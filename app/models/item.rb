@@ -23,6 +23,8 @@ class Item < ActiveRecord::Base
         in_phrase = !in_phrase
       elsif c == ':' && !in_phrase
         query_conditions.last.to_property!
+      elsif c == '-' && !in_phrase && query_conditions.last.empty?
+        query_conditions.last.negate!
       else
         query_conditions.last << c
       end
@@ -35,26 +37,34 @@ class Item < ActiveRecord::Base
   private
   
   class Condition < String
-    attr_reader :property
-    
     def to_property!
       @property = self.clone
       self.replace ''
     end
     
+    def negate!
+      @negative = true
+    end
+    
     def narrow(scope)
+      items = Table(:objects)
       if @property == 'species'
         species = Species.find_by_name(self)
         # TODO: add a many-to-many table to handle this relationship
-        scope.where('species_support_ids = ? OR species_support_ids LIKE ? OR species_support_ids LIKE ? OR species_support_ids LIKE ?',
+        condition = items[:species_support_ids].matches_any(
           species.id,
           "#{species.id},%",
           "%,#{species.id},%",
           "%,#{species.id}"
         )
       else
-        scope.where('name LIKE :matcher OR description LIKE :matcher', :matcher => "%#{self}%")
+        matcher = "%#{self}%"
+        condition = items[:name].matches(matcher).or(
+          items[:description].matches(matcher)
+        )
       end
+      condition = condition.not if @negative
+      scope.where(condition)
     end
     
     def inspect

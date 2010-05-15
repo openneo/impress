@@ -2,6 +2,8 @@ source 'http://rubygems.org'
 
 gem 'rails', '3.0.0.beta2'
 
+gem 'arel', :git => 'http://github.com/ernie/arel.git'
+
 gem 'sqlite3-ruby', :require => 'sqlite3'
 
 group :test do
