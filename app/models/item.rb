@@ -2,6 +2,8 @@ class Item < ActiveRecord::Base
   set_table_name 'objects' # Neo & PHP Impress call them objects, but the class name is a conflict (duh!)
   set_inheritance_column 'inheritance_type' # PHP Impress used "type" to describe category
   
+  scope :alphabetize, order('name ASC')
+  
   # Not defining validations, since this app is currently read-only
   
   def species_support_ids

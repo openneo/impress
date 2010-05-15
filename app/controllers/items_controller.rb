@@ -3,7 +3,7 @@ class ItemsController < ApplicationController
     if params.has_key?(:q)
       @query = params[:q]
       begin
-        @results = Item.search(@query).all
+        @results = Item.search(@query).alphabetize.all
       rescue
         flash[:alert] = $!.message
       end
