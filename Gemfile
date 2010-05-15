@@ -8,6 +8,8 @@ gem 'sqlite3-ruby', :require => 'sqlite3'
 
 gem 'haml', '>= 3.0.0'
 
+gem 'will_paginate', :git => 'http://github.com/mislav/will_paginate.git', :branch => 'rails3'
+
 group :development do
   gem 'mysql'
 end
