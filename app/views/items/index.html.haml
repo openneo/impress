@@ -2,6 +2,15 @@
   = text_field_tag :q, @query
   = submit_tag 'Search', :name => nil
 - if @results
-  = will_paginate @results
-  = render @results
-  = will_paginate @results
+  - if @results.empty?
+    :markdown
+      We couldn't find any wearables that matched **#{@query}**. Sorry!
+      
+      Are we missing something? To add an item to our database, just
+      [show us a pet who is wearing it][1]. That's it!
+      
+      [1]: http://impress.openneo.net/
+  - else
+    = will_paginate @results
+    = render @results
+    = will_paginate @results
