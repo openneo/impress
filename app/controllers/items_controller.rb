@@ -5,7 +5,7 @@ class ItemsController < ApplicationController
       begin
         @results = Item.search(@query).alphabetize.paginate :page => params[:page]
       rescue
-        flash[:alert] = $!.message
+        flash.now[:alert] = $!.message
       end
     end
   end
