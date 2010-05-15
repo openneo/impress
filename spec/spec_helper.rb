@@ -21,4 +21,12 @@ Rspec.configure do |config|
   # If you'd prefer not to run each of your examples within a transaction,
   # uncomment the following line.
   # config.use_transactional_examples = false
+  
+  def query_should(query, sets)
+    sets = sets.each { |k,v| sets[k] = v.map { |x| x.is_a?(Array) ? x : [x, ''] } }
+    all_sets = sets[:return] + sets[:not_return]
+    all_sets.each { |s| Factory.create :item, :name => s[0], :description => s[1]}
+    returned_sets = Item.search(query).all.map { |i| [i.name, i.description] }.sort
+    returned_sets.should == sets[:return].sort
+  end
 end

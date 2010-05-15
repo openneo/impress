@@ -1,6 +1,6 @@
-class CreateItems < ActiveRecord::Migration
+class CreateObjects < ActiveRecord::Migration
   def self.up
-    create_table :items do |t|
+    create_table :objects do |t|
       t.string :name
       t.string :species_support_ids
 
@@ -9,6 +9,6 @@ class CreateItems < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :items
+    drop_table :objects
   end
 end
