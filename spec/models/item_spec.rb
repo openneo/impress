@@ -147,5 +147,14 @@ describe Item do
           ['One two four', 'Zero one']
         ]
     end
+    
+    specify "should return raise exception for a query with no conditions" do
+      Factory.create :item
+      [
+        lambda { Item.search('').all },
+        lambda { Item.search(nil).all },
+        lambda { Item.search(' ').all }
+      ].each { |l| l.should raise_error(ArgumentError) }
+    end
   end
 end

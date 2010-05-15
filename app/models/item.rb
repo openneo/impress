@@ -14,6 +14,8 @@ class Item < ActiveRecord::Base
   end
   
   def self.search(query)
+    query = query.strip if query
+    raise ArgumentError, "Please provide a search query" if query.blank?
     query_conditions = [Condition.new]
     in_phrase = false
     query.each_char do |c|
