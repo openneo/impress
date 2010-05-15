@@ -12,6 +12,8 @@ gem 'will_paginate', :git => 'http://github.com/mislav/will_paginate.git', :bran
 
 gem 'rdiscount'
 
+gem 'compass'
+
 group :development do
   gem 'mysql'
 end
