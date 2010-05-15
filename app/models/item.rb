@@ -2,6 +2,9 @@ class Item < ActiveRecord::Base
   set_table_name 'objects' # Neo & PHP Impress call them objects, but the class name is a conflict (duh!)
   set_inheritance_column 'inheritance_type' # PHP Impress used "type" to describe category
   
+  cattr_reader :per_page
+  @@per_page = 30
+  
   scope :alphabetize, order('name ASC')
   
   # Not defining validations, since this app is currently read-only
