@@ -58,7 +58,9 @@ class Item < ActiveRecord::Base
       items = Table(:objects)
       if @property == 'species'
         species = Species.find_by_name(self)
-        # TODO: add a many-to-many table to handle this relationship
+        raise ArgumentError, "Species \"#{self.humanize}\" does not exist" unless species
+        # TODO: add a many-to-many table to handle this relationship, if
+        # performance becomes an issue
         ids = items[:species_support_ids]
         condition = ids.eq('').or(ids.matches_any(
           species.id,
