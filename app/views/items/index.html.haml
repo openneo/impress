@@ -1,0 +1,5 @@
+= form_tag items_path, :method => :get do
+  = text_field_tag :q, @query
+  = submit_tag 'Search', :name => nil
+- if @results
+  = @results.inspect
