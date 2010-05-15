@@ -1,6 +1,7 @@
 = form_tag items_path, :method => :get do
   = text_field_tag :q, @query
   = submit_tag 'Search', :name => nil
-= will_paginate @results
-= render @results
-= will_paginate @results
+- if @results
+  = will_paginate @results
+  = render @results
+  = will_paginate @results
