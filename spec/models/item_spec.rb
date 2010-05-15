@@ -164,5 +164,9 @@ describe Item do
     specify "should raise exception for a query that's too short" do
       lambda { Item.search('e').all }.should raise_error(ArgumentError)
     end
+    
+    specify "should not be able to search other attributes thru filters" do
+      lambda { Item.search('id:1').all }.should raise_error(ArgumentError)
+    end
   end
 end

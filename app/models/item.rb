@@ -66,9 +66,11 @@ class Item < ActiveRecord::Base
           "%,#{species.id},%",
           "%,#{species.id}"
         ))
-      else
-        column = @property ? @property : :name
+      elsif @property == 'description' || @property.blank?
+        column = @property == 'description' ? :description : :name
         condition = items[column].matches("%#{self}%")
+      else
+        raise ArgumentError, "Unknown search filter \"#{@property}\""
       end
       condition = condition.not if @negative
       scope.where(condition)
