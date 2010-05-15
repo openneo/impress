@@ -342,13 +342,13 @@ body .error {
   padding: 0.8em;
   margin-bottom: 1em;
   border: 2px solid #dddddd;
-  background: #fbe3e4;
-  color: #8a1f11;
-  border-color: #fbc2c4;
+  background: #e14f1c;
+  color: white;
+  border-color: #cd0a0a;
 }
 /* line 29, ../../../../../.rvm/gems/ruby-1.9.1-p378/gems/compass-0.10.1/frameworks/blueprint/stylesheets/blueprint/_interaction.scss */
 body .error a {
-  color: #8a1f11;
+  color: white;
 }
 /* line 6, ../../../../../.rvm/gems/ruby-1.9.1-p378/gems/compass-0.10.1/frameworks/blueprint/stylesheets/blueprint/_interaction.scss */
 body .notice {
@@ -466,15 +466,29 @@ form.bp textarea {
 }
 
 /* line 27, ../../../app/stylesheets/screen.scss */
+.alert {
+  padding: 0.8em;
+  margin-bottom: 1em;
+  border: 2px solid #dddddd;
+  background: #e14f1c;
+  color: white;
+  border-color: #cd0a0a;
+}
+/* line 29, ../../../../../.rvm/gems/ruby-1.9.1-p378/gems/compass-0.10.1/frameworks/blueprint/stylesheets/blueprint/_interaction.scss */
+.alert a {
+  color: white;
+}
+
+/* line 31, ../../../app/stylesheets/screen.scss */
 h1 a {
   text-decoration: none;
 }
-/* line 29, ../../../app/stylesheets/screen.scss */
+/* line 33, ../../../app/stylesheets/screen.scss */
 h1 a:hover {
   text-decoration: underline;
 }
 
-/* line 34, ../../../app/stylesheets/screen.scss */
+/* line 38, ../../../app/stylesheets/screen.scss */
 .item {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -487,7 +501,7 @@ h1 a:hover {
   vertical-align: top;
   width: 100px;
 }
-/* line 40, ../../../app/stylesheets/screen.scss */
+/* line 44, ../../../app/stylesheets/screen.scss */
 .item img {
   display: block;
   height: 80px;

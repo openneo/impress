@@ -24,6 +24,10 @@ body {
 form.bp {
   @include blueprint-form; }
 
+.alert {
+  @include error;
+}
+
 h1 a {
   text-decoration: none;
   &:hover {
