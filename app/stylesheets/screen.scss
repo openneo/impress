@@ -24,6 +24,13 @@ body {
 form.bp {
   @include blueprint-form; }
 
+h1 a {
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .item {
   @include inline-block;
   padding: 10px;

@@ -5,6 +5,6 @@
     = stylesheet_link_tag 'compiled/screen'
   %body
     #container
-      %h1 Infinite Closet
+      %h1= link_to 'Infinite Closet', items_path
       = flashes
       = yield

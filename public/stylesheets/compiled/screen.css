@@ -466,6 +466,15 @@ form.bp textarea {
 }
 
 /* line 27, ../../../app/stylesheets/screen.scss */
+h1 a {
+  text-decoration: none;
+}
+/* line 29, ../../../app/stylesheets/screen.scss */
+h1 a:hover {
+  text-decoration: underline;
+}
+
+/* line 34, ../../../app/stylesheets/screen.scss */
 .item {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -478,7 +487,7 @@ form.bp textarea {
   vertical-align: top;
   width: 100px;
 }
-/* line 33, ../../../app/stylesheets/screen.scss */
+/* line 40, ../../../app/stylesheets/screen.scss */
 .item img {
   display: block;
   height: 80px;
