@@ -10,6 +10,8 @@ gem 'haml', '>= 3.0.0'
 
 gem 'will_paginate', :git => 'http://github.com/mislav/will_paginate.git', :branch => 'rails3'
 
+gem 'rdiscount'
+
 group :development do
   gem 'mysql'
 end
