@@ -19,8 +19,9 @@ class Item < ActiveRecord::Base
   end
   
   def self.search(query)
-    query = query.strip if query
-    raise ArgumentError, "Please provide a search query" if query.blank?
+    raise ArgumentError, "Please provide a search query" unless query
+    query = query.strip
+    raise ArgumentError, "Search queries should be at least 3 characters" if query.length < 3
     query_conditions = [Condition.new]
     in_phrase = false
     query.each_char do |c|
@@ -58,17 +59,16 @@ class Item < ActiveRecord::Base
       if @property == 'species'
         species = Species.find_by_name(self)
         # TODO: add a many-to-many table to handle this relationship
-        condition = items[:species_support_ids].matches_any(
+        ids = items[:species_support_ids]
+        condition = ids.eq('').or(ids.matches_any(
           species.id,
           "#{species.id},%",
           "%,#{species.id},%",
           "%,#{species.id}"
-        )
+        ))
       else
-        matcher = "%#{self}%"
-        condition = items[:name].matches(matcher).or(
-          items[:description].matches(matcher)
-        )
+        column = @property ? @property : :name
+        condition = items[column].matches("%#{self}%")
       end
       condition = condition.not if @negative
       scope.where(condition)

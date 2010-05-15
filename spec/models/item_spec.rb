@@ -72,18 +72,17 @@ describe Item do
         ]
     end
     
-    specify "should search name and description" do
-      query_should 'zero "one two"',
+    specify "should search description for words and phrases" do
+      query_should 'description:zero description:"one two"',
         :return => [
-          'zero one two',
-          ['zero one', 'one two three'],
-          ['one two four', 'one three zero'],
-          ['three', 'one two four zero']
+          ['Green Hat', 'zero one two three'],
+          ['Blue Hat', 'five one two four zero']
         ],
         :not_return => [
-          ['zero one', 'two'],
-          ['one two four', 'three'],
-          ['five two', 'zero one three two']
+          'Zero one two',
+          ['Zero one', 'two'],
+          ['Zero', 'One two'],
+          ['Three', 'One zero two']
         ]
     end
     
@@ -106,20 +105,28 @@ describe Item do
       Item.search('red species:aisha').count.should == 1
     end
     
+    specify "should return items with no species requirements if a species condition is added" do
+      Factory.create :item, :species_support_ids => [1]
+      Factory.create :item, :species_support_ids => [1,2]
+      Factory.create :item, :species_support_ids => []
+      Item.search('species:acara').count.should == 3
+      Item.search('species:aisha').count.should == 2
+      Item.search('species:acara species:aisha').count.should == 2
+      Item.search('-species:acara').count.should == 0
+      Item.search('-species:aisha').count.should == 1
+    end
+    
     specify "should be able to negate word in search" do
       query_should 'hat -blue',
         :return => [
           'Green Hat',
           'Red Hat',
           'Blu E Hat',
-          ['Yellow Hat', 'This hat is not green!']
         ],
         :not_return => [
           'Blue Hat',
           'Green Shirt',
           'Blue Shirt',
-          ['Orange Hat', 'This hat is not blue!'],
-          ['Blue Pants', 'This is not a hat!']
         ]
     end
     
@@ -138,23 +145,24 @@ describe Item do
       query_should 'zero -"one two"',
         :return => [
           'Zero two one',
-          ['Two one', 'Zero'],
           'One three two zero'
         ],
         :not_return => [
           'Zero one two',
-          ['Zero', 'one two three'],
-          ['One two four', 'Zero one']
+          'One two three zero'
         ]
     end
     
-    specify "should return raise exception for a query with no conditions" do
-      Factory.create :item
+    specify "should raise exception for a query with no conditions" do
       [
         lambda { Item.search('').all },
         lambda { Item.search(nil).all },
         lambda { Item.search(' ').all }
       ].each { |l| l.should raise_error(ArgumentError) }
+    end
+    
+    specify "should raise exception for a query that's too short" do
+      lambda { Item.search('e').all }.should raise_error(ArgumentError)
     end
   end
 end
