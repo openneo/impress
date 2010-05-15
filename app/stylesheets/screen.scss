@@ -1,0 +1,39 @@
+@import "blueprint/reset";
+// The blue color scheme
+@import "partials/blue";
+@import "blueprint";
+@import "compass";
+
+body {
+  @include blueprint-typography(true);
+  @include blueprint-utilities;
+  @include blueprint-debug;
+  @include blueprint-interaction;
+  
+  background: $background_color;
+  text-align: center;
+}
+
+#container {
+  margin: 0 auto;
+  padding: 1em 2em 1em;
+  text-align: center;
+  width: 800px;
+}
+
+form.bp {
+  @include blueprint-form; }
+
+.item {
+  @include inline-block;
+  padding: 10px;
+  text-align: center;
+  vertical-align: top;
+  width: 100px;
+  img {
+    display: block;
+    height: 80px;
+    margin: 0 auto;
+    width: 80px;
+  }
+}
