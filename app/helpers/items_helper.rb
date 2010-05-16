@@ -9,7 +9,7 @@ module ItemsHelper
       pet_type.species = species
       pet_type.color = color
       src = sprintf(StandardSpeciesImageFormat, pet_type.image_hash)
-      html + image_tag(src, 'data-color' => color, 'data-species' => species.name)
+      html + image_tag(src, 'data-color-id' => color.id, 'data-species-id' => species.id, 'data-species-name' => species.name)
     end)
   end
 end
