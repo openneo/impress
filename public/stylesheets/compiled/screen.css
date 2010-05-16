@@ -335,7 +335,7 @@ body .bottom {
 }
 /* line 8, ../../../../../.rvm/gems/ruby-1.9.1-p378/gems/compass-0.10.1/frameworks/blueprint/stylesheets/blueprint/_debug.scss */
 body .showgrid {
-  background: url('/images/grid.png?1273964747');
+  background: url('/images/grid.png?1273969609');
 }
 /* line 4, ../../../../../.rvm/gems/ruby-1.9.1-p378/gems/compass-0.10.1/frameworks/blueprint/stylesheets/blueprint/_interaction.scss */
 body .error {
@@ -525,13 +525,44 @@ h1 a:hover {
   *vertical-align: auto;
   padding: 10px;
   text-align: center;
+  text-decoration: none;
   vertical-align: top;
   width: 100px;
 }
-/* line 73, ../../../app/stylesheets/screen.scss */
+/* line 74, ../../../app/stylesheets/screen.scss */
 .item img {
   display: block;
   height: 80px;
   margin: 0 auto;
   width: 80px;
+}
+
+/* line 2, ../../../app/stylesheets/items/show.scss */
+body.show header {
+  display: block;
+}
+/* line 6, ../../../app/stylesheets/items/show.scss */
+body.show #item-thumbnail {
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: middle;
+  *display: inline;
+  *vertical-align: auto;
+  border: 1px solid #033e6b;
+  height: 80px;
+  margin-right: -0.5em;
+  width: 80px;
+}
+/* line 14, ../../../app/stylesheets/items/show.scss */
+body.show #item-name {
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: middle;
+  *display: inline;
+  *vertical-align: auto;
+  border-bottom: 1px solid #033e6b;
+  margin: 0;
+  padding: 0 1em 0 1em;
 }

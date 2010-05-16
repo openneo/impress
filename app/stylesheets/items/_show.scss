@@ -1,0 +1,20 @@
+body.show {
+  header {
+    display: block;
+  }
+  
+  #item-thumbnail {
+    @include inline-block;
+    border: 1px solid $module_border_color;
+    height: 80px;
+    margin-right: -.5em;
+    width: 80px;
+  }
+  
+  #item-name {
+    @include inline-block;
+    border-bottom: 1px solid $module_border_color;
+    margin: 0;
+    padding: 0 1em 0 1em;
+  }
+}
