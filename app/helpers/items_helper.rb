@@ -1,11 +1,14 @@
 module ItemsHelper
   StandardSpeciesImageFormat = 'http://pets.neopets.com/cp/%s/1/1.png'
   
-  def standard_species_images
-    colors = Species::StandardColors
-    raw(Species.all.inject('') do |html, species|
+  def standard_species_images(species_list)
+    colors = Color::Basic
+    pet_type = PetType.new
+    raw(species_list.inject('') do |html, species|
       color = colors[rand(colors.size)]
-      src = sprintf(StandardSpeciesImageFormat, species.hash_for_color(color))
+      pet_type.species = species
+      pet_type.color = color
+      src = sprintf(StandardSpeciesImageFormat, pet_type.image_hash)
       html + image_tag(src, 'data-color' => color, 'data-species' => species.name)
     end)
   end

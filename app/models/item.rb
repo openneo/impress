@@ -22,6 +22,10 @@ class Item < ActiveRecord::Base
     write_attribute('species_support_ids', replacement)
   end
   
+  def supported_species
+    @supported_species ||= species_support_ids.empty? ? Species.all : species_support_ids.map { |id| Species.find(id) }
+  end
+  
   def self.search(query)
     raise ArgumentError, "Please provide a search query" unless query
     query = query.strip

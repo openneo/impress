@@ -15,4 +15,8 @@ describe Color do
     Color.find_by_name('Alien').id.should == 1
     Color.find_by_name('alien').id.should == 1
   end
+  
+  specify "class should have list of basic colors" do
+    Color::Basic.map { |c| c.name }.should == ['blue', 'green', 'red', 'yellow']
+  end
 end

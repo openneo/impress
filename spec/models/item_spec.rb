@@ -13,6 +13,16 @@ describe Item do
       @item.species_support_ids.should == [4, 5, 6]
     end
     
+    specify "should provide list of supported species objects" do
+      @item.species_support_ids = [1, 2, 3]
+      @item.supported_species.map { |s| s.name }.should == ['acara', 'aisha', 'blumaroo']
+    end
+    
+    specify "should provide all species if no support ids" do
+      @item.species_support_ids = ''
+      @item.supported_species.count.should be > 0
+    end
+    
     specify "should have many swf_assets through parent_swf_asset_relationships" do
       3.times do |n|
         swf_asset = Factory.create :swf_asset, :id => n, :url => "http://images.neopets.com/#{n}.swf", :type => 'object'
