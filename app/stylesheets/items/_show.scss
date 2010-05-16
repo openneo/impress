@@ -19,17 +19,27 @@ body.show {
     margin-top: 1em;
   }
   
-  #item-preview div {
-    float: left;
-    width: 50%;
+  #item-preview {
+    div {
+      float: left;
+      width: 50%;
+    }
+    
+    a, img {
+      height: 50px;
+      width: 50px;
+    }
+    
+    a {
+      @include inline-block;
+      &.current {
+        background: $module_background_color;
+        outline: 1px solid $module_border_color;
+      }
+    }
   }
   
   #item-preview-swf {
     height: 50%;
-  }
-  
-  #item-preview img {
-    height: 50px;
-    width: 50px;
   }
 }
