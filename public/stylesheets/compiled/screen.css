@@ -537,11 +537,14 @@ h1 a:hover {
   width: 80px;
 }
 
-/* line 2, ../../../app/stylesheets/items/show.scss */
+/* line 2, ../../../app/stylesheets/items/_show.scss */
 body.show header {
+  border-bottom: 1px solid #033e6b;
   display: block;
+  margin-bottom: 1em;
+  padding: 1em 0;
 }
-/* line 6, ../../../app/stylesheets/items/show.scss */
+/* line 9, ../../../app/stylesheets/items/_show.scss */
 body.show #item-thumbnail {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -551,10 +554,10 @@ body.show #item-thumbnail {
   *vertical-align: auto;
   border: 1px solid #033e6b;
   height: 80px;
-  margin-right: -0.5em;
+  margin-right: .5em;
   width: 80px;
 }
-/* line 14, ../../../app/stylesheets/items/show.scss */
+/* line 17, ../../../app/stylesheets/items/_show.scss */
 body.show #item-name {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -562,7 +565,5 @@ body.show #item-name {
   vertical-align: middle;
   *display: inline;
   *vertical-align: auto;
-  border-bottom: 1px solid #033e6b;
-  margin: 0;
-  padding: 0 1em 0 1em;
+  margin-top: 1em;
 }

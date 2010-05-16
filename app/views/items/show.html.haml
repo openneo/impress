@@ -1,3 +1,5 @@
 %header
   = image_tag @item.thumbnail_url, :id => 'item-thumbnail'
   %h2#item-name= @item.name
+
+%p= @item.description
