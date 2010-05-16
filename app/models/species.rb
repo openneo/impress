@@ -1,3 +1,5 @@
+require 'yaml'
+
 class Species
   attr_accessor :id, :name
   
@@ -8,6 +10,17 @@ class Species
     @objects << @objects_by_name[name] = species = Species.new
     species.id = @objects.size
     species.name = name
+  end
+  
+  StandardColors = %w(blue green yellow red)
+  StandardHashes = YAML::load_file(Rails.root.join('config', 'standard_type_hashes.yml'))
+  
+  def hash_for_color(color)
+    StandardHashes[name][color]
+  end
+  
+  def self.all
+    @objects
   end
   
   def self.find(id)

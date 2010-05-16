@@ -11,3 +11,4 @@
         = text_field_tag :q, @query
         = submit_tag 'Search', :name => nil
       = yield
+      = yield(:javascripts)

@@ -5,6 +5,9 @@ class Item < ActiveRecord::Base
   cattr_reader :per_page
   @@per_page = 30
   
+  has_many :parent_swf_asset_relationships, :foreign_key => 'parent_id'
+  has_many :swf_assets, :through => :parent_swf_asset_relationships
+  
   scope :alphabetize, order('name ASC')
   
   # Not defining validations, since this app is currently read-only
@@ -14,6 +17,7 @@ class Item < ActiveRecord::Base
   end
   
   def species_support_ids=(replacement)
+    @species_support_ids_array = nil
     replacement = replacement.join(',') if replacement.is_a?(Array)
     write_attribute('species_support_ids', replacement)
   end

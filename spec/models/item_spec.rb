@@ -2,12 +2,25 @@ require 'spec_helper'
 
 describe Item do
   context "an item" do
+    before(:each) do
+      @item = Factory.build :item
+    end
+    
     specify "should accept string or array for species_support_ids" do
-      items = [
-        Factory.build(:item, :species_support_ids => '1,2,3'),
-        Factory.build(:item, :species_support_ids => [1,2,3])
-      ]
-      items.each { |i| i.species_support_ids.should == [1,2,3] }
+      @item.species_support_ids = '1,2,3'
+      @item.species_support_ids.should == [1, 2, 3]
+      @item.species_support_ids = [4, 5, 6]
+      @item.species_support_ids.should == [4, 5, 6]
+    end
+    
+    specify "should have many swf_assets through parent_swf_asset_relationships" do
+      3.times do |n|
+        swf_asset = Factory.create :swf_asset, :id => n, :url => "http://images.neopets.com/#{n}.swf", :type => 'object'
+        ParentSwfAssetRelationship.create :swf_asset => swf_asset, :item => @item
+      end
+      @item.swf_asset_ids.should == [0, 1, 2]
+      @item.swf_assets.map(&:url).should == ['http://images.neopets.com/0.swf',
+        'http://images.neopets.com/1.swf', 'http://images.neopets.com/2.swf']
     end
   end
   

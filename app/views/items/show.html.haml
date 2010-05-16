@@ -3,3 +3,15 @@
   %h2#item-name= @item.name
 
 %p= @item.description
+
+%h3 Preview
+
+#item-preview
+  #item-preview-species= standard_species_images
+  #item-preview-swf
+    Javascript and Flash are required to preview wearables. Sorry!
+
+- content_for :javascripts do
+  = javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js',
+    'http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js',
+    'items/show'

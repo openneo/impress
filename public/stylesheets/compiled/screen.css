@@ -567,3 +567,17 @@ body.show #item-name {
   *vertical-align: auto;
   margin-top: 1em;
 }
+/* line 22, ../../../app/stylesheets/items/_show.scss */
+body.show #item-preview div {
+  float: left;
+  width: 50%;
+}
+/* line 27, ../../../app/stylesheets/items/_show.scss */
+body.show #item-preview-swf {
+  height: 50%;
+}
+/* line 31, ../../../app/stylesheets/items/_show.scss */
+body.show #item-preview img {
+  height: 50px;
+  width: 50px;
+}
