@@ -30,11 +30,26 @@ describe PetType do
       pet_type.image_hash.should == 'mnbztxxn'
     end
     
-    specify "should return nil if not a basic color" do
+    specify "should return nil for image hash if not a basic color" do
       asparagus = Color.find_by_name('asparagus')
       acara = Species.find_by_name('acara')
       pet_type = PetType.new :color => asparagus, :species => acara
       pet_type.image_hash.should be nil
+    end
+    
+    specify "should have many swf_assets through parent_swf_asset_relationships" do
+      pet_type = Factory.create :pet_type
+      3.times do |n|
+        swf_asset = Factory.create :swf_asset, :id => n, :url => "http://images.neopets.com/#{n}.swf", :type => 'biology'
+        ParentSwfAssetRelationship.create :swf_asset => swf_asset, :item => pet_type, :swf_asset_type => 'biology'
+      end
+      dud_swf_asset = Factory.create :swf_asset, :id => 3, :type => 'object'
+      ParentSwfAssetRelationship.create :swf_asset => dud_swf_asset, :parent_id => 2, :swf_asset_type => 'biology'
+      other_type_swf_asset = Factory.create :swf_asset, :id => 4, :type => 'biology'
+      ParentSwfAssetRelationship.create :swf_asset => other_type_swf_asset, :parent_id => 1, :swf_asset_type => 'object'
+      pet_type.swf_assets.map(&:id).should == [0, 1, 2]
+      pet_type.swf_assets.map(&:url).should == ['http://images.neopets.com/0.swf',
+        'http://images.neopets.com/1.swf', 'http://images.neopets.com/2.swf']
     end
   end
 end

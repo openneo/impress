@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Item do
   context "an item" do
     before(:each) do
-      @item = Factory.build :item
+      @item = Factory.create :item
     end
     
     specify "should accept string or array for species_support_ids" do
@@ -26,9 +26,13 @@ describe Item do
     specify "should have many swf_assets through parent_swf_asset_relationships" do
       3.times do |n|
         swf_asset = Factory.create :swf_asset, :id => n, :url => "http://images.neopets.com/#{n}.swf", :type => 'object'
-        ParentSwfAssetRelationship.create :swf_asset => swf_asset, :item => @item
+        ParentSwfAssetRelationship.create :swf_asset => swf_asset, :item => @item, :swf_asset_type => 'object'
       end
-      @item.swf_asset_ids.should == [0, 1, 2]
+      dud_swf_asset = Factory.create :swf_asset, :id => 3, :type => 'object'
+      ParentSwfAssetRelationship.create :swf_asset => dud_swf_asset, :parent_id => 2, :swf_asset_type => 'object'
+      other_type_swf_asset = Factory.create :swf_asset, :id => 4, :type => 'biology'
+      ParentSwfAssetRelationship.create :swf_asset => other_type_swf_asset, :parent_id => 1, :swf_asset_type => 'biology'
+      @item.swf_assets.map(&:id).should == [0, 1, 2]
       @item.swf_assets.map(&:url).should == ['http://images.neopets.com/0.swf',
         'http://images.neopets.com/1.swf', 'http://images.neopets.com/2.swf']
     end

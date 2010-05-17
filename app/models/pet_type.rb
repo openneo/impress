@@ -1,4 +1,10 @@
 class PetType < ActiveRecord::Base
+  include SwfAssetParent
+  
+  def swf_asset_type
+    'biology'
+  end
+  
   BasicHashes = YAML::load_file(Rails.root.join('config', 'basic_type_hashes.yml'))
   
   def as_json(options={})

@@ -8,11 +8,6 @@ describe ParentSwfAssetRelationship do
       @relationship.parent_id = 1
     end
     
-    specify "should belong to an item" do
-      @relationship.item.id.should == 1
-      @relationship.item.name.should == 'foo'
-    end
-    
     specify "should belong to an swf_asset" do
       Factory.create :swf_asset, :type => 'object', :id => 1
       @relationship.swf_asset_id = 1

@@ -1,12 +1,15 @@
 class Item < ActiveRecord::Base
+  include SwfAssetParent
+  
+  def swf_asset_type
+    'object'
+  end
+  
   set_table_name 'objects' # Neo & PHP Impress call them objects, but the class name is a conflict (duh!)
   set_inheritance_column 'inheritance_type' # PHP Impress used "type" to describe category
   
   cattr_reader :per_page
   @@per_page = 30
-  
-  has_many :parent_swf_asset_relationships, :foreign_key => 'parent_id'
-  has_many :swf_assets, :through => :parent_swf_asset_relationships
   
   scope :alphabetize, order('name ASC')
   
