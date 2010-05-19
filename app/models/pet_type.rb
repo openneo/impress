@@ -1,9 +1,7 @@
 class PetType < ActiveRecord::Base
   include SwfAssetParent
   
-  def swf_asset_type
-    'biology'
-  end
+  SwfAssetType = 'biology'
   
   BasicHashes = YAML::load_file(Rails.root.join('config', 'basic_type_hashes.yml'))
   

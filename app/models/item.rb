@@ -1,9 +1,7 @@
 class Item < ActiveRecord::Base
   include SwfAssetParent
   
-  def swf_asset_type
-    'object'
-  end
+  SwfAssetType = 'object'
   
   set_table_name 'objects' # Neo & PHP Impress call them objects, but the class name is a conflict (duh!)
   set_inheritance_column 'inheritance_type' # PHP Impress used "type" to describe category
