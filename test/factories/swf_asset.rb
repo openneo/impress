@@ -3,4 +3,6 @@ Factory.define :swf_asset do |s|
   s.zone_id 0
   s.zones_restrict ''
   s.body_id 0
+  s.add_attribute :type, 'object'
+  s.sequence(:id) { |n| n }
 end
