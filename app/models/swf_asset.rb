@@ -5,6 +5,8 @@ class SwfAsset < ActiveRecord::Base
   
   delegate :depth, :to => :zone
   
+  scope :for_json, includes(:zone)
+  
   def local_url
     uri = URI.parse(url)
     uri.host = RemoteImpressHost
@@ -13,7 +15,7 @@ class SwfAsset < ActiveRecord::Base
     uri.to_s
   end
   
-  def as_json
+  def as_json(options={})
     {
       :id => id,
       :depth => depth,
