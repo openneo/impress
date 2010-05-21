@@ -24,7 +24,7 @@ class Item < ActiveRecord::Base
   end
   
   def supported_species
-    @supported_species ||= species_support_ids.empty? ? Species.all : species_support_ids.map { |id| Species.find(id) }
+    @supported_species ||= species_support_ids.empty? ? Species.all : species_support_ids.sort.map { |id| Species.find(id) }
   end
   
   def self.search(query)
