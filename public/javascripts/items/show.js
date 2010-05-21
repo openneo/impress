@@ -22,7 +22,9 @@ PetType.prototype.load = function () {
   $.getJSON(url, function (data) {
     pet_type.id = data.id;
     pet_type.body_id = data.body_id;
+    Item.current.load();
     $.getJSON('/pet_types/' + data.id + '/swf_assets.json', function (assets) {
+      log('pet type assets loaded');
       pet_type.assets = assets;
       Preview.update();
     });
@@ -36,12 +38,34 @@ PetType.prototype.setAsCurrent = function () {
   this.load();
 }
 
-PetType.create_from_link = function (link) {
+PetType.createFromLink = function (link) {
   var pet_type = new PetType();
   pet_type.color_id = link.attr('data-color-id');
   pet_type.species_id = link.attr('data-species-id');
   pet_type.link = link;
   return pet_type;
+}
+
+function Item() {
+  this.load = function () {
+    var url = '/' + this.id + '/swf_assets.json?body_id=' + PetType.current.body_id,
+      item = this;
+    $.getJSON(url, function (data) {
+      log('item assets loaded');
+      item.assets = data;
+      Preview.update();
+    })
+  }
+  
+  this.setAsCurrent = function () {
+    Item.current = this;
+  }
+}
+
+Item.createFromLocation = function () {
+  var item = new Item();
+  item.id = parseInt(document.location.pathname.substr(1));
+  return item;
 }
 
 Preview = new function Preview() {
@@ -54,12 +78,16 @@ Preview = new function Preview() {
   }
   
   this.update = function (assets) {
-    var assets;
+    var assets = [];
     log('want to update');
     if(swf) {
       log('got to update');
-      log(PetType.current.assets);
-      assets = $.each(PetType.current.assets, function () {
+      log(assets);
+      $.each([PetType, Item], function () {
+        if(this.current.assets) assets = assets.concat(this.current.assets);
+      });
+      log(assets);
+      assets = $.each(assets, function () {
         this.local_path = this.local_url;
       });
       log(assets);
@@ -86,11 +114,13 @@ Preview = new function Preview() {
 
 Preview.embed(PREVIEW_SWF_ID);
 
-PetType.create_from_link(speciesList.eq(Math.floor(Math.random()*speciesList.length))).setAsCurrent();
+PetType.createFromLink(speciesList.eq(Math.floor(Math.random()*speciesList.length))).setAsCurrent();
+
+Item.createFromLocation().setAsCurrent();
 
 speciesList.click(function (e) {
   e.preventDefault();
-  PetType.create_from_link($(this)).setAsCurrent();
+  PetType.createFromLink($(this)).setAsCurrent();
 });
 
 MainWardrobe = { View: { Outfit: Preview } };
