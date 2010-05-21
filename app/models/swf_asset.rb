@@ -6,6 +6,7 @@ class SwfAsset < ActiveRecord::Base
   delegate :depth, :to => :zone
   
   scope :for_json, includes(:zone)
+  scope :fitting_body_id, lambda { |body_id| where(arel_table[:body_id].in([body_id, 0])) }
   
   def local_url
     uri = URI.parse(url)
