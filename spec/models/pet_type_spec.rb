@@ -37,19 +37,11 @@ describe PetType do
       pet_type.image_hash.should be nil
     end
     
-    specify "should have many swf_assets through parent_swf_asset_relationships" do
+    specify "has many pet states" do
       pet_type = Factory.create :pet_type
-      3.times do |n|
-        swf_asset = Factory.create :swf_asset, :id => n, :url => "http://images.neopets.com/#{n}.swf", :type => 'biology'
-        ParentSwfAssetRelationship.create :swf_asset => swf_asset, :item => pet_type, :swf_asset_type => 'biology'
-      end
-      dud_swf_asset = Factory.create :swf_asset, :id => 3, :type => 'object'
-      ParentSwfAssetRelationship.create :swf_asset => dud_swf_asset, :parent_id => 2, :swf_asset_type => 'biology'
-      other_type_swf_asset = Factory.create :swf_asset, :id => 4, :type => 'biology'
-      ParentSwfAssetRelationship.create :swf_asset => other_type_swf_asset, :parent_id => 1, :swf_asset_type => 'object'
-      pet_type.swf_assets.map(&:id).should == [0, 1, 2]
-      pet_type.swf_assets.map(&:url).should == ['http://images.neopets.com/0.swf',
-        'http://images.neopets.com/1.swf', 'http://images.neopets.com/2.swf']
+      [1, 1, 2].each { |x| Factory.create :pet_state, :pet_type_id => x }
+      pet_type.pet_state_ids.should == [1, 2]
+      pet_type.pet_states.map(&:id).should == [1, 2]
     end
   end
 end

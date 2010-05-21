@@ -11,11 +11,11 @@ class ParentSwfAssetRelationship < ActiveRecord::Base
     self.parent_id = replacement.id
   end
   
-  def pet_type
+  def pet_state
     parent
   end
   
-  def pet_type=(replacement)
+  def pet_state=(replacement)
     self.parent_id = replacement.id
   end
 end
