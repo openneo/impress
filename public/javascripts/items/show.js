@@ -102,8 +102,8 @@ Preview = new function Preview() {
     swfobject.embedSWF(
       impressUrl('/assets/swf/preview.swf'), // URL
       id, // ID
-      400, // width
-      400, // height
+      '100%', // width
+      '100%', // height
       '9', // required version
       impressUrl('/assets/js/swfobject/expressInstall.swf'), // express install URL
       {'swf_assets_path': impressUrl('/assets')}, // flashvars
