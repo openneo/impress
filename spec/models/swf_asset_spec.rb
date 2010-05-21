@@ -25,10 +25,12 @@ describe SwfAsset do
     asset = Factory.create :swf_asset,
       :id => 123,
       :zone_id => 1,
+      :body_id => 234,
       :url => 'http://images.neopets.com/cp/items/swf/000/000/012/12211_9969430b3a.swf'
     asset.as_json.should == {
       :id => 123,
       :depth => 12,
+      :body_id => 234,
       :local_url => 'http://impress.openneo.net/assets/swf/outfit/items/000/000/012/12211_9969430b3a.swf'
     }
   end

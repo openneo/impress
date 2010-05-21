@@ -19,7 +19,8 @@ class SwfAsset < ActiveRecord::Base
     {
       :id => id,
       :depth => depth,
-      :local_url => local_url
+      :local_url => local_url,
+      :body_id => body_id
     }
   end
 end
