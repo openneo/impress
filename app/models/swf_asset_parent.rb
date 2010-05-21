@@ -7,6 +7,6 @@ module SwfAssetParent
       select(rels[:swf_asset_id]).
       all.map(&:swf_asset_id)
     assets = SwfAsset.arel_table
-    SwfAsset.where(assets[:id].in(ids))
+    SwfAsset.where(assets[:id].in(ids).and(assets[:type].eq(type)))
   end
 end
