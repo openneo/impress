@@ -16,6 +16,11 @@ body {
   @include blueprint-interaction;
   
   background: $background_color;
+  font: {
+    family: Delicious, Helvetica, Arial, sans-serif;
+    size: 100%;
+  }
+  line-height: 1;
   text-align: center;
 }
 
@@ -77,6 +82,37 @@ h1 a {
     margin: 0 auto;
     width: 80px;
   }
+}
+
+a.item {
+  img {
+    @include opacity(.9);
+  }
+  &:hover img {
+    @include opacity(1);
+  }
+}
+
+/* A font by Jos Buivenga (exljbris) -> www.exljbris.nl */
+@font-face {
+	font-family: Delicious;
+	src: url('http://impress.openneo.net/assets/fonts/Delicious-Roman.otf');
+}
+
+@font-face {
+	font: {
+	  family: Delicious;
+	  weight: bold;
+  }
+	src: url('http://impress.openneo.net/assets/fonts/Delicious-Bold.otf');
+}
+
+@font-face {
+	font: {
+	  family: Delicious;
+	  style: italic;
+  }
+	src: url('http://impress.openneo.net/assets/fonts/Delicious-Italic.otf');
 }
 
 @import "items/show";

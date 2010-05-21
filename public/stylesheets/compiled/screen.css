@@ -88,6 +88,9 @@ body {
   color: white;
   font-size: 75%;
   background: #0b61a4;
+  font-family: Delicious, Helvetica, Arial, sans-serif;
+  font-size: 100%;
+  line-height: 1;
   text-align: center;
 }
 /* line 65, ../../../../../.bundle/ruby/1.8/gems/compass-0.10.1/frameworks/blueprint/stylesheets/blueprint/_typography.scss */
@@ -395,7 +398,7 @@ body .removed {
   color: white;
 }
 
-/* line 22, ../../../app/stylesheets/screen.scss */
+/* line 27, ../../../app/stylesheets/screen.scss */
 #container {
   margin: 0 auto;
   padding: 1em 2em 1em;
@@ -464,21 +467,21 @@ form textarea {
   width: 390px;
   height: 250px;
 }
-/* line 32, ../../../app/stylesheets/screen.scss */
+/* line 37, ../../../app/stylesheets/screen.scss */
 form input[type=text] {
   background: #66a3d2;
   border: 1px solid #033e6b;
   color: inherit;
 }
-/* line 35, ../../../app/stylesheets/screen.scss */
+/* line 40, ../../../app/stylesheets/screen.scss */
 form input[type=text]:hover {
   border-color: #ff9200;
 }
-/* line 38, ../../../app/stylesheets/screen.scss */
+/* line 43, ../../../app/stylesheets/screen.scss */
 form input[type=text]:focus {
   border-color: white;
 }
-/* line 43, ../../../app/stylesheets/screen.scss */
+/* line 48, ../../../app/stylesheets/screen.scss */
 form input[type=submit] {
   background: #ff9200;
   border: 1px solid #ffad40;
@@ -487,12 +490,12 @@ form input[type=submit] {
   font-weight: bold;
   padding: 5px;
 }
-/* line 50, ../../../app/stylesheets/screen.scss */
+/* line 55, ../../../app/stylesheets/screen.scss */
 form input[type=submit]:focus {
   border-color: black;
 }
 
-/* line 56, ../../../app/stylesheets/screen.scss */
+/* line 61, ../../../app/stylesheets/screen.scss */
 .alert {
   padding: 0.8em;
   margin-bottom: 1em;
@@ -506,16 +509,16 @@ form input[type=submit]:focus {
   color: inherit;
 }
 
-/* line 60, ../../../app/stylesheets/screen.scss */
+/* line 65, ../../../app/stylesheets/screen.scss */
 h1 a {
   text-decoration: none;
 }
-/* line 62, ../../../app/stylesheets/screen.scss */
+/* line 67, ../../../app/stylesheets/screen.scss */
 h1 a:hover {
   text-decoration: underline;
 }
 
-/* line 67, ../../../app/stylesheets/screen.scss */
+/* line 72, ../../../app/stylesheets/screen.scss */
 .item {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -529,12 +532,51 @@ h1 a:hover {
   vertical-align: top;
   width: 100px;
 }
-/* line 74, ../../../app/stylesheets/screen.scss */
+/* line 79, ../../../app/stylesheets/screen.scss */
 .item img {
   display: block;
   height: 80px;
   margin: 0 auto;
   width: 80px;
+}
+
+/* line 88, ../../../app/stylesheets/screen.scss */
+a.item img {
+  -moz-opacity: 0.9;
+  -webkit-opacity: 0.9;
+  -o-opacity: 0.9;
+  -khtml-opacity: 0.9;
+  opacity: 0.9;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90);
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90);
+}
+/* line 91, ../../../app/stylesheets/screen.scss */
+a.item:hover img {
+  -moz-opacity: 1;
+  -webkit-opacity: 1;
+  -o-opacity: 1;
+  -khtml-opacity: 1;
+  opacity: 1;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+}
+
+/* A font by Jos Buivenga (exljbris) -> www.exljbris.nl */
+@font-face {
+  font-family: Delicious;
+  src: url("http://impress.openneo.net/assets/fonts/Delicious-Roman.otf");
+}
+
+@font-face {
+  font-family: Delicious;
+  font-weight: bold;
+  src: url("http://impress.openneo.net/assets/fonts/Delicious-Bold.otf");
+}
+
+@font-face {
+  font-family: Delicious;
+  font-style: italic;
+  src: url("http://impress.openneo.net/assets/fonts/Delicious-Italic.otf");
 }
 
 /* line 2, ../../../app/stylesheets/items/_show.scss */
