@@ -22,8 +22,11 @@ body.show {
   #item-preview {
     div {
       float: left;
-      width: 50%;
     }
+  }
+  
+  #item-preview-species {
+    width: 400px;
     
     a, img {
       height: 50px;
@@ -32,11 +35,28 @@ body.show {
     
     a {
       @include inline-block;
+      
       &.current {
         background: $module_background_color;
         outline: 1px solid $module_border_color;
       }
+      
+      &.deactivated {
+        @include opacity(.5);
+        background: $error_bg_color;
+        //background: #fff;
+        //background: rgba(255, 255, 255, .5);
+        &.current {
+          outline-color: $error_border_color;
+        }
+      }
     }
+  }
+  
+  #item-preview-error {
+    display: none;
+    padding: 20px 10px 0;
+    width: 380px;
   }
   
   #item-preview-swf {

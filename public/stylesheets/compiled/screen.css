@@ -612,15 +612,18 @@ body.show #item-name {
 /* line 23, ../../../app/stylesheets/items/_show.scss */
 body.show #item-preview div {
   float: left;
-  width: 50%;
 }
 /* line 28, ../../../app/stylesheets/items/_show.scss */
-body.show #item-preview a, body.show #item-preview img {
+body.show #item-preview-species {
+  width: 400px;
+}
+/* line 31, ../../../app/stylesheets/items/_show.scss */
+body.show #item-preview-species a, body.show #item-preview-species img {
   height: 50px;
   width: 50px;
 }
-/* line 33, ../../../app/stylesheets/items/_show.scss */
-body.show #item-preview a {
+/* line 36, ../../../app/stylesheets/items/_show.scss */
+body.show #item-preview-species a {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
   display: inline-block;
@@ -628,12 +631,33 @@ body.show #item-preview a {
   *display: inline;
   *vertical-align: auto;
 }
-/* line 35, ../../../app/stylesheets/items/_show.scss */
-body.show #item-preview a.current {
+/* line 39, ../../../app/stylesheets/items/_show.scss */
+body.show #item-preview-species a.current {
   background: #66a3d2;
   outline: 1px solid #033e6b;
 }
-/* line 42, ../../../app/stylesheets/items/_show.scss */
+/* line 44, ../../../app/stylesheets/items/_show.scss */
+body.show #item-preview-species a.deactivated {
+  -moz-opacity: 0.5;
+  -webkit-opacity: 0.5;
+  -o-opacity: 0.5;
+  -khtml-opacity: 0.5;
+  opacity: 0.5;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  background: #e14f1c;
+}
+/* line 49, ../../../app/stylesheets/items/_show.scss */
+body.show #item-preview-species a.deactivated.current {
+  outline-color: #cd0a0a;
+}
+/* line 56, ../../../app/stylesheets/items/_show.scss */
+body.show #item-preview-error {
+  display: none;
+  padding: 20px 10px 0;
+  width: 380px;
+}
+/* line 62, ../../../app/stylesheets/items/_show.scss */
 body.show #item-preview-swf {
   height: 300px;
   overflow: hidden;
