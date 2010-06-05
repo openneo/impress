@@ -40,9 +40,10 @@ function LoadError(base_msg) {
 }
 
 function PetType() {
-  var pet_type = this;
+  var pet_type = this, loaded_data = false, loaded_assets = false;
   
   this.activated = true;
+  this.assets = true;
   
   this.deactivate = function (error, args) {
     var msg;
@@ -60,22 +61,24 @@ function PetType() {
   this.load = function () {
     var url = '/species/' + this.species_id + '/color/' + this.color_id + '/pet_type.json',
       pet_type = this;
-    $.ajax({
-      url: url,
-      dataType: 'json',
-      success: function (data) {
-        pet_type.id = data.id;
-        pet_type.body_id = data.body_id;
-        Item.current.load(pet_type);
-        $.getJSON('/pet_types/' + data.id + '/swf_assets.json', function (assets) {
-          pet_type.assets = assets;
-          Preview.update();
-        });
-      },
-      error: function () {
-        pet_type.deactivate(PetType.LOAD_ERROR);
-      }
-    });
+    function onComplete() { Item.current.load(pet_type); loadAssets(); }
+    if(loaded_data) {
+      onComplete();
+    } else {
+      $.ajax({
+        url: url,
+        dataType: 'json',
+        success: function (data) {
+          pet_type.id = data.id;
+          pet_type.body_id = data.body_id;
+          loaded_data = true;
+          onComplete();
+        },
+        error: function () {
+          pet_type.deactivate(PetType.LOAD_ERROR);
+        }
+      });
+    }
   }
 
   this.setAsCurrent = function () {
@@ -88,6 +91,18 @@ function PetType() {
     } else {
       showDeactivationMsg();
     }
+  }
+  
+  function loadAssets() {
+    function onComplete() { if(pet_type == PetType.current) Preview.update(); }
+    if(!loaded_assets) {
+      $.getJSON('/pet_types/' + pet_type.id + '/swf_assets.json', function (assets) {
+        pet_type.assets = assets;
+        loaded_assets = true;
+        onComplete();
+      });
+    }
+    onComplete();
   }
   
   function showDeactivationMsg() {
@@ -111,19 +126,30 @@ PetType.createFromLink = function (link) {
 }
 
 function Item() {
+  this.assets_by_body_id = {};
+  
   this.load = function (pet_type) {
     var url = '/' + this.id + '/swf_assets.json?body_id=' + pet_type.body_id,
       item = this;
-    $.getJSON(url, function (data) {
-      if(data.length) {
-        item.assets = data;
-        Preview.update();
-      } else {
-        pet_type.deactivate(Item.LOAD_ERROR, {
-          item: item.name
-        });
-      }
-    })
+    function onComplete() { if(pet_type == PetType.current) Preview.update() }
+    if(this.getAssetsForPetType(pet_type).length) {
+      onComplete();
+    } else {
+      $.getJSON(url, function (data) {
+        if(data.length) {
+          item.assets_by_body_id[pet_type.body_id] = data;
+          onComplete();
+        } else {
+          pet_type.deactivate(Item.LOAD_ERROR, {
+            item: item.name
+          });
+        }
+      });
+    }
+  }
+  
+  this.getAssetsForPetType = function (pet_type) {
+    return this.assets_by_body_id[pet_type.body_id] || [];
   }
   
   this.setAsCurrent = function () {
@@ -140,7 +166,7 @@ Item.createFromLocation = function () {
 }
 
 Preview = new function Preview() {
-  var assets = [], swf_id, swf, updateWhenFlashReady = false;
+  var swf_id, swf, updateWhenFlashReady = false;
   
   this.setFlashIsReady = function () {
     swf = document.getElementById(swf_id);
@@ -148,12 +174,15 @@ Preview = new function Preview() {
   }
   
   this.update = function (assets) {
-    var assets = [];
+    var assets = [], asset_sources = [
+      PetType.current.assets,
+      Item.current.getAssetsForPetType(PetType.current)
+    ];
     if(swf) {
-      $.each([PetType, Item], function () {
-        if(this.current.assets) assets = assets.concat(this.current.assets);
+      $.each(asset_sources, function () {
+        assets = assets.concat(this);
       });
-      assets = $.each(assets, function () {
+      $.each(assets, function () {
         this.local_path = this.local_url;
       });
       swf.setAssets(assets);
@@ -204,8 +233,8 @@ speciesList.each(function () {
 
 MainWardrobe = { View: { Outfit: Preview } };
 
-setTimeout(function () {
+/*setTimeout(function () {
   $.each(PetType.all, function () {
     this.load();
   });
-}, 5000);
+}, 5000);*/
