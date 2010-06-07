@@ -12,6 +12,9 @@
   #item-preview-swf{'data-impress-host' => RemoteImpressHost}
     Javascript and Flash are required to preview wearables. Sorry!
 
+:javascript
+  var CURRENT_ITEM_ZONES_RESTRICT = #{@item.zones_restrict.inspect};
+
 - content_for :javascripts do
   = javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js',
     'http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js',

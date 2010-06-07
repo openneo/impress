@@ -1,5 +1,3 @@
-// TODO: zones_restrict
-
 var PREVIEW_SWF_ID = 'item-preview-swf',
   PREVIEW_SWF = document.getElementById(PREVIEW_SWF_ID),
   IMPRESS_HOST = PREVIEW_SWF.getAttribute('data-impress-host'),
@@ -163,7 +161,14 @@ function Item(id) {
 Item.LOAD_ERROR = new LoadError("$species_article $species wear a $item");
 
 Item.createFromLocation = function () {
-  var item = new Item(parseInt(document.location.pathname.substr(1)));
+  var item = new Item(parseInt(document.location.pathname.substr(1))),
+    z = CURRENT_ITEM_ZONES_RESTRICT, zl = z.length;
+  item.restricted_zones = [];
+  for(i = 0; i < zl; i++) {
+    if(z.charAt(i) == '1') {
+      item.restricted_zones.push(i + 1);
+    }
+  }
   return item;
 }
 
@@ -184,8 +189,10 @@ Preview = new function Preview() {
       $.each(asset_sources, function () {
         assets = assets.concat(this);
       });
-      $.each(assets, function () {
-        this.local_path = this.local_url;
+      assets = $.grep(assets, function (asset) {
+        var visible = $.inArray(asset.zone_id, Item.current.restricted_zones) == -1;
+        if(visible) asset.local_path = asset.local_url;
+        return visible;
       });
       swf.setAssets(assets);
     } else {

@@ -20,7 +20,7 @@ describe SwfAsset do
     asset.local_url.should == 'http://impress.openneo.net/assets/swf/outfit/items/000/000/012/12211_9969430b3a.swf'
   end
   
-  it "should contain id, depth, and local_url as JSON" do
+  it "should contain id, depth, zone ID, and local_url as JSON" do
     zone = Factory.create :zone, :depth => 12
     asset = Factory.create :swf_asset,
       :id => 123,
@@ -31,7 +31,8 @@ describe SwfAsset do
       :id => 123,
       :depth => 12,
       :body_id => 234,
-      :local_url => 'http://impress.openneo.net/assets/swf/outfit/items/000/000/012/12211_9969430b3a.swf'
+      :local_url => 'http://impress.openneo.net/assets/swf/outfit/items/000/000/012/12211_9969430b3a.swf',
+      :zone_id => 1
     }
   end
 end
