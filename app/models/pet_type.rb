@@ -3,6 +3,18 @@ class PetType < ActiveRecord::Base
   
   BasicHashes = YAML::load_file(Rails.root.join('config', 'basic_type_hashes.yml'))
   
+  scope :random_basic_per_species, lambda { |species_ids|
+    conditions = nil
+    species_ids.each do |species_id|
+      color_id = Color::Basic[rand(Color::Basic.size)].id
+      condition = arel_table[:species_id].eq(species_id).and(
+        arel_table[:color_id].eq(color_id)
+      )
+      conditions = conditions ? conditions.or(condition) : condition
+    end
+    where(conditions).order(:species_id)
+  }
+  
   def as_json(options={})
     {:id => id, :body_id => body_id}
   end

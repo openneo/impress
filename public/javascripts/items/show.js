@@ -1,3 +1,5 @@
+// TODO: zones_restrict
+
 var PREVIEW_SWF_ID = 'item-preview-swf',
   PREVIEW_SWF = document.getElementById(PREVIEW_SWF_ID),
   IMPRESS_HOST = PREVIEW_SWF.getAttribute('data-impress-host'),
@@ -59,26 +61,8 @@ function PetType() {
   }
   
   this.load = function () {
-    var url = '/species/' + this.species_id + '/color/' + this.color_id + '/pet_type.json',
-      pet_type = this;
-    function onComplete() { Item.current.load(pet_type); loadAssets(); }
-    if(loaded_data) {
-      onComplete();
-    } else {
-      $.ajax({
-        url: url,
-        dataType: 'json',
-        success: function (data) {
-          pet_type.id = data.id;
-          pet_type.body_id = data.body_id;
-          loaded_data = true;
-          onComplete();
-        },
-        error: function () {
-          pet_type.deactivate(PetType.LOAD_ERROR);
-        }
-      });
-    }
+    Item.current.load(this);
+    loadAssets();
   }
 
   this.setAsCurrent = function () {
@@ -113,13 +97,15 @@ function PetType() {
 PetType.all = [];
 
 PetType.LOAD_ERROR = new LoadError("$color_article $color $species");
+PetType.DASH_REGEX = /-/g;
 
 PetType.createFromLink = function (link) {
   var pet_type = new PetType();
-  pet_type.color_id = link.attr('data-color-id');
-  pet_type.color_name = link.attr('data-color-name');
-  pet_type.species_id = link.attr('data-species-id');
-  pet_type.species_name = link.attr('data-species-name');
+  $.each(link.get(0).attributes, function () {
+    if(this.name.substr(0, 5) == 'data-') {
+      pet_type[this.name.substr(5).replace(PetType.DASH_REGEX, '_')] = this.value;
+    }
+  });
   pet_type.link = link;
   PetType.all.push(pet_type);
   return pet_type;
@@ -218,10 +204,10 @@ Preview = new function Preview() {
 
 Preview.embed(PREVIEW_SWF_ID);
 
-PetType.createFromLink(speciesList.eq(Math.floor(Math.random()*speciesList.length))).setAsCurrent();
-
 Item.createFromLocation().setAsCurrent();
 Item.current.name = $('#item-name').text();
+
+PetType.createFromLink(speciesList.eq(Math.floor(Math.random()*speciesList.length))).setAsCurrent();
 
 speciesList.each(function () {
   var pet_type = PetType.createFromLink($(this));
@@ -232,9 +218,3 @@ speciesList.each(function () {
 });
 
 MainWardrobe = { View: { Outfit: Preview } };
-
-/*setTimeout(function () {
-  $.each(PetType.all, function () {
-    this.load();
-  });
-}, 5000);*/
