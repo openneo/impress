@@ -65,18 +65,22 @@ class Item < ActiveRecord::Base
     
     def narrow(scope)
       items = Table(:objects)
-      if @property == 'species'
+      if @property == 'species' || @property == 'only'
         species = Species.find_by_name(self)
         raise ArgumentError, "Species \"#{self.humanize}\" does not exist" unless species
         # TODO: add a many-to-many table to handle this relationship, if
         # performance becomes an issue
         ids = items[:species_support_ids]
-        condition = ids.eq('').or(ids.matches_any(
-          species.id,
-          "#{species.id},%",
-          "%,#{species.id},%",
-          "%,#{species.id}"
-        ))
+        if @property == 'species'
+          condition = ids.eq('').or(ids.matches_any(
+            species.id,
+            "#{species.id},%",
+            "%,#{species.id},%",
+            "%,#{species.id}"
+          ))
+        else
+          condition = items[:species_support_ids].eq(species.id.to_s)
+        end
       elsif @property == 'description' || @property.blank?
         column = @property == 'description' ? :description : :name
         condition = items[column].matches("%#{self}%")

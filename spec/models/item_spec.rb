@@ -143,6 +143,16 @@ describe Item do
       Item.search('-species:aisha').count.should == 1
     end
     
+    specify "should search by only:species" do
+      Factory.create :item, :species_support_ids => [1], :name => 'a'
+      Factory.create :item, :species_support_ids => [1,2], :name => 'b'
+      Factory.create :item, :species_support_ids => [], :name => 'c'
+      Item.search('only:acara').map(&:name).should == ['a']
+      Item.search('only:aisha').count.should == 0
+      Item.search('-only:acara').map(&:name).should == ['b', 'c']
+      Item.search('-only:aisha').map(&:name).should == ['a', 'b', 'c']
+    end
+    
     specify "should be able to negate word in search" do
       query_should 'hat -blue',
         :return => [
