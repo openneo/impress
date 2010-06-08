@@ -123,7 +123,7 @@ function Item(id) {
   this.assets_by_body_id = {};
   
   this.load = function (pet_type) {
-    var url = '/' + id + '/bodies/' + pet_type.body_id + '/swf_assets.json',
+    var url = '/items/' + id + '/bodies/' + pet_type.body_id + '/swf_assets.json',
       item = this;
     if(this.getAssetsForPetType(pet_type).length) {
       pet_type.onUpdate();
@@ -136,7 +136,7 @@ function Item(id) {
   
   this.loadAllStandard = function () {
     var item = this;
-    $.getJSON('/' + id + '/swf_assets.json', function (assets_by_body_id) {
+    $.getJSON('/items/' + id + '/swf_assets.json', function (assets_by_body_id) {
       $.each(assets_by_body_id, function (i) {
         item.assets_by_body_id[parseInt(i)] = this;
       });
