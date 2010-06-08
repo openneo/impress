@@ -9,11 +9,12 @@
 #item-preview
   #item-preview-species= standard_species_images(@item.supported_species)
   #item-preview-error
-  #item-preview-swf{'data-impress-host' => RemoteImpressHost}
+  #item-preview-swf
     Javascript and Flash are required to preview wearables. Sorry!
 
 :javascript
-  var CURRENT_ITEM_ZONES_RESTRICT = #{@item.zones_restrict.inspect};
+  var CURRENT_ITEM_ZONES_RESTRICT = #{@item.zones_restrict.inspect},
+    IMPRESS_HOST = #{RemoteImpressHost.inspect};
 
 - content_for :javascripts do
   = javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js',

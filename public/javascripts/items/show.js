@@ -1,6 +1,5 @@
 var PREVIEW_SWF_ID = 'item-preview-swf',
   PREVIEW_SWF = document.getElementById(PREVIEW_SWF_ID),
-  IMPRESS_HOST = PREVIEW_SWF.getAttribute('data-impress-host'),
   speciesList = $('#item-preview a'),
   MainWardrobe;
 
