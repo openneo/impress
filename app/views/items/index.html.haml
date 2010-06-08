@@ -11,3 +11,19 @@
     = will_paginate @results
     = render @results
     = will_paginate @results
+- else
+  #search-help
+    %h2 Find what you're looking for
+    %dl
+      %dt negg
+      %dd returns any item with the word "negg" in it
+      %dt floating doll
+      %dd returns any item with the words "floating" and "doll" in it
+      %dt "easter negg"
+      %dd returns any item with the phrase "easter negg" in it
+      %dt species:shoyru
+      %dd returns any item a Shoyru can wear
+      
+  #species-search-links
+    %h2 Can't decide? Search by species
+    = standard_species_search_links

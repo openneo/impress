@@ -541,7 +541,7 @@ h1 a:hover {
 }
 
 /* line 88, ../../../app/stylesheets/screen.scss */
-a.item img {
+a img {
   -moz-opacity: 0.9;
   -webkit-opacity: 0.9;
   -o-opacity: 0.9;
@@ -550,8 +550,8 @@ a.item img {
   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90);
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90);
 }
-/* line 91, ../../../app/stylesheets/screen.scss */
-a.item:hover img {
+/* line 92, ../../../app/stylesheets/screen.scss */
+a:hover img, a:focus img {
   -moz-opacity: 1;
   -webkit-opacity: 1;
   -o-opacity: 1;
@@ -577,6 +577,46 @@ a.item:hover img {
   font-family: Delicious;
   font-style: italic;
   src: url("http://impress.openneo.net/assets/fonts/Delicious-Italic.otf");
+}
+
+/* line 1, ../../../app/stylesheets/items/_index.scss */
+form {
+  margin-bottom: 2em;
+}
+
+/* line 14, ../../../app/stylesheets/items/_index.scss */
+#search-help {
+  float: left;
+  width: 49%;
+  padding-right: 1%;
+}
+/* line 9, ../../../app/stylesheets/items/_index.scss */
+#search-help h2 {
+  font-size: 125%;
+}
+/* line 18, ../../../app/stylesheets/items/_index.scss */
+#search-help dl {
+  text-align: left;
+}
+/* line 22, ../../../app/stylesheets/items/_index.scss */
+#search-help dd {
+  margin-bottom: 1em;
+}
+
+/* line 27, ../../../app/stylesheets/items/_index.scss */
+#species-search-links {
+  float: left;
+  width: 49%;
+  padding-left: 1%;
+}
+/* line 9, ../../../app/stylesheets/items/_index.scss */
+#species-search-links h2 {
+  font-size: 125%;
+}
+/* line 32, ../../../app/stylesheets/items/_index.scss */
+#species-search-links img {
+  height: 80px;
+  width: 80px;
 }
 
 /* line 2, ../../../app/stylesheets/items/_show.scss */

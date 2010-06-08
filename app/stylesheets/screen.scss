@@ -84,12 +84,14 @@ h1 a {
   }
 }
 
-a.item {
+a {
   img {
     @include opacity(.9);
   }
-  &:hover img {
-    @include opacity(1);
+  &:hover, &:focus {
+    img {
+      @include opacity(1);
+    }
   }
 }
 
@@ -115,4 +117,5 @@ a.item {
 	src: url('http://impress.openneo.net/assets/fonts/Delicious-Italic.otf');
 }
 
+@import "items/index";
 @import "items/show";

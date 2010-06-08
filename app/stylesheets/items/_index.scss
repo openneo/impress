@@ -1,0 +1,36 @@
+form {
+  margin-bottom: 2em;
+}
+
+@mixin main_unit {
+  float: left;
+  width: 49%;
+  
+  h2 {
+    font-size: 125%;
+  }
+}
+
+#search-help {
+  @include main_unit;
+  padding-right: 1%;
+  
+  dl {
+    text-align: left;
+  }
+  
+  dd {
+    margin-bottom: 1em;
+  }
+}
+
+#species-search-links {
+  @include main_unit;
+  
+  padding-left: 1%;
+  
+  img {
+    height: 80px;
+    width: 80px;
+  }
+}

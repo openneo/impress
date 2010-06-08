@@ -1,12 +1,33 @@
 module ItemsHelper
-  StandardSpeciesImageFormat = 'http://pets.neopets.com/cp/%s/1/1.png'
+  module PetTypeImage
+    Format = 'http://pets.neopets.com/cp/%s/%i/%i.png'
+    
+    Emotions = {
+      :happy => 1,
+      :sad => 2,
+      :angry => 3,
+      :ill => 4
+    }
+    
+    Sizes = {
+      :face => 1,
+      :thumb => 2,
+      :zoom => 3,
+      :full => 4
+    }
+  end
   
-  def standard_species_images(species_list)
-    pet_types = PetType.random_basic_per_species(species_list.map(&:id))
-    raw(pet_types.inject('') do |html, pet_type|
-      src = sprintf(StandardSpeciesImageFormat, pet_type.image_hash)
-      human_name = pet_type.species.name.humanize
-      image = image_tag(src, :alt => human_name, :title => human_name)
+  def standard_species_search_links
+    build_on_random_standard_pet_types(Species.all) do |pet_type|
+      image = pet_type_image(pet_type, :happy, :zoom)
+      query = "species:#{pet_type.species.name}"
+      link_to(image, items_path(:q => query))
+    end
+  end
+  
+  def standard_species_images(species)
+    build_on_random_standard_pet_types(species) do |pet_type|
+      image = pet_type_image(pet_type, :happy, :face)
       attributes = {
         'data-id' => pet_type.id,
         'data-body-id' => pet_type.body_id
@@ -18,11 +39,25 @@ module ItemsHelper
             pet_type_attribute.send(subattribute_name)
         end
       end
-      html + link_to(
+      link_to(
         image,
         '#',
         attributes
       )
-    end)
+    end
+  end
+  
+  private
+  
+  def build_on_random_standard_pet_types(species, &block)
+    raw(PetType.random_basic_per_species(species.map(&:id)).map(&block).join)
+  end
+  
+  def pet_type_image(pet_type, emotion, size)
+    emotion_id = PetTypeImage::Emotions[emotion]
+    size_id = PetTypeImage::Sizes[size]
+    src = sprintf(PetTypeImage::Format, pet_type.image_hash, emotion_id, size_id)
+    human_name = pet_type.species.name.humanize
+    image_tag(src, :alt => human_name, :title => human_name)
   end
 end
