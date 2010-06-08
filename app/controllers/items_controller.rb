@@ -1,7 +1,8 @@
 class ItemsController < ApplicationController
+  before_filter :set_query
+  
   def index
     if params.has_key?(:q)
-      @query = params[:q]
       begin
         @results = Item.search(@query).alphabetize.paginate :page => params[:page]
       rescue
@@ -12,5 +13,11 @@ class ItemsController < ApplicationController
   
   def show
     @item = Item.find params[:id]
+  end
+  
+  private
+  
+  def set_query
+    @query = params[:q]
   end
 end
