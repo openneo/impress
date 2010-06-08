@@ -4,7 +4,7 @@ var PREVIEW_SWF_ID = 'item-preview-swf',
   speciesList = $('#item-preview a'),
   MainWardrobe;
 
-if(console === undefined || console.log === undefined) {
+if(typeof console == 'undefined' || typeof console.log == 'undefined') {
   function log() {}
 } else {
   log = $.proxy(console, 'log');
@@ -74,7 +74,6 @@ function PetType() {
     speciesList.filter('.current').removeClass('current');
     this.link.addClass('current');
     if(this.activated) {
-      Preview.enable();
       this.load();
     } else {
       showDeactivationMsg();
@@ -247,6 +246,8 @@ speciesList.each(function () {
     pet_type.setAsCurrent();
   });
 });
+
+Preview.enable();
 
 setTimeout($.proxy(Item.current, 'loadAllStandard'), 5000);
 
