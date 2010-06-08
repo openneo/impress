@@ -58,6 +58,12 @@ function PetType() {
     img.src = img.src.replace('/1/', '/2/');
   }
   
+  this.deactivateWithItem = function (item) {
+    pet_type.deactivate(Item.LOAD_ERROR, {
+      item: item.name
+    });
+  }
+  
   this.load = function () {
     Item.current.load(this);
     loadAssets();
@@ -100,9 +106,13 @@ PetType.all = [];
 PetType.all.load = function () {
   var body_ids = $.map(PetType.all, function (pt) { return pt.body_id });
   $.getJSON(Item.current.assets_url_base, {body_id: body_ids}, function (assets_by_body_id) {
+    $.each(assets_by_body_id, function (i) {
+      Item.current.assets_by_body_id[parseInt(i)] = this;
+    });
     $.each(PetType.all, function () {
-      var assets = assets_by_body_id[this.body_id] || [];
-      Item.current.setAssetsForPetType(assets, this);
+      if(Item.current.getAssetsForPetType(this).length == 0) {
+        this.deactivateWithItem(Item.current);
+      }
     });
   });
 }
@@ -139,7 +149,7 @@ function Item(id) {
   }
   
   this.getAssetsForPetType = function (pet_type) {
-    return this.assets_by_body_id[pet_type.body_id] || [];
+    return this.assets_by_body_id[pet_type.body_id] || this.assets_by_body_id[0] || [];
   }
   
   this.setAsCurrent = function () {
@@ -151,9 +161,7 @@ function Item(id) {
       this.assets_by_body_id[pet_type.body_id] = assets;
       pet_type.onUpdate();
     } else {
-      pet_type.deactivate(Item.LOAD_ERROR, {
-        item: this.name
-      });
+      pet_type.deactivateWithItem(this);
     }
   }
 }
