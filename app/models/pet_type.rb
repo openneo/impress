@@ -3,6 +3,11 @@ class PetType < ActiveRecord::Base
   
   BasicHashes = YAML::load_file(Rails.root.join('config', 'basic_type_hashes.yml'))
   
+  
+  StandardBodyIds = PetType.select(arel_table[:body_id]).
+    where(arel_table[:color_id].in(Color::BasicIds)).
+    group(arel_table[:species_id]).map(&:body_id)
+  
   scope :random_basic_per_species, lambda { |species_ids|
     conditions = nil
     species_ids.each do |species_id|

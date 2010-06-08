@@ -6,10 +6,14 @@ class SwfAsset < ActiveRecord::Base
   delegate :depth, :to => :zone
   
   scope :for_json, includes(:zone)
-  scope :fitting_body_id, lambda { |body_ids|
-    body_ids = [body_ids] unless body_ids.is_a?(Array)
-    body_ids << 0
-    where(arel_table[:body_id].in(body_ids))
+  
+  scope :fitting_body_id, lambda { |body_id|
+    where(arel_table[:body_id].in([body_id, 0]))
+  }
+  
+  BodyIdsFittingStandard = PetType::StandardBodyIds + [0]
+  scope :fitting_standard_body_ids, lambda {
+    where(arel_table[:body_id].in(BodyIdsFittingStandard))
   }
   
   def local_url

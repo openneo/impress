@@ -103,19 +103,6 @@ function PetType() {
 }
 
 PetType.all = [];
-PetType.all.load = function () {
-  var body_ids = $.map(PetType.all, function (pt) { return pt.body_id });
-  $.getJSON(Item.current.assets_url_base, {body_id: body_ids}, function (assets_by_body_id) {
-    $.each(assets_by_body_id, function (i) {
-      Item.current.assets_by_body_id[parseInt(i)] = this;
-    });
-    $.each(PetType.all, function () {
-      if(Item.current.getAssetsForPetType(this).length == 0) {
-        this.deactivateWithItem(Item.current);
-      }
-    });
-  });
-}
 
 PetType.LOAD_ERROR = new LoadError("$color_article $color $species");
 PetType.DASH_REGEX = /-/g;
@@ -134,10 +121,9 @@ PetType.createFromLink = function (link) {
 
 function Item(id) {
   this.assets_by_body_id = {};
-  this.assets_url_base = '/' + id + '/swf_assets.json';
   
   this.load = function (pet_type) {
-    var url = this.assets_url_base + '?body_id=' + pet_type.body_id,
+    var url = '/' + id + '/bodies/' + pet_type.body_id + '/swf_assets.json',
       item = this;
     if(this.getAssetsForPetType(pet_type).length) {
       pet_type.onUpdate();
@@ -146,6 +132,20 @@ function Item(id) {
         item.setAssetsForPetType(data, pet_type);
       });
     }
+  }
+  
+  this.loadAllStandard = function () {
+    var item = this;
+    $.getJSON('/' + id + '/swf_assets.json', function (assets_by_body_id) {
+      $.each(assets_by_body_id, function (i) {
+        item.assets_by_body_id[parseInt(i)] = this;
+      });
+      $.each(PetType.all, function () {
+        if(item.getAssetsForPetType(this).length == 0) {
+          this.deactivateWithItem(item);
+        }
+      });
+    });
   }
   
   this.getAssetsForPetType = function (pet_type) {
@@ -248,6 +248,6 @@ speciesList.each(function () {
   });
 });
 
-setTimeout(PetType.all.load, 5000);
+setTimeout($.proxy(Item.current, 'loadAllStandard'), 5000);
 
 MainWardrobe = { View: { Outfit: Preview } };
