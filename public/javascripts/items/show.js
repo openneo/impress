@@ -74,6 +74,7 @@ function PetType() {
     speciesList.filter('.current').removeClass('current');
     this.link.addClass('current');
     if(this.activated) {
+      Preview.enable();
       this.load();
     } else {
       showDeactivationMsg();
@@ -246,8 +247,6 @@ speciesList.each(function () {
     pet_type.setAsCurrent();
   });
 });
-
-Preview.enable();
 
 setTimeout($.proxy(Item.current, 'loadAllStandard'), 5000);
 
