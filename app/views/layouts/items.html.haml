@@ -11,4 +11,6 @@
         = text_field_tag :q, @query
         = submit_tag 'Search', :name => nil
       = yield
+      %a#impress-link{:href => "http://#{RemoteImpressHost}"}
+        %span Dress to Impress
       = yield(:javascripts)

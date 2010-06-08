@@ -561,6 +561,29 @@ a:hover img, a:focus img {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
 }
 
+/* line 98, ../../../app/stylesheets/screen.scss */
+#impress-link {
+  font-size: 125%;
+  font-weight: bold;
+  left: .5em;
+  padding: .5em;
+  text-decoration: none;
+  top: .5em;
+  position: absolute;
+}
+/* line 109, ../../../app/stylesheets/screen.scss */
+#impress-link:before {
+  content: "<< ";
+}
+/* line 113, ../../../app/stylesheets/screen.scss */
+#impress-link:hover {
+  background: #66a3d2;
+}
+/* line 117, ../../../app/stylesheets/screen.scss */
+#impress-link span {
+  text-decoration: underline;
+}
+
 /* A font by Jos Buivenga (exljbris) -> www.exljbris.nl */
 @font-face {
   font-family: Delicious;

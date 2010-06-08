@@ -95,6 +95,30 @@ a {
   }
 }
 
+#impress-link {
+  font: {
+    size: 125%;
+    weight: bold;
+  }
+  left: .5em;
+  padding: .5em;
+  text-decoration: none;
+  top: .5em;
+  position: absolute;
+  
+  &:before {
+    content: "<< ";
+  }
+  
+  &:hover {
+    background: $module_background_color;
+  }
+  
+  span {
+    text-decoration: underline;
+  }
+}
+
 /* A font by Jos Buivenga (exljbris) -> www.exljbris.nl */
 @font-face {
 	font-family: Delicious;
