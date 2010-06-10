@@ -11,6 +11,12 @@ class Item < ActiveRecord::Base
   
   scope :alphabetize, order('name ASC')
   
+  scope :occupying_zone, lambda { |zone_id|
+    joins('INNER JOIN parents_swf_assets psa ON psa.swf_asset_type = "object" AND psa.parent_id = objects.id').
+    joins('INNER JOIN swf_assets sa ON sa.id = psa.swf_asset_id').
+    where('sa.zone_id = ?', zone_id)
+  }
+  
   # Not defining validations, since this app is currently read-only
   
   def species_support_ids
