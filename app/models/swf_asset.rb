@@ -1,11 +1,7 @@
 class SwfAsset < ActiveRecord::Base
   set_inheritance_column 'inheritance_type'
   
-  belongs_to :zone
-  
   delegate :depth, :to => :zone
-  
-  scope :for_json, includes(:zone)
   
   scope :fitting_body_id, lambda { |body_id|
     where(arel_table[:body_id].in([body_id, 0]))
@@ -32,5 +28,9 @@ class SwfAsset < ActiveRecord::Base
       :body_id => body_id,
       :zone_id => zone_id
     }
+  end
+  
+  def zone
+    @zone ||= Zone.find(zone_id)
   end
 end
