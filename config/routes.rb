@@ -1,5 +1,6 @@
 OpenneoImpressItems::Application.routes.draw do |map|
   match '/' => 'items#index', :as => :items
+  match '/index.js' => 'items#index', :format => :js
   match '/:id' => 'items#show', :as => :item
   
   match '/items/:item_id/swf_assets.json' => 'swf_assets#index', :as => :item_swf_assets

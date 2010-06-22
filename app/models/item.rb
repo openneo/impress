@@ -55,6 +55,16 @@ class Item < ActiveRecord::Base
     end
   end
   
+  def as_json(options = {})
+    {
+      :description => description,
+      :id => id,
+      :name => name,
+      :thumbnail_url => thumbnail_url,
+      :zones_restrict => zones_restrict
+    }
+  end
+  
   private
   
   SearchFilterScopes = []
