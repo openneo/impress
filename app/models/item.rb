@@ -11,11 +11,9 @@ class Item < ActiveRecord::Base
   
   scope :alphabetize, order('name ASC')
   
-  scope :occupying_zone, lambda { |zone_id|
-    joins('INNER JOIN parents_swf_assets psa ON psa.swf_asset_type = "object" AND psa.parent_id = objects.id').
-    joins('INNER JOIN swf_assets sa ON sa.id = psa.swf_asset_id').
-    where('sa.zone_id = ?', zone_id)
-  }
+  scope :join_swf_assets, joins('INNER JOIN parents_swf_assets psa ON psa.swf_asset_type = "object" AND psa.parent_id = objects.id').
+    joins('INNER JOIN swf_assets ON swf_assets.id = psa.swf_asset_id').
+    group('objects.id')
   
   # Not defining validations, since this app is currently read-only
   
@@ -45,23 +43,66 @@ class Item < ActiveRecord::Base
       elsif c == '"'
         in_phrase = !in_phrase
       elsif c == ':' && !in_phrase
-        query_conditions.last.to_property!
+        query_conditions.last.to_filter!
       elsif c == '-' && !in_phrase && query_conditions.last.empty?
         query_conditions.last.negate!
       else
         query_conditions.last << c
       end
     end
-    query_conditions.inject(self) do |scope, condition|
+    query_conditions.inject(self.scoped) do |scope, condition|
       condition.narrow(scope)
     end
   end
   
   private
   
+  SearchFilterScopes = []
+  
+  def self.search_filter(name, args={})
+    SearchFilterScopes << name.to_s
+    scope "search_filter_#{name}", lambda { |str, negative|
+      condition = yield(str)
+      condition = condition.not if negative
+      rel = where(condition)
+      rel = rel & args[:scope] if args[:scope]
+      rel
+    }
+  end
+  
+  search_filter :name do |name|
+    arel_table[:name].matches("%#{name}%")
+  end
+  
+  search_filter :description do |description|
+    arel_table[:description].matches("%#{description}%")
+  end
+  
+  search_filter :only do |species_name|
+    id = Species.require_by_name(species_name).id
+    arel_table[:species_support_ids].eq(id.to_s)
+  end
+  
+  search_filter :species do |species_name|
+    id = Species.require_by_name(species_name).id
+    ids = arel_table[:species_support_ids]
+    ids.eq('').or(ids.matches_any(
+      id,
+      "#{id},%",
+      "%,#{id},%",
+      "%,#{id}"
+    ))
+  end
+  
+  search_filter :type, {:scope => join_swf_assets} do |zone_set_name|
+    zone_set = Zone::ItemZoneSets[zone_set_name]
+    raise ArgumentError, "Type \"#{zone_set_name}\" does not exist" unless zone_set
+    SwfAsset.arel_table[:zone_id].in(zone_set.map(&:id))
+  end
+  
   class Condition < String
-    def to_property!
-      @property = self.clone
+    def to_filter!
+      @filter = self.clone
       self.replace ''
     end
     
@@ -70,35 +111,19 @@ class Item < ActiveRecord::Base
     end
     
     def narrow(scope)
-      items = Table(:objects)
-      if @property == 'species' || @property == 'only'
-        species = Species.find_by_name(self)
-        raise ArgumentError, "Species \"#{self.humanize}\" does not exist" unless species
-        # TODO: add a many-to-many table to handle this relationship, if
-        # performance becomes an issue
-        ids = items[:species_support_ids]
-        if @property == 'species'
-          condition = ids.eq('').or(ids.matches_any(
-            species.id,
-            "#{species.id},%",
-            "%,#{species.id},%",
-            "%,#{species.id}"
-          ))
-        else
-          condition = items[:species_support_ids].eq(species.id.to_s)
-        end
-      elsif @property == 'description' || @property.blank?
-        column = @property == 'description' ? :description : :name
-        condition = items[column].matches("%#{self}%")
+      if SearchFilterScopes.include?(filter)
+        scope & Item.send("search_filter_#{filter}", self, @negative)
       else
-        raise ArgumentError, "Unknown search filter \"#{@property}\""
+        raise ArgumentError, "Filter #{filter} does not exist"
       end
-      condition = condition.not if @negative
-      scope.where(condition)
+    end
+    
+    def filter
+      @filter || 'name'
     end
     
     def inspect
-      @property ? "#{@property}:#{super}" : super
+      @filter ? "#{@filter}:#{super}" : super
     end
   end
 end

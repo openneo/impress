@@ -42,7 +42,7 @@ function PetType() {
   var pet_type = this, loaded_data = false, loaded_assets = false;
   
   this.activated = true;
-  this.assets = true;
+  this.assets = [];
   
   this.deactivate = function (error, args) {
     var msg;
@@ -182,20 +182,17 @@ Item.createFromLocation = function () {
 Preview = new function Preview() {
   var swf_id, swf, updateWhenFlashReady = false;
   
-  this.setFlashIsReady = function () {
+  window.previewSWFIsReady = function () {
     swf = document.getElementById(swf_id);
     if(updateWhenFlashReady) this.update();
   }
   
   this.update = function (assets) {
-    var assets = [], asset_sources = [
-      PetType.current.assets,
-      Item.current.getAssetsForPetType(PetType.current)
-    ];
+    var assets;
     if(swf) {
-      $.each(asset_sources, function () {
-        assets = assets.concat(this);
-      });
+      assets = PetType.current.assets.concat(
+        Item.current.getAssetsForPetType(PetType.current)
+      );
       assets = $.grep(assets, function (asset) {
         var visible = $.inArray(asset.zone_id, Item.current.restricted_zones) == -1;
         if(visible) asset.local_path = asset.local_url;
@@ -249,4 +246,4 @@ speciesList.each(function () {
 
 setTimeout($.proxy(Item.current, 'loadAllStandard'), 5000);
 
-MainWardrobe = { View: { Outfit: Preview } };
+var SWFLog = $.noop;
