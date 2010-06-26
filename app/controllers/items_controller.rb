@@ -18,8 +18,13 @@ class ItemsController < ApplicationController
       rescue
         respond_to do |format|
           format.html { flash.now[:error] = $!.message }
-          format.js { render :json => {:error => $!.message}, :status => :bad_request, :callback => params[:callback] }
+          format.js { render :json => {:error => $!.message}, :callback => params[:callback] }
         end
+      end
+    else
+      respond_to do |format|
+        format.html { render }
+        format.js { render :json => {:error => '$q required'}}
       end
     end
   end
