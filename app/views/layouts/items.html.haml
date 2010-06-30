@@ -14,4 +14,14 @@
       = yield
       %a#home-link{:href => "http://#{RemoteImpressHost}"}
         %span Dress to Impress
+      #footer
+        %ul
+          %li= link_to 'OpenNeo', 'http://www.openneo.net/'
+          %li= link_to 'Blog', 'http://blog.openneo.net/' 
+          %li= link_to 'The Source Code', 'http://github.com/matchu/openneo-impress' 
+          %li= link_to 'Forum', 'http://forum.openneo.net/' 
+          %li= link_to 'Terms of Use', "http://#{RemoteImpressHost}/terms.html"
+        %p
+          Images &copy; 2000-2010 Neopets, Inc. All Rights Reserved.
+          Used With Permission
       = yield(:javascripts)
