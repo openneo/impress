@@ -249,4 +249,6 @@ speciesList.each(function () {
 
 setTimeout($.proxy(Item.current, 'loadAllStandard'), 5000);
 
+window.MainWardrobe = {View: {Outfit: {setFlashIsReady: previewSWFIsReady}}}
+
 var SWFLog = $.noop;
