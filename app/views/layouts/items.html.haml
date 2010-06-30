@@ -2,7 +2,8 @@
 %html
   %head
     %title Infinite Closet
-    = stylesheet_link_tag 'compiled/screen'
+    = stylesheet_link_tag "http://#{RemoteImpressHost}/assets/css/clean/layout.css"
+    = stylesheet_link_tag "compiled/screen"
   %body{:class => params[:action]}
     #container
       %h1= link_to 'Infinite Closet', items_path
@@ -11,6 +12,6 @@
         = text_field_tag :q, @query
         = submit_tag 'Search', :name => nil
       = yield
-      %a#impress-link{:href => "http://#{RemoteImpressHost}"}
+      %a#home-link{:href => "http://#{RemoteImpressHost}"}
         %span Dress to Impress
       = yield(:javascripts)

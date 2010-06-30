@@ -1,6 +1,6 @@
 body.show {
   header {
-    border-bottom: 1px solid $module_border_color;
+    border-bottom: 1px solid $module-border-color;
     display: block;
     margin-bottom: 1em;
     padding: 1em 0;
@@ -8,7 +8,7 @@ body.show {
   
   #item-thumbnail {
     @include inline-block;
-    border: 1px solid $module_border_color;
+    border: 1px solid $module-border-color;
     height: 80px;
     margin-right: .5em;
     width: 80px;
@@ -37,8 +37,8 @@ body.show {
       @include inline-block;
       
       &.current {
-        background: $module_background_color;
-        outline: 1px solid $module_border_color;
+        background: $module-bg-color;
+        outline: 1px solid $module-border-color;
       }
       
       &.deactivated {
