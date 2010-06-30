@@ -210,7 +210,7 @@ Preview = new function Preview() {
   this.embed = function (id) {
     swf_id = id;
     swfobject.embedSWF(
-      impressUrl('/assets/swf/preview.swf'), // URL
+      impressUrl('/assets/swf/preview.swf?v=2'), // URL
       id, // ID
       '100%', // width
       '100%', // height
