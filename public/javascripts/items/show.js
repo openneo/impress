@@ -180,16 +180,18 @@ Item.createFromLocation = function () {
 }
 
 Preview = new function Preview() {
-  var swf_id, swf, updateWhenFlashReady = false;
+  var preview = this, swf_id, swf, update_when_swf_ready = false;
   
   window.previewSWFIsReady = function () {
+    log('preview SWF is ready');
     swf = document.getElementById(swf_id);
-    if(updateWhenFlashReady) this.update();
+    if(update_when_swf_ready) preview.update();
   }
   
   this.update = function (assets) {
     var assets;
     if(swf) {
+      log('now doing update');
       assets = PetType.current.assets.concat(
         Item.current.getAssetsForPetType(PetType.current)
       );
@@ -200,7 +202,8 @@ Preview = new function Preview() {
       });
       swf.setAssets(assets);
     } else {
-      updateWhenFlashReady = true;
+      log('putting off update');
+      update_when_swf_ready = true;
     }
   }
   
@@ -237,11 +240,11 @@ Item.current.name = $('#item-name').text();
 PetType.createFromLink(speciesList.eq(Math.floor(Math.random()*speciesList.length))).setAsCurrent();
 
 speciesList.each(function () {
-  var pet_type = PetType.createFromLink($(this));
-  $(this).click(function (e) {
-    e.preventDefault();
-    pet_type.setAsCurrent();
-  });
+  var el = $(this);
+  el.data('pet_type', PetType.createFromLink(el));
+}).live('click', function (e) {
+  e.preventDefault();
+  $(this).data('pet_type').setAsCurrent();
 });
 
 setTimeout($.proxy(Item.current, 'loadAllStandard'), 5000);
