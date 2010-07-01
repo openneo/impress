@@ -6,7 +6,10 @@
     = stylesheet_link_tag "compiled/screen"
   %body{:class => params[:action]}
     #container
-      %h1= link_to 'Infinite Closet', items_path
+      %h1
+        = link_to items_path do
+          = image_tag 'http://images.neopets.com/items/mall_floatingneggfaerie.gif'
+          %span Infinite Closet
       = flashes
       = form_tag items_path, :method => :get do
         = text_field_tag :q, @query

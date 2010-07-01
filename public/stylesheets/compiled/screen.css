@@ -9,6 +9,29 @@ input[type=text] {
   width: 15em;
 }
 
+/* line 13, ../../../app/stylesheets/screen.scss */
+h1 {
+  margin-bottom: 1em;
+}
+/* line 15, ../../../app/stylesheets/screen.scss */
+h1 img {
+  height: 80px;
+  margin-bottom: -0.5em;
+  width: 80px;
+}
+/* line 21, ../../../app/stylesheets/screen.scss */
+h1 a {
+  text-decoration: none;
+}
+/* line 24, ../../../app/stylesheets/screen.scss */
+h1 a span {
+  text-decoration: underline;
+}
+/* line 28, ../../../app/stylesheets/screen.scss */
+h1 a:hover span {
+  text-decoration: none;
+}
+
 /* line 1, ../../../app/stylesheets/items/_index.scss */
 form {
   margin-bottom: 2em;

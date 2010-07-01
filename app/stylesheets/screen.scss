@@ -10,5 +10,26 @@ input[type=text] {
   width: 15em;
 }
 
+h1 {
+  margin-bottom: 1em;
+  img {
+    height: 80px;
+    margin-bottom: -.5em;
+    width: 80px;
+  }
+  
+  a {
+    text-decoration: none;
+    
+    span {
+      text-decoration: underline;
+    }
+    
+    &:hover span {
+      text-decoration: none;
+    }
+  }
+}
+
 @import "items/index";
 @import "items/show";
