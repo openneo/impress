@@ -1,11 +1,6 @@
 --- 
-hash: 69933c49c3e95c92aa2fa74961dcafc1b817fff7
+hash: a126f60340d5ff8894e44c49aca44bfd89843564
 sources: 
-- Git: 
-    git: git://github.com/thoughtbot/factory_girl.git
-    branch: rails3
-    uri: git://github.com/thoughtbot/factory_girl.git
-    ref: feac7298352a83fef0717d8beadd2eda9aabfe56
 - Git: 
     git: http://github.com/mislav/will_paginate.git
     branch: rails3
@@ -63,37 +58,38 @@ specs:
 - diff-lcs: 
     version: 1.1.2
 - factory_girl: 
-    version: 1.2.3
-    source: 0
-- mysql: 
-    version: 2.8.1
-- nokogiri: 
-    version: 1.4.2
+    version: 1.3.1
 - thor: 
     version: 0.13.7
 - railties: 
     version: 3.0.0.beta4
 - rails: 
     version: 3.0.0.beta4
+- factory_girl_rails: 
+    version: "1.0"
+- mysql: 
+    version: 2.8.1
+- nokogiri: 
+    version: 1.4.2
 - rdiscount: 
     version: 1.6.5
 - rspec-core: 
-    version: 2.0.0.beta.14
+    version: 2.0.0.beta.16
 - rspec-expectations: 
-    version: 2.0.0.beta.14
+    version: 2.0.0.beta.16
 - rspec-mocks: 
-    version: 2.0.0.beta.14
+    version: 2.0.0.beta.16
 - rspec: 
-    version: 2.0.0.beta.14
+    version: 2.0.0.beta.16
 - webrat: 
     version: 0.7.1
 - rspec-rails: 
-    version: 2.0.0.beta.14.2
+    version: 2.0.0.beta.16
 - sqlite3-ruby: 
-    version: 1.3.0
+    version: 1.3.1
 - will_paginate: 
     version: 3.0.pre
-    source: 1
+    source: 0
 dependencies: 
   rails: 
     version: = 3.0.0.beta4
@@ -129,7 +125,7 @@ dependencies:
     version: ">= 2.0.0.beta.8"
     group: 
     - :test
-  factory_girl: 
+  factory_girl_rails: 
     version: ">= 0"
     group: 
     - :test

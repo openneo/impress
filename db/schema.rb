@@ -43,12 +43,12 @@ ActiveRecord::Schema.define(:version => 24) do
     t.string    "category",            :limit => 50,  :null => false
     t.string    "type",                :limit => 50,  :null => false
     t.string    "rarity",              :limit => 25,  :null => false
-    t.integer   "rarity_index",        :limit => 1,   :null => false
+    t.integer   "rarity_index",        :limit => 2,   :null => false
     t.integer   "price",               :limit => 3,   :null => false
     t.integer   "weight_lbs",          :limit => 2,   :null => false
     t.text      "species_support_ids"
     t.integer   "sold_in_mall",        :limit => 1,   :null => false
-    t.timestamp "last_spidered"
+    t.timestamp "last_spidered",                      :null => false
   end
 
   add_index "objects", ["last_spidered"], :name => "objects_last_spidered"
@@ -63,6 +63,12 @@ ActiveRecord::Schema.define(:version => 24) do
   add_index "parents_swf_assets", ["parent_id", "swf_asset_id", "swf_asset_type"], :name => "unique_parents_swf_assets", :unique => true
   add_index "parents_swf_assets", ["parent_id"], :name => "parent_swf_assets_parent_id"
   add_index "parents_swf_assets", ["swf_asset_id"], :name => "parents_swf_assets_swf_asset_id"
+
+  create_table "pet_loads", :force => true do |t|
+    t.string    "pet_name",   :limit => 20, :null => false
+    t.text      "amf",                      :null => false
+    t.timestamp "created_at",               :null => false
+  end
 
   create_table "pet_states", :force => true do |t|
     t.integer "pet_type_id",   :limit => 3,   :null => false
@@ -89,6 +95,10 @@ ActiveRecord::Schema.define(:version => 24) do
   add_index "pets", ["name"], :name => "pets_name", :unique => true
   add_index "pets", ["pet_type_id"], :name => "pets_pet_type_id"
 
+  create_table "schema_info", :id => false, :force => true do |t|
+    t.integer "version", :default => 0, :null => false
+  end
+
   create_table "swf_assets", :id => false, :force => true do |t|
     t.string    "type",           :limit => 0,   :null => false
     t.integer   "id",             :limit => 3,   :null => false
@@ -100,6 +110,7 @@ ActiveRecord::Schema.define(:version => 24) do
   end
 
   add_index "swf_assets", ["body_id"], :name => "swf_assets_body_id_and_object_id"
+  add_index "swf_assets", ["zone_id"], :name => "idx_swf_assets_zone_id"
 
   create_table "users", :force => true do |t|
     t.string  "name",           :limit => 20, :null => false

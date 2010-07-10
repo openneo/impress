@@ -88,6 +88,11 @@ class Item < ActiveRecord::Base
     arel_table[:description].matches("%#{description}%")
   end
   
+  search_filter :is do |is_what|
+    raise ArgumentError, "We don't know how an item can be \"#{is_what}\". Did you mean is:nc?" unless is_what == 'nc'
+    arel_table[:rarity_index].in([0, 500])
+  end
+  
   search_filter :only do |species_name|
     id = Species.require_by_name(species_name).id
     arel_table[:species_support_ids].eq(id.to_s)

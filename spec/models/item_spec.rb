@@ -153,6 +153,21 @@ describe Item do
       Item.search('-only:aisha').map(&:name).should == ['a', 'b', 'c']
     end
     
+    specify "should search by is:nc" do
+      Factory.create :item, :name => 'mall', :rarity_index => 500
+      Factory.create :item, :name => 'also mall', :rarity_index => 500
+      Factory.create :item, :name => 'only mall', :rarity_index => 0, :sold_in_mall => true
+      Factory.create :item, :name => 'not mall', :rarity_index => 400
+      Factory.create :item, :name => 'also not mall', :rarity_index => 101
+      Item.search('is:nc').map(&:name).should == ['mall', 'also mall', 'only mall']
+      Item.search('!is:nc').map(&:name).should == ['not mall', 'also not mall']
+    end
+    
+    specify "is:(anything but 'nc') should throw ArgumentError" do
+      lambda { Item.search('is:nc') }.should_not raise_error(ArgumentError)
+      lambda { Item.search('is:awesome') }.should raise_error(ArgumentError)
+    end
+    
     specify "should be able to negate word in search" do
       query_should 'hat -blue',
         :return => [
