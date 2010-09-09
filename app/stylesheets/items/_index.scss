@@ -2,6 +2,18 @@ form {
   margin-bottom: 2em;
 }
 
+.object .nc-icon {
+  height: 16px;
+  position: absolute;
+  right: ($object-width - $object-img-size) / 2 + $object-padding;
+  top: $object-img-size - $nc-icon-size;
+  width: 16px;
+  
+  &:hover {
+    @include opacity(.5);
+  }
+}
+
 @mixin main_unit {
   float: left;
   width: 49%;

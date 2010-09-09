@@ -3,11 +3,18 @@ class Zone < StaticResource
   ItemZoneSets = {}
   
   attr_reader *AttributeNames
+  # When selecting zones that an asset occupies, we allow the zone to set
+  # whether or not the zone is "sometimes" occupied. This is false by default.
+  attr_writer :sometimes
 
   def initialize(attributes)
     AttributeNames.each do |name|
       instance_variable_set "@#{name}", attributes[name]
     end
+  end
+  
+  def uncertain_label
+    @sometimes ? "#{label} sometimes" : label
   end
   
   n = 0

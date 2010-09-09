@@ -52,9 +52,9 @@ specs:
 - bundler: 
     version: 0.9.26
 - haml: 
-    version: 3.0.13
+    version: 3.0.17
 - compass: 
-    version: 0.10.2
+    version: 0.10.4
 - diff-lcs: 
     version: 1.1.2
 - factory_girl: 
@@ -70,7 +70,7 @@ specs:
 - mysql: 
     version: 2.8.1
 - nokogiri: 
-    version: 1.4.2
+    version: 1.4.3.1
 - rdiscount: 
     version: 1.6.5
 - rspec-core: 

@@ -1,4 +1,5 @@
 module ItemsHelper
+  NeoitemsURLFormat = 'http://neoitems.net/search2.php?Name=%s&AndOr=and&Category=All&Special=0&Status=Active&Sort=ItemID&results=15&SearchType=8'
   module PetTypeImage
     Format = 'http://pets.neopets.com/cp/%s/%i/%i.png'
     
@@ -45,6 +46,18 @@ module ItemsHelper
         attributes
       )
     end
+  end
+  
+  def list_zones(zones, method=:label)
+    zones.sort { |x,y| x.label <=> y.label }.map(&method).join(', ')
+  end
+  
+  def nc_icon_for(item)
+    image_tag 'nc.png', :title => 'NC Mall Item', :alt => 'NC', :class => 'nc-icon' if item.nc?
+  end
+  
+  def neoitems_url_for(item)
+    sprintf(NeoitemsURLFormat, CGI::escape(item.name))
   end
   
   private

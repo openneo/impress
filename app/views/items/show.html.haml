@@ -1,10 +1,28 @@
 %header
   = image_tag @item.thumbnail_url, :id => 'item-thumbnail'
-  %h2#item-name= @item.name
+  %div
+    %h2#item-name= @item.name
+    = nc_icon_for(@item)
+    - unless @item.rarity.empty?
+      == Rarity: #{@item.rarity_index} (#{@item.rarity})
+    %a.button{:href => neoitems_url_for(@item)} NeoItems
 
 %p= @item.description
 
-%h3 Preview
+#item-zones
+  %p
+    %strong Occupies:
+    = list_zones @item.occupied_zones, :uncertain_label
+  %p
+    %strong Restricts:
+    - if @item.restricted_zones.empty?
+      None
+    - else
+      = list_zones @item.restricted_zones
+
+#item-preview-header
+  %h3 Preview
+  %a#customize-more.button{:href => 'http://impress.openneo.net/'} Customize more
 
 #item-preview
   #item-preview-species= standard_species_images(@item.supported_species)

@@ -1,6 +1,9 @@
+// FIXME: pick a consistent javascript style! underscores for vars or camelCase?
+
 var PREVIEW_SWF_ID = 'item-preview-swf',
   PREVIEW_SWF = document.getElementById(PREVIEW_SWF_ID),
   speciesList = $('#item-preview a'),
+  customize_more_el = $('#customize-more'),
   MainWardrobe;
 
 if(typeof console == 'undefined' || typeof console.log == 'undefined') {
@@ -72,6 +75,9 @@ function PetType() {
     PetType.current = this;
     speciesList.filter('.current').removeClass('current');
     this.link.addClass('current');
+    customize_more_el.attr('href',
+      'http://impress.openneo.net/wardrobe?species=' + this.species_id + 
+      '&color=' + this.color_id + '&objects[]=' + Item.current.id);
     if(this.activated) {
       Preview.enable();
       this.load();
@@ -120,6 +126,7 @@ PetType.createFromLink = function (link) {
 
 function Item(id) {
   this.assets_by_body_id = {};
+  this.id = id;
   
   this.load = function (pet_type) {
     var url = '/items/' + id + '/bodies/' + pet_type.body_id + '/swf_assets.json',

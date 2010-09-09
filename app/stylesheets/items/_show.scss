@@ -4,10 +4,22 @@ body.show {
     display: block;
     margin-bottom: 1em;
     padding: 1em 0;
+    
+    div, img {
+      @include inline-block;
+    }
+    
+    div {
+      text-align: left;
+    }
+    
+    a {
+      font-size: 75%;
+      margin-left: 1em;
+    }
   }
   
   #item-thumbnail {
-    @include inline-block;
     border: 1px solid $module-border-color;
     height: 80px;
     margin-right: .5em;
@@ -15,8 +27,7 @@ body.show {
   }
   
   #item-name {
-    @include inline-block;
-    margin-top: 1em;
+    margin-bottom: 0;
   }
   
   #item-preview {
@@ -63,5 +74,34 @@ body.show {
     height: 300px;
     overflow: hidden;
     width: 300px;
+  }
+  
+  #item-zones {
+    font: {
+      family: $body-font;
+      size: 85%;
+    }
+    
+    p:first-child {
+      margin-bottom: .25em;
+    }
+  }
+  
+  #item-preview-header {
+    margin-top: 3em;
+    
+    h3, a {
+      @include inline-block;
+    }
+    
+    a {
+      font-size: 85%;
+      margin: -1.5em 0 0 1em
+    }
+  }
+  
+  .nc-icon {
+    height: 16px;
+    width: 16px;
   }
 }

@@ -3,6 +3,8 @@ class Item < ActiveRecord::Base
   
   SwfAssetType = 'object'
   
+  NCRarities = [0, 500]
+  
   set_table_name 'objects' # Neo & PHP Impress call them objects, but the class name is a conflict (duh!)
   set_inheritance_column 'inheritance_type' # PHP Impress used "type" to describe category
   
@@ -16,6 +18,39 @@ class Item < ActiveRecord::Base
     group('objects.id')
   
   # Not defining validations, since this app is currently read-only
+  
+  def nc?
+    NCRarities.include?(rarity_index)
+  end
+  
+  def restricted_zones
+    unless @restricted_zones
+      @restricted_zones = []
+      zones_restrict.split(//).each_with_index do |switch, id|
+        @restricted_zones << Zone.find(id.to_i + 1) if switch == '1'
+      end
+    end
+    @restricted_zones
+  end
+  
+  def occupied_zones
+    all_body_ids = []
+    zone_body_ids = {}
+    selected_assets = swf_assets.select('body_id, zone_id').each do |swf_asset|
+      zone_body_ids[swf_asset.zone_id] ||= []
+      body_ids = zone_body_ids[swf_asset.zone_id]
+      body_ids << swf_asset.body_id unless body_ids.include?(swf_asset.body_id)
+      all_body_ids << swf_asset.body_id unless all_body_ids.include?(swf_asset.body_id)
+    end
+    zones = []
+    total_body_ids = all_body_ids.size
+    zone_body_ids.each do |zone_id, body_ids|
+      zone = Zone.find(zone_id)
+      zone.sometimes = true if body_ids.size < total_body_ids
+      zones << zone
+    end
+    zones
+  end
   
   def species_support_ids
     @species_support_ids_array ||= read_attribute('species_support_ids').split(',').map(&:to_i)
@@ -91,7 +126,7 @@ class Item < ActiveRecord::Base
   
   search_filter :is do |is_what|
     raise ArgumentError, "We don't know how an item can be \"#{is_what}\". Did you mean is:nc?" unless is_what == 'nc'
-    arel_table[:rarity_index].in([0, 500])
+    arel_table[:rarity_index].in(NCRarities)
   end
   
   search_filter :only do |species_name|
