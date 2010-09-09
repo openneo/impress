@@ -61,7 +61,8 @@ class Item < ActiveRecord::Base
       :id => id,
       :name => name,
       :thumbnail_url => thumbnail_url,
-      :zones_restrict => zones_restrict
+      :zones_restrict => zones_restrict,
+      :rarity_index => rarity_index
     }
   end
   
