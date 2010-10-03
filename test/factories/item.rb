@@ -11,5 +11,5 @@ Factory.define :item do |i|
   i.weight_lbs 0
   i.species_support_ids ''
   i.sold_in_mall false
-  i.last_spidered 0
+  i.last_spidered Time.now
 end

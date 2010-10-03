@@ -24,6 +24,8 @@ describe Item do
     end
     
     specify "should have many swf_assets through parent_swf_asset_relationships" do
+      SwfAsset.delete_all
+      ParentSwfAssetRelationship.delete_all
       3.times do |n|
         swf_asset = Factory.create :swf_asset, :id => n, :url => "http://images.neopets.com/#{n}.swf", :type => 'object'
         ParentSwfAssetRelationship.create :swf_asset => swf_asset, :item => @item, :swf_asset_type => 'object'
@@ -39,6 +41,10 @@ describe Item do
   end
   
   context "class" do
+    before :each do
+      Item.delete_all # don't want search returning results from previous tests
+    end
+    
     specify "should search name for word" do
       query_should 'blue',
         :return => [
@@ -160,10 +166,10 @@ describe Item do
       Factory.create :item, :name => 'not mall', :rarity_index => 400
       Factory.create :item, :name => 'also not mall', :rarity_index => 101
       Item.search('is:nc').map(&:name).should == ['mall', 'also mall', 'only mall']
-      Item.search('!is:nc').map(&:name).should == ['not mall', 'also not mall']
+      Item.search('-is:nc').map(&:name).should == ['not mall', 'also not mall']
     end
     
-    specify "is:(anything but 'nc') should throw ArgumentError" do
+    specify "is:[not 'nc' or 'pb'] should throw ArgumentError" do
       lambda { Item.search('is:nc') }.should_not raise_error(ArgumentError)
       lambda { Item.search('is:awesome') }.should raise_error(ArgumentError)
     end
