@@ -4,6 +4,7 @@ class Item < ActiveRecord::Base
   SwfAssetType = 'object'
   
   NCRarities = [0, 500]
+  PaintbrushSetDescription = 'This item is part of a deluxe paint brush set!'
   
   set_table_name 'objects' # Neo & PHP Impress call them objects, but the class name is a conflict (duh!)
   set_inheritance_column 'inheritance_type' # PHP Impress used "type" to describe category
@@ -124,9 +125,18 @@ class Item < ActiveRecord::Base
     arel_table[:description].matches("%#{description}%")
   end
   
-  search_filter :is do |is_what|
-    raise ArgumentError, "We don't know how an item can be \"#{is_what}\". Did you mean is:nc?" unless is_what == 'nc'
-    arel_table[:rarity_index].in(NCRarities)
+  ADJECTIVE_FILTERS = {
+    'nc' => arel_table[:rarity_index].in(NCRarities),
+    'pb' => arel_table[:description].eq(PaintbrushSetDescription)
+  }
+  search_filter :is do |adjective|
+    filter = ADJECTIVE_FILTERS[adjective]
+    unless filter
+      raise ArgumentError,
+        "We don't know how an item can be \"#{adjective}\". " +
+        "Did you mean is:nc or is:pb?"
+    end
+    filter
   end
   
   search_filter :only do |species_name|

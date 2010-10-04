@@ -169,8 +169,24 @@ describe Item do
       Item.search('-is:nc').map(&:name).should == ['not mall', 'also not mall']
     end
     
+    specify "should search by is:pb" do
+      descriptions_by_name = {
+        'Aisha Collar' => 'This item is part of a deluxe paint brush set!',
+        'Christmas Buzz Hat' => 'This item is part of a deluxe paint brush set!',
+        'Blue Hat' => 'This item is a trick and is NOT part of a deluxe paint brush set!',
+        'Green Hat' => 'This hat is green.'
+      }
+      descriptions_by_name.each do |name, description|
+        Factory.create :item, :name => name, :description => description
+      end
+      Item.search('is:pb').map(&:name).should == ['Aisha Collar', 'Christmas Buzz Hat']
+      Item.search('-is:pb').map(&:name).should == ['Blue Hat', 'Green Hat']
+      
+    end
+    
     specify "is:[not 'nc' or 'pb'] should throw ArgumentError" do
       lambda { Item.search('is:nc') }.should_not raise_error(ArgumentError)
+      lambda { Item.search('is:pb') }.should_not raise_error(ArgumentError)
       lambda { Item.search('is:awesome') }.should raise_error(ArgumentError)
     end
     
