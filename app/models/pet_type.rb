@@ -3,7 +3,6 @@ class PetType < ActiveRecord::Base
   
   BasicHashes = YAML::load_file(Rails.root.join('config', 'basic_type_hashes.yml'))
   
-  
   StandardBodyIds = PetType.select(arel_table[:body_id]).
     where(arel_table[:color_id].in(Color::BasicIds)).
     group(arel_table[:species_id]).map(&:body_id)
@@ -54,5 +53,11 @@ class PetType < ActiveRecord::Base
   
   def image_hash
     BasicHashes[species.name][color.name]
+  end
+  
+  def add_pet_state_from_biology!(biology)
+    pet_state = PetState.from_pet_type_and_biology_info(self, biology)
+    self.pet_states << pet_state
+    pet_state
   end
 end

@@ -33,4 +33,21 @@ class SwfAsset < ActiveRecord::Base
   def zone
     @zone ||= Zone.find(zone_id)
   end
+  
+  def origin_pet_type=(pet_type)
+    self.body_id = pet_type.body_id
+  end
+  
+  def origin_biology_data=(data)
+    self.type = 'biology'
+    self.zone_id = data[:zone_id].to_i
+    self.url = data[:asset_url]
+    self.zones_restrict = data[:zones_restrict]
+  end
+  
+  def origin_object_data=(data)
+    self.type = 'object'
+    self.zone_id = data[:zone_id].to_i
+    self.url = data[:asset_url]
+  end
 end

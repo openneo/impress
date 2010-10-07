@@ -1,7 +1,9 @@
 class Item < ActiveRecord::Base
-  include SwfAssetParent
-  
   SwfAssetType = 'object'
+  
+  has_many :parent_swf_asset_relationships, :foreign_key => 'parent_id',
+    :conditions => {:swf_asset_type => SwfAssetType}
+  has_many :swf_assets, :through => :parent_swf_asset_relationships
   
   NCRarities = [0, 500]
   PaintbrushSetDescription = 'This item is part of a deluxe paint brush set!'
@@ -100,6 +102,89 @@ class Item < ActiveRecord::Base
       :zones_restrict => zones_restrict,
       :rarity_index => rarity_index
     }
+  end
+  
+  def before_save
+    sold_in_mall = false
+  end
+  
+  def origin_registry_info=(info)
+    # bear in mind that numbers from registries are floats
+    self.species_support_ids = info[:species_support].map(&:to_i)
+    attribute_names.each do |attribute|
+      value = info[attribute.to_sym]
+      if value
+        value = value.to_i if value.is_a? Float
+        self[attribute] = value
+      end
+    end
+  end
+  
+  def self.collection_from_pet_type_and_registries(pet_type, info_registry, asset_registry)
+    # bear in mind that registries are arrays with many nil elements,
+    # due to how the parser works
+    items = {}
+    item_ids = []
+    info_registry.each do |info|
+      if info
+        item_ids << info[:obj_info_id].to_i
+      end
+    end
+    existing_relationships_by_item_id_and_swf_asset_id = {}
+    existing_items = Item.find_all_by_id(item_ids, :include => :parent_swf_asset_relationships)
+    existing_items.each do |item|
+      items[item.id] = item
+      relationships_by_swf_asset_id = {}
+      item.parent_swf_asset_relationships.each do |relationship|
+        relationships_by_swf_asset_id[relationship.swf_asset_id] = relationship
+      end
+      existing_relationships_by_item_id_and_swf_asset_id[item.id] =
+        relationships_by_swf_asset_id
+    end
+    swf_asset_ids = []
+    asset_registry.each_with_index do |asset_data, index|
+      swf_asset_ids << index if asset_data
+    end
+    existing_swf_assets = SwfAsset.find_all_by_id(swf_asset_ids)
+    existing_swf_assets_by_id = {}
+    existing_swf_assets.each do |swf_asset|
+      existing_swf_assets_by_id[swf_asset.id] = swf_asset
+    end
+    relationships_by_item_id = {}
+    asset_registry.each do |asset_data|
+      if asset_data
+        item_id = asset_data[:obj_info_id].to_i
+        item = items[item_id]
+        unless item
+          item = Item.new
+          item.id = item_id
+          items[item_id] = item
+        end
+        item.origin_registry_info = info_registry[item.id]
+        swf_asset_id = asset_data[:asset_id].to_i
+        swf_asset = existing_swf_assets[swf_asset_id]
+        unless swf_asset
+          swf_asset = SwfAsset.new
+          swf_asset.id = swf_asset_id
+        end
+        swf_asset.origin_object_data = asset_data
+        swf_asset.origin_pet_type = pet_type
+        relationship = existing_relationships_by_item_id_and_swf_asset_id[item.id][swf_asset_id] rescue nil
+        unless relationship
+          relationship = ParentSwfAssetRelationship.new
+          relationship.parent_id = item.id
+          relationship.swf_asset_type = SwfAssetType
+          relationship.swf_asset_id = swf_asset.id
+        end
+        relationship.swf_asset = swf_asset
+        relationships_by_item_id[item_id] ||= []
+        relationships_by_item_id[item_id] << relationship
+      end
+    end
+    relationships_by_item_id.each do |item_id, relationships|
+      items[item_id].parent_swf_asset_relationships = relationships
+    end
+    items.values
   end
   
   private
