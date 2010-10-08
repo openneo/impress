@@ -1,5 +1,12 @@
+require 'open-uri'
+
 class PetType < ActiveRecord::Base
+  IMAGE_CPN_FORMAT = 'http://pets.neopets.com/cpn/%s/1/1.png';
+  IMAGE_CP_LOCATION_REGEX = %r{^/cp/(.+?)/1/1\.png$};
+  
   has_many :pet_states
+  
+  attr_writer :origin_pet
   
   BasicHashes = YAML::load_file(Rails.root.join('config', 'basic_type_hashes.yml'))
   
@@ -59,5 +66,28 @@ class PetType < ActiveRecord::Base
     pet_state = PetState.from_pet_type_and_biology_info(self, biology)
     self.pet_states << pet_state
     pet_state
+  end
+  
+  def before_save
+    if @origin_pet
+      cpn_uri = URI.parse sprintf(IMAGE_CPN_FORMAT, @origin_pet.name);
+      res = Net::HTTP.get_response(cpn_uri)
+      unless res.is_a? Net::HTTPFound
+        begin
+          res.error!
+        rescue Exception => e
+          raise "Error loading CPN image at #{cpn_uri}: #{e.message}"
+        else
+          raise "Error loading CPN image at #{cpn_uri}. Response: #{res.inspect}"
+        end
+      end
+      new_url = res['location']
+      match = new_url.match(IMAGE_CP_LOCATION_REGEX)
+      if match
+        self.image_hash = match[1]
+      else
+        raise "CPN image pointed to #{new_url}, which does not match CP image format"
+      end
+    end
   end
 end

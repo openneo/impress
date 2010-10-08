@@ -25,6 +25,7 @@ class Pet < ActiveRecord::Base
         pet_data.color_id.to_i
       )
     self.pet_type.body_id = pet_data.body_id
+    self.pet_type.origin_pet = self
     @pet_state = self.pet_type.add_pet_state_from_biology! pet_data.biology_by_zone
     @items = Item.collection_from_pet_type_and_registries(self.pet_type,
       contents.object_info_registry, contents.object_asset_registry)
