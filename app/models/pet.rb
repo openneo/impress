@@ -32,6 +32,11 @@ class Pet < ActiveRecord::Base
     true
   end
   
+  def before_save
+    self.pet_type.save
+    self.items.each(&:save)
+  end 
+  
   def self.load(name)
     pet = Pet.find_or_initialize_by_name(name)
     pet.load!

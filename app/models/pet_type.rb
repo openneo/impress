@@ -1,5 +1,3 @@
-require 'open-uri'
-
 class PetType < ActiveRecord::Base
   IMAGE_CPN_FORMAT = 'http://pets.neopets.com/cpn/%s/1/1.png';
   IMAGE_CP_LOCATION_REGEX = %r{^/cp/(.+?)/1/1\.png$};

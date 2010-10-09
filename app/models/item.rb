@@ -104,8 +104,9 @@ class Item < ActiveRecord::Base
     }
   end
   
-  def before_save
-    sold_in_mall = false
+  def before_create
+    self.sold_in_mall = false
+    true
   end
   
   def origin_registry_info=(info)

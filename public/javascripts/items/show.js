@@ -217,13 +217,13 @@ Preview = new function Preview() {
   this.embed = function (id) {
     swf_id = id;
     swfobject.embedSWF(
-      impressUrl('/assets/swf/preview.swf?v=2'), // URL
+      '/swfs/preview.swf?v=2', // URL
       id, // ID
       '100%', // width
       '100%', // height
       '9', // required version
       impressUrl('/assets/js/swfobject/expressInstall.swf'), // express install URL
-      {'swf_assets_path': impressUrl('/assets')}, // flashvars
+      {}, // flashvars
       {'wmode': 'transparent', 'allowscriptaccess': 'always'} // params
     );
   }

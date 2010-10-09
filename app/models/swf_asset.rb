@@ -1,4 +1,6 @@
 class SwfAsset < ActiveRecord::Base
+  PUBLIC_ASSET_DIR = File.join('swfs', 'outfit')
+  LOCAL_ASSET_DIR = Rails.root.join('public', PUBLIC_ASSET_DIR)
   set_inheritance_column 'inheritance_type'
   
   delegate :depth, :to => :zone
@@ -13,11 +15,7 @@ class SwfAsset < ActiveRecord::Base
   }
   
   def local_url
-    uri = URI.parse(url)
-    uri.host = RemoteImpressHost
-    pieces = uri.path.split('/')
-    uri.path = "/assets/swf/outfit/#{pieces[2]}/#{pieces[4..7].join('/')}"
-    uri.to_s
+    '/' + File.join(PUBLIC_ASSET_DIR, local_path_within_outfit_swfs)
   end
   
   def as_json(options={})
@@ -49,5 +47,37 @@ class SwfAsset < ActiveRecord::Base
     self.type = 'object'
     self.zone_id = data[:zone_id].to_i
     self.url = data[:asset_url]
+  end
+  
+  def before_create
+    uri = URI.parse url
+    response = Net::HTTP.get_response(uri)
+    if response.is_a? Net::HTTPSuccess
+      new_local_path = File.join(LOCAL_ASSET_DIR, local_path_within_outfit_swfs)
+      new_local_dir = File.dirname new_local_path
+      content = response.body.force_encoding 'utf-8'
+      FileUtils.mkdir_p new_local_dir
+      File.open(new_local_path, 'w') do |f|
+        f.print content
+      end
+    else
+      begin
+        response.error!
+      rescue Exception => e
+        raise "Error loading SWF at #{url}: #{e.message}"
+      else
+        raise "Error loading SWF at #{url}. Response: #{response.inspect}"
+      end
+    end
+  end
+  
+  private
+  
+  def local_path_within_outfit_swfs
+    uri = URI.parse(url)
+    pieces = uri.path.split('/')
+    relevant_pieces = pieces[4..7]
+    relevant_pieces.unshift pieces[2]
+    File.join(relevant_pieces)
   end
 end
