@@ -28,8 +28,12 @@ class SwfAsset < ActiveRecord::Base
     }
   end
   
+  def body_specific?
+    self.body_id == 0 || self.zone.type_id < 3
+  end
+  
   def zone
-    @zone ||= Zone.find(zone_id)
+    Zone.find(zone_id)
   end
   
   def origin_pet_type=(pet_type)
@@ -69,6 +73,12 @@ class SwfAsset < ActiveRecord::Base
         raise "Error loading SWF at #{url}. Response: #{response.inspect}"
       end
     end
+  end
+  
+  def before_save
+    # If an asset body ID changes, that means more than one body ID has been
+    # linked to it, meaning that it's probably wearable by all bodies.
+    self.body_id = 0 if self.body_id_changed? || !self.body_specific?
   end
   
   private
