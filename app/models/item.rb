@@ -127,7 +127,7 @@ class Item < ActiveRecord::Base
     items = {}
     item_ids = []
     info_registry.each do |info|
-      if info
+      if info && info[:is_compatible]
         item_ids << info[:obj_info_id].to_i
       end
     end
@@ -155,6 +155,7 @@ class Item < ActiveRecord::Base
     asset_registry.each do |asset_data|
       if asset_data
         item_id = asset_data[:obj_info_id].to_i
+        next unless item_ids.include?(item_id) # skip incompatible
         item = items[item_id]
         unless item
           item = Item.new
