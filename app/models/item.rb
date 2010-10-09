@@ -5,6 +5,8 @@ class Item < ActiveRecord::Base
     :conditions => {:swf_asset_type => SwfAssetType}
   has_many :swf_assets, :through => :parent_swf_asset_relationships
   
+  attr_writer :current_body_id
+  
   NCRarities = [0, 500]
   PaintbrushSetDescription = 'This item is part of a deluxe paint brush set!'
   
@@ -109,6 +111,27 @@ class Item < ActiveRecord::Base
     true
   end
   
+  def before_save
+    if @parent_swf_asset_relationships_to_update && @current_body_id
+      new_swf_asset_ids = @parent_swf_asset_relationships_to_update.map(&:swf_asset_id)
+      rels = ParentSwfAssetRelationship.arel_table
+      swf_assets = SwfAsset.arel_table
+      ids_to_delete = self.parent_swf_asset_relationships.
+        select(:id).
+        joins(:swf_asset).
+        where(rels[:swf_asset_id].in(new_swf_asset_ids).not).
+        where(swf_assets[:body_id].in([@current_body_id, 0])).
+        map(&:id)
+      unless ids_to_delete.empty?
+        ParentSwfAssetRelationship.
+          where(rels[:parent_id].eq(self.id)).
+          where(rels[:swf_asset_type].eq(SwfAssetType)).
+          where(rels[:swf_asset_id].in(ids_to_delete)).
+          delete_all
+      end
+    end
+  end
+  
   def origin_registry_info=(info)
     # bear in mind that numbers from registries are floats
     self.species_support_ids = info[:species_support].map(&:to_i)
@@ -119,6 +142,11 @@ class Item < ActiveRecord::Base
         self[attribute] = value
       end
     end
+  end
+  
+  def parent_swf_asset_relationships_to_update=(rels)
+    self.parent_swf_asset_relationships += rels
+    @parent_swf_asset_relationships_to_update = rels
   end
   
   def self.collection_from_pet_type_and_registries(pet_type, info_registry, asset_registry)
@@ -146,7 +174,8 @@ class Item < ActiveRecord::Base
     asset_registry.each_with_index do |asset_data, index|
       swf_asset_ids << index if asset_data
     end
-    existing_swf_assets = SwfAsset.find_all_by_id(swf_asset_ids)
+    existing_swf_assets = SwfAsset.find_all_by_id swf_asset_ids,
+      :conditions => {:type => SwfAssetType}
     existing_swf_assets_by_id = {}
     existing_swf_assets.each do |swf_asset|
       existing_swf_assets_by_id[swf_asset.id] = swf_asset
@@ -163,8 +192,9 @@ class Item < ActiveRecord::Base
           items[item_id] = item
         end
         item.origin_registry_info = info_registry[item.id]
+        item.current_body_id = pet_type.body_id
         swf_asset_id = asset_data[:asset_id].to_i
-        swf_asset = existing_swf_assets[swf_asset_id]
+        swf_asset = existing_swf_assets_by_id[swf_asset_id]
         unless swf_asset
           swf_asset = SwfAsset.new
           swf_asset.id = swf_asset_id
@@ -184,7 +214,7 @@ class Item < ActiveRecord::Base
       end
     end
     relationships_by_item_id.each do |item_id, relationships|
-      items[item_id].parent_swf_asset_relationships = relationships
+      items[item_id].parent_swf_asset_relationships_to_update = relationships
     end
     items.values
   end
