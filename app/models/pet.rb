@@ -26,7 +26,9 @@ class Pet < ActiveRecord::Base
       )
     self.pet_type.body_id = pet_data.body_id
     self.pet_type.origin_pet = self
-    @pet_state = self.pet_type.add_pet_state_from_biology! pet_data.biology_by_zone
+    biology = pet_data.biology_by_zone
+    biology[0] = nil # remove effects if present
+    @pet_state = self.pet_type.add_pet_state_from_biology! biology
     @items = Item.collection_from_pet_type_and_registries(self.pet_type,
       contents.object_info_registry, contents.object_asset_registry)
     true
