@@ -3,10 +3,11 @@ class Pet < ActiveRecord::Base
   AMF_SERVICE_NAME = 'CustomPetService'
   PET_VIEWER_METHOD = 'getViewerData'
   PET_NOT_FOUND_REMOTE_ERROR = 'PHP: Unable to retrieve records from the database.'
+  WARDROBE_PATH = '/wardrobe'
   
   belongs_to :pet_type
   
-  attr_reader :items
+  attr_reader :items, :pet_state
   
   def load!
     require 'ostruct'
@@ -32,6 +33,21 @@ class Pet < ActiveRecord::Base
     @items = Item.collection_from_pet_type_and_registries(self.pet_type,
       contents.object_info_registry, contents.object_asset_registry)
     true
+  end
+  
+  def wardrobe_url
+    uri = URI::HTTP.build({
+      :host => RemoteImpressHost,
+      :path => WARDROBE_PATH,
+      :fragment => {
+        :name => self.name,
+        :color => self.pet_type.color.id,
+        :species => self.pet_type.species.id,
+        :state => self.pet_state.id,
+        :objects => self.items.map(&:id)
+      }.to_query
+    })
+    uri.to_s
   end
   
   def before_save
