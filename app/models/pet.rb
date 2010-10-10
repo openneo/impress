@@ -50,7 +50,7 @@ class Pet < ActiveRecord::Base
     uri.to_s
   end
   
-  def before_save
+  before_save do
     self.pet_type.save
     self.items.each(&:save)
   end 

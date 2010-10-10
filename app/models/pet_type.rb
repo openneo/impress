@@ -66,7 +66,7 @@ class PetType < ActiveRecord::Base
     pet_state
   end
   
-  def before_save
+  before_save do
     if @origin_pet
       cpn_uri = URI.parse sprintf(IMAGE_CPN_FORMAT, @origin_pet.name);
       res = Net::HTTP.get_response(cpn_uri)

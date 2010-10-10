@@ -53,7 +53,7 @@ class SwfAsset < ActiveRecord::Base
     self.url = data[:asset_url]
   end
   
-  def before_create
+  before_create do
     uri = URI.parse url
     response = Net::HTTP.get_response(uri)
     if response.is_a? Net::HTTPSuccess
@@ -75,7 +75,7 @@ class SwfAsset < ActiveRecord::Base
     end
   end
   
-  def before_save
+  before_save do
     # If an asset body ID changes, that means more than one body ID has been
     # linked to it, meaning that it's probably wearable by all bodies.
     self.body_id = 0 if self.body_id_changed? || !self.body_specific?

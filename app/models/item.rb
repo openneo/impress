@@ -106,12 +106,12 @@ class Item < ActiveRecord::Base
     }
   end
   
-  def before_create
+  before_create do
     self.sold_in_mall = false
     true
   end
   
-  def before_save
+  before_save do
     if @parent_swf_asset_relationships_to_update && @current_body_id
       new_swf_asset_ids = @parent_swf_asset_relationships_to_update.map(&:swf_asset_id)
       rels = ParentSwfAssetRelationship.arel_table
