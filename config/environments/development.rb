@@ -18,6 +18,10 @@ OpenneoImpressItems::Application.configure do
   config.action_mailer.raise_delivery_errors = false
   
   config.active_support.deprecation = :log
+  
+  config.serve_static_assets = true
+  
+  config.threadsafe!
 end
 
 RemoteImpressHost = 'beta.impress.openneo.net'
