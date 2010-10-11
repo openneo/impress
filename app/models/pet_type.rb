@@ -25,7 +25,9 @@ class PetType < ActiveRecord::Base
   }
   
   def as_json(options={})
-    {:id => id, :body_id => body_id}
+    json = {:id => id, :body_id => body_id}
+    json[:pet_state_ids] = self.pet_state_ids if options[:for] == 'wardrobe'
+    json
   end
   
   def color_id=(new_color_id)

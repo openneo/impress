@@ -25,6 +25,8 @@ gem 'rdiscount', '~> 1.6.5'
 gem 'RocketAMF', '~> 0.2.1'
 gem 'will_paginate', '~> 3.0.pre2'
 
+gem 'jammit', '~> 0.5.3'
+
 group :test do
   gem 'factory_girl_rails', '~> 1.0'
   gem 'rspec-rails', '~> 2.0.0.beta.22'

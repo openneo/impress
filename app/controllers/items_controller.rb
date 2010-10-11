@@ -10,16 +10,21 @@ class ItemsController < ApplicationController
         else
           per_page = nil
         end
-        @results = Item.search(@query).alphabetize.paginate :page => params[:page], :per_page => per_page
+        @items = Item.search(@query).alphabetize.paginate :page => params[:page], :per_page => per_page
         respond_to do |format|
           format.html { render }
-          format.js { render :json => {:items => @results, :total_pages => @results.total_pages}, :callback => params[:callback] }
+          format.js { render :json => {:items => @items, :total_pages => @items.total_pages}, :callback => params[:callback] }
         end
       rescue
         respond_to do |format|
           format.html { flash.now[:error] = $!.message }
           format.js { render :json => {:error => $!.message}, :callback => params[:callback] }
         end
+      end
+    elsif params.has_key?(:ids) && params[:ids].is_a?(Array)
+      @items = Item.find(params[:ids])
+      respond_to do |format|
+        format.json { render :json => @items }
       end
     else
       respond_to do |format|

@@ -1,5 +1,5 @@
-- if @results
-  - if @results.empty?
+- if @items
+  - if @items.empty?
     :markdown
       We couldn't find any wearables that matched **#{@query}**. Sorry!
       
@@ -8,9 +8,9 @@
       
       [1]: http://impress.openneo.net/
   - else
-    = will_paginate @results
-    = render @results
-    = will_paginate @results
+    = will_paginate @items
+    = render @items
+    = will_paginate @items
 - else
   #search-help
     %h2 Find what you're looking for

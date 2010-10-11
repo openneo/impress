@@ -3,7 +3,7 @@ class Item < ActiveRecord::Base
   
   has_many :parent_swf_asset_relationships, :foreign_key => 'parent_id',
     :conditions => {:swf_asset_type => SwfAssetType}
-  has_many :swf_assets, :through => :parent_swf_asset_relationships
+  has_many :swf_assets, :through => :parent_swf_asset_relationships, :source => :object_asset
   
   attr_writer :current_body_id
   
@@ -118,7 +118,7 @@ class Item < ActiveRecord::Base
       swf_assets = SwfAsset.arel_table
       ids_to_delete = self.parent_swf_asset_relationships.
         select(:id).
-        joins(:swf_asset).
+        joins(:object_asset).
         where(rels[:swf_asset_id].in(new_swf_asset_ids).not).
         where(swf_assets[:body_id].in([@current_body_id, 0])).
         map(&:id)
@@ -208,7 +208,7 @@ class Item < ActiveRecord::Base
           relationship.swf_asset_type = SwfAssetType
           relationship.swf_asset_id = swf_asset.id
         end
-        relationship.swf_asset = swf_asset
+        relationship.object_asset = swf_asset
         relationships_by_item_id[item_id] ||= []
         relationships_by_item_id[item_id] << relationship
       end

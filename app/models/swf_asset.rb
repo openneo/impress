@@ -3,6 +3,9 @@ class SwfAsset < ActiveRecord::Base
   LOCAL_ASSET_DIR = Rails.root.join('public', PUBLIC_ASSET_DIR)
   set_inheritance_column 'inheritance_type'
   
+  has_many :object_asset_relationships, :class_name => 'ParentSwfAssetRelationship',
+    :conditions => {:swf_asset_type => 'object'}
+  
   delegate :depth, :to => :zone
   
   scope :fitting_body_id, lambda { |body_id|
@@ -19,13 +22,21 @@ class SwfAsset < ActiveRecord::Base
   end
   
   def as_json(options={})
-    {
+    json = {
       :id => id,
       :depth => depth,
-      :local_url => local_url,
       :body_id => body_id,
-      :zone_id => zone_id
+      :zone_id => zone_id,
+      :zones_restrict => zones_restrict,
+      :is_body_specific => body_specific?
     }
+    if options[:for] == 'wardrobe'
+      json[:local_path] = local_url
+    else
+      json[:local_url] = local_url
+    end
+    json[:parent_id] = options[:parent_id] if options[:parent_id]
+    json
   end
   
   def body_specific?
@@ -78,7 +89,7 @@ class SwfAsset < ActiveRecord::Base
   before_save do
     # If an asset body ID changes, that means more than one body ID has been
     # linked to it, meaning that it's probably wearable by all bodies.
-    self.body_id = 0 if self.body_id_changed? || !self.body_specific?
+    self.body_id = 0 if !self.body_specific? || (!self.new_record? && self.body_id_changed?)
   end
   
   private

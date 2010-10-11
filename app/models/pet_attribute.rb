@@ -1,4 +1,11 @@
 class PetAttribute < StaticResource
+  def as_json(options={})
+    {
+      :id => self.id,
+      :name => self.name.capitalize
+    }
+  end
+  
   def self.find_by_name(name)
     @objects_by_name[name.downcase]
   end

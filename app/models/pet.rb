@@ -35,19 +35,14 @@ class Pet < ActiveRecord::Base
     true
   end
   
-  def wardrobe_url
-    uri = URI::HTTP.build({
-      :host => RemoteImpressHost,
-      :path => WARDROBE_PATH,
-      :fragment => {
-        :name => self.name,
-        :color => self.pet_type.color.id,
-        :species => self.pet_type.species.id,
-        :state => self.pet_state.id,
-        :objects => self.items.map(&:id)
-      }.to_query
-    })
-    uri.to_s
+  def wardrobe_query
+    {
+      :name => self.name,
+      :color => self.pet_type.color.id,
+      :species => self.pet_type.species.id,
+      :state => self.pet_state.id,
+      :objects => self.items.map(&:id)
+    }.to_query
   end
   
   before_save do

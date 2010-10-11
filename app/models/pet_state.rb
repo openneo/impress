@@ -3,7 +3,7 @@ class PetState < ActiveRecord::Base
   
   has_many :parent_swf_asset_relationships, :foreign_key => 'parent_id',
     :conditions => {:swf_asset_type => SwfAssetType}
-  has_many :swf_assets, :through => :parent_swf_asset_relationships
+  has_many :swf_assets, :through => :parent_swf_asset_relationships, :source => :biology_asset
   
   belongs_to :pet_type
   
@@ -63,7 +63,7 @@ class PetState < ActiveRecord::Base
           relationship.swf_asset_type = SwfAssetType
           relationship.swf_asset_id = swf_asset.id
         end
-        relationship.swf_asset = swf_asset
+        relationship.biology_asset = swf_asset
         relationships << relationship
       end
     end

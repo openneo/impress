@@ -67,6 +67,7 @@ GEM
     arel (1.0.1)
       activesupport (~> 3.0.0)
     builder (2.1.2)
+    closure-compiler (0.3.3)
     compass (0.10.5)
       haml (>= 3.0.4)
     diff-lcs (1.1.2)
@@ -78,6 +79,9 @@ GEM
       rails (>= 3.0.0.beta4)
     haml (3.0.21)
     i18n (0.4.1)
+    jammit (0.5.3)
+      closure-compiler (>= 0.1.0)
+      yui-compressor (>= 0.9.1)
     mail (2.2.6.1)
       activesupport (>= 2.3.6)
       mime-types
@@ -122,6 +126,7 @@ GEM
       polyglot (>= 0.3.1)
     tzinfo (0.3.23)
     will_paginate (3.0.pre2)
+    yui-compressor (0.9.1)
 
 PLATFORMS
   ruby
@@ -136,6 +141,7 @@ DEPENDENCIES
   eventmachine!
   factory_girl_rails (~> 1.0)
   haml (~> 3.0.18)
+  jammit (~> 0.5.3)
   mysqlplus!
   rack-fiber_pool
   rails (= 3.0.0)
