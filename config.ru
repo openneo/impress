@@ -2,5 +2,5 @@
 
 require ::File.expand_path('../config/environment',  __FILE__)
 
-use Rack::FiberPool
+use Rack::FiberPool if defined?(USE_FIBER_POOL) && USE_FIBER_POOL
 run OpenneoImpressItems::Application

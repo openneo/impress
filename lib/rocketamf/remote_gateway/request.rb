@@ -12,7 +12,7 @@ module RocketAMF
       def fetch
         uri = @service.gateway.uri
         data = envelope.serialize
-        if EventMachine.reactor_running?
+        if defined?(EventMachine) && EventMachine.reactor_running?
           req = EM::HttpRequest.new(uri).post :body => data
           response_body = req.response
         else
