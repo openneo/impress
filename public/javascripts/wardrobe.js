@@ -1,5 +1,4 @@
-var ITEMS_SERVER = '',
-  SHORT_URL_HOST = 'http://bit.ly/';
+var SHORT_URL_HOST = 'http://bit.ly/';
 
 window.log = window.SWFLog = $.noop;
 
@@ -184,13 +183,11 @@ function Wardrobe() {
     return items;
   }
   
-  var ITEMS_URL = ITEMS_SERVER + '/index.js?callback=?';
-  
   Item.PER_PAGE = 21;
   
   Item.loadByQuery = function (query, offset, success, error) {
     var page = Math.round(offset / Item.PER_PAGE) + 1;
-    $.getJSON(ITEMS_URL, {q: query, per_page: Item.PER_PAGE, page: page}, function (data) {
+    $.getJSON('/items.json', {q: query, per_page: Item.PER_PAGE, page: page}, function (data) {
       var items = [], item, item_data;
       if(data.items) {
         for(var i = 0; i < data.items.length; i++) {
@@ -213,7 +210,7 @@ function Wardrobe() {
   }
   
   ItemZoneSet.loadAll = function (success) {
-    $.getJSON(ITEMS_SERVER + '/item_zone_sets.js?callback=?', function (data) {
+    $.getJSON('/item_zone_sets.json', function (data) {
       for(var i = 0, l = data.length; i < l; i++) {
         ItemZoneSet.all.push(new ItemZoneSet(data[i]));
       }

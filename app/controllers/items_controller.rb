@@ -13,6 +13,7 @@ class ItemsController < ApplicationController
         @items = Item.search(@query).alphabetize.paginate :page => params[:page], :per_page => per_page
         respond_to do |format|
           format.html { render }
+          format.json { render :json => {:items => @items, :total_pages => @items.total_pages} }
           format.js { render :json => {:items => @items, :total_pages => @items.total_pages}, :callback => params[:callback] }
         end
       rescue

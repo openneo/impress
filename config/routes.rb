@@ -2,8 +2,10 @@ OpenneoImpressItems::Application.routes.draw do |map|
   match '/' => 'items#index', :as => :items
   match '/index.js' => 'items#index', :format => :js
   match '/items.json' => 'items#index', :format => :json
+  match '/items/:id' => 'items#show', :as => :item
  
   match '/item_zone_sets.js' => 'ItemZoneSets#index'
+  match '/item_zone_sets.json' => 'ItemZoneSets#index'
   
   match '/bodies/:body_id/swf_assets.json' => 'swf_assets#index', :as => :body_swf_assets
   match '/items/:item_id/swf_assets.json' => 'swf_assets#index', :as => :item_swf_assets
@@ -17,5 +19,4 @@ OpenneoImpressItems::Application.routes.draw do |map|
   resources :pets, :only => [:show]
   
   match '/wardrobe' => 'outfits#edit', :as => :wardrobe
-  match '/:id' => 'items#show', :as => :item
 end

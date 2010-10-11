@@ -69,7 +69,7 @@ Partial.ItemSet = function ItemSet(wardrobe, selector) {
       info_link = $('<a/>', {
         'class': 'object-info',
         html: '<span>i</span>',
-        href: ITEMS_SERVER + '/' + item.id,
+        href: '/items/' + item.id,
         target: '_blank'
       });
       if(
