@@ -31,5 +31,24 @@ h1 {
   }
 }
 
+#userbar-log-in {
+  text-decoration: none;
+  
+  img {
+    margin: {
+      bottom: -4px;
+      right: .25em;
+    }
+  }
+  
+  span {
+    text-decoration: underline;
+  }
+  
+  &:hover span {
+    text-decoration: none;
+  }
+}
+
 @import "items/index";
 @import "items/show";

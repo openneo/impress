@@ -7,13 +7,6 @@
     = javascript_include_tag "http://#{RemoteImpressHost}/assets/js/analytics.js"
   %body{:class => params[:action]}
     #container
-      - if user_signed_in?
-        You are logged in as
-        = current_user.name
-        == (#{current_user.id})
-        = link_to 'Log out', logout_path
-      - else
-        = link_to 'Log in', login_path
       %h1
         = link_to items_path do
           = image_tag 'http://images.neopets.com/items/mall_floatingneggfaerie.gif'
@@ -25,6 +18,17 @@
       = yield
       %a#home-link{:href => "http://#{RemoteImpressHost}"}
         %span Dress to Impress
+      #userbar
+        - if user_signed_in?
+          %div
+            == Hey, #{current_user.name}!
+            == You have #{current_user.points} points.
+          %div
+            = link_to 'Log out', logout_path
+        - else
+          = link_to login_path, :id => 'userbar-log-in' do
+            = image_tag auth_server_icon_url
+            %span Log in
       #footer
         %ul
           %li= link_to 'OpenNeo', 'http://www.openneo.net/'

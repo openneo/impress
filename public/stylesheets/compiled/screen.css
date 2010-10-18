@@ -32,6 +32,24 @@ h1 a:hover span {
   text-decoration: none;
 }
 
+/* line 34, ../../../app/stylesheets/screen.scss */
+#userbar-log-in {
+  text-decoration: none;
+}
+/* line 37, ../../../app/stylesheets/screen.scss */
+#userbar-log-in img {
+  margin-bottom: -4px;
+  margin-right: .25em;
+}
+/* line 44, ../../../app/stylesheets/screen.scss */
+#userbar-log-in span {
+  text-decoration: underline;
+}
+/* line 48, ../../../app/stylesheets/screen.scss */
+#userbar-log-in:hover span {
+  text-decoration: none;
+}
+
 /* line 1, ../../../app/stylesheets/items/_index.scss */
 form {
   margin-bottom: 2em;
