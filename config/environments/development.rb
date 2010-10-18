@@ -21,3 +21,8 @@ OpenneoImpressItems::Application.configure do
 end
 
 RemoteImpressHost = 'beta.impress.openneo.net'
+OPENNEO_AUTH_CONFIG = {
+  :app => 'beta.items.impress',
+  :auth_server => 'openneo-id',
+  :secret => 'zaheh2draswAb8eneca$3an?2ADAsTuwra8h7BujUBr_w--p2-a@e?u!taQux3tr'
+}

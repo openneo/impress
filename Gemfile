@@ -8,6 +8,11 @@ gem 'haml', '~> 3.0.18'
 gem 'rdiscount', '~> 1.6.5'
 gem 'RocketAMF', '~> 0.2.1'
 gem 'will_paginate', '~> 3.0.pre2'
+gem 'warden', '~> 1.0.1'
+gem 'rails_warden', '~> 0.5.2'
+
+gem 'msgpack', '~> 0.4.3'
+gem 'openneo-auth-signatory', '~> 0.0.4'
 
 gem 'jammit', '~> 0.5.3'
 

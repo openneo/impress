@@ -1,4 +1,5 @@
 OpenneoImpressItems::Application.routes.draw do |map|
+  root :to => 'items#index'
   match '/' => 'items#index', :as => :items
   match '/index.js' => 'items#index', :format => :js
   match '/items.json' => 'items#index', :format => :json
@@ -17,6 +18,10 @@ OpenneoImpressItems::Application.routes.draw do |map|
   resources :items, :only => [:index]
   resources :pet_attributes, :only => [:index]
   resources :pets, :only => [:show]
+  
+  match '/login' => 'sessions#new', :as => :login
+  match '/logout' => 'sessions#destroy', :as => :logout
+  match '/users/authorize' => 'sessions#create'
   
   match '/wardrobe' => 'outfits#edit', :as => :wardrobe
 end

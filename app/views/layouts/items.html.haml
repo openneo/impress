@@ -7,6 +7,13 @@
     = javascript_include_tag "http://#{RemoteImpressHost}/assets/js/analytics.js"
   %body{:class => params[:action]}
     #container
+      - if user_signed_in?
+        You are logged in as
+        = current_user.name
+        == (#{current_user.id})
+        = link_to 'Log out', logout_path
+      - else
+        = link_to 'Log in', login_path
       %h1
         = link_to items_path do
           = image_tag 'http://images.neopets.com/items/mall_floatingneggfaerie.gif'
