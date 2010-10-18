@@ -13,4 +13,8 @@ module ApplicationHelper
       content_tag 'p', value, :class => key
     end
   end
+  
+  def login_path_with_return_to
+    login_path :return_to => request.request_uri
+  end
 end

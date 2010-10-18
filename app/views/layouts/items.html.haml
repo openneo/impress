@@ -24,7 +24,7 @@
           == You have #{current_user.points} points.
           = link_to 'Log out', logout_path
         - else
-          = link_to login_path, :id => 'userbar-log-in' do
+          = link_to login_path_with_return_to, :id => 'userbar-log-in' do
             = image_tag auth_server_icon_url
             %span Log in
       #footer
