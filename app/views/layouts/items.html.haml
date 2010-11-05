@@ -1,40 +1,11 @@
-!!! 5
-%html
-  %head
-    %title Infinite Closet
-    = stylesheet_link_tag "http://#{RemoteImpressHost}/assets/css/clean/layout.css"
-    = stylesheet_link_tag "compiled/screen"
-    = javascript_include_tag "http://#{RemoteImpressHost}/assets/js/analytics.js"
-  %body{:class => params[:action]}
-    #container
-      %h1
-        = link_to items_path do
-          = image_tag 'http://images.neopets.com/items/mall_floatingneggfaerie.gif'
-          %span Infinite Closet
-      = flashes
-      = form_tag items_path, :method => :get do
-        = text_field_tag :q, @query
-        = submit_tag 'Search', :name => nil
-      = yield
-      %a#home-link{:href => "http://#{RemoteImpressHost}"}
-        %span Dress to Impress
-      #userbar
-        - if user_signed_in?
-          == Hey, #{current_user.name}!
-          == You have #{current_user.points} points.
-          = link_to 'Log out', logout_path
-        - else
-          = link_to login_path_with_return_to, :id => 'userbar-log-in' do
-            = image_tag auth_server_icon_url
-            %span Log in
-      #footer
-        %ul
-          %li= link_to 'OpenNeo', 'http://www.openneo.net/'
-          %li= link_to 'Blog', 'http://blog.openneo.net/' 
-          %li= link_to 'The Source Code', 'http://github.com/matchu/openneo-impress' 
-          %li= link_to 'Forum', 'http://forum.openneo.net/' 
-          %li= link_to 'Terms of Use', "http://#{RemoteImpressHost}/terms.html"
-        %p
-          Images &copy; 2000-2010 Neopets, Inc. All Rights Reserved.
-          Used With Permission
-      = yield(:javascripts)
+- content_for :before_flashes do
+  %h1
+    = link_to items_path do
+      = image_tag 'http://images.neopets.com/items/mall_floatingneggfaerie.gif'
+      %span Infinite Closet
+- content_for :content do
+  = form_tag items_path, :method => :get do
+    = text_field_tag :q, @query
+    = submit_tag 'Search', :name => nil
+  = yield
+= render :file => 'layouts/application'

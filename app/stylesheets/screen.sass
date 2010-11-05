@@ -1,36 +1,10 @@
 @import compass
-@import clean_constants
+@import partials/clean/constants
+@import partials/clean/mixins
 
-body
-  text-align: center
+@import layout
 
-input[type=text]
-  font-size: 125%
-  width: 15em
-
-h1
-  margin-bottom: 1em
-  img
-    height: 80px
-    margin-bottom: -0.5em
-    width: 80px
-  a
-    text-decoration: none
-    span
-      text-decoration: underline
-    &:hover span
-      text-decoration: none
-
-#userbar-log-in
-  text-decoration: none
-  img
-    margin:
-      bottom: -4px
-      right: .25em
-  span
-    text-decoration: underline
-  &:hover span
-    text-decoration: none
-
+@import items
 @import items/index
 @import items/show
+@import outfits/new

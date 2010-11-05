@@ -1,0 +1,239 @@
+/* Reset
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p,
+blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em,
+font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b,
+u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table,
+caption, tbody, tfoot, thead, tr, th, td
+  margin: 0
+  padding: 0
+  border: 0
+  outline: 0
+  font-size: 100%
+  vertical-align: baseline
+  background: transparent
+
+/* Typography
+
+html, body
+  height: 100%
+
+body
+  color: $text-color
+  font:
+    family: $main-font
+    size: 90%
+  line-height: 1.5
+
+a
+  color: $link-color
+
+p
+  font-family: $text-font
+
+input, button, select
+  font:
+    family: inherit
+    size: 100%
+
+p
+  margin-bottom: 1em
+
+h1, h2, h3
+  +header-text
+
+h1
+  font-size: 3em
+  line-height: 1
+  margin-bottom: 0.50em
+
+h2
+  font-size: 2em
+  margin-bottom: 0.75em
+
+h3
+  font-size: 1.5em
+  line-height: 1
+  margin-bottom: 1.00em
+
+.inline-image
+  margin-right: 1em
+  vertical-align: middle
+
+/* Main
+
+$container_width: 800px
+
+#container
+  margin: 1em auto
+  padding-top: 3em
+  position: relative
+  width: $container_width
+
+input, button, select, label
+  cursor: pointer
+
+input[type=text], input[type=password], input[type=search], select
+  +border-radius(3px)
+  background: #fff
+  border: 1px solid $input-border-color
+  color: $text-color + #444444
+  padding: .25em
+  &:focus, &:active
+    color: inherit
+
+a.button, input[type=submit], button
+  +awesome-button
+  &.loud
+    +loud-awesome-button
+
+a.button
+  +arrowed-awesome-button
+
+ul.buttons
+  margin-bottom: 1em
+  li
+    list-style: none
+    margin: 0 .5em
+    &, form
+      display: inline
+
+#footer
+  clear: both
+  font-size: 75%
+  margin-bottom: 1em
+  padding-top: 2em
+  text-align: center
+  ul, div
+    display: inline
+    margin: 0 1em
+  li, div ul
+    display: inline
+    margin: 0 .5em
+
+.success, .alert, .warning
+  margin-bottom: 1em
+  padding: .25em .5em
+  text-align: center
+
+.success
+  background: $notice-bg-color
+  border: 1px solid $notice-border-color
+  color: $notice-color
+
+.alert
+  background: $error-bg-color
+  border: 1px solid $error-border-color
+  color: $error-color
+
+.warning
+  background: $warning-bg-color
+  border: 1px solid $warning-border-color
+  color: $warning-color
+
+#userbar
+  +header-text
+  position: absolute
+  right: 0
+  top: 0
+  > *
+    display: inline
+    margin: 0 .25em
+
+#userbar-log-in
+  text-decoration: none
+  img
+    margin:
+      bottom: -4px
+      right: .25em
+  span
+    text-decoration: underline
+  &:hover span
+    text-decoration: none
+
+.object
+  +inline-block
+  padding: .5em
+  position: relative
+  text-align: center
+  vertical-align: top
+  width: $object-width
+  a
+    text-decoration: none
+    img
+      +opacity(0.75)
+    &:hover img
+      +opacity(1)
+  img
+    display: block
+    height: $object-img-size
+    margin: 0 auto
+    width: $object-img-size
+
+dt
+  font-weight: bold
+
+dd
+  margin: 0 0 1.5em 1em
+
+#home-link
+  +header-text
+  font:
+    size: 175%
+    weight: bold
+  left: 0
+  line-height: 1
+  padding: .25em
+  position: absolute
+  top: 0
+  &:hover
+    background: $module-bg-color
+    text-decoration: none
+  span:before
+    content: "<< "
+
+.pagination
+  a, span
+    margin: 0 .5em
+  .current
+    font-weight: bold
+
+/* Fonts
+
+/* A font by Jos Buivenga (exljbris) -> www.exljbris.nl
+@font-face
+  font-family: Delicious
+  src: url("/assets/fonts/Delicious-Roman.otf")
+
+
+@font-face
+  font-family: Delicious
+  font-weight: bold
+  src: url("/assets/fonts/Delicious-Bold.otf")
+
+
+@font-face
+  font-family: Delicious
+  font-style: italic
+  src: url("/assets/fonts/Delicious-Italic.otf")
+
+
+@font-face
+  font-family: 'Droid Serif'
+  font-style: normal
+  font-weight: normal
+  src: local("Droid Serif"), url("http://themes.googleusercontent.com/font?kit=70P0G8gxVDIV6F9om0DsKg") format("truetype")
+
+
+@font-face
+  font-family: 'Droid Serif'
+  font-style: normal
+  font-weight: bold
+  src: local("Droid Serif"), url("http://themes.googleusercontent.com/font?kit=QQt14e8dY39u-eYBZmppwf5Jgr8ufe5A6KahQF76Xmg") format("truetype")
+
+
+@font-face
+  font-family: 'Droid Sans'
+  font-style: normal
+  font-weight: normal
+  src: local("Droid Sans"), url("http://themes.googleusercontent.com/font?kit=POVDFY-UUf0WFR9DIMCU8g") format("truetype")

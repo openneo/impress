@@ -81,11 +81,8 @@
       #no-assets-full-message
         We haven't seen this item on this body type before. Have you? Submit its name on the home page if you have!
       /[if IE]
-        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-      %script{:src => "http://ajax.googleapis.com/ajax/libs/jquery/1.4.0/jquery.min.js", :type => "text/javascript"}
-      %script{:src => "http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js", :type => "text/javascript"}
-      %script{:src => "http://bit.ly/javascript-api.js?version=latest&login=openneo&apiKey=R_4d0438829b7a99860de1d3edf55d8dc8", :type => "text/javascript"}
-      %script{:src => "http://s7.addthis.com/js/250/addthis_widget.js#username=openneo", :type => "text/javascript"}
+        = include_javascript_libraries :html5
+      = include_javascript_libraries :jquery, :swfobject, :bitly, :addthis
       %script{:src => "http://#{RemoteImpressHost}/assets/timestamped/js/jquery.jgrowl-v1278204174.js", :type => "text/javascript"}
       = include_javascripts :edit_outfit_package
       #userbar
@@ -115,5 +112,5 @@
             %li
               %a{:href => "mailto:webmaster@openneo.net"} Questions, comments, bug reports
         %p
-          Images © 2000-2010 Neopets, Inc. All Rights Reserved.
+          Images &copy; 2000-2010 Neopets, Inc. All Rights Reserved.
           Used With Permission

@@ -1,0 +1,73 @@
+=box-sizing($bs)
+  $bs: unquote($bs)
+  +experimental(box-sizing, $bs, -moz, -webkit, not -o, -ms, not -khtml, official)
+
+=clearfix
+  overflow: hidden
+  display: inline-block
+  &
+    display: block
+
+=border-radius($r)
+  -moz-border-radius: $r
+  -webkit-border-radius: $r
+
+=inline-block
+  display: -moz-inline-box
+  -moz-box-orient: vertical
+  display: inline-block
+  vertical-align: middle
+  *display: inline
+  *vertical-align: auto
+
+=opacity($o)
+  -moz-opacity: $o
+  -webkit-opacity: $o
+  -o-opacity: $o
+  -khtml-opacity: $o
+
+=header-text
+  font-family: $header-font
+
+=awesome-button-color($c)
+  background: $c url(/assets/images/alert-overlay.png) repeat-x
+  &:hover
+    background-color: $c - #111111
+
+=awesome-button
+  /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html
+  +border-radius(5px)
+  +awesome-button-color(#006400)
+  border: 0
+  display: inline-block
+  padding: .5em .75em .45em
+  color: #fff
+  text-decoration: none
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5)
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5)
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25)
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25)
+  position: relative
+  font-weight: bold
+  line-height: 1
+  &:hover
+    color: #fff
+  &:active
+    top: 1px
+
+=loud-awesome-button-color
+  +awesome-button-color(#ff5c00)
+
+=loud-awesome-button
+  +loud-awesome-button-color
+  font-size: 125%
+  padding: 8px 14px 9px
+
+=arrowed-awesome-button
+  &:after
+    content: " >>"
+
+=module
+  background: $module-bg-color
+  border: 1px solid $module-border-color
+  padding: 1em

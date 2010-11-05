@@ -1,0 +1,107 @@
+#outfit-forms
+  #pet-preview
+    = image_tag 'default_preview.png'
+    %span
+  %h1 Dress to Impress
+  %h2 Neopets wearables made easy!
+  = form_tag load_pet_path, :id => 'load-pet-to-wardrobe' do
+    = origin_tag root_path
+    = destination_tag 'wardrobe'
+    %fieldset
+      %legend Enter your pet's name
+      = pet_name_tag
+      %button{:type => "submit"}
+        Plan my outfit!
+  = form_tag wardrobe_path, :method => 'get', :id => 'start-from-scratch' do
+    %fieldset
+      %legend Or start from scratch
+      = pet_attribute_select 'color', @colors, 8
+      = pet_attribute_select 'species', @species
+      %input{:type => "submit", :value => "Go"}
+%ul#sections
+  %li
+    %a{:href => "http://forum.openneo.net"}
+      = image_tag 'forum.png'
+    %h3
+      %a{:href => "http://forum.openneo.net/"} Forum
+    %div
+      %h4 Join our community!
+      %p
+        Show off your designs, ask for advice, or play silly forum games
+        here.
+  %li
+    %a{:href => items_path}
+      = image_tag 'items.png'
+    %h3
+      %a{:href => items_path}
+        Infinite Closet
+    %div
+      %h4 Looking for something?
+      %p
+        Take a look through our wearables database!
+      = form_tag items_path, :method => 'get' do
+        = text_field_tag 'q', '', :placeholder => raw('search items&hellip;'), :type => 'search'
+        = submit_tag 'search'
+  %li#blog-preview
+    %a{:href => "http://blog.openneo.net"}
+      = image_tag 'blog.png'
+    %h3
+      %a{:href => "http://blog.openneo.net/"} OpenNeo Blog
+    %div
+      %h4 We'll keep you posted!
+      %p
+        Dress to Impress is always improving, and you can always stay in
+        the loop through our blog.
+#description
+  %h2 Built by you, just for you!
+  %p
+    Dress to Impress lets you plan how you want to dress up your Neopets,
+    before you even go shopping! Whenever you give us a Neopet's name, we
+    automatically look up what it's wearing and organize the data into
+    our own wearables database &mdash; a community closet, if you will.
+    Then you can plan your outfit, mixing and matching various items, so
+    you can have the best-dressed Neopet in all of Neopia!
+  %p
+    To make all this possible, though, we need your help &mdash; and if
+    you log in at the top, we'll keep track of your
+    = link_to 'contributions', contributions_path
+    and award
+    = link_to 'points', top_contributors_path
+    so you can show off just how dedicated you really are!
+#top-contributors
+  %h3 Top Contributors
+  %ol
+    - @top_contributors.each do |user|
+      %li
+        = link_to user.name, user_contributions_path(user)
+        &mdash;
+        = user.points
+  %a{:href => top_contributors_path} see more
+= form_tag load_pet_path, :id => 'how-can-i-help' do
+  = destination_tag 'needed_items'
+  = origin_tag root_path
+  %h2 How can I help?
+  %p
+    Enter your pet's name, and we'll tell you what items you can help us
+    model. Thanks so much!
+  = pet_name_tag
+  %button{:type => "submit"}
+    Let's model!
+= form_tag load_pet_path, :id => 'i-found-something' do
+  = origin_tag root_path
+  %a{:href => bulk_pets_path}
+    add many pets
+  %h2 I found something!
+  %p
+    Enter the name of the pet you found, and we'll keep a copy of what
+    it's wearing. Thanks so much!
+  = pet_name_tag
+  %button{:type => "submit"}
+    I pwn!
+- content_for :home_link do
+  %button#tell-the-world.button.addthis_button
+    %img{:src => "http://s7.addthis.com/static/t00/logo1414.gif"}
+    Tell the world!
+- content_for :javascripts do
+  = include_javascript_libraries :jquery, :addthis
+  = include_javascripts :new_outfit_package

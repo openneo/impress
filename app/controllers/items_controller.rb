@@ -1,6 +1,8 @@
 class ItemsController < ApplicationController
   before_filter :set_query
   
+  layout 'items'
+  
   def index
     if params.has_key?(:q)
       begin
@@ -18,7 +20,7 @@ class ItemsController < ApplicationController
         end
       rescue
         respond_to do |format|
-          format.html { flash.now[:error] = $!.message }
+          format.html { flash.now[:alert] = $!.message }
           format.js { render :json => {:error => $!.message}, :callback => params[:callback] }
         end
       end

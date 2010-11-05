@@ -1,52 +1,401 @@
-/* line 4, ../../../app/stylesheets/screen.sass */
+/* Reset */
+/* line 3, ../../../app/stylesheets/_layout.sass */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p,
+blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em,
+font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b,
+u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table,
+caption, tbody, tfoot, thead, tr, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+}
+
+/* Typography */
+/* line 18, ../../../app/stylesheets/_layout.sass */
+html, body {
+  height: 100%;
+}
+
+/* line 21, ../../../app/stylesheets/_layout.sass */
 body {
+  color: #004400;
+  font-family: "Droid Sans", Helvetica, Arial, Verdana, sans-serif;
+  font-size: 90%;
+  line-height: 1.5;
+}
+
+/* line 28, ../../../app/stylesheets/_layout.sass */
+a {
+  color: #226622;
+}
+
+/* line 31, ../../../app/stylesheets/_layout.sass */
+p {
+  font-family: "Droid Serif", Georgia, "Times New Roman", Times, serif;
+}
+
+/* line 34, ../../../app/stylesheets/_layout.sass */
+input, button, select {
+  font-family: inherit;
+  font-size: 100%;
+}
+
+/* line 39, ../../../app/stylesheets/_layout.sass */
+p {
+  margin-bottom: 1em;
+}
+
+/* line 42, ../../../app/stylesheets/_layout.sass */
+h1, h2, h3 {
+  font-family: Delicious, Helvetica, Arial, Verdana, sans-serif;
+}
+
+/* line 45, ../../../app/stylesheets/_layout.sass */
+h1 {
+  font-size: 3em;
+  line-height: 1;
+  margin-bottom: 0.5em;
+}
+
+/* line 50, ../../../app/stylesheets/_layout.sass */
+h2 {
+  font-size: 2em;
+  margin-bottom: 0.75em;
+}
+
+/* line 54, ../../../app/stylesheets/_layout.sass */
+h3 {
+  font-size: 1.5em;
+  line-height: 1;
+  margin-bottom: 1em;
+}
+
+/* line 59, ../../../app/stylesheets/_layout.sass */
+.inline-image {
+  margin-right: 1em;
+  vertical-align: middle;
+}
+
+/* Main */
+/* line 67, ../../../app/stylesheets/_layout.sass */
+#container {
+  margin: 1em auto;
+  padding-top: 3em;
+  position: relative;
+  width: 800px;
+}
+
+/* line 73, ../../../app/stylesheets/_layout.sass */
+input, button, select, label {
+  cursor: pointer;
+}
+
+/* line 76, ../../../app/stylesheets/_layout.sass */
+input[type=text], input[type=password], input[type=search], select {
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  background: white;
+  border: 1px solid #cceecc;
+  color: #448844;
+  padding: 0.25em;
+}
+/* line 82, ../../../app/stylesheets/_layout.sass */
+input[type=text]:focus, input[type=text]:active, input[type=password]:focus, input[type=password]:active, input[type=search]:focus, input[type=search]:active, select:focus, select:active {
+  color: inherit;
+}
+
+/* line 85, ../../../app/stylesheets/_layout.sass */
+a.button, input[type=submit], button {
+  /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background: #006400 url(/assets/images/alert-overlay.png) repeat-x;
+  border: 0;
+  display: inline-block;
+  padding: 0.5em 0.75em 0.45em;
+  color: white;
+  text-decoration: none;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  position: relative;
+  font-weight: bold;
+  line-height: 1;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+a.button:hover, input[type=submit]:hover, button:hover {
+  background-color: #005300;
+}
+/* line 53, ../../../app/stylesheets/partials/clean/_mixins.sass */
+a.button:hover, input[type=submit]:hover, button:hover {
+  color: white;
+}
+/* line 55, ../../../app/stylesheets/partials/clean/_mixins.sass */
+a.button:active, input[type=submit]:active, button:active {
+  top: 1px;
+}
+/* line 87, ../../../app/stylesheets/_layout.sass */
+a.button.loud, input[type=submit].loud, button.loud {
+  background: #ff5c00 url(/assets/images/alert-overlay.png) repeat-x;
+  font-size: 125%;
+  padding: 8px 14px 9px;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+a.button.loud:hover, input[type=submit].loud:hover, button.loud:hover {
+  background-color: #ee4b00;
+}
+
+/* line 67, ../../../app/stylesheets/partials/clean/_mixins.sass */
+a.button:after {
+  content: " >>";
+}
+
+/* line 93, ../../../app/stylesheets/_layout.sass */
+ul.buttons {
+  margin-bottom: 1em;
+}
+/* line 95, ../../../app/stylesheets/_layout.sass */
+ul.buttons li {
+  list-style: none;
+  margin: 0 0.5em;
+}
+/* line 98, ../../../app/stylesheets/_layout.sass */
+ul.buttons li, ul.buttons li form {
+  display: inline;
+}
+
+/* line 101, ../../../app/stylesheets/_layout.sass */
+#footer {
+  clear: both;
+  font-size: 75%;
+  margin-bottom: 1em;
+  padding-top: 2em;
+  text-align: center;
+}
+/* line 107, ../../../app/stylesheets/_layout.sass */
+#footer ul, #footer div {
+  display: inline;
+  margin: 0 1em;
+}
+/* line 110, ../../../app/stylesheets/_layout.sass */
+#footer li, #footer div ul {
+  display: inline;
+  margin: 0 0.5em;
+}
+
+/* line 114, ../../../app/stylesheets/_layout.sass */
+.success, .alert, .warning {
+  margin-bottom: 1em;
+  padding: 0.25em 0.5em;
   text-align: center;
 }
 
-/* line 7, ../../../app/stylesheets/screen.sass */
-input[type=text] {
-  font-size: 125%;
-  width: 15em;
+/* line 119, ../../../app/stylesheets/_layout.sass */
+.success {
+  background: #e6efc2;
+  border: 1px solid #c6d880;
+  color: #264409;
 }
 
-/* line 11, ../../../app/stylesheets/screen.sass */
-h1 {
-  margin-bottom: 1em;
-}
-/* line 13, ../../../app/stylesheets/screen.sass */
-h1 img {
-  height: 80px;
-  margin-bottom: -0.5em;
-  width: 80px;
-}
-/* line 17, ../../../app/stylesheets/screen.sass */
-h1 a {
-  text-decoration: none;
-}
-/* line 19, ../../../app/stylesheets/screen.sass */
-h1 a span {
-  text-decoration: underline;
-}
-/* line 21, ../../../app/stylesheets/screen.sass */
-h1 a:hover span {
-  text-decoration: none;
+/* line 124, ../../../app/stylesheets/_layout.sass */
+.alert {
+  background: #fbe3e4;
+  border: 1px solid #fbc2c4;
+  color: #8a1f11;
 }
 
-/* line 24, ../../../app/stylesheets/screen.sass */
+/* line 129, ../../../app/stylesheets/_layout.sass */
+.warning {
+  background: #fff6bf;
+  border: 1px solid #ffd324;
+  color: #514721;
+}
+
+/* line 134, ../../../app/stylesheets/_layout.sass */
+#userbar {
+  font-family: Delicious, Helvetica, Arial, Verdana, sans-serif;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+/* line 139, ../../../app/stylesheets/_layout.sass */
+#userbar > * {
+  display: inline;
+  margin: 0 0.25em;
+}
+
+/* line 143, ../../../app/stylesheets/_layout.sass */
 #userbar-log-in {
   text-decoration: none;
 }
-/* line 26, ../../../app/stylesheets/screen.sass */
+/* line 145, ../../../app/stylesheets/_layout.sass */
 #userbar-log-in img {
   margin-bottom: -4px;
   margin-right: 0.25em;
 }
-/* line 30, ../../../app/stylesheets/screen.sass */
+/* line 149, ../../../app/stylesheets/_layout.sass */
 #userbar-log-in span {
   text-decoration: underline;
 }
-/* line 32, ../../../app/stylesheets/screen.sass */
+/* line 151, ../../../app/stylesheets/_layout.sass */
 #userbar-log-in:hover span {
+  text-decoration: none;
+}
+
+/* line 154, ../../../app/stylesheets/_layout.sass */
+.object {
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: middle;
+  *display: inline;
+  *vertical-align: auto;
+  padding: 0.5em;
+  position: relative;
+  text-align: center;
+  vertical-align: top;
+  width: 100px;
+}
+/* line 161, ../../../app/stylesheets/_layout.sass */
+.object a {
+  text-decoration: none;
+}
+/* line 163, ../../../app/stylesheets/_layout.sass */
+.object a img {
+  -moz-opacity: 0.75;
+  -webkit-opacity: 0.75;
+  -o-opacity: 0.75;
+  -khtml-opacity: 0.75;
+}
+/* line 165, ../../../app/stylesheets/_layout.sass */
+.object a:hover img {
+  -moz-opacity: 1;
+  -webkit-opacity: 1;
+  -o-opacity: 1;
+  -khtml-opacity: 1;
+}
+/* line 167, ../../../app/stylesheets/_layout.sass */
+.object img {
+  display: block;
+  height: 80px;
+  margin: 0 auto;
+  width: 80px;
+}
+
+/* line 173, ../../../app/stylesheets/_layout.sass */
+dt {
+  font-weight: bold;
+}
+
+/* line 176, ../../../app/stylesheets/_layout.sass */
+dd {
+  margin: 0 0 1.5em 1em;
+}
+
+/* line 179, ../../../app/stylesheets/_layout.sass */
+#home-link {
+  font-family: Delicious, Helvetica, Arial, Verdana, sans-serif;
+  font-size: 175%;
+  font-weight: bold;
+  left: 0;
+  line-height: 1;
+  padding: 0.25em;
+  position: absolute;
+  top: 0;
+}
+/* line 189, ../../../app/stylesheets/_layout.sass */
+#home-link:hover {
+  background: #eeffee;
+  text-decoration: none;
+}
+/* line 192, ../../../app/stylesheets/_layout.sass */
+#home-link span:before {
+  content: "<< ";
+}
+
+/* line 196, ../../../app/stylesheets/_layout.sass */
+.pagination a, .pagination span {
+  margin: 0 0.5em;
+}
+/* line 198, ../../../app/stylesheets/_layout.sass */
+.pagination .current {
+  font-weight: bold;
+}
+
+/* Fonts */
+/* A font by Jos Buivenga (exljbris) -> www.exljbris.nl */
+@font-face {
+  font-family: Delicious;
+  src: url("/assets/fonts/Delicious-Roman.otf");
+}
+
+@font-face {
+  font-family: Delicious;
+  font-weight: bold;
+  src: url("/assets/fonts/Delicious-Bold.otf");
+}
+
+@font-face {
+  font-family: Delicious;
+  font-style: italic;
+  src: url("/assets/fonts/Delicious-Italic.otf");
+}
+
+@font-face {
+  font-family: "Droid Serif";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Droid Serif"), url("http://themes.googleusercontent.com/font?kit=70P0G8gxVDIV6F9om0DsKg") format("truetype");
+}
+
+@font-face {
+  font-family: "Droid Serif";
+  font-style: normal;
+  font-weight: bold;
+  src: local("Droid Serif"), url("http://themes.googleusercontent.com/font?kit=QQt14e8dY39u-eYBZmppwf5Jgr8ufe5A6KahQF76Xmg") format("truetype");
+}
+
+@font-face {
+  font-family: "Droid Sans";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Droid Sans"), url("http://themes.googleusercontent.com/font?kit=POVDFY-UUf0WFR9DIMCU8g") format("truetype");
+}
+
+/* line 1, ../../../app/stylesheets/_items.sass */
+body.items {
+  text-align: center;
+}
+/* line 4, ../../../app/stylesheets/_items.sass */
+body.items input[type=text] {
+  font-size: 125%;
+  width: 15em;
+}
+/* line 8, ../../../app/stylesheets/_items.sass */
+body.items h1 {
+  margin-bottom: 1em;
+}
+/* line 10, ../../../app/stylesheets/_items.sass */
+body.items h1 img {
+  height: 80px;
+  margin-bottom: -0.5em;
+  width: 80px;
+}
+/* line 14, ../../../app/stylesheets/_items.sass */
+body.items h1 a {
+  text-decoration: none;
+}
+/* line 16, ../../../app/stylesheets/_items.sass */
+body.items h1 a span {
+  text-decoration: underline;
+}
+/* line 18, ../../../app/stylesheets/_items.sass */
+body.items h1 a:hover span {
   text-decoration: none;
 }
 
@@ -64,9 +413,10 @@ body.items-index .object .nc-icon {
 }
 /* line 17, ../../../app/stylesheets/items/_index.sass */
 body.items-index .object .nc-icon:hover {
-  opacity: 0.5;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  -moz-opacity: 0.5;
+  -webkit-opacity: 0.5;
+  -o-opacity: 0.5;
+  -khtml-opacity: 0.5;
 }
 /* line 20, ../../../app/stylesheets/items/_index.sass */
 body.items-index #search-help {
@@ -167,9 +517,10 @@ body.items-show #item-preview-species a.current {
 }
 /* line 34, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-species a.deactivated {
-  opacity: 0.5;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  -moz-opacity: 0.5;
+  -webkit-opacity: 0.5;
+  -o-opacity: 0.5;
+  -khtml-opacity: 0.5;
   background: #fbe3e4;
 }
 /* line 39, ../../../app/stylesheets/items/_show.sass */
@@ -217,6 +568,251 @@ body.items-show #item-preview-header a {
 }
 /* line 62, ../../../app/stylesheets/items/_show.sass */
 body.items-show .nc-icon {
+  height: 16px;
+  width: 16px;
+}
+
+/* line 2, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #outfit-forms {
+  overflow: hidden;
+  display: inline-block;
+  background: #eeffee;
+  border: 1px solid #006600;
+  padding: 1em;
+  margin-bottom: 3em;
+  position: relative;
+}
+/* line 8, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.outfits-new #outfit-forms {
+  display: block;
+}
+/* line 7, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #outfit-forms h1 {
+  margin-bottom: 0;
+}
+/* line 9, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #outfit-forms h2 {
+  font-size: 150%;
+  font-style: italic;
+  text-indent: 1em;
+}
+/* line 14, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #outfit-forms #pet-preview {
+  float: left;
+  height: 300px;
+  margin-right: 2em;
+  position: relative;
+  width: 300px;
+}
+/* line 20, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #outfit-forms #pet-preview img {
+  height: 100%;
+  width: 100%;
+}
+/* line 23, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #outfit-forms #pet-preview.loading img {
+  -moz-opacity: 0.5;
+  -webkit-opacity: 0.5;
+  -o-opacity: 0.5;
+  -khtml-opacity: 0.5;
+}
+/* line 25, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #outfit-forms #pet-preview.hidden img {
+  display: none;
+}
+/* line 27, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #outfit-forms #pet-preview.loaded {
+  cursor: pointer;
+}
+/* line 29, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #outfit-forms #pet-preview span {
+  background: gray;
+  background: rgba(0, 0, 0, 0.5);
+  bottom: 0;
+  color: white;
+  padding: 0.25em 0.5em;
+  position: absolute;
+  right: 0;
+}
+/* line 37, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #outfit-forms #pet-preview span:empty {
+  display: none;
+}
+/* line 39, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #outfit-forms fieldset {
+  position: relative;
+  left: 1em;
+}
+/* line 42, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #outfit-forms fieldset legend {
+  margin-left: -1em;
+}
+/* line 44, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #load-pet-to-wardrobe {
+  font-size: 175%;
+  margin-bottom: 1em;
+  margin-top: 2em;
+}
+/* line 49, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #load-pet-to-wardrobe input {
+  font-size: 67%;
+  padding: 0.5em;
+  width: 10em;
+}
+/* line 53, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #load-pet-to-wardrobe button {
+  background: #ff5c00 url(/assets/images/alert-overlay.png) repeat-x;
+  font-size: 125%;
+  padding: 8px 14px 9px;
+  font-size: 67%;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.outfits-new #load-pet-to-wardrobe button:hover {
+  background-color: #ee4b00;
+}
+/* line 56, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #description, body.outfits-new #top-contributors {
+  float: left;
+}
+/* line 58, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #description {
+  margin-right: 2%;
+  width: 64%;
+}
+/* line 61, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #top-contributors {
+  border: 1px solid #cceecc;
+  margin-top: 1em;
+  padding: 1%;
+  width: 30%;
+}
+/* line 66, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #top-contributors ol {
+  margin-left: 2em;
+  padding-left: 1em;
+}
+/* line 69, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #top-contributors > a {
+  font-size: 80%;
+  display: block;
+  text-align: right;
+}
+/* line 73, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #how-can-i-help, body.outfits-new #i-found-something {
+  background: #eeffee;
+  border: 1px solid #006600;
+  padding: 1em;
+  float: left;
+  padding: 1%;
+  width: 46%;
+}
+/* line 78, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #how-can-i-help h2, body.outfits-new #i-found-something h2 {
+  font-style: italic;
+}
+/* line 80, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #how-can-i-help input, body.outfits-new #how-can-i-help button, body.outfits-new #i-found-something input, body.outfits-new #i-found-something button {
+  font-size: 115%;
+}
+/* line 82, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #how-can-i-help input[type=text], body.outfits-new #i-found-something input[type=text] {
+  border-color: #006600;
+  width: 12em;
+}
+/* line 85, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #how-can-i-help {
+  margin-right: 1%;
+}
+/* line 87, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #i-found-something {
+  margin-left: 1%;
+}
+/* line 89, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #i-found-something a {
+  float: right;
+  font-size: 87.5%;
+  margin-top: 1em;
+}
+/* line 98, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #sections {
+  overflow: hidden;
+  display: inline-block;
+  display: table;
+  list-style: none;
+  margin-bottom: 1em;
+}
+/* line 8, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.outfits-new #sections {
+  display: block;
+}
+/* line 103, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #sections h3 {
+  margin-bottom: 0.25em;
+}
+/* line 105, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #sections li {
+  border-left-color: #006600;
+  border-left-style: solid;
+  border-left-width: 1px;
+  display: table-cell;
+  padding: 0.5em;
+  position: relative;
+  width: 33.333%;
+}
+/* line 114, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #sections li:first-child {
+  border-left: 0;
+}
+/* line 116, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #sections div {
+  color: #448844;
+  font-size: 75%;
+  margin-left: 1em;
+  z-index: 2;
+}
+/* line 121, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #sections h4, body.outfits-new #sections input {
+  font-size: 116%;
+}
+/* line 123, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #sections h4, body.outfits-new #sections input[type=text] {
+  color: inherit;
+}
+/* line 125, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #sections h4 a {
+  background: #ffffc0;
+}
+/* line 127, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #sections img {
+  -moz-opacity: 0.75;
+  -webkit-opacity: 0.75;
+  -o-opacity: 0.75;
+  -khtml-opacity: 0.75;
+  float: right;
+  margin-left: 0.5em;
+}
+/* line 131, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #sections img:hover {
+  -moz-opacity: 1;
+  -webkit-opacity: 1;
+  -o-opacity: 1;
+  -khtml-opacity: 1;
+}
+/* line 133, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #read-more {
+  float: right;
+}
+/* line 135, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #tell-the-world {
+  font-size: 87.5%;
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+/* line 140, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #tell-the-world img {
+  margin-bottom: -0.25em;
+  margin-right: 0.25em;
   height: 16px;
   width: 16px;
 }

@@ -4,3 +4,7 @@ javascripts:
   edit_outfit_package:
     - public/javascripts/wardrobe.js
     - public/javascripts/outfits/edit.js
+  
+  new_outfit_package:
+    - public/javascripts/pet_query.js
+    - public/javascripts/outfits/new.js
