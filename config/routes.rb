@@ -37,4 +37,6 @@ OpenneoImpressItems::Application.routes.draw do |map|
   match 'users/top_contributors' => redirect('/users/top-contributors')
   
   match '/wardrobe' => 'outfits#edit', :as => :wardrobe
+  
+  match '/terms' => 'static#terms', :as => :terms
 end

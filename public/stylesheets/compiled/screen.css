@@ -816,3 +816,8 @@ body.outfits-new #tell-the-world img {
   height: 16px;
   width: 16px;
 }
+
+/* line 1, ../../../app/stylesheets/static/_terms.sass */
+body.static-terms {
+  text-align: center;
+}
