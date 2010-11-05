@@ -3,6 +3,10 @@ require 'warden'
 module Openneo
   module Auth
     class Strategy < Warden::Strategies::Base
+      def valid?
+        session && session[:session_id]
+      end
+      
       def authenticate!
         begin
           auth_session = Session.find session[:session_id]

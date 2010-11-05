@@ -2,6 +2,8 @@ class SessionsController < ApplicationController
   rescue_from Openneo::Auth::Session::InvalidSignature, :with => :invalid_signature
   rescue_from Openneo::Auth::Session::MissingParam, :with => :missing_param
   
+  before_filter :initialize_session, :only => [new]
+  
   skip_before_filter :verify_authenticity_token, :only => [:create]
   
   def new
@@ -20,6 +22,10 @@ class SessionsController < ApplicationController
   end
   
   protected
+  
+  def initialize_session
+    session[:session_initialization_placeholder] = nil
+  end
   
   def invalid_signature(exception)
     render :text => "Signature did not match. Check secret.",
