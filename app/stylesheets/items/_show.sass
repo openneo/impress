@@ -1,0 +1,64 @@
+body.items-show
+  header
+    border-bottom: 1px solid $module-border-color
+    display: block
+    margin-bottom: 1em
+    padding: 1em 0
+    div, img
+      +inline-block
+    div
+      text-align: left
+    a
+      font-size: 75%
+      margin-left: 1em
+  #item-thumbnail
+    border: 1px solid $module-border-color
+    height: 80px
+    margin-right: .5em
+    width: 80px
+  #item-name
+    margin-bottom: 0
+  #item-preview
+    div
+      float: left
+  #item-preview-species
+    width: 400px
+    a, img
+      height: 50px
+      width: 50px
+    a
+      +inline-block
+      &.current
+        background: $module-bg-color
+        outline: 1px solid $module-border-color
+      &.deactivated
+        +opacity(0.5)
+        background: $error_bg_color
+        //background: #fff;
+        //background: rgba(255, 255, 255, .5);
+        &.current
+          outline-color: $error_border_color
+  #item-preview-error
+    display: none
+    padding: 20px 10px 0
+    width: 380px
+  #item-preview-swf
+    height: 300px
+    overflow: hidden
+    width: 300px
+  #item-zones
+    font:
+      family: $body-font
+      size: 85%
+    p:first-child
+      margin-bottom: .25em
+  #item-preview-header
+    margin-top: 3em
+    h3, a
+      +inline-block
+    a
+      font-size: 85%
+      margin: -1.5em 0 0 1em
+  .nc-icon
+    height: 16px
+    width: 16px
