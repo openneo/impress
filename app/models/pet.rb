@@ -8,6 +8,7 @@ class Pet < ActiveRecord::Base
   belongs_to :pet_type
   
   attr_reader :items, :pet_state
+  attr_accessor :contributor
   
   def load!
     require 'ostruct'
@@ -45,10 +46,23 @@ class Pet < ActiveRecord::Base
     }.to_query
   end
   
-  before_save do
-    self.pet_type.save
-    self.items.each(&:save)
-  end 
+  before_validation do
+    if @contributor
+      contributables = [pet_type, @pet_state]
+      items.each do |item|
+        item.handle_assets!
+        contributables << item
+        contributables += item.pending_swf_assets
+      end
+      @contributor.contribute! contributables
+    else
+      pet_type.save!
+      items.each do |item|
+        item.handle_assets!
+        item.save!
+      end
+    end
+  end
   
   def self.load(name)
     pet = Pet.find_or_initialize_by_name(name)

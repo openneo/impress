@@ -13,6 +13,7 @@ class PetsController < ApplicationController
     
     raise Pet::PetNotFound unless params[:name]
     @pet = Pet.load(params[:name])
+    @pet.contributor = current_user if user_signed_in?
     @pet.save
     respond_to do |format|
       format.html do

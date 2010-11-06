@@ -8,6 +8,7 @@ class Contribution < ActiveRecord::Base
   
   attr_accessor :contributed
 
+  belongs_to :contributed, :polymorphic => true
   belongs_to :user
   
   scope :recent, order('id DESC')

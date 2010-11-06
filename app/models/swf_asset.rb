@@ -5,6 +5,7 @@ class SwfAsset < ActiveRecord::Base
   
   attr_accessor :item
   
+  has_one :contribution, :as => :contributed
   has_many :object_asset_relationships, :class_name => 'ParentSwfAssetRelationship',
     :conditions => {:swf_asset_type => 'object'}
   

@@ -1,6 +1,7 @@
 class PetState < ActiveRecord::Base
   SwfAssetType = 'biology'
   
+  has_one :contribution, :as => :contributed
   has_many :parent_swf_asset_relationships, :foreign_key => 'parent_id',
     :conditions => {:swf_asset_type => SwfAssetType}
   has_many :swf_assets, :through => :parent_swf_asset_relationships, :source => :biology_asset

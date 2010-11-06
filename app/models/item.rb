@@ -1,6 +1,7 @@
 class Item < ActiveRecord::Base
   SwfAssetType = 'object'
   
+  has_one :contribution, :as => :contributed
   has_many :parent_swf_asset_relationships, :foreign_key => 'parent_id',
     :conditions => {:swf_asset_type => SwfAssetType}
   has_many :swf_assets, :through => :parent_swf_asset_relationships, :source => :object_asset
@@ -111,7 +112,7 @@ class Item < ActiveRecord::Base
     true
   end
   
-  before_save do
+  def handle_assets!
     if @parent_swf_asset_relationships_to_update && @current_body_id
       new_swf_asset_ids = @parent_swf_asset_relationships_to_update.map(&:swf_asset_id)
       rels = ParentSwfAssetRelationship.arel_table
@@ -129,6 +130,7 @@ class Item < ActiveRecord::Base
           where(rels[:swf_asset_id].in(ids_to_delete)).
           delete_all
       end
+      self.parent_swf_asset_relationships += @parent_swf_asset_relationships_to_update
     end
   end
   
@@ -144,8 +146,13 @@ class Item < ActiveRecord::Base
     end
   end
   
+  def pending_swf_assets
+    @parent_swf_asset_relationships_to_update.inject([]) do |all_swf_assets, relationship|
+      all_swf_assets << relationship.swf_asset
+    end
+  end
+  
   def parent_swf_asset_relationships_to_update=(rels)
-    self.parent_swf_asset_relationships += rels
     @parent_swf_asset_relationships_to_update = rels
   end
   
