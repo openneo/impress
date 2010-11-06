@@ -120,11 +120,9 @@ $(function () {
     name = name.join(' ');
     Preview.displayLoading();
     $.ajax({
-      url: '/pet_types.json',
+      url: '/species/' + type.species + '/color/' + type.color + '/pet_type.json',
       data: {
-        'for': 'image',
-        'species_id': type.species,
-        'color_id': type.color
+        'for': 'image'
       },
       dataType: 'json',
       success: function (data) {

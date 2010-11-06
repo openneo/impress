@@ -25,9 +25,11 @@ class PetType < ActiveRecord::Base
   }
   
   def as_json(options={})
-    json = {:id => id, :body_id => body_id}
-    json[:pet_state_ids] = self.pet_state_ids if options[:for] == 'wardrobe'
-    json
+    if options[:for] == 'wardrobe'
+      {:id => id, :body_id => body_id, :pet_state_ids => pet_state_ids}
+    else
+      {:image_hash => image_hash}
+    end
   end
   
   def color_id=(new_color_id)
@@ -59,7 +61,7 @@ class PetType < ActiveRecord::Base
   end
   
   def image_hash
-    BasicHashes[species.name][color.name]
+    self['image_hash'] || BasicHashes[species.name][color.name]
   end
   
   def add_pet_state_from_biology!(biology)
