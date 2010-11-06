@@ -113,7 +113,7 @@ a.button, input[type=submit], button {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  background: #006400 url(/assets/images/alert-overlay.png) repeat-x;
+  background: #006400 url(/images/alert-overlay.png) repeat-x;
   border: 0;
   display: inline-block;
   padding: 0.5em 0.75em 0.45em;
@@ -141,7 +141,7 @@ a.button:active, input[type=submit]:active, button:active {
 }
 /* line 87, ../../../app/stylesheets/_layout.sass */
 a.button.loud, input[type=submit].loud, button.loud {
-  background: #ff5c00 url(/assets/images/alert-overlay.png) repeat-x;
+  background: #ff5c00 url(/images/alert-overlay.png) repeat-x;
   font-size: 125%;
   padding: 8px 14px 9px;
 }
@@ -347,19 +347,19 @@ dd {
 /* A font by Jos Buivenga (exljbris) -> www.exljbris.nl */
 @font-face {
   font-family: Delicious;
-  src: url("/assets/fonts/Delicious-Roman.otf");
+  src: url("/fonts/Delicious-Roman.otf");
 }
 
 @font-face {
   font-family: Delicious;
   font-weight: bold;
-  src: url("/assets/fonts/Delicious-Bold.otf");
+  src: url("/fonts/Delicious-Bold.otf");
 }
 
 @font-face {
   font-family: Delicious;
   font-style: italic;
-  src: url("/assets/fonts/Delicious-Italic.otf");
+  src: url("/fonts/Delicious-Italic.otf");
 }
 
 @font-face {
@@ -715,7 +715,7 @@ body.outfits-new #load-pet-to-wardrobe input {
 }
 /* line 53, ../../../app/stylesheets/outfits/_new.sass */
 body.outfits-new #load-pet-to-wardrobe button {
-  background: #ff5c00 url(/assets/images/alert-overlay.png) repeat-x;
+  background: #ff5c00 url(/images/alert-overlay.png) repeat-x;
   font-size: 125%;
   padding: 8px 14px 9px;
   font-size: 67%;
