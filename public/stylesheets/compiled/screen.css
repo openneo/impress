@@ -327,6 +327,22 @@ dd {
   font-weight: bold;
 }
 
+/* line 201, ../../../app/stylesheets/_layout.sass */
+.object .nc-icon {
+  height: 16px;
+  position: absolute;
+  right: 16px;
+  top: 64px;
+  width: 16px;
+}
+/* line 207, ../../../app/stylesheets/_layout.sass */
+.object .nc-icon:hover {
+  -moz-opacity: 0.5;
+  -webkit-opacity: 0.5;
+  -o-opacity: 0.5;
+  -khtml-opacity: 0.5;
+}
+
 /* Fonts */
 /* A font by Jos Buivenga (exljbris) -> www.exljbris.nl */
 @font-face {
@@ -457,21 +473,6 @@ body.items-index form {
   margin-bottom: 2em;
 }
 /* line 11, ../../../app/stylesheets/items/_index.sass */
-body.items-index .object .nc-icon {
-  height: 16px;
-  position: absolute;
-  right: 16px;
-  top: 64px;
-  width: 16px;
-}
-/* line 17, ../../../app/stylesheets/items/_index.sass */
-body.items-index .object .nc-icon:hover {
-  -moz-opacity: 0.5;
-  -webkit-opacity: 0.5;
-  -o-opacity: 0.5;
-  -khtml-opacity: 0.5;
-}
-/* line 20, ../../../app/stylesheets/items/_index.sass */
 body.items-index #search-help {
   float: left;
   width: 49%;
@@ -481,15 +482,15 @@ body.items-index #search-help {
 body.items-index #search-help h2 {
   font-size: 125%;
 }
-/* line 23, ../../../app/stylesheets/items/_index.sass */
+/* line 14, ../../../app/stylesheets/items/_index.sass */
 body.items-index #search-help dl {
   text-align: left;
 }
-/* line 25, ../../../app/stylesheets/items/_index.sass */
+/* line 16, ../../../app/stylesheets/items/_index.sass */
 body.items-index #search-help dd {
   margin-bottom: 1em;
 }
-/* line 28, ../../../app/stylesheets/items/_index.sass */
+/* line 19, ../../../app/stylesheets/items/_index.sass */
 body.items-index #species-search-links {
   float: left;
   width: 49%;
@@ -499,7 +500,7 @@ body.items-index #species-search-links {
 body.items-index #species-search-links h2 {
   font-size: 125%;
 }
-/* line 31, ../../../app/stylesheets/items/_index.sass */
+/* line 22, ../../../app/stylesheets/items/_index.sass */
 body.items-index #species-search-links img {
   height: 80px;
   width: 80px;

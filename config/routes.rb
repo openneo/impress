@@ -3,7 +3,6 @@ OpenneoImpressItems::Application.routes.draw do |map|
   match '/' => 'items#index', :as => :items
   match '/index.js' => 'items#index', :format => :js
   match '/items.json' => 'items#index', :format => :json
-  match '/items/:id' => 'items#show', :as => :item
  
   match '/item_zone_sets.js' => 'ItemZoneSets#index'
   match '/item_zone_sets.json' => 'ItemZoneSets#index'
@@ -16,7 +15,7 @@ OpenneoImpressItems::Application.routes.draw do |map|
   match '/species/:species_id/color/:color_id/pet_type.json' => 'pet_types#show'
   
   resources :contributions, :only => [:index]
-  resources :items, :only => [:index] do
+  resources :items, :only => [:index, :show] do
     collection do
       get :needed
     end

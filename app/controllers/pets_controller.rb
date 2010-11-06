@@ -16,7 +16,7 @@ class PetsController < ApplicationController
     @pet.save
     respond_to do |format|
       format.html do
-        destination = params[:destination]
+        destination = params[:destination] || params[:origin]
         destination = 'root' unless DESTINATIONS[destination]
         query_joiner = DESTINATIONS[destination]
         path = send("#{destination}_path") + query_joiner + @pet.wardrobe_query

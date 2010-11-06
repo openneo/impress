@@ -175,7 +175,7 @@ function Item(id) {
 Item.LOAD_ERROR = new LoadError("$species_article $species wear a $item");
 
 Item.createFromLocation = function () {
-  var item = new Item(parseInt(document.location.pathname.substr(1))),
+  var item = new Item(parseInt(document.location.pathname.substr(7), 10)),
     z = CURRENT_ITEM_ZONES_RESTRICT, zl = z.length;
   item.restricted_zones = [];
   for(i = 0; i < zl; i++) {

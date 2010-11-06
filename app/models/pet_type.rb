@@ -68,6 +68,28 @@ class PetType < ActiveRecord::Base
     self.color.human_name + ' ' + self.species.human_name
   end
   
+  def needed_items
+    items = Item.arel_table
+    species_matchers = [
+      "#{species_id},%",
+      "%,#{species_id},%",
+      "%,#{species_id}"
+    ]
+    species_condition = nil
+    species_matchers.each do |matcher|
+      condition = items[:species_support_ids].matches(matcher)
+      if species_condition
+        species_condition = species_condition.or(condition)
+      else
+        species_condition = condition
+      end
+    end
+    unneeded_item_ids = Item.select(items[:id]).joins(:parent_swf_asset_relationships => :object_asset).
+      where(SwfAsset.arel_table[:body_id].in([0, self.body_id])).map(&:id)
+    Item.where(items[:id].in(unneeded_item_ids).not).
+      where(species_condition)
+  end
+  
   def add_pet_state_from_biology!(biology)
     pet_state = PetState.from_pet_type_and_biology_info(self, biology)
     self.pet_states << pet_state

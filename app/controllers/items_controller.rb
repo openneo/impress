@@ -1,8 +1,6 @@
 class ItemsController < ApplicationController
   before_filter :set_query
   
-  layout 'items'
-  
   def index
     if params.has_key?(:q)
       begin
@@ -39,6 +37,21 @@ class ItemsController < ApplicationController
   
   def show
     @item = Item.find params[:id]
+  end
+  
+  def needed
+    if params[:color] && params[:species]
+      @pet_type = PetType.find_by_color_id_and_species_id(
+        params[:color],
+        params[:species]
+      )
+    end
+    unless @pet_type
+      raise ActiveRecord::RecordNotFound, 'Pet type not found'
+    end
+    @items = @pet_type.needed_items.alphabetize
+    @pet_name = params[:name]
+    render :layout => 'application'
   end
   
   private
