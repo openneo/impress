@@ -1,6 +1,14 @@
 - title 'Recent Contributions'
 %ul.buttons
+  - if @user
+    %li= link_to 'Recent Contributions', contributions_path, :class => 'button'
   %li= link_to 'Top Contributors', top_contributors_path, :class => 'button'
+- if @user
+  %p
+    = @user.name
+    currently has
+    = @user.points
+    points
 - if @contributions.empty?
   %p No contributions to see here!
 - else

@@ -1,7 +1,12 @@
 class ContributionsController < ApplicationController
   def index
-    @contributions = Contribution.recent.paginate :page => params[:page],
-      :include => :user
+    if params[:user_id]
+      @user = User.find params[:user_id]
+      @contributions = @user.contributions
+    else
+      @contributions = Contribution.includes(:user)
+    end
+    @contributions = @contributions.recent.paginate :page => params[:page]
     Contribution.preload_contributeds_and_parents @contributions
   end
 end
