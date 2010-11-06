@@ -1,0 +1,33 @@
+- unless user_signed_in?
+  %p.warning
+    = link_to 'You are not logged in!', login_path(:return_to => bulk_pets_path)
+    We award points for each new contribution to our database, and we don't want
+    you to miss out, since our users have made the Dress to Impress database
+    what it is today. Thanks for all your hard work!
+%p.noscript
+  Note that submitting pets in bulk requires Javascript.
+%p.script-only
+  We like to make it as easy as possible for you to contribute, so we thought
+  this might help!
+  %strong
+    Type a pet's name in the box below, and we'll
+    start loading it the moment you press enter!
+  If you're a power-user,
+  you can even submit a whole list at once &mdash; just put one pet per line, and
+  copy-paste it into the box. We do the rest!
+%p
+  %strong
+    Thanks for all your hard work!
+= form_tag load_pet_path, :id => 'bulk-pets-form' do
+  = origin_tag bulk_pets_path
+  %span.noscript
+    %input{:name => "name", :type => "text"}/
+    %input{:type => "submit", :value => "Load pet"}/
+  %span.script-only
+    %ul
+    %textarea
+    %button#bulk-pets-form-add{:type => "button"} Add
+    %button#bulk-pets-form-clear{:type => "button"} Clear
+- content_for :javascripts do
+  = include_javascript_libraries :jquery
+  = include_javascripts :bulk_pets_package

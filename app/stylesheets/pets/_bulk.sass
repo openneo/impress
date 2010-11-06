@@ -1,0 +1,48 @@
+body.pets-bulk
+  text-align: center
+  
+  #bulk-pets-form
+    textarea, div
+      +inline-block
+    textarea
+      +inline-block
+      @extend input[type=text]
+      display: inline
+      font: inherit
+      height: 1.5em
+      overflow: hidden
+      resize: none
+    ul
+      list-style: none
+      margin-bottom: 1em
+      li
+        +inline-block
+        background: #eee
+        margin: 0 auto
+        min-width: 25%
+        text-align: left
+        &.loaded
+          background: $notice-bg-color
+        &.failed
+          background: $error-bg-color
+      img
+        @extend .inline-image
+        float: left
+        height: 50px
+        width: 50px
+      span
+        display: block
+      .response
+        font:
+          size: 75%
+          style: italic
+        margin-left: 75px
+
+  &.js
+    .noscript
+      display: none
+    .script-only
+      display: block
+
+  .script-only
+    display: none

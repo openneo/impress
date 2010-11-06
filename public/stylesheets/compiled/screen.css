@@ -75,7 +75,7 @@ h3 {
 }
 
 /* line 59, ../../../app/stylesheets/_layout.sass */
-.inline-image {
+.inline-image, body.pets-bulk #bulk-pets-form ul img {
   margin-right: 1em;
   vertical-align: middle;
 }
@@ -95,7 +95,7 @@ input, button, select, label {
 }
 
 /* line 76, ../../../app/stylesheets/_layout.sass */
-input[type=text], input[type=password], input[type=search], select {
+input[type=text], body.pets-bulk #bulk-pets-form textarea, input[type=password], input[type=search], select {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   background: white;
@@ -104,7 +104,7 @@ input[type=text], input[type=password], input[type=search], select {
   padding: 0.25em;
 }
 /* line 82, ../../../app/stylesheets/_layout.sass */
-input[type=text]:focus, input[type=text]:active, input[type=password]:focus, input[type=password]:active, input[type=search]:focus, input[type=search]:active, select:focus, select:active {
+input[type=text]:focus, body.pets-bulk #bulk-pets-form textarea:focus, input[type=text]:active, body.pets-bulk #bulk-pets-form textarea:active, input[type=password]:focus, input[type=password]:active, input[type=search]:focus, input[type=search]:active, select:focus, select:active {
   color: inherit;
 }
 
@@ -372,7 +372,7 @@ body.items {
   text-align: center;
 }
 /* line 4, ../../../app/stylesheets/_items.sass */
-body.items input[type=text] {
+body.items input[type=text], body.items body.pets-bulk #bulk-pets-form textarea, body.pets-bulk #bulk-pets-form body.items textarea {
   font-size: 125%;
   width: 15em;
 }
@@ -715,7 +715,7 @@ body.outfits-new #how-can-i-help input, body.outfits-new #how-can-i-help button,
   font-size: 115%;
 }
 /* line 82, ../../../app/stylesheets/outfits/_new.sass */
-body.outfits-new #how-can-i-help input[type=text], body.outfits-new #i-found-something input[type=text] {
+body.outfits-new #how-can-i-help input[type=text], body.outfits-new #how-can-i-help body.pets-bulk #bulk-pets-form textarea, body.pets-bulk #bulk-pets-form body.outfits-new #how-can-i-help textarea, body.outfits-new #i-found-something input[type=text], body.outfits-new #i-found-something body.pets-bulk #bulk-pets-form textarea, body.pets-bulk #bulk-pets-form body.outfits-new #i-found-something textarea {
   border-color: #006600;
   width: 12em;
 }
@@ -775,7 +775,7 @@ body.outfits-new #sections h4, body.outfits-new #sections input {
   font-size: 116%;
 }
 /* line 123, ../../../app/stylesheets/outfits/_new.sass */
-body.outfits-new #sections h4, body.outfits-new #sections input[type=text] {
+body.outfits-new #sections h4, body.outfits-new #sections input[type=text], body.outfits-new #sections body.pets-bulk #bulk-pets-form textarea, body.pets-bulk #bulk-pets-form body.outfits-new #sections textarea {
   color: inherit;
 }
 /* line 125, ../../../app/stylesheets/outfits/_new.sass */
@@ -815,6 +815,88 @@ body.outfits-new #tell-the-world img {
   margin-right: 0.25em;
   height: 16px;
   width: 16px;
+}
+
+/* line 1, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk {
+  text-align: center;
+}
+/* line 5, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #bulk-pets-form textarea, body.pets-bulk #bulk-pets-form div {
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: middle;
+  *display: inline;
+  *vertical-align: auto;
+}
+/* line 7, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #bulk-pets-form textarea {
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: middle;
+  *display: inline;
+  *vertical-align: auto;
+  display: inline;
+  font: inherit;
+  height: 1.5em;
+  overflow: hidden;
+  resize: none;
+}
+/* line 15, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #bulk-pets-form ul {
+  list-style: none;
+  margin-bottom: 1em;
+}
+/* line 18, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #bulk-pets-form ul li {
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: middle;
+  *display: inline;
+  *vertical-align: auto;
+  background: #eeeeee;
+  margin: 0 auto;
+  min-width: 25%;
+  text-align: left;
+}
+/* line 24, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #bulk-pets-form ul li.loaded {
+  background: #e6efc2;
+}
+/* line 26, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #bulk-pets-form ul li.failed {
+  background: #fbe3e4;
+}
+/* line 28, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #bulk-pets-form ul img {
+  float: left;
+  height: 50px;
+  width: 50px;
+}
+/* line 33, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #bulk-pets-form ul span {
+  display: block;
+}
+/* line 35, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #bulk-pets-form ul .response {
+  font-size: 75%;
+  font-style: italic;
+  margin-left: 75px;
+}
+/* line 42, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk.js .noscript {
+  display: none;
+}
+/* line 44, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk.js .script-only {
+  display: block;
+}
+/* line 47, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk .script-only {
+  display: none;
 }
 
 /* line 1, ../../../app/stylesheets/static/_terms.sass */

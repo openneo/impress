@@ -1,6 +1,10 @@
 embed_assets: on
 
 javascripts:
+  bulk_pets_package:
+    - public/javascripts/pet_query.js
+    - public/javascripts/pets/bulk.js
+    
   edit_outfit_package:
     - public/javascripts/wardrobe.js
     - public/javascripts/outfits/edit.js

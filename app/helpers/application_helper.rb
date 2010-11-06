@@ -35,4 +35,8 @@ module ApplicationHelper
   def login_path_with_return_to
     login_path :return_to => request.request_uri
   end
+  
+  def origin_tag(value)
+    hidden_field_tag 'origin', value, :id => nil
+  end
 end
