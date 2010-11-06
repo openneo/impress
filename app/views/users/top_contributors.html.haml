@@ -1,0 +1,15 @@
+- title 'Top Contributors'
+= will_paginate @users
+%table#top-contributors
+  %thead
+    %tr
+      %th{:scope => 'column'} Rank
+      %th{:scope => 'column'} User
+      %th{:scope => 'column'} Points
+  %tbody
+    - @users.each_with_index do |user, rank|
+      %tr
+        %th{:scope => 'row'}= @users.offset + rank + 1
+        %td= link_to user.name, user_contributions_path(user)
+        %td= user.points
+= will_paginate @users

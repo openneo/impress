@@ -956,3 +956,24 @@ body.pets-bulk .script-only {
 body.static-terms {
   text-align: center;
 }
+
+/* line 1, ../../../app/stylesheets/users/_top_contributors.sass */
+body.users-top_contributors {
+  text-align: center;
+}
+/* line 4, ../../../app/stylesheets/users/_top_contributors.sass */
+body.users-top_contributors #top-contributors {
+  border-spacing: 0;
+  border-width: 1px 1px 0 0;
+  margin: 1em auto;
+}
+/* line 9, ../../../app/stylesheets/users/_top_contributors.sass */
+body.users-top_contributors #top-contributors, body.users-top_contributors #top-contributors td, body.users-top_contributors #top-contributors th {
+  border-color: #004400;
+  border-style: solid;
+}
+/* line 13, ../../../app/stylesheets/users/_top_contributors.sass */
+body.users-top_contributors #top-contributors td, body.users-top_contributors #top-contributors th {
+  border-width: 0 0 1px 1px;
+  padding: 0.5em 1em;
+}
