@@ -10,6 +10,16 @@ class PetAttribute < StaticResource
     self.name.capitalize
   end
   
+  def self.find(id)
+    attribute = super
+    unless attribute
+      attribute = new
+      attribute.id = id
+      attribute.name = "color \##{id}"
+    end
+    attribute
+  end
+  
   def self.find_by_name(name)
     @objects_by_name[name.downcase]
   end

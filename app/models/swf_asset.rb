@@ -3,6 +3,8 @@ class SwfAsset < ActiveRecord::Base
   LOCAL_ASSET_DIR = Rails.root.join('public', PUBLIC_ASSET_DIR)
   set_inheritance_column 'inheritance_type'
   
+  attr_accessor :item
+  
   has_many :object_asset_relationships, :class_name => 'ParentSwfAssetRelationship',
     :conditions => {:swf_asset_type => 'object'}
   
@@ -16,6 +18,8 @@ class SwfAsset < ActiveRecord::Base
   scope :fitting_standard_body_ids, lambda {
     where(arel_table[:body_id].in(BodyIdsFittingStandard))
   }
+  
+  scope :object_assets, where(arel_table[:type].eq('object'))
   
   def local_url
     '/' + File.join(PUBLIC_ASSET_DIR, local_path_within_outfit_swfs)

@@ -64,6 +64,10 @@ class PetType < ActiveRecord::Base
     self['image_hash'] || BasicHashes[species.name][color.name]
   end
   
+  def human_name
+    self.color.human_name + ' ' + self.species.human_name
+  end
+  
   def add_pet_state_from_biology!(biology)
     pet_state = PetState.from_pet_type_and_biology_info(self, biology)
     self.pet_states << pet_state
@@ -89,6 +93,26 @@ class PetType < ActiveRecord::Base
         self.image_hash = match[1]
       else
         raise "CPN image pointed to #{new_url}, which does not match CP image format"
+      end
+    end
+  end
+  
+  def self.all_by_ids_or_children(ids, pet_states)
+    pet_states_by_pet_type_id = {}
+    pet_states.each do |pet_state|
+      id = pet_state.pet_type_id
+      ids << id
+      pet_states_by_pet_type_id[id] ||= []
+      pet_states_by_pet_type_id[id] << pet_state
+    end
+    find(ids).tap do |pet_types|
+      pet_types.each do |pet_type|
+        pet_states = pet_states_by_pet_type_id[pet_type.id]
+        if pet_states
+          pet_states.each do |pet_state|
+            pet_state.pet_type = pet_type
+          end
+        end
       end
     end
   end

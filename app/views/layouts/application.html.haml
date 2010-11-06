@@ -1,11 +1,17 @@
 !!! 5
 %html
   %head
-    %title Dress to Impress
+    %title
+      Dress to Impress
+      - if content_for? :title
+        &mdash;
+        = yield :title
     = stylesheet_link_tag "compiled/screen"
     = javascript_include_tag "http://#{RemoteImpressHost}/assets/js/analytics.js"
   %body{:class => body_class}
     #container
+      - if content_for? :title
+        %h1#title= yield :title
       = yield :before_flashes
       = flashes
 

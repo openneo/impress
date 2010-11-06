@@ -1,0 +1,10 @@
+- contributed = contribution.contributed
+= content_tag_for :li, contribution do
+  %span.point-value= contribution.point_value
+  %span.username
+    = link_to contribution.user.name, user_contributions_path(contribution.user)
+  showed us
+  = contributed_description contributed
+  %span.time-ago{:title => contribution.created_at.to_s}
+    = time_ago_in_words(contribution.created_at)
+    ago

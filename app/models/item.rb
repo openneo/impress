@@ -149,6 +149,34 @@ class Item < ActiveRecord::Base
     @parent_swf_asset_relationships_to_update = rels
   end
   
+  def self.all_by_ids_or_children(ids, swf_assets)
+    swf_asset_ids = []
+    swf_assets_by_id = {}
+    swf_assets_by_parent_id = {}
+    swf_assets.each do |swf_asset|
+      id = swf_asset.id
+      swf_assets_by_id[id] = swf_asset
+      swf_asset_ids << id
+    end
+    SwfAsset.select('id, parent_id').object_assets.joins(:object_asset_relationships).
+      where(SwfAsset.arel_table[:id].in(swf_asset_ids)).each do |row|
+        item_id = row.parent_id.to_i
+        swf_assets_by_parent_id[item_id] ||= []
+        swf_assets_by_parent_id[item_id] << swf_assets_by_id[row.id.to_i]
+        ids << item_id
+      end
+    find(ids).tap do |items|
+      items.each do |item|
+        swf_assets = swf_assets_by_parent_id[item.id]
+        if swf_assets
+          swf_assets.each do |swf_asset|
+            swf_asset.item = item
+          end
+        end
+      end
+    end
+  end
+  
   def self.collection_from_pet_type_and_registries(pet_type, info_registry, asset_registry)
     # bear in mind that registries are arrays with many nil elements,
     # due to how the parser works

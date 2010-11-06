@@ -1,0 +1,38 @@
+body.contributions-index
+  text-align: center
+  
+  .contributions
+    li
+      list-style: none
+      height: 80px
+      overflow: hidden
+      padding: 1em 0 0 100px
+      position: relative
+      text-align: left
+    .point-value
+      +header-text
+      color: #fff
+      font-size: 80px
+      left: 0
+      line-height: 1
+      position: absolute
+      text-align: center
+      text-shadow: 2px 2px 0 #000
+      top: 0
+      width: 80px
+      z-index: 3
+      &:hover
+        +opacity(0.5)
+    img
+      height: 80px
+      left: 0
+      position: absolute
+      top: 0
+      width: 80px
+      z-index: 2
+    span
+      &.username, &.contributed-name
+        font-weight: bold
+      &.time-ago
+        display: block
+        font-size: 75%

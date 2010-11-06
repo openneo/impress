@@ -39,4 +39,8 @@ module ApplicationHelper
   def origin_tag(value)
     hidden_field_tag 'origin', value, :id => nil
   end
+  
+  def title(value)
+    content_for :title, value
+  end
 end

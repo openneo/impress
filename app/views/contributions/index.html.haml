@@ -1,0 +1,9 @@
+- title 'Recent Contributions'
+%ul.buttons
+  %li= link_to 'Top Contributors', top_contributors_path, :class => 'button'
+- if @contributions.empty?
+  %p No contributions to see here!
+- else
+  = will_paginate @contributions
+  %ul.contributions= render @contributions
+  = will_paginate @contributions

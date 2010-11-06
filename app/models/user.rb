@@ -1,6 +1,8 @@
 class User < ActiveRecord::Base
   DefaultAuthServerId = 1
   
+  has_many :contributions
+  
   scope :top_contributors, order('points DESC')
   
   def self.find_or_create_from_remote_auth_data(user_data)

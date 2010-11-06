@@ -367,6 +367,59 @@ dd {
   src: local("Droid Sans"), url("http://themes.googleusercontent.com/font?kit=POVDFY-UUf0WFR9DIMCU8g") format("truetype");
 }
 
+/* line 1, ../../../app/stylesheets/contributions/_index.sass */
+body.contributions-index {
+  text-align: center;
+}
+/* line 5, ../../../app/stylesheets/contributions/_index.sass */
+body.contributions-index .contributions li {
+  list-style: none;
+  height: 80px;
+  overflow: hidden;
+  padding: 1em 0 0 100px;
+  position: relative;
+  text-align: left;
+}
+/* line 12, ../../../app/stylesheets/contributions/_index.sass */
+body.contributions-index .contributions .point-value {
+  font-family: Delicious, Helvetica, Arial, Verdana, sans-serif;
+  color: white;
+  font-size: 80px;
+  left: 0;
+  line-height: 1;
+  position: absolute;
+  text-align: center;
+  text-shadow: 2px 2px 0 black;
+  top: 0;
+  width: 80px;
+  z-index: 3;
+}
+/* line 24, ../../../app/stylesheets/contributions/_index.sass */
+body.contributions-index .contributions .point-value:hover {
+  -moz-opacity: 0.5;
+  -webkit-opacity: 0.5;
+  -o-opacity: 0.5;
+  -khtml-opacity: 0.5;
+}
+/* line 26, ../../../app/stylesheets/contributions/_index.sass */
+body.contributions-index .contributions img {
+  height: 80px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 80px;
+  z-index: 2;
+}
+/* line 34, ../../../app/stylesheets/contributions/_index.sass */
+body.contributions-index .contributions span.username, body.contributions-index .contributions span.contributed-name {
+  font-weight: bold;
+}
+/* line 36, ../../../app/stylesheets/contributions/_index.sass */
+body.contributions-index .contributions span.time-ago {
+  display: block;
+  font-size: 75%;
+}
+
 /* line 1, ../../../app/stylesheets/_items.sass */
 body.items {
   text-align: center;
