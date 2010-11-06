@@ -28,8 +28,9 @@
 
       #userbar
         - if user_signed_in?
-          == Hey, #{current_user.name}!
-          == You have #{current_user.points} points.
+          %span
+            == Hey, #{link_to current_user.name, user_contributions_path(current_user)}!
+            == You have #{current_user.points} points.
           = link_to 'Log out', logout_path
         - else
           = link_to login_path_with_return_to, :id => 'userbar-log-in' do
