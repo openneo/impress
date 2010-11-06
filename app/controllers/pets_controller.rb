@@ -13,8 +13,12 @@ class PetsController < ApplicationController
     
     raise Pet::PetNotFound unless params[:name]
     @pet = Pet.load(params[:name])
-    @pet.contributor = current_user if user_signed_in?
-    @pet.save
+    if user_signed_in?
+      points = current_user.contribute! @pet
+    else
+      @pet.save
+      points = true
+    end
     respond_to do |format|
       format.html do
         destination = params[:destination] || params[:origin]
@@ -25,7 +29,7 @@ class PetsController < ApplicationController
       end
       
       format.json do
-        render :json => true
+        render :json => points
       end
     end
   end

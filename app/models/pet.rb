@@ -46,21 +46,21 @@ class Pet < ActiveRecord::Base
     }.to_query
   end
   
+  def contributables
+    contributables = [pet_type, @pet_state]
+    items.each do |item|
+      item.handle_assets!
+      contributables << item
+      contributables += item.pending_swf_assets
+    end
+    contributables
+  end
+  
   before_validation do
-    if @contributor
-      contributables = [pet_type, @pet_state]
-      items.each do |item|
-        item.handle_assets!
-        contributables << item
-        contributables += item.pending_swf_assets
-      end
-      @contributor.contribute! contributables
-    else
-      pet_type.save!
-      items.each do |item|
-        item.handle_assets!
-        item.save!
-      end
+    pet_type.save!
+    items.each do |item|
+      item.handle_assets!
+      item.save!
     end
   end
   
