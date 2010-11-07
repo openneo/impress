@@ -1,6 +1,6 @@
 #outfit-forms
   #pet-preview
-    = image_tag 'default_preview.png'
+    = image_tag 'default_preview.png', :alt => ''
     %span
   %h1 Dress to Impress
   %h2 Neopets wearables made easy!
@@ -9,7 +9,7 @@
     = destination_tag 'wardrobe'
     %fieldset
       %legend Enter your pet's name
-      = pet_name_tag
+      = pet_name_tag :id => 'main-pet-name'
       %button{:type => "submit"}
         Plan my outfit!
   = form_tag wardrobe_path, :method => 'get', :id => 'start-from-scratch' do

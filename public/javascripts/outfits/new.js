@@ -3,7 +3,7 @@
 var preview_el = $('#pet-preview'),
   img_el = preview_el.find('img'),
   response_el = preview_el.find('span'),
-  name_el = $('#name');
+  name_el = $('#main-pet-name');
 
 preview_el.click(function () {
   name_el.val(Preview.Job.current.name).closest('form').submit();
