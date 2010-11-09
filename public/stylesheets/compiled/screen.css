@@ -22,66 +22,67 @@ html, body {
 
 /* line 21, ../../../app/stylesheets/_layout.sass */
 body {
+  background: white;
   color: #004400;
   font-family: "Droid Sans", Helvetica, Arial, Verdana, sans-serif;
   font-size: 90%;
   line-height: 1.5;
 }
 
-/* line 28, ../../../app/stylesheets/_layout.sass */
+/* line 29, ../../../app/stylesheets/_layout.sass */
 a {
   color: #226622;
 }
 
-/* line 31, ../../../app/stylesheets/_layout.sass */
+/* line 32, ../../../app/stylesheets/_layout.sass */
 p {
   font-family: "Droid Serif", Georgia, "Times New Roman", Times, serif;
 }
 
-/* line 34, ../../../app/stylesheets/_layout.sass */
+/* line 35, ../../../app/stylesheets/_layout.sass */
 input, button, select {
   font-family: inherit;
   font-size: 100%;
 }
 
-/* line 39, ../../../app/stylesheets/_layout.sass */
+/* line 40, ../../../app/stylesheets/_layout.sass */
 p {
   margin-bottom: 1em;
 }
 
-/* line 42, ../../../app/stylesheets/_layout.sass */
+/* line 43, ../../../app/stylesheets/_layout.sass */
 h1, h2, h3 {
   font-family: Delicious, Helvetica, Arial, Verdana, sans-serif;
 }
 
-/* line 45, ../../../app/stylesheets/_layout.sass */
+/* line 46, ../../../app/stylesheets/_layout.sass */
 h1 {
   font-size: 3em;
   line-height: 1;
   margin-bottom: 0.5em;
 }
 
-/* line 50, ../../../app/stylesheets/_layout.sass */
+/* line 51, ../../../app/stylesheets/_layout.sass */
 h2 {
   font-size: 2em;
   margin-bottom: 0.75em;
 }
 
-/* line 54, ../../../app/stylesheets/_layout.sass */
+/* line 55, ../../../app/stylesheets/_layout.sass */
 h3 {
   font-size: 1.5em;
   line-height: 1;
   margin-bottom: 1em;
 }
 
-/* line 59, ../../../app/stylesheets/_layout.sass */
+/* line 60, ../../../app/stylesheets/_layout.sass */
 .inline-image, body.pets-bulk #bulk-pets-form ul img {
   margin-right: 1em;
   vertical-align: middle;
 }
 
 /* Main */
-/* line 67, ../../../app/stylesheets/_layout.sass */
+/* line 68, ../../../app/stylesheets/_layout.sass */
 #container {
   margin: 1em auto;
   padding-top: 3em;
@@ -89,12 +90,12 @@ h3 {
   width: 800px;
 }
 
-/* line 73, ../../../app/stylesheets/_layout.sass */
+/* line 74, ../../../app/stylesheets/_layout.sass */
 input, button, select, label {
   cursor: pointer;
 }
 
-/* line 76, ../../../app/stylesheets/_layout.sass */
+/* line 77, ../../../app/stylesheets/_layout.sass */
 input[type=text], body.pets-bulk #bulk-pets-form textarea, input[type=password], input[type=search], select {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -103,12 +104,12 @@ input[type=text], body.pets-bulk #bulk-pets-form textarea, input[type=password],
   color: #448844;
   padding: 0.25em;
 }
-/* line 82, ../../../app/stylesheets/_layout.sass */
+/* line 83, ../../../app/stylesheets/_layout.sass */
 input[type=text]:focus, body.pets-bulk #bulk-pets-form textarea:focus, input[type=text]:active, body.pets-bulk #bulk-pets-form textarea:active, input[type=password]:focus, input[type=password]:active, input[type=search]:focus, input[type=search]:active, select:focus, select:active {
   color: inherit;
 }
 
-/* line 85, ../../../app/stylesheets/_layout.sass */
+/* line 86, ../../../app/stylesheets/_layout.sass */
 a.button, input[type=submit], button {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
@@ -139,7 +140,7 @@ a.button:hover, input[type=submit]:hover, button:hover {
 a.button:active, input[type=submit]:active, button:active {
   top: 1px;
 }
-/* line 87, ../../../app/stylesheets/_layout.sass */
+/* line 88, ../../../app/stylesheets/_layout.sass */
 a.button.loud, input[type=submit].loud, button.loud {
   background: #ff5c00 url(/images/alert-overlay.png) repeat-x;
   font-size: 125%;
@@ -150,26 +151,26 @@ a.button.loud:hover, input[type=submit].loud:hover, button.loud:hover {
   background-color: #ee4b00;
 }
 
-/* line 67, ../../../app/stylesheets/partials/clean/_mixins.sass */
+/* line 87, ../../../app/stylesheets/partials/clean/_mixins.sass */
 a.button:after {
   content: " >>";
 }
 
-/* line 93, ../../../app/stylesheets/_layout.sass */
+/* line 94, ../../../app/stylesheets/_layout.sass */
 ul.buttons {
   margin-bottom: 1em;
 }
-/* line 95, ../../../app/stylesheets/_layout.sass */
+/* line 96, ../../../app/stylesheets/_layout.sass */
 ul.buttons li {
   list-style: none;
   margin: 0 0.5em;
 }
-/* line 98, ../../../app/stylesheets/_layout.sass */
+/* line 99, ../../../app/stylesheets/_layout.sass */
 ul.buttons li, ul.buttons li form {
   display: inline;
 }
 
-/* line 101, ../../../app/stylesheets/_layout.sass */
+/* line 102, ../../../app/stylesheets/_layout.sass */
 #footer {
   clear: both;
   font-size: 75%;
@@ -177,77 +178,77 @@ ul.buttons li, ul.buttons li form {
   padding-top: 2em;
   text-align: center;
 }
-/* line 107, ../../../app/stylesheets/_layout.sass */
+/* line 108, ../../../app/stylesheets/_layout.sass */
 #footer ul, #footer div {
   display: inline;
   margin: 0 1em;
 }
-/* line 110, ../../../app/stylesheets/_layout.sass */
+/* line 111, ../../../app/stylesheets/_layout.sass */
 #footer li, #footer div ul {
   display: inline;
   margin: 0 0.5em;
 }
 
-/* line 114, ../../../app/stylesheets/_layout.sass */
+/* line 115, ../../../app/stylesheets/_layout.sass */
 .success, .alert, .warning {
   margin-bottom: 1em;
   padding: 0.25em 0.5em;
   text-align: center;
 }
 
-/* line 119, ../../../app/stylesheets/_layout.sass */
+/* line 120, ../../../app/stylesheets/_layout.sass */
 .success {
   background: #e6efc2;
   border: 1px solid #c6d880;
   color: #264409;
 }
 
-/* line 124, ../../../app/stylesheets/_layout.sass */
+/* line 125, ../../../app/stylesheets/_layout.sass */
 .alert {
   background: #fbe3e4;
   border: 1px solid #fbc2c4;
   color: #8a1f11;
 }
 
-/* line 129, ../../../app/stylesheets/_layout.sass */
+/* line 130, ../../../app/stylesheets/_layout.sass */
 .warning {
   background: #fff6bf;
   border: 1px solid #ffd324;
   color: #514721;
 }
 
-/* line 134, ../../../app/stylesheets/_layout.sass */
+/* line 135, ../../../app/stylesheets/_layout.sass */
 #userbar {
   font-family: Delicious, Helvetica, Arial, Verdana, sans-serif;
   position: absolute;
   right: 0;
   top: 0;
 }
-/* line 139, ../../../app/stylesheets/_layout.sass */
+/* line 140, ../../../app/stylesheets/_layout.sass */
 #userbar > * {
   display: inline;
   margin: 0 0.25em;
 }
 
-/* line 143, ../../../app/stylesheets/_layout.sass */
+/* line 144, ../../../app/stylesheets/_layout.sass */
 #userbar-log-in {
   text-decoration: none;
 }
-/* line 145, ../../../app/stylesheets/_layout.sass */
+/* line 146, ../../../app/stylesheets/_layout.sass */
 #userbar-log-in img {
   margin-bottom: -4px;
   margin-right: 0.25em;
 }
-/* line 149, ../../../app/stylesheets/_layout.sass */
+/* line 150, ../../../app/stylesheets/_layout.sass */
 #userbar-log-in span {
   text-decoration: underline;
 }
-/* line 151, ../../../app/stylesheets/_layout.sass */
+/* line 152, ../../../app/stylesheets/_layout.sass */
 #userbar-log-in:hover span {
   text-decoration: none;
 }
 
-/* line 154, ../../../app/stylesheets/_layout.sass */
+/* line 155, ../../../app/stylesheets/_layout.sass */
 .object {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -261,25 +262,25 @@ ul.buttons li, ul.buttons li form {
   vertical-align: top;
   width: 100px;
 }
-/* line 161, ../../../app/stylesheets/_layout.sass */
+/* line 162, ../../../app/stylesheets/_layout.sass */
 .object a {
   text-decoration: none;
 }
-/* line 163, ../../../app/stylesheets/_layout.sass */
+/* line 164, ../../../app/stylesheets/_layout.sass */
 .object a img {
   -moz-opacity: 0.75;
   -webkit-opacity: 0.75;
   -o-opacity: 0.75;
   -khtml-opacity: 0.75;
 }
-/* line 165, ../../../app/stylesheets/_layout.sass */
+/* line 166, ../../../app/stylesheets/_layout.sass */
 .object a:hover img {
   -moz-opacity: 1;
   -webkit-opacity: 1;
   -o-opacity: 1;
   -khtml-opacity: 1;
 }
-/* line 167, ../../../app/stylesheets/_layout.sass */
+/* line 168, ../../../app/stylesheets/_layout.sass */
 .object img {
   display: block;
   height: 80px;
@@ -287,17 +288,17 @@ ul.buttons li, ul.buttons li form {
   width: 80px;
 }
 
-/* line 173, ../../../app/stylesheets/_layout.sass */
+/* line 174, ../../../app/stylesheets/_layout.sass */
 dt {
   font-weight: bold;
 }
 
-/* line 176, ../../../app/stylesheets/_layout.sass */
+/* line 177, ../../../app/stylesheets/_layout.sass */
 dd {
   margin: 0 0 1.5em 1em;
 }
 
-/* line 179, ../../../app/stylesheets/_layout.sass */
+/* line 180, ../../../app/stylesheets/_layout.sass */
 #home-link {
   font-family: Delicious, Helvetica, Arial, Verdana, sans-serif;
   font-size: 175%;
@@ -308,26 +309,26 @@ dd {
   position: absolute;
   top: 0;
 }
-/* line 189, ../../../app/stylesheets/_layout.sass */
+/* line 190, ../../../app/stylesheets/_layout.sass */
 #home-link:hover {
   background: #eeffee;
   text-decoration: none;
 }
-/* line 192, ../../../app/stylesheets/_layout.sass */
+/* line 193, ../../../app/stylesheets/_layout.sass */
 #home-link span:before {
   content: "<< ";
 }
 
-/* line 196, ../../../app/stylesheets/_layout.sass */
+/* line 197, ../../../app/stylesheets/_layout.sass */
 .pagination a, .pagination span {
   margin: 0 0.5em;
 }
-/* line 198, ../../../app/stylesheets/_layout.sass */
+/* line 199, ../../../app/stylesheets/_layout.sass */
 .pagination .current {
   font-weight: bold;
 }
 
-/* line 201, ../../../app/stylesheets/_layout.sass */
+/* line 202, ../../../app/stylesheets/_layout.sass */
 .object .nc-icon {
   height: 16px;
   position: absolute;
@@ -335,7 +336,7 @@ dd {
   top: 64px;
   width: 16px;
 }
-/* line 207, ../../../app/stylesheets/_layout.sass */
+/* line 208, ../../../app/stylesheets/_layout.sass */
 .object .nc-icon:hover {
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
@@ -624,6 +625,648 @@ body.items-show #item-preview-header a {
 body.items-show .nc-icon {
   height: 16px;
   width: 16px;
+}
+
+@import url(../shared/jquery.jgrowl.css);
+/* line 13, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-toolbar {
+  margin-bottom: 0.5em;
+  text-align: left;
+}
+/* line 16, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-toolbar form {
+  display: inline;
+  margin-right: 2em;
+}
+/* line 19, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #pet-info form {
+  display: inline;
+}
+/* line 22, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #pet-state-form ul {
+  list-style: none;
+}
+/* line 24, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #pet-state-form ul, body.outfits-edit #pet-state-form ul li {
+  display: inline;
+}
+/* line 26, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #pet-state-form input {
+  display: none;
+}
+/* line 28, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #pet-state-form label {
+  /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background: #006400 url(/images/alert-overlay.png) repeat-x;
+  border: 0;
+  display: inline-block;
+  padding: 0.5em 0.75em 0.45em;
+  color: white;
+  text-decoration: none;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  position: relative;
+  font-weight: bold;
+  line-height: 1;
+  margin: 0 0.25em;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.outfits-edit #pet-state-form label:hover {
+  background-color: #005300;
+}
+/* line 53, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.outfits-edit #pet-state-form label:hover {
+  color: white;
+}
+/* line 55, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.outfits-edit #pet-state-form label:active {
+  top: 1px;
+}
+/* line 31, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #pet-state-form li.selected label {
+  background: #0b61a4 url(/images/alert-overlay.png) repeat-x;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.outfits-edit #pet-state-form li.selected label:hover {
+  background-color: #005093;
+}
+/* line 33, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #sharing {
+  float: right;
+  position: relative;
+}
+/* line 36, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #short-url-response {
+  font-size: 87.5%;
+  display: none;
+  position: absolute;
+  right: 0;
+  top: -2em;
+  width: 20em;
+}
+/* line 43, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #share-button-wrapper {
+  display: inline;
+}
+/* line 46, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #share-button img {
+  margin-bottom: -0.25em;
+  margin-right: 0.25em;
+  height: 16px;
+  width: 16px;
+}
+/* line 52, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #share-button:active {
+  top: 1px;
+}
+/* line 54, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview {
+  clear: both;
+}
+/* line 56, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-swf {
+  float: left;
+  height: 400px;
+  margin-bottom: 1em;
+  position: relative;
+  width: 400px;
+}
+/* line 62, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-swf-overlay {
+  -moz-opacity: 0;
+  -webkit-opacity: 0;
+  -o-opacity: 0;
+  -khtml-opacity: 0;
+  background: black;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+/* line 70, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-sidebar {
+  float: left;
+  height: 400px;
+  margin-left: 20px;
+  margin-bottom: 1em;
+  width: 380px;
+}
+/* line 77, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-sidebar.viewing-outfits #preview-closet {
+  display: none;
+}
+/* line 79, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-sidebar.viewing-outfits #preview-outfits {
+  display: block;
+}
+/* line 82, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-closet h2 {
+  margin: 0;
+}
+/* line 84, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-closet .object {
+  background: #eeffee;
+}
+/* line 86, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-closet .object img {
+  -moz-opacity: 0.5;
+  -webkit-opacity: 0.5;
+  -o-opacity: 0.5;
+  -khtml-opacity: 0.5;
+}
+/* line 88, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-closet .object.worn {
+  background: transparent;
+}
+/* line 90, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-closet .object.worn img {
+  -moz-opacity: 1;
+  -webkit-opacity: 1;
+  -o-opacity: 1;
+  -khtml-opacity: 1;
+}
+/* line 92, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-closet .object.no-assets {
+  background: #fbe3e4;
+  color: #8a1f11;
+  padding-bottom: 1.25em;
+}
+/* line 96, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-closet .object.no-assets .no-assets-message {
+  display: block;
+}
+/* line 98, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit .no-assets-message {
+  background: #f3dbdc;
+  bottom: 0;
+  color: #821709;
+  cursor: pointer;
+  display: none;
+  font-size: 75%;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}
+/* line 108, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #no-assets-full-message {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background: #fff4f5;
+  border: 1px solid #ffd3d5;
+  color: #9b3022;
+  font-size: 75%;
+  left: -9999px;
+  padding: 0.25em;
+  position: absolute;
+  top: -9999px;
+  width: 30em;
+}
+/* line 119, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-search-form {
+  clear: both;
+  text-align: left;
+}
+/* line 122, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-search-form h2 {
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: middle;
+  *display: inline;
+  *vertical-align: auto;
+  margin: 0 1em 0 0;
+}
+/* line 125, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-search-form input {
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: middle;
+  *display: inline;
+  *vertical-align: auto;
+}
+/* line 127, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-search-form-pagination {
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: middle;
+  *display: inline;
+  *vertical-align: auto;
+  margin-left: 2em;
+}
+/* line 130, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-search-form-pagination a, body.outfits-edit #preview-search-form-pagination span {
+  margin: 0 0.25em;
+}
+/* line 132, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-search-form-pagination .current {
+  font-weight: bold;
+}
+/* line 134, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-search-form-clear {
+  display: none;
+  font-size: 87.5%;
+  margin-left: 2em;
+}
+/* line 138, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-search-form-loading {
+  display: none;
+  font-size: 75%;
+  font-style: italic;
+  margin-left: 2em;
+}
+/* line 144, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-search-form-no-results {
+  display: none;
+}
+/* line 146, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-search-form-help {
+  font-size: 87.5%;
+  margin-left: 2em;
+}
+/* line 149, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit .search-helper {
+  font-family: inherit;
+}
+/* line 151, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit .possible-error {
+  display: none;
+}
+/* line 154, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #fullscreen-copyright {
+  display: none;
+}
+/* line 156, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit.fullscreen {
+  height: 100%;
+}
+/* line 159, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit.fullscreen #container {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 100%;
+  margin: 0 auto;
+  min-width: 800px;
+  padding-top: 2.5em;
+  position: relative;
+  width: 80%;
+}
+/* line 167, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit.fullscreen h1 {
+  display: none;
+}
+/* line 169, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit.fullscreen #short-url-response {
+  position: static;
+}
+/* line 171, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit.fullscreen #preview {
+  width: 100%;
+}
+/* line 173, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit.fullscreen #preview-sidebar {
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border: 1px solid #aaddaa;
+  float: right;
+  height: 100%;
+  margin: 0;
+  overflow: auto;
+  position: relative;
+  width: 400px;
+}
+/* line 182, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit.fullscreen #preview-sidebar > div {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+/* line 186, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit.fullscreen #preview-search-form {
+  bottom: 1em;
+  left: 0;
+  overflow: auto;
+  padding: 0.5em 1em;
+  position: absolute;
+  width: 100%;
+}
+/* line 194, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit.fullscreen #preview-search-form-help div {
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: middle;
+  *display: inline;
+  *vertical-align: auto;
+  width: 48%;
+}
+/* line 197, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit.fullscreen #footer {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}
+/* line 202, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit.fullscreen #footer ul, body.outfits-edit.fullscreen #footer p, body.outfits-edit.fullscreen #footer li {
+  display: inline;
+}
+/* line 204, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit.fullscreen #footer ul {
+  margin-right: 2em;
+}
+/* line 207, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit .object {
+  padding: 6px;
+  position: relative;
+}
+/* line 210, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit .object ul {
+  display: none;
+  left: 0;
+  list-style: none;
+  position: absolute;
+  top: 0;
+}
+/* line 216, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit .object ul li {
+  margin-bottom: 0.25em;
+}
+/* line 218, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit .object ul li a {
+  /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background: #006400 url(/images/alert-overlay.png) repeat-x;
+  border: 0;
+  display: inline-block;
+  padding: 0.5em 0.75em 0.45em;
+  color: white;
+  text-decoration: none;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  position: relative;
+  font-weight: bold;
+  line-height: 1;
+  background: #aaaaaa url(/images/alert-overlay.png) repeat-x;
+  -moz-opacity: 0.9;
+  -webkit-opacity: 0.9;
+  -o-opacity: 0.9;
+  -khtml-opacity: 0.9;
+  font-size: 80%;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.outfits-edit .object ul li a:hover {
+  background-color: #005300;
+}
+/* line 53, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.outfits-edit .object ul li a:hover {
+  color: white;
+}
+/* line 55, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.outfits-edit .object ul li a:active {
+  top: 1px;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.outfits-edit .object ul li a:hover {
+  background-color: #999999;
+}
+/* line 224, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit .object:hover ul, body.outfits-edit .object:hover .object-info {
+  display: block;
+}
+/* line 231, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit .nc-icon {
+  background: url(/assets/images/nc.png) no-repeat;
+  height: 16px;
+  position: absolute;
+  right: 16px;
+  text-indent: -9999px;
+  top: 64px;
+  width: 16px;
+}
+/* line 239, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit .nc-icon:hover {
+  -moz-opacity: 0.5;
+  -webkit-opacity: 0.5;
+  -o-opacity: 0.5;
+  -khtml-opacity: 0.5;
+}
+/* line 242, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit .object-info {
+  -moz-border-radius: 12px;
+  -webkit-border-radius: 12px;
+  -moz-opacity: 0.75;
+  -webkit-opacity: 0.75;
+  -o-opacity: 0.75;
+  -khtml-opacity: 0.75;
+  background: #aaaaaa;
+  color: white;
+  display: none;
+  height: 16px;
+  position: absolute;
+  right: 8px;
+  top: 0;
+  width: 16px;
+}
+/* line 253, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit .object-info span {
+  font-family: "Droid Serif", Georgia, "Times New Roman", Times, serif;
+  font-weight: bold;
+  position: relative;
+  top: -2px;
+}
+/* line 259, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit .object-info:hover {
+  -moz-opacity: 1;
+  -webkit-opacity: 1;
+  -o-opacity: 1;
+  -khtml-opacity: 1;
+}
+/* line 269, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits {
+  display: none;
+  text-align: left;
+}
+/* line 272, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits h2 {
+  margin-bottom: 0.25em;
+}
+/* line 274, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits h3 {
+  margin-bottom: 0.5em;
+}
+/* line 276, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul {
+  display: block;
+  font-family: "Droid Sans", Helvetica, Arial, Verdana, sans-serif;
+  list-style: none;
+  margin-bottom: 1em;
+}
+/* line 281, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul > li {
+  overflow: hidden;
+  display: inline-block;
+  font-size: 75%;
+  margin-bottom: 0.5em;
+}
+/* line 8, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.outfits-edit #preview-outfits > ul > li {
+  display: block;
+}
+/* line 285, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul > li .outfit-thumbnail {
+  float: left;
+  height: 50px;
+  margin-right: 12px;
+  overflow: hidden;
+  position: relative;
+  width: 50px;
+}
+/* line 292, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul > li img {
+  height: 100px;
+  left: -25px;
+  position: absolute;
+  top: -25px;
+  width: 100px;
+}
+/* line 298, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul > li > div {
+  float: left;
+  width: 258px;
+}
+/* line 301, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul > li button {
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  background: transparent;
+  display: inline;
+  padding: 0;
+  color: inherit;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  text-shadow: none;
+  border-bottom: 0;
+  position: static;
+  font-weight: normal;
+  line-height: inherit;
+  -moz-opacity: 0.5;
+  -webkit-opacity: 0.5;
+  -o-opacity: 0.5;
+  -khtml-opacity: 0.5;
+  font-size: 150%;
+  float: right;
+  line-height: 1;
+  margin-top: -0.125em;
+  padding: 0.125em 0.25em;
+}
+/* line 72, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.outfits-edit #preview-outfits > ul > li button:hover {
+  background: transparent;
+  color: inherit;
+}
+/* line 75, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.outfits-edit #preview-outfits > ul > li button:active {
+  top: auto;
+}
+/* line 309, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul > li button:hover {
+  -moz-opacity: 1;
+  -webkit-opacity: 1;
+  -o-opacity: 1;
+  -khtml-opacity: 1;
+  background: #eeffee;
+}
+/* line 312, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul > li header {
+  display: block;
+  padding-left: 24px;
+}
+/* line 315, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul > li .outfit-star {
+  background-image: url(/images/unstarred.png);
+  background-position: left top;
+  background-repeat: no-repeat;
+  bottom: -2px;
+  /* margin-bottom doesn't work here */
+  cursor: pointer;
+  display: block;
+  float: left;
+  height: 16px;
+  margin-left: -24px;
+  /* makes it not take up inline space */
+  position: relative;
+  width: 16px;
+}
+/* line 330, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul > li h4 {
+  cursor: pointer;
+  font-size: 150%;
+}
+/* line 333, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul > li h4:hover {
+  text-decoration: underline;
+}
+/* line 335, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul > li input {
+  -moz-opacity: 0.5;
+  -webkit-opacity: 0.5;
+  -o-opacity: 0.5;
+  -khtml-opacity: 0.5;
+  border-color: white;
+  width: 234px;
+}
+/* line 339, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul > li input:hover {
+  -moz-opacity: 1;
+  -webkit-opacity: 1;
+  -o-opacity: 1;
+  -khtml-opacity: 1;
+  border-color: #cceecc;
+}
+/* line 342, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul > li .outfit-delete-confirmation {
+  display: none;
+}
+/* line 344, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul > li .outfit-delete-confirmation span {
+  color: red;
+}
+/* line 346, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul > li .outfit-delete-confirmation a {
+  margin: 0 0.25em;
+}
+/* line 349, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul > li.confirming-deletion .outfit-delete {
+  visibility: hidden;
+}
+/* line 351, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul > li.confirming-deletion .outfit-url {
+  display: none;
+}
+/* line 353, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul > li.confirming-deletion .outfit-delete-confirmation {
+  display: block;
+}
+/* line 356, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-outfits > ul > li.starred .outfit-star {
+  background-image: url(/images/star.png);
+}
+/* line 359, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit .preview-sidebar-nav {
+  float: right;
+  font-size: 85%;
+  margin-top: 1em;
 }
 
 /* line 2, ../../../app/stylesheets/outfits/_new.sass */

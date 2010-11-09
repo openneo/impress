@@ -6,6 +6,7 @@ javascripts:
     - public/javascripts/pets/bulk.js
     
   edit_outfit_package:
+    - public/javascripts/jquery.jgrowl.js
     - public/javascripts/wardrobe.js
     - public/javascripts/outfits/edit.js
   

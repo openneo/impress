@@ -1,116 +1,143 @@
-!!!
-%html
-  %head
-    %title Dress to Impress - Planning an outfit
-    /[if lt IE 9]
-      = javascript_include_tag "http://html5shiv.googlecode.com/svn/trunk/html5.js"
-    = stylesheet_link_tag "http://#{RemoteImpressHost}/assets/css/clean.css"
-  %body.standard.outfits-edit.fullscreen
-    #container
-      %a#home-link{:href => "/"}
-        %span Dress to Impress
-      %h1#title Planning an outfit
-      #pet-type-not-found.possible-error
-        We haven't seen that combination before. Have you?
-        Submit the pet's name if you have!
-      #preview-toolbar
-        %form#pet-type-form
-          %select{:name => "color"}
-          %select{:name => "species"}
-          %input{:type => "submit", :value => "Go"}/
-        %form#pet-state-form
-          Gender/Emotions:
-          %ul
-        #sharing
-          %input#short-url-response{:type => "text", :value => "http://www.example.com/"}/
-          %button#short-url-button
-            Short URL
-          #share-button-wrapper
-            %button#share-button.addthis_button
-              %img{:src => "http://s7.addthis.com/static/t00/logo1414.gif"}/
-              Share
-      #preview
-        #preview-swf
-          %p Flash and Javascript (but not Java!) are required to preview outfits.
-          %p If this message stays after the page is done loading, check those first.
-        #preview-closet
-          %h2 Closet
-          %ul
-          %p#fullscreen-copyright
-            Images © 2000-2010 Neopets, Inc. All Rights Reserved.
-            Used With Permission
-      %form#preview-search-form
-        %header
-          %h2 Add an item
-          %input{:name => "query", :placeholder => "Search items...", :type => "search"}/
-          %input{:type => "submit", :value => "Go"}/
-          #preview-search-form-pagination
-          %a#preview-search-form-clear{:href => "#"} clear
-        %dl#preview-search-form-help
+- add_body_class 'fullscreen'
+%a#home-link{:href => "/"}
+  %span Dress to Impress
+%h1#title Planning an outfit
+#pet-type-not-found.possible-error
+  We haven't seen that combination before. Have you?
+  Submit the pet's name if you have!
+#preview-toolbar
+  %form#pet-type-form
+    %select{:name => "color"}
+    %select{:name => "species"}
+    %input{:type => "submit", :value => "Go"}/
+  %form#pet-state-form
+    Gender/Emotions:
+    %ul
+  #sharing
+    %input#short-url-response{:type => "text", :value => "http://www.example.com/"}/
+    %button#short-url-button
+      Short URL
+    #share-button-wrapper
+      %button#share-button.addthis_button
+        %img{:src => "http://s7.addthis.com/static/t00/logo1414.gif"}/
+        Share
+#preview
+  #preview-swf
+    #preview-swf-container
+      %p Flash and Javascript (but not Java!) are required to preview outfits.
+      %p If this message stays after the page is done loading, check those first.
+    #preview-swf-overlay
+  #preview-sidebar
+    #preview-closet
+      %a#preview-sidebar-nav-outfits.preview-sidebar-nav{:href => '#'} Your outfits
+      %h2 Closet
+      %ul
+      %p#fullscreen-copyright
+        Images © 2000-2010 Neopets, Inc. All Rights Reserved.
+        Used With Permission
+    #preview-outfits
+      %a#preview-sidebar-nav-closet.preview-sidebar-nav{:href => "#"} &larr; Back to Closet
+      %h2 Your outfits
+      %ul
+        %li.starred
+          %span.outfit-thumbnail
+            %img{:src => "http://pets.neopets.com/cp/qw2l4ocw/1/2.png"}/
           %div
-            %dt kreludor "altador cup" -background
-            %dd
-              returns any item with the word "kreludor" and the phrase "altador cup"
-              in it, but not the word "background"
+            %header
+              %button.outfit-delete &times;
+              .outfit-star
+              %h4 Pretty in Pink
+              %input.outfit-url{:type => 'text', :value => 'http://impress.openneo.net/outfits/qW2l4o'}
+              .outfit-delete-confirmation
+                %span Delete forever?
+                %a.outfit-delete-confirmation-yes{:href => '#'} yes
+                \/
+                %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
+        %li.starred
+          %span.outfit-thumbnail
+            %img{:src => "http://pets.neopets.com/cp/wgvw75n8/1/2.png"}/
           %div
-            %dt collar -is:nc -is:pb
-            %dd
-              returns any item with the word "collar" in it, but is not from the NC
-              mall, and is not from a deluxe paint brush set
+            %header
+              %button.outfit-delete &times;
+              .outfit-star
+              %h4 The Little Mermaid
+              %input.outfit-url{:type => 'text', :value => 'http://impress.openneo.net/outfits/qW2l4o'}
+              .outfit-delete-confirmation
+                %span Delete forever?
+                %a.outfit-delete-confirmation-yes{:href => '#'} yes
+                \/
+                %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
+        %li
+          %span.outfit-thumbnail
+            %img{:src => "http://pets.neopets.com/cp/qb98jrng/1/2.png"}/
           %div
-            %dt
-              %span species:
-              %span.search-helper{"data-search-filter" => "species"} Acara
-            %dd
-              returns any item a
-              %span.search-helper{"data-search-filter" => "species"} Acara
-              can wear
+            %header
+              %button.outfit-delete &times;
+              .outfit-star
+              %h4 Autumn is Here
+              %input.outfit-url{:type => 'text', :value => 'http://impress.openneo.net/outfits/qW2l4o'}
+              .outfit-delete-confirmation
+                %span Delete forever?
+                %a.outfit-delete-confirmation-yes{:href => '#'} yes
+                \/
+                %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
+        %li
+          %span.outfit-thumbnail
+            %img{:src => "http://pets.neopets.com/cp/84l7xx9t/1/2.png"}/
           %div
-            %dt
-              %span type:
-              %span.search-helper{"data-search-filter" => "type"} background
-            %dd
-              returns any item that fills a
-              %span.search-helper{"data-search-filter" => "type"} background
-              zone
-        #preview-search-form-loading Loading...
-        #preview-search-form-error.possible-error
-        #preview-search-form-no-results
-          No results for "<span></span>"
-        %ul
-      #no-assets-full-message
-        We haven't seen this item on this body type before. Have you? Submit its name on the home page if you have!
-      /[if IE]
-        = include_javascript_libraries :html5
-      = include_javascript_libraries :jquery, :swfobject, :bitly, :addthis
-      %script{:src => "http://#{RemoteImpressHost}/assets/timestamped/js/jquery.jgrowl-v1278204174.js", :type => "text/javascript"}
-      = include_javascripts :edit_outfit_package
-      #userbar
-        #userbar-login-with Login with:
-        %ul#userbar-auth-servers
-          %li
-            %a{:href => "http://id.openneo.net/?app=impress&path=%2Fwardrobe&session_id=a9ddeffb83a923447e2f40a2fe8387dc"}
-              %img{:src => "http://id.openneo.net/favicon.png"}/
-              %span OpenNeo ID
-      #footer
-        %ul
-          %li
-            %a{:href => "http://openneo.net/", :target => "_blank"} OpenNeo
-          %li
-            %a{:href => "http://blog.openneo.net/", :target => "_blank"} Blog
-          %li
-            %a{:href => "http://forum.openneo.net/", :target => "_blank"} Forum
-          %li
-            %a{:href => "http://github.com/matchu/openneo-impress"} The Source Code
-          %li
-            %a{:href => "/terms.html"} Terms of Use
-        %div
-          Contact:
-          %ul
-            %li
-              %a{:href => "http://openneo.uservoice.com/forums/40720-dress-to-impress"} Feedback
-            %li
-              %a{:href => "mailto:webmaster@openneo.net"} Questions, comments, bug reports
-        %p
-          Images &copy; 2000-2010 Neopets, Inc. All Rights Reserved.
-          Used With Permission
+            %header
+              %button.outfit-delete &times;
+              .outfit-star
+              %h4 Super Mysterious Secret Agent
+              %input.outfit-url{:type => 'text', :value => 'http://impress.openneo.net/outfits/qW2l4o'}
+              .outfit-delete-confirmation
+                %span Delete forever?
+                %a.outfit-delete-confirmation-yes{:href => '#'} yes
+                \/
+                %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
+%form#preview-search-form
+  %header
+    %h2 Add an item
+    %input{:name => "query", :placeholder => "Search items...", :type => "search"}/
+    %input{:type => "submit", :value => "Go"}/
+    #preview-search-form-pagination
+    %a#preview-search-form-clear{:href => "#"} clear
+  %dl#preview-search-form-help
+    %div
+      %dt kreludor "altador cup" -background
+      %dd
+        returns any item with the word "kreludor" and the phrase "altador cup"
+        in it, but not the word "background"
+    %div
+      %dt collar -is:nc -is:pb
+      %dd
+        returns any item with the word "collar" in it, but is not from the NC
+        mall, and is not from a deluxe paint brush set
+    %div
+      %dt
+        %span species:
+        %span.search-helper{"data-search-filter" => "species"} Acara
+      %dd
+        returns any item a
+        %span.search-helper{"data-search-filter" => "species"} Acara
+        can wear
+    %div
+      %dt
+        %span type:
+        %span.search-helper{"data-search-filter" => "type"} background
+      %dd
+        returns any item that fills a
+        %span.search-helper{"data-search-filter" => "type"} background
+        zone
+  #preview-search-form-loading Loading...
+  #preview-search-form-error.possible-error
+  #preview-search-form-no-results
+    No results for "<span></span>"
+  %ul
+#no-assets-full-message
+  We haven't seen this item on this body type before. Have you? Submit its name on the home page if you have!
+- content_for :javascripts do
+  /[if IE]
+    = include_javascript_libraries :html5
+  = include_javascript_libraries :jquery, :swfobject, :bitly, :addthis
+  = include_javascripts :edit_outfit_package

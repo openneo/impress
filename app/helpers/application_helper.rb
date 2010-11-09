@@ -1,4 +1,9 @@
 module ApplicationHelper
+  def add_body_class(class_name)
+    @body_class ||= ''
+    @body_class << " #{class_name}"
+  end
+  
   def auth_server_icon_url
     # TODO: if auth servers expand, don't hardcode path
     URI::HTTP.build(
@@ -8,7 +13,9 @@ module ApplicationHelper
   end
   
   def body_class
-    "#{params[:controller]} #{params[:controller]}-#{params[:action]}"
+    "#{params[:controller]} #{params[:controller]}-#{params[:action]}".tap do |output|
+      output << @body_class if @body_class
+    end
   end
   
   def flashes

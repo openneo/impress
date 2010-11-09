@@ -1,8 +1,4 @@
 class OutfitsController < ApplicationController
-  def edit
-    render :layout => false
-  end
-  
   def new
     @colors = Color.all
     @species = Species.all

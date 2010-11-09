@@ -1,9 +1,11 @@
+// TODO: remove code associated with Short URL, Share
+
 var Partial = {}, main_wardrobe,
   View = Wardrobe.getStandardView({
     Preview: {
       swf_url: '/swfs/preview.swf?v=0.12',
       wrapper: $('#preview'),
-      placeholder: $('#preview-swf')
+      placeholder: $('#preview-swf-container')
     }
   });
 
@@ -147,7 +149,7 @@ View.Closet = function (wardrobe) {
 View.Fullscreen = function (wardrobe) {
   var full = $(document.body).hasClass('fullscreen'), win = $(window),
     preview_el = $('#preview'), search_el = $('#preview-search-form'),
-    preview_swf = $('#preview-swf'), closet_el = $('#preview-closet'),
+    preview_swf = $('#preview-swf'), sidebar_el = $('#preview-sidebar'),
     footer = $('#footer');
   
   function fit() {
@@ -155,7 +157,7 @@ View.Fullscreen = function (wardrobe) {
       preview_swf = $('#preview-swf'); // swf replaced
       var available = {
         height:  search_el.offset().top - preview_el.offset().top,
-        width: preview_el.innerWidth() - closet_el.outerWidth() - 12 // 12px margin
+        width: preview_el.innerWidth() - sidebar_el.outerWidth() - 12 // 12px margin
       }, dim = {}, margin = {}, size = {
         old: {height: preview_swf.height(), width: preview_swf.width()},
         next: {}
@@ -406,6 +408,39 @@ View.Hash = function (wardrobe) {
       response_el.focus().select();
     });
   })();
+}
+
+View.Outfits = function (wardrobe) {
+  var outfits_el = $('#preview-outfits'), sidebar_el = $('#preview-sidebar'),
+    overlay_el = $('#preview-swf-overlay');
+  
+  $('input.outfit-url').live('mouseover', function () {
+    this.focus();
+  }).live('mouseout', function () {
+    this.blur();
+  });
+  
+  $('button.outfit-delete').live('click', function (e) {
+    e.preventDefault();
+    $(this).closest('li').addClass('confirming-deletion');
+  });
+  
+  $('a.outfit-delete-confirmation-no').live('click', function (e) {
+    e.preventDefault();
+    $(this).closest('li').removeClass('confirming-deletion');
+  });
+  
+  $('#preview-sidebar-nav-outfits').click(function (e) {
+    e.preventDefault();
+    sidebar_el.addClass('viewing-outfits');
+    overlay_el.fadeTo('slow', .75)
+  });
+  
+  $('#preview-sidebar-nav-closet').click(function (e) {
+    e.preventDefault();
+    sidebar_el.removeClass('viewing-outfits');
+    overlay_el.fadeTo('fast', 0);
+  });
 }
 
 View.PetStateForm = function (wardrobe) {
