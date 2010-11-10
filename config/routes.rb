@@ -20,6 +20,7 @@ OpenneoImpressItems::Application.routes.draw do |map|
       get :needed
     end
   end
+  resources :outfits, :only => [:create]
   resources :pet_attributes, :only => [:index]
   
   match '/pets/load' => 'pets#load', :method => :post, :as => :load_pet

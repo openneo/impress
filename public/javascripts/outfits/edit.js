@@ -1,4 +1,28 @@
-// TODO: remove code associated with Short URL, Share
+// TODO: replace updateItems triggers, move references to wardrobe.closet to outfit controller
+
+(function () {
+  var csrf_param = $('meta[name=csrf-param]').attr('content'),
+    csrf_token = $('meta[name=csrf-token]').attr('content');
+  $.ajaxSetup({
+    data: {csrf_param: csrf_token}
+  });
+})();
+
+(function () {
+  var controlOverlay = $('<div/>', {'class': 'control-overlay'});
+  
+  $.fn.disableControl = function () {
+    this.prepend(controlOverlay.clone()).stop().fadeTo('slow', .35);
+  }
+
+  $.fn.enableControl = function () {
+    this.stop().fadeTo('fast', 1).children('div.control-overlay').remove();
+  }
+})();
+
+$.fn.notify = function () {
+  this.show('slow').delay(5000).hide('fast');
+}
 
 var Partial = {}, main_wardrobe,
   View = Wardrobe.getStandardView({
@@ -43,7 +67,7 @@ Partial.ItemSet = function ItemSet(wardrobe, selector) {
     var item, no_assets, li, no_assets_message;
     for(var i = 0, l = specific_items.length; i < l; i++) {
       item = specific_items[i];
-      no_assets = item.couldNotLoadAssetsFitting(wardrobe.outfit.pet_type);
+      no_assets = item.couldNotLoadAssetsFitting(wardrobe.outfit.getPetType());
       li = $('li.object-' + item.id).toggleClass('no-assets', no_assets);
       (function (li) {
         no_assets_message = li.find('span.no-assets-message');
@@ -82,8 +106,8 @@ Partial.ItemSet = function ItemSet(wardrobe, selector) {
       }
       li.append(img).append(controls).append(info_link).append(item.name).appendTo(ul);
     }
-    setClosetItems(wardrobe.closet.items);
-    setOutfitItems(wardrobe.outfit.items);
+    setClosetItems(wardrobe.outfit.getClosetItems());
+    setOutfitItems(wardrobe.outfit.getWornItems());
   }
   
   $('span.no-assets-message').live('mouseover', function () {
@@ -96,9 +120,9 @@ Partial.ItemSet = function ItemSet(wardrobe, selector) {
     no_assets_full_message.removeAttr('style');
   });
   
-  wardrobe.outfit.bind('updateItemAssets', function () { setHasAssets(wardrobe.outfit.items) });
-  wardrobe.outfit.bind('updateItems', setOutfitItems);
-  wardrobe.closet.bind('updateItems', setClosetItems);
+  wardrobe.outfit.bind('updateItemAssets', function () { setHasAssets(wardrobe.outfit.getWornItems()) });
+  wardrobe.outfit.bind('updateWornItems', setOutfitItems);
+  wardrobe.outfit.bind('updateClosetItems', setClosetItems);
 }
 
 Partial.ItemSet.CONTROL_SETS = {};
@@ -130,12 +154,12 @@ Partial.ItemSet.setWardrobe = function (wardrobe) {
   }
   
   toggle_fn.closeted = {};
-  toggle_fn.closeted[true] = $.proxy(wardrobe.closet, 'addItem');
-  toggle_fn.closeted[false] = function (item) { wardrobe.outfit.removeItem(item); wardrobe.closet.removeItem(item); }
+  toggle_fn.closeted[true] = $.proxy(wardrobe.outfit, 'closetItem');
+  toggle_fn.closeted[false] = $.proxy(wardrobe.outfit, 'unclosetItem');
 
   toggle_fn.worn = {};
-  toggle_fn.worn[true] = function (item) { wardrobe.closet.addItem(item); wardrobe.outfit.addItem(item); }
-  toggle_fn.worn[false] = $.proxy(wardrobe.outfit, 'removeItem');
+  toggle_fn.worn[true] = $.proxy(wardrobe.outfit, 'wearItem');
+  toggle_fn.worn[false] = $.proxy(wardrobe.outfit, 'unwearItem');
   
   Partial.ItemSet.setWardrobe = $.noop;
 }
@@ -143,7 +167,7 @@ Partial.ItemSet.setWardrobe = function (wardrobe) {
 View.Closet = function (wardrobe) {
   var item_set = new Partial.ItemSet(wardrobe, '#preview-closet ul');
   
-  wardrobe.closet.bind('updateItems', $.proxy(item_set, 'setItems'));
+  wardrobe.outfit.bind('updateClosetItems', $.proxy(item_set, 'setItems'));
 }
 
 View.Fullscreen = function (wardrobe) {
@@ -214,7 +238,7 @@ View.Hash = function (wardrobe) {
     search_offset: TYPES.INTEGER,
     species: TYPES.INTEGER,
     state: TYPES.INTEGER
-  }, onUpdateQuery;
+  }, links_with_return_to = $('a[href*=return_to]');
   
   function checkQuery() {
     var query = (document.location.hash || document.location.search).substr(1);
@@ -251,13 +275,13 @@ View.Hash = function (wardrobe) {
     }
     if(new_data.closet) {
       if(!arraysMatch(new_data.closet, data.closet)) {
-        wardrobe.closet.setItemsByIds(new_data.closet.slice(0));
+        wardrobe.outfit.setClosetItemsByIds(new_data.closet.slice(0));
       }
     } else if(!arraysMatch(new_data.objects, data.closet)) {
-      wardrobe.closet.setItemsByIds(new_data.objects.slice(0));
+      wardrobe.outfit.setClosetItemsByIds(new_data.objects.slice(0));
     }
     if(!arraysMatch(new_data.objects, data.objects)) {
-      wardrobe.outfit.setItemsByIds(new_data.objects.slice(0));
+      wardrobe.outfit.setWornItemsByIds(new_data.objects.slice(0));
     }
     if(new_data.name != data.name && new_data.name) {
       wardrobe.base_pet.setName(new_data.name);
@@ -270,6 +294,7 @@ View.Hash = function (wardrobe) {
     }
     data = new_data;
     parse_in_progress = false;
+    updateLinksWithReturnTo();
   }
   
   function changeQuery(changes) {
@@ -294,23 +319,33 @@ View.Hash = function (wardrobe) {
     new_query = $.param(data).replace(/%5B%5D/g, '[]');
     previous_query = new_query;
     document.location.hash = '#' + new_query;
-    onUpdateQuery();
+    updateLinksWithReturnTo();
+  }
+  
+  function updateLinksWithReturnTo() {
+    links_with_return_to.each(function () {
+      var new_return_to = 'return_to=' + encodeURIComponent(
+        document.location.pathname +
+        document.location.search +
+        document.location.hash
+      );
+      this.href = this.href.replace(/return_to=[^&]+/, new_return_to);
+    });
   }
   
   this.initialize = function () {
     checkQuery();
     setInterval(checkQuery, 100);
-    onUpdateQuery();
   }
   
-  wardrobe.closet.bind('updateItems', function (items) {
+  wardrobe.outfit.bind('updateClosetItems', function (items) {
     var item_ids = items.map('id');
     if(!arraysMatch(item_ids, data.closet)) {
       changeQuery({closet: item_ids});
     }
   });
   
-  wardrobe.outfit.bind('updateItems', function (items) {
+  wardrobe.outfit.bind('updateWornItems', function (items) {
     var item_ids = items.map('id'), changes = {};
     if(!arraysMatch(item_ids, data.objects)) {
       changes.objects = item_ids;
@@ -318,7 +353,7 @@ View.Hash = function (wardrobe) {
     if(arraysMatch(item_ids, data.closet) || arraysMatch(item_ids, data.objects)) {
       changes.closet = undefined;
     } else {
-      changes.closet = wardrobe.closet.items.map('id');
+      changes.closet = wardrobe.outfit.getClosetItems().map('id');
     }
     if(changes.objects || changes.closet) changeQuery(changes);
   });
@@ -338,7 +373,7 @@ View.Hash = function (wardrobe) {
   });
   
   wardrobe.outfit.bind('updatePetState', function (pet_state) {
-    var pet_type = wardrobe.outfit.pet_type;
+    var pet_type = wardrobe.outfit.getPetType();
     if(pet_state.id != data.state && pet_type && (data.state || pet_state.id != pet_type.pet_state_ids[0])) {
       changeQuery({state: pet_state.id});
     }
@@ -352,67 +387,65 @@ View.Hash = function (wardrobe) {
       });
     }
   });
-  
-  (function Share() {
-    var CALLBACK_NAME = 'shortenResponse',
-      button_id = '#share-button',
-      button = $(button_id),
-      wrapper = button.parent(),
-      shorten_el = $('#short-url-button'),
-      response_el = $('#short-url-response'),
-      current_url,
-      shortening = false,
-      shortened = false;
-    
-    onUpdateQuery = function () {
-      var l = window.location, hash = l.hash;
-      if(!hash) hash = '#' + l.search.substr(1);
-      current_url = l.protocol + '//' + l.host + l.pathname + hash;
-      setURL(current_url);
-      response_el.hide();
-      shortened = false;
-    }
-    
-    function setURL(url) {
-      if(typeof addthis_share != 'undefined') {
-        addthis_share.url = url;
-        button.replaceWith(button.clone());
-        addthis.button(button_id);
-      }
-    }
-    
-    BitlyCB[CALLBACK_NAME] = function (data) {
-      var url, key;
-      for(key in data.results) {
-        url = SHORT_URL_HOST + data.results[key].hash;
-        break;
-      }
-      setURL(url);
-      response_el.val(url).show();
-      shortening = false;
-      shortened = true;
-    }
-    
-    function startShorten() {
-      if(!shortening && !shortened) {
-        shortening = true;
-        BitlyClient.shorten(current_url, 'BitlyCB.' + CALLBACK_NAME);
-      }
-    }
-    
-    shorten_el.click(startShorten);
-    wrapper.mouseover(startShorten);
-    button.focus(startShorten);
-    
-    response_el.mouseover(function () {
-      response_el.focus().select();
-    });
-  })();
 }
 
 View.Outfits = function (wardrobe) {
   var outfits_el = $('#preview-outfits'), sidebar_el = $('#preview-sidebar'),
-    overlay_el = $('#preview-swf-overlay');
+    controls = $('#pet-type-form, #pet-state-form, #preview-swf, #preview-search-form'),
+    save_success_el = $('#save-success'), save_error_el = $('#save-error'),
+    new_outfit_el = $('#new-outfit'), new_outfit_form_el = $('#new-outfit-form'),
+    new_outfit_name_el = $('#new-outfit-name'),
+    outfits_list_el = outfits_el.children('ul'),
+    stars = $('div.outfit-star'),
+    previously_viewing = '';
+  
+  function navLinkTo(callback) {
+    return function (e) {
+      e.preventDefault();
+      callback();
+    }
+  }
+  
+  function navigateTo(will_be_viewing) {
+    var currently_viewing = sidebar_el.attr('class');
+    if(currently_viewing != will_be_viewing) previously_viewing = currently_viewing;
+    sidebar_el.attr('class', will_be_viewing);
+  }
+  
+  /* Nav */
+  
+  function showCloset() {
+    controls.enableControl('fast');
+    navigateTo('');
+  }
+  
+  function showOutfits() {
+    controls.enableControl('fast');
+    navigateTo('viewing-outfits');
+  }
+  
+  function showSavingOutfit() {
+    controls.disableControl('slow');
+    navigateTo('viewing-saving-outfit');
+    new_outfit_name_el.focus();
+  }
+  
+  $('#preview-sidebar-nav-outfits').click(navLinkTo(showOutfits));
+  
+  $('#preview-sidebar-nav-closet').click(navLinkTo(showCloset));
+  
+  $('#preview-sidebar-nav-cancel-save').click(function (e) {
+    e.preventDefault();
+    controls.enableControl('fast');
+    sidebar_el.attr('class', previously_viewing);
+  });
+  
+  $('#save-outfit').click(function () {
+    new_outfit_el.show().children('input').text('').removeClass('starred');
+    showSavingOutfit();
+  });
+  
+  /* Individual outfits */
   
   $('input.outfit-url').live('mouseover', function () {
     this.focus();
@@ -430,16 +463,45 @@ View.Outfits = function (wardrobe) {
     $(this).closest('li').removeClass('confirming-deletion');
   });
   
-  $('#preview-sidebar-nav-outfits').click(function (e) {
-    e.preventDefault();
-    sidebar_el.addClass('viewing-outfits');
-    overlay_el.fadeTo('slow', .75)
+  stars.live('click', function () {
+    $(this).closest('#new-outfit, li').toggleClass('starred');
   });
   
-  $('#preview-sidebar-nav-closet').click(function (e) {
+  /* Saving */
+  
+  new_outfit_form_el.submit(function (e) {
     e.preventDefault();
-    sidebar_el.removeClass('viewing-outfits');
-    overlay_el.fadeTo('fast', 0);
+    wardrobe.outfit.save(new_outfit_el.hasClass('starred'), new_outfit_name_el.val());
+  });
+  
+  var SAVE_ERRORS = {
+      'item_outfit_relationships': "Item not found. How odd. Pull some items out of your closet and try again.",
+      'pet_state': "Pet state not found. How odd. Try picking a new Gender/Emotion.",
+      'name': "Outfits must have a name",
+      'user': "You must be logged in to save outfits"
+    };
+  
+  function saveErrorMessage(text) {
+    save_error_el.text(text).notify();
+  }
+  
+  wardrobe.outfit.bind('saveSuccess', function () {
+    save_success_el.notify();
+    showOutfits();
+  });
+  
+  wardrobe.outfit.bind('saveFailure', function (response) {
+    var errors = response.errors;
+    if(typeof errors == 'undefined') {
+      saveErrorMessage("Whoops! The save failed, but the server didn't say why. Please try again.");
+    } else {
+      for(var key in SAVE_ERRORS) {
+        if(SAVE_ERRORS.hasOwnProperty(key) && typeof errors[key] != 'undefined') {
+          saveErrorMessage(SAVE_ERRORS[key]);
+          break;
+        }
+      }
+    }
   });
 }
 
@@ -464,9 +526,9 @@ View.PetStateForm = function (wardrobe) {
     var ids = pet_type.pet_state_ids, i, id, li, radio, label;
     ul.children().remove();
     if(ids.length == 1) {
-      form.hide();
+      form.addClass('hidden');
     } else {
-      form.show();
+      form.removeClass('hidden');
       for(var i = 0; i < ids.length; i++) {
         id = 'pet-state-radio-' + i;
         li = $('<li/>');
@@ -527,7 +589,7 @@ View.PetTypeForm = function (wardrobe) {
       });
     });
     loaded = true;
-    updatePetType(wardrobe.outfit.pet_type);
+    updatePetType(wardrobe.outfit.getPetType());
   });
   
   wardrobe.outfit.bind('updatePetType', updatePetType);
@@ -756,6 +818,19 @@ View.Title = function (wardrobe) {
     $('#title').text("Planning " + name + "'s outfit");
   });
 }
+
+var userbar_sessions_link = $('#userbar a:last'),
+  userbar_message_verb = userbar_sessions_link.text() == 'Log out' ? 'logged out' : 'sent to the login page',
+  userbar_message_el = $('<span/>', {
+    id: 'userbar-message',
+    text: "You will be " + userbar_message_verb + ", then brought back to this exact outfit you've made."
+  }).prependTo('#userbar');
+
+userbar_sessions_link.hover(function () {
+  userbar_message_el.stop().fadeTo('normal', .5);
+}, function () {
+  userbar_message_el.stop().fadeOut('fast');
+});
 
 $.ajaxSetup({
   error: function (xhr) {

@@ -13,21 +13,16 @@
   %form#pet-state-form
     Gender/Emotions:
     %ul
-  #sharing
-    %input#short-url-response{:type => "text", :value => "http://www.example.com/"}/
-    %button#short-url-button
-      Short URL
-    #share-button-wrapper
-      %button#share-button.addthis_button
-        %img{:src => "http://s7.addthis.com/static/t00/logo1414.gif"}/
-        Share
+  #save-outfit-wrapper
+    %button#save-outfit Save outfit
 #preview
   #preview-swf
     #preview-swf-container
       %p Flash and Javascript (but not Java!) are required to preview outfits.
       %p If this message stays after the page is done loading, check those first.
-    #preview-swf-overlay
   #preview-sidebar
+    #save-success Outfit successfully saved
+    #save-error
     #preview-closet
       %a#preview-sidebar-nav-outfits.preview-sidebar-nav{:href => '#'} Your outfits
       %h2 Closet
@@ -40,61 +35,63 @@
       %h2 Your outfits
       %ul
         %li.starred
-          %span.outfit-thumbnail
-            %img{:src => "http://pets.neopets.com/cp/qw2l4ocw/1/2.png"}/
           %div
             %header
               %button.outfit-delete &times;
               .outfit-star
               %h4 Pretty in Pink
-              %input.outfit-url{:type => 'text', :value => 'http://impress.openneo.net/outfits/qW2l4o'}
-              .outfit-delete-confirmation
-                %span Delete forever?
-                %a.outfit-delete-confirmation-yes{:href => '#'} yes
-                \/
-                %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
+            %input.outfit-url{:type => 'text', :value => 'http://impress.openneo.net/outfits/qW2l4o'}
+            .outfit-delete-confirmation
+              %span Delete forever?
+              %a.outfit-delete-confirmation-yes{:href => '#'} yes
+              \/
+              %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
         %li.starred
-          %span.outfit-thumbnail
-            %img{:src => "http://pets.neopets.com/cp/wgvw75n8/1/2.png"}/
           %div
             %header
               %button.outfit-delete &times;
               .outfit-star
               %h4 The Little Mermaid
-              %input.outfit-url{:type => 'text', :value => 'http://impress.openneo.net/outfits/qW2l4o'}
-              .outfit-delete-confirmation
-                %span Delete forever?
-                %a.outfit-delete-confirmation-yes{:href => '#'} yes
-                \/
-                %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
+            %input.outfit-url{:type => 'text', :value => 'http://impress.openneo.net/outfits/qW2l4o'}
+            .outfit-delete-confirmation
+              %span Delete forever?
+              %a.outfit-delete-confirmation-yes{:href => '#'} yes
+              \/
+              %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
         %li
-          %span.outfit-thumbnail
-            %img{:src => "http://pets.neopets.com/cp/qb98jrng/1/2.png"}/
           %div
             %header
               %button.outfit-delete &times;
               .outfit-star
               %h4 Autumn is Here
-              %input.outfit-url{:type => 'text', :value => 'http://impress.openneo.net/outfits/qW2l4o'}
-              .outfit-delete-confirmation
-                %span Delete forever?
-                %a.outfit-delete-confirmation-yes{:href => '#'} yes
-                \/
-                %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
+            %input.outfit-url{:type => 'text', :value => 'http://impress.openneo.net/outfits/qW2l4o'}
+            .outfit-delete-confirmation
+              %span Delete forever?
+              %a.outfit-delete-confirmation-yes{:href => '#'} yes
+              \/
+              %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
         %li
-          %span.outfit-thumbnail
-            %img{:src => "http://pets.neopets.com/cp/84l7xx9t/1/2.png"}/
           %div
             %header
               %button.outfit-delete &times;
               .outfit-star
               %h4 Super Mysterious Secret Agent
-              %input.outfit-url{:type => 'text', :value => 'http://impress.openneo.net/outfits/qW2l4o'}
-              .outfit-delete-confirmation
-                %span Delete forever?
-                %a.outfit-delete-confirmation-yes{:href => '#'} yes
-                \/
-                %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
+            %input.outfit-url{:type => 'text', :value => 'http://impress.openneo.net/outfits/qW2l4o'}
+            .outfit-delete-confirmation
+              %span Delete forever?
+              %a.outfit-delete-confirmation-yes{:href => '#'} yes
+              \/
+              %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
+    #preview-saving-outfit
+      %a#preview-sidebar-nav-cancel-save.preview-sidebar-nav{:href => '#'} &larr; Cancel
+      %h2 Saving new outfit
+      #new-outfit
+        %form#new-outfit-form
+          %header
+            .outfit-star
+            %h4
+              %input#new-outfit-name{:type => 'text', :placeholder => 'Outfit name'}
+            %button{:type => 'submit'} Save
 %form#preview-search-form
   %header
     %h2 Add an item
@@ -139,5 +136,5 @@
 - content_for :javascripts do
   /[if IE]
     = include_javascript_libraries :html5
-  = include_javascript_libraries :jquery, :swfobject, :bitly, :addthis
+  = include_javascript_libraries :jquery, :swfobject
   = include_javascripts :edit_outfit_package

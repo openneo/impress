@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 0) do
+ActiveRecord::Schema.define(:version => 20101110213044) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10, :null => false
@@ -21,10 +21,18 @@ ActiveRecord::Schema.define(:version => 0) do
   end
 
   create_table "contributions", :force => true do |t|
-    t.string    "contributed_type", :limit => 8, :null => false
-    t.integer   "contributed_id",                :null => false
-    t.integer   "user_id",                       :null => false
-    t.timestamp "created_at",                    :null => false
+    t.string   "contributed_type", :limit => 8, :null => false
+    t.integer  "contributed_id",                :null => false
+    t.integer  "user_id",                       :null => false
+    t.datetime "created_at",                    :null => false
+  end
+
+  create_table "item_outfit_relationships", :force => true do |t|
+    t.integer  "item_id"
+    t.integer  "outfit_id"
+    t.boolean  "is_worn"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "login_cookies", :force => true do |t|
@@ -37,23 +45,32 @@ ActiveRecord::Schema.define(:version => 0) do
   add_index "login_cookies", ["user_id"], :name => "login_cookies_user_id"
 
   create_table "objects", :force => true do |t|
-    t.text      "zones_restrict",      :limit => 255, :null => false
-    t.text      "thumbnail_url",                      :null => false
-    t.string    "name",                :limit => 100, :null => false
-    t.text      "description",                        :null => false
-    t.string    "category",            :limit => 50,  :null => false
-    t.string    "type",                :limit => 50,  :null => false
-    t.string    "rarity",              :limit => 25,  :null => false
-    t.integer   "rarity_index",        :limit => 2,   :null => false
-    t.integer   "price",               :limit => 3,   :null => false
-    t.integer   "weight_lbs",          :limit => 2,   :null => false
-    t.text      "species_support_ids"
-    t.integer   "sold_in_mall",        :limit => 1,   :null => false
-    t.timestamp "last_spidered"
+    t.text     "zones_restrict",      :limit => 255, :null => false
+    t.text     "thumbnail_url",                      :null => false
+    t.string   "name",                :limit => 100, :null => false
+    t.text     "description",                        :null => false
+    t.string   "category",            :limit => 50,  :null => false
+    t.string   "type",                :limit => 50,  :null => false
+    t.string   "rarity",              :limit => 25,  :null => false
+    t.integer  "rarity_index",        :limit => 2,   :null => false
+    t.integer  "price",               :limit => 3,   :null => false
+    t.integer  "weight_lbs",          :limit => 2,   :null => false
+    t.text     "species_support_ids"
+    t.integer  "sold_in_mall",        :limit => 1,   :null => false
+    t.datetime "last_spidered"
   end
 
   add_index "objects", ["last_spidered"], :name => "objects_last_spidered"
   add_index "objects", ["name"], :name => "name"
+
+  create_table "outfits", :force => true do |t|
+    t.integer  "pet_state_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "name",                            :null => false
+    t.boolean  "starred",      :default => false, :null => false
+  end
 
   create_table "parents_swf_assets", :id => false, :force => true do |t|
     t.integer "parent_id",      :limit => 3, :null => false
@@ -61,14 +78,14 @@ ActiveRecord::Schema.define(:version => 0) do
     t.string  "swf_asset_type", :limit => 7, :null => false
   end
 
+  add_index "parents_swf_assets", ["parent_id", "swf_asset_id", "swf_asset_type"], :name => "unique_parents_swf_assets", :unique => true
   add_index "parents_swf_assets", ["parent_id"], :name => "parent_swf_assets_parent_id"
   add_index "parents_swf_assets", ["swf_asset_id"], :name => "parents_swf_assets_swf_asset_id"
-  add_index "parents_swf_assets", ["parent_id", "swf_asset_id", "swf_asset_type"], :name => "unique_parents_swf_assets", :unique => true
 
   create_table "pet_loads", :force => true do |t|
-    t.string    "pet_name",   :limit => 20, :null => false
-    t.text      "amf",                      :null => false
-    t.timestamp "created_at",               :null => false
+    t.string   "pet_name",   :limit => 20, :null => false
+    t.text     "amf",                      :null => false
+    t.datetime "created_at",               :null => false
   end
 
   create_table "pet_states", :force => true do |t|
@@ -79,11 +96,11 @@ ActiveRecord::Schema.define(:version => 0) do
   add_index "pet_states", ["pet_type_id"], :name => "pet_states_pet_type_id"
 
   create_table "pet_types", :force => true do |t|
-    t.integer   "color_id",   :limit => 1, :null => false
-    t.integer   "species_id", :limit => 1, :null => false
-    t.timestamp "created_at",              :null => false
-    t.integer   "body_id",    :limit => 2, :null => false
-    t.string    "image_hash", :limit => 8
+    t.integer  "color_id",   :limit => 1, :null => false
+    t.integer  "species_id", :limit => 1, :null => false
+    t.datetime "created_at",              :null => false
+    t.integer  "body_id",    :limit => 2, :null => false
+    t.string   "image_hash", :limit => 8
   end
 
   add_index "pet_types", ["species_id", "color_id"], :name => "pet_types_species_color", :unique => true
@@ -101,13 +118,13 @@ ActiveRecord::Schema.define(:version => 0) do
   end
 
   create_table "swf_assets", :id => false, :force => true do |t|
-    t.string    "type",           :limit => 7,   :null => false
-    t.integer   "id",             :limit => 3,   :null => false
-    t.text      "url",                           :null => false
-    t.integer   "zone_id",        :limit => 1,   :null => false
-    t.text      "zones_restrict", :limit => 255, :null => false
-    t.timestamp "created_at",                    :null => false
-    t.integer   "body_id",        :limit => 2,   :null => false
+    t.string   "type",           :limit => 7,   :null => false
+    t.integer  "id",             :limit => 3,   :null => false
+    t.text     "url",                           :null => false
+    t.integer  "zone_id",        :limit => 1,   :null => false
+    t.text     "zones_restrict", :limit => 255, :null => false
+    t.datetime "created_at",                    :null => false
+    t.integer  "body_id",        :limit => 2,   :null => false
   end
 
   add_index "swf_assets", ["body_id"], :name => "swf_assets_body_id_and_object_id"

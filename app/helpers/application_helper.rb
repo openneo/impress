@@ -29,7 +29,7 @@ module ApplicationHelper
     :addthis => 'http://s7.addthis.com/js/250/addthis_widget.js#username=openneo',
     :bitly => 'http://bit.ly/javascript-api.js?version=latest&login=openneo&apiKey=R_4d0438829b7a99860de1d3edf55d8dc8',
     :html5 => 'http://html5shim.googlecode.com/svn/trunk/html5.js',
-    :jquery => 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.0/jquery.min.js',
+    :jquery => 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js',
     :swfobject => 'http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js'
   }
   
@@ -40,7 +40,11 @@ module ApplicationHelper
   end
   
   def login_path_with_return_to
-    login_path :return_to => request.request_uri
+    login_path :return_to => request.fullpath
+  end
+  
+  def logout_path_with_return_to
+    logout_path :return_to => request.fullpath
   end
   
   def origin_tag(value)

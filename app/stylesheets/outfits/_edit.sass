@@ -9,12 +9,98 @@ $sidebar-width: 400px
 $sidebar-unit-horizontal-padding: 24px
 $sidebar-unit-inner-width: $sidebar-width - $sidebar-unit-horizontal-padding * 2
 
+$outfit-thumbnail-size: 0
+$outfit-thumbnail-original-size: 100px
+$outfit-thumbnail-margin: 12px
+$outfit-header-padding: 24px
+$outfit-content-width: $sidebar-unit-inner-width - $outfit-thumbnail-size - $outfit-thumbnail-margin - 32px
+$outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
+
+=outfit
+  //+clearfix
+  margin-bottom: .5em
+  //.outfit-thumbnail
+    float: left
+    height: $outfit-thumbnail-size
+    margin-right: $outfit-thumbnail-margin
+    overflow: hidden
+    position: relative
+    width: $outfit-thumbnail-size
+  img
+    height: $outfit-thumbnail-original-size
+    left: -$outfit-thumbnail-original-size / 4
+    position: absolute
+    top: -$outfit-thumbnail-original-size / 4
+    width: $outfit-thumbnail-original-size
+  //> div
+    float: left
+    width: $outfit-content-width
+  .outfit-delete
+    +reset-awesome-button
+    +opacity(.5)
+    font-size: 150%
+    float: right
+    line-height: 1
+    margin-top: -.125em
+    padding: .125em .25em
+    &:hover
+      +opacity(1)
+      background: $module-bg-color
+  header
+    display: block
+    padding-left: $outfit-header-padding
+  .outfit-star
+    background:
+      image: url(/images/unstarred.png)
+      position: left top
+      repeat: no-repeat
+    bottom: -2px
+    /* margin-bottom doesn't work here
+    cursor: pointer
+    display: block
+    float: left
+    height: 16px
+    margin-left: -24px
+    /* makes it not take up inline space
+    position: relative
+    width: 16px
+  h4
+    cursor: pointer
+    font-size: 115%
+    &:hover
+      text-decoration: underline
+  .outfit-url
+    +opacity(.5)
+    border-color: $background-color
+    font-size: 75%
+    width: $outfit-content-inner-width
+    &:hover
+      +opacity(1)
+      border-color: $input-border-color
+  .outfit-delete-confirmation
+    display: none
+    font-size: 75%
+    span
+      color: red
+    a
+      margin: 0 .25em
+  &.confirming-deletion
+    .outfit-delete
+      visibility: hidden
+    .outfit-url
+      display: none
+    .outfit-delete-confirmation
+      display: block
+  &.starred
+    .outfit-star
+      background-image: url(/images/star.png)
+
 body.outfits-edit
   #preview-toolbar
     margin-bottom: .5em
     text-align: left
     form
-      display: inline
+      +inline-block
       margin-right: 2em
   #pet-info form
     display: inline
@@ -30,27 +116,12 @@ body.outfits-edit
       margin: 0 .25em
     li.selected label
       +awesome-button-color($marked_button_color)
-  #sharing
+    &.hidden
+      visibility: hidden
+  #save-outfit-wrapper
     float: right
-    position: relative
-  #short-url-response
-    font-size: 87.5%
-    display: none
-    position: absolute
-    right: 0
-    top: -2em
-    width: 20em
-  #share-button-wrapper
-    display: inline
-  #share-button
-    img
-      margin:
-        bottom: -0.25em
-        right: .25em
-      height: 16px
-      width: 16px
-    &:active
-      top: 1px
+    button
+      +loud-awesome-button-color
   #preview
     clear: both
   #preview-swf
@@ -77,6 +148,13 @@ body.outfits-edit
       #preview-closet
         display: none
       #preview-outfits
+        display: block
+    &.viewing-saving-outfit
+      height: auto
+      max-height: 100%
+      #preview-closet
+        display: none
+      #preview-saving-outfit
         display: block
   #preview-closet
     h2
@@ -180,9 +258,14 @@ body.outfits-edit
       position: relative
       width: $sidebar-width
       > div
-        padding:
+        margin:
           left: $sidebar-unit-horizontal-padding
           right: $sidebar-unit-horizontal-padding
+        h2
+          margin-bottom: .25em
+      &.viewing-saving-outfit
+        height: auto
+        max-height: 100%
     #preview-search-form
       bottom: 1em
       left: 0
@@ -259,18 +342,9 @@ body.outfits-edit
     &:hover
       +opacity(1)
 
-  $outfit-thumbnail-size: 50px
-  $outfit-thumbnail-original-size: 100px
-  $outfit-thumbnail-margin: 12px
-  $outfit-header-padding: 24px
-  $outfit-content-width: $sidebar-unit-inner-width - $outfit-thumbnail-size - $outfit-thumbnail-margin - 32px
-  $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
-
   #preview-outfits
     display: none
     text-align: left
-    h2
-      margin-bottom: .25em
     h3
       margin-bottom: .5em
     > ul
@@ -279,84 +353,53 @@ body.outfits-edit
       list-style: none
       margin-bottom: 1em
       > li
-        +clearfix
-        font-size: 75%
-        margin-bottom: .5em
-        .outfit-thumbnail
-          float: left
-          height: $outfit-thumbnail-size
-          margin-right: $outfit-thumbnail-margin
-          overflow: hidden
-          position: relative
-          width: $outfit-thumbnail-size
-        img
-          height: $outfit-thumbnail-original-size
-          left: -$outfit-thumbnail-original-size / 4
-          position: absolute
-          top: -$outfit-thumbnail-original-size / 4
-          width: $outfit-thumbnail-original-size
-        > div
-          float: left
-          width: $outfit-content-width
-        button
-          +reset-awesome-button
-          +opacity(.5)
-          font-size: 150%
-          float: right
-          line-height: 1
-          margin-top: -.125em
-          padding: .125em .25em
-          &:hover
-            +opacity(1)
-            background: $module-bg-color
-        header
-          display: block
-          padding-left: $outfit-header-padding
-        .outfit-star
-          background:
-            image: url(/images/unstarred.png)
-            position: left top
-            repeat: no-repeat
-          bottom: -2px
-          /* margin-bottom doesn't work here
-          cursor: pointer
-          display: block
-          float: left
-          height: 16px
-          margin-left: -24px
-          /* makes it not take up inline space
-          position: relative
-          width: 16px
-        h4
-          cursor: pointer
-          font-size: 150%
-          &:hover
-            text-decoration: underline
-        input
-          +opacity(.5)
-          border-color: $background-color
-          width: $outfit-content-inner-width
-          &:hover
-            +opacity(1)
-            border-color: $input-border-color
-        .outfit-delete-confirmation
-          display: none
-          span
-            color: red
-          a
-            margin: 0 .25em
-        &.confirming-deletion
-          .outfit-delete
-            visibility: hidden
-          .outfit-url
-            display: none
-          .outfit-delete-confirmation
-            display: block
-        &.starred
-          .outfit-star
-            background-image: url(/images/star.png)
+        +outfit
 
   .preview-sidebar-nav
     float: right
     font-size: 85%
     margin-top: 1em
+  
+  #save-success, #save-error
+    display: none
+    margin-top: 1em
+    text-align: center
+  
+  #save-success
+    +notice
+  
+  #save-error
+    +error
+  
+  #userbar-message
+    +opacity(.5)
+    display: none
+  
+  #new-outfit
+    +outfit
+    display: none
+    h4
+      display: inline
+      &:hover
+        text-decoration: none
+    .outfit-star
+      margin-top: .5em
+  
+  #new-outfit-name
+    font: inherit
+    line-height: 1
+  
+  #preview-saving-outfit
+    display: none
+    padding-bottom: 1em
+  
+  #pet-type-form, #pet-state-form, #preview-swf, #preview-search-form
+    position: relative
+  
+  .control-overlay
+    height: 100%
+    left: 0
+    position: absolute
+    top: 0
+    width: 100%
+    z-index: 5

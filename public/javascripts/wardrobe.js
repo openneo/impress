@@ -1,5 +1,3 @@
-var SHORT_URL_HOST = 'http://bit.ly/';
-
 window.log = window.SWFLog = $.noop;
 
 function arraysMatch(array1, array2) {
@@ -220,6 +218,201 @@ function Wardrobe() {
   
   ItemZoneSet.all = [];
   
+  function Outfit() {
+    var outfit = this, previous_pet_type, worn_item_ids = [];
+    
+    this.closet_items = [];
+    this.worn_items = [];
+    
+    function getRestrictedZones() {
+      // note: may contain duplicates - loop through assets, not these, for
+      // best performance
+      var restricted_zones = [],
+        restrictors = outfit.worn_items.concat(outfit.pet_state.assets);
+      $.each(restrictors, function () {
+        restricted_zones = restricted_zones.concat(this.restricted_zones);
+      });
+      return restricted_zones;
+    }
+    
+    function hasItemInCloset(item) {
+      return $.inArray(item, outfit.closet_items) != -1;
+    }
+    
+    function isWearingItem(item) {
+      return $.inArray(item, outfit.worn_items) != -1;
+    }
+    
+    function itemAssetsOnLoad(added_item, updateItemsCallback, updateItemAssetsCallback) {
+      var item_zones, item_zones_length, existing_item, existing_item_zones, passed,
+        new_items = [], new_worn_item_ids = [];
+      if(added_item) {
+        // now that we've loaded, check for conflicts on the added item
+        item_zones = added_item.getAssetsFitting(outfit.pet_type).map('zone_id');
+        item_zones_length = item_zones.length;
+        for(var i = 0; i < outfit.worn_items.length; i++) {
+          existing_item = outfit.worn_items[i];
+          existing_item_zones = existing_item.getAssetsFitting(outfit.pet_type).map('zone_id');
+          passed = true;
+          if(existing_item != added_item) {
+            for(var j = 0; j < item_zones_length; j++) {
+              if($.inArray(item_zones[j], existing_item_zones) != -1) {
+                passed = false;
+                break;
+              }
+            }
+          }
+          if(passed) {
+            new_items.push(existing_item);
+            new_worn_item_ids.push(existing_item.id);
+          }
+        }
+        outfit.worn_items = new_items;
+        worn_item_ids = new_worn_item_ids;
+        updateItemsCallback(outfit.worn_items);
+      }
+      updateItemAssetsCallback();
+    }
+    
+    function petTypeOnLoad(pet_type, petTypeLoadedCallback, updatePetStateCallback, updateItemsCallback, updateItemAssetsCallback) {
+      if(!outfit.pet_state || !pet_type.ownsPetState(outfit.pet_state)) {
+        outfit.setPetStateById(null, updatePetStateCallback);
+      }
+      petTypeLoadedCallback(pet_type);
+      updateItemAssets(null, updateItemsCallback, updateItemAssetsCallback);
+    }
+    
+    function updateItemAssets(added_item, updateItemsCallback, updateItemAssetsCallback) {
+      if(outfit.pet_type && outfit.pet_type.loaded && worn_item_ids.length) {
+        outfit.pet_type.loadItemAssets(worn_item_ids, function () {
+          itemAssetsOnLoad(added_item, updateItemsCallback, updateItemAssetsCallback)
+        });
+      }
+    }
+    
+    this.closetItem = function (item, updateClosetItemsCallback) {
+      if(!hasItemInCloset(item)) {
+        this.closet_items.push(item);
+        closet_item_ids.push(item.id);
+        updateClosetItemsCallback(this.closet_items);
+      }
+    }
+    
+    this.getVisibleAssets = function () {
+      var assets = this.pet_state.assets, restricted_zones = getRestrictedZones(),
+        visible_assets = [];
+      for(var i = 0; i < outfit.worn_items.length; i++) {
+        assets = assets.concat(outfit.worn_items[i].getAssetsFitting(outfit.pet_type));
+      }
+      $.each(assets, function () {
+        if($.inArray(this.zone_id, restricted_zones) == -1) {
+          visible_assets.push(this);
+        }
+      });
+      return visible_assets;
+    }
+    
+    this.setClosetItemsByIds = function (ids, updateItemsCallback) {
+      if(ids) closet_item_ids = ids;
+      if(ids && ids.length) {
+        this.closet_items = Item.loadByIds(ids, updateItemsCallback);
+      } else {
+        this.closet_items = [];
+        updateItemsCallback(this.closet_items);
+      }
+    }
+    
+    this.setPetStateById = function (id, petStateOnLoad) {
+      if(!id && this.pet_type) {
+        id = this.pet_type.pet_state_ids[0];
+      }
+      if(id) {
+        this.pet_state = PetState.find(id);
+        this.pet_state.loadAssets(petStateOnLoad);
+      }
+    }
+    
+    this.setPetTypeByColorAndSpecies = function (color_id, species_id, updatePetTypeCallback, petTypeLoadedCallback, petTypeNotFoundCallback, updatePetStateCallback, updateItemsCallback, updateItemAssetsCallback) {
+      this.pet_type = PetType.findOrCreateByColorAndSpecies(color_id, species_id);
+      updatePetTypeCallback(this.pet_type);
+      this.pet_type.load(function (pet_type) { petTypeOnLoad(pet_type, petTypeLoadedCallback, updatePetStateCallback, updateItemsCallback, updateItemAssetsCallback) }, petTypeNotFoundCallback);
+    }
+    
+    this.setWornItemsByIds = function (ids, updateItemsCallback, updateItemAssetsCallback) {
+      if(ids) worn_item_ids = ids;
+      if(ids && ids.length) {
+        this.worn_items = Item.loadByIds(ids, updateItemsCallback);
+      } else {
+        this.worn_items = [];
+        updateItemsCallback(this.worn_items);
+      }
+      updateItemAssets(null, updateItemsCallback, updateItemAssetsCallback);
+    }
+    
+    this.unclosetItem = function (item, updateClosetItemsCallback, updateWornItemsCallback) {
+      var i = $.inArray(item, this.closet_items), id_i;
+      if(i != -1) {
+        this.closet_items.splice(i, 1);
+        id_i = $.inArray(item.id, closet_item_ids);
+        closet_item_ids.splice(id_i, 1);
+        updateClosetItemsCallback(this.closet_items);
+        this.unwearItem(item, updateWornItemsCallback);
+      }
+    }
+    
+    this.unwearItem = function (item, updateWornItemsCallback) {
+      var i = $.inArray(item, this.worn_items), id_i;
+      if(i != -1) {
+        this.worn_items.splice(i, 1);
+        id_i = $.inArray(item.id, worn_item_ids);
+        worn_item_ids.splice(id_i, 1);
+        updateWornItemsCallback(this.worn_items);
+      }
+    }
+    
+    this.wearItem = function (item, updateWornItemsCallback, updateClosetItemsCallback, updateItemAssetsCallback) {
+      if(!isWearingItem(item)) {
+        this.worn_items.push(item);
+        worn_item_ids.push(item.id);
+        this.closetItem(item, updateClosetItemsCallback);
+        if(updateItemAssetsCallback) {
+          updateItemAssets(item, updateWornItemsCallback, updateItemAssetsCallback);
+        }
+        updateWornItemsCallback(this.worn_items);
+      }
+    }
+    
+    function sortWornUnworn() {
+      var unworn_item_ids = [], id;
+      for(var i in outfit.closet_items) {
+        id = outfit.closet_items[i].id;
+        if(outfit.closet_items.hasOwnProperty(i)) {
+          if($.inArray(id, worn_item_ids) === -1) {
+            unworn_item_ids.push(id);
+          }
+        }
+      }
+      return {worn_item_ids: worn_item_ids, unworn_item_ids: unworn_item_ids};
+    }
+    
+    this.save = function (starred, name, success, error) {
+      // TODO: put starred and name on the actual objects, for updating
+      var outfit_data = sortWornUnworn();
+      outfit_data.name = name;
+      outfit_data.starred = starred;
+      outfit_data.pet_state_id = outfit.pet_state.id;
+      $.ajax({
+        url: '/outfits',
+        type: 'post',
+        data: {outfit: outfit_data},
+        success: success,
+        error: function (xhr) {
+          error($.parseJSON(xhr.responseText));
+        }
+      });
+    }
+  }
+  
   function PetAttribute() {}
   
   PetAttribute.loadAll = function (success) {
@@ -373,13 +566,20 @@ function Wardrobe() {
       this.events[event].push(callback);
     }
     
-    this.events.trigger = function (event) {
-      var subarguments;
-      if(controller.events[event]) {
-        subarguments = Array.prototype.slice.apply(arguments, [1]);
-        $.each(controller.events[event], function () {
+    this.event = function (event_name) {
+      return function () {
+        var subarguments = arguments;
+        $.each(controller.events[event_name], function () {
           this.apply(controller, subarguments);
         });
+      }
+    }
+    
+    this.events.trigger = function (event_name) {
+      var subarguments, event;
+      if(controller.events[event_name]) {
+        subarguments = Array.prototype.slice.apply(arguments, [1]);
+        controller.event(event_name).apply(controller, subarguments);
       }
     }
   }
@@ -387,185 +587,89 @@ function Wardrobe() {
   Controller.all = {};
   
   Controller.all.Outfit = function OutfitController() {
-    var outfit = this, previous_pet_type, item_ids = [];
+    var controller = this, outfit = new Outfit;
     
-    this.items = [];
-    
-    function getRestrictedZones() {
-      // note: may contain duplicates - loop through assets, not these, for
-      // best performance
-      var restricted_zones = [],
-        restrictors = outfit.items.concat(outfit.pet_state.assets);
-      $.each(restrictors, function () {
-        restricted_zones = restricted_zones.concat(this.restricted_zones);
-      });
-      return restricted_zones;
+    this.closetItem = function (item) {
+      outfit.closetItem(
+        item,
+        controller.event('updateClosetItems')
+      );
     }
     
-    function hasItem(item) {
-      return $.inArray(item, outfit.items) != -1;
+    this.getClosetItems = function () {
+      return outfit.closet_items;
     }
     
-    function itemAssetsOnLoad(added_item) {
-      var item_zones, item_zones_length, existing_item, existing_item_zones, passed,
-        new_items = [], new_item_ids = [];
-      if(added_item) {
-        // now that we've loaded, check for conflicts on the added item
-        item_zones = added_item.getAssetsFitting(outfit.pet_type).map('zone_id');
-        item_zones_length = item_zones.length;
-        for(var i = 0; i < outfit.items.length; i++) {
-          existing_item = outfit.items[i];
-          existing_item_zones = existing_item.getAssetsFitting(outfit.pet_type).map('zone_id');
-          passed = true;
-          if(existing_item != added_item) {
-            for(var j = 0; j < item_zones_length; j++) {
-              if($.inArray(item_zones[j], existing_item_zones) != -1) {
-                passed = false;
-                break;
-              }
-            }
-          }
-          if(passed) {
-            new_items.push(existing_item);
-            new_item_ids.push(existing_item.id);
-          }
-        }
-        outfit.items = new_items;
-        item_ids = new_item_ids;
-        outfit.events.trigger('updateItems', outfit.items);
-      }
-      outfit.events.trigger('updateItemAssets');
-    }
-    
-    function itemsOnLoad(items) {
-      outfit.events.trigger('updateItems', items);
-    }
-    
-    function petStateOnLoad(pet_state) {
-      outfit.events.trigger('updatePetState', pet_state);
-    }
-    
-    function petTypeOnLoad(pet_type) {
-      if(!outfit.pet_state || !pet_type.ownsPetState(outfit.pet_state)) {
-        outfit.setPetStateById();
-      }
-      outfit.events.trigger('petTypeLoaded', pet_type);
-      updateItemAssets();
-    }
-    
-    function petTypeOnError(pet_type) {
-      outfit.events.trigger('petTypeNotFound', pet_type);
-    }
-    
-    function updateItemAssets(added_item) {
-      if(outfit.pet_type && outfit.pet_type.loaded && item_ids.length) {
-        outfit.pet_type.loadItemAssets(item_ids, function () {
-          itemAssetsOnLoad(added_item)
-        });
-      }
-    }
-    
-    this.addItem = function (item) {
-      if(!hasItem(item)) {
-        this.items.push(item);
-        item_ids.push(item.id);
-        updateItemAssets(item);
-        outfit.events.trigger('updateItems', this.items);
-      }
+    this.getPetType = function () {
+      return outfit.pet_type;
     }
     
     this.getVisibleAssets = function () {
-      var assets = this.pet_state.assets, restricted_zones = getRestrictedZones(),
-        visible_assets = [];
-      for(var i = 0; i < outfit.items.length; i++) {
-        assets = assets.concat(outfit.items[i].getAssetsFitting(outfit.pet_type));
-      }
-      $.each(assets, function () {
-        if($.inArray(this.zone_id, restricted_zones) == -1) {
-          visible_assets.push(this);
-        }
-      });
-      return visible_assets;
+      return outfit.getVisibleAssets();
     }
     
-    this.removeItem = function (item) {
-      var i = $.inArray(item, this.items), id_i;
-      if(i != -1) {
-        this.items.splice(i, 1);
-        id_i = $.inArray(item.id, item_ids);
-        item_ids.splice(id_i, 1);
-        outfit.events.trigger('updateItems', this.items);
-      }
+    this.getWornItems = function () {
+      return outfit.worn_items;
     }
     
-    this.setPetStateById = function (id) {
-      if(!id && this.pet_type) {
-        id = this.pet_type.pet_state_ids[0];
-      }
-      if(id) {
-        this.pet_state = PetState.find(id);
-        this.pet_state.loadAssets(petStateOnLoad);
-      }
+    this.save = function (starred, name) {
+      outfit.save(
+        starred,
+        name,
+        controller.event('saveSuccess'),
+        controller.event('saveFailure')
+      );
     }
     
-    this.setPetTypeByColorAndSpecies = function (color_id, species_id) {
-      this.pet_type = PetType.findOrCreateByColorAndSpecies(color_id, species_id);
-      outfit.events.trigger('updatePetType', this.pet_type);
-      this.pet_type.load(petTypeOnLoad, petTypeOnError);
+    this.setClosetItemsByIds = function (item_ids) {
+      outfit.setClosetItemsByIds(
+        item_ids,
+        controller.event('updateClosetItems')
+      );
     }
     
-    this.setItemsByIds = function (ids) {
-      if(ids) item_ids = ids;
-      if(ids && ids.length) {
-        this.items = Item.loadByIds(ids, itemsOnLoad);
-      } else {
-        this.items = [];
-        itemsOnLoad(this.items);
-      }
-      updateItemAssets();
-    }
-  }
-  
-  Controller.all.Closet = function ClosetController() {
-    // FIXME: a lot of duplication from outfit controller
-    var closet = this, item_ids = [];
-    this.items = [];
-    
-    function hasItem(item) {
-      return $.inArray(item, closet.items) != -1;
+    this.setPetStateById = function (pet_state_id) {
+      outfit.setPetStateById(pet_state_id, controller.event('updatePetState'));
     }
     
-    function itemsOnLoad(items) {
-      closet.events.trigger('updateItems', items);
+    this.setPetTypeByColorAndSpecies = function(color_id, species_id) {
+      outfit.setPetTypeByColorAndSpecies(color_id, species_id,
+        controller.event('updatePetType'),
+        controller.event('petTypeLoaded'),
+        controller.event('petTypeNotFound'),
+        controller.event('updatePetState'),
+        controller.event('updateWornItems'),
+        controller.event('updateItemAssets')
+      );
     }
     
-    this.addItem = function (item) {
-      if(!hasItem(item)) {
-        this.items.push(item);
-        item_ids.push(item.id);
-        closet.events.trigger('updateItems', this.items);
-      }
+    this.setWornItemsByIds = function (item_ids) {
+      outfit.setWornItemsByIds(
+        item_ids,
+        controller.event('updateWornItems'),
+        controller.event('updateItemAssets')
+      );
     }
     
-    this.removeItem = function (item) {
-      var i = $.inArray(item, this.items), id_i;
-      if(i != -1) {
-        this.items.splice(i, 1);
-        id_i = $.inArray(item.id, item_ids);
-        item_ids.splice(id_i, 1);
-        closet.events.trigger('updateItems', this.items);
-      }
+    this.unclosetItem = function (item) {
+      outfit.unclosetItem(
+        item,
+        controller.event('updateClosetItems'),
+        controller.event('updateWornItems')
+      );
     }
     
-    this.setItemsByIds = function (ids) {
-      if(ids && ids.length) {
-        item_ids = ids;
-        this.items = Item.loadByIds(ids, itemsOnLoad);
-      } else {
-        item_ids = ids;
-        this.items = [];
-        itemsOnLoad(this.items);
-      }
+    this.unwearItem = function (item) {
+      outfit.unwearItem(item, controller.event('updateWornItems'));
+    }
+    
+    this.wearItem = function (item) {
+      outfit.wearItem(
+        item,
+        controller.event('updateWornItems'),
+        controller.event('updateClosetItems'),
+        controller.event('updateItemAssets')
+      );
     }
   }
   
@@ -703,7 +807,7 @@ Wardrobe.getStandardView = function (options) {
         log('Welcome to the Wardrobe!');
       }
       
-      var outfit_events = ['updateItems', 'updateItemAssets', 'updatePetType', 'updatePetState'];
+      var outfit_events = ['updateWornItems', 'updateClosetItems', 'updateItemAssets', 'updatePetType', 'updatePetState'];
       for(var i = 0; i < outfit_events.length; i++) {
         (function (event) {
           wardrobe.outfit.bind(event, function (obj) {
@@ -737,7 +841,6 @@ Wardrobe.getStandardView = function (options) {
     );
     
     Wardrobe.StandardPreview.views_by_swf_id[preview_swf_id] = this;
-    console.log(Wardrobe.StandardPreview.views_by_swf_id);
     
     this.previewSWFIsReady = function () {
       preview_swf = document.getElementById(preview_swf_id);
@@ -758,7 +861,7 @@ Wardrobe.getStandardView = function (options) {
       }
     }
     
-    wardrobe.outfit.bind('updateItems', updateAssets);
+    wardrobe.outfit.bind('updateWornItems', updateAssets);
     wardrobe.outfit.bind('updateItemAssets', updateAssets);
     wardrobe.outfit.bind('updatePetState', updateAssets);
   }

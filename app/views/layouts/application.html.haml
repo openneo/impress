@@ -8,6 +8,7 @@
         = yield :title
     = stylesheet_link_tag "compiled/screen"
     = javascript_include_tag "http://#{RemoteImpressHost}/assets/js/analytics.js"
+    = csrf_meta_tag
   %body{:class => body_class}
     #container
       - if content_for? :title
@@ -31,7 +32,7 @@
           %span
             == Hey, #{link_to current_user.name, user_contributions_path(current_user)}!
             == You have #{current_user.points} points.
-          = link_to 'Log out', logout_path
+          = link_to 'Log out', logout_path_with_return_to
         - else
           = link_to login_path_with_return_to, :id => 'userbar-log-in' do
             = image_tag auth_server_icon_url

@@ -18,7 +18,7 @@ class SessionsController < ApplicationController
   
   def destroy
     warden.logout
-    redirect_to root_path
+    redirect_to (params[:return_to] || root_path)
   end
   
   protected
