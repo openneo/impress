@@ -4,7 +4,7 @@ class OutfitsController < ApplicationController
       outfit = Outfit.new params[:outfit]
       outfit.user = current_user
       if outfit.save
-        render :json => true
+        render :json => outfit.id
       else
         render :json => {:errors => outfit.errors}, :status => :bad_request
       end
@@ -13,9 +13,34 @@ class OutfitsController < ApplicationController
     end
   end
   
+  def for_current_user
+    @outfits = user_signed_in? ? current_user.outfits : []
+    render :json => @outfits
+  end
+  
+  def destroy
+    authenticate_action &:destroy
+  end
+  
   def new
     @colors = Color.all
     @species = Species.all
     @top_contributors = User.top_contributors.limit(3)
+  end
+  
+  def update
+    authenticate_action { |outfit| outfit.update_attributes(params[:outfit]) }
+  end
+  
+  private
+  
+  def authenticate_action
+    raise ActiveRecord::RecordNotFound unless user_signed_in?
+    outfit = current_user.outfits.find(params[:id])
+    if yield(outfit)
+      render :json => true
+    else
+      render :json => false, :status => :bad_request
+    end
   end
 end

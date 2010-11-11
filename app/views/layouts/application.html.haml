@@ -9,6 +9,7 @@
     = stylesheet_link_tag "compiled/screen"
     = javascript_include_tag "http://#{RemoteImpressHost}/assets/js/analytics.js"
     = csrf_meta_tag
+    = signed_in_meta_tag
   %body{:class => body_class}
     #container
       - if content_for? :title

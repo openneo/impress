@@ -8,11 +8,24 @@ class Outfit < ActiveRecord::Base
   
   attr_accessible :name, :pet_state_id, :starred, :unworn_item_ids, :worn_item_ids
   
-  def worn_and_unworn_items
+  def as_json(more_options={})
+    serializable_hash :only => [:id, :name, :pet_state_id, :starred],
+      :methods => [:color_id, :species_id, :worn_and_unworn_item_ids]
+  end
+  
+  def color_id
+    pet_state.pet_type.color_id
+  end
+  
+  def species_id
+    pet_state.pet_type.species_id
+  end
+  
+  def worn_and_unworn_item_ids
     {:worn => [], :unworn => []}.tap do |output|
-      item_outfit_relationships.all(:include => :item).each do |rel|
+      item_outfit_relationships.each do |rel|
         key = rel.is_worn? ? :worn : :unworn
-        output[key] << rel.item
+        output[key] << rel.item_id
       end
     end
   end

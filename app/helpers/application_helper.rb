@@ -30,6 +30,7 @@ module ApplicationHelper
     :bitly => 'http://bit.ly/javascript-api.js?version=latest&login=openneo&apiKey=R_4d0438829b7a99860de1d3edf55d8dc8',
     :html5 => 'http://html5shim.googlecode.com/svn/trunk/html5.js',
     :jquery => 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js',
+    :jquery_tmpl => 'http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js',
     :swfobject => 'http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js'
   }
   
@@ -49,6 +50,10 @@ module ApplicationHelper
   
   def origin_tag(value)
     hidden_field_tag 'origin', value, :id => nil
+  end
+  
+  def signed_in_meta_tag
+    %(<meta name="user-signed-in" content="#{user_signed_in?}">).html_safe
   end
   
   def title(value)

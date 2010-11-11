@@ -218,8 +218,16 @@ function Wardrobe() {
   
   ItemZoneSet.all = [];
   
-  function Outfit() {
-    var outfit = this, previous_pet_type, worn_item_ids = [];
+  function Outfit(data) {
+    var outfit = this, previous_pet_type, worn_item_ids = [],
+      new_record = true;
+    
+    if(typeof data != 'undefined') {
+      this.id = data.id;
+      this.name = data.name;
+      this.starred = data.starred;
+      new_record = false;
+    }
     
     this.closet_items = [];
     this.worn_items = [];
@@ -349,6 +357,11 @@ function Wardrobe() {
       updateItemAssets(null, updateItemsCallback, updateItemAssetsCallback);
     }
     
+    this.toggleStar = function (success) {
+      this.starred = !this.starred;
+      this.update(success);
+    }
+    
     this.unclosetItem = function (item, updateClosetItemsCallback, updateWornItemsCallback) {
       var i = $.inArray(item, this.closet_items), id_i;
       if(i != -1) {
@@ -395,22 +408,65 @@ function Wardrobe() {
       return {worn_item_ids: worn_item_ids, unworn_item_ids: unworn_item_ids};
     }
     
-    this.save = function (starred, name, success, error) {
-      // TODO: put starred and name on the actual objects, for updating
+    this.destroy = function (success) {
+      $.ajax({
+        url: '/outfits/' + outfit.id + '.json',
+        type: 'post',
+        data: {'_method': 'delete'},
+        success: function () { success(outfit) }
+      });
+    }
+    
+    this.create = function (success, error) {
       var outfit_data = sortWornUnworn();
-      outfit_data.name = name;
-      outfit_data.starred = starred;
-      outfit_data.pet_state_id = outfit.pet_state.id;
+      outfit_data.name = outfit.name;
+      outfit_data.starred = outfit.starred;
+      if(outfit.pet_state) outfit_data.pet_state_id = outfit.pet_state.id;
       $.ajax({
         url: '/outfits',
         type: 'post',
         data: {outfit: outfit_data},
-        success: success,
+        success: function (data) {
+          new_record = false;
+          outfit.id = data;
+          success(outfit);
+        },
         error: function (xhr) {
           error($.parseJSON(xhr.responseText));
         }
       });
     }
+    
+    this.update = function (success) {
+      var outfit_data = sortWornUnworn();
+      outfit_data.name = outfit.name;
+      outfit_data.starred = outfit.starred;
+      if(outfit.pet_state) outfit_data.pet_state_id = outfit.pet_state.id;
+      $.ajax({
+        url: '/outfits/' + outfit.id,
+        type: 'post',
+        data: {'_method': 'put', outfit: outfit_data},
+        success: function () { success(outfit) }
+      });
+    }
+  }
+  
+  Outfit.forCurrentUserCache = {};
+  
+  Outfit.loadForCurrentUser = function (success) {
+    var outfits = [];
+    $.getJSON('/users/current-user/outfits.json', function (data) {
+      var outfit_data, outfit, i;
+      for(i in data) {
+        if(data.hasOwnProperty(i)) {
+          outfit_data = data[i];
+          outfit = new Outfit(outfit_data);
+          outfits.push(outfit);
+          Outfit.forCurrentUserCache[outfit_data.id] = outfit;
+        }
+      }
+      success(outfits);
+    });
   }
   
   function PetAttribute() {}
@@ -613,9 +669,9 @@ function Wardrobe() {
     }
     
     this.save = function (starred, name) {
-      outfit.save(
-        starred,
-        name,
+      outfit.starred = starred;
+      outfit.name = name;
+      outfit.create(
         controller.event('saveSuccess'),
         controller.event('saveFailure')
       );
@@ -738,6 +794,75 @@ function Wardrobe() {
     
     this.setPerPage = function (per_page) {
       Item.PER_PAGE = per_page;
+    }
+  }
+  
+  Controller.all.User = function UserController() {
+    var controller = this, outfits = [], outfits_loaded = false;
+    
+    function compareOutfits(a, b) {
+      if(a.starred) {
+        if(!b.starred) return -1;
+      } else if(b.starred) {
+        return 1;
+      }
+      if(a.name < b.name) return -1;
+      else if(a.name == b.name) return 0;
+      else return 1;
+    }
+    
+    function insertOutfit(outfit) {
+      for(var i = 0; i < outfits.length; i++) {
+        if(compareOutfits(outfit, outfits[i]) < 0) {
+          outfits.splice(i, 0, outfit);
+          controller.events.trigger('addOutfit', outfit, i);
+          return;
+        }
+      }
+      controller.events.trigger('addOutfit', outfit, outfits.length);
+      outfits.push(outfit);
+    }
+    
+    function sortOutfits(outfits) {
+      outfits.sort(compareOutfits);
+    }
+    
+    function yankOutfit(outfit) {
+      var i;
+      for(i = 0; i < outfits.length; i++) {
+        if(outfit == outfits[i]) {
+          outfits.splice(i, 1);
+          break;
+        }
+      }
+      controller.events.trigger('removeOutfit', outfit, i);
+    }
+    
+    this.addOutfit = insertOutfit;
+    
+    this.destroyOutfit = function (outfit) {
+      outfit.destroy(function () {
+        yankOutfit(outfit);
+      });
+    }
+    
+    this.loadOutfits = function () {
+      if(!outfits_loaded) {
+        Outfit.loadForCurrentUser(function (new_outfits) {
+          outfits = new_outfits;
+          outfits_loaded = true;
+          sortOutfits(outfits);
+          controller.events.trigger('outfitsLoaded', outfits);
+        });
+      }
+    }
+    
+    this.toggleOutfitStar = function (outfit) {
+      outfit.toggleStar(function () {
+        yankOutfit(outfit);
+        insertOutfit(outfit);
+        controller.events.trigger('outfitStarToggled', outfit);
+      });
     }
   }
 

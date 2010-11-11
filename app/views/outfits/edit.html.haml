@@ -14,7 +14,9 @@
     Gender/Emotions:
     %ul
   #save-outfit-wrapper
-    %button#save-outfit Save outfit
+    %button#save-outfit
+      %span#save-outfit-signed-in Save outfit
+      %span Log in to save outfit
 #preview
   #preview-swf
     #preview-swf-container
@@ -34,54 +36,6 @@
       %a#preview-sidebar-nav-closet.preview-sidebar-nav{:href => "#"} &larr; Back to Closet
       %h2 Your outfits
       %ul
-        %li.starred
-          %div
-            %header
-              %button.outfit-delete &times;
-              .outfit-star
-              %h4 Pretty in Pink
-            %input.outfit-url{:type => 'text', :value => 'http://impress.openneo.net/outfits/qW2l4o'}
-            .outfit-delete-confirmation
-              %span Delete forever?
-              %a.outfit-delete-confirmation-yes{:href => '#'} yes
-              \/
-              %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
-        %li.starred
-          %div
-            %header
-              %button.outfit-delete &times;
-              .outfit-star
-              %h4 The Little Mermaid
-            %input.outfit-url{:type => 'text', :value => 'http://impress.openneo.net/outfits/qW2l4o'}
-            .outfit-delete-confirmation
-              %span Delete forever?
-              %a.outfit-delete-confirmation-yes{:href => '#'} yes
-              \/
-              %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
-        %li
-          %div
-            %header
-              %button.outfit-delete &times;
-              .outfit-star
-              %h4 Autumn is Here
-            %input.outfit-url{:type => 'text', :value => 'http://impress.openneo.net/outfits/qW2l4o'}
-            .outfit-delete-confirmation
-              %span Delete forever?
-              %a.outfit-delete-confirmation-yes{:href => '#'} yes
-              \/
-              %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
-        %li
-          %div
-            %header
-              %button.outfit-delete &times;
-              .outfit-star
-              %h4 Super Mysterious Secret Agent
-            %input.outfit-url{:type => 'text', :value => 'http://impress.openneo.net/outfits/qW2l4o'}
-            .outfit-delete-confirmation
-              %span Delete forever?
-              %a.outfit-delete-confirmation-yes{:href => '#'} yes
-              \/
-              %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
     #preview-saving-outfit
       %a#preview-sidebar-nav-cancel-save.preview-sidebar-nav{:href => '#'} &larr; Cancel
       %h2 Saving new outfit
@@ -133,8 +87,21 @@
   %ul
 #no-assets-full-message
   We haven't seen this item on this body type before. Have you? Submit its name on the home page if you have!
+%script#outfit-template{:type => 'text/x-jquery-tmpl'}
+  <li id="outfit-${id}"{{if starred}} class="starred"{{/if}}>
+  %header
+    %button.outfit-delete &times;
+    .outfit-star
+    %h4 ${name}
+  %input.outfit-url{:type => 'text', :value => 'http://impress.openneo.net/outfits/FIXME'}
+  .outfit-delete-confirmation
+    %span Delete forever?
+    %a.outfit-delete-confirmation-yes{:href => '#'} yes
+    \/
+    %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
+  </li>
 - content_for :javascripts do
   /[if IE]
     = include_javascript_libraries :html5
-  = include_javascript_libraries :jquery, :swfobject
+  = include_javascript_libraries :jquery, :swfobject, :jquery_tmpl
   = include_javascripts :edit_outfit_package
