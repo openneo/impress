@@ -277,11 +277,17 @@ View.Hash = function (wardrobe) {
       if(!arraysMatch(new_data.closet, data.closet)) {
         wardrobe.outfit.setClosetItemsByIds(new_data.closet.slice(0));
       }
-    } else if(!arraysMatch(new_data.objects, data.closet)) {
+    } else if(new_data.objects && !arraysMatch(new_data.objects, data.closet)) {
       wardrobe.outfit.setClosetItemsByIds(new_data.objects.slice(0));
+    } else {
+      wardrobe.outfit.setClosetItemsByIds([]);
     }
-    if(!arraysMatch(new_data.objects, data.objects)) {
-      wardrobe.outfit.setWornItemsByIds(new_data.objects.slice(0));
+    if(new_data.objects) {
+      if(!arraysMatch(new_data.objects, data.objects)) {
+        wardrobe.outfit.setWornItemsByIds(new_data.objects.slice(0));
+      }
+    } else {
+      wardrobe.outfit.setWornItemsByIds([]);
     }
     if(new_data.name != data.name && new_data.name) {
       wardrobe.base_pet.setName(new_data.name);
@@ -338,14 +344,20 @@ View.Hash = function (wardrobe) {
     setInterval(checkQuery, 100);
   }
   
-  wardrobe.outfit.bind('updateClosetItems', function (items) {
+  function singleOutfitResponse(event_name, response) {
+    wardrobe.outfit.bind(event_name, function () {
+      if(!wardrobe.outfit.in_transaction) response.apply(this, arguments);
+    });
+  }
+  
+  singleOutfitResponse('updateClosetItems', function (items) {
     var item_ids = items.map('id');
     if(!arraysMatch(item_ids, data.closet)) {
       changeQuery({closet: item_ids});
     }
   });
   
-  wardrobe.outfit.bind('updateWornItems', function (items) {
+  singleOutfitResponse('updateWornItems', function (items) {
     var item_ids = items.map('id'), changes = {};
     if(!arraysMatch(item_ids, data.objects)) {
       changes.objects = item_ids;
@@ -358,7 +370,7 @@ View.Hash = function (wardrobe) {
     if(changes.objects || changes.closet) changeQuery(changes);
   });
   
-  wardrobe.outfit.bind('updatePetType', function (pet_type) {
+  singleOutfitResponse('updatePetType', function (pet_type) {
     if(pet_type.color_id != data.color || pet_type.species_id != data.species) {
       changeQuery({
         color: pet_type.color_id,
@@ -368,15 +380,25 @@ View.Hash = function (wardrobe) {
     }
   });
   
-  wardrobe.outfit.bind('petTypeNotFound', function () {
+  singleOutfitResponse('petTypeNotFound', function () {
     window.history.back();
   });
   
-  wardrobe.outfit.bind('updatePetState', function (pet_state) {
+  singleOutfitResponse('updatePetState', function (pet_state) {
     var pet_type = wardrobe.outfit.getPetType();
     if(pet_state.id != data.state && pet_type && (data.state || pet_state.id != pet_type.pet_state_ids[0])) {
       changeQuery({state: pet_state.id});
     }
+  });
+  
+  wardrobe.outfit.bind('setOutfit', function (outfit) {
+    changeQuery({
+      closet: outfit.getClosetItemIds(),
+      color: outfit.pet_type.color_id,
+      objects: outfit.getWornItemIds(),
+      species: outfit.pet_type.species_id,
+      state: outfit.pet_state.id
+    });
   });
   
   wardrobe.search.bind('updateRequest', function (request) {
@@ -480,6 +502,10 @@ View.Outfits = function (wardrobe) {
   wardrobe.user.bind('removeOutfit', function (outfit, i) {
     var outfit_el = outfits_list_el.children().not('.hiding').eq(i);
     outfit_el.addClass('hiding').hide('normal', function () { outfit_el.remove() });
+  });
+  
+  $('#preview-outfits h4').live('click', function () {
+    wardrobe.outfit.load($(this).tmplItem().data.clone());
   });
   
   $('input.outfit-url').live('mouseover', function () {

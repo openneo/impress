@@ -223,14 +223,29 @@ function Wardrobe() {
       new_record = true;
     
     if(typeof data != 'undefined') {
+      this.color_id = data.color_id;
       this.id = data.id;
       this.name = data.name;
+      this.pet_state_id = data.pet_state_id;
       this.starred = data.starred;
+      this.species_id = data.species_id;
+      this.worn_and_unworn_item_ids = data.worn_and_unworn_item_ids;
+      worn_item_ids = this.worn_and_unworn_item_ids.worn;
+      closet_item_ids = this.worn_and_unworn_item_ids.unworn.
+        concat(this.worn_and_unworn_item_ids.worn);
       new_record = false;
     }
     
     this.closet_items = [];
     this.worn_items = [];
+    
+    this.getWornItemIds = function () { // TODO just expose the worn_item_ids
+      return worn_item_ids;
+    }
+    
+    this.getClosetItemIds = function () { // TODO just expose the closet_item_ids
+      return closet_item_ids;
+    }
     
     function getRestrictedZones() {
       // note: may contain duplicates - loop through assets, not these, for
@@ -323,7 +338,10 @@ function Wardrobe() {
     this.setClosetItemsByIds = function (ids, updateItemsCallback) {
       if(ids) closet_item_ids = ids;
       if(ids && ids.length) {
-        this.closet_items = Item.loadByIds(ids, updateItemsCallback);
+        Item.loadByIds(ids, function (items) {
+          outfit.closet_items = items;
+          updateItemsCallback(items);
+        });
       } else {
         this.closet_items = [];
         updateItemsCallback(this.closet_items);
@@ -406,6 +424,21 @@ function Wardrobe() {
         }
       }
       return {worn_item_ids: worn_item_ids, unworn_item_ids: unworn_item_ids};
+    }
+    
+    this.clone = function () {
+      return new Outfit({
+        color_id: outfit.color_id,
+        id: outfit.id,
+        name: outfit.name,
+        species_id: outfit.species_id,
+        starred: outfit.starred,
+        pet_state_id: outfit.pet_state_id,
+        worn_and_unworn_item_ids: {
+          worn: outfit.worn_and_unworn_item_ids.worn.slice(0),
+          unworn: outfit.worn_and_unworn_item_ids.unworn.slice(0)
+        }
+      });
     }
     
     this.destroy = function (success) {
@@ -615,6 +648,12 @@ function Wardrobe() {
     var controller = this;
     this.events = {};
     
+    function fireEvent(event_name, subarguments) {
+      $.each(controller.events[event_name], function () {
+        this.apply(controller, subarguments);
+      });
+    }
+    
     this.bind = function (event, callback) {
       if(typeof this.events[event] == 'undefined') {
         this.events[event] = [];
@@ -624,10 +663,7 @@ function Wardrobe() {
     
     this.event = function (event_name) {
       return function () {
-        var subarguments = arguments;
-        $.each(controller.events[event_name], function () {
-          this.apply(controller, subarguments);
-        });
+        fireEvent(event_name, arguments);
       }
     }
     
@@ -635,7 +671,7 @@ function Wardrobe() {
       var subarguments, event;
       if(controller.events[event_name]) {
         subarguments = Array.prototype.slice.apply(arguments, [1]);
-        controller.event(event_name).apply(controller, subarguments);
+        fireEvent(event_name, subarguments);
       }
     }
   }
@@ -644,6 +680,8 @@ function Wardrobe() {
   
   Controller.all.Outfit = function OutfitController() {
     var controller = this, outfit = new Outfit;
+    
+    this.in_transaction = false;
     
     this.closetItem = function (item) {
       outfit.closetItem(
@@ -666,6 +704,17 @@ function Wardrobe() {
     
     this.getWornItems = function () {
       return outfit.worn_items;
+    }
+    
+    this.load = function (new_outfit) {
+      outfit = new_outfit;
+      this.in_transaction = true;
+      controller.setPetTypeByColorAndSpecies(outfit.color_id, outfit.species_id);
+      controller.setPetStateById(outfit.pet_state_id);
+      controller.setClosetItemsByIds(outfit.getClosetItemIds());
+      controller.setWornItemsByIds(outfit.getWornItemIds());
+      this.in_transaction = false;
+      controller.events.trigger('setOutfit', outfit);
     }
     
     this.save = function (starred, name) {
