@@ -1,5 +1,5 @@
 class Outfit < ActiveRecord::Base
-  has_many :item_outfit_relationships
+  has_many :item_outfit_relationships, :dependent => :destroy
   belongs_to :pet_state
   belongs_to :user
   

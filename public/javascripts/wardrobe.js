@@ -376,8 +376,7 @@ function Wardrobe() {
     }
     
     this.toggleStar = function (success) {
-      this.starred = !this.starred;
-      this.update(success);
+      this.updateAttributes({starred: !outfit.starred}, success);
     }
     
     this.unclosetItem = function (item, updateClosetItemsCallback, updateWornItemsCallback) {
@@ -427,18 +426,23 @@ function Wardrobe() {
     }
     
     this.clone = function () {
-      return new Outfit({
+      var outfit_data = {
         color_id: outfit.color_id,
         id: outfit.id,
         name: outfit.name,
         species_id: outfit.species_id,
         starred: outfit.starred,
         pet_state_id: outfit.pet_state_id,
-        worn_and_unworn_item_ids: {
+      };
+      if(typeof outfit.worn_and_unworn_item_ids !== 'undefined') {
+        outfit_data.worn_and_unworn_item_ids = {
           worn: outfit.worn_and_unworn_item_ids.worn.slice(0),
           unworn: outfit.worn_and_unworn_item_ids.unworn.slice(0)
         }
-      });
+      } else {
+        outfit_data.worn_and_unworn_item_ids = sortWornUnworn();
+      }
+      return new Outfit(outfit_data);
     }
     
     this.destroy = function (success) {
@@ -470,11 +474,13 @@ function Wardrobe() {
       });
     }
     
-    this.update = function (success) {
-      var outfit_data = sortWornUnworn();
-      outfit_data.name = outfit.name;
-      outfit_data.starred = outfit.starred;
-      if(outfit.pet_state) outfit_data.pet_state_id = outfit.pet_state.id;
+    this.updateAttributes = function (attributes, success) {
+      var outfit_data = {};
+      for(var key in attributes) {
+        if(attributes.hasOwnProperty(key)) {
+          outfit_data[key] = outfit[key] = attributes[key];
+        }
+      }
       $.ajax({
         url: '/outfits/' + outfit.id,
         type: 'post',
