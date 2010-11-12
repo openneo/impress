@@ -438,7 +438,11 @@ View.Outfits = function (wardrobe) {
   /* Show for login */
   
   signed_in = $('meta[name=user-signed-in]').attr('content') == 'true';
-  if(signed_in) $(document.body).addClass('user-signed-in');
+  if(signed_in) {
+    $(document.body).addClass('user-signed-in');
+  } else {
+    $(document.body).addClass('user-not-signed-in');
+  }
   
   /* Nav */
   
@@ -470,13 +474,13 @@ View.Outfits = function (wardrobe) {
   });
   
   $('#save-outfit').click(function () {
-    if(signed_in) {
-      new_outfit_name_el.val('');
-      new_outfit_el.removeClass('starred').show();
-      showSavingOutfit();
-    } else {
-      window.location.replace($('#userbar a').attr('href'));
-    }
+    new_outfit_name_el.val('');
+    new_outfit_el.removeClass('starred').show();
+    showSavingOutfit();
+  });
+  
+  $('#save-outfit-not-signed-in').click(function () {
+    window.location.replace($('#userbar a').attr('href'));
   });
   
   /* Outfits list */

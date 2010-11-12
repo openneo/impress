@@ -124,6 +124,7 @@ body.outfits-edit
     float: right
     button
       +loud-awesome-button-color
+      display: none
   #preview
     clear: both
   #preview-swf
@@ -416,7 +417,9 @@ body.outfits-edit
   &.user-signed-in
     #preview-sidebar-nav-outfits
       display: block
-    #save-outfit span
-      display: none
-    span#save-outfit-signed-in
-      display: inline
+    #save-outfit
+      display: inline-block
+  
+  &.user-not-signed-in
+    #save-outfit-not-signed-in
+      display: inline-block
