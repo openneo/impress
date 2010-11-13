@@ -590,7 +590,7 @@ View.Outfits = function (wardrobe) {
   var SAVE_ERRORS = {
       'item_outfit_relationships': "Item not found. How odd. Pull some items out of your closet and try again.",
       'pet_state': "Pet state not found. How odd. Try picking a new Gender/Emotion.",
-      'name': "Outfits must have a name",
+      'name': true,
       'user': "You must be logged in to save outfits"
     };
   
@@ -611,7 +611,12 @@ View.Outfits = function (wardrobe) {
     } else {
       for(var key in SAVE_ERRORS) {
         if(SAVE_ERRORS.hasOwnProperty(key) && typeof errors[key] != 'undefined') {
-          saveErrorMessage(SAVE_ERRORS[key]);
+          var message = SAVE_ERRORS[key];
+          if(message === true) {
+            message = key.charAt(0).toUpperCase() + key.substr(1) + ' ' +
+              errors[key];
+          }
+          saveErrorMessage(message);
           break;
         }
       }

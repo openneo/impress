@@ -3,7 +3,7 @@ class Outfit < ActiveRecord::Base
   belongs_to :pet_state
   belongs_to :user
   
-  validates :name, :presence => true
+  validates :name, :presence => true, :uniqueness => {:scope => :user_id}
   validates :pet_state, :presence => true
   
   attr_accessible :name, :pet_state_id, :starred, :unworn_item_ids, :worn_item_ids
