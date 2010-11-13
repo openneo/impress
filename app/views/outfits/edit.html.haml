@@ -95,7 +95,7 @@
     %button.outfit-delete &times;
     .outfit-star
     %h4 ${name}
-  %input.outfit-url{:type => 'text', :value => 'http://impress.openneo.net/outfits/FIXME'}
+  %input.outfit-url{:type => 'text', :value => "http://#{request.host}/outfits/${id}"}
   .outfit-delete-confirmation
     %span Delete forever?
     %a.outfit-delete-confirmation-yes{:href => '#'} yes
