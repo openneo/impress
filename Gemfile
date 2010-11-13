@@ -32,6 +32,8 @@ group :development_async, :production do
   # async http requires
   gem 'em-http-request',:git => 'git://github.com/igrigorik/em-http-request.git', :require => 'em-http'
   gem 'addressable', :require => 'addressable/uri'
+  
+  gem 'thin', '~> 1.2.7'
 end
 
 group :test do
