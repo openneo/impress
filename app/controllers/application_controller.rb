@@ -6,7 +6,15 @@ class ApplicationController < ActionController::Base
   protected
   
   def current_user
-    @current_user ||= warden.authenticate
+    unless @current_user
+      @current_user = warden.authenticate
+      if @current_user && !@current_user.beta?
+        warden.logout
+        @current_user = nil
+        flash.now[:alert] = "Only beta testers may log in right now. Sorry! We'll let you know when the new server is open to the public."
+      end
+    end
+    @current_user
   end
   
   def user_signed_in?
