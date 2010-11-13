@@ -18,7 +18,7 @@ $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
 
 =outfit
   //+clearfix
-  margin-bottom: .5em
+  padding: .25em 0
   //.outfit-thumbnail
     float: left
     height: $outfit-thumbnail-size
@@ -73,6 +73,7 @@ $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
       text-decoration: underline
   .outfit-url
     +opacity(.5)
+    background: transparent
     border-color: $background-color
     font-size: 75%
     width: $outfit-content-inner-width
@@ -86,6 +87,8 @@ $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
       color: red
     a
       margin: 0 .25em
+  &.active
+    background: $module-bg-color
   &.confirming-deletion
     .outfit-delete
       visibility: hidden
@@ -367,7 +370,7 @@ body.outfits-edit
     font-size: 85%
     margin-top: 1em
   
-  #save-success, #save-error
+  #save-success, #save-error, #outfit-not-found
     display: none
     margin-top: 1em
     text-align: center
@@ -375,7 +378,7 @@ body.outfits-edit
   #save-success
     +notice
   
-  #save-error
+  #save-error, #outfit-not-found
     +error
   
   #userbar-message

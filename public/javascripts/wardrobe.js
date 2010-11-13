@@ -222,6 +222,12 @@ function Wardrobe() {
     var outfit = this, previous_pet_type, worn_item_ids = [],
       new_record = true;
     
+    this.setWornAndUnwornItemIds = function (new_ids) {
+      this.worn_and_unworn_item_ids = new_ids;
+      worn_item_ids = new_ids.worn;
+      closet_item_ids = new_ids.unworn.concat(new_ids.worn);
+    }
+    
     if(typeof data != 'undefined') {
       this.color_id = data.color_id;
       this.id = data.id;
@@ -229,10 +235,7 @@ function Wardrobe() {
       this.pet_state_id = data.pet_state_id;
       this.starred = data.starred;
       this.species_id = data.species_id;
-      this.worn_and_unworn_item_ids = data.worn_and_unworn_item_ids;
-      worn_item_ids = this.worn_and_unworn_item_ids.worn;
-      closet_item_ids = this.worn_and_unworn_item_ids.unworn.
-        concat(this.worn_and_unworn_item_ids.worn);
+      this.setWornAndUnwornItemIds(data.worn_and_unworn_item_ids);
       new_record = false;
     }
     
@@ -321,6 +324,13 @@ function Wardrobe() {
       }
     }
     
+    this.getPetStateId = function () {
+      if(typeof outfit.pet_state_id === 'undefined') {
+        outfit.pet_state_id = outfit.pet_state.id;
+      }
+      return outfit.pet_state_id;
+    }
+    
     this.getVisibleAssets = function () {
       var assets = this.pet_state.assets, restricted_zones = getRestrictedZones(),
         visible_assets = [];
@@ -354,12 +364,15 @@ function Wardrobe() {
       }
       if(id) {
         this.pet_state = PetState.find(id);
+        this.pet_state_id = id;
         this.pet_state.loadAssets(petStateOnLoad);
       }
     }
     
     this.setPetTypeByColorAndSpecies = function (color_id, species_id, updatePetTypeCallback, petTypeLoadedCallback, petTypeNotFoundCallback, updatePetStateCallback, updateItemsCallback, updateItemAssetsCallback) {
       this.pet_type = PetType.findOrCreateByColorAndSpecies(color_id, species_id);
+      this.color_id = color_id;
+      this.species_id = species_id;
       updatePetTypeCallback(this.pet_type);
       this.pet_type.load(function (pet_type) { petTypeOnLoad(pet_type, petTypeLoadedCallback, updatePetStateCallback, updateItemsCallback, updateItemAssetsCallback) }, petTypeNotFoundCallback);
     }
@@ -412,37 +425,42 @@ function Wardrobe() {
       }
     }
     
-    function sortWornUnworn() {
-      var unworn_item_ids = [], id;
-      for(var i in outfit.closet_items) {
-        id = outfit.closet_items[i].id;
-        if(outfit.closet_items.hasOwnProperty(i)) {
+    this.getWornAndUnwornItemIds = function () {
+      if(typeof outfit.worn_and_unworn_item_ids === 'undefined') {
+        var unworn_item_ids = [], id;
+        for(var i = 0; i < closet_item_ids.length; i++) {
+          id = closet_item_ids[i];
           if($.inArray(id, worn_item_ids) === -1) {
             unworn_item_ids.push(id);
           }
         }
+        outfit.worn_and_unworn_item_ids = {worn: worn_item_ids, unworn: unworn_item_ids};
       }
-      return {worn_item_ids: worn_item_ids, unworn_item_ids: unworn_item_ids};
+      return outfit.worn_and_unworn_item_ids;
     }
     
     this.clone = function () {
-      var outfit_data = {
-        color_id: outfit.color_id,
-        id: outfit.id,
-        name: outfit.name,
-        species_id: outfit.species_id,
-        starred: outfit.starred,
-        pet_state_id: outfit.pet_state_id,
-      };
-      if(typeof outfit.worn_and_unworn_item_ids !== 'undefined') {
-        outfit_data.worn_and_unworn_item_ids = {
-          worn: outfit.worn_and_unworn_item_ids.worn.slice(0),
-          unworn: outfit.worn_and_unworn_item_ids.unworn.slice(0)
-        }
-      } else {
-        outfit_data.worn_and_unworn_item_ids = sortWornUnworn();
-      }
-      return new Outfit(outfit_data);
+      var new_outfit = new Outfit;
+      new_outfit.cloneAttributesFrom(outfit);
+      new_outfit.id = outfit.id;
+      new_outfit.name = outfit.name;
+      new_outfit.starred = outfit.starred;
+      return new_outfit;
+    }
+    
+    this.cloneAttributesFrom = function (base_outfit) {
+      var base_ids = base_outfit.getWornAndUnwornItemIds(),
+        new_ids = {};
+      outfit.color_id = base_outfit.color_id
+      outfit.species_id = base_outfit.species_id;
+      outfit.pet_state_id = base_outfit.getPetStateId();
+      outfit.pet_state = base_outfit.pet_state;
+      outfit.pet_type = base_outfit.pet_type;
+      outfit.closet_items = base_outfit.closet_items.slice(0);
+      outfit.worn_items = base_outfit.worn_items.slice(0);
+      new_ids.worn = base_ids.worn.slice(0);
+      new_ids.unworn = base_ids.unworn.slice(0);
+      outfit.setWornAndUnwornItemIds(new_ids);
     }
     
     this.destroy = function (success) {
@@ -455,9 +473,11 @@ function Wardrobe() {
     }
     
     this.create = function (success, error) {
-      var outfit_data = sortWornUnworn();
+      var outfit_data = {}, sorted = outfit.getWornAndUnwornItemIds();
       outfit_data.name = outfit.name;
       outfit_data.starred = outfit.starred;
+      outfit_data.worn_item_ids = sorted.worn;
+      outfit_data.unworn_item_ids = sorted.unworn;
       if(outfit.pet_state) outfit_data.pet_state_id = outfit.pet_state.id;
       $.ajax({
         url: '/outfits',
@@ -466,6 +486,7 @@ function Wardrobe() {
         success: function (data) {
           new_record = false;
           outfit.id = data;
+          Outfit.cache[data] = outfit;
           success(outfit);
         },
         error: function (xhr) {
@@ -490,19 +511,35 @@ function Wardrobe() {
     }
   }
   
-  Outfit.forCurrentUserCache = {};
+  Outfit.cache = {};
+  
+  Outfit.find = function (id, callback) {
+    if(typeof Outfit.cache[id] !== 'undefined') {
+      callback(Outfit.cache[id]);
+    } else {
+      $.ajax({
+        url: '/outfits/' + id + '.json',
+        success: function (data) {
+          var outfit = new Outfit(data);
+          Outfit.cache[id] = outfit;
+          callback(outfit);
+        },
+        error: function () {
+          callback(null);
+        }
+      });
+    }
+  }
   
   Outfit.loadForCurrentUser = function (success) {
     var outfits = [];
     $.getJSON('/users/current-user/outfits.json', function (data) {
       var outfit_data, outfit, i;
-      for(i in data) {
-        if(data.hasOwnProperty(i)) {
-          outfit_data = data[i];
-          outfit = new Outfit(outfit_data);
-          outfits.push(outfit);
-          Outfit.forCurrentUserCache[outfit_data.id] = outfit;
-        }
+      for(var i = 0; i < data.length; i++) {
+        outfit_data = data[i];
+        outfit = new Outfit(outfit_data);
+        outfits.push(outfit);
+        Outfit.cache[outfit_data.id] = outfit;
       }
       success(outfits);
     });
@@ -689,6 +726,11 @@ function Wardrobe() {
     
     this.in_transaction = false;
     
+    function setOutfitIdentity(new_outfit) {
+      new_outfit.cloneAttributesFrom(outfit);
+      outfit = new_outfit;
+    }
+    
     this.closetItem = function (item) {
       outfit.closetItem(
         item,
@@ -698,6 +740,10 @@ function Wardrobe() {
     
     this.getClosetItems = function () {
       return outfit.closet_items;
+    }
+    
+    this.getOutfit = function () {
+      return outfit;
     }
     
     this.getPetType = function () {
@@ -719,15 +765,19 @@ function Wardrobe() {
       controller.setPetStateById(outfit.pet_state_id);
       controller.setClosetItemsByIds(outfit.getClosetItemIds());
       controller.setWornItemsByIds(outfit.getWornItemIds());
-      this.in_transaction = false;
       controller.events.trigger('setOutfit', outfit);
+      this.in_transaction = false;
+      controller.events.trigger('loadOutfit', outfit);
     }
     
     this.save = function (starred, name) {
       outfit.starred = starred;
       outfit.name = name;
       outfit.create(
-        controller.event('saveSuccess'),
+        function (outfit) {
+          controller.events.trigger('saveSuccess', outfit);
+          controller.events.trigger('setOutfit', outfit);
+        },
         controller.event('saveFailure')
       );
     }
@@ -737,6 +787,25 @@ function Wardrobe() {
         item_ids,
         controller.event('updateClosetItems')
       );
+    }
+    
+    this.setId = function (outfit_id) {
+      // Note that this does not load the outfit, but only sets the ID of the
+      // outfit we're supposedly working with. This allows the hash to contain
+      // the outfit ID while still allowing us to change as we go
+      if(outfit_id) {
+        Outfit.find(outfit_id, function (new_outfit) {
+          if(new_outfit) {
+            setOutfitIdentity(new_outfit);
+            controller.events.trigger('setOutfit', outfit);
+          } else {
+            controller.events.trigger('outfitNotFound', outfit);
+          }
+        });
+      } else {
+        setOutfitIdentity(new Outfit);
+        controller.events.trigger('setOutfit', outfit);
+      }
     }
     
     this.setPetStateById = function (pet_state_id) {

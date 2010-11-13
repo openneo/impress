@@ -22,6 +22,7 @@
       %p Flash and Javascript (but not Java!) are required to preview outfits.
       %p If this message stays after the page is done loading, check those first.
   #preview-sidebar
+    #outfit-not-found Outfit not found
     #save-success Outfit successfully saved
     #save-error
     #preview-closet
@@ -87,7 +88,7 @@
 #no-assets-full-message
   We haven't seen this item on this body type before. Have you? Submit its name on the home page if you have!
 %script#outfit-template{:type => 'text/x-jquery-tmpl'}
-  <li id="outfit-${id}"{{if starred}} class="starred"{{/if}}>
+  <li class="outfit-${id}{{if starred}} starred{{/if}}">
   %header
     %button.outfit-delete &times;
     .outfit-star

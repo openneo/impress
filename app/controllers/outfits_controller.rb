@@ -1,4 +1,6 @@
 class OutfitsController < ApplicationController
+  before_filter :find_outfit, :only => [:show, :update, :destroy]
+  
   def create
     if user_signed_in?
       outfit = Outfit.new params[:outfit]
@@ -28,6 +30,10 @@ class OutfitsController < ApplicationController
     @top_contributors = User.top_contributors.limit(3)
   end
   
+  def show
+    render :json => @outfit
+  end
+  
   def update
     authenticate_action { |outfit| outfit.update_attributes(params[:outfit]) }
   end
@@ -35,12 +41,15 @@ class OutfitsController < ApplicationController
   private
   
   def authenticate_action
-    raise ActiveRecord::RecordNotFound unless user_signed_in?
-    outfit = current_user.outfits.find(params[:id])
-    if yield(outfit)
+    if yield(@outfit)
       render :json => true
     else
       render :json => false, :status => :bad_request
     end
+  end
+  
+  def find_outfit
+    raise ActiveRecord::RecordNotFound unless user_signed_in?
+    @outfit = current_user.outfits.find(params[:id])
   end
 end

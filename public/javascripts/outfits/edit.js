@@ -21,7 +21,7 @@
 })();
 
 $.fn.notify = function () {
-  this.show('slow').delay(5000).hide('fast');
+  this.stop().show('slow').delay(5000).hide('fast');
 }
 
 var Partial = {}, main_wardrobe,
@@ -234,6 +234,7 @@ View.Hash = function (wardrobe) {
     color: TYPES.INTEGER,
     name: TYPES.STRING,
     objects: TYPES.INTEGER_ARRAY,
+    outfit: TYPES.INTEGER,
     search: TYPES.STRING,
     search_offset: TYPES.INTEGER,
     species: TYPES.INTEGER,
@@ -294,6 +295,9 @@ View.Hash = function (wardrobe) {
     }
     if(new_data.state != data.state) {
       wardrobe.outfit.setPetStateById(new_data.state);
+    }
+    if(new_data.outfit != data.outfit) {
+      wardrobe.outfit.setId(new_data.outfit);
     }
     if(new_data.search != data.search || new_data.search_offset != data.search_offset) {
       wardrobe.search.setItemsByQuery(new_data.search, {offset: new_data.search_offset});
@@ -391,14 +395,26 @@ View.Hash = function (wardrobe) {
     }
   });
   
-  wardrobe.outfit.bind('setOutfit', function (outfit) {
+  singleOutfitResponse('setOutfit', function (outfit) {
+    if(outfit.id != data.outfit) {
+      changeQuery({outfit: outfit.id});
+    }
+  });
+  
+  wardrobe.outfit.bind('loadOutfit', function (outfit) {
     changeQuery({
       closet: outfit.getClosetItemIds(),
       color: outfit.pet_type.color_id,
       objects: outfit.getWornItemIds(),
+      outfit: outfit.id,
       species: outfit.pet_type.species_id,
       state: outfit.pet_state.id
     });
+  });
+  
+  wardrobe.outfit.bind('outfitNotFound', function (outfit) {
+    var new_id = outfit ? outfit.id : undefined;
+    changeQuery({outfit: new_id});
   });
   
   wardrobe.search.bind('updateRequest', function (request) {
@@ -418,6 +434,7 @@ View.Outfits = function (wardrobe) {
     new_outfit_el = $('#new-outfit'), new_outfit_form_el = $('#new-outfit-form'),
     new_outfit_name_el = $('#new-outfit-name'),
     outfits_list_el = outfits_el.children('ul'),
+    outfit_not_found_el = $('#outfit-not-found'),
     stars = $('#preview-outfits div.outfit-star'),
     signed_in,
     previously_viewing = '';
@@ -490,6 +507,7 @@ View.Outfits = function (wardrobe) {
   wardrobe.user.bind('outfitsLoaded', function (outfits) {
     var outfit_els = $.tmpl('outfitTemplate', outfits);
     outfits_list_el.html('').append(outfit_els).addClass('loaded');
+    updateActiveOutfit();
   });
   
   wardrobe.user.bind('addOutfit', function (outfit, i) {
@@ -500,6 +518,7 @@ View.Outfits = function (wardrobe) {
     } else {
       outfit_el.appendTo(outfits_list_el);
     }
+    updateActiveOutfit();
     outfit_el.hide().show('normal');
   });
   
@@ -524,8 +543,12 @@ View.Outfits = function (wardrobe) {
   });
   
   $('a.outfit-delete-confirmation-yes').live('click', function (e) {
+    var outfit = $(this).tmplItem().data;
     e.preventDefault();
-    wardrobe.user.destroyOutfit($(this).tmplItem().data);
+    wardrobe.user.destroyOutfit(outfit);
+    if(wardrobe.outfit.getOutfit().id == outfit.id) {
+      wardrobe.outfit.setId(null);
+    }
   });
   
   $('a.outfit-delete-confirmation-no').live('click', function (e) {
@@ -539,9 +562,19 @@ View.Outfits = function (wardrobe) {
     wardrobe.user.toggleOutfitStar(el.tmplItem().data);
   });
   
-  wardrobe.user.bind('outfitStarToggled', function (outfit) {
-    // test
-  });
+  function setActiveOutfit(outfit) {
+    outfits_list_el.find('li.active').removeClass('active');
+    if(outfit.id) {
+      $('li.outfit-' + outfit.id).addClass('active');
+    }
+  }
+  
+  function updateActiveOutfit() {
+    setActiveOutfit(wardrobe.outfit.getOutfit());
+  }
+  
+  wardrobe.outfit.bind('setOutfit', setActiveOutfit);
+  wardrobe.outfit.bind('outfitNotFound', setActiveOutfit);
   
   /* Saving */
   
@@ -583,6 +616,12 @@ View.Outfits = function (wardrobe) {
         }
       }
     }
+  });
+  
+  /* Error */
+  
+  wardrobe.outfit.bind('outfitNotFound', function () {
+    outfit_not_found_el.notify();
   });
 }
 

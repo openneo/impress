@@ -20,7 +20,7 @@ OpenneoImpressItems::Application.routes.draw do |map|
       get :needed
     end
   end
-  resources :outfits, :only => [:create, :update, :destroy]
+  resources :outfits, :only => [:show, :create, :update, :destroy]
   resources :pet_attributes, :only => [:index]
   
   match '/users/current-user/outfits.json' => 'outfits#for_current_user'
