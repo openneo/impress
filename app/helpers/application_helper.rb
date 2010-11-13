@@ -5,11 +5,7 @@ module ApplicationHelper
   end
   
   def auth_server_icon_url
-    # TODO: if auth servers expand, don't hardcode path
-    URI::HTTP.build(
-      :host => Openneo::Auth.config.auth_server,
-      :path => '/favicon.png'
-    ).to_s
+    "http://#{Openneo::Auth.config.auth_server}/favicon.png"
   end
   
   def body_class

@@ -4,9 +4,10 @@ Rails.configuration.middleware.use RailsWarden::Manager do |manager|
 end
 
 require 'openneo-auth'
+require 'yaml'
 
 Openneo::Auth.configure do |config|
-  OPENNEO_AUTH_CONFIG.each do |key, value|
+  YAML.load_file(Rails.root.join('config', 'openneo_auth.yml'))[Rails.env].each do |key, value|
     config.send("#{key}=", value)
   end
   
