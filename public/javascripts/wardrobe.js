@@ -220,7 +220,7 @@ function Wardrobe() {
   
   function Outfit(data) {
     var outfit = this, previous_pet_type, worn_item_ids = [],
-      new_record = true;
+      closet_item_ids = [], new_record = true;
     
     this.setWornAndUnwornItemIds = function (new_ids) {
       this.worn_and_unworn_item_ids = new_ids;
@@ -248,6 +248,15 @@ function Wardrobe() {
     
     this.getClosetItemIds = function () { // TODO just expose the closet_item_ids
       return closet_item_ids;
+    }
+    
+    function getAttributes() {
+      var outfit_data = {};
+      outfit_data.name = outfit.name;
+      outfit_data.starred = outfit.starred;
+      outfit_data.worn_and_unworn_item_ids = outfit.getWornAndUnwornItemIds();
+      if(outfit.pet_state) outfit_data.pet_state_id = outfit.pet_state.id;
+      return outfit_data;
     }
     
     function getRestrictedZones() {
@@ -314,6 +323,19 @@ function Wardrobe() {
           itemAssetsOnLoad(added_item, updateItemsCallback, updateItemAssetsCallback)
         });
       }
+    }
+    
+    function sendUpdate(outfit_data, success, failure) {
+      $.ajax({
+        url: '/outfits/' + outfit.id,
+        type: 'post',
+        data: {'_method': 'put', outfit: outfit_data},
+        success: function () {
+          Outfit.cache[outfit.id] = outfit;
+          success(outfit);
+        },
+        error: function () { if(typeof failure !== 'undefined') failure(outfit) }
+      });
     }
     
     this.closetItem = function (item, updateClosetItemsCallback) {
@@ -413,6 +435,10 @@ function Wardrobe() {
       }
     }
     
+    this.update = function (success, failure) {
+      sendUpdate(getAttributes(), success, failure);
+    }
+    
     this.wearItem = function (item, updateWornItemsCallback, updateClosetItemsCallback, updateItemAssetsCallback) {
       if(!isWearingItem(item)) {
         this.worn_items.push(item);
@@ -426,16 +452,14 @@ function Wardrobe() {
     }
     
     this.getWornAndUnwornItemIds = function () {
-      if(typeof outfit.worn_and_unworn_item_ids === 'undefined') {
-        var unworn_item_ids = [], id;
-        for(var i = 0; i < closet_item_ids.length; i++) {
-          id = closet_item_ids[i];
-          if($.inArray(id, worn_item_ids) === -1) {
-            unworn_item_ids.push(id);
-          }
+      var unworn_item_ids = [], id;
+      for(var i = 0; i < closet_item_ids.length; i++) {
+        id = closet_item_ids[i];
+        if($.inArray(id, worn_item_ids) === -1) {
+          unworn_item_ids.push(id);
         }
-        outfit.worn_and_unworn_item_ids = {worn: worn_item_ids, unworn: unworn_item_ids};
       }
+      outfit.worn_and_unworn_item_ids = {worn: worn_item_ids, unworn: unworn_item_ids};
       return outfit.worn_and_unworn_item_ids;
     }
     
@@ -473,16 +497,10 @@ function Wardrobe() {
     }
     
     this.create = function (success, error) {
-      var outfit_data = {}, sorted = outfit.getWornAndUnwornItemIds();
-      outfit_data.name = outfit.name;
-      outfit_data.starred = outfit.starred;
-      outfit_data.worn_item_ids = sorted.worn;
-      outfit_data.unworn_item_ids = sorted.unworn;
-      if(outfit.pet_state) outfit_data.pet_state_id = outfit.pet_state.id;
       $.ajax({
         url: '/outfits',
         type: 'post',
-        data: {outfit: outfit_data},
+        data: {outfit: getAttributes()},
         success: function (data) {
           new_record = false;
           outfit.id = data;
@@ -502,12 +520,7 @@ function Wardrobe() {
           outfit_data[key] = outfit[key] = attributes[key];
         }
       }
-      $.ajax({
-        url: '/outfits/' + outfit.id,
-        type: 'post',
-        data: {'_method': 'put', outfit: outfit_data},
-        success: function () { success(outfit) }
-      });
+      sendUpdate(outfit_data, success);
     }
   }
   
@@ -758,24 +771,29 @@ function Wardrobe() {
       return outfit.worn_items;
     }
     
-    this.load = function (new_outfit) {
-      outfit = new_outfit;
-      this.in_transaction = true;
-      controller.setPetTypeByColorAndSpecies(outfit.color_id, outfit.species_id);
-      controller.setPetStateById(outfit.pet_state_id);
-      controller.setClosetItemsByIds(outfit.getClosetItemIds());
-      controller.setWornItemsByIds(outfit.getWornItemIds());
-      controller.events.trigger('setOutfit', outfit);
-      this.in_transaction = false;
-      controller.events.trigger('loadOutfit', outfit);
+    this.load = function (new_outfit_id) {
+      Outfit.find(new_outfit_id, function (new_outfit) {
+        outfit = new_outfit.clone();
+        controller.in_transaction = true;
+        controller.setPetTypeByColorAndSpecies(outfit.color_id, outfit.species_id);
+        controller.setPetStateById(outfit.pet_state_id);
+        controller.setClosetItemsByIds(outfit.getClosetItemIds());
+        controller.setWornItemsByIds(outfit.getWornItemIds());
+        controller.events.trigger('setOutfit', outfit);
+        controller.in_transaction = false;
+        controller.events.trigger('loadOutfit', outfit);
+      });
     }
     
-    this.save = function (starred, name) {
-      outfit.starred = starred;
-      outfit.name = name;
+    this.create = function (attributes) {
+      if(attributes) {
+        outfit.starred = attributes.starred;
+        outfit.name = attributes.name;
+      }
       outfit.create(
         function (outfit) {
           controller.events.trigger('saveSuccess', outfit);
+          controller.events.trigger('createSuccess', outfit);
           controller.events.trigger('setOutfit', outfit);
         },
         controller.event('saveFailure')
@@ -841,6 +859,16 @@ function Wardrobe() {
     
     this.unwearItem = function (item) {
       outfit.unwearItem(item, controller.event('updateWornItems'));
+    }
+    
+    this.update = function () {
+      outfit.update(
+        function (outfit) {
+          controller.events.trigger('saveSuccess', outfit),
+          controller.events.trigger('updateSuccess', outfit)
+        },
+        controller.event('saveFailure')
+      );
     }
     
     this.wearItem = function (item) {
@@ -987,6 +1015,15 @@ function Wardrobe() {
         insertOutfit(outfit);
         controller.events.trigger('outfitStarToggled', outfit);
       });
+    }
+    
+    this.updateOutfit = function (outfit) {
+      for(var i = 0; i < outfits.length; i++) {
+        if(outfits[i].id == outfit.id) {
+          outfits[i] = outfit.clone();
+          break;
+        }
+      }
     }
   }
 

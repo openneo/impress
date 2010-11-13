@@ -6,7 +6,7 @@ class Outfit < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => {:scope => :user_id}
   validates :pet_state, :presence => true
   
-  attr_accessible :name, :pet_state_id, :starred, :unworn_item_ids, :worn_item_ids
+  attr_accessible :name, :pet_state_id, :starred, :worn_and_unworn_item_ids
   
   def as_json(more_options={})
     serializable_hash :only => [:id, :name, :pet_state_id, :starred],
@@ -30,20 +30,17 @@ class Outfit < ActiveRecord::Base
     end
   end
   
-  def worn_item_ids=(item_ids)
-    add_relationships(item_ids, true)
-  end
-  
-  def unworn_item_ids=(item_ids)
-    add_relationships(item_ids, false)
-  end
-  
-  def add_relationships(item_ids, worn)
-    item_ids.each do |item_id|
-      rel = ItemOutfitRelationship.new
-      rel.item_id = item_id
-      rel.is_worn = worn
-      item_outfit_relationships << rel
+  def worn_and_unworn_item_ids=(all_item_ids)
+    new_rels = []
+    all_item_ids.each do |key, item_ids|
+      worn = key == 'worn'
+      item_ids.each do |item_id|
+        rel = ItemOutfitRelationship.new
+        rel.item_id = item_id
+        rel.is_worn = worn
+        new_rels << rel
+      end
     end
+    self.item_outfit_relationships = new_rels
   end
 end

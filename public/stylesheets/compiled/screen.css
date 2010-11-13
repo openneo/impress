@@ -1621,7 +1621,15 @@ body.outfits-edit.user-signed-in #preview-sidebar-nav-outfits {
 body.outfits-edit.user-signed-in #save-outfit {
   display: inline-block;
 }
-/* line 427, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 426, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit.user-signed-in #save-outfit-wrapper.active-outfit #save-outfit {
+  display: none;
+}
+/* line 428, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit.user-signed-in #save-outfit-wrapper.active-outfit #save-current-outfit, body.outfits-edit.user-signed-in #save-outfit-wrapper.active-outfit #save-outfit-copy {
+  display: inline-block;
+}
+/* line 432, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-not-signed-in #save-outfit-not-signed-in {
   display: inline-block;
 }

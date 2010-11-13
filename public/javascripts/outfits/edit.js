@@ -428,14 +428,20 @@ View.Hash = function (wardrobe) {
 }
 
 View.Outfits = function (wardrobe) {
-  var outfits_el = $('#preview-outfits'), sidebar_el = $('#preview-sidebar'),
-    controls = $('#pet-type-form, #pet-state-form, #preview-swf, #preview-search-form'),
-    save_success_el = $('#save-success'), save_error_el = $('#save-error'),
-    new_outfit_el = $('#new-outfit'), new_outfit_form_el = $('#new-outfit-form'),
+  var controls = $('#pet-type-form, #pet-state-form, #preview-swf, #preview-search-form'),
+    new_outfit_el = $('#new-outfit'),
+    new_outfit_form_el = $('#new-outfit-form'),
     new_outfit_name_el = $('#new-outfit-name'),
+    outfits_el = $('#preview-outfits'),
     outfits_list_el = outfits_el.children('ul'),
     outfit_not_found_el = $('#outfit-not-found'),
+    save_current_outfit_el = $('#save-current-outfit'),
+    save_current_outfit_name_el = save_current_outfit_el.children('span'),
+    save_outfit_wrapper_el = $('#save-outfit-wrapper'),
+    save_success_el = $('#save-success'),
+    save_error_el = $('#save-error'),
     stars = $('#preview-outfits div.outfit-star'),
+    sidebar_el = $('#preview-sidebar'),
     signed_in,
     previously_viewing = '';
   
@@ -490,7 +496,7 @@ View.Outfits = function (wardrobe) {
     sidebar_el.attr('class', previously_viewing);
   });
   
-  $('#save-outfit').click(function () {
+  $('#save-outfit, #save-outfit-copy').click(function () {
     new_outfit_name_el.val('');
     new_outfit_el.removeClass('starred').show();
     showSavingOutfit();
@@ -528,7 +534,7 @@ View.Outfits = function (wardrobe) {
   });
   
   $('#preview-outfits h4').live('click', function () {
-    wardrobe.outfit.load($(this).tmplItem().data.clone());
+    wardrobe.outfit.load($(this).tmplItem().data.id);
   });
   
   $('input.outfit-url').live('mouseover', function () {
@@ -566,7 +572,9 @@ View.Outfits = function (wardrobe) {
     outfits_list_el.find('li.active').removeClass('active');
     if(outfit.id) {
       $('li.outfit-' + outfit.id).addClass('active');
+      save_current_outfit_name_el.text(outfit.name);
     }
+    save_outfit_wrapper_el.toggleClass('active-outfit', outfit.id ? true : false);
   }
   
   function updateActiveOutfit() {
@@ -578,9 +586,13 @@ View.Outfits = function (wardrobe) {
   
   /* Saving */
   
+  save_current_outfit_el.click(function () {
+    wardrobe.outfit.update();
+  });
+  
   new_outfit_form_el.submit(function (e) {
     e.preventDefault();
-    wardrobe.outfit.save(new_outfit_el.hasClass('starred'), new_outfit_name_el.val());
+    wardrobe.outfit.create({starred: new_outfit_el.hasClass('starred'), name: new_outfit_name_el.val()});
   });
   
   new_outfit_el.find('div.outfit-star').click(function () {
@@ -599,9 +611,16 @@ View.Outfits = function (wardrobe) {
   }
   
   wardrobe.outfit.bind('saveSuccess', function (outfit) {
-    wardrobe.user.addOutfit(outfit);
     save_success_el.notify();
+  });
+  
+  wardrobe.outfit.bind('createSuccess', function (outfit) {
+    wardrobe.user.addOutfit(outfit);
     showOutfits();
+  });
+  
+  wardrobe.outfit.bind('updateSuccess', function (outfit) {
+    wardrobe.user.updateOutfit(outfit);
   });
   
   wardrobe.outfit.bind('saveFailure', function (response) {
