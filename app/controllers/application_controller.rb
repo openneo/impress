@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
     unless @current_user
       @current_user = warden.authenticate
       if @current_user && !@current_user.beta?
+        cookies.delete :remember_me
         warden.logout
         @current_user = nil
         flash.now[:alert] = "Only beta testers may log in right now. Sorry! We'll let you know when the new server is open to the public."
