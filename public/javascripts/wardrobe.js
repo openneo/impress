@@ -705,9 +705,12 @@ function Wardrobe() {
     this.events = {};
     
     function fireEvent(event_name, subarguments) {
-      $.each(controller.events[event_name], function () {
-        this.apply(controller, subarguments);
-      });
+      var events = controller.events[event_name];
+      if(typeof events !== 'undefined') {
+        for(var i = 0; i < events.length; i++) {
+          events[i].apply(controller, subarguments);
+        }
+      }
     }
     
     this.bind = function (event, callback) {
@@ -738,6 +741,18 @@ function Wardrobe() {
     var controller = this, outfit = new Outfit;
     
     this.in_transaction = false;
+    
+    function setFullOutfit(new_outfit) {
+      outfit = new_outfit;
+      controller.in_transaction = true;
+      controller.setPetTypeByColorAndSpecies(outfit.color_id, outfit.species_id);
+      controller.setPetStateById(outfit.pet_state_id);
+      controller.setClosetItemsByIds(outfit.getClosetItemIds());
+      controller.setWornItemsByIds(outfit.getWornItemIds());
+      controller.events.trigger('setOutfit', outfit);
+      controller.in_transaction = false;
+      controller.events.trigger('loadOutfit', outfit);
+    }
     
     function setOutfitIdentity(new_outfit) {
       new_outfit.cloneAttributesFrom(outfit);
@@ -773,16 +788,12 @@ function Wardrobe() {
     
     this.load = function (new_outfit_id) {
       Outfit.find(new_outfit_id, function (new_outfit) {
-        outfit = new_outfit.clone();
-        controller.in_transaction = true;
-        controller.setPetTypeByColorAndSpecies(outfit.color_id, outfit.species_id);
-        controller.setPetStateById(outfit.pet_state_id);
-        controller.setClosetItemsByIds(outfit.getClosetItemIds());
-        controller.setWornItemsByIds(outfit.getWornItemIds());
-        controller.events.trigger('setOutfit', outfit);
-        controller.in_transaction = false;
-        controller.events.trigger('loadOutfit', outfit);
+        setFullOutfit(new_outfit.clone());
       });
+    }
+    
+    this.loadData = function (new_outfit_data) {
+      setFullOutfit(new Outfit(new_outfit_data));
     }
     
     this.create = function (attributes) {

@@ -1,0 +1,16 @@
+- title @outfit.name
+%a.button#outfit-wardrobe-link{:href => wardrobe_path(:anchor => @outfit.to_query)}
+  Edit a copy
+#outfit-user
+  Created by
+  == #{link_to @outfit.user.name, user_contributions_path(@outfit.user)},
+  %span{:title => @outfit.created_at}= time_ago_in_words @outfit.created_at
+  ago
+#preview-wrapper
+  #preview-swf
+#outfit-items= render @outfit.worn_items
+- content_for :javascripts do
+  :javascript
+    var INITIAL_OUTFIT_DATA = #{@outfit.to_json};
+  = include_javascript_libraries :jquery, :swfobject
+  = include_javascripts :show_outfit_package

@@ -48,7 +48,7 @@ module Openneo
       end
       
       def user
-        Auth.config.find_user(@message['user'])
+        Auth.config.find_user_with_remote_auth(@message['user'])
       end
       
       def self.from_params(params)

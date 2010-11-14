@@ -1,5 +1,5 @@
 class OutfitsController < ApplicationController
-  before_filter :find_outfit, :only => [:show, :update, :destroy]
+  before_filter :find_authorized_outfit, :only => [:update, :destroy]
   
   def create
     if user_signed_in?
@@ -31,7 +31,11 @@ class OutfitsController < ApplicationController
   end
   
   def show
-    render :json => @outfit
+    @outfit = Outfit.find(params[:id])
+    respond_to do |format|
+      format.html { render }
+      format.json { render :json => @outfit }
+    end
   end
   
   def update
@@ -48,7 +52,7 @@ class OutfitsController < ApplicationController
     end
   end
   
-  def find_outfit
+  def find_authorized_outfit
     raise ActiveRecord::RecordNotFound unless user_signed_in?
     @outfit = current_user.outfits.find(params[:id])
   end
