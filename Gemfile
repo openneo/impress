@@ -16,6 +16,8 @@ gem 'openneo-auth-signatory', '~> 0.0.4'
 
 gem 'jammit', '~> 0.5.3'
 
+gem 'hoptoad_notifier'
+
 group :development_async, :production do
   # async wrappers
   gem 'eventmachine',     :git => 'git://github.com/eventmachine/eventmachine.git'
