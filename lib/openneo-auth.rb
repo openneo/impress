@@ -1,20 +1,30 @@
 require 'openneo-auth/session'
 require 'openneo-auth/strategy'
 
-Warden::Strategies.add :openneo_auth_token, Openneo::Auth::Strategy
+Warden::Strategies.add :openneo_auth_token, Openneo::Auth::Strategies::Token
+Warden::Strategies.add :openneo_auth_remember, Openneo::Auth::Strategies::Remember
 
 module Openneo
   module Auth
     class Config
       attr_accessor :app, :auth_server, :secret
       
-      def find_user(data)
-        raise "Must set a user finder for Openneo Auth to find a user" unless @user_finder
-        @user_finder.call(data)
+      def find_user_with_remote_auth(data)
+        raise "Must set a remote user finder for Openneo Auth to find a user" unless @remote_auth_user_finder
+        @remote_auth_user_finder.call(data)
       end
       
-      def user_finder(&block)
-        @user_finder = block
+      def find_user_by_remembering(id)
+        raise "Must set a remember user finder for Openneo Auth to find a user" unless @remember_user_finder
+        @remember_user_finder.call(id)
+      end
+      
+      def remote_auth_user_finder(&block)
+        @remote_auth_user_finder = block
+      end
+      
+      def remember_user_finder(&block)
+        @remember_user_finder = block
       end
     end
       

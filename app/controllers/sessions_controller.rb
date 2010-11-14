@@ -18,6 +18,7 @@ class SessionsController < ApplicationController
   
   def destroy
     warden.logout
+    cookies.delete :remember_me
     redirect_to (params[:return_to] || root_path)
   end
   
