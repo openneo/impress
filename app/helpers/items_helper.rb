@@ -69,7 +69,7 @@ module ItemsHelper
   def pet_type_image(pet_type, emotion, size)
     emotion_id = PetTypeImage::Emotions[emotion]
     size_id = PetTypeImage::Sizes[size]
-    src = sprintf(PetTypeImage::Format, pet_type.image_hash, emotion_id, size_id)
+    src = sprintf(PetTypeImage::Format, pet_type.basic_image_hash, emotion_id, size_id)
     human_name = pet_type.species.name.humanize
     image_tag(src, :alt => human_name, :title => human_name)
   end

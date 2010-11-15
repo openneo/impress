@@ -62,7 +62,11 @@ class PetType < ActiveRecord::Base
   end
   
   def image_hash
-    self['image_hash'] || BasicHashes[species.name][color.name]
+    self['image_hash'] || basic_image_hash
+  end
+  
+  def basic_image_hash
+    BasicHashes[species.name][color.name]
   end
   
   def human_name
