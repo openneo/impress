@@ -51,7 +51,7 @@ $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
     padding-left: $outfit-header-padding
   .outfit-star
     background:
-      image: url(/images/unstarred.png)
+      image: image-url("unstarred.png")
       position: left top
       repeat: no-repeat
     bottom: -2px
@@ -65,7 +65,7 @@ $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
     position: relative
     width: 16px
     &.loading
-      background-image: url(/images/loading.gif) !important
+      background-image: image-url("loading.gif") !important
   h4
     cursor: pointer
     font-size: 115%
@@ -98,7 +98,7 @@ $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
       display: block
   &.starred
     .outfit-star
-      background-image: url(/images/star.png)
+      background-image: image-url("star.png")
 
 body.outfits-edit
   #preview-toolbar
@@ -318,7 +318,7 @@ body.outfits-edit
   $object-img-diff: ($object-width - $object-img-size) / 2 + $object-padding
 
   .nc-icon
-    background: url(/images/nc.png) no-repeat
+    background: image-url("nc.png") no-repeat
     height: $nc-icon-size
     position: absolute
     right: $object-img-diff
@@ -354,7 +354,7 @@ body.outfits-edit
     h3
       margin-bottom: .5em
     > ul
-      background: url(/images/loading.gif) no-repeat center top
+      background: image-url("loading.gif") no-repeat center top
       display: block
       font-family: $main-font
       list-style: none
