@@ -49,7 +49,6 @@ class Pet < ActiveRecord::Base
   def contributables
     contributables = [pet_type, @pet_state]
     items.each do |item|
-      item.handle_assets!
       contributables << item
       contributables += item.pending_swf_assets
     end

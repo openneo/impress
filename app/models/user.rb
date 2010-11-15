@@ -17,10 +17,10 @@ class User < ActiveRecord::Base
         new_points += contribution.point_value
       end
     end
-    self.contributions += new_contributions
     self.points += new_points
     Pet.transaction do
       pet.save!
+      self.contributions += new_contributions
       save!
     end
     new_points
