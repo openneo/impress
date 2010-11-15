@@ -13,11 +13,15 @@ module ContributionHelper
   end
   
   def contributed_item(item, adverbial)
-    output do |html|
-      html << 'the'
-      html << link_to(item.name, item, :class => 'contributed-name')
-      html << adverbial
-      html << image_tag(item.thumbnail_url)
+    if item
+      output do |html|
+        html << 'the'
+        html << link_to(item.name, item, :class => 'contributed-name')
+        html << adverbial
+        html << image_tag(item.thumbnail_url)
+      end
+    else
+      "data for an item that has since been updated"
     end
   end
   
