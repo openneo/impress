@@ -114,7 +114,7 @@ a.button, input[type=submit], button {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  background: #006400 url(/images/alert-overlay.png) repeat-x;
+  background: #006400 url('/images/alert-overlay.png?1289168102') repeat-x;
   border: 0;
   display: inline-block;
   padding: 0.5em 0.75em 0.45em;
@@ -142,7 +142,7 @@ a.button:active, input[type=submit]:active, button:active {
 }
 /* line 88, ../../../app/stylesheets/_layout.sass */
 a.button.loud, input[type=submit].loud, button.loud {
-  background: #ff5c00 url(/images/alert-overlay.png) repeat-x;
+  background: #ff5c00 url('/images/alert-overlay.png?1289168102') repeat-x;
   font-size: 125%;
   padding: 8px 14px 9px;
 }
@@ -348,19 +348,19 @@ dd {
 /* A font by Jos Buivenga (exljbris) -> www.exljbris.nl */
 @font-face {
   font-family: Delicious;
-  src: url("/fonts/Delicious-Roman.otf");
+  src: local("Delicious"), url('/fonts/Delicious-Roman.otf');
 }
 
 @font-face {
   font-family: Delicious;
   font-weight: bold;
-  src: url("/fonts/Delicious-Bold.otf");
+  src: local("Delicious"), url('/fonts/Delicious-Bold.otf');
 }
 
 @font-face {
   font-family: Delicious;
   font-style: italic;
-  src: url("/fonts/Delicious-Italic.otf");
+  src: local("Delicious"), url('/fonts/Delicious-Italic.otf');
 }
 
 @font-face {
@@ -796,7 +796,7 @@ body.outfits-edit #pet-state-form label {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  background: #006400 url(/images/alert-overlay.png) repeat-x;
+  background: #006400 url('/images/alert-overlay.png?1289168102') repeat-x;
   border: 0;
   display: inline-block;
   padding: 0.5em 0.75em 0.45em;
@@ -825,7 +825,7 @@ body.outfits-edit #pet-state-form label:active {
 }
 /* line 122, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #pet-state-form li.selected label {
-  background: #0b61a4 url(/images/alert-overlay.png) repeat-x;
+  background: #0b61a4 url('/images/alert-overlay.png?1289168102') repeat-x;
 }
 /* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
 body.outfits-edit #pet-state-form li.selected label:hover {
@@ -841,7 +841,7 @@ body.outfits-edit #save-outfit-wrapper {
 }
 /* line 128, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit-wrapper button {
-  background: #ff5c00 url(/images/alert-overlay.png) repeat-x;
+  background: #ff5c00 url('/images/alert-overlay.png?1289168102') repeat-x;
   display: none;
 }
 /* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
@@ -1151,7 +1151,7 @@ body.outfits-edit .object ul li a {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  background: #006400 url(/images/alert-overlay.png) repeat-x;
+  background: #006400 url('/images/alert-overlay.png?1289168102') repeat-x;
   border: 0;
   display: inline-block;
   padding: 0.5em 0.75em 0.45em;
@@ -1164,7 +1164,7 @@ body.outfits-edit .object ul li a {
   position: relative;
   font-weight: bold;
   line-height: 1;
-  background: #aaaaaa url(/images/alert-overlay.png) repeat-x;
+  background: #aaaaaa url('/images/alert-overlay.png?1289168102') repeat-x;
   -moz-opacity: 0.9;
   -webkit-opacity: 0.9;
   -o-opacity: 0.9;
@@ -1193,7 +1193,7 @@ body.outfits-edit .object:hover ul, body.outfits-edit .object:hover .object-info
 }
 /* line 320, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .nc-icon {
-  background: url(/images/nc.png) no-repeat;
+  background: url('/images/nc.png?1285023784') no-repeat;
   height: 16px;
   position: absolute;
   right: 16px;
@@ -1250,7 +1250,7 @@ body.outfits-edit #preview-outfits h3 {
 }
 /* line 356, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul {
-  background: url(/images/loading.gif) no-repeat center top;
+  background: url('/images/loading.gif?1289657021') no-repeat center top;
   display: block;
   font-family: "Droid Sans", Helvetica, Arial, Verdana, sans-serif;
   list-style: none;
@@ -1318,7 +1318,7 @@ body.outfits-edit #preview-outfits > ul > li header {
 }
 /* line 52, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-star {
-  background-image: url(/images/unstarred.png);
+  background-image: url('/images/unstarred.png?1289657021');
   background-position: left top;
   background-repeat: no-repeat;
   bottom: -2px;
@@ -1334,7 +1334,7 @@ body.outfits-edit #preview-outfits > ul > li .outfit-star {
 }
 /* line 67, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-star.loading {
-  background-image: url(/images/loading.gif) !important;
+  background-image: url('/images/loading.gif?1289657021') !important;
 }
 /* line 69, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li h4 {
@@ -1395,7 +1395,7 @@ body.outfits-edit #preview-outfits > ul > li.confirming-deletion .outfit-delete-
 }
 /* line 100, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li.starred .outfit-star {
-  background-image: url(/images/star.png);
+  background-image: url('/images/star.png?1289657021');
 }
 /* line 365, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul.loaded {
@@ -1495,7 +1495,7 @@ body.outfits-edit #new-outfit header {
 }
 /* line 52, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-star {
-  background-image: url(/images/unstarred.png);
+  background-image: url('/images/unstarred.png?1289657021');
   background-position: left top;
   background-repeat: no-repeat;
   bottom: -2px;
@@ -1511,7 +1511,7 @@ body.outfits-edit #new-outfit .outfit-star {
 }
 /* line 67, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-star.loading {
-  background-image: url(/images/loading.gif) !important;
+  background-image: url('/images/loading.gif?1289657021') !important;
 }
 /* line 69, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit h4 {
@@ -1572,7 +1572,7 @@ body.outfits-edit #new-outfit.confirming-deletion .outfit-delete-confirmation {
 }
 /* line 100, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit.starred .outfit-star {
-  background-image: url(/images/star.png);
+  background-image: url('/images/star.png?1289657021');
 }
 /* line 391, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit h4 {
@@ -1723,7 +1723,7 @@ body.outfits-new #load-pet-to-wardrobe input {
 }
 /* line 53, ../../../app/stylesheets/outfits/_new.sass */
 body.outfits-new #load-pet-to-wardrobe button {
-  background: #ff5c00 url(/images/alert-overlay.png) repeat-x;
+  background: #ff5c00 url('/images/alert-overlay.png?1289168102') repeat-x;
   font-size: 125%;
   padding: 8px 14px 9px;
   font-size: 67%;
