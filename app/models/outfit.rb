@@ -51,11 +51,13 @@ class Outfit < ActiveRecord::Base
     new_rels = []
     all_item_ids.each do |key, item_ids|
       worn = key == 'worn'
-      item_ids.each do |item_id|
-        rel = ItemOutfitRelationship.new
-        rel.item_id = item_id
-        rel.is_worn = worn
-        new_rels << rel
+      unless item_ids.blank?
+        item_ids.each do |item_id|
+          rel = ItemOutfitRelationship.new
+          rel.item_id = item_id
+          rel.is_worn = worn
+          new_rels << rel
+        end
       end
     end
     self.item_outfit_relationships = new_rels
