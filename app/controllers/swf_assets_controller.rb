@@ -1,6 +1,4 @@
 class SwfAssetsController < ApplicationController
-  caches_page :index
-  
   def index
     if params[:item_id]
       @swf_assets = Item.find(params[:item_id]).swf_assets
