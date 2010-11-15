@@ -97,7 +97,6 @@ class PetType < ActiveRecord::Base
   
   def add_pet_state_from_biology!(biology)
     pet_state = PetState.from_pet_type_and_biology_info(self, biology)
-    self.pet_states << pet_state
     pet_state
   end
   
