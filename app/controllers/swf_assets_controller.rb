@@ -8,7 +8,7 @@ class SwfAssetsController < ApplicationController
         @swf_assets = @swf_assets.fitting_standard_body_ids
         json = @swf_assets.all.group_by(&:body_id)
       end
-    elsif params[:body_id]
+    elsif params[:body_id] && params[:item_ids]
       swf_assets = SwfAsset.arel_table
       rels = ParentSwfAssetRelationship.arel_table
       @swf_assets = SwfAsset.select('swf_assets.*, parents_swf_assets.parent_id').
@@ -23,7 +23,7 @@ class SwfAssetsController < ApplicationController
     elsif params[:pet_type_id]
       @swf_assets = PetType.find(params[:pet_type_id]).pet_states.first.swf_assets
     end
-    json ||= @swf_assets.all
+    json ||= @swf_assets ? @swf_assets.all : nil
     render :json => json
   end
 end
