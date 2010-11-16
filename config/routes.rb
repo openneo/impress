@@ -1,6 +1,5 @@
 OpenneoImpressItems::Application.routes.draw do |map|
   root :to => 'outfits#new'
-  match '/' => 'items#index', :as => :items
   match '/index.js' => 'items#index', :format => :js
   match '/items.json' => 'items#index', :format => :json
  

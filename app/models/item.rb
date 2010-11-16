@@ -120,7 +120,7 @@ class Item < ActiveRecord::Base
       ids_to_delete = self.parent_swf_asset_relationships.
         select(:id).
         joins(:object_asset).
-        where(rels[:swf_asset_id].in(new_swf_asset_ids).not).
+        where(rels[:swf_asset_id].not_in(new_swf_asset_ids)).
         where(swf_assets[:body_id].in([@current_body_id, 0])).
         map(&:id)
       unless ids_to_delete.empty?
@@ -262,7 +262,7 @@ class Item < ActiveRecord::Base
     SearchFilterScopes << name.to_s
     scope "search_filter_#{name}", lambda { |str, negative|
       condition = yield(str)
-      condition = condition.not if negative
+      condition = not(condition) if negative
       rel = where(condition)
       rel = rel & args[:scope] if args[:scope]
       rel
