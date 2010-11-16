@@ -91,7 +91,7 @@ class PetType < ActiveRecord::Base
     end
     unneeded_item_ids = Item.select(items[:id]).joins(:parent_swf_asset_relationships => :object_asset).
       where(SwfAsset.arel_table[:body_id].in([0, self.body_id])).map(&:id)
-    Item.where(items[:id].in(unneeded_item_ids).not).
+    Item.where(items[:id].not_in(unneeded_item_ids)).
       where(species_condition)
   end
   
