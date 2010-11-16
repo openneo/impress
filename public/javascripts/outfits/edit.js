@@ -695,7 +695,7 @@ View.PetStateForm = function (wardrobe) {
         label.appendTo(li);
         li.appendTo(ul);
       }
-      updatePetState(wardrobe.outfit.pet_state);
+      updatePetState(wardrobe.outfit.getPetState());
     }
   });
   
