@@ -1097,7 +1097,7 @@ body.outfits-edit.fullscreen #preview-sidebar.viewing-saving-outfit {
 }
 /* line 275, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #preview-search-form {
-  bottom: 1em;
+  bottom: 1.5em;
   left: 0;
   overflow: auto;
   padding: 0.5em 1em;
