@@ -745,8 +745,8 @@ function Wardrobe() {
     function setFullOutfit(new_outfit) {
       outfit = new_outfit;
       controller.in_transaction = true;
-      controller.setPetTypeByColorAndSpecies(outfit.color_id, outfit.species_id);
       controller.setPetStateById(outfit.pet_state_id);
+      controller.setPetTypeByColorAndSpecies(outfit.color_id, outfit.species_id);
       controller.setClosetItemsByIds(outfit.getClosetItemIds());
       controller.setWornItemsByIds(outfit.getWornItemIds());
       controller.events.trigger('setOutfit', outfit);
@@ -772,6 +772,10 @@ function Wardrobe() {
     
     this.getOutfit = function () {
       return outfit;
+    }
+    
+    this.getPetState = function () {
+      return outfit.pet_state;
     }
     
     this.getPetType = function () {
