@@ -9,21 +9,20 @@ class PetType < ActiveRecord::Base
   
   BasicHashes = YAML::load_file(Rails.root.join('config', 'basic_type_hashes.yml'))
   
-  StandardBodyIds = PetType.select(arel_table[:body_id]).
-    where(arel_table[:color_id].in(Color::BasicIds)).
-    group(arel_table[:species_id]).map(&:body_id)
+  StandardPetTypesBySpeciesId = PetType.where(arel_table[:color_id].in(Color::BasicIds)).group_by(&:species_id)
+  StandardBodyIds = []
+  StandardPetTypesBySpeciesId.each do |species_id, pet_types|
+    StandardBodyIds += pet_types.map(&:body_id)
+  end
   
-  scope :random_basic_per_species, lambda { |species_ids|
-    conditions = nil
+  def self.random_basic_per_species(species_ids)
+    random_pet_types = []
     species_ids.each do |species_id|
-      color_id = Color::Basic[rand(Color::Basic.size)].id
-      condition = arel_table[:species_id].eq(species_id).and(
-        arel_table[:color_id].eq(color_id)
-      )
-      conditions = conditions ? conditions.or(condition) : condition
+      pet_types = StandardPetTypesBySpeciesId[species_id]
+      random_pet_types << pet_types[rand(pet_types.size)] if pet_types
     end
-    where(conditions).order(:species_id)
-  }
+    random_pet_types
+  end
   
   def as_json(options={})
     if options[:for] == 'wardrobe'
