@@ -262,7 +262,7 @@ class Item < ActiveRecord::Base
     SearchFilterScopes << name.to_s
     scope "search_filter_#{name}", lambda { |str, negative|
       condition = yield(str)
-      condition = not(condition) if negative
+      condition = "!(#{condition.to_sql})" if negative
       rel = where(condition)
       rel = rel & args[:scope] if args[:scope]
       rel
