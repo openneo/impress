@@ -73,9 +73,9 @@ class Item < ActiveRecord::Base
   end
   
   def self.search(query)
-    raise ArgumentError, "Please provide a search query" unless query
+    raise SearchError, "Please provide a search query" unless query
     query = query.strip
-    raise ArgumentError, "Search queries should be at least 3 characters" if query.length < 3
+    raise SearchError, "Search queries should be at least 3 characters" if query.length < 3
     query_conditions = [Condition.new]
     in_phrase = false
     query.each_char do |c|
@@ -284,7 +284,7 @@ class Item < ActiveRecord::Base
   search_filter :is do |adjective|
     filter = ADJECTIVE_FILTERS[adjective]
     unless filter
-      raise ArgumentError,
+      raise SearchError,
         "We don't know how an item can be \"#{adjective}\". " +
         "Did you mean is:nc or is:pb?"
     end
@@ -299,17 +299,17 @@ class Item < ActiveRecord::Base
   search_filter :species do |species_name|
     id = Species.require_by_name(species_name).id
     ids = arel_table[:species_support_ids]
-    ids.eq('').or(ids.matches_any(
+    ids.eq('').or(ids.matches_any([
       id,
       "#{id},%",
       "%,#{id},%",
       "%,#{id}"
-    ))
+    ]))
   end
   
   search_filter :type, {:scope => join_swf_assets} do |zone_set_name|
     zone_set = Zone::ItemZoneSets[zone_set_name]
-    raise ArgumentError, "Type \"#{zone_set_name}\" does not exist" unless zone_set
+    raise SearchError, "Type \"#{zone_set_name}\" does not exist" unless zone_set
     SwfAsset.arel_table[:zone_id].in(zone_set.map(&:id))
   end
   
@@ -327,7 +327,7 @@ class Item < ActiveRecord::Base
       if SearchFilterScopes.include?(filter)
         scope & Item.send("search_filter_#{filter}", self, @negative)
       else
-        raise ArgumentError, "Filter #{filter} does not exist"
+        raise SearchError, "Filter #{filter} does not exist"
       end
     end
     
@@ -339,4 +339,6 @@ class Item < ActiveRecord::Base
       @filter ? "#{@filter}:#{super}" : super
     end
   end
+  
+  class SearchError < ArgumentError;end
 end
