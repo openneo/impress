@@ -321,12 +321,20 @@ class Item < ActiveRecord::Base
   end
   
   search_filter :only do |species_name|
-    id = Species.require_by_name(species_name).id
+    begin
+      id = Species.require_by_name(species_name).id
+    rescue Species::NotFound => e
+      raise SearchError, e.message
+    end
     arel_table[:species_support_ids].eq(id.to_s)
   end
   
   search_filter :species do |species_name|
-    id = Species.require_by_name(species_name).id
+    begin
+      id = Species.require_by_name(species_name).id
+    rescue Species::NotFound => e
+      raise SearchError, e.message
+    end
     ids = arel_table[:species_support_ids]
     ids.eq('').or(ids.matches_any([
       id,
