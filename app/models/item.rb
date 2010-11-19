@@ -359,7 +359,7 @@ class Item < ActiveRecord::Base
     # SWFs that don't match end up being NULL rows. Then we take the max SWF
     # asset ID, which is NULL if and only if there are no rows that matched
     # the zone requirement. If that max was NULL, return the object.
-    scope.joins(
+    item_ids = select(arel_table[:id]).joins(
         "LEFT JOIN #{ParentSwfAssetRelationship.table_name} #{psa.name} ON " +
         psa[:swf_asset_type].eq(SwfAssetType)
         .and(psa[:parent_id].eq(arel_table[:id]))
@@ -373,7 +373,9 @@ class Item < ActiveRecord::Base
         .to_sql
       ).
       group("#{table_name}.id").
-      having("MAX(#{sa.name}.id) IS NULL") # SwfAsset.arel_table[:id].maximum has no #eq
+      having("MAX(#{sa.name}.id) IS NULL"). # SwfAsset.arel_table[:id].maximum has no #eq
+      map(&:id)
+    scope.where(arel_table[:id].in(item_ids))
   }
   
   class Condition < String
