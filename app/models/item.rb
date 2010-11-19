@@ -91,7 +91,15 @@ class Item < ActiveRecord::Base
         query_conditions.last << c
       end
     end
+    limited_filters_used = []
     query_conditions.inject(self.scoped) do |scope, condition|
+      if condition.filter? && LimitedSearchFilters.include?(condition.filter)
+        if limited_filters_used.include?(condition.filter)
+          raise SearchError, "The #{condition.filter} filter is complex; please only use one per search. Thanks!"
+        else
+          limited_filters_used << condition.filter
+        end
+      end
       condition.narrow(scope)
     end
   end
@@ -257,15 +265,36 @@ class Item < ActiveRecord::Base
   private
   
   SearchFilterScopes = []
+  LimitedSearchFilters = []
   
-  def self.search_filter(name, args={})
-    SearchFilterScopes << name.to_s
-    scope "search_filter_#{name}", lambda { |str, negative|
+  def self.search_filter(name, options={}, &block)
+    assume_complement = options.delete(:assume_complement) || true
+    name = name.to_s
+    SearchFilterScopes << name
+    LimitedSearchFilters << name if options[:limit]
+    (class << self; self; end).instance_eval do
+      if options[:full]
+        define_method "search_filter_#{name}", &options[:full]
+      else
+        if assume_complement
+          define_method "search_filter_not_#{name}", &Item.search_filter_block(options, false, &block)
+        end
+        define_method "search_filter_#{name}", &Item.search_filter_block(options, true, &block)
+      end
+    end
+  end
+  
+  def self.single_search_filter(name, options={}, &block)
+    options[:assume_complement] = false
+    search_filter name, options, &block
+  end
+  
+  def self.search_filter_block(options, positive)
+    Proc.new { |str, scope|
       condition = yield(str)
-      condition = "!(#{condition.to_sql})" if negative
-      rel = where(condition)
-      rel = rel & args[:scope] if args[:scope]
-      rel
+      condition = "!(#{condition.to_sql})" unless positive
+      scope = scope.send(options[:scope]) if options[:scope]
+      scope.where(condition)
     }
   end
   
@@ -307,25 +336,62 @@ class Item < ActiveRecord::Base
     ]))
   end
   
-  search_filter :type, {:scope => join_swf_assets} do |zone_set_name|
+  single_search_filter :type, {:limit => true, :scope => :join_swf_assets} do |zone_set_name|
     zone_set = Zone::ItemZoneSets[zone_set_name]
     raise SearchError, "Type \"#{zone_set_name}\" does not exist" unless zone_set
     SwfAsset.arel_table[:zone_id].in(zone_set.map(&:id))
   end
   
+  single_search_filter :not_type, :full => lambda { |zone_set_name, scope|
+    zone_set = Zone::ItemZoneSets[zone_set_name]
+    raise SearchError, "Type \"#{zone_set_name}\" does not exist" unless zone_set
+    psa = ParentSwfAssetRelationship.arel_table.alias
+    sa = SwfAsset.arel_table.alias
+    # Join to SWF assets, including the zone condition in the join so that
+    # SWFs that don't match end up being NULL rows. Then we take the max SWF
+    # asset ID, which is NULL if and only if there are no rows that matched
+    # the zone requirement. If that max was NULL, return the object.
+    scope.joins(
+        "LEFT JOIN #{ParentSwfAssetRelationship.table_name} #{psa.name} ON " +
+        psa[:swf_asset_type].eq(SwfAssetType)
+        .and(psa[:parent_id].eq(arel_table[:id]))
+        .to_sql
+      ).
+      joins(
+        "LEFT JOIN #{SwfAsset.table_name} #{sa.name} ON " +
+        sa[:type].eq(SwfAssetType)
+        .and(sa[:id].eq(psa[:swf_asset_id]))
+        .and(sa[:zone_id].in(zone_set.map(&:id)))
+        .to_sql
+      ).
+      group("#{table_name}.id").
+      having("MAX(#{sa.name}.id) IS NULL") # SwfAsset.arel_table[:id].maximum has no #eq
+  }
+  
   class Condition < String
+    attr_accessor :filter
+    
+    def initialize
+      @positive = true
+    end
+    
+    def filter?
+      !@filter.nil?
+    end
+    
     def to_filter!
       @filter = self.clone
       self.replace ''
     end
     
     def negate!
-      @negative = true
+      @positive = !@positive
     end
     
     def narrow(scope)
       if SearchFilterScopes.include?(filter)
-        scope & Item.send("search_filter_#{filter}", self, @negative)
+        polarized_filter = @positive ? filter : "not_#{filter}"
+        Item.send("search_filter_#{polarized_filter}", self, scope)
       else
         raise SearchError, "Filter #{filter} does not exist"
       end
