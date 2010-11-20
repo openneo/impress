@@ -127,6 +127,7 @@ ActiveRecord::Schema.define(:version => 20101110213044) do
     t.integer  "body_id",        :limit => 2,   :null => false
   end
 
+  add_index "swf_assets", ["type", "id"], :name => "swf_assets_type_and_id"
   add_index "swf_assets", ["body_id"], :name => "swf_assets_body_id_and_object_id"
   add_index "swf_assets", ["zone_id"], :name => "idx_swf_assets_zone_id"
 
