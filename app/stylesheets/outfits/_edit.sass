@@ -164,7 +164,9 @@ body.outfits-edit
         display: block
   #preview-closet
     h2
-      margin: 0
+      margin-bottom: 0
+    ul
+      text-align: center
     .object
       background: $module-bg-color
       img
@@ -265,12 +267,11 @@ body.outfits-edit
       > div
         height: 100%
         overflow: auto
-        padding:
-          left: $sidebar-unit-horizontal-padding
-          right: $sidebar-unit-horizontal-padding
-        width: $sidebar-width - (2 * $sidebar-unit-horizontal-padding)
+        width: $sidebar-width
         h2
-          margin-bottom: .25em
+          margin: 
+            bottom: .25em
+            left: $sidebar-unit-horizontal-padding
       &.viewing-saving-outfit
         height: auto
         max-height: 100%
@@ -353,14 +354,15 @@ body.outfits-edit
   #preview-outfits
     display: none
     text-align: left
-    h3
-      margin-bottom: .5em
     > ul
       background: image-url("loading.gif") no-repeat center top
       display: block
       font-family: $main-font
       list-style: none
-      margin-bottom: 1em
+      margin:
+        bottom: 1em
+        left: $sidebar-unit-horizontal-padding
+        right: $sidebar-unit-horizontal-padding
       min-height: 16px
       > li
         +outfit
@@ -370,7 +372,9 @@ body.outfits-edit
   .preview-sidebar-nav
     float: right
     font-size: 85%
-    margin-top: 1em
+    margin:
+      right: $sidebar-unit-horizontal-padding
+      top: 1em
   
   #save-success, #save-error, #outfit-not-found
     display: none
