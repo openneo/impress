@@ -260,13 +260,15 @@ body.outfits-edit
       float: right
       height: 100%
       margin: 0
-      overflow: auto
       position: relative
-      width: $sidebar-width
+      width: auto
       > div
-        margin:
+        height: 100%
+        overflow: auto
+        padding:
           left: $sidebar-unit-horizontal-padding
           right: $sidebar-unit-horizontal-padding
+        width: $sidebar-width - (2 * $sidebar-unit-horizontal-padding)
         h2
           margin-bottom: .25em
       &.viewing-saving-outfit
