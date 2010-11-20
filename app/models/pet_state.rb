@@ -63,7 +63,7 @@ class PetState < ActiveRecord::Base
           swf_asset_ids_str
         )
     end
-    existing_swf_assets = SwfAsset.find_all_by_id(swf_asset_ids)
+    existing_swf_assets = SwfAsset.biology_assets.find_all_by_id(swf_asset_ids)
     existing_swf_assets_by_id = {}
     existing_swf_assets.each do |swf_asset|
       existing_swf_assets_by_id[swf_asset.id] = swf_asset

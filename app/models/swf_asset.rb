@@ -20,7 +20,8 @@ class SwfAsset < ActiveRecord::Base
     where(arel_table[:body_id].in(BodyIdsFittingStandard))
   }
   
-  scope :object_assets, where(arel_table[:type].eq('object'))
+  scope :biology_assets, where(arel_table[:type].eq(PetState::SwfAssetType))
+  scope :object_assets, where(arel_table[:type].eq(Item::SwfAssetType))
   
   def local_url
     '/' + File.join(PUBLIC_ASSET_DIR, local_path_within_outfit_swfs)
