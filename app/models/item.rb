@@ -217,8 +217,7 @@ class Item < ActiveRecord::Base
     asset_registry.each_with_index do |asset_data, index|
       swf_asset_ids << index if asset_data
     end
-    existing_swf_assets = SwfAsset.find_all_by_id swf_asset_ids,
-      :conditions => {:type => SwfAssetType}
+    existing_swf_assets = SwfAsset.object_assets.find_all_by_id swf_asset_ids
     existing_swf_assets_by_id = {}
     existing_swf_assets.each do |swf_asset|
       existing_swf_assets_by_id[swf_asset.id] = swf_asset
