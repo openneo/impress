@@ -29,8 +29,8 @@ class OutfitsController < ApplicationController
   end
   
   def new
-    @colors = Color.all
-    @species = Species.all
+    @colors = Color.all_ordered_by_name
+    @species = Species.all_ordered_by_name
     @top_contributors = User.top_contributors.limit(3)
   end
   

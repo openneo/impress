@@ -10,18 +10,24 @@ class PetAttribute < StaticResource
     self.name.capitalize
   end
   
-  def self.find(id)
-    attribute = super
-    unless attribute
-      attribute = new
-      attribute.id = id
-      attribute.name = "color \##{id}"
+  class << self
+    def all_ordered_by_name
+      @objects_ordered_by_name
     end
-    attribute
-  end
-  
-  def self.find_by_name(name)
-    @objects_by_name[name.downcase]
+    
+    def find(id)
+      attribute = super
+      unless attribute
+        attribute = new
+        attribute.id = id
+        attribute.name = "color \##{id}"
+      end
+      attribute
+    end
+    
+    def find_by_name(name)
+      @objects_by_name[name.downcase]
+    end
   end
   
   private
@@ -43,5 +49,6 @@ class PetAttribute < StaticResource
     File.open(Rails.root.join('config', data_source)).each do |line|
       process_line(line)
     end
+    @objects_ordered_by_name = @objects.sort { |a,b| a.name <=> b.name }
   end
 end

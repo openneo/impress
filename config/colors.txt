@@ -88,3 +88,4 @@ Magma
 Relic
 Woodland
 Transparent
+Maractite
