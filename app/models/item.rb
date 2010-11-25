@@ -116,7 +116,7 @@ class Item < ActiveRecord::Base
   end
   
   before_create do
-    self.sold_in_mall = false
+    self.sold_in_mall ||= false
     true
   end
   
@@ -259,6 +259,93 @@ class Item < ActiveRecord::Base
       items[item_id].parent_swf_asset_relationships_to_update = relationships
     end
     items.values
+  end
+  
+  class << self
+    MALL_HOST = 'ncmall.neopets.com'
+    MALL_MAIN_PATH = '/mall/shop.phtml'
+    MALL_CATEGORY_PATH = '/mall/ajax/load_page.phtml?type=browse&cat={cat}&lang=en'
+    MALL_CATEGORY_TRIGGER = /load_items_pane\("browse", ([0-9]+)\);/
+    MALL_JSON_ITEM_DATA_KEY = 'object_data'
+    MALL_ITEM_URL_TEMPLATE = 'http://images.neopets.com/items/%s.gif'
+    
+    MALL_MAIN_URI = Addressable::URI.new :scheme => 'http',
+      :host => MALL_HOST, :path => MALL_MAIN_PATH
+    MALL_CATEGORY_URI = Addressable::URI.new :scheme => 'http',
+      :host => MALL_HOST, :path => MALL_CATEGORY_PATH
+    MALL_CATEGORY_TEMPLATE = Addressable::Template.new MALL_CATEGORY_URI
+    
+    def spider_mall!
+      # Load the mall HTML, scan it for category onclicks
+      items = {}
+      spider_request(MALL_MAIN_URI).scan(MALL_CATEGORY_TRIGGER) do |match|
+        # Plug the category ID into the URI for that category's JSON document
+        uri = MALL_CATEGORY_TEMPLATE.expand :cat => match[0]
+        begin
+          # Load up that JSON and send it off to be parsed
+          puts "Loading #{uri}..."
+          category_items = spider_mall_category(spider_request(uri))
+          puts "...found #{category_items.size} items"
+          items.merge!(category_items)
+        rescue SpiderJSONError => e
+          # If there was a parsing error, add where it came from
+          Rails.logger.warn "Error parsing JSON at #{uri}, skipping: #{e.message}"
+        end
+      end
+      puts "#{items.size} items total"
+      # Remove items from the list that already exist, so as to avoid
+      # unnecessary saves
+      existing_item_ids = Item.find_all_by_id(items.keys, :select => :id).map(&:id)
+      items = items.except *existing_item_ids
+      puts "#{items.size} new items"
+      items.each do |item_id, item|
+        item.save
+        puts "Saved #{item.name} (#{item_id})"
+      end
+      items
+    end
+    
+    private
+    
+    def spider_mall_category(json)
+      begin
+        items_data = JSON.parse(json)[MALL_JSON_ITEM_DATA_KEY]
+        unless items_data
+          raise SpiderJSONError, "Missing key #{MALL_JSON_ITEM_DATA_KEY}"
+        end
+      rescue Exception => e
+        # Catch both errors parsing JSON and the missing key
+        raise SpiderJSONError, e.message
+      end
+      items = {}
+      items_data.each do |item_id, item_data|
+        if item_data['isWearable'] == 1
+          relevant_item_data = item_data.slice('name', 'description', 'price')
+          item = Item.new relevant_item_data
+          item.id = item_data['id']
+          item.thumbnail_url = sprintf(MALL_ITEM_URL_TEMPLATE, item_data['imageFile'])
+          item.sold_in_mall = true
+          items[item.id] = item
+        end
+      end
+      items
+    end
+    
+    def spider_request(uri)
+      begin
+        response = Net::HTTP.get_response uri
+      rescue SocketError => e
+        raise SpiderHTTPError, "Error loading #{uri}: #{e.message}"
+      end
+      unless response.is_a? Net::HTTPOK
+        raise SpiderHTTPError, "Error loading #{uri}: Response was a #{response.class}"
+      end
+      response.body
+    end
+    
+    class SpiderError < RuntimeError;end
+    class SpiderHTTPError < SpiderError;end
+    class SpiderJSONError < SpiderError;end
   end
   
   private

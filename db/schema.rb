@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101110213044) do
+ActiveRecord::Schema.define(:version => 20101125160843) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10, :null => false
@@ -49,14 +49,14 @@ ActiveRecord::Schema.define(:version => 20101110213044) do
     t.text     "thumbnail_url",                      :null => false
     t.string   "name",                :limit => 100, :null => false
     t.text     "description",                        :null => false
-    t.string   "category",            :limit => 50,  :null => false
-    t.string   "type",                :limit => 50,  :null => false
-    t.string   "rarity",              :limit => 25,  :null => false
-    t.integer  "rarity_index",        :limit => 2,   :null => false
+    t.string   "category",            :limit => 50
+    t.string   "type",                :limit => 50
+    t.string   "rarity",              :limit => 25
+    t.integer  "rarity_index",        :limit => 2
     t.integer  "price",               :limit => 3,   :null => false
-    t.integer  "weight_lbs",          :limit => 2,   :null => false
+    t.integer  "weight_lbs",          :limit => 2
     t.text     "species_support_ids"
-    t.integer  "sold_in_mall",        :limit => 1,   :null => false
+    t.boolean  "sold_in_mall",                       :null => false
     t.datetime "last_spidered"
   end
 
@@ -127,15 +127,16 @@ ActiveRecord::Schema.define(:version => 20101110213044) do
     t.integer  "body_id",        :limit => 2,   :null => false
   end
 
-  add_index "swf_assets", ["type", "id"], :name => "swf_assets_type_and_id"
   add_index "swf_assets", ["body_id"], :name => "swf_assets_body_id_and_object_id"
+  add_index "swf_assets", ["type", "id"], :name => "swf_assets_type_and_id"
   add_index "swf_assets", ["zone_id"], :name => "idx_swf_assets_zone_id"
 
   create_table "users", :force => true do |t|
-    t.string  "name",           :limit => 20,                :null => false
-    t.integer "auth_server_id", :limit => 1,                 :null => false
-    t.integer "remote_id",                                   :null => false
-    t.integer "points",                       :default => 0, :null => false
+    t.string  "name",           :limit => 20,                    :null => false
+    t.integer "auth_server_id", :limit => 1,                     :null => false
+    t.integer "remote_id",                                       :null => false
+    t.integer "points",                       :default => 0,     :null => false
+    t.boolean "beta",                         :default => false, :null => false
   end
 
   create_table "zones", :force => true do |t|
