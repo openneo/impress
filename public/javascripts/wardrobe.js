@@ -334,7 +334,11 @@ function Wardrobe() {
           Outfit.cache[outfit.id] = outfit;
           success(outfit);
         },
-        error: function () { if(typeof failure !== 'undefined') failure(outfit) }
+        error: function (xhr) {
+          if(typeof failure !== 'undefined') {
+            failure(outfit, $.parseJSON(xhr.responseText));
+          }
+        }
       });
     }
     
@@ -365,6 +369,10 @@ function Wardrobe() {
         }
       });
       return visible_assets;
+    }
+    
+    this.rename = function (new_name, success, failure) {
+      this.updateAttributes({name: new_name}, success, failure);
     }
     
     this.setClosetItemsByIds = function (ids, updateItemsCallback) {
@@ -508,19 +516,19 @@ function Wardrobe() {
           success(outfit);
         },
         error: function (xhr) {
-          error($.parseJSON(xhr.responseText));
+          error(outfit, $.parseJSON(xhr.responseText));
         }
       });
     }
     
-    this.updateAttributes = function (attributes, success) {
+    this.updateAttributes = function (attributes, success, failure) {
       var outfit_data = {};
       for(var key in attributes) {
         if(attributes.hasOwnProperty(key)) {
           outfit_data[key] = outfit[key] = attributes[key];
         }
       }
-      sendUpdate(outfit_data, success);
+      sendUpdate(outfit_data, success, failure);
     }
   }
   
@@ -770,6 +778,10 @@ function Wardrobe() {
       return outfit.closet_items;
     }
     
+    this.getId = function () {
+      return outfit.id;
+    }
+    
     this.getOutfit = function () {
       return outfit;
     }
@@ -997,7 +1009,7 @@ function Wardrobe() {
     function yankOutfit(outfit) {
       var i;
       for(i = 0; i < outfits.length; i++) {
-        if(outfit == outfits[i]) {
+        if(outfit.id == outfits[i].id) {
           outfits.splice(i, 1);
           break;
         }
@@ -1022,6 +1034,18 @@ function Wardrobe() {
           controller.events.trigger('outfitsLoaded', outfits);
         });
       }
+    }
+    
+    this.renameOutfit = function (outfit, new_name) {
+      var old_name = outfit.name;
+      outfit.rename(new_name, function () {
+        yankOutfit(outfit);
+        insertOutfit(outfit);
+        controller.events.trigger('outfitRenamed', outfit);
+      }, function (outfit_copy, response) {
+        outfit.name = old_name;
+        controller.events.trigger('saveFailure', outfit_copy, response);
+      });
     }
     
     this.toggleOutfitStar = function (outfit) {
