@@ -27,18 +27,18 @@
     #outfit-not-found Outfit not found
     #save-success Outfit successfully saved
     #save-error
-    #preview-closet
+    #preview-closet.sidebar-view
       %a#preview-sidebar-nav-outfits.preview-sidebar-nav{:href => '#'} Your outfits
       %h2 Closet
       %ul
       %p#fullscreen-copyright
         Images © 2000-2010 Neopets, Inc. All Rights Reserved.
         Used With Permission
-    #preview-outfits
+    #preview-outfits.sidebar-view
       %a#preview-sidebar-nav-closet.preview-sidebar-nav{:href => "#"} &larr; Back to Closet
       %h2 Your outfits
       %ul
-    #preview-saving-outfit
+    #preview-saving-outfit.sidebar-view
       %a#preview-sidebar-nav-cancel-save.preview-sidebar-nav{:href => '#'} &larr; Cancel
       %h2 Saving new outfit
       #new-outfit
@@ -95,6 +95,9 @@
     %button.outfit-delete &times;
     .outfit-star
     %h4 ${name}
+    %a.outfit-rename-button{:href => '#'} rename
+    %form.outfit-rename-form
+      %input.outfit-rename-field{:type => 'text'}
   %input.outfit-url{:type => 'text', :value => "http://#{request.host}/outfits/${id}"}
   .outfit-delete-confirmation
     %span Delete forever?

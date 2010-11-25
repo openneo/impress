@@ -21,7 +21,18 @@
 })();
 
 $.fn.notify = function () {
-  this.stop().show('slow').delay(5000).hide('fast');
+  this.stop(true, true).show('slow').delay(5000).hide('fast');
+}
+
+$.fn.outfitLoading = function () {
+  this.delay(1000).queue(function (next) {
+    $(this).addClass('loading');
+    next();
+  });
+}
+
+$.fn.stopLoading = function () {
+  this.removeClass('loading').clearQueue();
 }
 
 var Partial = {}, main_wardrobe,
@@ -449,6 +460,10 @@ View.Outfits = function (wardrobe) {
     signed_in,
     previously_viewing = '';
   
+  function liForOutfit(outfit) {
+    return $('li.outfit-' + outfit.id);
+  }
+  
   function navLinkTo(callback) {
     return function (e) {
       e.preventDefault();
@@ -534,11 +549,35 @@ View.Outfits = function (wardrobe) {
   
   wardrobe.user.bind('removeOutfit', function (outfit, i) {
     var outfit_el = outfits_list_el.children().not('.hiding').eq(i);
-    outfit_el.addClass('hiding').hide('normal', function () { outfit_el.remove() });
+    outfit_el.addClass('hiding').stop(true).hide('normal', function () { outfit_el.remove() });
   });
   
   $('#preview-outfits h4').live('click', function () {
     wardrobe.outfit.load($(this).tmplItem().data.id);
+  });
+  
+  $('a.outfit-rename-button').live('click', function (e) {
+    e.preventDefault();
+    var li = $(this).closest('li').addClass('renaming'),
+      name = li.find('h4').text();
+    li.find('input.outfit-rename-field').val(name).focus();
+  });
+  
+  function submitRename() {
+    var el = $(this), outfit = el.tmplItem().data, new_name = el.val(),
+      li = el.closest('li').removeClass('renaming');
+    if(new_name != outfit.name) {
+      li.outfitLoading();
+      wardrobe.user.renameOutfit(outfit, new_name);
+    }
+  }
+  
+  $('input.outfit-rename-field').live('blur', submitRename);
+  
+  $('form.outfit-rename-form').live('submit', function (e) {
+    e.preventDefault();
+    var input = $(this).find('input');
+    submitRename.apply(input);
   });
   
   $('input.outfit-url').live('mouseover', function () {
@@ -568,14 +607,14 @@ View.Outfits = function (wardrobe) {
   
   stars.live('click', function () {
     var el = $(this);
-    setTimeout(function () { el.addClass('loading') }, 1000);
+    el.closest('li').outfitLoading();
     wardrobe.user.toggleOutfitStar(el.tmplItem().data);
   });
   
   function setActiveOutfit(outfit) {
     outfits_list_el.find('li.active').removeClass('active');
     if(outfit.id) {
-      $('li.outfit-' + outfit.id).addClass('active');
+      liForOutfit(outfit).addClass('active');
       save_current_outfit_name_el.text(outfit.name);
     }
     save_outfit_wrapper_el.toggleClass('active-outfit', outfit.id ? true : false);
@@ -587,6 +626,12 @@ View.Outfits = function (wardrobe) {
   
   wardrobe.outfit.bind('setOutfit', setActiveOutfit);
   wardrobe.outfit.bind('outfitNotFound', setActiveOutfit);
+  
+  wardrobe.user.bind('outfitRenamed', function (outfit) {
+    if(outfit.id == wardrobe.outfit.getId()) {
+      save_current_outfit_name_el.text(outfit.name);
+    }
+  });
   
   /* Saving */
   
@@ -627,7 +672,7 @@ View.Outfits = function (wardrobe) {
     wardrobe.user.updateOutfit(outfit);
   });
   
-  wardrobe.outfit.bind('saveFailure', function (response) {
+  function saveFailure(outfit, response) {
     var errors = response.errors;
     if(typeof errors == 'undefined') {
       saveErrorMessage("Whoops! The save failed, but the server didn't say why. Please try again.");
@@ -644,7 +689,11 @@ View.Outfits = function (wardrobe) {
         }
       }
     }
-  });
+    liForOutfit(outfit).stopLoading();
+  }
+  
+  wardrobe.outfit.bind('saveFailure', saveFailure);
+  wardrobe.user.bind('saveFailure', saveFailure)
   
   /* Error */
   

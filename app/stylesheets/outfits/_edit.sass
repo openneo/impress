@@ -64,22 +64,34 @@ $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
     /* makes it not take up inline space
     position: relative
     width: 16px
-    &.loading
-      background-image: image-url("loading.gif") !important
+  &.starred .outfit-star
+    background-image: image-url("star.png")
+  &.loading .outfit-star
+    background-image: image-url("loading.gif")
+  &.loading.active .outfit-star
+    background-image: image-url("loading_current_outfit.gif")
   h4
     cursor: pointer
-    font-size: 115%
+    display: inline
     &:hover
       text-decoration: underline
+  h4, .outfit-rename-field
+    font-size: 115%
+  .outfit-rename-button, .outfit-rename-form
+    display: none
+  .outfit-rename-button
+    +opacity(.75)
+    font-size: 75%
+    margin-left: 1em
   .outfit-url
     +opacity(.5)
     background: transparent
-    border-color: $background-color
+    border-width: 0
     font-size: 75%
     width: $outfit-content-inner-width
     &:hover
       +opacity(1)
-      border-color: $input-border-color
+      border-width: 1px
   .outfit-delete-confirmation
     display: none
     font-size: 75%
@@ -96,9 +108,22 @@ $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
       display: none
     .outfit-delete-confirmation
       display: block
-  &.starred
-    .outfit-star
-      background-image: image-url("star.png")
+  &.renaming
+    h4
+      display: none
+    .outfit-rename-form
+      display: inline
+    &:hover
+      .outfit-rename-button
+        display: none
+  &:hover
+    .outfit-rename-button
+      display: inline
+
+=sidebar-view-child
+  margin:
+    left: $sidebar-unit-horizontal-padding
+    right: $sidebar-unit-horizontal-padding
 
 body.outfits-edit
   #preview-toolbar
@@ -262,12 +287,10 @@ body.outfits-edit
       float: right
       height: 100%
       margin: 0
+      overflow: auto
       position: relative
-      width: auto
-      > div
-        height: 100%
-        overflow: auto
-        width: $sidebar-width
+      width: $sidebar-width
+      .sidebar-view
         h2
           margin: 
             bottom: .25em
@@ -355,14 +378,13 @@ body.outfits-edit
     display: none
     text-align: left
     > ul
+      +sidebar-view-child
       background: image-url("loading.gif") no-repeat center top
       display: block
       font-family: $main-font
       list-style: none
       margin:
         bottom: 1em
-        left: $sidebar-unit-horizontal-padding
-        right: $sidebar-unit-horizontal-padding
       min-height: 16px
       > li
         +outfit
@@ -377,8 +399,10 @@ body.outfits-edit
       top: 1em
   
   #save-success, #save-error, #outfit-not-found
+    +sidebar-view-child
     display: none
-    margin-top: 1em
+    margin:
+      top: 1em
     text-align: center
   
   #save-success
@@ -393,6 +417,7 @@ body.outfits-edit
   
   #new-outfit
     +outfit
+    +sidebar-view-child
     display: none
     h4
       display: inline

@@ -3,12 +3,12 @@ class OutfitsController < ApplicationController
   
   def create
     if user_signed_in?
-      outfit = Outfit.new params[:outfit]
-      outfit.user = current_user
-      if outfit.save
-        render :json => outfit.id
+      @outfit = Outfit.new params[:outfit]
+      @outfit.user = current_user
+      if @outfit.save
+        render :json => @outfit.id
       else
-        render :json => {:errors => outfit.errors}, :status => :bad_request
+        render_outfit_errors
       end
     else
       render :json => {:errors => {:user => ['not logged in']}}, :status => :forbidden
@@ -21,7 +21,11 @@ class OutfitsController < ApplicationController
   end
   
   def destroy
-    authenticate_action &:destroy
+    if @outfit.destroy
+      render :json => true
+    else
+      render :json => false, :status => :bad_request
+    end
   end
   
   def new
@@ -39,21 +43,21 @@ class OutfitsController < ApplicationController
   end
   
   def update
-    authenticate_action { |outfit| outfit.update_attributes(params[:outfit]) }
+    if @outfit.update_attributes(params[:outfit])
+      render :json => true
+    else
+      render_outfit_errors
+    end
   end
   
   private
   
-  def authenticate_action
-    if yield(@outfit)
-      render :json => true
-    else
-      render :json => false, :status => :bad_request
-    end
-  end
-  
   def find_authorized_outfit
     raise ActiveRecord::RecordNotFound unless user_signed_in?
     @outfit = current_user.outfits.find(params[:id])
+  end
+  
+  def render_outfit_errors
+    render :json => {:errors => @outfit.errors}, :status => :bad_request
   end
 end
