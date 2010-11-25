@@ -549,7 +549,7 @@ View.Outfits = function (wardrobe) {
   
   wardrobe.user.bind('removeOutfit', function (outfit, i) {
     var outfit_el = outfits_list_el.children().not('.hiding').eq(i);
-    outfit_el.addClass('hiding').hide('normal', function () { outfit_el.remove() });
+    outfit_el.addClass('hiding').stop(true).hide('normal', function () { outfit_el.remove() });
   });
   
   $('#preview-outfits h4').live('click', function () {

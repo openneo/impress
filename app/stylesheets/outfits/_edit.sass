@@ -64,8 +64,12 @@ $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
     /* makes it not take up inline space
     position: relative
     width: 16px
+  &.starred .outfit-star
+    background-image: image-url("star.png")
   &.loading .outfit-star
-    background-image: image-url("loading.gif") !important
+    background-image: image-url("loading.gif")
+  &.loading.active .outfit-star
+    background-image: image-url("loading_current_outfit.gif")
   h4
     cursor: pointer
     display: inline
@@ -112,9 +116,6 @@ $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
     &:hover
       .outfit-rename-button
         display: none
-  &.starred
-    .outfit-star
-      background-image: image-url("star.png")
   &:hover
     .outfit-rename-button
       display: inline
