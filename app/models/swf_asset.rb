@@ -22,6 +22,10 @@ class SwfAsset < ActiveRecord::Base
   
   scope :biology_assets, where(arel_table[:type].eq(PetState::SwfAssetType))
   scope :object_assets, where(arel_table[:type].eq(Item::SwfAssetType))
+  scope :for_item_ids, lambda { |item_ids|
+    joins(:object_asset_relationships).
+      where(ParentSwfAssetRelationship.arel_table[:parent_id].in(item_ids))
+  }
   
   def local_url
     '/' + File.join(PUBLIC_ASSET_DIR, local_path_within_outfit_swfs)
