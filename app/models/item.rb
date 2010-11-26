@@ -4,7 +4,8 @@ class Item < ActiveRecord::Base
   has_one :contribution, :as => :contributed
   has_many :parent_swf_asset_relationships, :foreign_key => 'parent_id',
     :conditions => {:swf_asset_type => SwfAssetType}
-  has_many :swf_assets, :through => :parent_swf_asset_relationships, :source => :object_asset
+  has_many :swf_assets, :through => :parent_swf_asset_relationships, :source => :object_asset,
+    :conditions => {:type => SwfAssetType}
   
   attr_writer :current_body_id
   
