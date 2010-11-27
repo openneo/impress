@@ -19,9 +19,18 @@ class Item < ActiveRecord::Base
   
   scope :alphabetize, order('name ASC')
   
-  scope :join_swf_assets, joins('INNER JOIN parents_swf_assets psa ON psa.swf_asset_type = "object" AND psa.parent_id = objects.id').
-    joins('INNER JOIN swf_assets ON swf_assets.id = psa.swf_asset_id').
+  scope :join_swf_assets, joins("INNER JOIN #{ParentSwfAssetRelationship.table_name} psa ON psa.swf_asset_type = 'object' AND psa.parent_id = objects.id").
+    joins("INNER JOIN #{SwfAsset.table_name} swf_assets ON swf_assets.id = psa.swf_asset_id").
     group('objects.id')
+  
+  scope :without_swf_assets, joins(
+    "LEFT JOIN #{ParentSwfAssetRelationship.table_name} psa ON psa.swf_asset_type = 'object' AND psa.parent_id = #{table_name}.id " +
+    "LEFT JOIN #{SwfAsset.table_name} sa ON sa.type = 'object' AND sa.id = psa.swf_asset_id"
+  ).where('sa.id IS NULL')
+  
+  scope :spidered_longest_ago, order(["(#{Item.arel_table[:last_spidered].eq(nil).to_sql}) DESC", arel_table[:last_spidered].desc])
+  
+  scope :sold_in_mall, where(arel_table[:sold_in_mall].eq(true))
   
   # Not defining validations, since this app is currently read-only
   
@@ -59,7 +68,7 @@ class Item < ActiveRecord::Base
   end
   
   def species_support_ids
-    @species_support_ids_array ||= read_attribute('species_support_ids').split(',').map(&:to_i)
+    @species_support_ids_array ||= read_attribute('species_support_ids').split(',').map(&:to_i) rescue nil
   end
   
   def species_support_ids=(replacement)
@@ -69,7 +78,7 @@ class Item < ActiveRecord::Base
   end
   
   def supported_species
-    @supported_species ||= species_support_ids.empty? ? Species.all : species_support_ids.sort.map { |id| Species.find(id) }
+    @supported_species ||= species_support_ids.blank? ? Species.all : species_support_ids.sort.map { |id| Species.find(id) }
   end
   
   def self.search(query)
@@ -264,7 +273,8 @@ class Item < ActiveRecord::Base
   class << self
     MALL_HOST = 'ncmall.neopets.com'
     MALL_MAIN_PATH = '/mall/shop.phtml'
-    MALL_CATEGORY_PATH = '/mall/ajax/load_page.phtml?type=browse&cat={cat}&lang=en'
+    MALL_CATEGORY_PATH = '/mall/ajax/load_page.phtml'
+    MALL_CATEGORY_QUERY = 'type=browse&cat={cat}&lang=en'
     MALL_CATEGORY_TRIGGER = /load_items_pane\("browse", ([0-9]+)\);/
     MALL_JSON_ITEM_DATA_KEY = 'object_data'
     MALL_ITEM_URL_TEMPLATE = 'http://images.neopets.com/items/%s.gif'
@@ -272,7 +282,8 @@ class Item < ActiveRecord::Base
     MALL_MAIN_URI = Addressable::URI.new :scheme => 'http',
       :host => MALL_HOST, :path => MALL_MAIN_PATH
     MALL_CATEGORY_URI = Addressable::URI.new :scheme => 'http',
-      :host => MALL_HOST, :path => MALL_CATEGORY_PATH
+      :host => MALL_HOST, :path => MALL_CATEGORY_PATH,
+      :query => MALL_CATEGORY_QUERY
     MALL_CATEGORY_TEMPLATE = Addressable::Template.new MALL_CATEGORY_URI
     
     def spider_mall!
@@ -305,7 +316,190 @@ class Item < ActiveRecord::Base
       items
     end
     
+    def spider_mall_assets!(limit)
+      items = self.select([arel_table[:id], arel_table[:name]]).sold_in_mall.spidered_longest_ago.limit(limit).all
+      puts "- #{items.size} items need asset spidering"
+      AssetStrategy.build_strategies
+      items.each do |item|
+        AssetStrategy.spider item
+      end
+    end
+    
+    def spider_request(uri)
+      begin
+        response = Net::HTTP.get_response uri
+      rescue SocketError => e
+        raise SpiderHTTPError, "Error loading #{uri}: #{e.message}"
+      end
+      unless response.is_a? Net::HTTPOK
+        raise SpiderHTTPError, "Error loading #{uri}: Response was a #{response.class}"
+      end
+      response.body
+    end
+    
     private
+    
+    class AssetStrategy
+      Strategies = {}
+      
+      MALL_ASSET_PATH = '/mall/ajax/get_item_assets.phtml'
+      MALL_ASSET_QUERY = 'pet={pet_name}&oii={item_id}'
+      MALL_ASSET_URI = Addressable::URI.new :scheme => 'http',
+        :host => MALL_HOST, :path => MALL_ASSET_PATH,
+        :query => MALL_ASSET_QUERY
+      MALL_ASSET_TEMPLATE = Addressable::Template.new MALL_ASSET_URI
+      
+      def initialize(name, options)
+        @name = name
+        @pass = options[:pass]
+        @complete = options[:complete]
+        @pet_types = options[:pet_types]
+      end
+      
+      def spider(item)
+        puts "  - Using #{@name} strategy"
+        exit = false
+        @pet_types.each do |pet_type|
+          swf_assets = load_for_pet_type(item, pet_type)
+          if swf_assets
+            contains_body_specific_assets = false
+            swf_assets.each do |swf_asset|
+              if swf_asset.body_specific?
+                contains_body_specific_assets = true
+                break
+              end
+            end
+            if contains_body_specific_assets
+              if @pass
+                Strategies[@pass].spider(item) unless @pass == :exit
+                exit = true
+                break
+              end
+            else
+              # if all are universal, no need to spider more
+              puts "    - No body specific assets; moving on"
+              exit = true
+              break
+            end
+          end
+        end
+        if !exit && @complete && @complete != :exit
+          Strategies[@complete].spider(item)
+        end
+      end
+      
+      private
+      
+      def load_for_pet_type(item, pet_type, banned_pet_ids=[])
+        pet_id = pet_type.pet_id
+        pet_name = pet_type.pet_name
+        pet = Pet.load(pet_name)
+        if pet.pet_type == pet_type
+          swf_assets = load_for_pet_name(item, pet_type, pet_name)
+          if swf_assets
+            puts "    - Modeled with #{pet_name}, saved assets (#{swf_assets.map(&:id).join(', ')})"
+          else
+            puts "    - Item #{item.name} does not fit #{pet_name}"
+          end
+          return swf_assets
+        else
+          puts "    - Pet #{pet_name} is pet type \##{pet.pet_type_id}, not \##{pet_type.id}; saving it and loading new pet"
+          pet.save
+          banned_pet_ids << pet_id
+          new_pet = pet_type.pets.select([:id, :name]).where(Pet.arel_table[:id].not_in(banned_pet_ids)).first
+          if new_pet
+            pet_type.pet_id = new_pet.id
+            pet_type.pet_name = new_pet.name
+            load_for_pet_type(item, pet_type, banned_pet_ids)
+          else
+            puts "    - We have no more pets of type \##{pet_type.id}. Skipping"
+            return nil
+          end
+        end
+      end
+      
+      def load_for_pet_name(item, pet_type, pet_name)
+        uri = MALL_ASSET_TEMPLATE.
+          expand(
+            :item_id => item.id,
+            :pet_name => pet_name
+          )
+        raw_data = Item.spider_request(uri)
+        data = JSON.parse(raw_data)
+        item_id_key = item.id.to_s
+        if !data.empty? && data[item_id_key] && data[item_id_key]['asset_data']
+          data[item_id_key]['asset_data'].map do |asset_id_str, asset_data|
+            item.zones_restrict = asset_data['restrict']
+            item.save
+            swf_asset = SwfAsset.find_or_initialize_by_type_and_id(SwfAssetType, asset_id_str.to_i)
+            swf_asset.type = SwfAssetType
+            swf_asset.body_id = pet_type.body_id
+            swf_asset.mall_data = asset_data
+            item.swf_assets << swf_asset unless item.swf_assets.include? swf_asset
+            swf_asset.save
+            swf_asset
+          end
+        else
+          nil
+        end
+      end
+      
+      class << self
+        def add_strategy(name, options)
+          Strategies[name] = new(name, options)
+        end
+        
+        def add_cascading_strategy(name, options)
+          pet_type_groups = options[:pet_types]
+          pet_type_group_names = pet_type_groups.keys
+          pet_type_group_names.each_with_index do |pet_type_group_name, i|
+            remaining_pet_types = pet_type_groups[pet_type_group_name]
+            first_pet_type = [remaining_pet_types.slice!(0)]
+            cascade_name = "#{name}_cascade"
+            next_name = pet_type_group_names[i + 1]
+            next_name = next_name ? "group_#{next_name}" : options[:complete]
+            first_strategy_options = {:complete => next_name, :pass => :exit,
+              :pet_types => first_pet_type}
+            unless remaining_pet_types.empty?
+              first_strategy_options[:pass] = cascade_name
+              add_strategy cascade_name, :complete => :exit,
+                :pet_types => remaining_pet_types
+            end
+            add_strategy name, first_strategy_options
+            name = next_name
+          end
+        end
+        
+        def spider(item)
+          puts "- Spidering for #{item.name}"
+          Strategies[:start].spider(item)
+          item.last_spidered = Time.now
+          item.save
+          puts "- #{item.name} done spidering, saved last spidered timestamp"
+        end
+        
+        def build_strategies
+          if Strategies.empty?
+            pet_type_t = PetType.arel_table
+            require 'pet' # FIXME: console is whining when i don't do this
+            pet_t = Pet.arel_table
+            pet_types = PetType.select([pet_type_t[:id], pet_type_t[:body_id], "#{Pet.table_name}.id as pet_id, #{Pet.table_name}.name as pet_name"]).
+              joins(:pets).group(pet_type_t[:id])
+            remaining_standard_pet_types = pet_types.single_standard_color.order(:species_id)
+            first_standard_pet_type = [remaining_standard_pet_types.slice!(0)]
+            
+            add_strategy :start, :pass => :remaining_standard, :complete => :first_nonstandard_color,
+              :pet_types => first_standard_pet_type
+            
+            add_strategy :remaining_standard, :complete => :exit,
+              :pet_types => remaining_standard_pet_types
+            
+            add_cascading_strategy :first_nonstandard_color, :complete => :remaining_standard,
+              :pet_types => pet_types.select(pet_type_t[:color_id]).nonstandard_colors.all.group_by(&:color_id)
+          end
+        end
+      end
+    end
     
     def spider_mall_category(json)
       begin
@@ -329,18 +523,6 @@ class Item < ActiveRecord::Base
         end
       end
       items
-    end
-    
-    def spider_request(uri)
-      begin
-        response = Net::HTTP.get_response uri
-      rescue SocketError => e
-        raise SpiderHTTPError, "Error loading #{uri}: #{e.message}"
-      end
-      unless response.is_a? Net::HTTPOK
-        raise SpiderHTTPError, "Error loading #{uri}: Response was a #{response.class}"
-      end
-      response.body
     end
     
     class SpiderError < RuntimeError;end

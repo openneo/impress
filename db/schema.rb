@@ -103,6 +103,7 @@ ActiveRecord::Schema.define(:version => 20101125160843) do
     t.string   "image_hash", :limit => 8
   end
 
+  add_index "pet_types", ["body_id"], :name => "pet_type_body_id"
   add_index "pet_types", ["species_id", "color_id"], :name => "pet_types_species_color", :unique => true
 
   create_table "pets", :force => true do |t|

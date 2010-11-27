@@ -4,6 +4,7 @@ class PetType < ActiveRecord::Base
   
   has_one :contribution, :as => :contributed
   has_many :pet_states
+  has_many :pets
   
   attr_writer :origin_pet
   
@@ -14,6 +15,12 @@ class PetType < ActiveRecord::Base
   StandardPetTypesBySpeciesId.each do |species_id, pet_types|
     StandardBodyIds += pet_types.map(&:body_id)
   end
+  
+  # Returns all pet types of a single standard color. The caller shouldn't care
+  # which, though, in this implemention, it's always Blue. Don't depend on that.
+  scope :single_standard_color, where(:color_id => Color::BasicIds[0])
+  
+  scope :nonstandard_colors, where(:color_id => Color.nonstandard_ids)
   
   def self.random_basic_per_species(species_ids)
     random_pet_types = []
