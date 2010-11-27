@@ -20,6 +20,8 @@ gem 'hoptoad_notifier'
 
 gem 'addressable', :require => ['addressable/template', 'addressable/uri']
 
+gem 'whenever', '~> 0.6.2', :require => false
+
 group :development_async, :production do
   # async wrappers
   gem 'eventmachine',     :git => 'git://github.com/eventmachine/eventmachine.git'
