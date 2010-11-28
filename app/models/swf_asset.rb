@@ -1,6 +1,7 @@
 class SwfAsset < ActiveRecord::Base
   PUBLIC_ASSET_DIR = File.join('swfs', 'outfit')
   LOCAL_ASSET_DIR = Rails.root.join('public', PUBLIC_ASSET_DIR)
+  NEOPETS_ASSET_SERVER = 'http://images.neopets.com'
   set_inheritance_column 'inheritance_type'
   
   attr_accessor :item
@@ -50,7 +51,7 @@ class SwfAsset < ActiveRecord::Base
   end
   
   def body_specific?
-    self.body_id == 0 || self.zone.type_id < 3
+    self.zone.type_id < 3
   end
   
   def zone
@@ -72,6 +73,11 @@ class SwfAsset < ActiveRecord::Base
     self.type = 'object'
     self.zone_id = data[:zone_id].to_i
     self.url = data[:asset_url]
+  end
+  
+  def mall_data=(data)
+    self.zone_id = data['zone'].to_i
+    self.url = "#{NEOPETS_ASSET_SERVER}/#{data['url']}"
   end
   
   before_create do
