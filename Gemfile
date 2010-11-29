@@ -12,7 +12,7 @@ gem 'warden', '~> 1.0.1'
 gem 'rails_warden', '~> 0.5.2'
 
 gem 'msgpack', '~> 0.4.3'
-gem 'openneo-auth-signatory', '~> 0.0.4'
+gem 'openneo-auth-signatory', '~> 0.1.0'
 
 gem 'jammit', '~> 0.5.3'
 

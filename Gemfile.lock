@@ -93,7 +93,7 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.16)
     msgpack (0.4.3)
-    openneo-auth-signatory (0.0.4)
+    openneo-auth-signatory (0.1.0)
       ruby-hmac
     polyglot (0.3.1)
     rack (1.2.1)
@@ -165,7 +165,7 @@ DEPENDENCIES
   jammit (~> 0.5.3)
   msgpack (~> 0.4.3)
   mysqlplus!
-  openneo-auth-signatory (~> 0.0.4)
+  openneo-auth-signatory (~> 0.1.0)
   rack-fiber_pool
   rails (= 3.0.3)
   rails_warden (~> 0.5.2)
