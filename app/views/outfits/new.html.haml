@@ -2,7 +2,9 @@
   #pet-preview
     = image_tag 'default_preview.png', :alt => ''
     %span
-  %h1 Dress to Impress
+  %h1
+    Dress to Impress
+    %span.beta-tag beta!
   %h2 Neopets wearables made easy!
   = form_tag load_pet_path, :id => 'load-pet-to-wardrobe' do
     = origin_tag root_path
