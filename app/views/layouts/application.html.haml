@@ -23,9 +23,7 @@
       - else
         = yield
         
-      - if content_for? :home_link
-        = yield :home_link
-      - else
+      - if home_link?
         %a#home-link{:href => root_path}
           %span Dress to Impress
 

@@ -1942,20 +1942,6 @@ body.outfits-new #read-more {
   float: right;
 }
 /* line 135, ../../../app/stylesheets/outfits/_new.sass */
-body.outfits-new #tell-the-world {
-  font-size: 87.5%;
-  left: 0;
-  position: absolute;
-  top: 0;
-}
-/* line 140, ../../../app/stylesheets/outfits/_new.sass */
-body.outfits-new #tell-the-world img {
-  margin-bottom: -0.25em;
-  margin-right: 0.25em;
-  height: 16px;
-  width: 16px;
-}
-/* line 146, ../../../app/stylesheets/outfits/_new.sass */
 body.outfits-new .beta-tag {
   color: red;
   font-size: 50%;
