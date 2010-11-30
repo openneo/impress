@@ -21,6 +21,14 @@ module ApplicationHelper
     end)
   end
   
+  def hide_home_link
+    @hide_home_link = true
+  end
+  
+  def home_link?
+    !@hide_home_link
+  end
+  
   JAVASCRIPT_LIBRARIES = {
     :addthis => 'http://s7.addthis.com/js/250/addthis_widget.js#username=openneo',
     :bitly => 'http://bit.ly/javascript-api.js?version=latest&login=openneo&apiKey=R_4d0438829b7a99860de1d3edf55d8dc8',

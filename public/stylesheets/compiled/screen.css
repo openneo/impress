@@ -1340,7 +1340,7 @@ body.outfits-edit #preview-outfits > ul > li.loading .outfit-star {
 }
 /* line 71, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li.loading.active .outfit-star {
-  background-image: url('/images/loading_current_outfit.gif?1290649989');
+  background-image: url('/images/loading_current_outfit.gif?1290738816');
 }
 /* line 73, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li h4 {
@@ -1559,7 +1559,7 @@ body.outfits-edit #new-outfit.loading .outfit-star {
 }
 /* line 71, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit.loading.active .outfit-star {
-  background-image: url('/images/loading_current_outfit.gif?1290649989');
+  background-image: url('/images/loading_current_outfit.gif?1290738816');
 }
 /* line 73, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit h4 {
@@ -1940,20 +1940,6 @@ body.outfits-new #sections img:hover {
 /* line 133, ../../../app/stylesheets/outfits/_new.sass */
 body.outfits-new #read-more {
   float: right;
-}
-/* line 135, ../../../app/stylesheets/outfits/_new.sass */
-body.outfits-new #tell-the-world {
-  font-size: 87.5%;
-  left: 0;
-  position: absolute;
-  top: 0;
-}
-/* line 140, ../../../app/stylesheets/outfits/_new.sass */
-body.outfits-new #tell-the-world img {
-  margin-bottom: -0.25em;
-  margin-right: 0.25em;
-  height: 16px;
-  width: 16px;
 }
 
 /* line 2, ../../../app/stylesheets/outfits/_show.sass */

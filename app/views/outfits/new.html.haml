@@ -1,3 +1,4 @@
+- hide_home_link
 #outfit-forms
   #pet-preview
     = image_tag 'default_preview.png', :alt => ''
@@ -98,10 +99,6 @@
   = pet_name_tag
   %button{:type => "submit"}
     I pwn!
-- content_for :home_link do
-  %button#tell-the-world.button.addthis_button
-    %img{:src => "http://s7.addthis.com/static/t00/logo1414.gif"}
-    Tell the world!
 - content_for :javascripts do
-  = include_javascript_libraries :jquery, :addthis
+  = include_javascript_libraries :jquery
   = include_javascripts :new_outfit_package
