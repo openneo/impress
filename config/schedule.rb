@@ -22,9 +22,10 @@
 env :MAILTO, 'webmaster@openneo.net'
 
 every :day do
-  rake "items:spider_mall"
+  runner "Item.spider_mall!"
 end
 
+ItemsLimit = 20
 every :hour do
-  rake "items:spider_mall_assets"
+  runner "Item.spider_mall_assets! #{ItemsLimit}"
 end
