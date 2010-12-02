@@ -12,5 +12,5 @@ end
 
 ItemsLimit = 20
 every :hour do
-  runner "Item.spider_mall_assets\\! #{ItemsLimit}"
+  runner "Item.spider_mall_assets\\!\\(#{ItemsLimit}\\)"
 end
