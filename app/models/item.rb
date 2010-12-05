@@ -31,7 +31,8 @@ class Item < ActiveRecord::Base
   
   scope :spidered_longest_ago, order(["(#{Item.arel_table[:last_spidered].eq(nil).to_sql}) DESC", arel_table[:last_spidered].desc])
   
-  scope :sold_in_mall, where(arel_table[:sold_in_mall].eq(true))
+  scope :sold_in_mall, where(:sold_in_mall => true)
+  scope :not_sold_in_mall, where(:sold_in_mall => false)
   
   # Not defining validations, since this app is currently read-only
   
@@ -304,11 +305,28 @@ class Item < ActiveRecord::Base
           Rails.logger.warn "Error parsing JSON at #{uri}, skipping: #{e.message}"
         end
       end
-      puts "#{items.size} items total"
-      # Remove items from the list that already exist, so as to avoid
-      # unnecessary saves
-      existing_item_ids = Item.find_all_by_id(items.keys, :select => :id).map(&:id)
-      items = items.except *existing_item_ids
+      puts "#{items.size} items found"
+      all_item_ids = items.keys
+      # Find which of these already exist but aren't marked as sold_in_mall so
+      # we can update them as being sold
+      Item.not_sold_in_mall.where(:id => items.keys).select([:id, :name]).each do |item|
+        items.delete(item.id)
+        item.sold_in_mall = true
+        item.save
+        puts "#{item.name} (#{item.id}) now in mall, updated"
+      end
+      # Find items marked as sold_in_mall so we can skip those we just found
+      # if they already are properly marked, and mark those that we didn't just
+      # find as no longer sold_in_mall
+      Item.sold_in_mall.select([:id, :name]).each do |item|
+        if all_item_ids.include?(item.id)
+          items.delete(item.id)
+        else
+          item.sold_in_mall = false
+          item.save
+          puts "#{item.name} (#{item.id}) no longer in mall, removed sold_in_mall status"
+        end
+      end
       puts "#{items.size} new items"
       items.each do |item_id, item|
         item.save
