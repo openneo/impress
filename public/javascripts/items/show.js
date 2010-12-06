@@ -20,6 +20,10 @@ String.prototype.article = function () {
   return 'aeiou'.indexOf(this.charAt(0).toLowerCase()) == -1 ? 'a' : 'an'
 }
 
+function impressUrl(path) {
+  return 'http://' + IMPRESS_HOST + path;
+}
+
 function LoadError(base_msg) {
   this.render = function (args) {
     var msg = base_msg, token, article_token;
@@ -32,7 +36,7 @@ function LoadError(base_msg) {
       msg = msg.replace(token, args[i]);
     }
     return "Whoops - we've never seen " + msg + " before! If you have, please " +
-    "<a href='/'>submit that pet's name</a> as soon as you " +
+    "<a href='http://" + IMPRESS_HOST + "'>submit that pet's name</a> as soon as you " +
     "get the chance! Thanks!";
   }
 }
@@ -72,7 +76,7 @@ function PetType() {
     speciesList.filter('.current').removeClass('current');
     this.link.addClass('current');
     customize_more_el.attr('href',
-      '/wardrobe#species=' + this.species_id + 
+      'http://impress.openneo.net/wardrobe?species=' + this.species_id + 
       '&color=' + this.color_id + '&objects[]=' + Item.current.id);
     if(this.activated) {
       Preview.enable();
@@ -218,7 +222,7 @@ Preview = new function Preview() {
       '100%', // width
       '100%', // height
       '9', // required version
-      null, // express install URL
+      impressUrl('/assets/js/swfobject/expressInstall.swf'), // express install URL
       {}, // flashvars
       {'wmode': 'transparent', 'allowscriptaccess': 'always'} // params
     );

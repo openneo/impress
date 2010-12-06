@@ -29,6 +29,21 @@ module ApplicationHelper
     !@hide_home_link
   end
   
+  JAVASCRIPT_LIBRARIES = {
+    :addthis => 'http://s7.addthis.com/js/250/addthis_widget.js#username=openneo',
+    :bitly => 'http://bit.ly/javascript-api.js?version=latest&login=openneo&apiKey=R_4d0438829b7a99860de1d3edf55d8dc8',
+    :html5 => 'http://html5shim.googlecode.com/svn/trunk/html5.js',
+    :jquery => 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js',
+    :jquery_tmpl => 'http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js',
+    :swfobject => 'http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js'
+  }
+  
+  def include_javascript_libraries(*library_names)
+    raw(library_names.inject('') do |html, name|
+      html + javascript_include_tag(JAVASCRIPT_LIBRARIES[name])
+    end)
+  end
+  
   def login_path_with_return_to
     login_path :return_to => request.fullpath
   end
