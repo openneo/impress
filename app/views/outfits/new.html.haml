@@ -1,5 +1,4 @@
 - hide_home_link
-- javascript_chain :jquery, 'pet_query', 'outfits/new'
 #outfit-forms
   #pet-preview
     = image_tag 'default_preview.png', :alt => ''
@@ -102,3 +101,6 @@
   = pet_name_tag
   %button{:type => "submit"}
     I pwn!
+- content_for :javascripts do
+  = include_javascript_libraries :jquery
+  = include_javascripts :new_outfit_package
