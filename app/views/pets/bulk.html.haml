@@ -1,3 +1,4 @@
+- javascript_chain :jquery, 'pet_query', 'pets/bulk'
 - unless user_signed_in?
   %p.warning
     = link_to 'You are not logged in!', login_path(:return_to => bulk_pets_path)
@@ -28,6 +29,3 @@
     %textarea
     %button#bulk-pets-form-add{:type => "button"} Add
     %button#bulk-pets-form-clear{:type => "button"} Clear
-- content_for :javascripts do
-  = include_javascript_libraries :jquery
-  = include_javascripts :bulk_pets_package

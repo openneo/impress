@@ -1,3 +1,5 @@
+- html5
+- javascript_chain :jquery, :swfobject, :jquery_tmpl, 'wardrobe', 'outfits/edit'
 - add_body_class 'fullscreen'
 %a#home-link{:href => "/"}
   %span Dress to Impress
@@ -105,8 +107,3 @@
     \/
     %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
   </li>
-- content_for :javascripts do
-  /[if IE]
-    = include_javascript_libraries :html5
-  = include_javascript_libraries :jquery, :swfobject, :jquery_tmpl
-  = include_javascripts :edit_outfit_package
