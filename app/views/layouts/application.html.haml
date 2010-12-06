@@ -6,13 +6,11 @@
       - if content_for? :title
         &mdash;
         = yield :title
-    = yield(:html5)
     = stylesheet_link_tag "compiled/screen"
     = csrf_meta_tag
     = signed_in_meta_tag
-    - javascript_chain 'analytics'
-    = javascript_chains
   %body{:class => body_class}
+    = javascript_include_tag "analytics"
     #container
       - if content_for? :title
         %h1#title= yield :title
@@ -62,3 +60,4 @@
         %p
           Images &copy; 2000-2010 Neopets, Inc. All Rights Reserved.
           Used With Permission
+      = yield(:javascripts)
