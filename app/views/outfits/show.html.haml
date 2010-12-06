@@ -1,4 +1,5 @@
 - title @outfit.name
+- javascript_chain :jquery, :swfobject, 'wardrobe', 'outfits/show'
 %a.button#outfit-wardrobe-link{:href => wardrobe_path(:anchor => @outfit.to_query)}
   Edit a copy
 #outfit-user
@@ -9,8 +10,5 @@
 #preview-wrapper
   #preview-swf
 #outfit-items= render @outfit.worn_items
-- content_for :javascripts do
-  :javascript
-    var INITIAL_OUTFIT_DATA = #{@outfit.to_json};
-  = include_javascript_libraries :jquery, :swfobject
-  = include_javascripts :show_outfit_package
+:javascript
+  var INITIAL_OUTFIT_DATA = #{@outfit.to_json};
