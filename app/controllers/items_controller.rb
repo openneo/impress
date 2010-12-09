@@ -1,5 +1,6 @@
 class ItemsController < ApplicationController
   before_filter :set_query
+  caches_action :show, :layout => false
   
   def index
     if params.has_key?(:q)

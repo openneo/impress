@@ -1,3 +1,5 @@
+# requires item sweeper at bottom
+
 class Item < ActiveRecord::Base
   SwfAssetType = 'object'
   
@@ -705,3 +707,5 @@ class Item < ActiveRecord::Base
   
   class SearchError < ArgumentError;end
 end
+
+require 'item_sweeper'
