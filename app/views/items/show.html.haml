@@ -34,7 +34,5 @@
   var CURRENT_ITEM_ZONES_RESTRICT = #{@item.zones_restrict.inspect},
     IMPRESS_HOST = #{RemoteImpressHost.inspect};
 
-- content_for :javascripts do
-  = javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js',
-    'http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js',
-    'items/show'
+= include_javascript_libraries :jquery, :swfobject
+= javascript_include_tag 'items/show'
