@@ -39,6 +39,8 @@ group :development_async, :production do
   gem 'em-http-request',:git => 'git://github.com/igrigorik/em-http-request.git', :require => 'em-http'
   
   gem 'thin', '~> 1.2.7'
+  
+  gem 'memcache-client', '~> 1.8.5', :require => ['memcache', 'memcache/event_machine']
 end
 
 group :test do
