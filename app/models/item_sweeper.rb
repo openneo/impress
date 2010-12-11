@@ -1,5 +1,3 @@
-puts 'Hey! Item sweeper!'
-
 class ItemSweeper < ActionController::Caching::Sweeper
   observe Item
 

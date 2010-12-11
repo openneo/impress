@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   DefaultAuthServerId = 1
+  PreviewTopContributorsCount = 3
   
   has_many :contributions
   has_many :outfits
@@ -36,5 +37,9 @@ class User < ActiveRecord::Base
       user.save
     end
     user
+  end
+  
+  def self.points_required_to_pass_top_contributor(offset)
+    User.top_contributors.select(:points).limit(1).offset(offset).first.points
   end
 end
