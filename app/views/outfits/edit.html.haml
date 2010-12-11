@@ -1,112 +1,110 @@
 - add_body_class 'fullscreen'
-%a#home-link{:href => "/"}
-  %span Dress to Impress
-%h1#title Planning an outfit
-#pet-type-not-found.possible-error
-  We haven't seen that combination before. Have you?
-  Submit the pet's name if you have!
-#preview-toolbar
-  %form#pet-type-form
-    %select{:name => "color"}
-    %select{:name => "species"}
-    %input{:type => "submit", :value => "Go"}/
-  %form#pet-state-form
-    Gender/Emotions:
+- cache do
+  %a#home-link{:href => "/"}
+    %span Dress to Impress
+  %h1#title Planning an outfit
+  #pet-type-not-found.possible-error
+    We haven't seen that combination before. Have you?
+    Submit the pet's name if you have!
+  #preview-toolbar
+    %form#pet-type-form
+      %select{:name => "color"}
+      %select{:name => "species"}
+      %input{:type => "submit", :value => "Go"}/
+    %form#pet-state-form
+      Gender/Emotions:
+      %ul
+    #save-outfit-wrapper
+      %button#save-outfit Save outfit
+      %button#save-outfit-not-signed-in Log in to save outfit
+      %button#save-current-outfit Save &quot;<span>current outfit</span>&quot;
+      %button#save-outfit-copy Save a copy
+  #preview
+    #preview-swf
+      #preview-swf-container
+        %p Flash and Javascript (but not Java!) are required to preview outfits.
+        %p If this message stays after the page is done loading, check those first.
+    #preview-sidebar
+      #outfit-not-found Outfit not found
+      #save-success Outfit successfully saved
+      #save-error
+      #preview-closet.sidebar-view
+        %a#preview-sidebar-nav-outfits.preview-sidebar-nav{:href => '#'} Your outfits
+        %h2 Closet
+        %ul
+        %p#fullscreen-copyright
+          Images © 2000-2010 Neopets, Inc. All Rights Reserved.
+          Used With Permission
+      #preview-outfits.sidebar-view
+        %a#preview-sidebar-nav-closet.preview-sidebar-nav{:href => "#"} &larr; Back to Closet
+        %h2 Your outfits
+        %ul
+      #preview-saving-outfit.sidebar-view
+        %a#preview-sidebar-nav-cancel-save.preview-sidebar-nav{:href => '#'} &larr; Cancel
+        %h2 Saving new outfit
+        #new-outfit
+          %form#new-outfit-form
+            %header
+              .outfit-star
+              %h4
+                %input#new-outfit-name{:type => 'text', :placeholder => 'Outfit name'}
+              %button{:type => 'submit'} Save
+  %form#preview-search-form
+    %header
+      %h2 Add an item
+      %input{:name => "query", :placeholder => "Search items...", :type => "search"}/
+      %input{:type => "submit", :value => "Go"}/
+      #preview-search-form-pagination
+      %a#preview-search-form-clear{:href => "#"} clear
+    %dl#preview-search-form-help
+      %div
+        %dt kreludor "altador cup" -background
+        %dd
+          returns any item with the word "kreludor" and the phrase "altador cup"
+          in it, but not the word "background"
+      %div
+        %dt collar -is:nc -is:pb
+        %dd
+          returns any item with the word "collar" in it, but is not from the NC
+          mall, and is not from a deluxe paint brush set
+      %div
+        %dt
+          %span species:
+          %span.search-helper{"data-search-filter" => "species"} Acara
+        %dd
+          returns any item a
+          %span.search-helper{"data-search-filter" => "species"} Acara
+          can wear
+      %div
+        %dt
+          %span type:
+          %span.search-helper{"data-search-filter" => "type"} background
+        %dd
+          returns any item that fills a
+          %span.search-helper{"data-search-filter" => "type"} background
+          zone
+    #preview-search-form-loading Loading...
+    #preview-search-form-error.possible-error
+    #preview-search-form-no-results
+      No results for "<span></span>"
     %ul
-  #save-outfit-wrapper
-    %button#save-outfit Save outfit
-    %button#save-outfit-not-signed-in Log in to save outfit
-    %button#save-current-outfit Save &quot;<span>current outfit</span>&quot;
-    %button#save-outfit-copy Save a copy
-#preview
-  #preview-swf
-    #preview-swf-container
-      %p Flash and Javascript (but not Java!) are required to preview outfits.
-      %p If this message stays after the page is done loading, check those first.
-  #preview-sidebar
-    #outfit-not-found Outfit not found
-    #save-success Outfit successfully saved
-    #save-error
-    #preview-closet.sidebar-view
-      %a#preview-sidebar-nav-outfits.preview-sidebar-nav{:href => '#'} Your outfits
-      %h2 Closet
-      %ul
-      %p#fullscreen-copyright
-        Images © 2000-2010 Neopets, Inc. All Rights Reserved.
-        Used With Permission
-    #preview-outfits.sidebar-view
-      %a#preview-sidebar-nav-closet.preview-sidebar-nav{:href => "#"} &larr; Back to Closet
-      %h2 Your outfits
-      %ul
-    #preview-saving-outfit.sidebar-view
-      %a#preview-sidebar-nav-cancel-save.preview-sidebar-nav{:href => '#'} &larr; Cancel
-      %h2 Saving new outfit
-      #new-outfit
-        %form#new-outfit-form
-          %header
-            .outfit-star
-            %h4
-              %input#new-outfit-name{:type => 'text', :placeholder => 'Outfit name'}
-            %button{:type => 'submit'} Save
-%form#preview-search-form
-  %header
-    %h2 Add an item
-    %input{:name => "query", :placeholder => "Search items...", :type => "search"}/
-    %input{:type => "submit", :value => "Go"}/
-    #preview-search-form-pagination
-    %a#preview-search-form-clear{:href => "#"} clear
-  %dl#preview-search-form-help
-    %div
-      %dt kreludor "altador cup" -background
-      %dd
-        returns any item with the word "kreludor" and the phrase "altador cup"
-        in it, but not the word "background"
-    %div
-      %dt collar -is:nc -is:pb
-      %dd
-        returns any item with the word "collar" in it, but is not from the NC
-        mall, and is not from a deluxe paint brush set
-    %div
-      %dt
-        %span species:
-        %span.search-helper{"data-search-filter" => "species"} Acara
-      %dd
-        returns any item a
-        %span.search-helper{"data-search-filter" => "species"} Acara
-        can wear
-    %div
-      %dt
-        %span type:
-        %span.search-helper{"data-search-filter" => "type"} background
-      %dd
-        returns any item that fills a
-        %span.search-helper{"data-search-filter" => "type"} background
-        zone
-  #preview-search-form-loading Loading...
-  #preview-search-form-error.possible-error
-  #preview-search-form-no-results
-    No results for "<span></span>"
-  %ul
-#no-assets-full-message
-  We haven't seen this item on this body type before. Have you? Submit its name on the home page if you have!
-%script#outfit-template{:type => 'text/x-jquery-tmpl'}
-  <li class="outfit-${id}{{if starred}} starred{{/if}}">
-  %header
-    %button.outfit-delete &times;
-    .outfit-star
-    %h4 ${name}
-    %a.outfit-rename-button{:href => '#'} rename
-    %form.outfit-rename-form
-      %input.outfit-rename-field{:type => 'text'}
-  %input.outfit-url{:type => 'text', :value => "http://#{request.host}/outfits/${id}"}
-  .outfit-delete-confirmation
-    %span Delete forever?
-    %a.outfit-delete-confirmation-yes{:href => '#'} yes
-    \/
-    %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
-  </li>
-- content_for :javascripts do
-  /[if IE]
-    = include_javascript_libraries :html5
+  #no-assets-full-message
+    We haven't seen this item on this body type before. Have you? Submit its name on the home page if you have!
+  %script#outfit-template{:type => 'text/x-jquery-tmpl'}
+    <li class="outfit-${id}{{if starred}} starred{{/if}}">
+    %header
+      %button.outfit-delete &times;
+      .outfit-star
+      %h4 ${name}
+      %a.outfit-rename-button{:href => '#'} rename
+      %form.outfit-rename-form
+        %input.outfit-rename-field{:type => 'text'}
+    %input.outfit-url{:type => 'text', :value => "http://#{request.host}/outfits/${id}"}
+    .outfit-delete-confirmation
+      %span Delete forever?
+      %a.outfit-delete-confirmation-yes{:href => '#'} yes
+      \/
+      %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
+    </li>
   = include_javascript_libraries :jquery, :swfobject, :jquery_tmpl
   = include_javascripts :edit_outfit_package
