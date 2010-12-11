@@ -1,6 +1,8 @@
 class PetsController < ApplicationController
   rescue_from Pet::PetNotFound, :with => :pet_not_found
   
+  cache_sweeper :user_sweeper
+  
   DESTINATIONS = {
     'needed_items' => '?',
     'root' => '#',

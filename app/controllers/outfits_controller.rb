@@ -29,9 +29,13 @@ class OutfitsController < ApplicationController
   end
   
   def new
-    @colors = Color.all_ordered_by_name
-    @species = Species.all_ordered_by_name
-    @top_contributors = User.top_contributors.limit(3)
+    unless fragment_exist?(:action_suffix => 'start_from_scratch_form_content')
+      @colors = Color.all_ordered_by_name
+      @species = Species.all_ordered_by_name
+    end
+    unless fragment_exist?(:action_suffix => 'top_contributors')
+      @top_contributors = User.top_contributors.limit(User::PreviewTopContributorsCount)
+    end
   end
   
   def show
