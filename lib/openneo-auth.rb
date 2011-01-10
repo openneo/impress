@@ -43,7 +43,8 @@ module Openneo
         query = {
           :app => config.app,
           :session_id => session[:session_id],
-          :path => params[:return_to] || '/'
+          :path => params[:return_to] || '/',
+          :from => params[:from]
         }.to_query
         uri = URI::HTTP.build({
           :host => config.auth_server,
@@ -51,6 +52,13 @@ module Openneo
           :query => query
         })
         uri.to_s
+      end
+      
+      def remote_settings_url
+        URI::HTTP.build({
+          :host => config.auth_server,
+          :path => '/users/edit'
+        }).to_s
       end
     end
   end

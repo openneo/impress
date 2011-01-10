@@ -34,6 +34,7 @@
           %span
             == Hey, #{link_to current_user.name, user_contributions_path(current_user)}!
             == You have #{current_user.points} points.
+          = link_to 'Settings', Openneo::Auth.remote_settings_url
           = link_to 'Log out', logout_path_with_return_to
         - else
           = link_to login_path_with_return_to, :id => 'userbar-log-in' do
