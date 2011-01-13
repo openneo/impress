@@ -210,9 +210,9 @@ class Item < ActiveRecord::Base
     # due to how the parser works
     items = {}
     item_ids = []
-    info_registry.each do |info|
+    info_registry.each do |item_id, info|
       if info && info[:is_compatible]
-        item_ids << info[:obj_info_id].to_i
+        item_ids << item_id.to_i
       end
     end
     existing_relationships_by_item_id_and_swf_asset_id = {}
@@ -227,8 +227,8 @@ class Item < ActiveRecord::Base
         relationships_by_swf_asset_id
     end
     swf_asset_ids = []
-    asset_registry.each_with_index do |asset_data, index|
-      swf_asset_ids << index if asset_data
+    asset_registry.each do |asset_id, asset_data|
+      swf_asset_ids << asset_id.to_i if asset_data
     end
     existing_swf_assets = SwfAsset.object_assets.find_all_by_id swf_asset_ids
     existing_swf_assets_by_id = {}
@@ -236,7 +236,7 @@ class Item < ActiveRecord::Base
       existing_swf_assets_by_id[swf_asset.id] = swf_asset
     end
     relationships_by_item_id = {}
-    asset_registry.each do |asset_data|
+    asset_registry.each do |asset_id, asset_data|
       if asset_data
         item_id = asset_data[:obj_info_id].to_i
         next unless item_ids.include?(item_id) # skip incompatible
@@ -246,7 +246,7 @@ class Item < ActiveRecord::Base
           item.id = item_id
           items[item_id] = item
         end
-        item.origin_registry_info = info_registry[item.id]
+        item.origin_registry_info = info_registry[item.id.to_s]
         item.current_body_id = pet_type.body_id
         swf_asset_id = asset_data[:asset_id].to_i
         swf_asset = existing_swf_assets_by_id[swf_asset_id]

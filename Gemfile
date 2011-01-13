@@ -6,10 +6,12 @@ gem 'rails', '3.0.3'
 gem 'compass', '~> 0.10.1'
 gem 'haml', '~> 3.0.18'
 gem 'rdiscount', '~> 1.6.5'
-gem 'RocketAMF', '~> 0.2.1'
 gem 'will_paginate', '~> 3.0.pre2'
 gem 'warden', '~> 1.0.1'
 gem 'rails_warden', '~> 0.5.2'
+
+# unstable version of RocketAMF interprets info registry as a hash instead of an array
+gem 'RocketAMF', :git => 'git://github.com/warhammerkid/rocket-amf.git'
 
 gem 'msgpack', '~> 0.4.3'
 gem 'openneo-auth-signatory', '~> 0.1.0'
