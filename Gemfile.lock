@@ -32,10 +32,15 @@ GIT
   specs:
     mysqlplus (0.1.1)
 
+GIT
+  remote: git://github.com/warhammerkid/rocket-amf.git
+  revision: aecb8ce8b54e822bb594a53371801b446ecb26af
+  specs:
+    RocketAMF (0.2.1)
+
 GEM
   remote: http://rubygems.org/
   specs:
-    RocketAMF (0.2.1)
     aaronh-chronic (0.3.9)
     abstract (1.0.0)
     actionmailer (3.0.3)
@@ -153,7 +158,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  RocketAMF (~> 0.2.1)
+  RocketAMF!
   addressable
   compass (~> 0.10.1)
   em-http-request!
