@@ -7,6 +7,8 @@ class User < ActiveRecord::Base
   
   scope :top_contributors, order('points DESC').where(arel_table[:points].gt(0))
   
+  devise :rememberable
+  
   def contribute!(pet)
     new_contributions = []
     new_points = 0

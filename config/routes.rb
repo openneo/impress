@@ -1,5 +1,7 @@
 OpenneoImpressItems::Application.routes.draw do |map|
   root :to => 'outfits#new'
+  
+  devise_for :users
  
   match '/item_zone_sets.json' => 'ItemZoneSets#index'
   

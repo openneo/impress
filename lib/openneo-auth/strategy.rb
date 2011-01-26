@@ -15,23 +15,8 @@ module Openneo
             fail! e.message
           else
             auth_session.destroy!
-            cookies.permanent.signed[:remember_me] = auth_session.user.id
+            auth_session.user.remember_me!
             success! auth_session.user
-          end
-        end
-      end
-      
-      class Remember < Warden::Strategies::Base
-        def valid?
-          cookies.signed[:remember_me]
-        end
-        
-        def authenticate!
-          user = Auth.config.find_user_by_remembering cookies.signed[:remember_me]
-          if user
-            success! user
-          else
-            fail!
           end
         end
       end
