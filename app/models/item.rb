@@ -71,6 +71,10 @@ class Item < ActiveRecord::Base
     zones
   end
   
+  def affected_zones
+    restricted_zones + occupied_zones
+  end
+  
   def species_support_ids
     @species_support_ids_array ||= read_attribute('species_support_ids').split(',').map(&:to_i) rescue nil
   end
