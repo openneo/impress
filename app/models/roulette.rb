@@ -41,7 +41,7 @@ class Roulette
             item.affected_zones.each do |zone|
               checked_zone_id = zone.id
               next if checked_zone_id == zone_id
-              if item.species_support_ids.include?(@pet_type.species_id)
+              if item.species_support_ids.empty? || item.species_support_ids.include?(@pet_type.species_id)
                 if i = unoccupied_zone_ids.find_index(zone_id)
                   unoccupied_zone_ids.delete zone_id
                 else
