@@ -14,10 +14,12 @@ class Roulette
     # the list.
     unoccupied_zone_ids = Zone.all.map(&:id)
     swf_asset_count_by_zone_id = fitting_swf_assets.count(:group => :zone_id)
+    swf_asset_count_by_zone_id.default = 0
     @item_ids = []
     while !unoccupied_zone_ids.empty?
       zone_id = unoccupied_zone_ids.slice!(rand(unoccupied_zone_ids.count))
-      if swf_asset_count = swf_asset_count_by_zone_id[zone_id]
+      swf_asset_count = swf_asset_count_by_zone_id[zone_id]
+      if swf_asset_count > 0
         used_swf_asset_ids = []
         first_asset = true
         found_item = false
@@ -39,11 +41,17 @@ class Roulette
             item.affected_zones.each do |zone|
               checked_zone_id = zone.id
               next if checked_zone_id == zone_id
-              if i = unoccupied_zone_ids.find_index(zone_id)
-                unoccupied_zone_ids.delete zone_id
+              if item.species_support_ids.include?(@pet_type.species_id)
+                if i = unoccupied_zone_ids.find_index(zone_id)
+                  unoccupied_zone_ids.delete zone_id
+                else
+                  # This zone is already occupied, so this item is no good.
+                  pass = false
+                  break
+                end
               else
-                # This zone is already occupied, so this item is no good.
                 pass = false
+                break
               end
             end
             if pass
