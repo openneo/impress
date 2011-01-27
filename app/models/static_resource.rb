@@ -8,4 +8,8 @@ class StaticResource
   def self.find(id)
     @objects[id-1]
   end
+  
+  def self.count
+    @objects.size
+  end
 end

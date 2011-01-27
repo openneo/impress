@@ -10,28 +10,29 @@ class PetsController < ApplicationController
   }
 
   def load
-  
-    # TODO: include point value with JSON once contributions implemented
-    
-    raise Pet::PetNotFound unless params[:name]
-    @pet = Pet.load(params[:name])
-    if user_signed_in?
-      points = current_user.contribute! @pet
+    if params[:name] == '!'
+      redirect_to roulette_path
     else
-      @pet.save
-      points = true
-    end
-    respond_to do |format|
-      format.html do
-        destination = params[:destination] || params[:origin]
-        destination = 'root' unless DESTINATIONS[destination]
-        query_joiner = DESTINATIONS[destination]
-        path = send("#{destination}_path") + query_joiner + @pet.wardrobe_query
-        redirect_to path
+      raise Pet::PetNotFound unless params[:name]
+      @pet = Pet.load(params[:name])
+      if user_signed_in?
+        points = current_user.contribute! @pet
+      else
+        @pet.save
+        points = true
       end
-      
-      format.json do
-        render :json => points
+      respond_to do |format|
+        format.html do
+          destination = params[:destination] || params[:origin]
+          destination = 'root' unless DESTINATIONS[destination]
+          query_joiner = DESTINATIONS[destination]
+          path = send("#{destination}_path") + query_joiner + @pet.wardrobe_query
+          redirect_to path
+        end
+        
+        format.json do
+          render :json => points
+        end
       end
     end
   end

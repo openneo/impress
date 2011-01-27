@@ -10,6 +10,8 @@ OpenneoImpressItems::Application.routes.draw do |map|
   match '/pet_states/:pet_state_id/swf_assets.json' => 'swf_assets#index', :as => :pet_state_swf_assets
   match '/species/:species_id/color/:color_id/pet_type.json' => 'pet_types#show'
   
+  match '/roulette' => 'roulettes#new', :as => :roulette
+  
   resources :contributions, :only => [:index]
   resources :items, :only => [:index, :show] do
     collection do
