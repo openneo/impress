@@ -40,7 +40,7 @@ class Roulette
               checked_zone_id = zone.id
               next if checked_zone_id == zone_id
               if i = unoccupied_zone_ids.find_index(zone_id)
-                unoccupied_zone_ids.slice! zone_id
+                unoccupied_zone_ids.delete zone_id
               else
                 # This zone is already occupied, so this item is no good.
                 pass = false
