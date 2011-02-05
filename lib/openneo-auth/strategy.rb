@@ -1,9 +1,9 @@
-require 'warden'
+require 'devise'
 
 module Openneo
   module Auth
     module Strategies
-      class Token < Warden::Strategies::Base
+      class Token < Devise::Strategies::Authenticatable
         def valid?
           session && session[:session_id]
         end
@@ -12,27 +12,15 @@ module Openneo
           begin
             auth_session = Session.find session[:session_id]
           rescue Session::NotFound => e
-            fail! e.message
+            pass
           else
             auth_session.destroy!
-            cookies.permanent.signed[:remember_me] = auth_session.user.id
             success! auth_session.user
           end
         end
-      end
-      
-      class Remember < Warden::Strategies::Base
-        def valid?
-          cookies.signed[:remember_me]
-        end
         
-        def authenticate!
-          user = Auth.config.find_user_by_remembering cookies.signed[:remember_me]
-          if user
-            success! user
-          else
-            fail!
-          end
+        def remember_me?
+          true
         end
       end
     end

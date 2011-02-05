@@ -1,8 +1,3 @@
-Rails.configuration.middleware.use RailsWarden::Manager do |manager|
-  manager.default_strategies :openneo_auth_remember, :openneo_auth_token
-  manager.failure_app = SessionsController.action(:failure)
-end
-
 require 'openneo-auth'
 require 'yaml'
 

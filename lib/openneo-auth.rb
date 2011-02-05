@@ -2,7 +2,6 @@ require 'openneo-auth/session'
 require 'openneo-auth/strategy'
 
 Warden::Strategies.add :openneo_auth_token, Openneo::Auth::Strategies::Token
-Warden::Strategies.add :openneo_auth_remember, Openneo::Auth::Strategies::Remember
 
 module Openneo
   module Auth

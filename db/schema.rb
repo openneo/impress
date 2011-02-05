@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101125160843) do
+ActiveRecord::Schema.define(:version => 20110126180835) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10, :null => false
@@ -133,11 +133,13 @@ ActiveRecord::Schema.define(:version => 20101125160843) do
   add_index "swf_assets", ["zone_id"], :name => "idx_swf_assets_zone_id"
 
   create_table "users", :force => true do |t|
-    t.string  "name",           :limit => 20,                    :null => false
-    t.integer "auth_server_id", :limit => 1,                     :null => false
-    t.integer "remote_id",                                       :null => false
-    t.integer "points",                       :default => 0,     :null => false
-    t.boolean "beta",                         :default => false, :null => false
+    t.string   "name",                :limit => 20,                    :null => false
+    t.integer  "auth_server_id",      :limit => 1,                     :null => false
+    t.integer  "remote_id",                                            :null => false
+    t.integer  "points",                            :default => 0,     :null => false
+    t.boolean  "beta",                              :default => false, :null => false
+    t.string   "remember_token"
+    t.datetime "remember_created_at"
   end
 
   create_table "zones", :force => true do |t|
