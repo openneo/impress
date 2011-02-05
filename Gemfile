@@ -7,8 +7,7 @@ gem 'compass', '~> 0.10.1'
 gem 'haml', '~> 3.0.18'
 gem 'rdiscount', '~> 1.6.5'
 gem 'will_paginate', '~> 3.0.pre2'
-gem 'warden', '~> 1.0.1'
-gem 'rails_warden', '~> 0.5.2'
+gem 'devise', '~> 1.1.5'
 
 # unstable version of RocketAMF interprets info registry as a hash instead of an array
 gem 'RocketAMF', :git => 'git://github.com/warhammerkid/rocket-amf.git'
