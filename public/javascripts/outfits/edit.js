@@ -185,9 +185,21 @@ View.Fullscreen = function (wardrobe) {
   var full = $(document.body).hasClass('fullscreen'), win = $(window),
     preview_el = $('#preview'), search_el = $('#preview-search-form'),
     preview_swf = $('#preview-swf'), sidebar_el = $('#preview-sidebar'),
-    footer = $('#footer');
+    footer = $('#footer'), jwindow = $(window), overrideFull = false;
   
   function fit() {
+    if(!overrideFull) {
+      var newFull = jwindow.height() > 500;
+      if(newFull != full) {
+        full = newFull;
+        $(document.body).toggleClass('fullscreen', full);
+        if(!full) {
+          preview_swf.removeAttr('style').css('visibility', 'visible');
+          preview_el.removeAttr('style');
+        }
+      }
+    }
+    
     if(full) {
       preview_swf = $('#preview-swf'); // swf replaced
       var available = {
@@ -229,10 +241,10 @@ View.Fullscreen = function (wardrobe) {
   var Konami=function(){var a={addEvent:function(b,c,d,e){if(b.addEventListener)b.addEventListener(c,d,false);else if(b.attachEvent){b["e"+c+d]=d;b[c+d]=function(){b["e"+c+d](window.event,e)};b.attachEvent("on"+c,b[c+d])}},input:"",pattern:"3838404037393739666513",load:function(b){this.addEvent(document,"keydown",function(c,d){if(d)a=d;a.input+=c?c.keyCode:event.keyCode;if(a.input.indexOf(a.pattern)!=-1){a.code(b);a.input=""}},this);this.iphone.load(b)},code:function(b){window.location=b},iphone:{start_x:0,start_y:0,stop_x:0,stop_y:0,tap:false,capture:false,keys:["UP","UP","DOWN","DOWN","LEFT","RIGHT","LEFT","RIGHT","TAP","TAP","TAP"],code:function(b){a.code(b)},load:function(b){a.addEvent(document,"touchmove",function(c){if(c.touches.length==1&&a.iphone.capture==true){c=c.touches[0];a.iphone.stop_x=c.pageX;a.iphone.stop_y=c.pageY;a.iphone.tap=false;a.iphone.capture=false;a.iphone.check_direction()}});a.addEvent(document,"touchend",function(){a.iphone.tap==true&&a.iphone.check_direction(b)},false);a.addEvent(document,"touchstart",function(c){a.iphone.start_x=c.changedTouches[0].pageX;a.iphone.start_y=c.changedTouches[0].pageY;a.iphone.tap=true;a.iphone.capture=true})},check_direction:function(b){x_magnitude=Math.abs(this.start_x-this.stop_x);y_magnitude=Math.abs(this.start_y-this.stop_y);x=this.start_x-this.stop_x<0?"RIGHT":"LEFT";y=this.start_y-this.stop_y<0?"DOWN":"UP";result=x_magnitude>y_magnitude?x:y;result=this.tap==true?"TAP":result;if(result==this.keys[0])this.keys=this.keys.slice(1,this.keys.length);this.keys.length==0&&this.code(b)}}};return a};
   konami = new Konami();
   konami.code = function () {
+    overrideFull = true;
     $(document.body).removeClass('fullscreen');
     preview_swf.removeAttr('style').css('visibility', 'visible');
     preview_el.removeAttr('style');
-    wardrobe.search.setPerPage(21);
     wardrobe.search.setItemsByQuery(wardrobe.search.request.query, {offset: wardrobe.search.request.offset});
     full = false;
   }
@@ -835,6 +847,7 @@ View.Search = function (wardrobe) {
   function updatePerPage() {
     var new_per_page = Math.floor(form.width() / object_width),
       offset, new_page;
+    if(!$(document.body).hasClass('fullscreen')) new_per_page *= 4;
     if(new_per_page != PAGINATION.PER_PAGE) {
       PAGINATION.PER_PAGE = new_per_page;
       wardrobe.search.setPerPage(PAGINATION.PER_PAGE);

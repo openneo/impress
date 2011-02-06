@@ -170,11 +170,14 @@ body.outfits-edit
     top: 0
     width: 100%
   #preview-sidebar
+    +border-radius(10px)
+    border: 1px solid $soft-border-color
     float: left
     height: $preview-dimension
     margin-left: $sidebar-margin
     margin-bottom: 1em
-    width: $container_width - $preview-dimension - $sidebar-margin
+    overflow: auto
+    width: $container_width - $preview-dimension - $sidebar-margin - 2px
     &.viewing-outfits
       #preview-closet
         display: none
@@ -187,6 +190,11 @@ body.outfits-edit
         display: none
       #preview-saving-outfit
         display: block
+    .sidebar-view
+      h2
+        margin: 
+          bottom: .25em
+          left: $sidebar-unit-horizontal-padding
   #preview-closet
     h2
       margin-bottom: 0
@@ -282,19 +290,11 @@ body.outfits-edit
     #preview
       width: 100%
     #preview-sidebar
-      +border-radius(10px)
-      border: 1px solid $soft-border-color
       float: right
       height: 100%
       margin: 0
-      overflow: auto
       position: relative
       width: $sidebar-width
-      .sidebar-view
-        h2
-          margin: 
-            bottom: .25em
-            left: $sidebar-unit-horizontal-padding
       &.viewing-saving-outfit
         height: auto
         max-height: 100%
