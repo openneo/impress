@@ -824,11 +824,11 @@ body.outfits-edit #pet-state-form label:active {
   top: 1px;
 }
 /* line 147, ../../../app/stylesheets/outfits/_edit.sass */
-body.outfits-edit #pet-state-form li.selected label {
+body.outfits-edit #pet-state-form li.selected button {
   background: #0b61a4 url('/images/alert-overlay.png?1296599919') repeat-x;
 }
 /* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
-body.outfits-edit #pet-state-form li.selected label:hover {
+body.outfits-edit #pet-state-form li.selected button:hover {
   background-color: #005093;
 }
 /* line 149, ../../../app/stylesheets/outfits/_edit.sass */

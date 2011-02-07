@@ -718,42 +718,35 @@ View.PetStateForm = function (wardrobe) {
   var INPUT_NAME = 'pet_state_id', form_query = '#pet-state-form',
     form = $(form_query),
     ul = form.children('ul'),
-    radio_query = form_query + ' input[name=' + INPUT_NAME + ']';
-  $(radio_query).live('click', function () {
-    wardrobe.outfit.setPetStateById(+this.value);
+    button_query = form_query + ' button';
+  $(button_query).live('click', function (e) {
+    e.preventDefault();
+    wardrobe.outfit.setPetStateById(+$(this).data('value'));
   });
   
   function updatePetState(pet_state) {
     if(pet_state) {
       ul.children('li.selected').removeClass('selected');
-      $(radio_query + '[value=' + pet_state.id + ']')
-        .attr('checked', 'checked').parent().addClass('selected');
+      $(button_query + '[data-value=' + pet_state.id + ']').parent().addClass('selected');
     }
   }
   
   wardrobe.outfit.bind('petTypeLoaded', function (pet_type) {
-    var ids = pet_type.pet_state_ids, i, id, li, radio, label;
+    var ids = pet_type.pet_state_ids, i, id, li, button, label;
     ul.children().remove();
     if(ids.length == 1) {
       form.addClass('hidden');
     } else {
       form.removeClass('hidden');
       for(var i = 0; i < ids.length; i++) {
-        id = 'pet-state-radio-' + i;
+        id = 'pet-state-button-' + i;
         li = $('<li/>');
-        radio = $('<input/>', {
+        button = $('<button/>', {
           id: id,
-          name: INPUT_NAME,
-          type: 'radio',
-          value: ids[i]
+          text: i + 1,
+          "data-value": ids[i]
         });
-        label = $('<label/>', {
-          'for': id,
-          text: i + 1
-        });
-        if(i == 0) radio.attr('checked', 'checked');
-        radio.appendTo(li);
-        label.appendTo(li);
+        button.appendTo(li);
         li.appendTo(ul);
       }
       updatePetState(wardrobe.outfit.getPetState());
