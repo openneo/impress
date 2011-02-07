@@ -14,11 +14,16 @@
     %form#pet-state-form
       Gender/Emotions:
       %ul
-    #save-outfit-wrapper
+    #save-outfit-wrapper.saving-outfit
       %button#save-outfit Save outfit
       %button#save-outfit-not-signed-in Log in to save outfit
       %button#save-current-outfit Save &quot;<span>current outfit</span>&quot;
       %button#save-outfit-copy Save a copy
+      %form#save-outfit-form
+        .outfit-star
+        %input#new-outfit-name{:type => 'text', :placeholder => 'Outfit name'}
+        %button#save-outfit-finish{:type => 'submit'} Save
+        %button#save-outfit-cancel{:type => 'button'} Cancel
   #preview
     #preview-swf
       #preview-swf-container

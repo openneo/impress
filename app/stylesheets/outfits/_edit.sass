@@ -151,8 +151,9 @@ body.outfits-edit
   #save-outfit-wrapper
     float: right
     button
-      +loud-awesome-button-color
       display: none
+  #save-outfit, #save-outfit-not-signed-in, #save-current-outfit, #save-outfit-copy, #save-outfit-finish
+    +loud-awesome-button-color
   #preview
     clear: both
   #preview-swf
@@ -448,16 +449,36 @@ body.outfits-edit
   #preview-sidebar-nav-outfits, #save-outfit-signed-in
     display: none
   
+  form#save-outfit-form
+    +outfit
+    display: none
+    margin-right: 0
+    padding: 0
+    
+    .outfit-star, input, button
+      +inline-block
+      float: none
+      vertical-align: top
+    
+    .outfit-star
+      margin-top: .25em
+  
   &.user-signed-in
     #preview-sidebar-nav-outfits
       display: block
     #save-outfit
       display: inline-block
-    #save-outfit-wrapper.active-outfit
-      #save-outfit
-        display: none
-      #save-current-outfit, #save-outfit-copy
-        display: inline-block
+    #save-outfit-wrapper
+      &.active-outfit
+        #save-outfit
+          display: none
+        #save-current-outfit, #save-outfit-copy
+          display: inline-block
+      &.saving-outfit
+        #save-outfit-form
+          display: block
+        #save-outfit, #save-current-outfit, #save-outfit-copy
+          display: none
   
   &.user-not-signed-in
     #save-outfit-not-signed-in
