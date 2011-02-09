@@ -23,7 +23,7 @@ gem 'addressable', :require => ['addressable/template', 'addressable/uri']
 
 gem 'whenever', '~> 0.6.2', :require => false
 
-group :development_async, :production do
+group :development_async do
   # async wrappers
   gem 'eventmachine',     :git => 'git://github.com/eventmachine/eventmachine.git'
   gem 'rack-fiber_pool',  :require => 'rack/fiber_pool'
@@ -38,7 +38,9 @@ group :development_async, :production do
 
   # async http requires
   gem 'em-http-request',:git => 'git://github.com/igrigorik/em-http-request.git', :require => 'em-http'
-  
+end
+
+group :production do
   gem 'thin', '~> 1.2.7'
   
   gem 'memcache-client', '~> 1.8.5', :require => ['memcache', 'memcache/event_machine']
