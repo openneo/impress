@@ -46,5 +46,3 @@ end
 LocalImpressHost = 'newimpress.openneo.net'
 
 RemoteImpressHost = 'impress.openneo.net'
-
-USE_FIBER_POOL = true
