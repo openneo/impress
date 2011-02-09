@@ -12,7 +12,8 @@ module RocketAMF
       def fetch
         uri = @service.gateway.uri
         data = envelope.serialize
-        if defined?(EventMachine) && EventMachine.respond_to?(:reactor_running?) && EventMachine.reactor_running?
+        # TODO: re-enable if we go back to using threads
+        if false && defined?(EventMachine) && EventMachine.respond_to?(:reactor_running?) && EventMachine.reactor_running?
           req = EM::HttpRequest.new(uri).post :body => data
           response_body = req.response
         else
