@@ -43,6 +43,8 @@ end
 group :production do
   gem 'thin', '~> 1.2.7'
   
+  gem 'mysql2'
+  
   gem 'memcache-client', '~> 1.8.5', :require => ['memcache', 'memcache/event_machine']
 end
 
