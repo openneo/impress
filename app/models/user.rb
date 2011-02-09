@@ -42,6 +42,7 @@ class User < ActiveRecord::Base
   end
   
   def self.points_required_to_pass_top_contributor(offset)
-    User.top_contributors.select(:points).limit(1).offset(offset).first.points
+    user = User.top_contributors.select(:points).limit(1).offset(offset).first
+    user ? user.points : 0
   end
 end
