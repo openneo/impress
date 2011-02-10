@@ -15,10 +15,19 @@
       Gender/Emotions:
       %ul
     #save-outfit-wrapper
+      %a#current-outfit-permalink{:target => '_blank'}
+        = image_tag 'link_go.png', :alt => 'Permalink', :title => 'Permalink'
+      %input#current-outfit-url.outfit-url{:type => 'text'}
       %button#save-outfit Save outfit
-      %button#save-outfit-not-signed-in Log in to save outfit
+      %button#share-outfit Share outfit
+      %button#save-outfit-not-signed-in Log in to save
       %button#save-current-outfit Save &quot;<span>current outfit</span>&quot;
       %button#save-outfit-copy Save a copy
+      %form#save-outfit-form
+        .outfit-star
+        %input#save-outfit-name{:type => 'text', :placeholder => 'Outfit name'}
+        %button#save-outfit-finish{:type => 'submit'} Save
+        %button#save-outfit-cancel{:type => 'button'} Cancel
   #preview
     #preview-swf
       #preview-swf-container

@@ -2,16 +2,11 @@ class OutfitsController < ApplicationController
   before_filter :find_authorized_outfit, :only => [:update, :destroy]
   
   def create
-    if user_signed_in?
-      @outfit = Outfit.new params[:outfit]
-      @outfit.user = current_user
-      if @outfit.save
-        render :json => @outfit.id
-      else
-        render_outfit_errors
-      end
+    @outfit = Outfit.build_for_user(current_user, params[:outfit])
+    if @outfit.save
+      render :json => @outfit.id
     else
-      render :json => {:errors => {:user => ['not logged in']}}, :status => :forbidden
+      render_outfit_errors
     end
   end
   

@@ -16,6 +16,12 @@ $outfit-header-padding: 24px
 $outfit-content-width: $sidebar-unit-inner-width - $outfit-thumbnail-size - $outfit-thumbnail-margin - 32px
 $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
 
+=icon
+  bottom: -2px
+  height: 16px
+  position: relative
+  width: 16px
+
 =outfit
   //+clearfix
   padding: .25em 0
@@ -50,20 +56,16 @@ $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
     display: block
     padding-left: $outfit-header-padding
   .outfit-star
+    +icon
     background:
       image: image-url("unstarred.png")
       position: left top
       repeat: no-repeat
-    bottom: -2px
-    /* margin-bottom doesn't work here
     cursor: pointer
     display: block
     float: left
-    height: 16px
     margin-left: -24px
     /* makes it not take up inline space
-    position: relative
-    width: 16px
   &.starred .outfit-star
     background-image: image-url("star.png")
   &.loading .outfit-star
@@ -87,7 +89,6 @@ $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
     +opacity(.5)
     background: transparent
     border-width: 0
-    font-size: 75%
     width: $outfit-content-inner-width
     &:hover
       +opacity(1)
@@ -151,8 +152,23 @@ body.outfits-edit
   #save-outfit-wrapper
     float: right
     button
-      +loud-awesome-button-color
       display: none
+    &.loading
+      background:
+        image: image-url("loading.gif")
+        position: left center
+        repeat: no-repeat
+      padding-left: 20px
+  #save-outfit, #share-outfit, #save-outfit-not-signed-in, #save-current-outfit, #save-outfit-copy, #save-outfit-finish
+    +loud-awesome-button-color
+  #current-outfit-permalink
+    display: none
+    margin-right: .25em
+    img
+      +icon
+  #current-outfit-url
+    display: none
+    width: 15em
   #preview
     clear: both
   #preview-swf
@@ -448,17 +464,45 @@ body.outfits-edit
   #preview-sidebar-nav-outfits, #save-outfit-signed-in
     display: none
   
+  form#save-outfit-form
+    +outfit
+    display: none
+    margin-right: 0
+    padding: 0
+    
+    .outfit-star, input, button
+      +inline-block
+      float: none
+      vertical-align: top
+    
+    .outfit-star
+      margin-top: .25em
+  
+  .outfit-url
+    font-size: 75%
+  
   &.user-signed-in
     #preview-sidebar-nav-outfits
       display: block
     #save-outfit
       display: inline-block
-    #save-outfit-wrapper.active-outfit
-      #save-outfit
-        display: none
-      #save-current-outfit, #save-outfit-copy
-        display: inline-block
+    #save-outfit-wrapper
+      &.active-outfit
+        #save-outfit
+          display: none
+        #save-current-outfit, #save-outfit-copy
+          display: inline-block
+        #current-outfit-permalink
+          display: inline-block
+      &.saving-outfit
+        #save-outfit-form
+          display: block
+        #save-outfit, #save-current-outfit, #save-outfit-copy, #current-outfit-permalink
+          display: none
   
   &.user-not-signed-in
-    #save-outfit-not-signed-in
+    #share-outfit, #save-outfit-not-signed-in
       display: inline-block
+    #save-outfit-wrapper.shared-outfit
+      #current-outfit-permalink, #current-outfit-url
+        display: inline-block

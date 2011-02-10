@@ -1,11 +1,12 @@
-- title @outfit.name
+- title(@outfit.name || "Shared outfit")
 %a.button#outfit-wardrobe-link{:href => wardrobe_path(:anchor => @outfit.to_query)}
   Edit a copy
-#outfit-user
-  Created by
-  == #{link_to @outfit.user.name, user_contributions_path(@outfit.user)},
-  %span{:title => @outfit.created_at}= time_ago_in_words @outfit.created_at
-  ago
+- if @outfit.user_id
+  #outfit-user
+    Created by
+    == #{link_to @outfit.user.name, user_contributions_path(@outfit.user)},
+    %span{:title => @outfit.created_at}= time_ago_in_words @outfit.created_at
+    ago
 #preview-wrapper
   #preview-swf
 #outfit-items= render @outfit.worn_items
