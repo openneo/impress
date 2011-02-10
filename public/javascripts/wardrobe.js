@@ -876,6 +876,14 @@ function Wardrobe() {
       );
     }
     
+    this.share = function () {
+      var sharedOutfit = outfit.clone();
+      sharedOutfit.create(
+        controller.event('shareSuccess'),
+        controller.event('shareFailure')
+      );
+    }
+    
     this.unclosetItem = function (item) {
       outfit.unclosetItem(
         item,

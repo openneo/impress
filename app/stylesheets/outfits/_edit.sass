@@ -89,7 +89,6 @@ $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
     +opacity(.5)
     background: transparent
     border-width: 0
-    font-size: 75%
     width: $outfit-content-inner-width
     &:hover
       +opacity(1)
@@ -154,13 +153,22 @@ body.outfits-edit
     float: right
     button
       display: none
-  #save-outfit, #save-outfit-not-signed-in, #save-current-outfit, #save-outfit-copy, #save-outfit-finish
+    &.loading
+      background:
+        image: image-url("loading.gif")
+        position: left center
+        repeat: no-repeat
+      padding-left: 20px
+  #save-outfit, #share-outfit, #save-outfit-not-signed-in, #save-current-outfit, #save-outfit-copy, #save-outfit-finish
     +loud-awesome-button-color
   #current-outfit-permalink
     display: none
     margin-right: .25em
     img
       +icon
+  #current-outfit-url
+    display: none
+    width: 15em
   #preview
     clear: both
   #preview-swf
@@ -470,6 +478,9 @@ body.outfits-edit
     .outfit-star
       margin-top: .25em
   
+  .outfit-url
+    font-size: 75%
+  
   &.user-signed-in
     #preview-sidebar-nav-outfits
       display: block
@@ -479,7 +490,9 @@ body.outfits-edit
       &.active-outfit
         #save-outfit
           display: none
-        #current-outfit-permalink, #save-current-outfit, #save-outfit-copy
+        #save-current-outfit, #save-outfit-copy
+          display: inline-block
+        #current-outfit-permalink
           display: inline-block
       &.saving-outfit
         #save-outfit-form
@@ -488,5 +501,8 @@ body.outfits-edit
           display: none
   
   &.user-not-signed-in
-    #save-outfit-not-signed-in
+    #share-outfit, #save-outfit-not-signed-in
       display: inline-block
+    #save-outfit-wrapper.shared-outfit
+      #current-outfit-permalink, #current-outfit-url
+        display: inline-block

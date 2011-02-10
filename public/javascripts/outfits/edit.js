@@ -1,5 +1,3 @@
-// TODO: replace updateItems triggers, move references to wardrobe.closet to outfit controller
-
 (function () {
   var csrf_param = $('meta[name=csrf-param]').attr('content'),
     csrf_token = $('meta[name=csrf-token]').attr('content');
@@ -9,18 +7,18 @@
 })();
 
 $.fn.notify = function () {
-  this.stop(true, true).show('slow').delay(5000).hide('fast');
+  return this.stop(true, true).show('slow').delay(5000).hide('fast');
 }
 
-$.fn.outfitLoading = function () {
-  this.delay(1000).queue(function (next) {
+$.fn.startLoading = function () {
+  return this.delay(1000).queue(function (next) {
     $(this).addClass('loading');
     next();
   });
 }
 
 $.fn.stopLoading = function () {
-  this.removeClass('loading').clearQueue();
+  return this.removeClass('loading').clearQueue();
 }
 
 var Partial = {}, main_wardrobe,
@@ -444,6 +442,7 @@ View.Hash = function (wardrobe) {
 
 View.Outfits = function (wardrobe) {
   var current_outfit_permalink_el = $('#current-outfit-permalink'),
+    current_outfit_url_el = $('#current-outfit-url'),
     new_outfit_form_el = $('#save-outfit-form'),
     new_outfit_name_el = $('#save-outfit-name'),
     outfits_el = $('#preview-outfits'),
@@ -561,7 +560,7 @@ View.Outfits = function (wardrobe) {
     var el = $(this), outfit = el.tmplItem().data, new_name = el.val(),
       li = el.closest('li').removeClass('renaming');
     if(new_name != outfit.name) {
-      li.outfitLoading();
+      li.startLoading();
       wardrobe.user.renameOutfit(outfit, new_name);
     }
   }
@@ -601,19 +600,24 @@ View.Outfits = function (wardrobe) {
   
   stars.live('click', function () {
     var el = $(this);
-    el.closest('li').outfitLoading();
+    el.closest('li').startLoading();
     wardrobe.user.toggleOutfitStar(el.tmplItem().data);
   });
+  
+  function setOutfitPermalink(outfit) {
+    var url = document.location.protocol + "//" + document.location.host;
+    if(document.location.port) url += ":" + document.location.port;
+    url += "/outfits/" + outfit.id;
+    current_outfit_permalink_el.attr('href', url);
+    current_outfit_url_el.val(url);
+  }
   
   function setActiveOutfit(outfit) {
     outfits_list_el.find('li.active').removeClass('active');
     if(outfit.id) {
-      var url = document.location.protocol + "//" + document.location.host;
-      if(document.location.port) url += ":" + document.location.port;
-      url += "/outfits/" + outfit.id;
+      setOutfitPermalink(outfit);
       liForOutfit(outfit).addClass('active');
       save_current_outfit_name_el.text(outfit.name);
-      current_outfit_permalink_el.attr('href', url);
     }
     save_outfit_wrapper_el.toggleClass('active-outfit', outfit.id ? true : false);
   }
@@ -639,8 +643,13 @@ View.Outfits = function (wardrobe) {
   
   new_outfit_form_el.submit(function (e) {
     e.preventDefault();
-    new_outfit_form_el.outfitLoading();
+    new_outfit_form_el.startLoading();
     wardrobe.outfit.create({starred: new_outfit_form_el.hasClass('starred'), name: new_outfit_name_el.val()});
+  });
+  
+  $('#share-outfit').click(function () {
+    save_outfit_wrapper_el.startLoading();
+    wardrobe.outfit.share();
   });
   
   new_outfit_form_el.find('div.outfit-star').click(function () {
@@ -672,6 +681,19 @@ View.Outfits = function (wardrobe) {
     wardrobe.user.updateOutfit(outfit);
   });
   
+  wardrobe.outfit.bind('shareSuccess', function (outfit) {
+    save_outfit_wrapper_el.stopLoading().addClass('shared-outfit');
+    setOutfitPermalink(outfit);
+  });
+  
+  function clearSharedOutfit() {
+    save_outfit_wrapper_el.removeClass('shared-outfit');
+  }
+  
+  wardrobe.outfit.bind('updateClosetItems', clearSharedOutfit);
+  wardrobe.outfit.bind('updateWornItems', clearSharedOutfit);
+  wardrobe.outfit.bind('updatePetState', clearSharedOutfit);
+  
   function saveFailure(outfit, response) {
     var errors = response.errors;
     if(typeof errors == 'undefined') {
@@ -695,6 +717,10 @@ View.Outfits = function (wardrobe) {
   
   wardrobe.outfit.bind('saveFailure', saveFailure);
   wardrobe.user.bind('saveFailure', saveFailure)
+  wardrobe.outfit.bind('shareFailure', function (outfit, response) {
+    save_outfit_wrapper_el.stopLoading();
+    saveFailure(outfit, response);
+  });
   
   /* Error */
   

@@ -6,7 +6,7 @@ class Outfit < ActiveRecord::Base
   belongs_to :pet_state
   belongs_to :user
   
-  validates :name, :presence => true, :uniqueness => {:scope => :user_id}
+  validates :name, :presence => {:if => :user_id}, :uniqueness => {:scope => :user_id, :if => :user_id}
   validates :pet_state, :presence => true
   
   attr_accessible :name, :pet_state_id, :starred, :worn_and_unworn_item_ids
@@ -65,5 +65,18 @@ class Outfit < ActiveRecord::Base
   
   def worn_item_ids
     worn_and_unworn_item_ids[:worn]
+  end
+  
+  def self.build_for_user(user, params)
+    Outfit.new.tap do |outfit|
+      name = params.delete(:name)
+      starred = params.delete(:starred)
+      if user
+        outfit.user = user
+        outfit.name = name
+        outfit.starred = starred
+      end
+      outfit.attributes = params
+    end
   end
 end
