@@ -443,7 +443,7 @@ View.Hash = function (wardrobe) {
 }
 
 View.Outfits = function (wardrobe) {
-  var controls = $('#pet-type-form, #pet-state-form, #preview-swf, #preview-search-form'),
+  var current_outfit_permalink_el = $('#current-outfit-permalink'),
     new_outfit_form_el = $('#save-outfit-form'),
     new_outfit_name_el = $('#save-outfit-name'),
     outfits_el = $('#preview-outfits'),
@@ -608,8 +608,12 @@ View.Outfits = function (wardrobe) {
   function setActiveOutfit(outfit) {
     outfits_list_el.find('li.active').removeClass('active');
     if(outfit.id) {
+      var url = document.location.protocol + "//" + document.location.host;
+      if(document.location.port) url += ":" + document.location.port;
+      url += "/outfits/" + outfit.id;
       liForOutfit(outfit).addClass('active');
       save_current_outfit_name_el.text(outfit.name);
+      current_outfit_permalink_el.attr('href', url);
     }
     save_outfit_wrapper_el.toggleClass('active-outfit', outfit.id ? true : false);
   }
@@ -685,6 +689,7 @@ View.Outfits = function (wardrobe) {
         }
       }
     }
+    new_outfit_form_el.stopLoading();
     liForOutfit(outfit).stopLoading();
   }
   
