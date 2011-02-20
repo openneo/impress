@@ -114,9 +114,9 @@ class PetType < ActiveRecord::Base
         begin
           res.error!
         rescue Exception => e
-          raise "Error loading CPN image at #{cpn_uri}: #{e.message}"
+          raise DownloadError, "Error loading CPN image at #{cpn_uri}: #{e.message}"
         else
-          raise "Error loading CPN image at #{cpn_uri}. Response: #{res.inspect}"
+          raise DownloadError, "Error loading CPN image at #{cpn_uri}. Response: #{res.inspect}"
         end
       end
       new_url = res['location']
@@ -124,7 +124,7 @@ class PetType < ActiveRecord::Base
       if match
         self.image_hash = match[1]
       else
-        raise "CPN image pointed to #{new_url}, which does not match CP image format"
+        raise DownloadError, "CPN image pointed to #{new_url}, which does not match CP image format"
       end
     end
   end
@@ -148,4 +148,6 @@ class PetType < ActiveRecord::Base
       end
     end
   end
+  
+  class DownloadError < Exception;end
 end

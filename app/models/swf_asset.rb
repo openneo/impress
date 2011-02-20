@@ -95,9 +95,9 @@ class SwfAsset < ActiveRecord::Base
       begin
         response.error!
       rescue Exception => e
-        raise "Error loading SWF at #{url}: #{e.message}"
+        raise DownloadError, "Error loading SWF at #{url}: #{e.message}"
       else
-        raise "Error loading SWF at #{url}. Response: #{response.inspect}"
+        raise DownloadError, "Error loading SWF at #{url}. Response: #{response.inspect}"
       end
     end
   end
@@ -107,6 +107,8 @@ class SwfAsset < ActiveRecord::Base
     # linked to it, meaning that it's probably wearable by all bodies.
     self.body_id = 0 if !self.body_specific? || (!self.new_record? && self.body_id_changed?)
   end
+  
+  class DownloadError < Exception;end
   
   private
   
