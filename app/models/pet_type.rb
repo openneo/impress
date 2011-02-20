@@ -109,7 +109,11 @@ class PetType < ActiveRecord::Base
   before_save do
     if @origin_pet
       cpn_uri = URI.parse sprintf(IMAGE_CPN_FORMAT, @origin_pet.name);
-      res = Net::HTTP.get_response(cpn_uri)
+      begin
+        res = Net::HTTP.get_response(cpn_uri)
+      rescue Exception => e
+        raise DownloadError, e.message
+      end
       unless res.is_a? Net::HTTPFound
         begin
           res.error!

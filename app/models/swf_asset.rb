@@ -82,7 +82,11 @@ class SwfAsset < ActiveRecord::Base
   
   before_create do
     uri = URI.parse url
-    response = Net::HTTP.get_response(uri)
+    begin
+      response = Net::HTTP.get_response(uri)
+    rescue Exception => e
+      raise DownloadError, e.message
+    end
     if response.is_a? Net::HTTPSuccess
       new_local_path = File.join(LOCAL_ASSET_DIR, local_path_within_outfit_swfs)
       new_local_dir = File.dirname new_local_path

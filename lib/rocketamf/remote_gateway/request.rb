@@ -19,7 +19,11 @@ module RocketAMF
         else
           req = Net::HTTP::Post.new(uri.path)
           req.body = data
-          res = Net::HTTP.new(uri.host, uri.port).start { |http| http.request(req) }
+          begin
+            res = Net::HTTP.new(uri.host, uri.port).start { |http| http.request(req) }
+          rescue Exception => e
+            raise ConnectionError, e.message
+          end
           case res
           when Net::HTTPSuccess
             response_body = res.body
@@ -30,13 +34,13 @@ module RocketAMF
             rescue Exception => scoped_error
               error = scoped_error
             end
-            raise ConnectionError, "Error connecting to gateway: #{error}"
+            raise ConnectionError, error.message
           end
         end
         begin
           result = RocketAMF::Envelope.new.populate_from_stream(response_body)
         rescue Exception => e
-          raise ConnectionError, "Error parsing gateway response: #{e.message}"
+          raise ConnectionError, e.message
         end
         first_message_data = result.messages[0].data
         if first_message_data.respond_to?(:[]) && first_message_data[:code] == ERROR_CODE
@@ -66,7 +70,15 @@ module RocketAMF
       end
     end
     
-    class ConnectionError < RuntimeError;end
+    class ConnectionError < RuntimeError
+      def initialize(message)
+        @message = message
+      end
+      
+      def message
+        "Error connecting to gateway: #{@message}"
+      end
+    end
     class AMFError < RuntimeError
       DATA_KEYS = [:details, :line, :code]
       attr_reader *DATA_KEYS

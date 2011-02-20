@@ -1,6 +1,7 @@
 class PetsController < ApplicationController
   rescue_from Pet::PetNotFound, :with => :pet_not_found
-  rescue_from PetType::DownloadError, SwfAsset::DownloadError, :with => :download_error
+  rescue_from PetType::DownloadError, SwfAsset::DownloadError, :with => :asset_download_error
+  rescue_from Pet::DownloadError, :with => :pet_download_error
   
   cache_sweeper :user_sweeper
   
@@ -46,11 +47,19 @@ class PetsController < ApplicationController
       :status => :not_found
   end
   
-  def download_error(e)
+  def asset_download_error(e)
     Rails.logger.warn e.message
     pet_load_error :long_message => "We found the pet all right, but the " +
       "Neopets image server didn't respond to our download request. Maybe it's " +
       "down, or maybe it's just having trouble. Try again later, maybe. Sorry!",
+      :short_message => 'Neopets seems down. Try again?',
+      :status => :gateway_timeout
+  end
+  
+  def pet_download_error(e)
+    Rails.logger.warn e.message
+    pet_load_error :long_message => "Could not connect to the Neopets server " +
+      "to look up the pet. Maybe they're down. Try again later, maybe. Sorry!",
       :short_message => 'Neopets seems down. Try again?',
       :status => :gateway_timeout
   end
