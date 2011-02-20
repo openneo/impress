@@ -22,7 +22,9 @@ class Pet < ActiveRecord::Base
       if e.message == PET_NOT_FOUND_REMOTE_ERROR
         raise PetNotFound, "Pet #{name.inspect} does not exist"
       end
-      raise
+      raise DownloadError, e.message
+    rescue RocketAMF::RemoteGateway::ConnectionError => e
+      raise DownloadError, e.message
     end
     contents = OpenStruct.new(envelope.messages[0].data.body)
     pet_data = OpenStruct.new(contents.custom_pet)
@@ -88,4 +90,5 @@ class Pet < ActiveRecord::Base
   end
   
   class PetNotFound < Exception;end
+  class DownloadError < Exception;end
 end

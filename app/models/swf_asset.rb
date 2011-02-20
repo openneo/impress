@@ -82,7 +82,11 @@ class SwfAsset < ActiveRecord::Base
   
   before_create do
     uri = URI.parse url
-    response = Net::HTTP.get_response(uri)
+    begin
+      response = Net::HTTP.get_response(uri)
+    rescue Exception => e
+      raise DownloadError, e.message
+    end
     if response.is_a? Net::HTTPSuccess
       new_local_path = File.join(LOCAL_ASSET_DIR, local_path_within_outfit_swfs)
       new_local_dir = File.dirname new_local_path
@@ -95,9 +99,9 @@ class SwfAsset < ActiveRecord::Base
       begin
         response.error!
       rescue Exception => e
-        raise "Error loading SWF at #{url}: #{e.message}"
+        raise DownloadError, "Error loading SWF at #{url}: #{e.message}"
       else
-        raise "Error loading SWF at #{url}. Response: #{response.inspect}"
+        raise DownloadError, "Error loading SWF at #{url}. Response: #{response.inspect}"
       end
     end
   end
@@ -107,6 +111,8 @@ class SwfAsset < ActiveRecord::Base
     # linked to it, meaning that it's probably wearable by all bodies.
     self.body_id = 0 if !self.body_specific? || (!self.new_record? && self.body_id_changed?)
   end
+  
+  class DownloadError < Exception;end
   
   private
   
