@@ -1,6 +1,7 @@
 class PetType < ActiveRecord::Base
   IMAGE_CPN_FORMAT = 'http://pets.neopets.com/cpn/%s/1/1.png';
   IMAGE_CP_LOCATION_REGEX = %r{^/cp/(.+?)/1/1\.png$};
+  IMAGE_CPN_ACCEPTABLE_NAME = /^[a-z0-9_]+$/
   
   has_one :contribution, :as => :contributed
   has_many :pet_states
@@ -107,8 +108,8 @@ class PetType < ActiveRecord::Base
   end
   
   before_save do
-    if @origin_pet
-      cpn_uri = URI.parse sprintf(IMAGE_CPN_FORMAT, @origin_pet.name);
+    if @origin_pet && @origin_pet.name =~ IMAGE_CPN_ACCEPTABLE_NAME
+      cpn_uri = URI.parse sprintf(IMAGE_CPN_FORMAT, CGI.escape(@origin_pet.name));
       begin
         res = Net::HTTP.get_response(cpn_uri)
       rescue Exception => e
@@ -127,6 +128,7 @@ class PetType < ActiveRecord::Base
       match = new_url.match(IMAGE_CP_LOCATION_REGEX)
       if match
         self.image_hash = match[1]
+        Rails.logger.info "Successfully loaded #{cpn_uri}, saved image hash #{match[1]}"
       else
         raise DownloadError, "CPN image pointed to #{new_url}, which does not match CP image format"
       end
