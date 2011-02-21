@@ -23,7 +23,6 @@ class User < ActiveRecord::Base
     self.points += new_points
     Pet.transaction do
       pet.save!
-      self.contributions += new_contributions
       save!
     end
     new_points
