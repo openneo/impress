@@ -63,6 +63,7 @@ class Pet < ActiveRecord::Base
   
   before_validation do
     pet_type.save!
+    @pet_state.save!
     items.each do |item|
       item.handle_assets!
       item.save!

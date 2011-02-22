@@ -34,7 +34,7 @@ class PetType < ActiveRecord::Base
   
   def as_json(options={})
     if options[:for] == 'wardrobe'
-      {:id => id, :body_id => body_id, :pet_state_ids => pet_state_ids}
+      {:id => id, :body_id => body_id, :pet_state_ids => pet_states.select([:id]).emotion_order.map(&:id)}
     else
       {:image_hash => image_hash}
     end
