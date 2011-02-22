@@ -12,6 +12,9 @@ class PetState < ActiveRecord::Base
   
   alias_method :swf_asset_ids_from_association, :swf_asset_ids
   
+  scope :emotion_order, joins(:parent_swf_asset_relationships).
+    group("pet_states.id").order("COUNT(parents_swf_assets.swf_asset_id) DESC, SUM(parents_swf_assets.swf_asset_id) ASC")
+  
   def reassign_children_to!(main_pet_state)
     self.contributions.each do |contribution|
       contribution.contributed = main_pet_state

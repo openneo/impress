@@ -23,6 +23,7 @@ class User < ActiveRecord::Base
     self.points += new_points
     Pet.transaction do
       pet.save!
+      new_contributions.each(&:save!)
       save!
     end
     new_points
