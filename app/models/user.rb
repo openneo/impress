@@ -23,7 +23,13 @@ class User < ActiveRecord::Base
     self.points += new_points
     Pet.transaction do
       pet.save!
-      new_contributions.each(&:save!)
+      new_contributions.each do |contribution|
+        begin
+          contribution.save!
+        rescue ActiveRecord::RecordNotSaved => e
+          raise ActiveRecord::RecordNotSaved, "#{e.message}, #{contribution.inspect}, #{contribution.valid?.inspect}, #{contribution.errors.inspect}"
+        end
+      end
       save!
     end
     new_points
