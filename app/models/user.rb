@@ -30,7 +30,11 @@ class User < ActiveRecord::Base
           raise ActiveRecord::RecordNotSaved, "#{e.message}, #{contribution.inspect}, #{contribution.valid?.inspect}, #{contribution.errors.inspect}"
         end
       end
-      save!
+      begin
+        save!
+      rescue ActiveRecord::RecordNotSaved => e
+        raise ActiveRecord::RecordNotSaved, "#{e.message}, #{self.inspect}, #{self.valid?.inspect}, #{self.errors.inspect}"
+      end
     end
     new_points
   end
