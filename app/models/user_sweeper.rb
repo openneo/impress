@@ -8,5 +8,6 @@ class UserSweeper < ActionController::Caching::Sweeper
         expire_fragment(:controller => 'outfits', :action => 'new', :action_suffix => 'top_contributors')
       end
     end
+    true
   end
 end
