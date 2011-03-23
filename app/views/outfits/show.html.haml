@@ -1,6 +1,8 @@
 - title(@outfit.name || "Shared outfit")
-%a.button#outfit-wardrobe-link{:href => wardrobe_path(:anchor => @outfit.to_query)}
-  Edit a copy
+= link_to_edit_outfit(@outfit, :class => 'button', :id => 'outfit-wardrobe-link') do
+  Edit
+  - unless @outfit.user == current_user
+    a copy
 - if @outfit.user_id
   #outfit-user
     Created by
@@ -15,3 +17,4 @@
     var INITIAL_OUTFIT_DATA = #{@outfit.to_json};
   = include_javascript_libraries :jquery, :swfobject
   = include_javascripts :show_outfit_package
+

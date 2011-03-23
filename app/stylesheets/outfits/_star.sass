@@ -1,0 +1,27 @@
+@import icon
+
+=outfit-star
+  .outfit-star
+    +icon
+    background:
+      image: image-url("unstarred.png")
+      position: left top
+      repeat: no-repeat
+    cursor: pointer
+    display: block
+    float: left
+    margin-right: $icon-width / 2
+  &.starred .outfit-star
+    background-image: image-url("star.png")
+  &.loading .outfit-star
+    background-image: image-url("loading.gif")
+  &.loading.active .outfit-star
+    background-image: image-url("loading_current_outfit.gif")
+
+=outfit-star-shifted
+  +outfit-star
+
+  .outfit-star
+    margin-left: -$icon-width * 1.5
+    margin-right: 0
+

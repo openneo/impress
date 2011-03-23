@@ -24,7 +24,7 @@
         = yield(:content)
       - else
         = yield
-        
+
       - if home_link?
         %a#home-link{:href => root_path}
           %span Dress to Impress
@@ -34,6 +34,7 @@
           %span
             == Hey, #{link_to current_user.name, user_contributions_path(current_user)}!
             == You have #{current_user.points} points.
+          = link_to 'Outfits', current_user_outfits_path
           = link_to 'Settings', Openneo::Auth.remote_settings_url
           = link_to 'Log out', logout_path_with_return_to
         - else
@@ -64,3 +65,4 @@
           Images &copy; 2000-2010 Neopets, Inc. All Rights Reserved.
           Used With Permission
       = yield(:javascripts)
+

@@ -1,5 +1,8 @@
 @import ../shared/jquery.jgrowl
 
+@import icon
+@import star
+
 $object-padding: 6px
 $nc-icon-size: 16px
 
@@ -16,14 +19,8 @@ $outfit-header-padding: 24px
 $outfit-content-width: $sidebar-unit-inner-width - $outfit-thumbnail-size - $outfit-thumbnail-margin - 32px
 $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
 
-=icon
-  bottom: -2px
-  height: 16px
-  position: relative
-  width: 16px
-
 =outfit
-  //+clearfix
+  +outfit-star-shifted
   padding: .25em 0
   //.outfit-thumbnail
     float: left
@@ -38,9 +35,6 @@ $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
     position: absolute
     top: -$outfit-thumbnail-original-size / 4
     width: $outfit-thumbnail-original-size
-  //> div
-    float: left
-    width: $outfit-content-width
   .outfit-delete
     +reset-awesome-button
     +opacity(.5)
@@ -55,23 +49,6 @@ $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
   header
     display: block
     padding-left: $outfit-header-padding
-  .outfit-star
-    +icon
-    background:
-      image: image-url("unstarred.png")
-      position: left top
-      repeat: no-repeat
-    cursor: pointer
-    display: block
-    float: left
-    margin-left: -24px
-    /* makes it not take up inline space
-  &.starred .outfit-star
-    background-image: image-url("star.png")
-  &.loading .outfit-star
-    background-image: image-url("loading.gif")
-  &.loading.active .outfit-star
-    background-image: image-url("loading_current_outfit.gif")
   h4
     cursor: pointer
     display: inline
@@ -208,7 +185,7 @@ body.outfits-edit
         display: block
     .sidebar-view
       h2
-        margin: 
+        margin:
           bottom: .25em
           left: $sidebar-unit-horizontal-padding
   #preview-closet
@@ -413,24 +390,24 @@ body.outfits-edit
     margin:
       right: $sidebar-unit-horizontal-padding
       top: 1em
-  
+
   #save-success, #save-error, #outfit-not-found
     +sidebar-view-child
     display: none
     margin:
       top: 1em
     text-align: center
-  
+
   #save-success
     +notice
-  
+
   #save-error, #outfit-not-found
     +error
-  
+
   #userbar-message
     +opacity(.5)
     display: none
-  
+
   #new-outfit
     +outfit
     +sidebar-view-child
@@ -441,18 +418,18 @@ body.outfits-edit
         text-decoration: none
     .outfit-star
       margin-top: .5em
-  
+
   #new-outfit-name
     font: inherit
     line-height: 1
-  
+
   #preview-saving-outfit
     display: none
     padding-bottom: 1em
-  
+
   #pet-type-form, #pet-state-form, #preview-swf, #preview-search-form
     position: relative
-  
+
   .control-overlay
     height: 100%
     left: 0
@@ -460,27 +437,27 @@ body.outfits-edit
     top: 0
     width: 100%
     z-index: 5
-  
+
   #preview-sidebar-nav-outfits, #save-outfit-signed-in
     display: none
-  
+
   form#save-outfit-form
     +outfit
     display: none
     margin-right: 0
     padding: 0
-    
+
     .outfit-star, input, button
       +inline-block
       float: none
       vertical-align: top
-    
+
     .outfit-star
       margin-top: .25em
-  
+
   .outfit-url
     font-size: 75%
-  
+
   &.user-signed-in
     #preview-sidebar-nav-outfits
       display: block
@@ -499,10 +476,11 @@ body.outfits-edit
           display: block
         #save-outfit, #save-current-outfit, #save-outfit-copy, #current-outfit-permalink
           display: none
-  
+
   &.user-not-signed-in
     #share-outfit, #save-outfit-not-signed-in
       display: inline-block
     #save-outfit-wrapper.shared-outfit
       #current-outfit-permalink, #current-outfit-url
         display: inline-block
+
