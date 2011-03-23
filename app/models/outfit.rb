@@ -5,29 +5,31 @@ class Outfit < ActiveRecord::Base
   has_many :worn_items, :through => :worn_item_outfit_relationships, :source => :item
   belongs_to :pet_state
   belongs_to :user
-  
+
   validates :name, :presence => {:if => :user_id}, :uniqueness => {:scope => :user_id, :if => :user_id}
   validates :pet_state, :presence => true
-  
+
   attr_accessible :name, :pet_state_id, :starred, :worn_and_unworn_item_ids
-  
+
+  scope :wardrobe_order, order('starred DESC', :name)
+
   def as_json(more_options={})
     serializable_hash :only => [:id, :name, :pet_state_id, :starred],
       :methods => [:color_id, :species_id, :worn_and_unworn_item_ids]
   end
-  
+
   def closet_item_ids
     item_outfit_relationships.map(&:item_id)
   end
-  
+
   def color_id
     pet_state.pet_type.color_id
   end
-  
+
   def species_id
     pet_state.pet_type.species_id
   end
-  
+
   def to_query
     {
       :closet => closet_item_ids,
@@ -37,7 +39,7 @@ class Outfit < ActiveRecord::Base
       :state => pet_state_id
     }.to_query
   end
-  
+
   def worn_and_unworn_item_ids
     {:worn => [], :unworn => []}.tap do |output|
       item_outfit_relationships.each do |rel|
@@ -46,7 +48,7 @@ class Outfit < ActiveRecord::Base
       end
     end
   end
-  
+
   def worn_and_unworn_item_ids=(all_item_ids)
     new_rels = []
     all_item_ids.each do |key, item_ids|
@@ -62,11 +64,11 @@ class Outfit < ActiveRecord::Base
     end
     self.item_outfit_relationships = new_rels
   end
-  
+
   def worn_item_ids
     worn_and_unworn_item_ids[:worn]
   end
-  
+
   def self.build_for_user(user, params)
     Outfit.new.tap do |outfit|
       name = params.delete(:name)
@@ -80,3 +82,4 @@ class Outfit < ActiveRecord::Base
     end
   end
 end
+
