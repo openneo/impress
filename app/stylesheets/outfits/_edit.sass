@@ -130,20 +130,22 @@ body.outfits-edit
     float: right
     button
       display: none
+    #share-outfit
+      display: inline-block
     &.loading
       background:
         image: image-url("loading.gif")
         position: left center
         repeat: no-repeat
       padding-left: 20px
-  #save-outfit, #share-outfit, #save-outfit-not-signed-in, #save-current-outfit, #save-outfit-copy, #save-outfit-finish
+  #save-outfit, #save-outfit-not-signed-in, #save-current-outfit, #save-outfit-copy, #save-outfit-finish
     +loud-awesome-button-color
-  #current-outfit-permalink
+  #current-outfit-permalink, #shared-outfit-permalink
     display: none
     margin-right: .25em
     img
       +icon
-  #current-outfit-url
+  #shared-outfit-url
     display: none
     width: 15em
   #preview
@@ -474,13 +476,16 @@ body.outfits-edit
       &.saving-outfit
         #save-outfit-form
           display: block
-        #save-outfit, #save-current-outfit, #save-outfit-copy, #current-outfit-permalink
+        #save-outfit, #save-current-outfit, #save-outfit-copy, #current-outfit-permalink, #shared-outfit-permalink, #share-outfit, #shared-outfit-url
           display: none
 
   &.user-not-signed-in
-    #share-outfit, #save-outfit-not-signed-in
+    #save-outfit-not-signed-in
       display: inline-block
-    #save-outfit-wrapper.shared-outfit
-      #current-outfit-permalink, #current-outfit-url
-        display: inline-block
+
+  #save-outfit-wrapper.shared-outfit
+    #shared-outfit-permalink, #shared-outfit-url
+      display: inline-block
+    #current-outfit-permalink
+      display: none !important
 

@@ -16,10 +16,12 @@
       %ul
     #save-outfit-wrapper
       %a#current-outfit-permalink{:target => '_blank'}
-        = image_tag 'link_go.png', :alt => 'Permalink', :title => 'Permalink'
-      %input#current-outfit-url.outfit-url{:type => 'text'}
-      %button#save-outfit Save outfit
+        = image_tag 'link_go.png', :alt => 'Permalink', :title => 'Permalink to current outfit'
+      %a#shared-outfit-permalink{:target => '_blank'}
+        = image_tag 'link_go.png', :alt => 'Permalink', :title => 'Permalink to shared outfit'
+      %input#shared-outfit-url.outfit-url{:type => 'text'}
       %button#share-outfit Share outfit
+      %button#save-outfit Save outfit
       %button#save-outfit-not-signed-in Log in to save
       %button#save-current-outfit Save &quot;<span>current outfit</span>&quot;
       %button#save-outfit-copy Save a copy
@@ -118,3 +120,4 @@
 - content_for :javascripts do
   = include_javascript_libraries :jquery, :swfobject, :jquery_tmpl
   = include_javascripts :edit_outfit_package
+

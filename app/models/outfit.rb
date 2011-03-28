@@ -73,7 +73,8 @@ class Outfit < ActiveRecord::Base
     Outfit.new.tap do |outfit|
       name = params.delete(:name)
       starred = params.delete(:starred)
-      if user
+      anonymous = params.delete(:anonymous) == "true"
+      if user && !anonymous
         outfit.user = user
         outfit.name = name
         outfit.starred = starred
