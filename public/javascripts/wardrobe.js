@@ -259,7 +259,6 @@ function Wardrobe() {
       outfit_data.worn_and_unworn_item_ids = outfit.getWornAndUnwornItemIds();
       if(outfit.pet_state) outfit_data.pet_state_id = outfit.pet_state.id;
       outfit_data.anonymous = outfit.anonymous;
-      console.log(outfit.anonymous, outfit_data);
       return outfit_data;
     }
 
