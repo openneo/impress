@@ -2,46 +2,50 @@
 
 class Item < ActiveRecord::Base
   SwfAssetType = 'object'
-  
+
   has_one :contribution, :as => :contributed
   has_many :parent_swf_asset_relationships, :foreign_key => 'parent_id',
     :conditions => {:swf_asset_type => SwfAssetType}
   has_many :swf_assets, :through => :parent_swf_asset_relationships, :source => :object_asset,
     :conditions => {:type => SwfAssetType}
-  
+
   attr_writer :current_body_id
-  
+
   NCRarities = [0, 500]
-  PaintbrushSetDescription = 'This item is part of a deluxe paint brush set!'
-  
+  PAINTBRUSH_SET_DESCRIPTION = 'This item is part of a deluxe paint brush set!'
+  SPECIAL_COLOR_DESCRIPTION_REGEX = /This item is only wearable by Neopets painted ([a-zA-Z]+)\./
+
+  SPECIAL_PAINTBRUSH_COLORS_PATH = Rails.root.join('config', 'colors_with_unique_bodies.txt')
+  SPECIAL_PAINTBRUSH_COLORS = File.read(SPECIAL_PAINTBRUSH_COLORS_PATH).split("\n").map { |name| Color.find_by_name(name) }
+
   set_table_name 'objects' # Neo & PHP Impress call them objects, but the class name is a conflict (duh!)
   set_inheritance_column 'inheritance_type' # PHP Impress used "type" to describe category
-  
+
   cattr_reader :per_page
   @@per_page = 30
-  
+
   scope :alphabetize, order('name ASC')
-  
+
   scope :join_swf_assets, joins("INNER JOIN #{ParentSwfAssetRelationship.table_name} psa ON psa.swf_asset_type = 'object' AND psa.parent_id = objects.id").
     joins("INNER JOIN #{SwfAsset.table_name} swf_assets ON swf_assets.id = psa.swf_asset_id").
     group('objects.id')
-  
+
   scope :without_swf_assets, joins(
     "LEFT JOIN #{ParentSwfAssetRelationship.table_name} psa ON psa.swf_asset_type = 'object' AND psa.parent_id = #{table_name}.id " +
     "LEFT JOIN #{SwfAsset.table_name} sa ON sa.type = 'object' AND sa.id = psa.swf_asset_id"
   ).where('sa.id IS NULL')
-  
+
   scope :spidered_longest_ago, order(["(#{Item.arel_table[:last_spidered].eq(nil).to_sql}) DESC", arel_table[:last_spidered].desc])
-  
+
   scope :sold_in_mall, where(:sold_in_mall => true)
   scope :not_sold_in_mall, where(:sold_in_mall => false)
-  
+
   # Not defining validations, since this app is currently read-only
-  
+
   def nc?
     NCRarities.include?(rarity_index)
   end
-  
+
   def restricted_zones
     unless @restricted_zones
       @restricted_zones = []
@@ -51,7 +55,7 @@ class Item < ActiveRecord::Base
     end
     @restricted_zones
   end
-  
+
   def occupied_zones
     all_body_ids = []
     zone_body_ids = {}
@@ -70,25 +74,45 @@ class Item < ActiveRecord::Base
     end
     zones
   end
-  
+
   def affected_zones
     restricted_zones + occupied_zones
   end
-  
+
+  def special_color
+    @special_color ||= determine_special_color
+  end
+
+  protected
+  def determine_special_color
+    if description.include?(PAINTBRUSH_SET_DESCRIPTION)
+      downcased_name = name.downcase
+      SPECIAL_PAINTBRUSH_COLORS.each do |color|
+        return color if downcased_name.include?(color.name)
+      end
+    end
+
+    match = description.match(SPECIAL_COLOR_DESCRIPTION_REGEX)
+    if match
+      return Color.find_by_name(match[1].downcase)
+    end
+  end
+  public
+
   def species_support_ids
     @species_support_ids_array ||= read_attribute('species_support_ids').split(',').map(&:to_i) rescue nil
   end
-  
+
   def species_support_ids=(replacement)
     @species_support_ids_array = nil
     replacement = replacement.join(',') if replacement.is_a?(Array)
     write_attribute('species_support_ids', replacement)
   end
-  
+
   def supported_species
     @supported_species ||= species_support_ids.blank? ? Species.all : species_support_ids.sort.map { |id| Species.find(id) }
   end
-  
+
   def self.search(query)
     raise SearchError, "Please provide a search query" unless query
     query = query.strip
@@ -120,7 +144,7 @@ class Item < ActiveRecord::Base
       condition.narrow(scope)
     end
   end
-  
+
   def as_json(options = {})
     {
       :description => description,
@@ -131,12 +155,12 @@ class Item < ActiveRecord::Base
       :rarity_index => rarity_index
     }
   end
-  
+
   before_create do
     self.sold_in_mall ||= false
     true
   end
-  
+
   def handle_assets!
     if @parent_swf_asset_relationships_to_update && @current_body_id
       new_swf_asset_ids = @parent_swf_asset_relationships_to_update.map(&:swf_asset_id)
@@ -158,7 +182,7 @@ class Item < ActiveRecord::Base
       self.parent_swf_asset_relationships += @parent_swf_asset_relationships_to_update
     end
   end
-  
+
   def origin_registry_info=(info)
     # bear in mind that numbers from registries are floats
     self.species_support_ids = info[:species_support].map(&:to_i)
@@ -170,17 +194,17 @@ class Item < ActiveRecord::Base
       end
     end
   end
-  
+
   def pending_swf_assets
     @parent_swf_asset_relationships_to_update.inject([]) do |all_swf_assets, relationship|
       all_swf_assets << relationship.swf_asset
     end
   end
-  
+
   def parent_swf_asset_relationships_to_update=(rels)
     @parent_swf_asset_relationships_to_update = rels
   end
-  
+
   def self.all_by_ids_or_children(ids, swf_assets)
     swf_asset_ids = []
     swf_assets_by_id = {}
@@ -208,7 +232,7 @@ class Item < ActiveRecord::Base
       end
     end
   end
-  
+
   def self.collection_from_pet_type_and_registries(pet_type, info_registry, asset_registry)
     # bear in mind that registries are arrays with many nil elements,
     # due to how the parser works
@@ -277,7 +301,7 @@ class Item < ActiveRecord::Base
     end
     items.values
   end
-  
+
   class << self
     MALL_HOST = 'ncmall.neopets.com'
     MALL_MAIN_PATH = '/mall/shop.phtml'
@@ -286,14 +310,14 @@ class Item < ActiveRecord::Base
     MALL_CATEGORY_TRIGGER = /load_items_pane\("browse", ([0-9]+)\);/
     MALL_JSON_ITEM_DATA_KEY = 'object_data'
     MALL_ITEM_URL_TEMPLATE = 'http://images.neopets.com/items/%s.gif'
-    
+
     MALL_MAIN_URI = Addressable::URI.new :scheme => 'http',
       :host => MALL_HOST, :path => MALL_MAIN_PATH
     MALL_CATEGORY_URI = Addressable::URI.new :scheme => 'http',
       :host => MALL_HOST, :path => MALL_CATEGORY_PATH,
       :query => MALL_CATEGORY_QUERY
     MALL_CATEGORY_TEMPLATE = Addressable::Template.new MALL_CATEGORY_URI
-    
+
     def spider_mall!
       # Load the mall HTML, scan it for category onclicks
       items = {}
@@ -340,7 +364,7 @@ class Item < ActiveRecord::Base
       end
       items
     end
-    
+
     def spider_mall_assets!(limit)
       items = self.select([arel_table[:id], arel_table[:name]]).sold_in_mall.spidered_longest_ago.limit(limit).all
       puts "- #{items.size} items need asset spidering"
@@ -349,7 +373,7 @@ class Item < ActiveRecord::Base
         AssetStrategy.spider item
       end
     end
-    
+
     def spider_request(uri)
       begin
         response = Net::HTTP.get_response uri
@@ -361,26 +385,26 @@ class Item < ActiveRecord::Base
       end
       response.body
     end
-    
+
     private
-    
+
     class AssetStrategy
       Strategies = {}
-      
+
       MALL_ASSET_PATH = '/mall/ajax/get_item_assets.phtml'
       MALL_ASSET_QUERY = 'pet={pet_name}&oii={item_id}'
       MALL_ASSET_URI = Addressable::URI.new :scheme => 'http',
         :host => MALL_HOST, :path => MALL_ASSET_PATH,
         :query => MALL_ASSET_QUERY
       MALL_ASSET_TEMPLATE = Addressable::Template.new MALL_ASSET_URI
-      
+
       def initialize(name, options)
         @name = name
         @pass = options[:pass]
         @complete = options[:complete]
         @pet_types = options[:pet_types]
       end
-      
+
       def spider(item)
         puts "  - Using #{@name} strategy"
         exit = false
@@ -412,9 +436,9 @@ class Item < ActiveRecord::Base
           Strategies[@complete].spider(item)
         end
       end
-      
+
       private
-      
+
       def load_for_pet_type(item, pet_type, banned_pet_ids=[])
         pet_id = pet_type.pet_id
         pet_name = pet_type.pet_name
@@ -442,7 +466,7 @@ class Item < ActiveRecord::Base
           end
         end
       end
-      
+
       def load_for_pet_name(item, pet_type, pet_name)
         uri = MALL_ASSET_TEMPLATE.
           expand(
@@ -468,12 +492,12 @@ class Item < ActiveRecord::Base
           nil
         end
       end
-      
+
       class << self
         def add_strategy(name, options)
           Strategies[name] = new(name, options)
         end
-        
+
         def add_cascading_strategy(name, options)
           pet_type_groups = options[:pet_types]
           pet_type_group_names = pet_type_groups.keys
@@ -494,7 +518,7 @@ class Item < ActiveRecord::Base
             name = next_name
           end
         end
-        
+
         def spider(item)
           puts "- Spidering for #{item.name}"
           Strategies[:start].spider(item)
@@ -502,7 +526,7 @@ class Item < ActiveRecord::Base
           item.save
           puts "- #{item.name} done spidering, saved last spidered timestamp"
         end
-        
+
         def build_strategies
           if Strategies.empty?
             pet_type_t = PetType.arel_table
@@ -512,20 +536,20 @@ class Item < ActiveRecord::Base
               joins(:pets).group(pet_type_t[:id])
             remaining_standard_pet_types = pet_types.single_standard_color.order(:species_id)
             first_standard_pet_type = [remaining_standard_pet_types.slice!(0)]
-            
+
             add_strategy :start, :pass => :remaining_standard, :complete => :first_nonstandard_color,
               :pet_types => first_standard_pet_type
-            
+
             add_strategy :remaining_standard, :complete => :exit,
               :pet_types => remaining_standard_pet_types
-            
+
             add_cascading_strategy :first_nonstandard_color, :complete => :remaining_standard,
               :pet_types => pet_types.select(pet_type_t[:color_id]).nonstandard_colors.all.group_by(&:color_id)
           end
         end
       end
     end
-    
+
     def spider_mall_category(json)
       begin
         items_data = JSON.parse(json)[MALL_JSON_ITEM_DATA_KEY]
@@ -549,17 +573,17 @@ class Item < ActiveRecord::Base
       end
       items
     end
-    
+
     class SpiderError < RuntimeError;end
     class SpiderHTTPError < SpiderError;end
     class SpiderJSONError < SpiderError;end
   end
-  
+
   private
-  
+
   SearchFilterScopes = []
   LimitedSearchFilters = []
-  
+
   def self.search_filter(name, options={}, &block)
     assume_complement = options.delete(:assume_complement) || true
     name = name.to_s
@@ -576,12 +600,12 @@ class Item < ActiveRecord::Base
       end
     end
   end
-  
+
   def self.single_search_filter(name, options={}, &block)
     options[:assume_complement] = false
     search_filter name, options, &block
   end
-  
+
   def self.search_filter_block(options, positive)
     Proc.new { |str, scope|
       condition = yield(str)
@@ -590,18 +614,18 @@ class Item < ActiveRecord::Base
       scope.where(condition)
     }
   end
-  
+
   search_filter :name do |name|
     arel_table[:name].matches("%#{name}%")
   end
-  
+
   search_filter :description do |description|
     arel_table[:description].matches("%#{description}%")
   end
-  
+
   ADJECTIVE_FILTERS = {
     'nc' => arel_table[:rarity_index].in(NCRarities),
-    'pb' => arel_table[:description].eq(PaintbrushSetDescription)
+    'pb' => arel_table[:description].eq(PAINTBRUSH_SET_DESCRIPTION)
   }
   search_filter :is do |adjective|
     filter = ADJECTIVE_FILTERS[adjective]
@@ -612,7 +636,7 @@ class Item < ActiveRecord::Base
     end
     filter
   end
-  
+
   search_filter :only do |species_name|
     begin
       id = Species.require_by_name(species_name).id
@@ -621,7 +645,7 @@ class Item < ActiveRecord::Base
     end
     arel_table[:species_support_ids].eq(id.to_s)
   end
-  
+
   search_filter :species do |species_name|
     begin
       id = Species.require_by_name(species_name).id
@@ -636,13 +660,13 @@ class Item < ActiveRecord::Base
       "%,#{id}"
     ]))
   end
-  
+
   single_search_filter :type, {:limit => true, :scope => :join_swf_assets} do |zone_set_name|
     zone_set = Zone::ItemZoneSets[zone_set_name]
     raise SearchError, "Type \"#{zone_set_name}\" does not exist" unless zone_set
     SwfAsset.arel_table[:zone_id].in(zone_set.map(&:id))
   end
-  
+
   single_search_filter :not_type, :full => lambda { |zone_set_name, scope|
     zone_set = Zone::ItemZoneSets[zone_set_name]
     raise SearchError, "Type \"#{zone_set_name}\" does not exist" unless zone_set
@@ -670,27 +694,27 @@ class Item < ActiveRecord::Base
       map(&:id)
     scope.where(arel_table[:id].in(item_ids))
   }
-  
+
   class Condition < String
     attr_accessor :filter
-    
+
     def initialize
       @positive = true
     end
-    
+
     def filter?
       !@filter.nil?
     end
-    
+
     def to_filter!
       @filter = self.clone
       self.replace ''
     end
-    
+
     def negate!
       @positive = !@positive
     end
-    
+
     def narrow(scope)
       if SearchFilterScopes.include?(filter)
         polarized_filter = @positive ? filter : "not_#{filter}"
@@ -699,17 +723,18 @@ class Item < ActiveRecord::Base
         raise SearchError, "Filter #{filter} does not exist"
       end
     end
-    
+
     def filter
       @filter || 'name'
     end
-    
+
     def inspect
       @filter ? "#{@filter}:#{super}" : super
     end
   end
-  
+
   class SearchError < ArgumentError;end
 end
 
 require 'item_sweeper'
+

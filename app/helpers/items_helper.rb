@@ -2,14 +2,14 @@ module ItemsHelper
   NeoitemsURLFormat = 'http://neoitems.net/search2.php?Name=%s&AndOr=and&Category=All&Special=0&Status=Active&Sort=ItemID&results=15&SearchType=8'
   module PetTypeImage
     Format = 'http://pets.neopets.com/cp/%s/%i/%i.png'
-    
+
     Emotions = {
       :happy => 1,
       :sad => 2,
       :angry => 3,
       :ill => 4
     }
-    
+
     Sizes = {
       :face => 1,
       :thumb => 2,
@@ -17,17 +17,17 @@ module ItemsHelper
       :full => 4
     }
   end
-  
+
   def standard_species_search_links
-    build_on_random_standard_pet_types(Species.all) do |pet_type|
+    build_on_pet_types(Species.all) do |pet_type|
       image = pet_type_image(pet_type, :happy, :zoom)
       query = "species:#{pet_type.species.name}"
       link_to(image, items_path(:q => query))
     end
   end
-  
-  def standard_species_images(species)
-    build_on_random_standard_pet_types(species) do |pet_type|
+
+  def standard_species_images_for(item)
+    build_on_pet_types(item.supported_species, item.special_color) do |pet_type|
       image = pet_type_image(pet_type, :happy, :face)
       attributes = {
         'data-id' => pet_type.id,
@@ -47,25 +47,29 @@ module ItemsHelper
       )
     end
   end
-  
+
   def list_zones(zones, method=:label)
     zones.sort { |x,y| x.label <=> y.label }.map(&method).join(', ')
   end
-  
+
   def nc_icon_for(item)
     image_tag 'nc.png', :title => 'NC Mall Item', :alt => 'NC', :class => 'nc-icon' if item.nc?
   end
-  
+
   def neoitems_url_for(item)
     sprintf(NeoitemsURLFormat, CGI::escape(item.name))
   end
-  
+
   private
-  
-  def build_on_random_standard_pet_types(species, &block)
-    raw(PetType.random_basic_per_species(species.map(&:id)).map(&block).join)
+
+  def build_on_pet_types(species, special_color=nil, &block)
+    species_ids = species.map(&:id)
+    pet_types = special_color ?
+      PetType.where(:color_id => special_color.id, :species_id => species_ids).order(:species_id) :
+      PetType.random_basic_per_species(species.map(&:id))
+    pet_types.map(&block).join.html_safe
   end
-  
+
   def pet_type_image(pet_type, emotion, size)
     emotion_id = PetTypeImage::Emotions[emotion]
     size_id = PetTypeImage::Sizes[size]
@@ -74,3 +78,4 @@ module ItemsHelper
     image_tag(src, :alt => human_name, :title => human_name)
   end
 end
+
