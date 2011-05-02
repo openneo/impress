@@ -25,7 +25,7 @@
   %a#customize-more.button{:href => '/'} Customize more
 
 #item-preview
-  #item-preview-species= standard_species_images(@item.supported_species)
+  #item-preview-species= standard_species_images_for(@item)
   #item-preview-error
   #item-preview-swf
     Javascript and Flash are required to preview wearables. Sorry!
@@ -36,3 +36,4 @@
 
 = include_javascript_libraries :jquery, :swfobject
 = javascript_include_tag 'items/show'
+

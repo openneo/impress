@@ -1,11 +1,16 @@
 class SwfAssetsController < ApplicationController
   def index
     if params[:item_id]
-      @swf_assets = Item.find(params[:item_id]).swf_assets
+      item = Item.find(params[:item_id])
+      @swf_assets = item.swf_assets
       if params[:body_id]
         @swf_assets = @swf_assets.fitting_body_id(params[:body_id])
       else
-        @swf_assets = @swf_assets.fitting_standard_body_ids
+        if item.special_color
+          @swf_assets = @swf_assets.fitting_color(item.special_color)
+        else
+          @swf_assets = @swf_assets.fitting_standard_body_ids
+        end
         json = @swf_assets.all.group_by(&:body_id)
       end
     elsif params[:body_id] && params[:item_ids]
@@ -26,3 +31,4 @@ class SwfAssetsController < ApplicationController
     render :json => json
   end
 end
+
