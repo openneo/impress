@@ -12,9 +12,10 @@ class PetType < ActiveRecord::Base
   BasicHashes = YAML::load_file(Rails.root.join('config', 'basic_type_hashes.yml'))
 
   StandardPetTypesBySpeciesId = PetType.where(arel_table[:color_id].in(Color::BasicIds)).group_by(&:species_id)
-  StandardBodyIds = []
-  StandardPetTypesBySpeciesId.each do |species_id, pet_types|
-    StandardBodyIds += pet_types.map(&:body_id)
+  StandardBodyIds = [].tap do |body_ids|
+    StandardPetTypesBySpeciesId.each do |species_id, pet_types|
+      body_ids.concat(pet_types.map(&:body_id))
+    end
   end
 
   # Returns all pet types of a single standard color. The caller shouldn't care
