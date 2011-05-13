@@ -2,10 +2,10 @@
 %html
   %head
     %title
-      Dress to Impress
       - if content_for? :title
-        &mdash;
         = yield :title
+        |
+      Dress to Impress
     /[if IE]
       = include_javascript_libraries :html5
     = stylesheet_link_tag "compiled/screen"
