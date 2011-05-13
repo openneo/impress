@@ -1,8 +1,24 @@
 class SwfAsset < ActiveRecord::Base
   PUBLIC_ASSET_DIR = File.join('swfs', 'outfit')
   LOCAL_ASSET_DIR = Rails.root.join('public', PUBLIC_ASSET_DIR)
+  PUBLIC_IMAGE_DIR = File.join('images', 'outfit')
+  LOCAL_IMAGE_DIR = Rails.root.join('public', PUBLIC_IMAGE_DIR)
   NEOPETS_ASSET_SERVER = 'http://images.neopets.com'
+
   set_inheritance_column 'inheritance_type'
+
+  include SwfConverter
+  converts_swfs :size => [600, 600], :output_sizes => [[150, 150], [300, 300], [600, 600]]
+
+  def local_swf_path
+    LOCAL_ASSET_DIR.join(local_path_within_outfit_swfs)
+  end
+
+  def swf_image_path(size)
+    base_dir = File.dirname(local_path_within_outfit_swfs)
+    image_dir = LOCAL_IMAGE_DIR.join(base_dir).join(id.to_s)
+    image_dir.join("#{id}_#{size[0]}x#{size[1]}.png")
+  end
 
   attr_accessor :item
 
