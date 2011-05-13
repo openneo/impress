@@ -14,7 +14,7 @@
   %body{:class => body_class}
     = javascript_include_tag "analytics"
     #container
-      - if content_for? :title
+      - if content_for?(:title) && show_title_header?
         %h1#title= yield :title
       = render 'static/announcement.html'
       = yield :before_flashes
