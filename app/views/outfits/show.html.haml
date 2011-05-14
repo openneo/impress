@@ -1,7 +1,7 @@
 - title(@outfit.name || "Shared outfit")
 = link_to_edit_outfit(@outfit, :class => 'button', :id => 'outfit-wardrobe-link') do
   Edit
-  - unless @outfit.user == current_user
+  - unless user_signed_in? && @outfit.user == current_user
     a copy
 - if @outfit.user_id
   #outfit-user
