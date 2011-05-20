@@ -1,3 +1,5 @@
+aws_s3.yml
 database.yml
 deploy.rb
 openneo_auth.yml
+

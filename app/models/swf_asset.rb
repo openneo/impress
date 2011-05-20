@@ -1,8 +1,15 @@
+require 'fileutils'
+require 'uri'
+
 class SwfAsset < ActiveRecord::Base
   PUBLIC_ASSET_DIR = File.join('swfs', 'outfit')
   LOCAL_ASSET_DIR = Rails.root.join('public', PUBLIC_ASSET_DIR)
-  PUBLIC_IMAGE_DIR = File.join('images', 'outfit')
-  LOCAL_IMAGE_DIR = Rails.root.join('public', PUBLIC_IMAGE_DIR)
+  IMAGE_BUCKET = IMPRESS_S3.bucket('impress-asset-images')
+  IMAGE_PERMISSION = 'public-read'
+  IMAGE_HEADERS = {
+    'Cache-Control' => 'max-age=315360000',
+    'Content-Type' => 'image/png'
+  }
   NEOPETS_ASSET_SERVER = 'http://images.neopets.com'
 
   set_inheritance_column 'inheritance_type'
@@ -15,9 +22,47 @@ class SwfAsset < ActiveRecord::Base
   end
 
   def swf_image_path(size)
-    base_dir = File.dirname(local_path_within_outfit_swfs)
-    image_dir = LOCAL_IMAGE_DIR.join(base_dir).join(id.to_s)
-    image_dir.join("#{id}_#{size[0]}x#{size[1]}.png")
+    Rails.root.join('tmp', 'asset_images_before_upload', self.id.to_s, "#{size.join 'x'}.png")
+  end
+
+  def after_swf_conversion(images)
+    images.each do |size, path|
+      s3_key = URI.encode("#{self.id}/#{size.join 'x'}.png")
+
+      print "Uploading #{s3_key}..."
+      IMAGE_BUCKET.put(
+        s3_key,
+        File.open(path),
+        {}, # meta headers
+        IMAGE_PERMISSION, # permission
+        IMAGE_HEADERS
+      )
+      puts "done."
+
+      FileUtils.rm path
+    end
+  end
+
+  def convert_swf_if_not_converted!
+    if has_image?
+      false
+    else
+      convert_swf!
+      self.has_image = true
+      save!
+      true
+    end
+  end
+
+  def request_image_conversion!(klass=AssetImageConversionRequest)
+    if image_requested?
+      false
+    else
+      Resque.enqueue(klass, self.id)
+      self.image_requested = true
+      save!
+      true
+    end
   end
 
   attr_accessor :item
@@ -60,7 +105,8 @@ class SwfAsset < ActiveRecord::Base
       :body_id => body_id,
       :zone_id => zone_id,
       :zones_restrict => zones_restrict,
-      :is_body_specific => body_specific?
+      :is_body_specific => body_specific?,
+      :has_image => has_image?
     }
     if options[:for] == 'wardrobe'
       json[:local_path] = local_url
@@ -131,6 +177,10 @@ class SwfAsset < ActiveRecord::Base
     # If an asset body ID changes, that means more than one body ID has been
     # linked to it, meaning that it's probably wearable by all bodies.
     self.body_id = 0 if !self.body_specific? || (!self.new_record? && self.body_id_changed?)
+  end
+
+  after_create do
+    request_image_conversion!(AssetImageConversionRequest::OnCreation)
   end
 
   class DownloadError < Exception;end

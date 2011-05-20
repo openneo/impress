@@ -8,3 +8,4 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 
 OpenneoImpressItems::Application.load_tasks
+

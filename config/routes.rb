@@ -22,6 +22,9 @@ OpenneoImpressItems::Application.routes.draw do |map|
   end
   resources :outfits, :only => [:show, :create, :update, :destroy]
   resources :pet_attributes, :only => [:index]
+  resources :swf_assets, :only => [:show] do
+    resources :asset_image_conversion_requests, :path => 'conversions', :only => [:create]
+  end
 
   match '/users/current-user/outfits' => 'outfits#index', :as => :current_user_outfits
 

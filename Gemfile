@@ -23,7 +23,11 @@ gem 'addressable', :require => ['addressable/template', 'addressable/uri']
 
 gem 'whenever', '~> 0.6.2', :require => false
 
-gem 'swf_converter', '~> 0.0.1'
+gem 'swf_converter', '~> 0.0.3'
+
+gem 'resque', '~> 1.15.0'
+
+gem 'right_aws', '~> 2.1.0'
 
 group :development_async do
   # async wrappers

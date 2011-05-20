@@ -78,10 +78,15 @@ function Wardrobe() {
 
   function Asset(data) {
     var asset = this;
+
     for(var key in data) {
       if(data.hasOwnProperty(key)) {
         asset[key] = data[key];
       }
+    }
+
+    this.requestImageConversion = function () {
+      $.post('/swf_assets/' + this.id + '/conversions');
     }
   }
 
@@ -703,8 +708,6 @@ function Wardrobe() {
     return pet_type;
   }
 
-  function SwfAsset() {}
-
   /*
   *
   * Controllers
@@ -1161,43 +1164,66 @@ Wardrobe.getStandardView = function (options) {
 
   StandardView.Preview = function (wardrobe) {
     var preview_el = $(options.Preview.wrapper),
-      preview_swf_placeholder = $(options.Preview.placeholder),
-      preview_swf_id = preview_swf_placeholder.attr('id'),
-      preview_swf,
-      update_pending_flash = false;
+      preview_swf_placeholder = $(options.Preview.placeholder);
 
-    swfobject.embedSWF(
-      options.Preview.swf_url,
-      preview_swf_id,
-      '100%',
-      '100%',
-      '9',
-      '/assets/js/swfobject/expressInstall.swf',
-      {'id': preview_swf_id},
-      {'wmode': 'transparent'}
-    );
-
-    Wardrobe.StandardPreview.views_by_swf_id[preview_swf_id] = this;
-
-    this.previewSWFIsReady = function () {
-      preview_swf = document.getElementById(preview_swf_id);
-      if(update_pending_flash) {
+    function SWFAdapter() {
+      var preview_swf_id = preview_swf_placeholder.attr('id'),
+        preview_swf,
         update_pending_flash = false;
-        updateAssets();
+
+      swfobject.embedSWF(
+        options.Preview.swf_url,
+        preview_swf_id,
+        '100%',
+        '100%',
+        '9',
+        '/assets/js/swfobject/expressInstall.swf',
+        {'id': preview_swf_id},
+        {'wmode': 'transparent'}
+      );
+
+      Wardrobe.StandardPreview.views_by_swf_id[preview_swf_id] = this;
+
+      this.previewSWFIsReady = function () {
+        preview_swf = document.getElementById(preview_swf_id);
+        if(update_pending_flash) {
+          update_pending_flash = false;
+          this.updateAssets();
+        }
+      }
+
+      this.updateAssets = function () {
+        var assets, assets_for_swf;
+        if(update_pending_flash) return false;
+        if(preview_swf && preview_swf.setAssets) {
+          assets = wardrobe.outfit.getVisibleAssets();
+          preview_swf.setAssets(assets);
+        } else {
+          update_pending_flash = true;
+        }
       }
     }
 
-    function updateAssets() {
-      var assets, assets_for_swf;
-      if(update_pending_flash) return false;
-      if(preview_swf && preview_swf.setAssets) {
-        assets = wardrobe.outfit.getVisibleAssets();
-        preview_swf.setAssets(assets);
-      } else {
-        update_pending_flash = true;
+    function ImageAdapter() {
+      this.updateAssets = function () {
+        var assets = wardrobe.outfit.getVisibleAssets(), asset;
+        var imagesPending = 0;
+        for(var i in assets) {
+          if(!assets.hasOwnProperty(i)) continue;
+          asset = assets[i];
+          if(!asset.has_image) {
+            assets[i].requestImageConversion();
+            imagesPending++;
+          }
+        }
+        preview_swf_placeholder.text("Waiting on " + imagesPending + " images.");
       }
     }
 
+    //this.adapter = new SWFAdapter();
+    this.adapter = new ImageAdapter();
+
+    var updateAssets = $.proxy(this.adapter, 'updateAssets');
     wardrobe.outfit.bind('updateWornItems', updateAssets);
     wardrobe.outfit.bind('updateItemAssets', updateAssets);
     wardrobe.outfit.bind('updatePetState', updateAssets);

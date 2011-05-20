@@ -30,5 +30,10 @@ class SwfAssetsController < ApplicationController
     json ||= @swf_assets ? @swf_assets.all : nil
     render :json => json
   end
+
+  def show
+    @swf_asset = SwfAsset.find params[:id]
+    render :json => @swf_asset
+  end
 end
 
