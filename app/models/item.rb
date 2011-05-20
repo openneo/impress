@@ -156,6 +156,14 @@ class Item < ActiveRecord::Base
     }
   end
 
+  def name_for_url
+    name.downcase.gsub(' ', '-')
+  end
+
+  def to_param
+    "#{id}-#{name_for_url}"
+  end
+
   before_create do
     self.sold_in_mall ||= false
     true

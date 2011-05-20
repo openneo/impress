@@ -9,6 +9,7 @@
     /[if IE]
       = include_javascript_libraries :html5
     = stylesheet_link_tag "compiled/screen"
+    = yield :meta
     = csrf_meta_tag
     = signed_in_meta_tag
   %body{:class => body_class}
