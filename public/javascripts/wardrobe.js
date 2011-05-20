@@ -126,7 +126,7 @@ function Wardrobe() {
     }
 
     function getNameForSlug() {
-      return item.name.toLowerCase().replace(/ /g, '-');
+      return item.name.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9\-]/i, '');
     }
 
     function getSlug() {

@@ -156,8 +156,9 @@ class Item < ActiveRecord::Base
     }
   end
 
+  URL_CHAR_BLACKLIST = /[^a-z0-9\-]/i
   def name_for_url
-    name.downcase.gsub(' ', '-')
+    name.downcase.gsub(' ', '-').gsub(URL_CHAR_BLACKLIST, '')
   end
 
   def to_param
