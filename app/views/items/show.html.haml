@@ -1,4 +1,7 @@
 - title @item.name
+- content_for :meta do
+  %link{:rel => 'canonical', :href => url_for(@item)}
+
 %header
   = image_tag @item.thumbnail_url, :id => 'item-thumbnail'
   %div

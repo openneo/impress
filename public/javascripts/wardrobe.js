@@ -125,6 +125,22 @@ function Wardrobe() {
       this.loaded = true;
     }
 
+    function getNameForSlug() {
+      return item.name.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9\-]/i, '');
+    }
+
+    function getSlug() {
+      var slug = item.id.toString();
+      if(this.hasOwnProperty('name')) {
+        slug += '-' + getNameForSlug();
+      }
+      return slug;
+    }
+
+    this.getURL = function() {
+      return "/items/" + getSlug();
+    }
+
     Item.cache[id] = this;
   }
 
