@@ -1,0 +1,14 @@
+!!! XML
+%urlset{:xmlns => "http://www.sitemaps.org/schemas/sitemap/0.9"}
+  - for item in @items
+    %url
+      %loc http://#{request.host_with_port}#{url_for(item)}
+      %changefreq monthly
+      %priority 0.5
+
+  -# Homepage
+  %url
+    %loc= root_url
+    %changefreq monthly
+    %priority 1.0
+

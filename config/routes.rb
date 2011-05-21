@@ -41,5 +41,7 @@ OpenneoImpressItems::Application.routes.draw do |map|
   match '/wardrobe' => 'outfits#edit', :as => :wardrobe
 
   match '/terms' => 'static#terms', :as => :terms
+
+  match '/sitemap.xml' => 'sitemap#index', :as => :sitemap, :format => :xml
 end
 
