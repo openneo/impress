@@ -43,5 +43,6 @@ OpenneoImpressItems::Application.routes.draw do |map|
   match '/terms' => 'static#terms', :as => :terms
 
   match '/sitemap.xml' => 'sitemap#index', :as => :sitemap, :format => :xml
+  match '/robots.txt' => 'sitemap#robots', :as => :robots, :format => :text
 end
 
