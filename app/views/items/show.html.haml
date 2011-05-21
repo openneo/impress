@@ -2,42 +2,43 @@
 - content_for :meta do
   %link{:rel => 'canonical', :href => url_for(@item)}
 
-%header
-  = image_tag @item.thumbnail_url, :id => 'item-thumbnail'
-  %div
-    %h2#item-name= @item.name
-    = nc_icon_for(@item)
-    - unless @item.rarity.blank?
-      == Rarity: #{@item.rarity_index} (#{@item.rarity})
-    %a.button{:href => neoitems_url_for(@item)} NeoItems
+- cache "items_show_#{@item.id}_main_content" do
+  %header
+    = image_tag @item.thumbnail_url, :id => 'item-thumbnail'
+    %div
+      %h2#item-name= @item.name
+      = nc_icon_for(@item)
+      - unless @item.rarity.blank?
+        == Rarity: #{@item.rarity_index} (#{@item.rarity})
+      %a.button{:href => neoitems_url_for(@item)} NeoItems
 
-%p= @item.description
+  %p= @item.description
 
-#item-zones
-  %p
-    %strong Occupies:
-    = list_zones @item.occupied_zones, :uncertain_label
-  %p
-    %strong Restricts:
-    - if @item.restricted_zones.empty?
-      None
-    - else
-      = list_zones @item.restricted_zones
+  #item-zones
+    %p
+      %strong Occupies:
+      = list_zones @item.occupied_zones, :uncertain_label
+    %p
+      %strong Restricts:
+      - if @item.restricted_zones.empty?
+        None
+      - else
+        = list_zones @item.restricted_zones
 
-#item-preview-header
-  %h3 Preview
-  %a#customize-more.button{:href => '/'} Customize more
+  #item-preview-header
+    %h3 Preview
+    %a#customize-more.button{:href => '/'} Customize more
 
-#item-preview
-  #item-preview-species= standard_species_images_for(@item)
-  #item-preview-error
-  #item-preview-swf
-    Javascript and Flash are required to preview wearables. Sorry!
+  #item-preview
+    #item-preview-species= standard_species_images_for(@item)
+    #item-preview-error
+    #item-preview-swf
+      Javascript and Flash are required to preview wearables. Sorry!
 
-:javascript
-  var CURRENT_ITEM_ZONES_RESTRICT = #{@item.zones_restrict.inspect},
-    IMPRESS_HOST = #{RemoteImpressHost.inspect};
+  :javascript
+    var CURRENT_ITEM_ZONES_RESTRICT = #{@item.zones_restrict.inspect},
+      IMPRESS_HOST = #{RemoteImpressHost.inspect};
 
-= include_javascript_libraries :jquery, :swfobject
-= javascript_include_tag 'items/show'
+  = include_javascript_libraries :jquery, :swfobject
+  = javascript_include_tag 'items/show'
 
