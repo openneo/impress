@@ -1,7 +1,6 @@
 class ItemsController < ApplicationController
   before_filter :set_query
-  caches_action :show, :layout => false
-  
+
   def index
     if params.has_key?(:q)
       begin
@@ -35,11 +34,11 @@ class ItemsController < ApplicationController
       end
     end
   end
-  
+
   def show
     @item = Item.find params[:id]
   end
-  
+
   def needed
     if params[:color] && params[:species]
       @pet_type = PetType.find_by_color_id_and_species_id(
@@ -54,10 +53,11 @@ class ItemsController < ApplicationController
     @pet_name = params[:name]
     render :layout => 'application'
   end
-  
+
   private
-  
+
   def set_query
     @query = params[:q]
   end
 end
+
