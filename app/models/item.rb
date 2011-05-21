@@ -40,6 +40,8 @@ class Item < ActiveRecord::Base
   scope :sold_in_mall, where(:sold_in_mall => true)
   scope :not_sold_in_mall, where(:sold_in_mall => false)
 
+  scope :sitemap, select([:id, :name]).order(:id).limit(49999)
+
   # Not defining validations, since this app is currently read-only
 
   def nc?
