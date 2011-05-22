@@ -5,7 +5,10 @@
       - if content_for? :title
         = yield :title
         |
-      Dress to Impress
+      - if content_for? :title_category
+        = yield :title_category
+      - else
+        Dress to Impress: Preview customized Neopets' clothing and wearables
     /[if IE]
       = include_javascript_libraries :html5
     = stylesheet_link_tag "compiled/screen"
