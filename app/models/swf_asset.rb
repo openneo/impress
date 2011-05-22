@@ -27,11 +27,10 @@ class SwfAsset < ActiveRecord::Base
 
   def after_swf_conversion(images)
     images.each do |size, path|
-      s3_key = URI.encode("#{self.id}/#{size.join 'x'}.png")
-
-      print "Uploading #{s3_key}..."
+      key = s3_key(size)
+      print "Uploading #{key}..."
       IMAGE_BUCKET.put(
-        s3_key,
+        key,
         File.open(path),
         {}, # meta headers
         IMAGE_PERMISSION, # permission
@@ -40,6 +39,25 @@ class SwfAsset < ActiveRecord::Base
       puts "done."
 
       FileUtils.rm path
+    end
+  end
+
+  def s3_key(size)
+    URI.encode("#{s3_path}/#{size.join 'x'}.png")
+  end
+
+  def s3_path
+    "#{type}/#{s3_partition_path}#{self.id}"
+  end
+
+  PARTITION_COUNT = 3
+  PARTITION_DIGITS = 3
+  PARTITION_ID_LENGTH = PARTITION_COUNT * PARTITION_DIGITS
+  def s3_partition_path
+    (id / 10**PARTITION_DIGITS).to_s.rjust(PARTITION_ID_LENGTH, '0').tap do |id_str|
+      PARTITION_COUNT.times do |n|
+        id_str.insert(PARTITION_ID_LENGTH - (n * PARTITION_DIGITS), '/')
+      end
     end
   end
 
@@ -58,7 +76,7 @@ class SwfAsset < ActiveRecord::Base
     if image_requested?
       false
     else
-      Resque.enqueue(AssetImageConversionRequest, self.id)
+      Resque.enqueue(AssetImageConversionRequest, self.type, self.id)
       self.image_requested = true
       save!
       true
@@ -101,12 +119,14 @@ class SwfAsset < ActiveRecord::Base
   def as_json(options={})
     json = {
       :id => id,
+      :type => type,
       :depth => depth,
       :body_id => body_id,
       :zone_id => zone_id,
       :zones_restrict => zones_restrict,
       :is_body_specific => body_specific?,
-      :has_image => has_image?
+      :has_image => has_image?,
+      :s3_path => s3_path
     }
     if options[:for] == 'wardrobe'
       json[:local_path] = local_url
@@ -179,8 +199,8 @@ class SwfAsset < ActiveRecord::Base
     self.body_id = 0 if !self.body_specific? || (!self.new_record? && self.body_id_changed?)
   end
 
-  after_create do
-    Resque.enqueue(AssetImageConversionRequest::OnCreation, self.id)
+  after_commit :on => :create do
+    Resque.enqueue(AssetImageConversionRequest::OnCreation, self.type, self.id)
   end
 
   class DownloadError < Exception;end

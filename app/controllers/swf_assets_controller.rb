@@ -26,8 +26,22 @@ class SwfAssetsController < ApplicationController
       json = @swf_assets.map { |a| a.as_json(:parent_id => pet_state_id, :for => 'wardrobe') }
     elsif params[:pet_type_id]
       @swf_assets = PetType.find(params[:pet_type_id]).pet_states.emotion_order.first.swf_assets
+    elsif params[:ids]
+      @swf_assets = []
+      if params[:ids][:biology]
+        @swf_assets += SwfAsset.biology_assets.where(:id => params[:ids][:biology]).all
+      end
+      if params[:ids][:object]
+        @swf_assets += SwfAsset.object_assets.where(:id => params[:ids][:object]).all
+      end
     end
-    json ||= @swf_assets ? @swf_assets.all : nil
+    if @swf_assets
+      @swf_assets = @swf_assets.all unless @swf_assets.is_a? Array
+      @swf_assets.each(&:request_image_conversion!)
+      json = @swf_assets unless json
+    else
+      json = nil
+    end
     render :json => json
   end
 

@@ -76,18 +76,22 @@ function Wardrobe() {
     }
   }
 
-  function Asset(data) {
+  function Asset(newData) {
     var asset = this;
 
-    for(var key in data) {
-      if(data.hasOwnProperty(key)) {
-        asset[key] = data[key];
+    this.imageURL = function (size) {
+      return Wardrobe.IMAGE_CONFIG.base_url + this.s3_path + "/" + size[0] + "x" + size[1] + ".png";
+    }
+
+    this.update = function (data) {
+      for(var key in data) {
+        if(data.hasOwnProperty(key)) {
+          asset[key] = data[key];
+        }
       }
     }
 
-    this.requestImageConversion = function () {
-      $.post('/swf_assets/' + this.id + '/conversions');
-    }
+    this.update(newData);
   }
 
   function BiologyAsset(data) {
@@ -271,7 +275,8 @@ function Wardrobe() {
       // note: may contain duplicates - loop through assets, not these, for
       // best performance
       var restricted_zones = [],
-        restrictors = outfit.worn_items.concat(outfit.pet_state.assets);
+        restrictors = outfit.worn_items;
+      if(outfit.pet_state) restrictors = restrictors.concat(outfit.pet_state.assets);
       $.each(restrictors, function () {
         restricted_zones = restricted_zones.concat(this.restricted_zones);
       });
@@ -366,8 +371,9 @@ function Wardrobe() {
     }
 
     this.getVisibleAssets = function () {
-      var assets = this.pet_state.assets, restricted_zones = getRestrictedZones(),
+      var assets, restricted_zones = getRestrictedZones(),
         visible_assets = [];
+      assets = this.pet_state ? this.pet_state.assets : [];
       for(var i = 0; i < outfit.worn_items.length; i++) {
         assets = assets.concat(outfit.worn_items[i].getAssetsFitting(outfit.pet_type));
       }
@@ -1114,6 +1120,15 @@ function Wardrobe() {
   }
 }
 
+Wardrobe.IMAGE_CONFIG = {
+  base_url: "https://s3.amazonaws.com/impress-asset-images/",
+  sizes: [
+    [600, 600],
+    [300, 300],
+    [150, 150]
+  ]
+}
+
 Wardrobe.StandardPreview = {
   views_by_swf_id: {}
 };
@@ -1163,6 +1178,7 @@ Wardrobe.getStandardView = function (options) {
   }
 
   StandardView.Preview = function (wardrobe) {
+    var preview = this;
     var preview_el = $(options.Preview.wrapper),
       preview_swf_placeholder = $(options.Preview.placeholder);
 
@@ -1170,6 +1186,8 @@ Wardrobe.getStandardView = function (options) {
       var preview_swf_id = preview_swf_placeholder.attr('id'),
         preview_swf,
         update_pending_flash = false;
+
+      preview_el.removeClass('image-adapter').addClass('swf-adapter');
 
       swfobject.embedSWF(
         options.Preview.swf_url,
@@ -1205,28 +1223,145 @@ Wardrobe.getStandardView = function (options) {
     }
 
     function ImageAdapter() {
+      var pendingAssets = {}, pendingAssetIds = [], pendingInterval,
+        pendingAssetsCount = 0,
+        pendingMessageEl = $('<span/>', {id: 'preview-images-pending'}),
+        previewImageContainer = $(options.Preview.image_container);
+
+      var ASSET_PING_RATE = 5000;
+
+      preview_el.removeClass('swf-adapter').addClass('image-adapter');
+      pendingMessageEl.appendTo(previewImageContainer);
+
       this.updateAssets = function () {
-        var assets = wardrobe.outfit.getVisibleAssets(), asset;
-        var imagesPending = 0;
+        var assets = wardrobe.outfit.getVisibleAssets(), asset,
+          availableAssets = [];
+        pendingAssets = {};
+        pendingAssetsCount = 0;
+        clearView();
         for(var i in assets) {
           if(!assets.hasOwnProperty(i)) continue;
           asset = assets[i];
-          if(!asset.has_image) {
-            assets[i].requestImageConversion();
-            imagesPending++;
+          if(asset.has_image) {
+            addToView(asset);
+          } else {
+            pendingAssets[asset.id] = asset;
+            pendingAssetsCount++;
           }
         }
-        preview_swf_placeholder.text("Waiting on " + imagesPending + " images.");
+        updatePendingStatus();
       }
+
+      function addToView(asset) {
+        $(
+          '<img/>',
+          {
+            css: {
+              zIndex: asset.depth
+            },
+            src: asset.imageURL(bestSize())
+          }
+        ).appendTo(previewImageContainer);
+      }
+
+      // TODO: choose new best size on window resize
+      function bestSize() {
+        var sizes = Wardrobe.IMAGE_CONFIG.sizes,
+          width = preview_el.width(), height = preview_el.height();
+        for(var i in sizes) {
+          if(sizes[i][0] < width && sizes[i][1] < height) return sizes[i];
+        }
+        return sizes[sizes.length - 1];
+      }
+
+      function clearView() {
+        previewImageContainer.children('img').remove();
+      }
+
+      function loadPendingAssets() {
+        var pendingAssetIds = {
+          biology: [],
+          object: []
+        }, asset;
+        for(var i in pendingAssets) {
+          if(pendingAssets.hasOwnProperty(i)) {
+            pendingAssetIds[pendingAssets[i].type].push(pendingAssets[i].id);
+          }
+        }
+        $.getJSON(
+          '/swf_assets.json',
+          {
+            ids: pendingAssetIds
+          },
+          function (assetsData) {
+            var assetData, asset;
+            for(var i in assetsData) {
+              assetData = assetsData[i];
+              if(assetData.has_image && pendingAssets.hasOwnProperty(assetData.id)) {
+                asset = pendingAssets[assetData.id];
+                asset.update(assetData);
+                delete pendingAssets[assetData.id];
+                pendingAssetsCount--;
+                addToView(asset);
+              }
+            }
+            updatePendingStatus();
+          }
+        );
+      }
+
+      function updateContainerSize() {
+        var size = bestSize();
+        previewImageContainer.css({
+          height: size[1],
+          width: size[0]
+        });
+      }
+
+      function updatePendingInterval() {
+        if(pendingAssetsCount) {
+          if(pendingInterval == null) {
+            pendingInterval = setInterval(loadPendingAssets, ASSET_PING_RATE);
+          }
+        } else {
+          if(pendingInterval != null) {
+            clearInterval(pendingInterval);
+            pendingInterval = null;
+          }
+        }
+      }
+
+      function updatePendingMessage() {
+        pendingMessageEl.text("Waiting on " + pendingAssetsCount + " images").
+          attr("className", "waiting-on-" + pendingAssetsCount);
+      }
+
+      function updatePendingStatus() {
+        updatePendingInterval();
+        updatePendingMessage();
+      }
+
+      updateContainerSize();
+      $(window).resize(updateContainerSize);
     }
 
-    //this.adapter = new SWFAdapter();
-    this.adapter = new ImageAdapter();
+    this.adapter = new SWFAdapter();
 
-    var updateAssets = $.proxy(this.adapter, 'updateAssets');
+    function updateAssets() {
+      preview.adapter.updateAssets();
+    }
+
     wardrobe.outfit.bind('updateWornItems', updateAssets);
     wardrobe.outfit.bind('updateItemAssets', updateAssets);
     wardrobe.outfit.bind('updatePetState', updateAssets);
+
+    this.useSWFAdapter = function () { preview.adapter = new SWFAdapter(); updateAssets(); }
+    this.useImageAdapter = function () { preview.adapter = new ImageAdapter(); updateAssets(); }
+    this.toggleAdapter = function () {
+      var nextAdapter = preview.adapter.constructor == SWFAdapter ? ImageAdapter : SWFAdapter;
+      preview.adapter = new nextAdapter();
+      updateAssets();
+    }
   }
 
   window.previewSWFIsReady = function (id) {
