@@ -4,16 +4,16 @@ class Pet < ActiveRecord::Base
   PET_VIEWER_METHOD = 'getViewerData'
   PET_NOT_FOUND_REMOTE_ERROR = 'PHP: Unable to retrieve records from the database.'
   WARDROBE_PATH = '/wardrobe'
-  
+
   belongs_to :pet_type
-  
+
   attr_reader :items, :pet_state
   attr_accessor :contributor
-  
+
   scope :with_pet_type_color_ids, lambda { |color_ids|
     joins(:pet_type).where(PetType.arel_table[:id].in(color_ids))
   }
-  
+
   def load!
     require 'ostruct'
     begin
@@ -41,7 +41,7 @@ class Pet < ActiveRecord::Base
       contents.object_info_registry, contents.object_asset_registry)
     true
   end
-  
+
   def wardrobe_query
     {
       :name => self.name,
@@ -51,7 +51,7 @@ class Pet < ActiveRecord::Base
       :objects => self.items.map(&:id)
     }.to_query
   end
-  
+
   def contributables
     contributables = [pet_type, @pet_state]
     items.each do |item|
@@ -60,28 +60,30 @@ class Pet < ActiveRecord::Base
     end
     contributables
   end
-  
+
   before_validation do
     pet_type.save!
-    @pet_state.save!
-    items.each do |item|
-      item.handle_assets!
-      item.save!
+    @pet_state.save! if @pet_state
+    if @items
+      @items.each do |item|
+        item.handle_assets!
+        item.save!
+      end
     end
   end
-  
+
   def self.load(name)
     pet = Pet.find_or_initialize_by_name(name)
     pet.load!
     pet
   end
-  
+
   private
-  
+
   def self.amf_service
     @amf_service ||= gateway.service AMF_SERVICE_NAME
   end
-  
+
   def self.gateway
     unless @gateway
       require 'rocketamf/remote_gateway'
@@ -89,7 +91,8 @@ class Pet < ActiveRecord::Base
     end
     @gateway
   end
-  
+
   class PetNotFound < Exception;end
   class DownloadError < Exception;end
 end
+
