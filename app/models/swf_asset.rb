@@ -54,11 +54,11 @@ class SwfAsset < ActiveRecord::Base
     end
   end
 
-  def request_image_conversion!(klass=AssetImageConversionRequest)
+  def request_image_conversion!
     if image_requested?
       false
     else
-      Resque.enqueue(klass, self.id)
+      Resque.enqueue(AssetImageConversionRequest, self.id)
       self.image_requested = true
       save!
       true
@@ -180,7 +180,7 @@ class SwfAsset < ActiveRecord::Base
   end
 
   after_create do
-    request_image_conversion!(AssetImageConversionRequest::OnCreation)
+    Resque.enqueue(AssetImageConversionRequest::OnCreation, self.id)
   end
 
   class DownloadError < Exception;end
