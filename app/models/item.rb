@@ -453,8 +453,22 @@ class Item < ActiveRecord::Base
       def load_for_pet_type(item, pet_type, banned_pet_ids=[])
         pet_id = pet_type.pet_id
         pet_name = pet_type.pet_name
-        pet = Pet.load(pet_name)
-        if pet.pet_type == pet_type
+        pet_valid = nil
+        begin
+          pet = Pet.load(pet_name)
+          if pet.pet_type_id == pet_type.id
+            pet_valid = true
+          else
+            pet_valid = false
+            puts "    - Pet #{pet_name} is pet type \##{pet.pet_type_id}, not \##{pet_type.id}; saving it and loading new pet"
+            pet.save!
+          end
+        rescue Pet::PetNotFound
+          pet_valid = false
+          puts "    - Pet #{pet_name} no longer exists; destroying and loading new pet"
+          Pet.find_by_name(pet_name).destroy
+        end
+        if pet_valid
           swf_assets = load_for_pet_name(item, pet_type, pet_name)
           if swf_assets
             puts "    - Modeled with #{pet_name}, saved assets (#{swf_assets.map(&:id).join(', ')})"
@@ -463,8 +477,6 @@ class Item < ActiveRecord::Base
           end
           return swf_assets
         else
-          puts "    - Pet #{pet_name} is pet type \##{pet.pet_type_id}, not \##{pet_type.id}; saving it and loading new pet"
-          pet.save
           banned_pet_ids << pet_id
           new_pet = pet_type.pets.select([:id, :name]).where(Pet.arel_table[:id].not_in(banned_pet_ids)).first
           if new_pet
