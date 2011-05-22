@@ -1,4 +1,5 @@
 @import ../shared/jquery.jgrowl
+@import partials/wardrobe
 
 @import icon
 @import star
@@ -156,6 +157,16 @@ body.outfits-edit
     margin-bottom: 1em
     position: relative
     width: $preview-dimension
+    &.swf-adapter
+      #preview-image-container
+        display: none
+    &.image-adapter
+      #preview-swf-container
+        display: none
+  #preview-image-container
+    +wardrobe-image-wrapper
+    margin: 1em auto
+    position: relative
   #preview-swf-overlay
     +opacity(0)
     background: black
@@ -164,6 +175,18 @@ body.outfits-edit
     position: absolute
     top: 0
     width: 100%
+  #preview-images-pending
+    background: black
+    background: rgba(0, 0, 0, 0.75)
+    bottom: 0
+    color: white
+    font-size: 75%
+    padding: .5em
+    position: absolute
+    right: 0
+    z-index: 1000
+    &.waiting-on-0
+      display: none
   #preview-sidebar
     +border-radius(10px)
     border: 1px solid $soft-border-color

@@ -1,8 +1,87 @@
+require 'fileutils'
+require 'uri'
+
 class SwfAsset < ActiveRecord::Base
   PUBLIC_ASSET_DIR = File.join('swfs', 'outfit')
   LOCAL_ASSET_DIR = Rails.root.join('public', PUBLIC_ASSET_DIR)
+  IMAGE_BUCKET = IMPRESS_S3.bucket('impress-asset-images')
+  IMAGE_PERMISSION = 'public-read'
+  IMAGE_HEADERS = {
+    'Cache-Control' => 'max-age=315360000',
+    'Content-Type' => 'image/png'
+  }
   NEOPETS_ASSET_SERVER = 'http://images.neopets.com'
+
   set_inheritance_column 'inheritance_type'
+
+  include SwfConverter
+  converts_swfs :size => [600, 600], :output_sizes => [[150, 150], [300, 300], [600, 600]]
+
+  def local_swf_path
+    LOCAL_ASSET_DIR.join(local_path_within_outfit_swfs)
+  end
+
+  def swf_image_path(size)
+    Rails.root.join('tmp', 'asset_images_before_upload', self.id.to_s, "#{size.join 'x'}.png")
+  end
+
+  def after_swf_conversion(images)
+    images.each do |size, path|
+      key = s3_key(size)
+      print "Uploading #{key}..."
+      IMAGE_BUCKET.put(
+        key,
+        File.open(path),
+        {}, # meta headers
+        IMAGE_PERMISSION, # permission
+        IMAGE_HEADERS
+      )
+      puts "done."
+
+      FileUtils.rm path
+    end
+  end
+
+  def s3_key(size)
+    URI.encode("#{s3_path}/#{size.join 'x'}.png")
+  end
+
+  def s3_path
+    "#{type}/#{s3_partition_path}#{self.id}"
+  end
+
+  PARTITION_COUNT = 3
+  PARTITION_DIGITS = 3
+  PARTITION_ID_LENGTH = PARTITION_COUNT * PARTITION_DIGITS
+  def s3_partition_path
+    (id / 10**PARTITION_DIGITS).to_s.rjust(PARTITION_ID_LENGTH, '0').tap do |id_str|
+      PARTITION_COUNT.times do |n|
+        id_str.insert(PARTITION_ID_LENGTH - (n * PARTITION_DIGITS), '/')
+      end
+    end
+  end
+
+  def convert_swf_if_not_converted!
+    if has_image?
+      false
+    else
+      convert_swf!
+      self.has_image = true
+      save!
+      true
+    end
+  end
+
+  def request_image_conversion!
+    if image_requested?
+      false
+    else
+      Resque.enqueue(AssetImageConversionRequest, self.type, self.id)
+      self.image_requested = true
+      save!
+      true
+    end
+  end
 
   attr_accessor :item
 
@@ -40,11 +119,14 @@ class SwfAsset < ActiveRecord::Base
   def as_json(options={})
     json = {
       :id => id,
+      :type => type,
       :depth => depth,
       :body_id => body_id,
       :zone_id => zone_id,
       :zones_restrict => zones_restrict,
-      :is_body_specific => body_specific?
+      :is_body_specific => body_specific?,
+      :has_image => has_image?,
+      :s3_path => s3_path
     }
     if options[:for] == 'wardrobe'
       json[:local_path] = local_url
@@ -115,6 +197,10 @@ class SwfAsset < ActiveRecord::Base
     # If an asset body ID changes, that means more than one body ID has been
     # linked to it, meaning that it's probably wearable by all bodies.
     self.body_id = 0 if !self.body_specific? || (!self.new_record? && self.body_id_changed?)
+  end
+
+  after_commit :on => :create do
+    Resque.enqueue(AssetImageConversionRequest::OnCreation, self.type, self.id)
   end
 
   class DownloadError < Exception;end

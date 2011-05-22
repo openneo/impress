@@ -23,6 +23,12 @@ gem 'addressable', :require => ['addressable/template', 'addressable/uri']
 
 gem 'whenever', '~> 0.6.2', :require => false
 
+gem 'swf_converter', '~> 0.0.3'
+
+gem 'resque', '~> 1.15.0'
+
+gem 'right_aws', '~> 2.1.0'
+
 group :development_async do
   # async wrappers
   gem 'eventmachine',     :git => 'git://github.com/eventmachine/eventmachine.git'
@@ -42,9 +48,9 @@ end
 
 group :production do
   gem 'thin', '~> 1.2.7'
-  
+
   gem 'mysql2'
-  
+
   gem 'memcache-client', '~> 1.8.5', :require => ['memcache', 'memcache/event_machine']
 end
 
@@ -52,3 +58,4 @@ group :test do
   gem 'factory_girl_rails', '~> 1.0'
   gem 'rspec-rails', '~> 2.0.0.beta.22'
 end
+
