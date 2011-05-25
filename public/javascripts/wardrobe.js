@@ -140,7 +140,7 @@ function Wardrobe() {
 
     function getSlug() {
       var slug = item.id.toString();
-      if(this.hasOwnProperty('name')) {
+      if(item.hasOwnProperty('name')) {
         slug += '-' + getNameForSlug();
       }
       return slug;
