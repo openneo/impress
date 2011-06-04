@@ -1,5 +1,6 @@
 require 'fileutils'
 require 'uri'
+require 'utf8'
 
 class SwfAsset < ActiveRecord::Base
   PUBLIC_ASSET_DIR = File.join('swfs', 'outfit')
@@ -177,7 +178,7 @@ class SwfAsset < ActiveRecord::Base
     if response.is_a? Net::HTTPSuccess
       new_local_path = File.join(LOCAL_ASSET_DIR, local_path_within_outfit_swfs)
       new_local_dir = File.dirname new_local_path
-      content = response.body.force_encoding 'utf-8'
+      content = +response.body
       FileUtils.mkdir_p new_local_dir
       File.open(new_local_path, 'w') do |f|
         f.print content

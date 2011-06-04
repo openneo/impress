@@ -1,3 +1,5 @@
+require 'rocketamf/remote_gateway'
+
 class Pet < ActiveRecord::Base
   GATEWAY_URL = 'http://www.neopets.com/amfphp/gateway.php'
   AMF_SERVICE_NAME = 'CustomPetService'
@@ -86,7 +88,6 @@ class Pet < ActiveRecord::Base
 
   def self.gateway
     unless @gateway
-      require 'rocketamf/remote_gateway'
       @gateway = RocketAMF::RemoteGateway.new(GATEWAY_URL)
     end
     @gateway

@@ -29,6 +29,8 @@ gem 'resque', '~> 1.15.0'
 
 gem 'right_aws', '~> 2.1.0'
 
+gem "character-encodings", "~> 0.4.1", :platforms => :ruby_18
+
 group :development_async do
   # async wrappers
   gem 'eventmachine',     :git => 'git://github.com/eventmachine/eventmachine.git'
@@ -47,11 +49,8 @@ group :development_async do
 end
 
 group :production do
-  gem 'thin', '~> 1.2.7'
-
   gem 'mysql2'
-
-  gem 'memcache-client', '~> 1.8.5', :require => ['memcache', 'memcache/event_machine']
+  gem 'memcache-client', '~> 1.8.5', :require => 'memcache'
 end
 
 group :test do

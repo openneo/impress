@@ -701,16 +701,16 @@ class Item < ActiveRecord::Base
     # the zone requirement. If that max was NULL, return the object.
     item_ids = select(arel_table[:id]).joins(
         "LEFT JOIN #{ParentSwfAssetRelationship.table_name} #{psa.name} ON " +
-        psa[:swf_asset_type].eq(SwfAssetType)
-        .and(psa[:parent_id].eq(arel_table[:id]))
-        .to_sql
+        psa[:swf_asset_type].eq(SwfAssetType).
+        and(psa[:parent_id].eq(arel_table[:id])).
+        to_sql
       ).
       joins(
         "LEFT JOIN #{SwfAsset.table_name} #{sa.name} ON " +
-        sa[:type].eq(SwfAssetType)
-        .and(sa[:id].eq(psa[:swf_asset_id]))
-        .and(sa[:zone_id].in(zone_set.map(&:id)))
-        .to_sql
+        sa[:type].eq(SwfAssetType).
+        and(sa[:id].eq(psa[:swf_asset_id])).
+        and(sa[:zone_id].in(zone_set.map(&:id))).
+        to_sql
       ).
       group("#{table_name}.id").
       having("MAX(#{sa.name}.id) IS NULL"). # SwfAsset.arel_table[:id].maximum has no #eq
