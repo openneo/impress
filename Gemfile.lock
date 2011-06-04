@@ -74,6 +74,7 @@ GEM
     arel (2.0.8)
     bcrypt-ruby (2.1.4)
     builder (2.1.2)
+    character-encodings (0.4.1)
     closure-compiler (1.0.0)
     compass (0.10.6)
       haml (>= 3.0.4)
@@ -179,6 +180,7 @@ PLATFORMS
 DEPENDENCIES
   RocketAMF!
   addressable
+  character-encodings (~> 0.4.1)
   compass (~> 0.10.1)
   devise (~> 1.1.5)
   em-http-request!

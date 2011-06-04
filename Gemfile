@@ -29,6 +29,8 @@ gem 'resque', '~> 1.15.0'
 
 gem 'right_aws', '~> 2.1.0'
 
+gem "character-encodings", "~> 0.4.1", :platforms => :ruby_18
+
 group :development_async do
   # async wrappers
   gem 'eventmachine',     :git => 'git://github.com/eventmachine/eventmachine.git'
