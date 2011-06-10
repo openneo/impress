@@ -22,8 +22,12 @@ class SwfAsset < ActiveRecord::Base
     LOCAL_ASSET_DIR.join(local_path_within_outfit_swfs)
   end
 
+  def swf_image_dir
+    @swf_image_dir ||= Rails.root.join('tmp', 'asset_images_before_upload', self.id.to_s)
+  end
+
   def swf_image_path(size)
-    Rails.root.join('tmp', 'asset_images_before_upload', self.id.to_s, "#{size.join 'x'}.png")
+    swf_image_dir.join("#{size.join 'x'}.png")
   end
 
   def after_swf_conversion(images)
@@ -41,6 +45,7 @@ class SwfAsset < ActiveRecord::Base
 
       FileUtils.rm path
     end
+    FileUtils.rmdir swf_image_dir
   end
 
   def s3_key(size)
