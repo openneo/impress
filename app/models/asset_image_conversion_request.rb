@@ -1,4 +1,11 @@
+require 'resque-retry'
+
 class AssetImageConversionRequest
+  extend Resque::Plugins::Retry
+
+  @retry_limit = 5
+  @retry_delay = 60
+
   @queue = :requested_asset_images
 
   def self.perform(asset_type, asset_id)
@@ -7,6 +14,9 @@ class AssetImageConversionRequest
   end
 
   class OnCreation < AssetImageConversionRequest
+    @retry_limit = 5
+    @retry_delay = 60
+
     @queue = :requested_asset_images_on_creation
   end
 end
