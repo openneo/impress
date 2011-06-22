@@ -1,20 +1,21 @@
 class PetState < ActiveRecord::Base
   SwfAssetType = 'biology'
-  
+
   has_many :contributions, :as => :contributed # in case of duplicates being merged
   has_many :outfits
   has_many :parent_swf_asset_relationships, :foreign_key => 'parent_id',
     :conditions => {:swf_asset_type => SwfAssetType}
   has_many :swf_assets, :through => :parent_swf_asset_relationships, :source => :biology_asset,
     :conditions => {:type => SwfAssetType}
-  
+
   belongs_to :pet_type
-  
+
   alias_method :swf_asset_ids_from_association, :swf_asset_ids
-  
-  scope :emotion_order, joins(:parent_swf_asset_relationships).
-    group("pet_states.id").order("COUNT(parents_swf_assets.swf_asset_id) DESC, SUM(parents_swf_assets.swf_asset_id) ASC")
-  
+
+  bio_effect_zone_id = 4
+  scope :emotion_order, joins(:parent_swf_asset_relationships => :biology_asset).
+    group("pet_states.id").order("COUNT(swf_assets.zone_id = #{bio_effect_zone_id}) ASC, COUNT(parents_swf_assets.swf_asset_id) DESC, SUM(parents_swf_assets.swf_asset_id) ASC")
+
   def reassign_children_to!(main_pet_state)
     self.contributions.each do |contribution|
       contribution.contributed = main_pet_state
@@ -26,7 +27,7 @@ class PetState < ActiveRecord::Base
     end
     ParentSwfAssetRelationship.where(ParentSwfAssetRelationship.arel_table[:parent_id].eq(self.id)).delete_all
   end
-  
+
   def reassign_duplicates!
     raise "This may only be applied to pet states that represent many duplicate entries" unless duplicate_ids
     pet_states = duplicate_ids.split(',').map do |id|
@@ -38,19 +39,19 @@ class PetState < ActiveRecord::Base
       pet_state.destroy
     end
   end
-  
+
   def sort_swf_asset_ids!
     self.swf_asset_ids = swf_asset_ids.split(',').map(&:to_i).sort.join(',')
   end
-  
+
   def swf_asset_ids
     self['swf_asset_ids']
   end
-  
+
   def swf_asset_ids=(ids)
     self['swf_asset_ids'] = ids
   end
-  
+
   def self.from_pet_type_and_biology_info(pet_type, info)
     swf_asset_ids = []
     info.each do |zone_id, asset_info|
@@ -104,14 +105,14 @@ class PetState < ActiveRecord::Base
     pet_state.parent_swf_asset_relationships = relationships
     pet_state
   end
-  
+
   def self.repair_all!
     self.transaction do
       self.all.each do |pet_state|
         pet_state.sort_swf_asset_ids!
         pet_state.save
       end
-      
+
       self.
         select('pet_states.pet_type_id, pet_states.swf_asset_ids, GROUP_CONCAT(DISTINCT pet_states.id) AS duplicate_ids').
         joins('INNER JOIN pet_states ps2 ON pet_states.pet_type_id = ps2.pet_type_id AND pet_states.swf_asset_ids = ps2.swf_asset_ids').
@@ -124,3 +125,4 @@ class PetState < ActiveRecord::Base
     end
   end
 end
+
