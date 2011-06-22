@@ -13,8 +13,10 @@ class PetState < ActiveRecord::Base
   alias_method :swf_asset_ids_from_association, :swf_asset_ids
 
   bio_effect_zone_id = 4
-  scope :emotion_order, joins(:parent_swf_asset_relationships => :biology_asset).
-    group("pet_states.id").order("COUNT(swf_assets.zone_id = #{bio_effect_zone_id}) ASC, COUNT(parents_swf_assets.swf_asset_id) DESC, SUM(parents_swf_assets.swf_asset_id) ASC")
+  scope :emotion_order, joins(:parent_swf_asset_relationships).
+    joins("LEFT JOIN swf_assets effect_assets ON effect_assets.id = parents_swf_assets.swf_asset_id AND effect_assets.type = 'biology' AND effect_assets.zone_id = #{bio_effect_zone_id}").
+    group("pet_states.id").
+    order("COUNT(effect_assets.id) ASC, COUNT(parents_swf_assets.swf_asset_id) DESC, SUM(parents_swf_assets.swf_asset_id) ASC")
 
   def reassign_children_to!(main_pet_state)
     self.contributions.each do |contribution|
