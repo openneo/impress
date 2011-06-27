@@ -1249,6 +1249,48 @@ Wardrobe.getStandardView = function (options) {
       preview_el.removeClass('swf-adapter').addClass('image-adapter');
       pendingMessageEl.appendTo(previewImageContainer);
 
+      var exportIframe = $('#preview-export-iframe');
+      if(exportIframe.length == 0) {
+        exportIframe = $('<iframe/>',
+          {
+            id: 'preview-export-iframe',
+            src: 'about:blank',
+            css: {
+              left: -1000,
+              position: 'absolute',
+              top: -1000,
+              width: 300,
+              height: 300
+            }
+          }
+        ).appendTo(document.body);
+      }
+
+      this.saveImage = function () {
+        /*
+          Since browser security policy denies access to canvas image data
+          if we include assets from other domains, and our assets are on S3,
+          we pass the job to an HTML file on S3 called preview_export.html.
+
+          It expects the following query string:
+
+          ?WIDTH,HEIGHT,IMAGEURL0[,IMAGEURL1,...]
+
+          It then prompts the user to download a WIDTHxHEIGHT image of the
+          IMAGEURLs layered in order.
+        */
+        var size = bestSize();
+
+        var url = Wardrobe.IMAGE_CONFIG.base_url + "preview_export.html?" +
+          size[0] + "," + size[1];
+
+        previewImageContainer.children('img').each(function () {
+          url += "," + encodeURIComponent(this.src);
+        });
+
+        exportIframe.attr('src', url);
+      }
+
       this.updateAssets = function () {
         var assets = wardrobe.outfit.getVisibleAssets(), asset,
           availableAssets = [];
@@ -1269,15 +1311,38 @@ Wardrobe.getStandardView = function (options) {
       }
 
       function addToView(asset) {
-        $(
+        /*
+          Instead of sorting these assets by zIndex later when we're putting
+          them on the canvas, we just sort them as they get inserted.
+          Find the first asset with a higher zIndex, then insert the new asset
+          before that one. If there is no asset with a higher zIndex, just
+          put it at the very end.
+        */
+
+        var newZIndex = asset.depth, nextHighestAsset;
+        previewImageContainer.children('img').each(function () {
+          var el = $(this);
+          if(el.css('zIndex') > newZIndex) {
+            nextHighestAsset = el;
+            return false;
+          }
+        });
+
+        var el = $(
           '<img/>',
           {
             css: {
-              zIndex: asset.depth
+              zIndex: newZIndex
             },
             src: asset.imageURL(bestSize())
           }
-        ).appendTo(previewImageContainer);
+        );
+
+        if(nextHighestAsset) {
+          el.insertBefore(nextHighestAsset);
+        } else {
+          el.appendTo(previewImageContainer);
+        }
       }
 
       // TODO: choose new best size on window resize

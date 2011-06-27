@@ -20,6 +20,10 @@ $outfit-header-padding: 24px
 $outfit-content-width: $sidebar-unit-inner-width - $outfit-thumbnail-size - $outfit-thumbnail-margin - 32px
 $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
 
+=active-mode
+  color: $text-color
+  font-weight: bold
+
 =outfit
   +outfit-star-shifted
   padding: .25em 0
@@ -187,6 +191,51 @@ body.outfits-edit
     z-index: 1000
     &.waiting-on-0
       display: none
+  #preview-mode
+    margin-right: 1em
+    position: absolute
+    right: 100%
+    text-align: center
+    top: 0
+    width: 7em
+    &.flash-active
+      #preview-mode-flash
+        +active-mode
+    &.image-active
+      #preview-mode-image
+        +active-mode
+      &.can-download
+        #preview-download-image
+          display: inline-block
+  #preview-mode-toggle
+    +border-radius(.5em)
+    border: 1px solid $module-border-color
+    color: $soft-text-color
+    font-size: 85%
+    list-style: none
+    margin: 0 auto .5em
+    text-align: center
+    width: 5em
+    li
+      border-top: 1px solid $soft-border-color
+      cursor: pointer
+      padding: .125em 0
+      width: 100%
+      &:first-child
+        border-top: 0
+  #preview-download-image
+    display: none
+    font-size: 85%
+    margin: 0 auto
+  #preview-mode-image-access-denied
+    display: block
+    font-size: 75%
+    text-align: center
+    text-decoration: none
+    width: 100%
+    em
+      font-style: normal
+      text-decoration: underline
   #preview-sidebar
     +border-radius(10px)
     border: 1px solid $soft-border-color
