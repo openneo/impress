@@ -1,0 +1,40 @@
+- title "Support Dress to Impress"
+= pledgie_link :id => 'pledgie-link-with-title'
+%h2 Image Mode is almost here, but we need your help!
+
+%figure#image-mode-preview
+  = image_tag 'image_mode_preview.png'
+  %figcaption
+    Image Mode &hearts;
+
+%article#image-mode-beta
+  %header Donate $5 or more for early beta access
+  = pledgie_link
+  %p
+    Include your
+    = link_to 'Dress to Impress username', login_path_with_return_to
+    in Special Instructions.
+  %p We'll email you soon!
+
+%article#image-mode-description
+  :markdown
+    **Soon, Dress to Impress will be able to both save outfits as images and
+    even run entirely without Flash**. Image Mode. It's taken months to put
+    together, and it's pretty darn exciting. It's the most requested feature
+    for Dress to Impress, ever.
+
+    **To get there, though, we need a server upgrade.** We've done our best to
+    cut back on memory usage on the server we have now, but ultimately found
+    that, when we run the processes that convert the Flash files to images, we
+    lose stability, and the site goes down.
+
+    **So, we're moving from about $20 to $30 a month.** We'll be moving from
+    [Linode's 512 server to the 768 server](http://linode.com). It's what we
+    need to do in order to have enough RAM to both convert Flash to image and
+    also run a website with thousands of users a day.
+
+    **Thank you for your continued support.** Dress to Impress is 100%
+    user-funded, and we hope to stay that way. Our goal is to raise enough
+    money to guarantee that we'll be up and running for the next 12 months. I
+    think we can do it.
+

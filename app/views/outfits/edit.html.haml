@@ -42,7 +42,7 @@
           - if can_use_image_mode?
             %li#preview-mode-image Image
         - unless can_use_image_mode?
-          = link_to(donate_url, :id => 'preview-mode-image-access-denied', :target => '_blank') do
+          = link_to(donate_path, :id => 'preview-mode-image-access-denied', :target => '_blank') do
             %strong Image mode
             is available for early beta testing to users who
             %em donate

@@ -14,10 +14,6 @@ module ApplicationHelper
     end
   end
 
-  def donate_url
-    '/donate'
-  end
-
   def flashes
     raw(flash.inject('') do |html, pair|
       key, value = pair

@@ -385,6 +385,13 @@ dd {
   src: local("Droid Sans"), url("http://themes.googleusercontent.com/font?kit=POVDFY-UUf0WFR9DIMCU8g") format("truetype");
 }
 
+@font-face {
+  font-family: "Calligraffitti";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Calligraffiti"), url("http://themes.googleusercontent.com/font?kit=vLVN2Y-z65rVu1R7lWdvyKIZAuDcNtpCWuPSaIR0Ie8") format("woff");
+}
+
 /* line 2, ../../../app/stylesheets/partials/_jquery.jgrowl.sass */
 div.jGrowl {
   padding: 10px;
@@ -2454,6 +2461,120 @@ body.pets-bulk.js .script-only {
 /* line 47, ../../../app/stylesheets/pets/_bulk.sass */
 body.pets-bulk .script-only {
   display: none;
+}
+
+/* line 2, ../../../app/stylesheets/static/_donate.sass */
+body.static-donate #title {
+  margin-bottom: 0;
+}
+/* line 5, ../../../app/stylesheets/static/_donate.sass */
+body.static-donate h2 {
+  font-style: italic;
+  font-weight: normal;
+}
+/* line 9, ../../../app/stylesheets/static/_donate.sass */
+body.static-donate #title, body.static-donate h2 {
+  float: left;
+}
+/* line 12, ../../../app/stylesheets/static/_donate.sass */
+body.static-donate .pledgie-link {
+  /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  border: 0;
+  display: inline-block;
+  padding: 0.5em 0.75em 0.45em;
+  color: white;
+  text-decoration: none;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  position: relative;
+  font-weight: bold;
+  line-height: 1;
+  background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.static-donate .pledgie-link:hover {
+  background-color: #005300;
+}
+/* line 53, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.static-donate .pledgie-link:hover {
+  color: white;
+}
+/* line 55, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.static-donate .pledgie-link:active {
+  top: 1px;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.static-donate .pledgie-link:hover {
+  background-color: #ee4b00;
+}
+/* line 16, ../../../app/stylesheets/static/_donate.sass */
+body.static-donate #pledgie-link-with-title {
+  float: right;
+  font-size: 150%;
+  margin-top: 0.5em;
+  padding: 0.75em;
+}
+/* line 28, ../../../app/stylesheets/static/_donate.sass */
+body.static-donate #image-mode-preview {
+  border: 1px solid #006600;
+  clear: both;
+  display: block;
+  float: left;
+  margin: 0 20px 0 0;
+  padding-top: 20px;
+  padding-right: 20px;
+  padding-bottom: 13.333px;
+  padding-left: 20px;
+}
+/* line 40, ../../../app/stylesheets/static/_donate.sass */
+body.static-donate #image-mode-preview img {
+  border: 1px solid #006600;
+  margin-bottom: 0.5em;
+}
+/* line 44, ../../../app/stylesheets/static/_donate.sass */
+body.static-donate #image-mode-preview figcaption {
+  display: block;
+  font-family: Calligraffitti;
+  font-size: 250%;
+  text-align: center;
+}
+/* line 56, ../../../app/stylesheets/static/_donate.sass */
+body.static-donate #image-mode-beta {
+  background: #eeffee;
+  border: 1px solid #006600;
+  padding: 1em;
+  border-width: 1px;
+  display: block;
+  float: left;
+  margin-bottom: 1em;
+  padding: 10px 15px;
+  text-align: center;
+  width: 404px;
+}
+/* line 66, ../../../app/stylesheets/static/_donate.sass */
+body.static-donate #image-mode-beta header {
+  display: block;
+  font-weight: bold;
+}
+/* line 70, ../../../app/stylesheets/static/_donate.sass */
+body.static-donate #image-mode-beta p {
+  font-family: "Droid Sans", Helvetica, Arial, Verdana, sans-serif;
+  font-size: 75%;
+  margin: 0;
+}
+/* line 75, ../../../app/stylesheets/static/_donate.sass */
+body.static-donate #image-mode-beta .pledgie-link {
+  margin: 0.75em 0;
+}
+/* line 78, ../../../app/stylesheets/static/_donate.sass */
+body.static-donate #image-mode-description {
+  float: left;
+  width: 436px;
 }
 
 /* line 1, ../../../app/stylesheets/static/_terms.sass */
