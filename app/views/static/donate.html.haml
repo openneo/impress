@@ -2,21 +2,36 @@
 = pledgie_link :id => 'pledgie-link-with-title'
 %h2 Image Mode is almost here, but we need your help!
 
-%figure#image-mode-preview
-  = image_tag 'image_mode_preview.png'
-  %figcaption
-    Image Mode &hearts;
+#campaign-progress-wrapper
+  #campaign-progress{:style => 'width: 27%'}
+  #campaign-progress-label
+    We have
+    = surround '$', ',' do
+      %span.campaign-raised 100
+    and need
+    = precede '$' do
+      %span.campaign-goal 360
+    to run the upgraded server for a year
 
-%article#image-mode-beta
-  %header Donate $5 or more for early beta access
+%section#image-mode-data
+  %figure#image-mode-preview
+    = image_tag 'image_mode_preview.png'
+    %figcaption
+      Image Mode &hearts;
+  #campaign-donors
+    %h3 Thank you!
+    %ol
+
+#image-mode-beta
+  %header Donate at least $5 for early beta access
   = pledgie_link
   %p
     Include your
     = link_to 'Dress to Impress username', login_path_with_return_to
-    in Special Instructions.
+    in PayPal's Special Instructions field.
   %p We'll email you soon!
 
-%article#image-mode-description
+#image-mode-description
   :markdown
     **Soon, Dress to Impress will be able to both save outfits as images and
     even run entirely without Flash**. Image Mode. It's taken months to put
@@ -33,8 +48,44 @@
     need to do in order to have enough RAM to both convert Flash to image and
     also run a website with thousands of users a day.
 
+    **As a little treat, those who give at least $5 will get early access
+    to Image Mode.** Though we're still missing quite a few converted SWFs,
+    you'll be able to get a feel for what Image Mode will be when it's ready
+    for prime time, and help make sure it's exactly as simple and powerful as
+    it needs to be.
+
     **Thank you for your continued support.** Dress to Impress is 100%
     user-funded, and we hope to stay that way. Our goal is to raise enough
     money to guarantee that we'll be up and running for the next 12 months. I
-    think we can do it.
+    know we can do it.
+
+#image-mode-comments
+  #disqus_thread
+  :javascript
+    var disqus_shortname = 'dresstoimpress';
+
+    // The following are highly recommended additional parameters. Remove the slashes in front to use.
+    var disqus_identifier = 'dresstoimpress_donate';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+  %a.dsq-brlink{:href => "http://disqus.com"}
+    blog comments powered by
+    %span.logo-disqus Disqus
+
+- content_for :javascripts do
+  = include_javascript_libraries :jquery
+  = javascript_include_tag 'static/donate'
+
+- content_for :meta do
+  %meta{:name => 'pledgie-campaign-id', :content => PLEDGIE_CAMPAIGN_ID}
 
