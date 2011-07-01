@@ -2,16 +2,14 @@
 = pledgie_link :id => 'pledgie-link-with-title'
 %h2 Image Mode is almost here, but we need your help!
 
-.campaign-progress-wrapper
-  .campaign-progress
-  .campaign-progress-label
-    We have
-    = surround '$', ',' do
-      %span.campaign-raised
-    and need
-    = precede '$' do
-      %span.campaign-goal
-    to run the upgraded server for a year
+= campaign_progress do
+  We have
+  = surround '$', ',' do
+    %span.campaign-raised
+  and need
+  = precede '$' do
+    %span.campaign-goal
+  to run the upgraded server for a year
 
 %section#image-mode-data
   %figure#image-mode-preview
@@ -81,11 +79,4 @@
   %a.dsq-brlink{:href => "http://disqus.com"}
     blog comments powered by
     %span.logo-disqus Disqus
-
-- content_for :javascripts do
-  = include_javascript_libraries :jquery
-  = javascript_include_tag 'static/donate'
-
-- content_for :meta do
-  %meta{:name => 'pledgie-campaign-id', :content => PLEDGIE_CAMPAIGN_ID}
 

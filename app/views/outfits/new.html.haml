@@ -1,4 +1,8 @@
 - hide_home_link
+
+= campaign_progress do
+  = link_to 'Image mode is almost here, but we need your help!', donate_path
+
 #outfit-forms
   - cache :action_suffix => 'outfit_forms_intro' do
     #pet-preview
@@ -22,6 +26,7 @@
         = pet_attribute_select 'color', @colors, 8
         = pet_attribute_select 'species', @species
         %input{:type => "submit", :value => "Go"}
+
 - cache :action_suffix => 'sections_and_description' do
   %ul#sections
     %li
@@ -109,3 +114,4 @@
 - content_for :javascripts do
   = include_javascript_libraries :jquery
   = include_javascripts :new_outfit_package
+
