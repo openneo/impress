@@ -25,7 +25,7 @@ body.static-donate
     margin-top: .5em
     padding: .75em
 
-  #campaign-progress-wrapper
+  .campaign-progress-wrapper
     +border-radius(8px)
     background: #aaa
     +linear-gradient(color-stops(#ccc, #aaa))
@@ -36,15 +36,15 @@ body.static-donate
     position: relative
     visibility: hidden
 
-  #campaign-progress
+  .campaign-progress
     background: $module-border-color
     +linear-gradient(color-stops($module-border-color + #222, $module-border-color))
     border-right: 1px solid $module-border-color
 
-  #campaign-progress-wrapper, #campaign-progress
+  .campaign-progress-wrapper, .campaign-progress
     height: 2.5em
 
-  #campaign-progress-label
+  .campaign-progress-label
     +text-shadow(#777, -1px, -1px, 0)
     color: white
     font-size: 150%
@@ -134,7 +134,7 @@ body.static-donate
     width: $image-mode-description-width
 
   &.campaign-loaded
-    #campaign-progress-wrapper
+    .campaign-progress-wrapper
       visibility: visible
 
     #campaign-donors
