@@ -21,13 +21,16 @@
     %ol
 
 #image-mode-beta
-  %header Donate at least $5 for early beta access
+  %header
+    As a Thank You gift, those who donate at least $5 will receive early
+    beta access to Image Mode
   = pledgie_link
   %p
     Include your
     = link_to 'Dress to Impress username', login_path_with_return_to
     in PayPal's Special Instructions field.
   %p We'll email you soon!
+
 
 #image-mode-description
   :markdown
@@ -52,13 +55,26 @@
     for prime time, and help make sure it's exactly as simple and powerful as
     it needs to be.
 
+    **Of course, it's still all about supporting a website you love.** Give
+    exactly as much as you want to give. If you can't afford a $5 gift right
+    now, don't worry about it. You'll still get Image Mode once it's ready.
+    Similarly, if you *can* afford to give more than $5, please consider doing
+    so. I often hear how much people appreciate Dress to Impress, and I'd hope
+    that it might be worth more than a wearable or two. I'm just one guy
+    building this site in my free time, and I can't afford server costs on my
+    own, so I'm so glad to be a part of such a generous community.
+
     **Thank you for your continued support.** Dress to Impress is 100%
-    user-funded, and we hope to stay that way. Our goal is to raise enough
-    money to guarantee that we'll be up and running for the next 12 months. I
-    know we can do it.
+    user-funded, and we intend to stay that way. Our goal is to raise enough
+    money to be able to keep running on the upgraded server for the next 12
+    months, so that's $280: $360 minus about $80 from previous fundraisers.
+    Looks like a lot, but I know we can do it.
 
 #image-mode-comments
   #disqus_thread
+  - if Rails.env.development?
+    :javascript
+      var disqus_developer = 1;
   :javascript
     var disqus_shortname = 'dresstoimpress';
 

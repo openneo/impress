@@ -19,6 +19,10 @@
         $('<span/>', {text: pledge.date}).appendTo(pledgeEl);
         pledgeEl.appendTo(donorsList);
       }
+
+      if(pledges.length > 0) {
+        donorsEl.addClass('has-donors');
+      }
     }
 
     // Set campaign progress data

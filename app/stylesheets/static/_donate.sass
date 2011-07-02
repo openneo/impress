@@ -76,6 +76,9 @@ body.static-donate
         color: $soft-text-color
         float: right
 
+    &.has-donors
+      display: block
+
   $image-mode-description-width: $container-width - $image-mode-preview-outer-width
 
   $image-mode-beta-h-padding: 15px
@@ -107,8 +110,4 @@ body.static-donate
   #image-mode-description, #image-mode-comments
     float: left
     width: $image-mode-description-width
-
-  &.campaign-loaded
-    #campaign-donors
-      display: block
 
