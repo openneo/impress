@@ -1249,6 +1249,8 @@ Wardrobe.getStandardView = function (options) {
       preview_el.removeClass('swf-adapter').addClass('image-adapter');
       pendingMessageEl.appendTo(previewImageContainer);
 
+      var adapter = this;
+
       var exportIframe = $('#preview-export-iframe');
       if(exportIframe.length == 0) {
         exportIframe = $('<iframe/>',
@@ -1345,15 +1347,42 @@ Wardrobe.getStandardView = function (options) {
         }
       }
 
-      // TODO: choose new best size on window resize
-      function bestSize() {
-        var sizes = Wardrobe.IMAGE_CONFIG.sizes,
-          width = preview_el.width(), height = preview_el.height();
-        for(var i in sizes) {
-          if(sizes[i][0] < width && sizes[i][1] < height) return sizes[i];
+      // Boring: sorting sizes small to large.
+      var sizes = Wardrobe.IMAGE_CONFIG.sizes;
+      var SIZES_SMALL_TO_LARGE = [], size, inserted;
+      for(var i in sizes) {
+        if(!sizes.hasOwnProperty(i)) continue;
+        size = sizes[i];
+        size[2] = size[0] * size[1];
+        inserted = false;
+        for(var i in SIZES_SMALL_TO_LARGE) {
+          if(SIZES_SMALL_TO_LARGE[i][2] > size[2]) {
+            SIZES_SMALL_TO_LARGE.splice(i, 0, size);
+            inserted = true;
+            break;
+          }
         }
-        return sizes[sizes.length - 1];
+        if(!inserted) SIZES_SMALL_TO_LARGE[SIZES_SMALL_TO_LARGE.length] = size;
       }
+
+      var currentBestSize;
+      function bestSize() {
+        var sizes = SIZES_SMALL_TO_LARGE,
+          width = preview_el.width(), height = preview_el.height();
+        // Choose the first size larger than the space available
+        for(var i in sizes) {
+          if(sizes[i][0] > width && sizes[i][1] > height) {
+            return currentBestSize = sizes[i];
+          }
+        }
+        return currentBestSize = sizes[sizes.length - 1];
+      }
+
+      $(window).resize(function () {
+        if(currentBestSize != bestSize()) {
+          adapter.updateAssets();
+        }
+      });
 
       function clearView() {
         previewImageContainer.children('img').remove();
@@ -1391,14 +1420,6 @@ Wardrobe.getStandardView = function (options) {
         );
       }
 
-      function updateContainerSize() {
-        var size = bestSize();
-        previewImageContainer.css({
-          height: size[1],
-          width: size[0]
-        });
-      }
-
       function updatePendingInterval() {
         if(pendingAssetsCount) {
           if(pendingInterval == null) {
@@ -1421,9 +1442,6 @@ Wardrobe.getStandardView = function (options) {
         updatePendingInterval();
         updatePendingMessage();
       }
-
-      updateContainerSize();
-      $(window).resize(updateContainerSize);
     }
 
     this.adapter = new SWFAdapter();

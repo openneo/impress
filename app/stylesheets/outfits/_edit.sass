@@ -169,8 +169,10 @@ body.outfits-edit
         display: none
   #preview-image-container
     +wardrobe-image-wrapper
-    margin: 1em auto
     position: relative
+    &, img
+      height: 100%
+      width: 100%
   #preview-swf-overlay
     +opacity(0)
     background: black
