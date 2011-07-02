@@ -10,6 +10,10 @@
     %span.campaign-goal
   to run the upgraded server for a year
 
+- if can_use_image_mode?
+  %p.success
+    Thank you for your help! Image Mode should be live on your account. Enjoy!
+
 %section#image-mode-data
   %figure#image-mode-preview
     = image_tag 'image_mode_preview.png'
