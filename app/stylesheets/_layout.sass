@@ -1,3 +1,5 @@
+@import "partials/icon"
+
 /* Reset
 
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p,
@@ -135,6 +137,13 @@ ul.buttons
     display: inline
     margin: 0 .25em
 
+#userbar-image-mode
+  font-weight: bold
+  margin-right: 1em
+  text-decoration: none
+  img
+    +icon
+
 #userbar-log-in
   text-decoration: none
   img
@@ -241,3 +250,10 @@ dd
   font-style: normal
   font-weight: normal
   src: local("Droid Sans"), url("http://themes.googleusercontent.com/font?kit=POVDFY-UUf0WFR9DIMCU8g") format("truetype")
+
+@font-face
+  font-family: 'Calligraffitti'
+  font-style: normal
+  font-weight: normal
+  src: local('Calligraffiti'), url('http://themes.googleusercontent.com/font?kit=vLVN2Y-z65rVu1R7lWdvyKIZAuDcNtpCWuPSaIR0Ie8') format('woff')
+

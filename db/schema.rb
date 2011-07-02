@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110515134542) do
+ActiveRecord::Schema.define(:version => 20110626202605) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -168,6 +168,7 @@ ActiveRecord::Schema.define(:version => 20110515134542) do
     t.datetime "remember_created_at"
     t.boolean  "forum_admin",                       :default => false, :null => false
     t.boolean  "forum_moderator"
+    t.boolean  "image_mode_tester",                 :default => false, :null => false
   end
 
   create_table "zones", :force => true do |t|

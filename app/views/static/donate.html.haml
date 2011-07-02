@@ -1,0 +1,104 @@
+- title "Support Dress to Impress"
+%h2 Image Mode is almost here, but we need your help!
+
+= campaign_progress do
+  We have
+  = surround '$', ',' do
+    %span.campaign-raised
+  and need
+  = precede '$' do
+    %span.campaign-goal
+  to run the upgraded server for a year
+
+- if can_use_image_mode?
+  %p.success
+    Thank you for your help! Image Mode should be live on your account. Enjoy!
+
+%section#image-mode-data
+  %figure#image-mode-preview
+    = image_tag 'image_mode_preview.png'
+    %figcaption
+      Image Mode &hearts;
+  #campaign-donors
+    %h3 Thank you!
+    %ol
+
+#image-mode-beta
+  %header
+    As a Thank You gift, those who donate at least $5 will receive early
+    beta access to Image Mode
+  = pledgie_form_tag do
+    = pledgie_amount_label_tag 'Amount'
+    = pledgie_amount_field_tag
+    %button{:type => 'submit'} Donate now!
+  %p
+    Include your
+    = link_to 'Dress to Impress username', login_path_with_return_to
+    in PayPal's Special Instructions field.
+  %p We'll email you soon!
+
+
+#image-mode-description
+  :markdown
+    **Soon, Dress to Impress will be able to both save outfits as images and
+    even run entirely without Flash**. Image Mode. It's taken months to put
+    together, and it's pretty darn exciting. It's the most requested feature
+    for Dress to Impress, ever.
+
+    **To get there, though, we need a server upgrade.** We've done our best to
+    cut back on memory usage on the server we have now, but ultimately found
+    that, when we run the processes that convert the Flash files to images, we
+    lose stability, and the site goes down.
+
+    **So, we're moving from about $20 to $30 a month.** We'll be moving from
+    [Linode's 512 server to the 768 server](http://linode.com). It's what we
+    need to do in order to have enough RAM to both convert Flash to image and
+    also run a website with thousands of users a day.
+
+    **As a little treat, those who give at least $5 will get early access
+    to Image Mode.** Though we're still missing quite a few converted SWFs,
+    you'll be able to get a feel for what Image Mode will be when it's ready
+    for prime time, and help make sure it's exactly as simple and powerful as
+    it needs to be.
+
+    **Of course, it's still all about supporting a website you love.** Give
+    exactly as much as you want to give. If you can't afford a $5 gift right
+    now, don't worry about it. You'll still get Image Mode once it's ready.
+    Similarly, if you *can* afford to give more than $5, please consider doing
+    so. I often hear how much people appreciate Dress to Impress, and I'd hope
+    that it might be worth more than a wearable or two. I'm just one guy
+    building this site in my free time, and I can't afford server costs on my
+    own, so I'm so glad to be a part of such a generous community.
+
+    **Thank you for your continued support.** Dress to Impress is 100%
+    user-funded, and we intend to stay that way. Our goal is to raise enough
+    money to be able to keep running on the upgraded server for the next 12
+    months, so that's $280: $360 minus about $80 from previous fundraisers.
+    Looks like a lot, but I know we can do it.
+
+#image-mode-comments
+  #disqus_thread
+  - if Rails.env.development?
+    :javascript
+      var disqus_developer = 1;
+  :javascript
+    var disqus_shortname = 'dresstoimpress';
+
+    // The following are highly recommended additional parameters. Remove the slashes in front to use.
+    var disqus_identifier = 'dresstoimpress_donate';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+  %a.dsq-brlink{:href => "http://disqus.com"}
+    blog comments powered by
+    %span.logo-disqus Disqus
+

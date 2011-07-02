@@ -14,11 +14,35 @@ module ApplicationHelper
     end
   end
 
+  def campaign_progress(content=nil, &block)
+    include_campaign_progress_requirements
+
+    content ||= capture(&block)
+    html = content_tag(:div, nil, :class => 'campaign-progress') +
+      content_tag(:div, content, :class => 'campaign-progress-label')
+    content_tag(:div, html, :class => 'campaign-progress-wrapper')
+  end
+
   def flashes
     raw(flash.inject('') do |html, pair|
       key, value = pair
       html + content_tag('p', value, :class => key)
     end)
+  end
+
+  def include_campaign_progress_requirements
+    unless @included_campaign_progress_requirements
+      content_for(:javascripts,
+        include_javascript_libraries(:jquery) +
+          javascript_include_tag('pledgie')
+      )
+
+      content_for(:meta,
+        tag(:meta, :name => 'pledgie-campaign-id', :content => PLEDGIE_CAMPAIGN_ID)
+      )
+
+      @included_campaign_progress_requirements = true
+    end
   end
 
   def hide_home_link

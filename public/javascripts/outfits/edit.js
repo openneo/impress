@@ -822,6 +822,32 @@ View.PreviewAdapterForm = function (wardrobe) {
     preview.toggleAdapter();
   }
   konami.load();
+
+  var modeWrapper = $('#preview-mode').addClass('flash-active');
+  var modeOptions = $('#preview-mode-toggle li');
+  function activate(el, modeOn, modeOff) {
+    modeWrapper.removeClass(modeOff + '-active').addClass(modeOn + '-active');
+    $(el).addClass('active');
+  }
+
+  $('#preview-mode-flash').click(function () {
+    activate(this, 'flash', 'image');
+    preview.useSWFAdapter();
+  });
+
+  $('#preview-mode-image').click(function () {
+    activate(this, 'image', 'flash');
+    preview.useImageAdapter();
+  });
+
+  $('#preview-download-image').click(function () {
+    preview.adapter.saveImage();
+  });
+
+  if(document.createElement('canvas').getContext) {
+    // If browser supports canvas
+    modeWrapper.addClass('can-download');
+  }
 }
 
 View.Search = function (wardrobe) {

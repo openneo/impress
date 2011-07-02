@@ -36,6 +36,19 @@
         %p Flash and Javascript (but not Java!) are required to preview outfits.
         %p If this message stays after the page is done loading, check those first.
       #preview-image-container
+      #preview-mode
+        %ul#preview-mode-toggle
+          %li#preview-mode-flash.active Flash
+          - if can_use_image_mode?
+            %li#preview-mode-image Image
+        - unless can_use_image_mode?
+          = link_to(donate_path, :id => 'preview-mode-image-access-denied', :target => '_blank') do
+            %strong Image mode
+            is available for early beta testing to users who
+            %em donate
+            at least $5 to help upgrade the server. Thanks!
+        - if can_use_image_mode?
+          %button#preview-download-image Download
     #preview-sidebar
       #outfit-not-found Outfit not found
       #save-success Outfit successfully saved

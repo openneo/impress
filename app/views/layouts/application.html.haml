@@ -35,8 +35,14 @@
 
       #userbar
         - if user_signed_in?
+          - if can_use_image_mode?
+            = link_to image_mode_path, :id => 'userbar-image-mode' do
+              = image_tag 'image_mode_icon.png', :alt => 'Image Mode'
+              Welcome to Image Mode!
           %span
-            == Hey, #{link_to current_user.name, user_contributions_path(current_user)}!
+            Hey,
+            = succeed '!' do
+              = link_to current_user.name, user_contributions_path(current_user)
             == You have #{current_user.points} points.
           = link_to 'Outfits', current_user_outfits_path
           = link_to 'Settings', Openneo::Auth.remote_settings_url
