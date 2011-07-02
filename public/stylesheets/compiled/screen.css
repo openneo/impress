@@ -2603,36 +2603,38 @@ body.static-donate #image-mode-preview {
 /* line 47, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-preview img {
   border: 1px solid #006600;
+  height: 300px;
   margin-bottom: 0.5em;
+  width: 300px;
 }
-/* line 51, ../../../app/stylesheets/static/_donate.sass */
+/* line 53, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-preview figcaption {
   display: block;
   font-family: Calligraffitti;
   font-size: 250%;
   text-align: center;
 }
-/* line 57, ../../../app/stylesheets/static/_donate.sass */
+/* line 59, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #campaign-donors {
   display: none;
   margin-right: 20px;
   width: 344px;
 }
-/* line 62, ../../../app/stylesheets/static/_donate.sass */
+/* line 64, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #campaign-donors ol {
   font-size: 85%;
   padding-left: 2em;
 }
-/* line 66, ../../../app/stylesheets/static/_donate.sass */
+/* line 68, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #campaign-donors ol span {
   color: #448844;
   float: right;
 }
-/* line 70, ../../../app/stylesheets/static/_donate.sass */
+/* line 72, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #campaign-donors.has-donors {
   display: block;
 }
-/* line 79, ../../../app/stylesheets/static/_donate.sass */
+/* line 81, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-beta {
   background: #eeffee;
   border: 1px solid #006600;
@@ -2645,35 +2647,35 @@ body.static-donate #image-mode-beta {
   text-align: center;
   width: 404px;
 }
-/* line 89, ../../../app/stylesheets/static/_donate.sass */
+/* line 91, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-beta header {
   display: block;
   font-weight: bold;
 }
-/* line 93, ../../../app/stylesheets/static/_donate.sass */
+/* line 95, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-beta p {
   font-family: "Droid Sans", Helvetica, Arial, Verdana, sans-serif;
   font-size: 75%;
   margin: 0;
 }
-/* line 98, ../../../app/stylesheets/static/_donate.sass */
+/* line 100, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-beta form {
   margin: 0.75em 0;
 }
-/* line 101, ../../../app/stylesheets/static/_donate.sass */
+/* line 103, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-beta form label {
   font-size: 85%;
   font-weight: bold;
 }
-/* line 105, ../../../app/stylesheets/static/_donate.sass */
+/* line 107, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-beta form label:after {
   content: ":";
 }
-/* line 108, ../../../app/stylesheets/static/_donate.sass */
+/* line 110, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-beta form input {
   width: 5em;
 }
-/* line 111, ../../../app/stylesheets/static/_donate.sass */
+/* line 113, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-beta form button {
   background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
 }
@@ -2681,10 +2683,22 @@ body.static-donate #image-mode-beta form button {
 body.static-donate #image-mode-beta form button:hover {
   background-color: #ee4b00;
 }
-/* line 114, ../../../app/stylesheets/static/_donate.sass */
+/* line 116, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-description, body.static-donate #image-mode-comments {
   float: right;
   width: 436px;
+}
+
+/* line 2, ../../../app/stylesheets/static/_image_mode.sass */
+body.static-image_mode h2 {
+  margin-bottom: 0.25em;
+  margin-top: 1.25em;
+}
+/* line 7, ../../../app/stylesheets/static/_image_mode.sass */
+body.static-image_mode ol, body.static-image_mode ul {
+  font-family: "Droid Serif", Georgia, "Times New Roman", Times, serif;
+  margin-bottom: 1em;
+  padding-left: 3em;
 }
 
 /* line 1, ../../../app/stylesheets/static/_terms.sass */

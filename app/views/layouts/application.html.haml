@@ -36,9 +36,9 @@
       #userbar
         - if user_signed_in?
           - if can_use_image_mode?
-            = link_to donate_path, :id => 'userbar-image-mode' do
+            = link_to image_mode_path, :id => 'userbar-image-mode' do
               = image_tag 'image_mode_icon.png', :alt => 'Image Mode'
-              Thank you!
+              Welcome to Image Mode!
           %span
             Hey,
             = succeed '!' do
