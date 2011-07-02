@@ -1,5 +1,5 @@
 - add_body_class 'fullscreen'
-- cache do
+- cache :action_suffix => "image_mode_#{can_use_image_mode?}" do
   %a#home-link{:href => "/"}
     %span Dress to Impress
   %h1#title Planning an outfit
