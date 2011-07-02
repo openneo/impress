@@ -19,16 +19,6 @@ body.static-donate
   h2
     margin-bottom: .25em
 
-  .pledgie-link
-    +awesome-button
-    +loud-awesome-button-color
-
-  #pledgie-link-with-title
-    float: right
-    font-size: 150%
-    margin-top: .5em
-    padding: .75em
-
   $image-mode-preview-image-width: 300px
   $image-mode-preview-image-border-width: 1px
   $image-mode-preview-h-padding: 20px
@@ -104,10 +94,23 @@ body.static-donate
       font-size: 75%
       margin: 0
 
-    .pledgie-link
+    form
       margin: .75em 0
 
+      label
+        font-size: 85%
+        font-weight: bold
+
+        &:after
+          content: ":"
+
+      input
+        width: 5em
+
+      button
+        +loud-awesome-button-color
+
   #image-mode-description, #image-mode-comments
-    float: left
+    float: right
     width: $image-mode-description-width
 

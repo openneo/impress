@@ -1,5 +1,4 @@
 - title "Support Dress to Impress"
-= pledgie_link :id => 'pledgie-link-with-title'
 %h2 Image Mode is almost here, but we need your help!
 
 = campaign_progress do
@@ -24,7 +23,10 @@
   %header
     As a Thank You gift, those who donate at least $5 will receive early
     beta access to Image Mode
-  = pledgie_link
+  = pledgie_form_tag do
+    = pledgie_amount_label_tag 'Amount'
+    = pledgie_amount_field_tag
+    %button{:type => 'submit'} Donate now!
   %p
     Include your
     = link_to 'Dress to Impress username', login_path_with_return_to
