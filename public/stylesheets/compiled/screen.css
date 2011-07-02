@@ -2579,45 +2579,46 @@ body.static-donate #image-mode-data {
 /* line 37, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-preview {
   border: 1px solid #006600;
+  display: block;
   margin: 0 0 2em 0;
   padding-top: 20px;
   padding-right: 20px;
   padding-bottom: 13.333px;
   padding-left: 20px;
 }
-/* line 46, ../../../app/stylesheets/static/_donate.sass */
+/* line 47, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-preview img {
   border: 1px solid #006600;
   margin-bottom: 0.5em;
 }
-/* line 50, ../../../app/stylesheets/static/_donate.sass */
+/* line 51, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-preview figcaption {
   display: block;
   font-family: Calligraffitti;
   font-size: 250%;
   text-align: center;
 }
-/* line 56, ../../../app/stylesheets/static/_donate.sass */
+/* line 57, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #campaign-donors {
   display: none;
   margin-right: 20px;
   width: 344px;
 }
-/* line 61, ../../../app/stylesheets/static/_donate.sass */
+/* line 62, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #campaign-donors ol {
   font-size: 85%;
   padding-left: 2em;
 }
-/* line 65, ../../../app/stylesheets/static/_donate.sass */
+/* line 66, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #campaign-donors ol span {
   color: #448844;
   float: right;
 }
-/* line 69, ../../../app/stylesheets/static/_donate.sass */
+/* line 70, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #campaign-donors.has-donors {
   display: block;
 }
-/* line 78, ../../../app/stylesheets/static/_donate.sass */
+/* line 79, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-beta {
   background: #eeffee;
   border: 1px solid #006600;
@@ -2630,35 +2631,35 @@ body.static-donate #image-mode-beta {
   text-align: center;
   width: 404px;
 }
-/* line 88, ../../../app/stylesheets/static/_donate.sass */
+/* line 89, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-beta header {
   display: block;
   font-weight: bold;
 }
-/* line 92, ../../../app/stylesheets/static/_donate.sass */
+/* line 93, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-beta p {
   font-family: "Droid Sans", Helvetica, Arial, Verdana, sans-serif;
   font-size: 75%;
   margin: 0;
 }
-/* line 97, ../../../app/stylesheets/static/_donate.sass */
+/* line 98, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-beta form {
   margin: 0.75em 0;
 }
-/* line 100, ../../../app/stylesheets/static/_donate.sass */
+/* line 101, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-beta form label {
   font-size: 85%;
   font-weight: bold;
 }
-/* line 104, ../../../app/stylesheets/static/_donate.sass */
+/* line 105, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-beta form label:after {
   content: ":";
 }
-/* line 107, ../../../app/stylesheets/static/_donate.sass */
+/* line 108, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-beta form input {
   width: 5em;
 }
-/* line 110, ../../../app/stylesheets/static/_donate.sass */
+/* line 111, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-beta form button {
   background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
 }
@@ -2666,7 +2667,7 @@ body.static-donate #image-mode-beta form button {
 body.static-donate #image-mode-beta form button:hover {
   background-color: #ee4b00;
 }
-/* line 113, ../../../app/stylesheets/static/_donate.sass */
+/* line 114, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-description, body.static-donate #image-mode-comments {
   float: right;
   width: 436px;
