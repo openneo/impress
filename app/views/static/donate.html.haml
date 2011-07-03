@@ -32,9 +32,11 @@
     = pledgie_amount_field_tag
     %button{:type => 'submit'} Donate now!
   %p
-    Include your
+    Once you're done, send your PayPal email address and
     = link_to 'Dress to Impress username', login_path_with_return_to
-    in PayPal's Special Instructions field.
+    to
+    = succeed '.' do
+      = mail_to 'webmaster@openneo.net'
   %p We'll email you soon!
 
 
