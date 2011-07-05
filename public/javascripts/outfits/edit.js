@@ -1094,3 +1094,23 @@ main_wardrobe = new Wardrobe();
 main_wardrobe.registerViews(View);
 main_wardrobe.initialize();
 
+var TIME_TO_DONATION_REQUEST_IN_MINUTES = 10;
+var donationRequestEl = $('#preview-sidebar-donation-request');
+
+donationRequestEl.find('a').click(function(e) {
+  donationRequestEl.slideUp(250);
+  var response = this.id == 'preview-sidebar-donation-request-no-thanks' ? 0 : 1;
+  if(!response) { // href is #
+    e.preventDefault();
+  }
+  var expiryDate = new Date();
+  expiryDate.setTime(expiryDate.getTime() + 7*24*60*60*1000); // one week from now
+  document.cookie = "previewSidebarDonationResponse=" + response + "; expires=" + expiryDate.toGMTString();
+});
+
+if(document.cookie.indexOf('previewSidebarDonationResponse') == -1) {
+  setTimeout(function () {
+    donationRequestEl.slideDown(1000);
+  }, TIME_TO_DONATION_REQUEST_IN_MINUTES * 60 * 1000);
+}
+

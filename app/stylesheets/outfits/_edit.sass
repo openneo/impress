@@ -467,12 +467,20 @@ body.outfits-edit
       right: $sidebar-unit-horizontal-padding
       top: 1em
 
-  #save-success, #save-error, #outfit-not-found
+  #save-success, #save-error, #outfit-not-found, #preview-sidebar-donation-request
     +sidebar-view-child
     display: none
     margin:
       top: 1em
     text-align: center
+
+  #preview-sidebar-donation-request
+    +notice
+    font-size: 85%
+    padding: 1em
+
+  #preview-sidebar-donation-request-no-thanks
+    margin-left: 1em
 
   #save-success
     +notice

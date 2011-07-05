@@ -10,6 +10,15 @@
     position: relative
     visibility: hidden
 
+    .button
+      +loud-awesome-button-color
+      font-size: 75%
+      margin-left: 1em
+      padding: .25em .75em
+
+      &:after
+        content: none
+
   .campaign-progress
     background: $module-border-color
     +linear-gradient(color-stops($module-border-color + #222, $module-border-color))

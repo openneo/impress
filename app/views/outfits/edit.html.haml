@@ -50,6 +50,18 @@
         - if can_use_image_mode?
           %button#preview-download-image Download
     #preview-sidebar
+      - unless can_use_image_mode?
+        #preview-sidebar-donation-request
+          %p
+            %strong
+              Having fun? Consider skipping your next NC run and instead
+              helping Dress to Impress.
+          %p
+            We need your support to stay online and make cool new features like
+            the upcoming Image Mode possible. If Dress to Impress is important
+            to you, please donate today. Thank you!
+          = link_to 'Donate now!', donate_path, :class => 'button', :target => '_blank'
+          = link_to 'no, thanks', '#', :id => 'preview-sidebar-donation-request-no-thanks'
       #outfit-not-found Outfit not found
       #save-success Outfit successfully saved
       #save-error
