@@ -1603,7 +1603,7 @@ body.outfits-edit .preview-sidebar-nav {
   margin-top: 1em;
 }
 /* line 470, ../../../app/stylesheets/outfits/_edit.sass */
-body.outfits-edit #save-success, body.outfits-edit #save-error, body.outfits-edit #outfit-not-found {
+body.outfits-edit #save-success, body.outfits-edit #save-error, body.outfits-edit #outfit-not-found, body.outfits-edit #preview-sidebar-donation-request {
   margin-left: 24px;
   margin-right: 24px;
   display: none;
@@ -1611,18 +1611,30 @@ body.outfits-edit #save-success, body.outfits-edit #save-error, body.outfits-edi
   text-align: center;
 }
 /* line 477, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-sidebar-donation-request {
+  background: #e6efc2;
+  border: 1px solid #c6d880;
+  color: #264409;
+  font-size: 85%;
+  padding: 1em;
+}
+/* line 482, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-sidebar-donation-request-no-thanks {
+  margin-left: 1em;
+}
+/* line 485, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-success {
   background: #e6efc2;
   border: 1px solid #c6d880;
   color: #264409;
 }
-/* line 480, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 488, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-error, body.outfits-edit #outfit-not-found {
   background: #fbe3e4;
   border: 1px solid #fbc2c4;
   color: #8a1f11;
 }
-/* line 483, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 491, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #userbar-message {
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
@@ -1630,7 +1642,7 @@ body.outfits-edit #userbar-message {
   -khtml-opacity: 0.5;
   display: none;
 }
-/* line 487, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 495, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit {
   padding: 0.25em 0;
   margin-left: 24px;
@@ -1812,33 +1824,33 @@ body.outfits-edit #new-outfit.renaming:hover .outfit-rename-button {
 body.outfits-edit #new-outfit:hover .outfit-rename-button {
   display: inline;
 }
-/* line 491, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 499, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit h4 {
   display: inline;
 }
-/* line 493, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 501, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit h4:hover {
   text-decoration: none;
 }
-/* line 495, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 503, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-star {
   margin-top: 0.5em;
 }
-/* line 498, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 506, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit-name {
   font: inherit;
   line-height: 1;
 }
-/* line 502, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 510, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-saving-outfit {
   display: none;
   padding-bottom: 1em;
 }
-/* line 506, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 514, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #pet-type-form, body.outfits-edit #pet-state-form, body.outfits-edit #preview-swf, body.outfits-edit #preview-search-form {
   position: relative;
 }
-/* line 509, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 517, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .control-overlay {
   height: 100%;
   left: 0;
@@ -1847,11 +1859,11 @@ body.outfits-edit .control-overlay {
   width: 100%;
   z-index: 5;
 }
-/* line 517, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 525, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar-nav-outfits, body.outfits-edit #save-outfit-signed-in {
   display: none;
 }
-/* line 520, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 528, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form {
   padding: 0.25em 0;
   display: none;
@@ -2033,7 +2045,7 @@ body.outfits-edit form#save-outfit-form.renaming:hover .outfit-rename-button {
 body.outfits-edit form#save-outfit-form:hover .outfit-rename-button {
   display: inline;
 }
-/* line 526, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 534, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-star, body.outfits-edit form#save-outfit-form input, body.outfits-edit form#save-outfit-form button {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -2044,51 +2056,51 @@ body.outfits-edit form#save-outfit-form .outfit-star, body.outfits-edit form#sav
   float: none;
   vertical-align: top;
 }
-/* line 531, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 539, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-star {
   margin-top: 0.25em;
 }
-/* line 534, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 542, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .outfit-url {
   font-size: 75%;
 }
-/* line 538, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 546, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #preview-sidebar-nav-outfits {
   display: block;
 }
-/* line 540, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 548, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit {
   display: inline-block;
 }
-/* line 544, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 552, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.active-outfit #save-outfit {
   display: none;
 }
-/* line 546, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 554, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.active-outfit #save-current-outfit, body.outfits-edit.user-signed-in #save-outfit-wrapper.active-outfit #save-outfit-copy {
   display: inline-block;
 }
-/* line 548, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 556, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.active-outfit #current-outfit-permalink {
   display: inline-block;
 }
-/* line 551, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 559, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #save-outfit-form {
   display: block;
 }
-/* line 553, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 561, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #save-outfit, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #save-current-outfit, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #save-outfit-copy, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #current-outfit-permalink, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #shared-outfit-permalink, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #share-outfit, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #shared-outfit-url {
   display: none;
 }
-/* line 557, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 565, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-not-signed-in #save-outfit-not-signed-in {
   display: inline-block;
 }
-/* line 561, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 569, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit-wrapper.shared-outfit #shared-outfit-permalink, body.outfits-edit #save-outfit-wrapper.shared-outfit #shared-outfit-url {
   display: inline-block;
 }
-/* line 563, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 571, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit-wrapper.shared-outfit #current-outfit-permalink {
   display: none !important;
 }
@@ -2148,6 +2160,21 @@ body.outfits-new .campaign-progress-wrapper {
   visibility: hidden;
 }
 /* line 13, ../../../app/stylesheets/partials/_campaign-progress.sass */
+body.outfits-new .campaign-progress-wrapper .button {
+  background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
+  font-size: 75%;
+  margin-left: 1em;
+  padding: 0.25em 0.75em;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.outfits-new .campaign-progress-wrapper .button:hover {
+  background-color: #ee4b00;
+}
+/* line 19, ../../../app/stylesheets/partials/_campaign-progress.sass */
+body.outfits-new .campaign-progress-wrapper .button:after {
+  content: none;
+}
+/* line 22, ../../../app/stylesheets/partials/_campaign-progress.sass */
 body.outfits-new .campaign-progress {
   background: #006600;
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #228822), color-stop(100%, #006600));
@@ -2155,11 +2182,11 @@ body.outfits-new .campaign-progress {
   background-image: linear-gradient(top, #228822 0%, #006600 100%);
   border-right: 1px solid #006600;
 }
-/* line 18, ../../../app/stylesheets/partials/_campaign-progress.sass */
+/* line 27, ../../../app/stylesheets/partials/_campaign-progress.sass */
 body.outfits-new .campaign-progress-wrapper, body.outfits-new .campaign-progress {
   height: 2.5em;
 }
-/* line 21, ../../../app/stylesheets/partials/_campaign-progress.sass */
+/* line 30, ../../../app/stylesheets/partials/_campaign-progress.sass */
 body.outfits-new .campaign-progress-label {
   text-shadow: #777777 -1px -1px 0;
   font-size: 150%;
@@ -2169,11 +2196,11 @@ body.outfits-new .campaign-progress-label {
   text-align: center;
   width: 100%;
 }
-/* line 30, ../../../app/stylesheets/partials/_campaign-progress.sass */
+/* line 39, ../../../app/stylesheets/partials/_campaign-progress.sass */
 body.outfits-new .campaign-progress-label, body.outfits-new .campaign-progress-label a {
   color: white;
 }
-/* line 34, ../../../app/stylesheets/partials/_campaign-progress.sass */
+/* line 43, ../../../app/stylesheets/partials/_campaign-progress.sass */
 body.outfits-new.campaign-loaded .campaign-progress-wrapper {
   visibility: visible;
 }
@@ -2540,6 +2567,21 @@ body.static-donate .campaign-progress-wrapper {
   visibility: hidden;
 }
 /* line 13, ../../../app/stylesheets/partials/_campaign-progress.sass */
+body.static-donate .campaign-progress-wrapper .button {
+  background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
+  font-size: 75%;
+  margin-left: 1em;
+  padding: 0.25em 0.75em;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.static-donate .campaign-progress-wrapper .button:hover {
+  background-color: #ee4b00;
+}
+/* line 19, ../../../app/stylesheets/partials/_campaign-progress.sass */
+body.static-donate .campaign-progress-wrapper .button:after {
+  content: none;
+}
+/* line 22, ../../../app/stylesheets/partials/_campaign-progress.sass */
 body.static-donate .campaign-progress {
   background: #006600;
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #228822), color-stop(100%, #006600));
@@ -2547,11 +2589,11 @@ body.static-donate .campaign-progress {
   background-image: linear-gradient(top, #228822 0%, #006600 100%);
   border-right: 1px solid #006600;
 }
-/* line 18, ../../../app/stylesheets/partials/_campaign-progress.sass */
+/* line 27, ../../../app/stylesheets/partials/_campaign-progress.sass */
 body.static-donate .campaign-progress-wrapper, body.static-donate .campaign-progress {
   height: 2.5em;
 }
-/* line 21, ../../../app/stylesheets/partials/_campaign-progress.sass */
+/* line 30, ../../../app/stylesheets/partials/_campaign-progress.sass */
 body.static-donate .campaign-progress-label {
   text-shadow: #777777 -1px -1px 0;
   font-size: 150%;
@@ -2561,11 +2603,11 @@ body.static-donate .campaign-progress-label {
   text-align: center;
   width: 100%;
 }
-/* line 30, ../../../app/stylesheets/partials/_campaign-progress.sass */
+/* line 39, ../../../app/stylesheets/partials/_campaign-progress.sass */
 body.static-donate .campaign-progress-label, body.static-donate .campaign-progress-label a {
   color: white;
 }
-/* line 34, ../../../app/stylesheets/partials/_campaign-progress.sass */
+/* line 43, ../../../app/stylesheets/partials/_campaign-progress.sass */
 body.static-donate.campaign-loaded .campaign-progress-wrapper {
   visibility: visible;
 }
