@@ -14,10 +14,16 @@ module ApplicationHelper
     end
   end
 
-  def campaign_progress(content=nil, &block)
+  def campaign_progress(&block)
     include_campaign_progress_requirements
 
-    content ||= capture(&block)
+    if block_given?
+      content = capture(&block)
+    else
+      content = link_to('We need your help to keep growing and stay online!', donate_path) +
+        link_to('Donate now!', donate_path, :class => 'button')
+    end
+
     html = content_tag(:div, nil, :class => 'campaign-progress') +
       content_tag(:div, content, :class => 'campaign-progress-label')
     content_tag(:div, html, :class => 'campaign-progress-wrapper')
