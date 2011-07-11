@@ -43,10 +43,10 @@ function LoadError(base_msg) {
 
 function PetType() {
   var pet_type = this, loaded_data = false, loaded_assets = false;
-  
+
   this.activated = true;
   this.assets = [];
-  
+
   this.deactivate = function (error, args) {
     var msg;
     this.activated = false;
@@ -59,13 +59,13 @@ function PetType() {
     this.link.addClass('deactivated');
     img.src = img.src.replace('/1/', '/2/');
   }
-  
+
   this.deactivateWithItem = function (item) {
     pet_type.deactivate(Item.LOAD_ERROR, {
       item: item.name
     });
   }
-  
+
   this.load = function () {
     Item.current.load(this);
     loadAssets();
@@ -76,7 +76,7 @@ function PetType() {
     speciesList.filter('.current').removeClass('current');
     this.link.addClass('current');
     customize_more_el.attr('href',
-      'http://impress.openneo.net/wardrobe?species=' + this.species_id + 
+      'http://impress.openneo.net/wardrobe?species=' + this.species_id +
       '&color=' + this.color_id + '&objects[]=' + Item.current.id);
     if(this.activated) {
       Preview.enable();
@@ -85,11 +85,11 @@ function PetType() {
       showDeactivationMsg();
     }
   }
-  
+
   this.onUpdate = function () {
     if(pet_type == PetType.current) Preview.update()
   }
-  
+
   function loadAssets() {
     if(loaded_assets) {
       pet_type.onUpdate();
@@ -101,13 +101,13 @@ function PetType() {
       });
     }
   }
-  
+
   function showDeactivationMsg() {
     Preview.disable(pet_type.deactivation_msg);
   }
 }
 
-PetType.all = [];
+PetType.all = {};
 
 PetType.LOAD_ERROR = new LoadError("$color_article $color $species");
 PetType.DASH_REGEX = /-/g;
@@ -120,14 +120,14 @@ PetType.createFromLink = function (link) {
     }
   });
   pet_type.link = link;
-  PetType.all.push(pet_type);
+  PetType.all[pet_type.id] = pet_type;
   return pet_type;
 }
 
 function Item(id) {
   this.assets_by_body_id = {};
   this.id = id;
-  
+
   this.load = function (pet_type) {
     var url = '/items/' + id + '/bodies/' + pet_type.body_id + '/swf_assets.json',
       item = this;
@@ -139,7 +139,7 @@ function Item(id) {
       });
     }
   }
-  
+
   this.loadAllStandard = function () {
     var item = this;
     $.getJSON('/items/' + id + '/swf_assets.json', function (assets_by_body_id) {
@@ -153,15 +153,15 @@ function Item(id) {
       });
     });
   }
-  
+
   this.getAssetsForPetType = function (pet_type) {
     return this.assets_by_body_id[pet_type.body_id] || this.assets_by_body_id[0] || [];
   }
-  
+
   this.setAsCurrent = function () {
     Item.current = this;
   }
-  
+
   this.setAssetsForPetType = function (assets, pet_type) {
     if(assets.length) {
       this.assets_by_body_id[pet_type.body_id] = assets;
@@ -188,13 +188,13 @@ Item.createFromLocation = function () {
 
 Preview = new function Preview() {
   var preview = this, swf_id, swf, update_when_swf_ready = false;
-  
+
   window.previewSWFIsReady = function () {
     log('preview SWF is ready');
     swf = document.getElementById(swf_id);
     if(update_when_swf_ready) preview.update();
   }
-  
+
   this.update = function (assets) {
     var assets;
     if(swf) {
@@ -213,7 +213,7 @@ Preview = new function Preview() {
       update_when_swf_ready = true;
     }
   }
-  
+
   this.embed = function (id) {
     swf_id = id;
     swfobject.embedSWF(
@@ -227,12 +227,12 @@ Preview = new function Preview() {
       {'wmode': 'transparent', 'allowscriptaccess': 'always'} // params
     );
   }
-  
+
   this.disable = function (msg) {
     $('#' + swf_id).hide();
     $('#item-preview-error').html(msg).show();
   }
-  
+
   this.enable = function () {
     $('#item-preview-error').hide();
     $('#' + swf_id).show();
@@ -248,10 +248,10 @@ PetType.createFromLink(speciesList.eq(Math.floor(Math.random()*speciesList.lengt
 
 speciesList.each(function () {
   var el = $(this);
-  el.data('pet_type', PetType.createFromLink(el));
+  PetType.createFromLink(el);
 }).live('click', function (e) {
   e.preventDefault();
-  $(this).data('pet_type').setAsCurrent();
+  PetType.all[$(this).data('id')].setAsCurrent();
 });
 
 setTimeout($.proxy(Item.current, 'loadAllStandard'), 5000);
@@ -259,3 +259,4 @@ setTimeout($.proxy(Item.current, 'loadAllStandard'), 5000);
 window.MainWardrobe = {View: {Outfit: {setFlashIsReady: previewSWFIsReady}}}
 
 var SWFLog = $.noop;
+
