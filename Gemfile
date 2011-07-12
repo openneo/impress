@@ -33,6 +33,8 @@ gem 'right_aws', '~> 2.1.0'
 
 gem "character-encodings", "~> 0.4.1", :platforms => :ruby_18
 
+gem "nokogiri", "~> 1.5.0"
+
 group :development_async do
   # async wrappers
   gem 'eventmachine',     :git => 'git://github.com/eventmachine/eventmachine.git'

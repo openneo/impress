@@ -3,6 +3,7 @@
 class Item < ActiveRecord::Base
   SwfAssetType = 'object'
 
+  has_many :closet_hangers
   has_one :contribution, :as => :contributed
   has_many :parent_swf_asset_relationships, :foreign_key => 'parent_id',
     :conditions => {:swf_asset_type => SwfAssetType}
