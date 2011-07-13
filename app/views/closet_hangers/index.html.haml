@@ -1,5 +1,6 @@
 - if user_is?(@user)
   - title 'Your Closet'
+  = link_to "Import closet from Neopets", new_closet_page_path, :id => 'import-link'
 - else
   - title "#{@user.name}'s Closet"
 #closet-hangers

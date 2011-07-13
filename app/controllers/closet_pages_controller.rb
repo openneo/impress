@@ -8,6 +8,8 @@ class ClosetPagesController < ApplicationController
   def create
     if params[:closet_page] && params[:closet_page][:source]
       @closet_page.source = params[:closet_page][:source]
+      @index = @closet_page.index
+
       saved_counts = @closet_page.save_hangers!
 
       any_created = saved_counts[:created] > 0
@@ -35,8 +37,8 @@ class ClosetPagesController < ApplicationController
         message << "That was the last page of your Neopets closet."
         destination = user_closet_hangers_path(current_user)
       else
-        message << "Let's move onto the next page!"
-        destination = {:action => :new, :page => (@closet_page.index + 1)}
+        message << "Now the frame should contain page #{@closet_page.index + 1}. Paste that source code over, too."
+        destination = {:action => :new, :index => (@closet_page.index + 1)}
       end
 
       flash[:success] = message
@@ -47,16 +49,18 @@ class ClosetPagesController < ApplicationController
   end
 
   def new
+    @closet_page.index ||= 1
   end
 
   protected
 
   def build_closet_page
     @closet_page = ClosetPage.new(current_user)
+    @closet_page.index = params[:index]
   end
 
   def on_parse_error
-    flash[:alert] = "We had trouble reading your source code. Is it a valid HTML document? Make sure you pasted the computery-looking result of right-click > View Source, and not the pretty page itself."
+    flash[:alert] = "We had trouble reading your source code. Is it a valid HTML document? Make sure you pasted the computery-looking result of clicking View Frame Source, and not the pretty page itself."
     render :action => :new
   end
 end

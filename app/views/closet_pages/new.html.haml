@@ -1,5 +1,49 @@
-= form_for(@closet_page) do |f|
-  = f.label :source
-  = f.text_area :source
+- title "Closet Importer, Page #{@closet_page.index}"
+
+= form_for @closet_page, :html => {:id => 'closet-page-form'} do |f|
+  #closet-page-frame-wrapper
+    %span
+      %strong Page #{@closet_page.index}
+      of your closet
+    %iframe#closet-page-frame{:src => @closet_page.url}
+  #closet-page-source
+    = f.label :source, "Paste source code below"
+    = f.text_area :source
   = f.submit 'Add items to closet'
+
+:markdown
+  **Welcome to the bulk closet importer!** We're going to make it as
+  easy as possible to import your Neopets.com closet data into your Dress to
+  Impress closet. Here's how it works.
+
+  1. Check the framed Neopets.com window on the left, pointing to
+    [page #{@closet_page.index} of your closet][cp].
+      * **Log in if you haven't already.** If you're logged into
+        Neopets, but not in this frame, enable "third-party cookies" in your
+        browser. (Most have that on by default.)
+      * **Confirm that the page is, in fact, your closet.** Don't just trust a
+        website when they tell you to copy-paste the source code of another site.
+        Instead, check that the page is what it is supposed to be and does not
+        contain any information you didn't mean to give out.
+
+  2. View the frame's source code.
+      * **In Google Chrome,** right-click the frame and choose **View Frame Source**.
+      * **In Firefox,** right-click the frame, choose **This Frame**, then **View Frame Source**.
+      * In other browsers, right-click, and look for something similar. If you're
+        still having trouble, try
+        #{link_to "viewing the page in a new window", @closet_page.url, :target => "_blank"},
+        right-clicking, and choosing View Source.
+
+  3. Highlight the entire source code, and copy-paste it into the box on the right.
+      * Some nifty shortcuts: Ctrl-A to select all the text, Ctrl-C to copy it,
+        Ctrl-V to paste it in.
+
+  4. Submit!
+      * We'll analyze the code you sent us, grab exclusively the identity and
+        quantity of items in your closet, and add that to your Dress to Impress
+        closet. I promise it's all safe, but, if you're concerned, find a
+        programmer buddy and [check out the source code to be sure][source].
+
+  [cp]: #{@closet_page.url}
+  [source]: http://github.com/matchu/openneo-impress-rails
 

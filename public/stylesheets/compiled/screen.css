@@ -538,9 +538,106 @@ div.jGrowl div.jGrowl-closer {
   }
 }
 
-/* line 2, ../../../app/stylesheets/closet_hangers/index.sass */
+/* line 2, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #title {
+  float: left;
+}
+/* line 5, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #import-link {
+  /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  border: 0;
+  display: inline-block;
+  padding: 0.5em 0.75em 0.45em;
+  color: white;
+  text-decoration: none;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  position: relative;
+  font-weight: bold;
+  line-height: 1;
+  background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
+  margin-left: 2em;
+  margin-top: 0.75em;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index #import-link:hover {
+  background-color: #005300;
+}
+/* line 53, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index #import-link:hover {
+  color: white;
+}
+/* line 55, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index #import-link:active {
+  top: 1px;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index #import-link:hover {
+  background-color: #ee4b00;
+}
+/* line 12, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers {
+  clear: both;
   text-align: center;
+}
+
+/* line 3, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new #closet-page-form, body.closet_pages-create #closet-page-form {
+  overflow: hidden;
+  display: inline-block;
+  margin-bottom: 1em;
+}
+/* line 8, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_pages-new #closet-page-form, body.closet_pages-create #closet-page-form {
+  display: block;
+}
+/* line 7, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new #closet-page-frame-wrapper, body.closet_pages-create #closet-page-frame-wrapper {
+  float: left;
+  margin-right: 2%;
+  width: 48%;
+}
+/* line 12, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new #closet-page-frame, body.closet_pages-create #closet-page-frame {
+  height: 19em;
+  width: 100%;
+}
+/* line 16, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new #closet-page-source, body.closet_pages-create #closet-page-source {
+  float: left;
+  width: 50%;
+}
+/* line 20, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new #closet-page-source label, body.closet_pages-create #closet-page-source label {
+  font-weight: bold;
+}
+/* line 23, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new #closet-page-source textarea, body.closet_pages-create #closet-page-source textarea {
+  height: 19em;
+}
+/* line 27, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new ol, body.closet_pages-create ol {
+  padding-left: 1em;
+}
+/* line 30, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new ol > li, body.closet_pages-create ol > li {
+  margin-bottom: 1em;
+}
+/* line 33, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new ol ul, body.closet_pages-create ol ul {
+  font-size: 85%;
+  margin-bottom: 1em;
+  margin-top: 0;
+  padding-left: 1em;
+}
+/* line 40, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new ol p, body.closet_pages-create ol p {
+  margin: 0;
 }
 
 /* line 1, ../../../app/stylesheets/contributions/_index.sass */

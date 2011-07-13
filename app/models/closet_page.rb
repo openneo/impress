@@ -14,7 +14,8 @@ class ClosetPage
     :selected       => "option[selected]"
   }
 
-  attr_reader :hangers, :index, :source, :total_pages, :unknown_item_names, :user
+  attr_accessor :index
+  attr_reader :hangers, :source, :total_pages, :unknown_item_names, :user
 
   def initialize(user)
     raise ArgumentError, "Expected #{user.inspect} to be a User", caller unless user.is_a?(User)
@@ -48,6 +49,10 @@ class ClosetPage
   def source=(source)
     @source = source
     parse_source!(source)
+  end
+
+  def url
+    "http://www.neopets.com/closet.phtml?per_page=50&page=#{@index}"
   end
 
   protected
