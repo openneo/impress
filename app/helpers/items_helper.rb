@@ -48,6 +48,17 @@ module ItemsHelper
     end
   end
 
+  def closeted_icon_for(item)
+    if item.closeted?
+      image_tag(
+        'closeted.png',
+        :title => 'You own this',
+        :alt => 'Closet',
+        :class => 'closeted-icon'
+      )
+    end
+  end
+
   def list_zones(zones, method=:label)
     zones.sort { |x,y| x.label <=> y.label }.map(&method).join(', ')
   end

@@ -102,6 +102,9 @@ Partial.ItemSet = function ItemSet(wardrobe, selector) {
       ) {
         $('<div/>', {'class': 'nc-icon', text: 'NC', title: 'NC'}).appendTo(li);
       }
+      if(item.closeted) {
+        $('<img/>', {'class': 'closeted-icon', alt: 'Closet', title: 'You own this', src: '/images/closeted.png'}).appendTo(li);
+      }
       li.append(img).append(controls).append(info_link).append(item.name).appendTo(ul);
     }
     setClosetItems(wardrobe.outfit.getClosetItems());

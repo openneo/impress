@@ -157,7 +157,8 @@ ul.buttons
 
 .object
   +inline-block
-  padding: .5em
+  margin: .5em 0
+  padding: 0 .5em
   position: relative
   text-align: center
   vertical-align: top
@@ -173,6 +174,21 @@ ul.buttons
     height: $object-img-size
     margin: 0 auto
     width: $object-img-size
+
+  .nc-icon, .closeted-icon
+    +opacity(1)
+    height: $nc-icon-size
+    position: absolute
+    top: $object-img-size - $nc-icon-size
+    width: $nc-icon-size
+    &:hover
+      +opacity(0.5)
+
+  .nc-icon
+    right: ($object-width - $object-img-size) / 2 + $object-padding
+
+  .closeted-icon
+    left: ($object-width - $object-img-size) / 2 + $object-padding
 
 dt
   font-weight: bold
@@ -201,15 +217,6 @@ dd
     margin: 0 .5em
   .current
     font-weight: bold
-
-.object .nc-icon
-  height: 16px
-  position: absolute
-  right: ($object-width - $object-img-size) / 2 + $object-padding
-  top: $object-img-size - $nc-icon-size
-  width: 16px
-  &:hover
-    +opacity(0.5)
 
 /* Fonts
 

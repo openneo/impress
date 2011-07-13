@@ -271,49 +271,76 @@ ul.buttons li, ul.buttons li form {
   vertical-align: middle;
   *display: inline;
   *vertical-align: auto;
-  padding: 0.5em;
+  margin: 0.5em 0;
+  padding: 0 0.5em;
   position: relative;
   text-align: center;
   vertical-align: top;
   width: 100px;
 }
-/* line 165, ../../../app/stylesheets/_layout.sass */
+/* line 166, ../../../app/stylesheets/_layout.sass */
 .object a {
   text-decoration: none;
 }
-/* line 167, ../../../app/stylesheets/_layout.sass */
+/* line 168, ../../../app/stylesheets/_layout.sass */
 .object a img {
   -moz-opacity: 0.75;
   -webkit-opacity: 0.75;
   -o-opacity: 0.75;
   -khtml-opacity: 0.75;
 }
-/* line 169, ../../../app/stylesheets/_layout.sass */
+/* line 170, ../../../app/stylesheets/_layout.sass */
 .object a:hover img {
   -moz-opacity: 1;
   -webkit-opacity: 1;
   -o-opacity: 1;
   -khtml-opacity: 1;
 }
-/* line 171, ../../../app/stylesheets/_layout.sass */
+/* line 172, ../../../app/stylesheets/_layout.sass */
 .object img {
   display: block;
   height: 80px;
   margin: 0 auto;
   width: 80px;
 }
+/* line 178, ../../../app/stylesheets/_layout.sass */
+.object .nc-icon, .object .closeted-icon {
+  -moz-opacity: 1;
+  -webkit-opacity: 1;
+  -o-opacity: 1;
+  -khtml-opacity: 1;
+  height: 16px;
+  position: absolute;
+  top: 64px;
+  width: 16px;
+}
+/* line 184, ../../../app/stylesheets/_layout.sass */
+.object .nc-icon:hover, .object .closeted-icon:hover {
+  -moz-opacity: 0.5;
+  -webkit-opacity: 0.5;
+  -o-opacity: 0.5;
+  -khtml-opacity: 0.5;
+}
+/* line 187, ../../../app/stylesheets/_layout.sass */
+.object .nc-icon {
+  right: 16px;
+}
+/* line 190, ../../../app/stylesheets/_layout.sass */
+.object .closeted-icon {
+  left: 16px;
+}
 
-/* line 177, ../../../app/stylesheets/_layout.sass */
+/* line 193, ../../../app/stylesheets/_layout.sass */
 dt {
   font-weight: bold;
 }
 
-/* line 180, ../../../app/stylesheets/_layout.sass */
+/* line 196, ../../../app/stylesheets/_layout.sass */
 dd {
   margin: 0 0 1.5em 1em;
 }
 
-/* line 183, ../../../app/stylesheets/_layout.sass */
+/* line 199, ../../../app/stylesheets/_layout.sass */
 #home-link {
   font-family: Delicious, Helvetica, Arial, Verdana, sans-serif;
   font-size: 175%;
@@ -324,39 +351,23 @@ dd {
   position: absolute;
   top: 0;
 }
-/* line 193, ../../../app/stylesheets/_layout.sass */
+/* line 209, ../../../app/stylesheets/_layout.sass */
 #home-link:hover {
   background: #eeffee;
   text-decoration: none;
 }
-/* line 196, ../../../app/stylesheets/_layout.sass */
+/* line 212, ../../../app/stylesheets/_layout.sass */
 #home-link span:before {
   content: "<< ";
 }
 
-/* line 200, ../../../app/stylesheets/_layout.sass */
+/* line 216, ../../../app/stylesheets/_layout.sass */
 .pagination a, .pagination span {
   margin: 0 0.5em;
 }
-/* line 202, ../../../app/stylesheets/_layout.sass */
+/* line 218, ../../../app/stylesheets/_layout.sass */
 .pagination .current {
   font-weight: bold;
-}
-
-/* line 205, ../../../app/stylesheets/_layout.sass */
-.object .nc-icon {
-  height: 16px;
-  position: absolute;
-  right: 16px;
-  top: 64px;
-  width: 16px;
-}
-/* line 211, ../../../app/stylesheets/_layout.sass */
-.object .nc-icon:hover {
-  -moz-opacity: 0.5;
-  -webkit-opacity: 0.5;
-  -o-opacity: 0.5;
-  -khtml-opacity: 0.5;
 }
 
 /* Fonts */
@@ -1511,7 +1522,11 @@ body.outfits-edit .object:hover ul, body.outfits-edit .object:hover .object-info
 }
 /* line 415, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .nc-icon {
+<<<<<<< HEAD
   background: url('/images/nc.png?1310662236') no-repeat;
+=======
+  background: url('/images/nc.png?1310533288') no-repeat;
+>>>>>>> closeted icon, all over the place
   height: 16px;
   position: absolute;
   right: 16px;

@@ -10,7 +10,7 @@ class Item < ActiveRecord::Base
   has_many :swf_assets, :through => :parent_swf_asset_relationships, :source => :object_asset,
     :conditions => {:type => SwfAssetType}
 
-  attr_writer :current_body_id
+  attr_writer :closeted, :current_body_id
 
   NCRarities = [0, 500]
   PAINTBRUSH_SET_DESCRIPTION = 'This item is part of a deluxe paint brush set!'
@@ -43,7 +43,9 @@ class Item < ActiveRecord::Base
 
   scope :sitemap, select([:id, :name]).order(:id).limit(49999)
 
-  # Not defining validations, since this app is currently read-only
+  def closeted?
+    !!@closeted
+  end
 
   def nc?
     NCRarities.include?(rarity_index)
@@ -155,7 +157,8 @@ class Item < ActiveRecord::Base
       :name => name,
       :thumbnail_url => thumbnail_url,
       :zones_restrict => zones_restrict,
-      :rarity_index => rarity_index
+      :rarity_index => rarity_index,
+      :closeted => closeted?
     }
   end
 

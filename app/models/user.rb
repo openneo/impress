@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   PreviewTopContributorsCount = 3
 
   has_many :closet_hangers
+  has_many :closeted_items, :through => :closet_hangers, :source => :item
   has_many :contributions
   has_many :outfits
 
@@ -38,6 +39,16 @@ class User < ActiveRecord::Base
       end
     end
     new_points
+  end
+
+  def assign_closeted_to_items!(items)
+    # Assigning these items to a hash by ID means that we don't have to go
+    # N^2 searching the items list for items that match the given IDs or vice
+    # versa, and everything stays a lovely O(n)
+    items_by_id = {}
+    items.each { |item| items_by_id[item.id] = item }
+    closeted_item_ids = closeted_items.where(:id => items_by_id.keys).map(&:id)
+    closeted_item_ids.each { |id| items_by_id[id].closeted = true }
   end
 
   def self.find_or_create_from_remote_auth_data(user_data)
