@@ -1,6 +1,9 @@
 require 'yaml'
 
 class ClosetPage
+  include ActiveModel::Conversion
+  extend ActiveModel::Naming
+
   SELECTORS = {
     :items          => "form[action=\"process_closet.phtml\"] tr[bgcolor!=silver][bgcolor!=\"#E4E4E4\"]",
     :item_thumbnail => "img",
@@ -11,18 +14,39 @@ class ClosetPage
     :selected       => "option[selected]"
   }
 
-  attr_reader :hangers, :index, :total_pages, :unknown_item_names
+  attr_reader :hangers, :index, :source, :total_pages, :unknown_item_names, :user
 
   def initialize(user)
     raise ArgumentError, "Expected #{user.inspect} to be a User", caller unless user.is_a?(User)
     @user = user
   end
 
+  def last?
+    @index == @total_pages
+  end
+
+  def persisted?
+    false
+  end
+
   def save_hangers!
-    @hangers.each(&:save!)
+    counts = {:created => 0, :updated => 0}
+    ClosetHanger.transaction do
+      @hangers.each do |hanger|
+        if hanger.new_record?
+          counts[:created] += 1
+          hanger.save!
+        elsif hanger.changed?
+          counts[:updated] += 1
+          hanger.save!
+        end
+      end
+    end
+    counts
   end
 
   def source=(source)
+    @source = source
     parse_source!(source)
   end
 
@@ -42,7 +66,7 @@ class ClosetPage
 
     page_selector = element(:page_select, doc)
     @total_pages = page_selector.children.size
-    @index = element(:selected, page_selector)['value']
+    @index = element(:selected, page_selector)['value'].to_i
 
     items_data = {
       :id => {},
@@ -89,8 +113,7 @@ class ClosetPage
     @hangers = items.map do |item|
       data = items_data[:id].delete(item.id) ||
         items_data[:thumbnail_url].delete(item.thumbnail_url)
-      hanger = @user.closet_hangers.build
-      hanger.item = item
+      hanger = @user.closet_hangers.find_or_initialize_by_item_id(item.id)
       hanger.quantity = data[:quantity]
       hanger
     end

@@ -24,6 +24,8 @@ OpenneoImpressItems::Application.routes.draw do |map|
   resources :pet_attributes, :only => [:index]
   resources :swf_assets, :only => [:index, :show]
 
+  resources :closet_pages, :only => [:new, :create], :path => 'closet/pages'
+
   match '/users/current-user/outfits' => 'outfits#index', :as => :current_user_outfits
 
   match '/pets/load' => 'pets#load', :method => :post, :as => :load_pet
@@ -37,6 +39,7 @@ OpenneoImpressItems::Application.routes.draw do |map|
     resources :contributions, :only => [:index]
     resources :closet_hangers, :only => [:index], :path => 'closet'
   end
+
   match 'users/top-contributors' => 'users#top_contributors', :as => :top_contributors
   match 'users/top_contributors' => redirect('/users/top-contributors')
 
