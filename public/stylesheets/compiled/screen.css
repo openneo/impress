@@ -538,6 +538,11 @@ div.jGrowl div.jGrowl-closer {
   }
 }
 
+/* line 2, ../../../app/stylesheets/closet_hangers/index.sass */
+body.closet_hangers-index #closet-hangers {
+  text-align: center;
+}
+
 /* line 1, ../../../app/stylesheets/contributions/_index.sass */
 body.contributions-index {
   text-align: center;

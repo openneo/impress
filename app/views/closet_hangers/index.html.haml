@@ -1,0 +1,20 @@
+- if user_is?(@user)
+  - title 'Your Closet'
+- else
+  - title "#{@user.name}'s Closet"
+#closet-hangers
+  - if !@closet_hangers.empty?
+    = render @closet_hangers
+  - else
+    - if user_is?(@user)
+      %p You don't have any items in your Dress to Impress closet.
+      %p
+        Your Dress to Impress closet is a way to keep track of what items you
+        have in your Neopets closet. Once you load your Neopets closet into
+        Dress to Impress, as you play with various outfit ideas you can keep
+        track of what items you already own. And, who knows? Maybe some day
+        you can use it as a up-for-trade list or wishlist. We'll see what
+        happens.
+    - else
+      %p #{@user.name} doesn't have any items in their Dress to Impress closet.
+

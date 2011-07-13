@@ -1,0 +1,6 @@
+.object
+  = render :partial => 'items/item_link', :locals => {:item => closet_hanger.item}
+  %span.quantity
+    = surround '(', ')' do
+      = closet_hanger.quantity
+
