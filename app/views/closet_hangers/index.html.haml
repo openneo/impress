@@ -1,21 +1,23 @@
 - if user_is?(@user)
-  - title 'Your Closet'
+  - title 'Your Items'
   = link_to "Import closet from Neopets", new_closet_page_path, :id => 'import-link'
 - else
-  - title "#{@user.name}'s Closet"
+  - title "#{@user.name}'s Items"
 #closet-hangers
   - if !@closet_hangers.empty?
     = render @closet_hangers
   - else
     - if user_is?(@user)
-      %p You don't have any items in your Dress to Impress closet.
+      %p You haven't tracked any items on Dress to Impress.
       %p
-        Your Dress to Impress closet is a way to keep track of what items you
-        have in your Neopets closet. Once you load your Neopets closet into
-        Dress to Impress, as you play with various outfit ideas you can keep
-        track of what items you already own. And, who knows? Maybe some day
-        you can use it as a up-for-trade list or wishlist. We'll see what
-        happens.
+        Here you can keep track of what items you already own, so that as you
+        design fancy outfits you can know what you have and what you still
+        need. And, who knows? Maybe some day this page will include wishlists
+        and up-for-trade items. We'll see what happens.
+      %p
+        It's easy to get started!
+        = link_to "Just import your Neopets closet in a few quick steps.", new_closet_page_path
+        Have fun!
     - else
-      %p #{@user.name} doesn't have any items in their Dress to Impress closet.
+      %p #{@user.name} hasn't tracked any items on Dress to Impress.
 
