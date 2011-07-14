@@ -6,11 +6,22 @@ body.outfits-index
 
     li
       +outfit-star
+      clear: left
+      float: left
+      margin-bottom: .5em
 
     h4
-      display: inline
+      float: left
+      width: 12em
 
-    .outfit-edit-link
+    .outfit-edit-link, form
+      float: left
       font-size: 85%
       margin-left: 1em
+
+    .outfit-edit-link
+      +awesome-button
+
+    .outfit-delete-button
+      margin: 0
 

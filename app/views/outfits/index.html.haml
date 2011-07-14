@@ -18,3 +18,7 @@
   %p
     It'll be fantastic. Promise.
 
+- content_for :javascripts do
+  = include_javascript_libraries :jquery
+  = javascript_include_tag 'outfits/index'
+

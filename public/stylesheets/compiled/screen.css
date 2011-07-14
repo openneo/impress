@@ -1409,7 +1409,7 @@ body.outfits-edit .object:hover ul, body.outfits-edit .object:hover .object-info
 }
 /* line 415, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .nc-icon {
-  background: url('/images/nc.png?1296599919') no-repeat;
+  background: url('/images/nc.png?1310662236') no-repeat;
   height: 16px;
   position: absolute;
   right: 16px;
@@ -2168,6 +2168,12 @@ body.outfits-edit #save-outfit-wrapper.shared-outfit #current-outfit-permalink {
 body.outfits-index #outfits {
   list-style: none;
 }
+/* line 7, ../../../app/stylesheets/outfits/_index.sass */
+body.outfits-index #outfits li {
+  clear: left;
+  float: left;
+  margin-bottom: 0.5em;
+}
 /* line 4, ../../../app/stylesheets/outfits/_star.sass */
 body.outfits-index #outfits li .outfit-star {
   bottom: -2px;
@@ -2194,14 +2200,51 @@ body.outfits-index #outfits li.loading .outfit-star {
 body.outfits-index #outfits li.loading.active .outfit-star {
   background-image: url('/images/loading_current_outfit.gif?1296599919');
 }
-/* line 10, ../../../app/stylesheets/outfits/_index.sass */
-body.outfits-index #outfits h4 {
-  display: inline;
-}
 /* line 13, ../../../app/stylesheets/outfits/_index.sass */
-body.outfits-index #outfits .outfit-edit-link {
+body.outfits-index #outfits h4 {
+  float: left;
+  width: 12em;
+}
+/* line 17, ../../../app/stylesheets/outfits/_index.sass */
+body.outfits-index #outfits .outfit-edit-link, body.outfits-index #outfits form {
+  float: left;
   font-size: 85%;
   margin-left: 1em;
+}
+/* line 22, ../../../app/stylesheets/outfits/_index.sass */
+body.outfits-index #outfits .outfit-edit-link {
+  /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  border: 0;
+  display: inline-block;
+  padding: 0.5em 0.75em 0.45em;
+  color: white;
+  text-decoration: none;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  position: relative;
+  font-weight: bold;
+  line-height: 1;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.outfits-index #outfits .outfit-edit-link:hover {
+  background-color: #005300;
+}
+/* line 53, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.outfits-index #outfits .outfit-edit-link:hover {
+  color: white;
+}
+/* line 55, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.outfits-index #outfits .outfit-edit-link:active {
+  top: 1px;
+}
+/* line 25, ../../../app/stylesheets/outfits/_index.sass */
+body.outfits-index #outfits .outfit-delete-button {
+  margin: 0;
 }
 
 /* line 2, ../../../app/stylesheets/partials/_campaign-progress.sass */
