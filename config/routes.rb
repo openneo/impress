@@ -19,6 +19,8 @@ OpenneoImpressItems::Application.routes.draw do |map|
     collection do
       get :needed
     end
+
+    resources :closet_hangers, :only => [:create, :update]
   end
   resources :outfits, :only => [:show, :create, :update, :destroy]
   resources :pet_attributes, :only => [:index]

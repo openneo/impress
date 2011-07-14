@@ -97,7 +97,7 @@ input, button, select, label {
 }
 
 /* line 79, ../../../app/stylesheets/_layout.sass */
-input[type=text], body.pets-bulk #bulk-pets-form textarea, input[type=password], input[type=search], select {
+input[type=text], body.pets-bulk #bulk-pets-form textarea, input[type=password], input[type=search], input[type=number], select {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   background: white;
@@ -106,7 +106,7 @@ input[type=text], body.pets-bulk #bulk-pets-form textarea, input[type=password],
   padding: 0.25em;
 }
 /* line 85, ../../../app/stylesheets/_layout.sass */
-input[type=text]:focus, body.pets-bulk #bulk-pets-form textarea:focus, input[type=text]:active, body.pets-bulk #bulk-pets-form textarea:active, input[type=password]:focus, input[type=password]:active, input[type=search]:focus, input[type=search]:active, select:focus, select:active {
+input[type=text]:focus, body.pets-bulk #bulk-pets-form textarea:focus, input[type=text]:active, body.pets-bulk #bulk-pets-form textarea:active, input[type=password]:focus, input[type=password]:active, input[type=search]:focus, input[type=search]:active, input[type=number]:focus, input[type=number]:active, select:focus, select:active {
   color: inherit;
 }
 
@@ -951,6 +951,29 @@ body.items-show #item-preview-header a {
 body.items-show .nc-icon {
   height: 16px;
   width: 16px;
+}
+/* line 66, ../../../app/stylesheets/items/_show.sass */
+body.items-show #closet-hanger-form {
+  border: 1px solid #006600;
+  float: right;
+  font-size: 85%;
+  padding: 1em 0.5em 0.5em;
+  width: 18em;
+}
+/* line 73, ../../../app/stylesheets/items/_show.sass */
+body.items-show #closet-hanger-form label {
+  display: block;
+  font-weight: bold;
+}
+/* line 77, ../../../app/stylesheets/items/_show.sass */
+body.items-show #closet-hanger-form input[type=number] {
+  width: 4em;
+}
+/* line 80, ../../../app/stylesheets/items/_show.sass */
+body.items-show #closet-hanger-form a {
+  display: block;
+  margin-top: 0.5em;
+  text-align: right;
 }
 
 @import url(../shared/jquery.jgrowl.css);

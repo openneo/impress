@@ -10,8 +10,14 @@
       = nc_icon_for(@item)
       - unless @item.rarity.blank?
         == Rarity: #{@item.rarity_index} (#{@item.rarity})
-      %a.button{:href => neoitems_url_for(@item)} NeoItems
+      = link_to 'NeoItems', neoitems_url_for(@item), :class => 'button'
 
+  - if @hanger
+    = form_for([@item, @hanger], :html => {:id => 'closet-hanger-form'}) do |f|
+      = f.label :quantity, "How many of these do you own?"
+      = f.number_field :quantity, :min => 0, :required => true
+      = f.submit "Save"
+      = link_to 'Your Items &rarr;'.html_safe, user_closet_hangers_path(current_user)
   %p= @item.description
 
   #item-zones
