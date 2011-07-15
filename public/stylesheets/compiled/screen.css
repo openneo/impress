@@ -623,29 +623,29 @@ body.closet_hangers-index #closet-hangers .object .quantity span, body.closet_ha
   font-size: 16px;
   font-weight: bold;
 }
-/* line 38, ../../../app/stylesheets/closet_hangers/_index.sass */
-body.closet_hangers-index #closet-hangers .object:hover .quantity {
+/* line 39, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers.current-user .object:hover .quantity {
   -moz-opacity: 1;
   -webkit-opacity: 1;
   -o-opacity: 1;
   -khtml-opacity: 1;
   top: 50px;
 }
-/* line 42, ../../../app/stylesheets/closet_hangers/_index.sass */
-body.closet_hangers-index #closet-hangers .object:hover .quantity span {
+/* line 43, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers.current-user .object:hover .quantity span {
   display: none;
 }
-/* line 45, ../../../app/stylesheets/closet_hangers/_index.sass */
-body.closet_hangers-index #closet-hangers .object:hover .quantity form {
+/* line 46, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers.current-user .object:hover .quantity form {
   display: inline;
 }
-/* line 48, ../../../app/stylesheets/closet_hangers/_index.sass */
-body.closet_hangers-index #closet-hangers .object:hover .quantity form input[type=number] {
+/* line 49, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers.current-user .object:hover .quantity form input[type=number] {
   padding: 2px;
   width: 2em;
 }
-/* line 52, ../../../app/stylesheets/closet_hangers/_index.sass */
-body.closet_hangers-index #closet-hangers .object:hover .quantity input[type=submit] {
+/* line 53, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers.current-user .object:hover .quantity input[type=submit] {
   font-size: 85%;
 }
 

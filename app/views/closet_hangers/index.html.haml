@@ -4,7 +4,7 @@
     = link_to "Import closet from Neopets", new_closet_page_path, :id => 'import-link'
 - else
   - title "#{@user.name}'s Items"
-#closet-hangers
+#closet-hangers{:class => user_is?(@user) ? 'current-user' : nil}
   - if !@closet_hangers.empty?
     = render @closet_hangers
   - else
