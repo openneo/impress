@@ -1,6 +1,4 @@
 .object
   = render :partial => 'items/item_link', :locals => {:item => closet_hanger.item}
-  %span.quantity
-    = surround '(', ')' do
-      = closet_hanger.quantity
+  %span.quantity{:title => "You own #{pluralize closet_hanger.quantity, closet_hanger.item.name}"}= closet_hanger.quantity
 

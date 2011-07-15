@@ -596,6 +596,20 @@ body.closet_hangers-index #closet-hangers {
   clear: both;
   text-align: center;
 }
+/* line 16, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers .object .quantity {
+  -moz-opacity: 0.75;
+  -webkit-opacity: 0.75;
+  -o-opacity: 0.75;
+  -khtml-opacity: 0.75;
+  background: white;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 2px 4px;
+  position: absolute;
+  left: 16px;
+  top: 56px;
+}
 
 /* line 3, ../../../app/stylesheets/closet_pages/_new.sass */
 body.closet_pages-new #closet-page-form, body.closet_pages-create #closet-page-form {
