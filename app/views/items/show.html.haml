@@ -13,7 +13,7 @@
       = link_to 'NeoItems', neoitems_url_for(@item), :class => 'button'
 
   - if @hanger
-    = form_for([@item, @hanger], :html => {:id => 'closet-hanger-form'}) do |f|
+    = form_for(@hanger, :url => user_item_closet_hanger_path(current_user, @item), :html => {:id => 'closet-hanger-form'}) do |f|
       = f.label :quantity, "How many of these do you own?"
       = f.number_field :quantity, :min => 0, :required => true
       = f.submit "Save"

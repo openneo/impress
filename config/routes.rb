@@ -19,8 +19,6 @@ OpenneoImpressItems::Application.routes.draw do |map|
     collection do
       get :needed
     end
-
-    resources :closet_hangers, :only => [:create, :update]
   end
   resources :outfits, :only => [:show, :create, :update, :destroy]
   resources :pet_attributes, :only => [:index]
@@ -40,6 +38,10 @@ OpenneoImpressItems::Application.routes.draw do |map|
   resources :user, :only => [] do
     resources :contributions, :only => [:index]
     resources :closet_hangers, :only => [:index], :path => 'closet'
+
+    resources :items, :only => [] do
+      resource :closet_hanger, :only => [:create, :update]
+    end
   end
 
   match 'users/top-contributors' => 'users#top_contributors', :as => :top_contributors

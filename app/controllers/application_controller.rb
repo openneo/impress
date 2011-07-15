@@ -10,5 +10,13 @@ class ApplicationController < ActionController::Base
   def can_use_image_mode?
     user_signed_in? && current_user.image_mode_tester?
   end
+
+  class AccessDenied < StandardError;end
+
+  rescue_from AccessDenied, :with => :on_access_denied
+
+  def on_access_denied
+    render :file => 'public/403.html', :layout => false, :status => :forbidden
+  end
 end
 
