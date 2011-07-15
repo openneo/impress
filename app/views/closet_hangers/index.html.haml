@@ -1,6 +1,7 @@
 - if user_is?(@user)
   - title 'Your Items'
-  = link_to "Import closet from Neopets", new_closet_page_path, :id => 'import-link'
+  - content_for :before_flashes do
+    = link_to "Import closet from Neopets", new_closet_page_path, :id => 'import-link'
 - else
   - title "#{@user.name}'s Items"
 #closet-hangers

@@ -1,4 +1,9 @@
 .object
   = render :partial => 'items/item_link', :locals => {:item => closet_hanger.item}
-  %span.quantity{:title => "You own #{pluralize closet_hanger.quantity, closet_hanger.item.name}"}= closet_hanger.quantity
+  .quantity
+    %span{:title => "You own #{pluralize closet_hanger.quantity, closet_hanger.item.name}"}= closet_hanger.quantity
+    = form_for closet_hanger, :url => user_item_closet_hanger_path(current_user, closet_hanger.item) do |f|
+      = hidden_field_tag :return_to, request.fullpath
+      = f.number_field :quantity, :min => 0, :required => true, :title => "You own #{pluralize closet_hanger.quantity, closet_hanger.item.name}"
+      = f.submit "Save"
 

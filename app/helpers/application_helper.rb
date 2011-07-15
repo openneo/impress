@@ -32,7 +32,7 @@ module ApplicationHelper
   def flashes
     raw(flash.inject('') do |html, pair|
       key, value = pair
-      html + content_tag('p', value, :class => key)
+      html + content_tag('p', value, :class => "flash #{key}")
     end)
   end
 

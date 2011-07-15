@@ -1,6 +1,10 @@
 body.closet_hangers-index
   #title
     float: left
+    margin-bottom: .5em
+
+  .flash
+    clear: both
 
   #import-link
     +awesome-button
@@ -13,13 +17,38 @@ body.closet_hangers-index
     clear: both
     text-align: center
 
-    .object .quantity
-      +opacity(.75)
-      background: white
-      font-size: 16px
-      font-weight: bold
-      padding: 2px 4px
-      position: absolute
-      left: ($object-width - $object-img-size) / 2 + $object-padding
-      top: $object-img-size - 24px
+    .object
+      .quantity
+        +opacity(.75)
+        background: white
+        padding: 2px 4px
+        position: absolute
+        left: ($object-width - $object-img-size) / 2 + $object-padding
+        text-align: left
+        top: $object-img-size - 24px
+
+        form
+          display: none
+
+        span, input[type=number]
+          font-size: 16px
+          font-weight: bold
+
+      &:hover
+        .quantity
+          +opacity(1)
+          top: $object-img-size - 30px
+
+          span
+            display: none
+
+          form
+            display: inline
+
+            input[type=number]
+              padding: 2px
+              width: 2em
+
+          input[type=submit]
+            font-size: 85%
 

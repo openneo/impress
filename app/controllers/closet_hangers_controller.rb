@@ -31,7 +31,7 @@ class ClosetHangersController < ApplicationController
       flash[:success] = "Success! You do not own #{@item.name}."
     end
 
-    redirect_to @item
+    redirect_to params[:return_to] || @item
   end
 
   alias_method :create, :update
