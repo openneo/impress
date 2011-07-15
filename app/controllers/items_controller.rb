@@ -41,7 +41,7 @@ class ItemsController < ApplicationController
     @item = Item.find params[:id]
     if user_signed_in?
       @hanger = current_user.closet_hangers.find_or_initialize_by_item_id(@item.id)
-      @hanger.quantity ||= 0
+      @hanger.quantity ||= 1
     end
   end
 

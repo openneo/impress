@@ -3,7 +3,7 @@
   %link{:rel => 'canonical', :href => url_for(@item)}
 
 - cache "items_show_#{@item.id}_main_content" do
-  %header
+  %header#item-header
     = image_tag @item.thumbnail_url, :id => 'item-thumbnail'
     %div
       %h2#item-name= @item.name
@@ -14,10 +14,17 @@
 
   - if @hanger
     = form_for(@hanger, :url => user_item_closet_hanger_path(current_user, @item), :html => {:id => 'closet-hanger-form'}) do |f|
-      = f.label :quantity, "How many of these do you own?"
-      = f.number_field :quantity, :min => 0, :required => true
-      = f.submit "Save"
-      = link_to 'Your Items &rarr;'.html_safe, user_closet_hangers_path(current_user)
+      - if @hanger.new_record?
+        %header Do you own this item?
+        %p
+          We can help you track your closet.
+        = f.hidden_field :quantity
+        = f.submit "I own this item!"
+      - else
+        = f.label :quantity, "How many of these do you own?"
+        = f.number_field :quantity, :min => 0, :required => true
+        = f.submit "Save"
+      = link_to 'Your Items &rarr;'.html_safe, user_closet_hangers_path(current_user), :id => 'closet-hanger-form-your-items'
   %p= @item.description
 
   #item-zones

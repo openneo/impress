@@ -834,14 +834,14 @@ body.items-index #species-search-links img {
 }
 
 /* line 2, ../../../app/stylesheets/items/_show.sass */
-body.items-show header {
+body.items-show #item-header {
   border-bottom: 1px solid #006600;
   display: block;
   margin-bottom: 1em;
   padding: 1em 0;
 }
 /* line 7, ../../../app/stylesheets/items/_show.sass */
-body.items-show header div, body.items-show header img {
+body.items-show #item-header div, body.items-show #item-header img {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
   display: inline-block;
@@ -850,11 +850,11 @@ body.items-show header div, body.items-show header img {
   *vertical-align: auto;
 }
 /* line 9, ../../../app/stylesheets/items/_show.sass */
-body.items-show header div {
+body.items-show #item-header div {
   text-align: left;
 }
 /* line 11, ../../../app/stylesheets/items/_show.sass */
-body.items-show header a {
+body.items-show #item-header a {
   font-size: 75%;
   margin-left: 1em;
 }
@@ -961,7 +961,7 @@ body.items-show #closet-hanger-form {
   width: 18em;
 }
 /* line 73, ../../../app/stylesheets/items/_show.sass */
-body.items-show #closet-hanger-form label {
+body.items-show #closet-hanger-form label, body.items-show #closet-hanger-form header {
   display: block;
   font-weight: bold;
 }
@@ -970,10 +970,14 @@ body.items-show #closet-hanger-form input[type=number] {
   width: 4em;
 }
 /* line 80, ../../../app/stylesheets/items/_show.sass */
-body.items-show #closet-hanger-form a {
+body.items-show #closet-hanger-form #closet-hanger-form-your-items {
   display: block;
   margin-top: 0.5em;
   text-align: right;
+}
+/* line 85, ../../../app/stylesheets/items/_show.sass */
+body.items-show #closet-hanger-form p {
+  font-family: "Droid Sans", Helvetica, Arial, Verdana, sans-serif;
 }
 
 @import url(../shared/jquery.jgrowl.css);
@@ -1545,11 +1549,7 @@ body.outfits-edit .object:hover ul, body.outfits-edit .object:hover .object-info
 }
 /* line 415, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .nc-icon {
-<<<<<<< HEAD
-  background: url('/images/nc.png?1310662236') no-repeat;
-=======
-  background: url('/images/nc.png?1310533288') no-repeat;
->>>>>>> closeted icon, all over the place
+  background: url('/images/nc.png?1310666180') no-repeat;
   height: 16px;
   position: absolute;
   right: 16px;
