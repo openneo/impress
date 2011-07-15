@@ -167,13 +167,16 @@ ul.buttons
     text-decoration: none
     img
       +opacity(0.75)
-    &:hover img
-      +opacity(1)
   img
     display: block
     height: $object-img-size
     margin: 0 auto
     width: $object-img-size
+  &:hover img, a:hover img
+    // behave in browsers that only respond to a:hover, but also be in the
+    // hover state more often for browsers who support div:hover
+    // (quantity form in user items)
+    +opacity(1)
 
   .nc-icon, .closeted-icon
     +opacity(1)

@@ -290,20 +290,20 @@ ul.buttons li, ul.buttons li form {
   -khtml-opacity: 0.75;
 }
 /* line 170, ../../../app/stylesheets/_layout.sass */
-.object a:hover img {
-  -moz-opacity: 1;
-  -webkit-opacity: 1;
-  -o-opacity: 1;
-  -khtml-opacity: 1;
-}
-/* line 172, ../../../app/stylesheets/_layout.sass */
 .object img {
   display: block;
   height: 80px;
   margin: 0 auto;
   width: 80px;
 }
-/* line 178, ../../../app/stylesheets/_layout.sass */
+/* line 175, ../../../app/stylesheets/_layout.sass */
+.object:hover img, .object a:hover img {
+  -moz-opacity: 1;
+  -webkit-opacity: 1;
+  -o-opacity: 1;
+  -khtml-opacity: 1;
+}
+/* line 181, ../../../app/stylesheets/_layout.sass */
 .object .nc-icon, .object .closeted-icon {
   -moz-opacity: 1;
   -webkit-opacity: 1;
@@ -314,33 +314,33 @@ ul.buttons li, ul.buttons li form {
   top: 64px;
   width: 16px;
 }
-/* line 184, ../../../app/stylesheets/_layout.sass */
+/* line 187, ../../../app/stylesheets/_layout.sass */
 .object .nc-icon:hover, .object .closeted-icon:hover {
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
   -o-opacity: 0.5;
   -khtml-opacity: 0.5;
 }
-/* line 187, ../../../app/stylesheets/_layout.sass */
+/* line 190, ../../../app/stylesheets/_layout.sass */
 .object .nc-icon {
   right: 16px;
 }
-/* line 190, ../../../app/stylesheets/_layout.sass */
+/* line 193, ../../../app/stylesheets/_layout.sass */
 .object .closeted-icon {
   left: 16px;
 }
 
-/* line 193, ../../../app/stylesheets/_layout.sass */
+/* line 196, ../../../app/stylesheets/_layout.sass */
 dt {
   font-weight: bold;
 }
 
-/* line 196, ../../../app/stylesheets/_layout.sass */
+/* line 199, ../../../app/stylesheets/_layout.sass */
 dd {
   margin: 0 0 1.5em 1em;
 }
 
-/* line 199, ../../../app/stylesheets/_layout.sass */
+/* line 202, ../../../app/stylesheets/_layout.sass */
 #home-link {
   font-family: Delicious, Helvetica, Arial, Verdana, sans-serif;
   font-size: 175%;
@@ -351,21 +351,21 @@ dd {
   position: absolute;
   top: 0;
 }
-/* line 209, ../../../app/stylesheets/_layout.sass */
+/* line 212, ../../../app/stylesheets/_layout.sass */
 #home-link:hover {
   background: #eeffee;
   text-decoration: none;
 }
-/* line 212, ../../../app/stylesheets/_layout.sass */
+/* line 215, ../../../app/stylesheets/_layout.sass */
 #home-link span:before {
   content: "<< ";
 }
 
-/* line 216, ../../../app/stylesheets/_layout.sass */
+/* line 219, ../../../app/stylesheets/_layout.sass */
 .pagination a, .pagination span {
   margin: 0 0.5em;
 }
-/* line 218, ../../../app/stylesheets/_layout.sass */
+/* line 221, ../../../app/stylesheets/_layout.sass */
 .pagination .current {
   font-weight: bold;
 }
@@ -629,22 +629,24 @@ body.closet_hangers-index #closet-hangers.current-user .object:hover .quantity {
   -webkit-opacity: 1;
   -o-opacity: 1;
   -khtml-opacity: 1;
-  top: 50px;
+  background: transparent;
+  top: 55px;
+  padding: 0;
 }
-/* line 43, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 45, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers.current-user .object:hover .quantity span {
   display: none;
 }
-/* line 46, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 48, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers.current-user .object:hover .quantity form {
   display: inline;
 }
-/* line 49, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 51, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers.current-user .object:hover .quantity form input[type=number] {
   padding: 2px;
   width: 2em;
 }
-/* line 53, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 55, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers.current-user .object:hover .quantity input[type=submit] {
   font-size: 85%;
 }
