@@ -4,8 +4,13 @@
     = link_to "Import closet from Neopets", new_closet_page_path, :id => 'import-link'
 - else
   - title "#{@user.name}'s Items"
+
 #closet-hangers{:class => user_is?(@user) ? 'current-user' : nil}
   - if !@closet_hangers.empty?
+    - if user_is?(@user)
+      %p
+        These are the items you own. Hover over an item to remove it from the
+        list or to change the quantity.
     = render @closet_hangers
   - else
     - if user_is?(@user)
@@ -21,4 +26,8 @@
         Have fun!
     - else
       %p #{@user.name} hasn't tracked any items on Dress to Impress.
+
+- content_for :javascripts do
+  = include_javascript_libraries :jquery
+  = javascript_include_tag 'jquery.jgrowl.js', 'closet_hangers/index'
 

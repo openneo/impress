@@ -24,8 +24,9 @@ body.closet_hangers-index
         padding: 2px 4px
         position: absolute
         left: ($object-width - $object-img-size) / 2 + $object-padding
+        line-height: 1
         text-align: left
-        top: $object-img-size - 24px
+        top: $object-img-size - 20px
 
         form
           display: none
@@ -35,23 +36,37 @@ body.closet_hangers-index
           font-weight: bold
 
     &.current-user
-      .object:hover
-        .quantity
-          +opacity(1)
-          background: transparent
-          top: $object-img-size - 25px
-          padding: 0
+      .object:hover .quantity
+        +opacity(1)
+        background: transparent
+        top: $object-img-size - 24px
+        padding: 0
 
-          span
-            display: none
+        span
+          display: none
 
-          form
-            display: inline
+        form
+          display: inline
 
-            input[type=number]
-              padding: 2px
-              width: 2em
+        input[type=number]
+          padding: 2px
+          width: 2em
+
+        input[type=submit]
+          font-size: 85%
+
+      &.js
+        .object:hover .quantity
+          input[type=number]
+            width: 2.5em
 
           input[type=submit]
-            font-size: 85%
+            display: none
+
+        .object.loading
+          background: $module-bg-color
+          outline: 1px solid $module-border-color
+
+          .quantity span:after
+            content: "…"
 

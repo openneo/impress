@@ -22,16 +22,35 @@ class ClosetHangersController < ApplicationController
 
     unless @closet_hanger.quantity == 0 # save the hanger, new record or not
       if @closet_hanger.save
-        flash[:success] = "Success! You own #{@closet_hanger.quantity} #{@item.name.pluralize}."
+        respond_to do |format|
+          format.html {
+            flash[:success] = "Success! You own #{@closet_hanger.quantity} #{@item.name.pluralize}."
+            redirect_back!
+          }
+
+          format.json { render :json => true }
+        end
       else
-        flash[:alert] = "We couldn't save how many of this item you own: #{@closet_hanger.errors.full_messages.to_sentence}"
+        respond_to do |format|
+          format.html {
+            flash[:alert] = "We couldn't save how many of this item you own: #{@closet_hanger.errors.full_messages.to_sentence}"
+            redirect_back!
+          }
+
+          format.json { render :json => {:errors => @closet_hanger.errors.full_messages}, :status => :unprocessable_entity }
+        end
       end
     else # delete the hanger since the user doesn't want it
       @closet_hanger.destroy
-      flash[:success] = "Success! You do not own #{@item.name}."
-    end
+      respond_to do |format|
+        format.html {
+          flash[:success] = "Success! You do not own #{@item.name}."
+          redirect_back!
+        }
 
-    redirect_to params[:return_to] || @item
+        format.json { render :json => true }
+      end
+    end
   end
 
   alias_method :create, :update
@@ -40,6 +59,10 @@ class ClosetHangersController < ApplicationController
 
   def authorize_user!
     raise AccessDenied unless user_signed_in? && current_user.id == params[:user_id].to_i
+  end
+
+  def redirect_back!
+    redirect_to params[:return_to] || @item
   end
 end
 
