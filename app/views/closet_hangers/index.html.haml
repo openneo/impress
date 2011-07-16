@@ -2,6 +2,9 @@
   - title 'Your Items'
   - content_for :before_flashes do
     = link_to "Import closet from Neopets", new_closet_page_path, :id => 'import-link'
+    = form_tag items_path, :method => :get, :id => 'closet-hangers-items-search', 'data-current-user-id' => current_user.id do
+      = search_field_tag :q, nil, :placeholder => "Search items"
+      = submit_tag 'Search', :name => nil
 - else
   - title "#{@user.name}'s Items"
 
@@ -27,7 +30,10 @@
     - else
       %p #{@user.name} hasn't tracked any items on Dress to Impress.
 
+- content_for :stylesheets do
+  = stylesheet_link_tag 'south-street/jquery-ui'
+
 - content_for :javascripts do
   = include_javascript_libraries :jquery
-  = javascript_include_tag 'jquery.jgrowl.js', 'closet_hangers/index'
+  = javascript_include_tag 'jquery.ui', 'jquery.jgrowl', 'placeholder', 'closet_hangers/index'
 

@@ -549,16 +549,20 @@ div.jGrowl div.jGrowl-closer {
   }
 }
 
-/* line 4, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 5, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #title {
   float: left;
   margin-bottom: 0.5em;
 }
-/* line 8, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 9, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index .flash {
   clear: both;
 }
-/* line 11, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 12, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #import-link, body.closet_hangers-index #closet-hangers-items-search {
+  margin-top: 0.75em;
+}
+/* line 15, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #import-link {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
@@ -578,7 +582,6 @@ body.closet_hangers-index #import-link {
   line-height: 1;
   background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
   margin-left: 2em;
-  margin-top: 0.75em;
 }
 /* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
 body.closet_hangers-index #import-link:hover {
@@ -596,12 +599,23 @@ body.closet_hangers-index #import-link:active {
 body.closet_hangers-index #import-link:hover {
   background-color: #ee4b00;
 }
-/* line 18, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 20, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers-items-search {
+  float: right;
+}
+/* line 24, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers-items-search input[type=search].loading {
+  background-image: url(/images/loading.gif);
+  background-position: 2px center;
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+/* line 31, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers {
   clear: both;
   text-align: center;
 }
-/* line 23, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 36, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers .object .quantity {
   -moz-opacity: 0.75;
   -webkit-opacity: 0.75;
@@ -615,26 +629,26 @@ body.closet_hangers-index #closet-hangers .object .quantity {
   text-align: left;
   top: 60px;
 }
-/* line 33, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 46, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers .object .quantity span, body.closet_hangers-index #closet-hangers .object .quantity input[type=number] {
   font-size: 16px;
   font-weight: bold;
 }
-/* line 37, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 50, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers .object form {
   display: none;
 }
-/* line 42, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 55, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers.current-user .object:hover form {
   display: inline;
 }
-/* line 45, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 58, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers.current-user .object:hover .closet-hanger-destroy {
   position: absolute;
   right: 18px;
   top: 0;
 }
-/* line 50, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 63, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers.current-user .object:hover .closet-hanger-destroy input {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
@@ -675,7 +689,7 @@ body.closet_hangers-index #closet-hangers.current-user .object:hover .closet-han
 body.closet_hangers-index #closet-hangers.current-user .object:hover .closet-hanger-destroy input:hover {
   background-color: #999999;
 }
-/* line 53, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 66, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers.current-user .object:hover .quantity {
   -moz-opacity: 1;
   -webkit-opacity: 1;
@@ -685,33 +699,33 @@ body.closet_hangers-index #closet-hangers.current-user .object:hover .quantity {
   top: 56px;
   padding: 0;
 }
-/* line 59, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 72, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers.current-user .object:hover .quantity span {
   display: none;
 }
-/* line 62, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 75, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers.current-user .object:hover .quantity input[type=number] {
   padding: 2px;
   width: 2em;
 }
-/* line 66, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 79, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers.current-user .object:hover .quantity input[type=submit] {
   font-size: 85%;
 }
-/* line 71, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 84, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers.current-user.js .object:hover .quantity input[type=number] {
   width: 2.5em;
 }
-/* line 74, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 87, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers.current-user.js .object:hover .quantity input[type=submit] {
   display: none;
 }
-/* line 77, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 90, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers.current-user.js .object.loading {
   background: #eeffee;
   outline: 1px solid #006600;
 }
-/* line 81, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 94, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers.current-user.js .object.loading .quantity span:after {
   content: "…";
 }

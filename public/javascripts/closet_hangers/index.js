@@ -1,5 +1,6 @@
 (function () {
-  var hangersEl = $('#closet-hangers.current-user');
+  var hangersElQuery = '#closet-hangers.current-user';
+  var hangersEl = $(hangersElQuery);
   hangersEl.addClass('js');
 
   $.fn.disableForms = function () {
@@ -15,17 +16,35 @@
   }
 
   $.fn.revertValue = function () {
-    this.each(function () {
+    return this.each(function () {
       var el = $(this);
       el.val(el.data('previousValue'));
     });
   }
 
   $.fn.storeValue = function () {
-    this.each(function () {
+    return this.each(function () {
       var el = $(this);
       el.data('previousValue', el.val());
     });
+  }
+
+  function handleHangerError(xhr, action) {
+    try {
+      var data = $.parseJSON(xhr.responseText);
+    } catch(e) {
+      var data = {};
+    }
+
+    if(typeof data.errors != 'undefined') {
+      $.jGrowl("Error " + action + ": " + data.errors.join(", "));
+    } else {
+      $.jGrowl("We had trouble " + action + " just now. Try again?");
+    }
+  }
+
+  function objectRemoved(objectWrapper) {
+    objectWrapper.hide(250);
   }
 
   function submitUpdateForm(form) {
@@ -43,44 +62,42 @@
         data: data,
         dataType: "json",
         complete: function (data) {
-          objectWrapper.removeClass("loading").enableForms();
+          if(input.val() == 0) {
+            objectRemoved(objectWrapper);
+          } else {
+            objectWrapper.removeClass("loading").enableForms();
+          }
           form.data('loading', false);
         },
         success: function () {
           input.storeValue();
         },
         error: function (xhr) {
-          try {
-            var data = $.parseJSON(xhr.responseText);
-          } catch(e) {
-            var data = {};
-          }
           input.revertValue();
           span.text(input.val());
-          if(typeof data.errors != 'undefined') {
-            $.jGrowl("Error updating quantity: " + data.errors.join(", "));
-          } else {
-            $.jGrowl("We had trouble updating the quantity just now. Try again?");
-          }
+
+          handleHangerError(xhr, "updating the quantity");
         }
       });
     }
   }
 
-  hangersEl.find('form.closet-hanger-update').submit(function (e) {
+  $(hangersElQuery + ' form.closet-hanger-update').live('submit', function (e) {
     e.preventDefault();
     submitUpdateForm($(this));
   });
 
-  hangersEl.find('input[type=number]').change(function () {
+  function quantityInputs() { return $(hangersElQuery + ' input[type=number]') }
+
+  quantityInputs().live('change', function () {
     submitUpdateForm($(this).parent());
   }).storeValue();
 
-  hangersEl.find('div.object').mouseleave(function () {
+  $(hangersElQuery + ' div.object').live('mouseleave', function () {
     submitUpdateForm($(this).find('form.closet-hanger-update'));
   });
 
-  hangersEl.find("form.closet-hanger-destroy").submit(function (e) {
+  $(hangersElQuery + " form.closet-hanger-destroy").live("submit", function (e) {
     e.preventDefault();
     var form = $(this);
     var button = form.children("input").val("Removing…");
@@ -96,7 +113,7 @@
         button.val("Remove");
       },
       success: function () {
-        objectWrapper.hide(500);
+        objectRemoved(objectWrapper);
       },
       error: function () {
         objectWrapper.removeClass("loading").enableForms();
@@ -104,5 +121,52 @@
       }
     });
   });
+
+  $('input, textarea').placeholder();
+
+  var itemsSearchForm = $("#closet-hangers-items-search[data-current-user-id]");
+  var itemsSearchField = itemsSearchForm.children("input[type=search]");
+
+  itemsSearchField.autocomplete({
+    select: function (e, ui) {
+      var item = ui.item;
+      itemsSearchField.addClass("loading");
+
+      $.ajax({
+        url: "/user/" + itemsSearchForm.data("current-user-id") + "/items/" + item.id + "/closet_hanger",
+        type: "post",
+        data: {closet_hanger: {quantity: 1}, return_to: window.location.pathname + window.location.search},
+        complete: function () {
+          itemsSearchField.removeClass("loading");
+        },
+        success: function (html) {
+          var doc = $(html);
+          hangersEl.html( doc.find('#closet-hangers').html() );
+          quantityInputs().storeValue(); // since all the quantity inputs are new, gotta store initial value again
+          doc.find('.flash').hide().insertBefore(hangersEl).show(500).delay(5000).hide(250);
+          itemsSearchField.val("");
+        },
+        error: function (xhr) {
+          handleHangerError(xhr, "adding the item");
+        }
+      });
+    },
+    source: function (input, callback) {
+      $.getJSON("/items.json?q=" + input.term, function (data) {
+        var output = [];
+        var items = data.items;
+        for(var i in items) {
+          items[i].label = items[i].name;
+          output[output.length] = items[i];
+        }
+        callback(output);
+      })
+    }
+  }).data( "autocomplete" )._renderItem = function( ul, item ) {
+		return $( "<li></li>" )
+			.data( "item.autocomplete", item )
+			.append( "<a>Add <strong>" + item.label + "</strong>" )
+			.appendTo( ul );
+	}
 })();
 
