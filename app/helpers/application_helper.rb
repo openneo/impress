@@ -86,6 +86,10 @@ module ApplicationHelper
     hidden_field_tag 'origin', value, :id => nil
   end
 
+  def return_to_field_tag
+    hidden_field_tag :return_to, request.fullpath
+  end
+
   def show_title_header?
     params[:controller] != 'items'
   end

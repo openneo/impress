@@ -54,7 +54,7 @@
     }
   }
 
-  hangersEl.find('form').submit(function (e) {
+  hangersEl.find('form.closet-hanger-update').submit(function (e) {
     e.preventDefault();
     submitForm($(this));
   });
@@ -64,7 +64,7 @@
   }).storeValue();
 
   hangersEl.find('div.object').mouseleave(function () {
-    submitForm($(this).find('form'));
+    submitForm($(this).find('form.closet-hanger-update'));
   });
 })();
 

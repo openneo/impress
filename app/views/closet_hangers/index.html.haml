@@ -11,7 +11,7 @@
       %p
         These are the items you own. Hover over an item to remove it from the
         list or to change the quantity.
-    = render @closet_hangers
+    = render :partial => 'closet_hanger', :collection => @closet_hangers, :locals => {:show_controls => user_is?(@user)}
   - else
     - if user_is?(@user)
       %p You haven't tracked any items on Dress to Impress.

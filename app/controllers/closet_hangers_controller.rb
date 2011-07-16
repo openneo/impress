@@ -1,5 +1,15 @@
 class ClosetHangersController < ApplicationController
-  before_filter :authorize_user!, :only => [:set_quantity]
+  before_filter :authorize_user!, :only => [:destroy, :update]
+  before_filter :find_item, :only => [:destroy, :update]
+
+  def destroy
+    @closet_hanger = current_user.closet_hangers.find_by_item_id!(@item.id)
+    @closet_hanger.destroy
+    respond_to do |format|
+      format.html { redirect_after_destroy! }
+      format.js { render :json => true }
+    end
+  end
 
   def index
     @user = User.find params[:user_id]
@@ -10,13 +20,13 @@ class ClosetHangersController < ApplicationController
   # quantity of an item they own, the user would expect a create form to work
   # even after the record already exists, and an update form to work even after
   # the record is deleted. So, create and update are aliased, and both find
-  # the record if it exists or create a new one if it does not.
+  # the record if it exists or create a new one if it does not. They will even
+  # delete the record if quantity is zero.
   #
   # This is kinda a violation of REST. It's not worth breaking user
   # expectations, though, and I can't really think of a genuinely RESTful way
   # to pull this off.
   def update
-    @item = Item.find params[:item_id]
     @closet_hanger = current_user.closet_hangers.find_or_initialize_by_item_id(@item.id)
     @closet_hanger.attributes = params[:closet_hanger]
 
@@ -43,10 +53,7 @@ class ClosetHangersController < ApplicationController
     else # delete the hanger since the user doesn't want it
       @closet_hanger.destroy
       respond_to do |format|
-        format.html {
-          flash[:success] = "Success! You do not own #{@item.name}."
-          redirect_back!
-        }
+        format.html { redirect_after_destroy! }
 
         format.json { render :json => true }
       end
@@ -59,6 +66,15 @@ class ClosetHangersController < ApplicationController
 
   def authorize_user!
     raise AccessDenied unless user_signed_in? && current_user.id == params[:user_id].to_i
+  end
+
+  def find_item
+    @item = Item.find params[:item_id]
+  end
+
+  def redirect_after_destroy!
+    flash[:success] = "Success! You do not own #{@item.name}."
+    redirect_back!
   end
 
   def redirect_back!

@@ -40,7 +40,7 @@ OpenneoImpressItems::Application.routes.draw do |map|
     resources :closet_hangers, :only => [:index], :path => 'closet'
 
     resources :items, :only => [] do
-      resource :closet_hanger, :only => [:create, :update]
+      resource :closet_hanger, :only => [:create, :update, :destroy]
     end
   end
 

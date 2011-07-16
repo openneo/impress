@@ -1,6 +1,7 @@
 @import ../shared/jquery.jgrowl
 @import partials/wardrobe
 
+@import "partials/context_button"
 @import "partials/icon"
 @import star
 
@@ -400,10 +401,7 @@ body.outfits-edit
       li
         margin-bottom: .25em
         a
-          +awesome-button
-          +awesome-button-color(#aaaaaa)
-          +opacity(0.9)
-          font-size: 80%
+          +context-button
     &:hover
       ul, .object-info
         display: block

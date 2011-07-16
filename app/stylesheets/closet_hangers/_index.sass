@@ -1,3 +1,5 @@
+@import "partials/context_button"
+
 body.closet_hangers-index
   #title
     float: left
@@ -28,32 +30,41 @@ body.closet_hangers-index
         text-align: left
         top: $object-img-size - 20px
 
-        form
-          display: none
-
         span, input[type=number]
           font-size: 16px
           font-weight: bold
 
+      form
+        display: none
+
     &.current-user
-      .object:hover .quantity
-        +opacity(1)
-        background: transparent
-        top: $object-img-size - 24px
-        padding: 0
-
-        span
-          display: none
-
+      .object:hover
         form
           display: inline
 
-        input[type=number]
-          padding: 2px
-          width: 2em
+        .closet-hanger-destroy
+          position: absolute
+          right: ($object-width - $object-img-size) / 2 + $object-padding
+          top: 0
 
-        input[type=submit]
-          font-size: 85%
+          input
+            +context-button
+
+        .quantity
+          +opacity(1)
+          background: transparent
+          top: $object-img-size - 24px
+          padding: 0
+
+          span
+            display: none
+
+          input[type=number]
+            padding: 2px
+            width: 2em
+
+          input[type=submit]
+            font-size: 85%
 
       &.js
         .object:hover .quantity
