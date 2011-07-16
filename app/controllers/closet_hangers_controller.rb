@@ -1,13 +1,13 @@
 class ClosetHangersController < ApplicationController
-  before_filter :authorize_user!, :only => [:destroy, :update]
-  before_filter :find_item, :only => [:destroy, :update]
+  before_filter :authorize_user!, :only => [:destroy, :create, :update]
+  before_filter :find_item, :only => [:destroy, :create, :update]
 
   def destroy
     @closet_hanger = current_user.closet_hangers.find_by_item_id!(@item.id)
     @closet_hanger.destroy
     respond_to do |format|
       format.html { redirect_after_destroy! }
-      format.js { render :json => true }
+      format.json { render :json => true }
     end
   end
 
