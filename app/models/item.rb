@@ -43,6 +43,8 @@ class Item < ActiveRecord::Base
 
   scope :sitemap, select([:id, :name]).order(:id).limit(49999)
 
+  scope :with_closet_hangers, joins(:closet_hangers)
+
   def closeted?
     !!@closeted
   end
@@ -118,7 +120,7 @@ class Item < ActiveRecord::Base
     @supported_species ||= species_support_ids.blank? ? Species.all : species_support_ids.sort.map { |id| Species.find(id) }
   end
 
-  def self.search(query)
+  def self.search(query, user=nil)
     raise SearchError, "Please provide a search query" unless query
     query = query.strip
     raise SearchError, "Search queries should be at least 3 characters" if query.length < 3
@@ -146,7 +148,7 @@ class Item < ActiveRecord::Base
           limited_filters_used << condition.filter
         end
       end
-      condition.narrow(scope)
+      condition.narrow(scope, user)
     end
   end
 
@@ -616,6 +618,7 @@ class Item < ActiveRecord::Base
     name = name.to_s
     SearchFilterScopes << name
     LimitedSearchFilters << name if options[:limit]
+
     (class << self; self; end).instance_eval do
       if options[:full]
         define_method "search_filter_#{name}", &options[:full]
@@ -633,9 +636,9 @@ class Item < ActiveRecord::Base
     search_filter name, options, &block
   end
 
-  def self.search_filter_block(options, positive)
-    Proc.new { |str, scope|
-      condition = yield(str)
+  def self.search_filter_block(options, positive, &block)
+    Proc.new { |str, user, scope|
+      condition = block.arity == 1 ? block.call(str) : block.call(str, user)
       condition = "!(#{condition.to_sql})" unless positive
       scope = scope.send(options[:scope]) if options[:scope]
       scope.where(condition)
@@ -662,6 +665,27 @@ class Item < ActiveRecord::Base
         "Did you mean is:nc or is:pb?"
     end
     filter
+  end
+
+  def self.validate_user_condition(adjective, user)
+    unless adjective == "owns"
+      raise SearchError, "We don't understand user:#{adjective}. " +
+        "Did you mean user:owns?"
+    end
+
+    unless user
+      raise SearchError, "It looks like you're not logged in, so you don't own any items."
+    end
+  end
+
+  single_search_filter :user, :full => lambda { |adjective, user, scope|
+    validate_user_condition(adjective, user)
+    scope.joins(:closet_hangers).where(ClosetHanger.arel_table[:user_id].eq(user.id))
+  }
+
+  single_search_filter :not_user do |adjective, user|
+    validate_user_condition(adjective, user)
+    arel_table[:id].not_in(user.closeted_items.map(&:id))
   end
 
   search_filter :only do |species_name|
@@ -694,7 +718,7 @@ class Item < ActiveRecord::Base
     SwfAsset.arel_table[:zone_id].in(zone_set.map(&:id))
   end
 
-  single_search_filter :not_type, :full => lambda { |zone_set_name, scope|
+  single_search_filter :not_type, :full => lambda { |zone_set_name, user, scope|
     zone_set = Zone::ItemZoneSets[zone_set_name]
     raise SearchError, "Type \"#{zone_set_name}\" does not exist" unless zone_set
     psa = ParentSwfAssetRelationship.arel_table.alias
@@ -742,10 +766,10 @@ class Item < ActiveRecord::Base
       @positive = !@positive
     end
 
-    def narrow(scope)
+    def narrow(scope, user)
       if SearchFilterScopes.include?(filter)
         polarized_filter = @positive ? filter : "not_#{filter}"
-        Item.send("search_filter_#{polarized_filter}", self, scope)
+        Item.send("search_filter_#{polarized_filter}", self, user, scope)
       else
         raise SearchError, "Filter #{filter} does not exist"
       end

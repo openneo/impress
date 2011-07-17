@@ -10,7 +10,7 @@ class ItemsController < ApplicationController
         else
           per_page = nil
         end
-        @items = Item.search(@query).alphabetize.paginate :page => params[:page], :per_page => per_page
+        @items = Item.search(@query, current_user).alphabetize.paginate :page => params[:page], :per_page => per_page
         assign_closeted!
         respond_to do |format|
           format.html { render }
