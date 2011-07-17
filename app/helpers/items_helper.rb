@@ -71,6 +71,10 @@ module ItemsHelper
     sprintf(NeoitemsURLFormat, CGI::escape(item.name))
   end
 
+  def your_items_path
+    user_signed_in? ? user_closet_hangers_path(current_user) : login_path
+  end
+
   private
 
   def build_on_pet_types(species, special_color=nil, &block)
