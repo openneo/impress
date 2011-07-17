@@ -863,6 +863,7 @@ View.Search = function (wardrobe) {
     loading_el = $('#preview-search-form-loading'),
     no_results_el = $('#preview-search-form-no-results'),
     no_results_span = no_results_el.children('span'),
+    your_items_el = $('#preview-search-form-your-items'),
     PAGINATION = {
       INNER_WINDOW: 4,
       OUTER_WINDOW: 1,
@@ -924,6 +925,12 @@ View.Search = function (wardrobe) {
   clear_el.click(function (e) {
     e.preventDefault();
     input_el.val('');
+    form.submit();
+  });
+
+  your_items_el.click(function (e) {
+    e.preventDefault();
+    input_el.val('user:owns');
     form.submit();
   });
 

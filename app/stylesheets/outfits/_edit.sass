@@ -313,9 +313,14 @@ body.outfits-edit
       margin: 0 1em 0 0
     input
       +inline-block
+      &[type=submit]
+        margin-right: 2em
+  #preview-search-form-your-items
+    display: none
+    font-size: 85%
+    margin-right: 1em
   #preview-search-form-pagination
     +inline-block
-    margin-left: 2em
     a, span
       margin: 0 .25em
     .current
@@ -558,6 +563,8 @@ body.outfits-edit
           display: block
         #save-outfit, #save-current-outfit, #save-outfit-copy, #current-outfit-permalink, #shared-outfit-permalink, #share-outfit, #shared-outfit-url
           display: none
+    #preview-search-form-your-items
+      +inline-block
 
   &.user-not-signed-in
     #save-outfit-not-signed-in
