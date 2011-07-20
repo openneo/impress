@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
-  helper_method :can_use_image_mode?
+  helper_method :can_use_image_mode?, :user_is?
 
   def authenticate_user! # too lazy to change references to login_path
     redirect_to(login_path) unless user_signed_in?
@@ -17,6 +17,10 @@ class ApplicationController < ActionController::Base
 
   def on_access_denied
     render :file => 'public/403.html', :layout => false, :status => :forbidden
+  end
+
+  def user_is?(user)
+    user_signed_in? && user == current_user
   end
 end
 

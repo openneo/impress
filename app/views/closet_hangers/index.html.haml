@@ -1,4 +1,4 @@
-- if user_is?(@user)
+- unless public_perspective?
   - title 'Your Items'
   - content_for :before_flashes do
     = link_to "Import closet from Neopets", new_closet_page_path, :id => 'import-link'
@@ -8,15 +8,15 @@
 - else
   - title "#{@user.name}'s Items"
 
-#closet-hangers{:class => user_is?(@user) ? 'current-user' : nil}
+#closet-hangers{:class => public_perspective? ? nil : 'current-user'}
   - if !@closet_hangers.empty?
-    - if user_is?(@user)
+    - unless public_perspective?
       %p
         These are the items you own. Hover over an item to remove it from the
         list or to change the quantity.
     = render :partial => 'closet_hanger', :collection => @closet_hangers, :locals => {:show_controls => user_is?(@user)}
   - else
-    - if user_is?(@user)
+    - unless public_perspective?
       %p You haven't tracked any items on Dress to Impress.
       %p
         Here you can keep track of what items you already own, so that as you

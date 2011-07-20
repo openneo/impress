@@ -14,6 +14,7 @@ class ClosetHangersController < ApplicationController
   def index
     @user = User.find params[:user_id]
     @closet_hangers = @user.closet_hangers.alphabetical_by_item_name.includes(:item)
+    @public_perspective = params.has_key?(:public) || !user_is?(@user)
   end
 
   # Since the user does not care about the idea of a hanger, but rather the

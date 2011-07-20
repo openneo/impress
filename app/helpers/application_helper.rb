@@ -101,9 +101,5 @@ module ApplicationHelper
   def title(value)
     content_for :title, value
   end
-
-  def user_is?(user)
-    user_signed_in? && user == current_user
-  end
 end
 
