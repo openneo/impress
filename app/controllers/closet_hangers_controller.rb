@@ -36,7 +36,7 @@ class ClosetHangersController < ApplicationController
         respond_to do |format|
           format.html {
             flash[:success] = "Success! You own #{@closet_hanger.quantity} #{@item.name.pluralize}."
-            redirect_back!
+            redirect_back!(@item)
           }
 
           format.json { render :json => true }
@@ -45,7 +45,7 @@ class ClosetHangersController < ApplicationController
         respond_to do |format|
           format.html {
             flash[:alert] = "We couldn't save how many of this item you own: #{@closet_hanger.errors.full_messages.to_sentence}"
-            redirect_back!
+            redirect_back!(@item)
           }
 
           format.json { render :json => {:errors => @closet_hanger.errors.full_messages}, :status => :unprocessable_entity }
@@ -75,11 +75,7 @@ class ClosetHangersController < ApplicationController
 
   def redirect_after_destroy!
     flash[:success] = "Success! You do not own #{@item.name}."
-    redirect_back!
-  end
-
-  def redirect_back!
-    redirect_to params[:return_to] || @item
+    redirect_back!(@item)
   end
 end
 

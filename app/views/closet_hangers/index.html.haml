@@ -8,15 +8,27 @@
 - else
   - title "#{@user.name}'s Items"
 
+- content_for :before_flashes do
+  #closet-hangers-contact
+    - if public_perspective?
+      - if @user.neopets_username?
+        = link_to "Neomail #{@user.neopets_username}", send_neomail_url(@user)
+    - else
+      = form_for @user do |f|
+        = f.label :neopets_username
+        = f.text_field :neopets_username
+        = f.submit "Save"
+
 #closet-hangers{:class => public_perspective? ? nil : 'current-user'}
-  - if !@closet_hangers.empty?
-    - unless public_perspective?
+  - if public_perspective?
+    - if @closet_hangers.empty?
+      %p #{@user.name} hasn't tracked any items on Dress to Impress.
+  - else
+    - unless @closet_hangers.empty?
       %p
         These are the items you own. Hover over an item to remove it from the
         list or to change the quantity.
-    = render :partial => 'closet_hanger', :collection => @closet_hangers, :locals => {:show_controls => user_is?(@user)}
-  - else
-    - unless public_perspective?
+    - else
       %p You haven't tracked any items on Dress to Impress.
       %p
         Here you can keep track of what items you already own, so that as you
@@ -27,8 +39,11 @@
         It's easy to get started!
         = link_to "Just import your Neopets closet in a few quick steps.", new_closet_page_path
         Have fun!
-    - else
-      %p #{@user.name} hasn't tracked any items on Dress to Impress.
+    %p
+      You can share
+      = link_to "this page", request.fullpath
+      with the world, and they'll be able to see what items you own.
+  = render :partial => 'closet_hanger', :collection => @closet_hangers, :locals => {:show_controls => user_is?(@user)}
 
 - content_for :stylesheets do
   = stylesheet_link_tag 'south-street/jquery-ui'

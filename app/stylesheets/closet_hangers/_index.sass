@@ -4,7 +4,7 @@
 body.closet_hangers-index
   #title
     float: left
-    margin-bottom: .5em
+    margin-bottom: 0
 
   .flash
     clear: both
@@ -27,6 +27,30 @@ body.closet_hangers-index
           position: 2px center
           repeat: no-repeat
         padding-left: $icon-width + 4px
+
+  #closet-hangers-contact
+    clear: both
+    font-size: 85%
+    margin-bottom: 1em
+    margin-left: 2em
+    min-height: image-height("neomail.png")
+
+    a
+      background:
+        image: image-url("neomail.png")
+        position: left center
+        repeat: no-repeat
+      padding-left: image-width("neomail.png") + 2px
+
+    input[type=text]
+      width: 10em
+
+    label
+      font-weight: bold
+      margin-right: .5em
+
+      &:after
+        content: ":"
 
   #closet-hangers
     clear: both

@@ -19,6 +19,10 @@ class ApplicationController < ActionController::Base
     render :file => 'public/403.html', :layout => false, :status => :forbidden
   end
 
+  def redirect_back!(default=:back)
+    redirect_to(params[:return_to] || default)
+  end
+
   def user_is?(user)
     user_signed_in? && user == current_user
   end

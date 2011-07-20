@@ -11,6 +11,8 @@ class User < ActiveRecord::Base
 
   devise :rememberable
 
+  attr_accessible :neopets_username
+
   def contribute!(pet)
     new_contributions = []
     new_points = 0
