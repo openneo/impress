@@ -168,7 +168,8 @@ class Item < ActiveRecord::Base
       :thumbnail_url => thumbnail_url,
       :zones_restrict => zones_restrict,
       :rarity_index => rarity_index,
-      :closeted => closeted?
+      :owned => owned?,
+      :wanted => wanted?
     }
   end
 

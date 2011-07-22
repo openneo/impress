@@ -91,7 +91,8 @@
       %h2 Add an item
       %input{:name => "query", :placeholder => "Search items...", :type => "search"}/
       %input{:type => "submit", :value => "Go"}/
-      %a#preview-search-form-your-items{:href => '#'} Your Items
+      %a.preview-search-form-your-items{:href => '#', 'data-search-value' => 'owns'} Items you own
+      %a.preview-search-form-your-items{:href => '#', 'data-search-value' => 'wants'} Items you want
       #preview-search-form-pagination
       %a#preview-search-form-clear{:href => "#"} clear
     %dl#preview-search-form-help

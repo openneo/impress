@@ -102,8 +102,12 @@ Partial.ItemSet = function ItemSet(wardrobe, selector) {
       ) {
         $('<div/>', {'class': 'nc-icon', text: 'NC', title: 'NC'}).appendTo(li);
       }
-      if(item.closeted) {
-        $('<img/>', {'class': 'closeted-icon', alt: 'Closet', title: 'You own this', src: '/images/closeted.png'}).appendTo(li);
+      if(item.owned || item.wanted) {
+        var iconsWrapper = $('<div/>', {'class': 'closeted-icons'}).appendTo(li);
+        if(item.owned) {
+          $('<img/>', {alt: 'Own', title: 'You own this', src: '/images/owned.png'}).appendTo(iconsWrapper);
+          $('<img/>', {alt: 'Want', title: 'You want this', src: '/images/wanted.png'}).appendTo(iconsWrapper);
+        }
       }
       li.append(img).append(controls).append(info_link).append(item.name).appendTo(ul);
     }
@@ -863,7 +867,7 @@ View.Search = function (wardrobe) {
     loading_el = $('#preview-search-form-loading'),
     no_results_el = $('#preview-search-form-no-results'),
     no_results_span = no_results_el.children('span'),
-    your_items_el = $('#preview-search-form-your-items'),
+    your_items_links = $('.preview-search-form-your-items'),
     PAGINATION = {
       INNER_WINDOW: 4,
       OUTER_WINDOW: 1,
@@ -928,9 +932,9 @@ View.Search = function (wardrobe) {
     form.submit();
   });
 
-  your_items_el.click(function (e) {
+  your_items_links.click(function (e) {
     e.preventDefault();
-    input_el.val('user:owns');
+    input_el.val('user:' + this.getAttribute('data-search-value'));
     form.submit();
   });
 

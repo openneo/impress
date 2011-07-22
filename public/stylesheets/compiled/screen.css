@@ -1616,7 +1616,7 @@ body.outfits-edit #preview-search-form input[type=submit] {
   margin-right: 2em;
 }
 /* line 318, ../../../app/stylesheets/outfits/_edit.sass */
-body.outfits-edit #preview-search-form-your-items {
+body.outfits-edit .preview-search-form-your-items {
   display: none;
   font-size: 85%;
   margin-right: 1em;
@@ -2555,7 +2555,7 @@ body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #save-outfit
   display: none;
 }
 /* line 566, ../../../app/stylesheets/outfits/_edit.sass */
-body.outfits-edit.user-signed-in #preview-search-form-your-items {
+body.outfits-edit.user-signed-in .preview-search-form-your-items {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
   display: inline-block;
