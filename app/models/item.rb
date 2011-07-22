@@ -177,6 +177,9 @@ class Item < ActiveRecord::Base
       new_swf_asset_ids = @parent_swf_asset_relationships_to_update.map(&:swf_asset_id)
       rels = ParentSwfAssetRelationship.arel_table
       swf_assets = SwfAsset.arel_table
+      # If a relationship used to bind an item and asset for this body type,
+      # but doesn't in this sample, the two have been unbound. Delete the
+      # relationship.
       ids_to_delete = self.parent_swf_asset_relationships.
         select(:id).
         joins(:object_asset).
@@ -190,7 +193,7 @@ class Item < ActiveRecord::Base
           where(rels[:swf_asset_id].in(ids_to_delete)).
           delete_all
       end
-      self.parent_swf_asset_relationships += @parent_swf_asset_relationships_to_update
+      @parent_swf_asset_relationships_to_update.each(&:save!)
     end
   end
 
@@ -247,6 +250,8 @@ class Item < ActiveRecord::Base
   def self.collection_from_pet_type_and_registries(pet_type, info_registry, asset_registry)
     # bear in mind that registries are arrays with many nil elements,
     # due to how the parser works
+
+    # Collect existing items
     items = {}
     item_ids = []
     info_registry.each do |item_id, info|
@@ -254,6 +259,8 @@ class Item < ActiveRecord::Base
         item_ids << item_id.to_i
       end
     end
+
+    # Collect existing relationships
     existing_relationships_by_item_id_and_swf_asset_id = {}
     existing_items = Item.find_all_by_id(item_ids, :include => :parent_swf_asset_relationships)
     existing_items.each do |item|
@@ -265,6 +272,8 @@ class Item < ActiveRecord::Base
       existing_relationships_by_item_id_and_swf_asset_id[item.id] =
         relationships_by_swf_asset_id
     end
+
+    # Collect existing assets
     swf_asset_ids = []
     asset_registry.each do |asset_id, asset_data|
       swf_asset_ids << asset_id.to_i if asset_data
@@ -274,11 +283,14 @@ class Item < ActiveRecord::Base
     existing_swf_assets.each do |swf_asset|
       existing_swf_assets_by_id[swf_asset.id] = swf_asset
     end
+
+    # With each asset in the registry,
     relationships_by_item_id = {}
     asset_registry.each do |asset_id, asset_data|
       if asset_data
+        # Build and update the item
         item_id = asset_data[:obj_info_id].to_i
-        next unless item_ids.include?(item_id) # skip incompatible
+        next unless item_ids.include?(item_id) # skip incompatible (Uni Bug)
         item = items[item_id]
         unless item
           item = Item.new
@@ -287,6 +299,8 @@ class Item < ActiveRecord::Base
         end
         item.origin_registry_info = info_registry[item.id.to_s]
         item.current_body_id = pet_type.body_id
+
+        # Build and update the SWF
         swf_asset_id = asset_data[:asset_id].to_i
         swf_asset = existing_swf_assets_by_id[swf_asset_id]
         unless swf_asset
@@ -295,6 +309,8 @@ class Item < ActiveRecord::Base
         end
         swf_asset.origin_object_data = asset_data
         swf_asset.origin_pet_type = pet_type
+
+        # Build and update the relationship
         relationship = existing_relationships_by_item_id_and_swf_asset_id[item.id][swf_asset_id] rescue nil
         unless relationship
           relationship = ParentSwfAssetRelationship.new
@@ -307,9 +323,12 @@ class Item < ActiveRecord::Base
         relationships_by_item_id[item_id] << relationship
       end
     end
+
+    # Set up the relationships to be updated on item save
     relationships_by_item_id.each do |item_id, relationships|
       items[item_id].parent_swf_asset_relationships_to_update = relationships
     end
+
     items.values
   end
 
