@@ -102,7 +102,7 @@
   $(hangersElQuery + " form.closet-hanger-destroy").live("submit", function (e) {
     e.preventDefault();
     var form = $(this);
-    var button = form.children("input").val("Removing…");
+    var button = form.children("input[type=submit]").val("Removing…");
     var objectWrapper = form.closest(".object").addClass("loading");
     var data = form.serialize(); // get data before disabling inputs
     objectWrapper.addClass("loading").disableForms();
@@ -215,6 +215,11 @@
 	    }
 	  });
 	  e.preventDefault();
+	});
+
+
+	$('div.closet-hangers-group h3').click(function () {
+	  $(this).next().toggle();
 	});
 })();
 

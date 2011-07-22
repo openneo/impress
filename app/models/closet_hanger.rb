@@ -12,8 +12,12 @@ class ClosetHanger < ActiveRecord::Base
   scope :owned_before_wanted, order(arel_table[:owned].desc)
 
   def verb(subject=:someone)
-    base = (owned?) ? 'own' : 'want'
-    base + 's' if subject != :you
+    self.class.verb(subject, owned?)
+  end
+
+  def self.verb(subject, owned)
+    base = (owned) ? 'own' : 'want'
+    base << 's' unless subject == :you
     base
   end
 end

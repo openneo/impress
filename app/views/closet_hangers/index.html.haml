@@ -29,31 +29,38 @@
         = f.submit "Save"
         %span#cancel-contact-link cancel
 
+- unless @closet_hangers_by_owned.empty?
+  %p
+    These are the items you are tracking on Dress to Impress. Hover over an
+    item to remove it from the list or to change the quantity.
+
+  %p
+    You can share
+    = link_to "this page", request.fullpath
+    with the world, and they'll be able to see what items you own.
+
 #closet-hangers{:class => public_perspective? ? nil : 'current-user'}
-  - if public_perspective?
-    - if @closet_hangers.empty?
-      %p #{@user.name} hasn't tracked any items on Dress to Impress.
-  - else
-    - unless @closet_hangers.empty?
-      %p
-        These are the items you own. Hover over an item to remove it from the
-        list or to change the quantity.
-    - else
-      %p You haven't tracked any items on Dress to Impress.
-      %p
-        Here you can keep track of what items you already own, so that as you
-        design fancy outfits you can know what you have and what you still
-        need. And, who knows? Maybe some day this page will include wishlists
-        and up-for-trade items. We'll see what happens.
-      %p
-        It's easy to get started!
-        = link_to "Just import your Neopets closet in a few quick steps.", new_closet_page_path
-        Have fun!
-    %p
-      You can share
-      = link_to "this page", request.fullpath
-      with the world, and they'll be able to see what items you own.
-  = render :partial => 'closet_hanger', :collection => @closet_hangers, :locals => {:show_controls => user_is?(@user)}
+  - [true, false].each do |owned|
+    .closet-hangers-group{'data-owned' => owned.to_s}
+      %h3 Items #{closet_hanger_subject} #{closet_hanger_verb(owned)}
+      .closet-hangers-group-content
+        - if public_perspective?
+          - unless @closet_hangers_by_owned[owned]
+            %p #{@user.name} hasn't tracked any items on Dress to Impress.
+        - else
+          - unless @closet_hangers_by_owned[owned]
+            %p
+              You haven't tracked any #{closet_hanger_verb(owned)} items on Dress
+              to Impress. It's worth doing, since you can share this list with your
+              friends and keep track of what items you still need as you create new
+              outfits.
+            %p
+              It's easy to get started!
+              = link_to "Just import your Neopets closet in a few quick steps.", new_closet_page_path
+              You can also add an item from its
+              = link_to 'Infinite Closet', items_path
+              page. Have fun!
+        = render_closet_hangers(owned)
 
 - content_for :stylesheets do
   = stylesheet_link_tag 'south-street/jquery-ui'

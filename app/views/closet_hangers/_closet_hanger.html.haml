@@ -6,10 +6,12 @@
     - if show_controls
       = form_for closet_hanger, :url => user_item_closet_hanger_path(current_user, closet_hanger.item), :html => {:class => 'closet-hanger-update'} do |f|
         = return_to_field_tag
+        = f.hidden_field :owned
         = f.number_field :quantity, :min => 0, :required => true, :title => "You own #{pluralize closet_hanger.quantity, closet_hanger.item.name}"
         = f.submit "Save"
   - if show_controls
     = form_tag user_item_closet_hanger_path(current_user, closet_hanger.item), :method => :delete, :class => 'closet-hanger-destroy' do
       = return_to_field_tag
+      = hidden_field_tag 'closet_hanger[owned]', closet_hanger.owned
       = submit_tag "Remove"
 

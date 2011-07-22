@@ -3,7 +3,8 @@ class ClosetHangersController < ApplicationController
   before_filter :find_item, :only => [:destroy, :create, :update]
 
   def destroy
-    @closet_hanger = current_user.closet_hangers.find_by_item_id!(@item.id)
+    raise ActiveRecord::RecordNotFound unless params[:closet_hanger]
+    @closet_hanger = current_user.closet_hangers.find_by_item_id_and_owned!(@item.id, owned)
     @closet_hanger.destroy
     respond_to do |format|
       format.html { redirect_after_destroy! }
@@ -13,7 +14,8 @@ class ClosetHangersController < ApplicationController
 
   def index
     @user = User.find params[:user_id]
-    @closet_hangers = @user.closet_hangers.owned_before_wanted.alphabetical_by_item_name.includes(:item)
+    @closet_hangers_by_owned = @user.closet_hangers.owned_before_wanted.
+      alphabetical_by_item_name.includes(:item).group_by(&:owned)
     @public_perspective = params.has_key?(:public) || !user_is?(@user)
   end
 
@@ -28,14 +30,6 @@ class ClosetHangersController < ApplicationController
   # expectations, though, and I can't really think of a genuinely RESTful way
   # to pull this off.
   def update
-    if params[:closet_hanger]
-      owned = case params[:closet_hanger][:owned]
-        when 'true' then true
-        when 'false' then false
-      end
-    end
-    owned ||= true
-
     @closet_hanger = current_user.closet_hangers.find_or_initialize_by_item_id_and_owned(@item.id, owned)
     @closet_hanger.attributes = params[:closet_hanger]
 
@@ -79,6 +73,16 @@ class ClosetHangersController < ApplicationController
 
   def find_item
     @item = Item.find params[:item_id]
+  end
+
+  def owned
+    owned = true
+    if params[:closet_hanger]
+      owned = case params[:closet_hanger][:owned]
+        when 'true', '1' then true
+        when 'false', '0' then false
+      end
+    end
   end
 
   def redirect_after_destroy!
