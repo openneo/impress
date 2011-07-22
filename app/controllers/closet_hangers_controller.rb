@@ -28,7 +28,12 @@ class ClosetHangersController < ApplicationController
   # expectations, though, and I can't really think of a genuinely RESTful way
   # to pull this off.
   def update
-    owned = (params[:closet_hanger][:owned] == 'true') if params[:closet_hanger]
+    if params[:closet_hanger]
+      owned = case params[:closet_hanger][:owned]
+        when 'true' then true
+        when 'false' then false
+      end
+    end
     owned ||= true
 
     @closet_hanger = current_user.closet_hangers.find_or_initialize_by_item_id_and_owned(@item.id, owned)
