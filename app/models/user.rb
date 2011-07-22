@@ -49,8 +49,14 @@ class User < ActiveRecord::Base
     # versa, and everything stays a lovely O(n)
     items_by_id = {}
     items.each { |item| items_by_id[item.id] = item }
-    closeted_item_ids = closeted_items.where(:id => items_by_id.keys).map(&:id)
-    closeted_item_ids.each { |id| items_by_id[id].closeted = true }
+    closet_hangers.where(:item_id => items_by_id.keys).each do |hanger|
+      item = items_by_id[hanger.item_id]
+      if hanger.owned?
+        item.owned = true
+      else
+        item.wanted = true
+      end
+    end
   end
 
   def self.find_or_create_from_remote_auth_data(user_data)

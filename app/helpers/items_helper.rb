@@ -48,15 +48,26 @@ module ItemsHelper
     end
   end
 
-  def closeted_icon_for(item)
-    if item.closeted?
-      image_tag(
-        'closeted.png',
+  def closeted_icons_for(item)
+    content = ''.html_safe
+
+    if item.owned?
+      content << image_tag(
+        'owned.png',
         :title => 'You own this',
-        :alt => 'Closet',
-        :class => 'closeted-icon'
+        :alt => 'Own'
       )
     end
+
+    if item.wanted?
+      content << image_tag(
+        'wanted.png',
+        :title => 'You want this',
+        :alt => 'Want'
+      )
+    end
+
+    content_tag :div, content, :class => 'closeted-icons'
   end
 
   def list_zones(zones, method=:label)

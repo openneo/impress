@@ -178,19 +178,25 @@ ul.buttons
     // (quantity form in user items)
     +opacity(1)
 
-  .nc-icon, .closeted-icon
+  .nc-icon, .closeted-icons
     +opacity(1)
-    height: $nc-icon-size
+    background: rgba(255, 255, 255, 0.75)
+    line-height: 1
     position: absolute
     top: $object-img-size - $nc-icon-size
-    width: $nc-icon-size
     &:hover
       +opacity(0.5)
+      background: transparent
+
+  .nc-icon, .closeted-icons img
+    display: inline
+    height: $nc-icon-size
+    width: $nc-icon-size
 
   .nc-icon
     right: ($object-width - $object-img-size) / 2 + $object-padding
 
-  .closeted-icon
+  .closeted-icons
     left: ($object-width - $object-img-size) / 2 + $object-padding
 
 dt

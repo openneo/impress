@@ -10,7 +10,7 @@ class Item < ActiveRecord::Base
   has_many :swf_assets, :through => :parent_swf_asset_relationships, :source => :object_asset,
     :conditions => {:type => SwfAssetType}
 
-  attr_writer :closeted, :current_body_id
+  attr_writer :current_body_id, :owned, :wanted
 
   NCRarities = [0, 500]
   PAINTBRUSH_SET_DESCRIPTION = 'This item is part of a deluxe paint brush set!'
@@ -46,11 +46,19 @@ class Item < ActiveRecord::Base
   scope :with_closet_hangers, joins(:closet_hangers)
 
   def closeted?
-    !!@closeted
+    @owned || @wanted
   end
 
   def nc?
     NCRarities.include?(rarity_index)
+  end
+
+  def owned?
+    @owned
+  end
+
+  def wanted?
+    @wanted
   end
 
   def restricted_zones
@@ -639,7 +647,10 @@ class Item < ActiveRecord::Base
   def self.search_filter_block(options, positive, &block)
     Proc.new { |str, user, scope|
       condition = block.arity == 1 ? block.call(str) : block.call(str, user)
-      condition = "!(#{condition.to_sql})" unless positive
+      unless positive
+        condition = condition.to_sql if condition.respond_to?(:to_sql)
+        condition = "!(#{condition})"
+      end
       scope = scope.send(options[:scope]) if options[:scope]
       scope.where(condition)
     }
@@ -667,25 +678,45 @@ class Item < ActiveRecord::Base
     filter
   end
 
-  def self.validate_user_condition(adjective, user)
-    unless adjective == "owns"
+  USER_ADJECTIVES = {
+    'own' => true,
+    'owns' => true,
+    'owned' => true,
+    'want' => false,
+    'wants' => false,
+    'wanted' => false,
+    'all' => nil,
+    'items' => nil
+  }
+  def self.parse_user_adjective(adjective, user)
+    unless USER_ADJECTIVES.has_key?(adjective)
       raise SearchError, "We don't understand user:#{adjective}. " +
-        "Did you mean user:owns?"
+        "Find items you own with user:owns, items you want with user:wants, or " +
+        "both with user:all"
     end
 
     unless user
       raise SearchError, "It looks like you're not logged in, so you don't own any items."
     end
+
+    USER_ADJECTIVES[adjective]
   end
 
-  single_search_filter :user, :full => lambda { |adjective, user, scope|
-    validate_user_condition(adjective, user)
-    scope.joins(:closet_hangers).where(ClosetHanger.arel_table[:user_id].eq(user.id))
-  }
+  search_filter :user do |adjective, user|
+    # Though joins may seem more efficient here for the positive case, we need
+    # to be able to handle cases like "user:owns user:wants", which breaks on
+    # the JOIN approach. Just have to look up the IDs in advance.
 
-  single_search_filter :not_user do |adjective, user|
-    validate_user_condition(adjective, user)
-    arel_table[:id].not_in(user.closeted_items.map(&:id))
+    owned_value = parse_user_adjective(adjective, user)
+    hangers = ClosetHanger.arel_table
+    items = user.closeted_items
+    items = items.where(ClosetHanger.arel_table[:owned].eq(owned_value)) unless owned_value.nil?
+    item_ids = items.map(&:id)
+    # Though it's best to do arel_table[:id].in(item_ids), it breaks in this
+    # version of Arel, and other conditions will overwrite this one. Since IDs
+    # are guaranteed to be integers, let's just build our own string condition
+    # and be done with it.
+    "id IN (#{item_ids.join(',')})"
   end
 
   search_filter :only do |species_name|

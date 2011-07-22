@@ -304,43 +304,50 @@ ul.buttons li, ul.buttons li form {
   -khtml-opacity: 1;
 }
 /* line 181, ../../../app/stylesheets/_layout.sass */
-.object .nc-icon, .object .closeted-icon {
+.object .nc-icon, .object .closeted-icons {
   -moz-opacity: 1;
   -webkit-opacity: 1;
   -o-opacity: 1;
   -khtml-opacity: 1;
-  height: 16px;
+  background: rgba(255, 255, 255, 0.75);
+  line-height: 1;
   position: absolute;
   top: 64px;
-  width: 16px;
 }
 /* line 187, ../../../app/stylesheets/_layout.sass */
-.object .nc-icon:hover, .object .closeted-icon:hover {
+.object .nc-icon:hover, .object .closeted-icons:hover {
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
   -o-opacity: 0.5;
   -khtml-opacity: 0.5;
+  background: transparent;
 }
-/* line 190, ../../../app/stylesheets/_layout.sass */
+/* line 191, ../../../app/stylesheets/_layout.sass */
+.object .nc-icon, .object .closeted-icons img {
+  display: inline;
+  height: 16px;
+  width: 16px;
+}
+/* line 196, ../../../app/stylesheets/_layout.sass */
 .object .nc-icon {
   right: 18px;
 }
-/* line 193, ../../../app/stylesheets/_layout.sass */
-.object .closeted-icon {
+/* line 199, ../../../app/stylesheets/_layout.sass */
+.object .closeted-icons {
   left: 18px;
 }
 
-/* line 196, ../../../app/stylesheets/_layout.sass */
+/* line 202, ../../../app/stylesheets/_layout.sass */
 dt {
   font-weight: bold;
 }
 
-/* line 199, ../../../app/stylesheets/_layout.sass */
+/* line 205, ../../../app/stylesheets/_layout.sass */
 dd {
   margin: 0 0 1.5em 1em;
 }
 
-/* line 202, ../../../app/stylesheets/_layout.sass */
+/* line 208, ../../../app/stylesheets/_layout.sass */
 #home-link {
   font-family: Delicious, Helvetica, Arial, Verdana, sans-serif;
   font-size: 175%;
@@ -351,21 +358,21 @@ dd {
   position: absolute;
   top: 0;
 }
-/* line 212, ../../../app/stylesheets/_layout.sass */
+/* line 218, ../../../app/stylesheets/_layout.sass */
 #home-link:hover {
   background: #eeffee;
   text-decoration: none;
 }
-/* line 215, ../../../app/stylesheets/_layout.sass */
+/* line 221, ../../../app/stylesheets/_layout.sass */
 #home-link span:before {
   content: "<< ";
 }
 
-/* line 219, ../../../app/stylesheets/_layout.sass */
+/* line 225, ../../../app/stylesheets/_layout.sass */
 .pagination a, .pagination span {
   margin: 0 0.5em;
 }
-/* line 221, ../../../app/stylesheets/_layout.sass */
+/* line 227, ../../../app/stylesheets/_layout.sass */
 .pagination .current {
   font-weight: bold;
 }
