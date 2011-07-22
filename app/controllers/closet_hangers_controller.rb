@@ -13,7 +13,7 @@ class ClosetHangersController < ApplicationController
 
   def index
     @user = User.find params[:user_id]
-    @closet_hangers = @user.closet_hangers.alphabetical_by_item_name.includes(:item)
+    @closet_hangers = @user.closet_hangers.owned_before_wanted.alphabetical_by_item_name.includes(:item)
     @public_perspective = params.has_key?(:public) || !user_is?(@user)
   end
 
@@ -28,14 +28,17 @@ class ClosetHangersController < ApplicationController
   # expectations, though, and I can't really think of a genuinely RESTful way
   # to pull this off.
   def update
-    @closet_hanger = current_user.closet_hangers.find_or_initialize_by_item_id(@item.id)
+    owned = (params[:closet_hanger][:owned] == 'true') if params[:closet_hanger]
+    owned ||= true
+
+    @closet_hanger = current_user.closet_hangers.find_or_initialize_by_item_id_and_owned(@item.id, owned)
     @closet_hanger.attributes = params[:closet_hanger]
 
     unless @closet_hanger.quantity == 0 # save the hanger, new record or not
       if @closet_hanger.save
         respond_to do |format|
           format.html {
-            flash[:success] = "Success! You own #{@closet_hanger.quantity} #{@item.name.pluralize}."
+            flash[:success] = "Success! You #{@closet_hanger.verb(:you)} #{@closet_hanger.quantity} #{@item.name.pluralize}."
             redirect_back!(@item)
           }
 
@@ -44,7 +47,7 @@ class ClosetHangersController < ApplicationController
       else
         respond_to do |format|
           format.html {
-            flash[:alert] = "We couldn't save how many of this item you own: #{@closet_hanger.errors.full_messages.to_sentence}"
+            flash[:alert] = "We couldn't save how many of this item you #{@closet_hanger.verb(:you)}: #{@closet_hanger.errors.full_messages.to_sentence}"
             redirect_back!(@item)
           }
 
@@ -74,7 +77,7 @@ class ClosetHangersController < ApplicationController
   end
 
   def redirect_after_destroy!
-    flash[:success] = "Success! You do not own #{@item.name}."
+    flash[:success] = "Success! You do not #{@closet_hanger.verb(:you)} #{@item.name}."
     redirect_back!(@item)
   end
 end

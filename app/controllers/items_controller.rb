@@ -40,8 +40,11 @@ class ItemsController < ApplicationController
   def show
     @item = Item.find params[:id]
     if user_signed_in?
-      @hanger = current_user.closet_hangers.find_or_initialize_by_item_id(@item.id)
-      @hanger.quantity ||= 1
+      @hangers = [true, false].map do |owned|
+        hanger = current_user.closet_hangers.find_or_initialize_by_item_id_and_owned(@item.id, owned)
+        hanger.quantity ||= 1
+        hanger
+      end
     end
   end
 

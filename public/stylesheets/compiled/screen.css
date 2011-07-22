@@ -620,7 +620,7 @@ body.closet_hangers-index #closet-hangers-contact {
 }
 /* line 38, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers-contact a {
-  background-image: url('/images/neomail.png?1311187553');
+  background-image: url('/images/neomail.png?1311362308');
   background-position: left center;
   background-repeat: no-repeat;
   padding-left: 18px;
@@ -1202,31 +1202,29 @@ body.items-show .nc-icon {
   width: 16px;
 }
 /* line 66, ../../../app/stylesheets/items/_show.sass */
-body.items-show #closet-hanger-form {
+body.items-show #closet-hangers {
   border: 1px solid #006600;
   float: right;
   font-size: 85%;
-  padding: 1em 0.5em 0.5em;
+  padding: 1em;
   width: 18em;
 }
 /* line 73, ../../../app/stylesheets/items/_show.sass */
-body.items-show #closet-hanger-form label, body.items-show #closet-hanger-form header {
+body.items-show #closet-hangers label, body.items-show #closet-hangers header {
   display: block;
   font-weight: bold;
 }
 /* line 77, ../../../app/stylesheets/items/_show.sass */
-body.items-show #closet-hanger-form input[type=number] {
-  width: 4em;
+body.items-show #closet-hangers header {
+  font-size: 125%;
 }
 /* line 80, ../../../app/stylesheets/items/_show.sass */
-body.items-show #closet-hanger-form #closet-hanger-form-your-items {
-  display: block;
-  margin-top: 0.5em;
-  text-align: right;
+body.items-show #closet-hangers form {
+  padding: 0.5em 0;
 }
-/* line 85, ../../../app/stylesheets/items/_show.sass */
-body.items-show #closet-hanger-form p {
-  font-family: "Droid Sans", Helvetica, Arial, Verdana, sans-serif;
+/* line 83, ../../../app/stylesheets/items/_show.sass */
+body.items-show #closet-hangers input[type=number] {
+  width: 4em;
 }
 
 @import url(../shared/jquery.jgrowl.css);
@@ -1807,7 +1805,7 @@ body.outfits-edit .object:hover ul, body.outfits-edit .object:hover .object-info
 }
 /* line 418, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .nc-icon {
-  background: url('/images/nc.png?1310666180') no-repeat;
+  background: url('/images/nc.png?1311362308') no-repeat;
   height: 16px;
   position: absolute;
   right: 16px;

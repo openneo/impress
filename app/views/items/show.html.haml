@@ -12,19 +12,22 @@
         == Rarity: #{@item.rarity_index} (#{@item.rarity})
       = link_to 'NeoItems', neoitems_url_for(@item), :class => 'button'
 
-  - if @hanger
-    = form_for(@hanger, :url => user_item_closet_hanger_path(current_user, @item), :html => {:id => 'closet-hanger-form'}) do |f|
-      - if @hanger.new_record?
-        %header Do you own this item?
-        %p
-          We can help you track your closet.
-        = f.hidden_field :quantity
-        = f.submit "I own this item!"
-      - else
-        = f.label :quantity, "How many of these do you own?"
-        = f.number_field :quantity, :min => 0, :required => true
-        = f.submit "Save"
-      = link_to 'Your Items &rarr;'.html_safe, user_closet_hangers_path(current_user), :id => 'closet-hanger-form-your-items'
+  - if @hangers
+    #closet-hangers
+      %header
+        Track this in
+        = link_to 'Your Items', user_closet_hangers_path(current_user)
+      - @hangers.each do |hanger|
+        = form_for(hanger, :url => user_item_closet_hanger_path(current_user, @item)) do |f|
+          - if hanger.new_record?
+            = f.hidden_field :quantity
+            = f.hidden_field :owned
+            = f.submit "I #{hanger.verb(:you)} this item!"
+          - else
+            = f.hidden_field :owned
+            = f.label :quantity, "How many of these do you #{hanger.verb(:you)}?"
+            = f.number_field :quantity, :min => 0, :required => true
+            = f.submit "Save"
   %p= @item.description
 
   #item-zones
