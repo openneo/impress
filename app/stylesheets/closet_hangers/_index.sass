@@ -52,6 +52,31 @@ body.closet_hangers-index
       &:after
         content: ":"
 
+  #edit-contact-link, #cancel-contact-link
+    cursor: pointer
+    display: none
+    text-decoration: underline
+
+    &:hover
+      text-decoration: none
+
+  #edit-contact-link
+    #contact-link-has-value
+      display: none
+
+    #contact-link-no-value
+      display: inline
+
+    &.has-value
+      #contact-link-has-value
+        display: inline
+
+      #contact-link-no-value
+        display: none
+
+  #cancel-contact-link
+    margin-left: 1em
+
   #closet-hangers
     clear: both
     text-align: center
@@ -74,7 +99,8 @@ body.closet_hangers-index
       form
         display: none
 
-    &.current-user
+  &.current-user
+    #closet-hangers
       .object:hover
         form
           display: inline
@@ -103,7 +129,8 @@ body.closet_hangers-index
           input[type=submit]
             font-size: 85%
 
-      &.js
+    &.js
+      #closet-hangers
         .object:hover .quantity
           input[type=number]
             width: 2.5em
@@ -117,4 +144,18 @@ body.closet_hangers-index
 
           .quantity span:after
             content: "…"
+
+      #closet-hangers-contact
+        form
+          display: none
+
+        #edit-contact-link, #cancel-contact-link
+          display: inline
+
+        &.editing
+          form
+            display: block
+
+          #edit-contact-link
+            display: none
 

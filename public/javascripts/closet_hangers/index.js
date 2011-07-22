@@ -1,7 +1,9 @@
 (function () {
-  var hangersElQuery = '#closet-hangers.current-user';
+  var body = $(document.body).addClass("js");
+  if(!body.hasClass("current-user")) return false;
+
+  var hangersElQuery = '#closet-hangers';
   var hangersEl = $(hangersElQuery);
-  hangersEl.addClass('js');
 
   $.fn.disableForms = function () {
     return this.data("formsDisabled", true).find("input").attr("disabled", "disabled").end();
@@ -29,7 +31,7 @@
     });
   }
 
-  function handleHangerError(xhr, action) {
+  function handleSaveError(xhr, action) {
     try {
       var data = $.parseJSON(xhr.responseText);
     } catch(e) {
@@ -76,7 +78,7 @@
           input.revertValue();
           span.text(input.val());
 
-          handleHangerError(xhr, "updating the quantity");
+          handleSaveError(xhr, "updating the quantity");
         }
       });
     }
@@ -147,7 +149,7 @@
           itemsSearchField.val("");
         },
         error: function (xhr) {
-          handleHangerError(xhr, "adding the item");
+          handleSaveError(xhr, "adding the item");
         }
       });
     },
@@ -168,5 +170,51 @@
 			.append( "<a>Add <strong>" + item.label + "</strong>" )
 			.appendTo( ul );
 	}
+
+	var contactEl = $('#closet-hangers-contact');
+	var editContactLink = $('#edit-contact-link');
+	var contactForm = contactEl.children('form');
+	var cancelContactLink = $('#cancel-contact-link');
+	var contactFormUsername = contactForm.children('input[type=text]');
+	var editContactLinkUsername = $('#contact-link-has-value span');
+
+	function closeContactForm() {
+	  contactEl.removeClass('editing');
+	}
+
+	editContactLink.click(function () {
+	  contactEl.addClass('editing');
+	  contactFormUsername.focus();
+	});
+
+	cancelContactLink.click(closeContactForm);
+
+	contactForm.submit(function (e) {
+	  var data = contactForm.serialize();
+	  contactForm.disableForms();
+	  $.ajax({
+	    url: contactForm.attr('action') + '.json',
+	    type: 'post',
+	    data: data,
+	    dataType: 'json',
+	    complete: function () {
+	      contactForm.enableForms();
+	    },
+	    success: function () {
+	      var newName = contactFormUsername.val();
+	      if(newName.length > 0) {
+	        editContactLink.addClass('has-value');
+	        editContactLinkUsername.text(newName);
+	      } else {
+	        editContactLink.removeClass('has-value');
+	      }
+	      closeContactForm();
+      },
+	    error: function (xhr) {
+	      handleSaveError(xhr, 'saving Neopets username');
+	    }
+	  });
+	  e.preventDefault();
+	});
 })();
 

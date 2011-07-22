@@ -1,5 +1,6 @@
 - unless public_perspective?
   - title 'Your Items'
+  - add_body_class 'current-user'
   - content_for :before_flashes do
     = link_to "Import closet from Neopets", new_closet_page_path, :id => 'import-link'
     = form_tag items_path, :method => :get, :id => 'closet-hangers-items-search', 'data-current-user-id' => current_user.id do
@@ -14,10 +15,19 @@
       - if @user.neopets_username?
         = link_to "Neomail #{@user.neopets_username}", send_neomail_url(@user)
     - else
+      %span#edit-contact-link{:class => @user.neopets_username? ? 'has-value' : nil}
+        %span#contact-link-no-value
+          Add your Neopets username
+        %span#contact-link-has-value
+          Edit
+          = surround '"' do
+            Neomail
+            %span= @user.neopets_username
       = form_for @user do |f|
         = f.label :neopets_username
         = f.text_field :neopets_username
         = f.submit "Save"
+        %span#cancel-contact-link cancel
 
 #closet-hangers{:class => public_perspective? ? nil : 'current-user'}
   - if public_perspective?
