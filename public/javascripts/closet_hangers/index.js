@@ -218,8 +218,8 @@
 	});
 
 
-	$('div.closet-hangers-group h3').click(function () {
-	  $(this).next().toggle();
+	$('div.closet-hangers-group header').click(function () {
+	  $(this).parent().toggleClass('hidden');
 	});
 })();
 

@@ -42,7 +42,10 @@
 #closet-hangers{:class => public_perspective? ? nil : 'current-user'}
   - [true, false].each do |owned|
     .closet-hangers-group{'data-owned' => owned.to_s}
-      %h3 Items #{closet_hanger_subject} #{closet_hanger_verb(owned)}
+      %header
+        %h3 Items #{closet_hanger_subject} #{closet_hanger_verb(owned)}
+        %span.show click to show
+        %span.hide click to hide
       .closet-hangers-group-content
         - if public_perspective?
           - unless @closet_hangers_by_owned[owned]

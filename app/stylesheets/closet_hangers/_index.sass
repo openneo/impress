@@ -99,12 +99,28 @@ body.closet_hangers-index
       form
         display: none
 
-  h3
+  header
     border-bottom: 1px solid $soft-border-color
-    cursor: pointer
-    font-size: 250%
+    display: block
     margin-bottom: .25em
     padding: .25em 0
+    position: relative
+
+    h3
+      font-size: 250%
+      margin: 0
+
+    span
+      color: $soft-text-color
+      display: none
+      font-size: 85%
+      position: absolute
+      right: 1em
+      bottom: 0
+
+    &:hover span
+      color: inherit
+      text-decoration: underline
 
   .closet-hangers-group
     border-top: 1px solid $module-border-color
@@ -170,4 +186,18 @@ body.closet_hangers-index
 
           #edit-contact-link
             display: none
+
+      .closet-hangers-group
+        header
+          cursor: pointer
+
+          .hide
+            display: block
+
+        &.hidden
+          header .hide, .closet-hangers-group-content
+            display: none
+
+          header .show
+            display: block
 
