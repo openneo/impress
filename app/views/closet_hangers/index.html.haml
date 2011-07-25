@@ -4,7 +4,7 @@
   - content_for :before_flashes do
     = link_to "Import closet from Neopets", new_closet_page_path, :id => 'import-link'
     = form_tag items_path, :method => :get, :id => 'closet-hangers-items-search', 'data-current-user-id' => current_user.id do
-      = search_field_tag :q, nil, :placeholder => "Find items to add"
+      = text_field_tag :q, nil, :placeholder => "Find items to add"
       = submit_tag 'Search', :name => nil
 - else
   - title "#{@user.name}'s Items"
@@ -43,7 +43,10 @@
   - [true, false].each do |owned|
     .closet-hangers-group{'data-owned' => owned.to_s}
       %header
-        %h3 Items #{closet_hanger_subject} #{closet_hanger_verb(owned)}
+        %h3
+          Items
+          = closet_hanger_subject
+          %span.verb= closet_hanger_verb(owned)
         %span.show click to show
         %span.hide click to hide
       .closet-hangers-group-content

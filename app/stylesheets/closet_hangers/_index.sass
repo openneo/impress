@@ -20,7 +20,7 @@ body.closet_hangers-index
   #closet-hangers-items-search
     float: right
 
-    input[type=search]
+    input[name=q]
       &.loading
         background:
           image: url(/images/loading.gif)
@@ -110,7 +110,7 @@ body.closet_hangers-index
       font-size: 250%
       margin: 0
 
-    span
+    span.show, span.hide
       color: $soft-text-color
       display: none
       font-size: 85%
@@ -118,9 +118,10 @@ body.closet_hangers-index
       right: 1em
       bottom: 0
 
-    &:hover span
-      color: inherit
-      text-decoration: underline
+    &:hover
+      span.show, span.hide
+        color: inherit
+        text-decoration: underline
 
   .closet-hangers-group
     border-top: 1px solid $module-border-color
