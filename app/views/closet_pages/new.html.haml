@@ -20,13 +20,18 @@
 
   1. Check the framed Neopets.com window on the left, pointing to
     [page #{@closet_page.index} of your closet][cp].
-      * **Log in if you haven't already.** If you're logged into
-        Neopets, but not in this frame, enable "third-party cookies" in your
-        browser. (Most have that on by default.)
-      * **Confirm that the page is, in fact, your closet.** Don't just trust a
-        website when they tell you to copy-paste the source code of another site.
-        Instead, check that the page is what it is supposed to be and does not
-        contain any information you didn't mean to give out.
+      * **Confirm that you're logged in.** If you're logged into
+        Neopets, but the above frame says that you're not, try enabling
+        "third-party cookies" in your browser. (Most have that on by default.)
+      * **If you haven't logged in, #{link_to_neopets_login "do so in another window"}</a>.**
+        It's never a good idea to log in inside of a frame, unless you're a
+        web programmer pro who can check that the frame does, in fact, point
+        to Neopets.com. To be safe,
+        #{link_to_neopets_login "pull up another window, check the URL, and log in safely"}.
+      * **Confirm that the page is, in fact, your closet.** Similarly, don't
+        just trust a website when they tell you to copy-paste the source code
+        of another site. Instead, check that the page is what it is supposed to
+        be and does not contain any information you didn't mean to give out.
 
   2. View the frame's source code.
       * **In Google Chrome,** right-click the frame and choose **View Frame Source**.
