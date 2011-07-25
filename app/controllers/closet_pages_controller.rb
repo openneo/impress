@@ -7,8 +7,8 @@ class ClosetPagesController < ApplicationController
 
   def create
     if params[:closet_page] && params[:closet_page][:source]
+      @closet_page.index = params[:closet_page][:index]
       @closet_page.source = params[:closet_page][:source]
-      @index = @closet_page.index
 
       saved_counts = @closet_page.save_hangers!
 

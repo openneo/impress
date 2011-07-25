@@ -3,6 +3,7 @@
   = link_to 'Back to Your Items', user_closet_hangers_path(current_user), :id => 'back-to-items'
 
 = form_for @closet_page, :html => {:id => 'closet-page-form'} do |f|
+  = f.hidden_field :index
   #closet-page-frame-wrapper
     %span
       %strong Page #{@closet_page.index}
