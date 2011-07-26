@@ -42,10 +42,10 @@
               = image_tag 'image_mode_icon.png', :alt => 'Image Mode'
               Welcome to Image Mode!
           %span
-            Hey,
-            = succeed '!' do
-              = link_to current_user.name, user_contributions_path(current_user)
-            == You have #{current_user.points} points.
+            Hey, #{current_user.name}!
+            You have
+            = succeed '.' do
+              = link_to "#{current_user.points} points", user_contributions_path(current_user)
           = link_to 'Items', user_closet_hangers_path(current_user)
           = link_to 'Outfits', current_user_outfits_path
           = link_to 'Settings', Openneo::Auth.remote_settings_url
