@@ -1,8 +1,8 @@
 require 'cgi'
 
 module ClosetHangersHelper
-  def closet_hanger_verb(owned)
-    ClosetHanger.verb(closet_hanger_subject, owned)
+  def closet_hanger_verb(owned, positive=true)
+    ClosetHanger.verb(closet_hanger_subject, owned, positive)
   end
 
   def send_neomail_url(user)

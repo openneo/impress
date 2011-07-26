@@ -240,7 +240,7 @@
 	*/
 
 	var contactEl = $('#closet-hangers-contact');
-	var editContactLink = $('#edit-contact-link');
+	var editContactLink = $('.edit-contact-link');
 	var contactForm = contactEl.children('form');
 	var cancelContactLink = $('#cancel-contact-link');
 	var contactFormUsername = contactForm.children('input[type=text]');

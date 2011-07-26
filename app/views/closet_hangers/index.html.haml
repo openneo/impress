@@ -15,7 +15,7 @@
       - if @user.neopets_username?
         = link_to "Neomail #{@user.neopets_username}", send_neomail_url(@user)
     - else
-      %span#edit-contact-link{:class => @user.neopets_username? ? 'has-value' : nil}
+      %span#edit-contact-link-to-replace-form.edit-contact-link{:class => @user.neopets_username? ? 'has-value' : nil}
         %span#contact-link-no-value
           Add your Neopets username
         %span#contact-link-has-value
@@ -37,7 +37,11 @@
   %p
     You can share
     = link_to "this page", request.fullpath
-    with the world, and they'll be able to see what items you own.
+    with the world, and they'll be able to see what items you own and want.
+    It's also a good idea to
+    %span.edit-contact-link add your Neopets username
+    so that when other users see your items they will know how to contact you for
+    trades.
 
 #closet-hangers{:class => public_perspective? ? nil : 'current-user'}
   - [true, false].each do |owned|
@@ -52,20 +56,26 @@
       .closet-hangers-group-content
         - if public_perspective?
           - unless @closet_hangers_by_owned[owned]
-            %p #{@user.name} hasn't tracked any items on Dress to Impress.
+            %p #{@user.name} doesn't seem to #{closet_hanger_verb(owned, false)} anything.
         - else
           - unless @closet_hangers_by_owned[owned]
             %p
-              You haven't tracked any #{closet_hanger_verb(owned)} items on Dress
-              to Impress. It's worth doing, since you can share this list with your
-              friends and keep track of what items you still need as you create new
-              outfits.
+              You haven't tracked any items you #{closet_hanger_verb(owned)} on
+              Dress to Impress. As you browse the site and create outfits, we'll
+              use this list to tell you what items you #{closet_hanger_verb(owned)},
+              and you can share this page with your friends, too.
             %p
-              It's easy to get started!
-              = link_to "Just import your Neopets closet in a few quick steps.", new_closet_page_path
-              You can also add an item from its
+              It's easy to get started! Use the search form at the top of the
+              page to find items to add, or add an item from its
               = link_to 'Infinite Closet', items_path
-              page. Have fun!
+              page.
+            - if owned
+              %p
+                You can even
+                = succeed ',' do
+                  = link_to "import your Neopets closet in a few quick steps", new_closet_page_path
+                so why not?
+            %p Have fun!
         = render_closet_hangers(owned)
 
 - content_for :stylesheets do

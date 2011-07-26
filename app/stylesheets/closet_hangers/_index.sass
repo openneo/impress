@@ -52,15 +52,17 @@ body.closet_hangers-index
       &:after
         content: ":"
 
-  #edit-contact-link, #cancel-contact-link
-    cursor: pointer
+  #edit-contact-link-to-replace-form, #cancel-contact-link
     display: none
+
+  .edit-contact-link, #cancel-contact-link
+    cursor: pointer
     text-decoration: underline
 
     &:hover
       text-decoration: none
 
-  #edit-contact-link
+  #edit-contact-link-to-replace-form
     #contact-link-has-value
       display: none
 
@@ -178,14 +180,14 @@ body.closet_hangers-index
         form
           display: none
 
-        #edit-contact-link, #cancel-contact-link
+        .edit-contact-link, #cancel-contact-link
           display: inline
 
         &.editing
           form
             display: block
 
-          #edit-contact-link
+          .edit-contact-link
             display: none
 
       .closet-hangers-group

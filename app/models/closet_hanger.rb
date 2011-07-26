@@ -15,9 +15,9 @@ class ClosetHanger < ActiveRecord::Base
     self.class.verb(subject, owned?)
   end
 
-  def self.verb(subject, owned)
+  def self.verb(subject, owned, positive=true)
     base = (owned) ? 'own' : 'want'
-    base << 's' unless subject == :you
+    base << 's' if positive && subject != :you
     base
   end
 end
