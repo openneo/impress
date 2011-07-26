@@ -1,6 +1,8 @@
 # requires item sweeper at bottom
 
 class Item < ActiveRecord::Base
+  include PrettyParam
+
   SwfAssetType = 'object'
 
   has_many :closet_hangers
@@ -171,15 +173,6 @@ class Item < ActiveRecord::Base
       :owned => owned?,
       :wanted => wanted?
     }
-  end
-
-  URL_CHAR_BLACKLIST = /[^a-z0-9\-]/i
-  def name_for_url
-    name.downcase.gsub(' ', '-').gsub(URL_CHAR_BLACKLIST, '')
-  end
-
-  def to_param
-    "#{id}-#{name_for_url}"
   end
 
   before_create do

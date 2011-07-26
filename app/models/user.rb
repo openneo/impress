@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  include PrettyParam
+
   DefaultAuthServerId = 1
   PreviewTopContributorsCount = 3
 
