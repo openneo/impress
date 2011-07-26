@@ -9,6 +9,8 @@
 - else
   - title "#{@user.name}'s Items"
 
+- canonical_path user_closet_hangers_path(@user)
+
 - content_for :before_flashes do
   #closet-hangers-contact
     - if public_perspective?

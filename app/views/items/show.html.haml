@@ -1,6 +1,5 @@
 - title @item.name
-- content_for :meta do
-  %link{:rel => 'canonical', :href => url_for(@item)}
+- canonical_path @item
 
 - cache "items_show_#{@item.id}_main_content" do
   %header#item-header

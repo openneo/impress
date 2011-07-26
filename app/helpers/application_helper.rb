@@ -29,6 +29,10 @@ module ApplicationHelper
     content_tag(:div, html, :class => 'campaign-progress-wrapper')
   end
 
+  def canonical_path(resource)
+    content_for :meta, tag(:link, :rel => 'canonical', :href => url_for(resource))
+  end
+
   def flashes
     raw(flash.inject('') do |html, pair|
       key, value = pair
