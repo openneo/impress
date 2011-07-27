@@ -76,7 +76,7 @@ $container_width: 800px
 input, button, select, label
   cursor: pointer
 
-input[type=text], input[type=password], input[type=search], input[type=number], select
+input[type=text], input[type=password], input[type=search], input[type=number], select, textarea
   +border-radius(3px)
   background: #fff
   border: 1px solid $input-border-color
@@ -84,6 +84,9 @@ input[type=text], input[type=password], input[type=search], input[type=number], 
   padding: .25em
   &:focus, &:active
     color: inherit
+
+textarea
+  font: inherit
 
 a.button, input[type=submit], button
   +awesome-button

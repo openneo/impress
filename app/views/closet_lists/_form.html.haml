@@ -1,0 +1,17 @@
+= form_for [@closet_list.user, @closet_list] do |f|
+  %ul.fields
+    %li
+      = f.label :name
+      %span.hint Like "up for trade" or "NC wishlist"
+      = f.text_field :name, :required => true
+    %li
+      = f.label :hangers_owned, 'This is a list for&hellip;'.html_safe
+      = f.select :hangers_owned, hangers_owned_options
+    %li
+      = f.label :description
+      %span.hint
+        Why are these items in a list? What are your terms for trading?
+        Or you can leave this blank.
+      = f.text_area :description
+  = f.submit 'Save list'
+

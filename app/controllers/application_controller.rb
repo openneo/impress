@@ -7,6 +7,10 @@ class ApplicationController < ActionController::Base
     redirect_to(login_path) unless user_signed_in?
   end
 
+  def authorize_user!
+    raise AccessDenied unless user_signed_in? && current_user.id == params[:user_id].to_i
+  end
+
   def can_use_image_mode?
     user_signed_in? && current_user.image_mode_tester?
   end

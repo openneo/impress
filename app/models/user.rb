@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
   PreviewTopContributorsCount = 3
 
   has_many :closet_hangers
+  has_many :closet_lists
   has_many :closeted_items, :through => :closet_hangers, :source => :item
   has_many :contributions
   has_many :outfits

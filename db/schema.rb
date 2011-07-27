@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110722180616) do
+ActiveRecord::Schema.define(:version => 20110726231143) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -26,7 +26,17 @@ ActiveRecord::Schema.define(:version => 20110722180616) do
     t.integer  "quantity"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "owned",      :default => true, :null => false
+    t.boolean  "owned",          :default => true, :null => false
+    t.integer  "closet_list_id"
+  end
+
+  create_table "closet_lists", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
+    t.boolean  "hangers_owned", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "contributions", :force => true do |t|

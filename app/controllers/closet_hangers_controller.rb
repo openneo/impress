@@ -67,10 +67,6 @@ class ClosetHangersController < ApplicationController
 
   protected
 
-  def authorize_user!
-    raise AccessDenied unless user_signed_in? && current_user.id == params[:user_id].to_i
-  end
-
   def find_item
     @item = Item.find params[:item_id]
   end

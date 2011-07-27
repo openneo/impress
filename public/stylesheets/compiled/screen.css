@@ -97,7 +97,7 @@ input, button, select, label {
 }
 
 /* line 79, ../../../app/stylesheets/_layout.sass */
-input[type=text], body.pets-bulk #bulk-pets-form textarea, input[type=password], input[type=search], input[type=number], select {
+input[type=text], body.pets-bulk #bulk-pets-form textarea, input[type=password], input[type=search], input[type=number], select, textarea {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   background: white;
@@ -106,11 +106,16 @@ input[type=text], body.pets-bulk #bulk-pets-form textarea, input[type=password],
   padding: 0.25em;
 }
 /* line 85, ../../../app/stylesheets/_layout.sass */
-input[type=text]:focus, body.pets-bulk #bulk-pets-form textarea:focus, input[type=text]:active, body.pets-bulk #bulk-pets-form textarea:active, input[type=password]:focus, input[type=password]:active, input[type=search]:focus, input[type=search]:active, input[type=number]:focus, input[type=number]:active, select:focus, select:active {
+input[type=text]:focus, body.pets-bulk #bulk-pets-form textarea:focus, input[type=text]:active, body.pets-bulk #bulk-pets-form textarea:active, input[type=password]:focus, input[type=password]:active, input[type=search]:focus, input[type=search]:active, input[type=number]:focus, input[type=number]:active, select:focus, select:active, textarea:focus, textarea:active {
   color: inherit;
 }
 
 /* line 88, ../../../app/stylesheets/_layout.sass */
+textarea {
+  font: inherit;
+}
+
+/* line 91, ../../../app/stylesheets/_layout.sass */
 a.button, input[type=submit], button {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
@@ -141,7 +146,7 @@ a.button:hover, input[type=submit]:hover, button:hover {
 a.button:active, input[type=submit]:active, button:active {
   top: 1px;
 }
-/* line 90, ../../../app/stylesheets/_layout.sass */
+/* line 93, ../../../app/stylesheets/_layout.sass */
 a.button.loud, input[type=submit].loud, button.loud {
   background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
   font-size: 125%;
@@ -157,21 +162,21 @@ a.button:after {
   content: " >>";
 }
 
-/* line 96, ../../../app/stylesheets/_layout.sass */
+/* line 99, ../../../app/stylesheets/_layout.sass */
 ul.buttons {
   margin-bottom: 1em;
 }
-/* line 98, ../../../app/stylesheets/_layout.sass */
+/* line 101, ../../../app/stylesheets/_layout.sass */
 ul.buttons li {
   list-style: none;
   margin: 0 0.5em;
 }
-/* line 101, ../../../app/stylesheets/_layout.sass */
+/* line 104, ../../../app/stylesheets/_layout.sass */
 ul.buttons li, ul.buttons li form {
   display: inline;
 }
 
-/* line 104, ../../../app/stylesheets/_layout.sass */
+/* line 107, ../../../app/stylesheets/_layout.sass */
 #footer {
   clear: both;
   font-size: 75%;
@@ -179,65 +184,65 @@ ul.buttons li, ul.buttons li form {
   padding-top: 2em;
   text-align: center;
 }
-/* line 110, ../../../app/stylesheets/_layout.sass */
+/* line 113, ../../../app/stylesheets/_layout.sass */
 #footer ul, #footer div {
   display: inline;
   margin: 0 1em;
 }
-/* line 113, ../../../app/stylesheets/_layout.sass */
+/* line 116, ../../../app/stylesheets/_layout.sass */
 #footer li, #footer div ul {
   display: inline;
   margin: 0 0.5em;
 }
 
-/* line 117, ../../../app/stylesheets/_layout.sass */
+/* line 120, ../../../app/stylesheets/_layout.sass */
 .success, .alert, .warning {
   margin-bottom: 1em;
   padding: 0.25em 0.5em;
   text-align: center;
 }
 
-/* line 122, ../../../app/stylesheets/_layout.sass */
+/* line 125, ../../../app/stylesheets/_layout.sass */
 .success {
   background: #e6efc2;
   border: 1px solid #c6d880;
   color: #264409;
 }
 
-/* line 125, ../../../app/stylesheets/_layout.sass */
+/* line 128, ../../../app/stylesheets/_layout.sass */
 .alert {
   background: #fbe3e4;
   border: 1px solid #fbc2c4;
   color: #8a1f11;
 }
 
-/* line 128, ../../../app/stylesheets/_layout.sass */
+/* line 131, ../../../app/stylesheets/_layout.sass */
 .warning {
   background: #fff6bf;
   border: 1px solid #ffd324;
   color: #514721;
 }
 
-/* line 131, ../../../app/stylesheets/_layout.sass */
+/* line 134, ../../../app/stylesheets/_layout.sass */
 #userbar {
   font-family: Delicious, Helvetica, Arial, Verdana, sans-serif;
   position: absolute;
   right: 0;
   top: 0;
 }
-/* line 136, ../../../app/stylesheets/_layout.sass */
+/* line 139, ../../../app/stylesheets/_layout.sass */
 #userbar > * {
   display: inline;
   margin: 0 0.25em;
 }
 
-/* line 140, ../../../app/stylesheets/_layout.sass */
+/* line 143, ../../../app/stylesheets/_layout.sass */
 #userbar-image-mode {
   font-weight: bold;
   margin-right: 1em;
   text-decoration: none;
 }
-/* line 144, ../../../app/stylesheets/_layout.sass */
+/* line 147, ../../../app/stylesheets/_layout.sass */
 #userbar-image-mode img {
   bottom: -2px;
   height: 16px;
@@ -245,25 +250,25 @@ ul.buttons li, ul.buttons li form {
   width: 16px;
 }
 
-/* line 147, ../../../app/stylesheets/_layout.sass */
+/* line 150, ../../../app/stylesheets/_layout.sass */
 #userbar-log-in {
   text-decoration: none;
 }
-/* line 149, ../../../app/stylesheets/_layout.sass */
+/* line 152, ../../../app/stylesheets/_layout.sass */
 #userbar-log-in img {
   margin-bottom: -4px;
   margin-right: 0.25em;
 }
-/* line 153, ../../../app/stylesheets/_layout.sass */
+/* line 156, ../../../app/stylesheets/_layout.sass */
 #userbar-log-in span {
   text-decoration: underline;
 }
-/* line 155, ../../../app/stylesheets/_layout.sass */
+/* line 158, ../../../app/stylesheets/_layout.sass */
 #userbar-log-in:hover span {
   text-decoration: none;
 }
 
-/* line 158, ../../../app/stylesheets/_layout.sass */
+/* line 161, ../../../app/stylesheets/_layout.sass */
 .object {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -278,32 +283,32 @@ ul.buttons li, ul.buttons li form {
   vertical-align: top;
   width: 100px;
 }
-/* line 166, ../../../app/stylesheets/_layout.sass */
+/* line 169, ../../../app/stylesheets/_layout.sass */
 .object a {
   text-decoration: none;
 }
-/* line 168, ../../../app/stylesheets/_layout.sass */
+/* line 171, ../../../app/stylesheets/_layout.sass */
 .object a img {
   -moz-opacity: 0.75;
   -webkit-opacity: 0.75;
   -o-opacity: 0.75;
   -khtml-opacity: 0.75;
 }
-/* line 170, ../../../app/stylesheets/_layout.sass */
+/* line 173, ../../../app/stylesheets/_layout.sass */
 .object img {
   display: block;
   height: 80px;
   margin: 0 auto;
   width: 80px;
 }
-/* line 175, ../../../app/stylesheets/_layout.sass */
+/* line 178, ../../../app/stylesheets/_layout.sass */
 .object:hover img, .object a:hover img {
   -moz-opacity: 1;
   -webkit-opacity: 1;
   -o-opacity: 1;
   -khtml-opacity: 1;
 }
-/* line 181, ../../../app/stylesheets/_layout.sass */
+/* line 184, ../../../app/stylesheets/_layout.sass */
 .object .nc-icon, .object .closeted-icons {
   -moz-opacity: 1;
   -webkit-opacity: 1;
@@ -314,7 +319,7 @@ ul.buttons li, ul.buttons li form {
   position: absolute;
   top: 64px;
 }
-/* line 187, ../../../app/stylesheets/_layout.sass */
+/* line 190, ../../../app/stylesheets/_layout.sass */
 .object .nc-icon:hover, .object .closeted-icons:hover {
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
@@ -322,32 +327,32 @@ ul.buttons li, ul.buttons li form {
   -khtml-opacity: 0.5;
   background: transparent;
 }
-/* line 191, ../../../app/stylesheets/_layout.sass */
+/* line 194, ../../../app/stylesheets/_layout.sass */
 .object .nc-icon, .object .closeted-icons img {
   display: inline;
   height: 16px;
   width: 16px;
 }
-/* line 196, ../../../app/stylesheets/_layout.sass */
+/* line 199, ../../../app/stylesheets/_layout.sass */
 .object .nc-icon {
   right: 18px;
 }
-/* line 199, ../../../app/stylesheets/_layout.sass */
+/* line 202, ../../../app/stylesheets/_layout.sass */
 .object .closeted-icons {
   left: 18px;
 }
 
-/* line 202, ../../../app/stylesheets/_layout.sass */
+/* line 205, ../../../app/stylesheets/_layout.sass */
 dt {
   font-weight: bold;
 }
 
-/* line 205, ../../../app/stylesheets/_layout.sass */
+/* line 208, ../../../app/stylesheets/_layout.sass */
 dd {
   margin: 0 0 1.5em 1em;
 }
 
-/* line 208, ../../../app/stylesheets/_layout.sass */
+/* line 211, ../../../app/stylesheets/_layout.sass */
 #home-link {
   font-family: Delicious, Helvetica, Arial, Verdana, sans-serif;
   font-size: 175%;
@@ -358,21 +363,21 @@ dd {
   position: absolute;
   top: 0;
 }
-/* line 218, ../../../app/stylesheets/_layout.sass */
+/* line 221, ../../../app/stylesheets/_layout.sass */
 #home-link:hover {
   background: #eeffee;
   text-decoration: none;
 }
-/* line 221, ../../../app/stylesheets/_layout.sass */
+/* line 224, ../../../app/stylesheets/_layout.sass */
 #home-link span:before {
   content: "<< ";
 }
 
-/* line 225, ../../../app/stylesheets/_layout.sass */
+/* line 228, ../../../app/stylesheets/_layout.sass */
 .pagination a, .pagination span {
   margin: 0 0.5em;
 }
-/* line 227, ../../../app/stylesheets/_layout.sass */
+/* line 230, ../../../app/stylesheets/_layout.sass */
 .pagination .current {
   font-weight: bold;
 }
@@ -861,6 +866,38 @@ body.closet_hangers-index.current-user.js .closet-hangers-group.hidden header .h
 /* line 204, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user.js .closet-hangers-group.hidden header .show {
   display: block;
+}
+
+/* line 3, ../../../app/stylesheets/closet_lists/_form.sass */
+body.closet_lists-new form ul.fields, body.closet_lists-create form ul.fields {
+  list-style: none;
+}
+/* line 6, ../../../app/stylesheets/closet_lists/_form.sass */
+body.closet_lists-new form ul.fields label, body.closet_lists-create form ul.fields label {
+  float: left;
+  font-weight: bold;
+  margin-right: 1em;
+}
+/* line 11, ../../../app/stylesheets/closet_lists/_form.sass */
+body.closet_lists-new form ul.fields li, body.closet_lists-create form ul.fields li {
+  padding: 0.75em 0;
+  width: 25em;
+}
+/* line 15, ../../../app/stylesheets/closet_lists/_form.sass */
+body.closet_lists-new form ul.fields input, body.closet_lists-new form ul.fields textarea, body.closet_lists-new form ul.fields select, body.closet_lists-create form ul.fields input, body.closet_lists-create form ul.fields textarea, body.closet_lists-create form ul.fields select {
+  clear: both;
+  display: block;
+  margin-top: 0.25em;
+  width: 80%;
+}
+/* line 21, ../../../app/stylesheets/closet_lists/_form.sass */
+body.closet_lists-new form ul.fields textarea, body.closet_lists-create form ul.fields textarea {
+  height: 12em;
+}
+/* line 24, ../../../app/stylesheets/closet_lists/_form.sass */
+body.closet_lists-new form ul.fields .hint, body.closet_lists-create form ul.fields .hint {
+  display: block;
+  font-size: 85%;
 }
 
 /* line 3, ../../../app/stylesheets/closet_pages/_new.sass */
