@@ -3,7 +3,7 @@ class ClosetHanger < ActiveRecord::Base
   belongs_to :list, :class_name => 'ClosetList'
   belongs_to :user
 
-  attr_accessible :owned, :quantity
+  attr_accessible :list_id, :owned, :quantity
 
   validates :item_id, :uniqueness => {:scope => [:user_id, :owned]}
   validates :quantity, :numericality => {:greater_than => 0}
@@ -11,11 +11,13 @@ class ClosetHanger < ActiveRecord::Base
 
   scope :alphabetical_by_item_name, joins(:item).order(Item.arel_table[:name])
   scope :owned_before_wanted, order(arel_table[:owned].desc)
+  scope :unlisted, where(:list_id => nil)
 
   before_validation :set_owned_by_list
 
   def set_owned_by_list
-    self.owned = list.hangers_owned if list?
+    self.owned = list.hangers_owned if list_id?
+    true
   end
 
   def verb(subject=:someone)

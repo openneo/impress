@@ -1,7 +1,7 @@
 - unless public_perspective?
   - title 'Your Items'
   - add_body_class 'current-user'
-  - content_for :before_flashes do
+  - secondary_nav do
     = link_to "Import closet from Neopets", new_closet_page_path, :id => 'import-link'
     = form_tag items_path, :method => :get, :id => 'closet-hangers-items-search', 'data-current-user-id' => current_user.id do
       = text_field_tag :q, nil, :placeholder => "Find items to add"
@@ -31,19 +31,18 @@
         = f.submit "Save"
         %span#cancel-contact-link cancel
 
-- unless @closet_hangers_by_owned.empty?
-  %p
-    These are the items you are tracking on Dress to Impress. Hover over an
-    item to remove it from the list or to change the quantity.
+%p
+  These are the items you are tracking on Dress to Impress. Hover over an
+  item to remove it from the list or to change the quantity.
 
-  %p
-    You can share
-    = link_to "this page", request.fullpath
-    with the world, and they'll be able to see what items you own and want.
-    It's also a good idea to
-    %span.edit-contact-link add your Neopets username
-    so that when other users see your items they will know how to contact you for
-    trades.
+%p
+  You can share
+  = link_to "this page", request.fullpath
+  with the world, and they'll be able to see what items you own and want.
+  It's also a good idea to
+  %span.edit-contact-link add your Neopets username
+  so that when other users see your items they will know how to contact you for
+  trades.
 
 #closet-hangers{:class => public_perspective? ? nil : 'current-user'}
   - [true, false].each do |owned|
@@ -53,14 +52,17 @@
           Items
           = closet_hanger_subject
           %span.verb= closet_hanger_verb(owned)
-        %span.show click to show
-        %span.hide click to hide
+        %span.toggle.show show
+        %span.toggle.hide hide
+        = link_to_add_closet_list 'Add new list', :owned => owned, :class => 'add-closet-list'
       .closet-hangers-group-content
+        = render_closet_lists(@closet_lists_by_owned[owned])
+        = render_unlisted_closet_hangers(owned)
         - if public_perspective?
-          - unless @closet_hangers_by_owned[owned]
+          - unless has_hangers?(owned)
             %p #{@user.name} doesn't seem to #{closet_hanger_verb(owned, false)} anything.
         - else
-          - unless @closet_hangers_by_owned[owned]
+          - unless has_hangers?(owned)
             %p
               You haven't tracked any items you #{closet_hanger_verb(owned)} on
               Dress to Impress. As you browse the site and create outfits, we'll
@@ -78,7 +80,6 @@
                   = link_to "import your Neopets closet in a few quick steps", new_closet_page_path
                 so why not?
             %p Have fun!
-        = render_closet_hangers(owned)
 
 - content_for :stylesheets do
   = stylesheet_link_tag 'south-street/jquery-ui'

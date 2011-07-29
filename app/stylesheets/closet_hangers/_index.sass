@@ -1,21 +1,16 @@
 @import "partials/context_button"
 @import "partials/icon"
+@import "partials/secondary_nav"
 
 body.closet_hangers-index
+  +secondary-nav
+
   #title
-    float: left
     margin-bottom: 0
-
-  .flash
-    clear: both
-
-  #import-link, #closet-hangers-items-search
-    margin-top: .75em
 
   #import-link
     +awesome-button
     +loud-awesome-button-color
-    margin-left: 2em
 
   #closet-hangers-items-search
     float: right
@@ -101,34 +96,86 @@ body.closet_hangers-index
       form
         display: none
 
-  header
-    border-bottom: 1px solid $soft-border-color
-    display: block
-    margin-bottom: .25em
-    padding: .25em 0
-    position: relative
-
-    h3
-      font-size: 250%
-      margin: 0
-
-    span.show, span.hide
-      color: $soft-text-color
-      display: none
-      font-size: 85%
-      position: absolute
-      right: 1em
-      bottom: 0
-
-    &:hover
-      span.show, span.hide
-        color: inherit
-        text-decoration: underline
+      .quantity-1
+        display: none
 
   .closet-hangers-group
     border-top: 1px solid $module-border-color
     margin-bottom: 2em
     padding-bottom: 1em
+
+    > header
+      border-bottom: 1px solid $soft-border-color
+      display: block
+      margin-bottom: .25em
+      padding: .25em 0
+      position: relative
+
+      h3
+        font-size: 250%
+        margin: 0
+
+      .add-closet-list
+        +awesome-button
+        bottom: 50%
+        margin-bottom: -1em
+        position: absolute
+        right: 1em
+
+        &:active
+          margin-bottom: -1.1em
+          top: auto
+
+      span.show, span.hide
+        color: $soft-text-color
+        display: none
+        font-size: 85%
+        left: 1em
+        position: absolute
+        top: 1em
+
+        &:hover
+          color: inherit
+          text-decoration: underline
+
+  .closet-list
+    border-bottom: 1px solid $soft-border-color
+    padding: .5em 0
+
+    header
+      display: block
+      position: relative
+
+    h4
+      +header-text
+      font-size: 150%
+      margin: 0 auto
+
+    .empty-list
+      font-style: italic
+
+    .closet-list-controls
+      display: none
+      position: absolute
+      right: 1em
+      top: 0
+
+      a, input[type=submit]
+        +context-button
+
+      form
+        display: inline
+
+    &.unlisted
+      h4
+        font-style: italic
+
+    &:hover
+      .closet-list-controls
+        display: block
+
+    &:last-child
+      border-bottom: 0
 
   &.current-user
     #closet-hangers
@@ -163,6 +210,8 @@ body.closet_hangers-index
     &.js
       #closet-hangers
         .object:hover .quantity
+          display: block
+
           input[type=number]
             width: 2.5em
 
@@ -173,8 +222,11 @@ body.closet_hangers-index
           background: $module-bg-color
           outline: 1px solid $module-border-color
 
-          .quantity span:after
-            content: "…"
+          .quantity
+            display: block
+
+            span:after
+              content: "…"
 
       #closet-hangers-contact
         form
@@ -192,7 +244,8 @@ body.closet_hangers-index
 
       .closet-hangers-group
         header
-          cursor: pointer
+          .show, .hide
+            cursor: pointer
 
           .hide
             display: block

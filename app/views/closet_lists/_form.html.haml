@@ -1,3 +1,6 @@
+- secondary_nav do
+  = link_to 'Back to Your Items', user_closet_hangers_path(current_user), :class => 'button'
+
 = form_for [@closet_list.user, @closet_list] do |f|
   %ul.fields
     %li
@@ -13,5 +16,13 @@
         Why are these items in a list? What are your terms for trading?
         Or you can leave this blank.
       = f.text_area :description
+      %span.hint
+        We
+        = surround '_' do
+          %em support
+        = surround '**' do
+          %strong Markdown
+        and
+        some HTML.
   = f.submit 'Save list'
 

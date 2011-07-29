@@ -13,8 +13,10 @@
 	    label: el.find('span.verb').text(),
 	    owned: (el.attr('data-owned') == 'true')
 	  };
-	}).find('header').click(function () {
-	  $(this).parent().toggleClass('hidden');
+	});
+
+	$('div.closet-hangers-group span.toggle').live('click', function () {
+	  $(this).closest('.closet-hangers-group').toggleClass('hidden');
 	});
 
   /*
@@ -78,7 +80,9 @@
     var input = form.children("input[type=number]");
     if(input.hasChanged()) {
       var objectWrapper = form.closest(".object").addClass("loading");
-      var span = objectWrapper.find("span").text(input.val());
+      var newQuantity = input.val();
+      var span = objectWrapper.find("span").text(newQuantity);
+      span.parent().attr('class', 'quantity quantity-' + newQuantity);
       var data = form.serialize(); // get data before disabling inputs
       objectWrapper.disableForms();
       form.data('loading', true);
@@ -284,5 +288,15 @@
 	  });
 	  e.preventDefault();
 	});
+
+	/*
+
+	  Hanger list controls
+
+	*/
+
+	$('input[type=submit][data-confirm]').live('click', function (e) {
+    if(!confirm(this.getAttribute('data-confirm'))) e.preventDefault();
+  });
 })();
 

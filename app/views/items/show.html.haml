@@ -26,6 +26,9 @@
             = f.hidden_field :owned
             = f.label :quantity, "How many of these do you #{hanger.verb(:you)}?"
             = f.number_field :quantity, :min => 0, :required => true
+            - lists = current_user.closet_lists.where(:hangers_owned => hanger.owned).all
+            - unless lists.empty?
+              = f.collection_select :list_id, lists, :id, :name, :include_blank => 'Not in a list'
             = f.submit "Save"
   %p= @item.description
 

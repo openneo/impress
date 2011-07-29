@@ -26,8 +26,8 @@ ActiveRecord::Schema.define(:version => 20110726231143) do
     t.integer  "quantity"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "owned",          :default => true, :null => false
-    t.integer  "closet_list_id"
+    t.boolean  "owned",      :default => true, :null => false
+    t.integer  "list_id"
   end
 
   create_table "closet_lists", :force => true do |t|

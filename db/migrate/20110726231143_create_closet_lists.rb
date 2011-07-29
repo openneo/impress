@@ -9,13 +9,13 @@ class CreateClosetLists < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_column :closet_hangers, :closet_list_id, :integer
+    add_column :closet_hangers, :list_id, :integer
   end
 
   def self.down
     drop_table :closet_lists
 
-    remove_column :closet_hangers, :closet_list_id
+    remove_column :closet_hangers, :list_id
   end
 end
 

@@ -94,6 +94,11 @@ module ApplicationHelper
     hidden_field_tag :return_to, request.fullpath
   end
 
+  def secondary_nav(&block)
+    content_for :before_flashes,
+      content_tag(:nav, :id => 'secondary-nav', &block)
+  end
+
   def show_title_header?
     params[:controller] != 'items'
   end

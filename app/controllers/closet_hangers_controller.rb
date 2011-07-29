@@ -14,8 +14,11 @@ class ClosetHangersController < ApplicationController
 
   def index
     @user = User.find params[:user_id]
-    @closet_hangers_by_owned = @user.closet_hangers.owned_before_wanted.
-      alphabetical_by_item_name.includes(:item).group_by(&:owned)
+    @closet_lists_by_owned = @user.closet_lists.alphabetical.
+      includes(:hangers => :item).group_by(&:hangers_owned)
+    @unlisted_closet_hangers_by_owned = @user.closet_hangers.unlisted.
+      owned_before_wanted.alphabetical_by_item_name.includes(:item).
+      group_by(&:owned)
     @public_perspective = params.has_key?(:public) || !user_is?(@user)
   end
 
@@ -37,7 +40,9 @@ class ClosetHangersController < ApplicationController
       if @closet_hanger.save
         respond_to do |format|
           format.html {
-            flash[:success] = "Success! You #{@closet_hanger.verb(:you)} #{@closet_hanger.quantity} #{@item.name.pluralize}."
+            message = "Success! You #{@closet_hanger.verb(:you)} #{@closet_hanger.quantity} #{@item.name.pluralize}"
+            message << " in the \"#{@closet_hanger.list.name}\" list" if @closet_hanger.list
+            flash[:success] = "#{message}."
             redirect_back!(@item)
           }
 
