@@ -52,7 +52,8 @@
           Items #{closet_hanger_subject} #{closet_hanger_verb(owned)}
         %span.toggle.show show
         %span.toggle.hide hide
-        = link_to_add_closet_list 'Add new list', :owned => owned, :class => 'add-closet-list'
+        - unless public_perspective?
+          = link_to_add_closet_list 'Add new list', :owned => owned, :class => 'add-closet-list'
       .closet-hangers-group-content
         = render_closet_lists(@closet_lists_by_owned[owned])
         = render_unlisted_closet_hangers(owned)
