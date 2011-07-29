@@ -9,16 +9,13 @@ class ClosetHanger < ActiveRecord::Base
   validates :quantity, :numericality => {:greater_than => 0}
   validates_presence_of :item, :user
 
+  validate :list_belongs_to_user
+
   scope :alphabetical_by_item_name, joins(:item).order(Item.arel_table[:name])
   scope :owned_before_wanted, order(arel_table[:owned].desc)
   scope :unlisted, where(:list_id => nil)
 
   before_validation :set_owned_by_list
-
-  def set_owned_by_list
-    self.owned = list.hangers_owned if list_id?
-    true
-  end
 
   def verb(subject=:someone)
     self.class.verb(subject, owned?)
@@ -28,6 +25,23 @@ class ClosetHanger < ActiveRecord::Base
     base = (owned) ? 'own' : 'want'
     base << 's' if positive && subject != :you && subject != :i
     base
+  end
+
+  protected
+
+  def list_belongs_to_user
+    if list_id?
+      if list
+        errors.add(:list_id, "must belong to you") unless list.user_id == user_id
+      else
+        errors.add(:list, "must exist")
+      end
+    end
+  end
+
+  def set_owned_by_list
+    self.owned = list.hangers_owned if list
+    true
   end
 end
 
