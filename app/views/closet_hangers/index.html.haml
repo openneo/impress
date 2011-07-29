@@ -49,9 +49,7 @@
     .closet-hangers-group{'data-owned' => owned.to_s}
       %header
         %h3
-          Items
-          = closet_hanger_subject
-          %span.verb= closet_hanger_verb(owned)
+          Items #{closet_hanger_subject} #{closet_hanger_verb(owned)}
         %span.toggle.show show
         %span.toggle.hide hide
         = link_to_add_closet_list 'Add new list', :owned => owned, :class => 'add-closet-list'

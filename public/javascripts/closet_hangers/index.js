@@ -9,8 +9,22 @@
 
 	$('div.closet-hangers-group').each(function () {
 	  var el = $(this);
+	  var lists = [];
+
+	  el.find('div.closet-list').each(function () {
+	    var el = $(this);
+	    var id = el.attr('data-id');
+	    if(id) {
+	      lists[lists.length] = {
+	        id: parseInt(id, 10),
+	        label: el.find('h4').text()
+	      }
+	    }
+	  });
+
 	  hangerGroups[hangerGroups.length] = {
-	    label: el.find('span.verb').text(),
+	    label: el.find('h3').text(),
+	    lists: lists,
 	    owned: (el.attr('data-owned') == 'true')
 	  };
 	});
@@ -176,7 +190,8 @@
 
         var closetHanger = {
           quantity: 1,
-          owned: group.owned
+          owned: group.owned,
+          list_id: ui.item.list ? ui.item.list.id : ''
         };
 
         $.ajax({
@@ -212,12 +227,23 @@
           callback(output);
         });
       } else { // item was chosen, now choose a group to insert
-        var groupInserts = [];
+        var groupInserts = [], group;
         for(var i in hangerGroups) {
+          group = hangerGroups[i];
+
           groupInserts[groupInserts.length] = {
-            group: hangerGroups[i],
+            group: group,
             item: input.term,
             label: input.term.label
+          }
+
+          for(var i = 0; i < group.lists.length; i++) {
+            groupInserts[groupInserts.length] = {
+              group: group,
+              item: input.term,
+              label: input.term.label,
+              list: group.lists[i]
+            }
           }
         }
         callback(groupInserts);
@@ -231,8 +257,11 @@
     var li = $("<li></li>").data("item.autocomplete", item);
     if(item.is_item) { // these are items from the server
       li.append("<a>Add <strong>" + item.label + "</strong>");
+    } else if(item.list) { // these are list inserts
+      li.append("<a>Add to <strong>" + item.list.label + "</strong>").
+        addClass("closet-list-autocomplete-item");
     } else { // these are group inserts
-		  li.append("<a>I <strong>" + item.group.label + "</strong> the <strong>" + item.item.label + "</strong>");
+		  li.append("<a>Add to <strong>" + item.group.label + "</strong>");
 		}
 		return li.appendTo(ul);
 	}

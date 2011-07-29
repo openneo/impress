@@ -40,7 +40,8 @@ class ClosetHangersController < ApplicationController
       if @closet_hanger.save
         respond_to do |format|
           format.html {
-            message = "Success! You #{@closet_hanger.verb(:you)} #{@closet_hanger.quantity} #{@item.name.pluralize}"
+            message = "Success! You #{@closet_hanger.verb(:you)} #{@closet_hanger.quantity} "
+            message << ((@closet_hanger.quantity > 1) ? @item.name.pluralize : @item.name)
             message << " in the \"#{@closet_hanger.list.name}\" list" if @closet_hanger.list
             flash[:success] = "#{message}."
             redirect_back!(@item)
