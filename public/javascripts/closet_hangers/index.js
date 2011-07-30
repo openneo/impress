@@ -189,10 +189,11 @@
         itemsSearchField.addClass("loading");
 
         var closetHanger = {
-          quantity: 1,
           owned: group.owned,
           list_id: ui.item.list ? ui.item.list.id : ''
         };
+
+        if(!item.hangerInGroup) closetHanger.quantity = 1;
 
         $.ajax({
           url: "/user/" + itemsSearchForm.data("current-user-id") + "/items/" + item.id + "/closet_hanger",
@@ -228,21 +229,29 @@
         });
       } else { // item was chosen, now choose a group to insert
         var groupInserts = [], group;
+        var item = input.term, itemEl, hangerInGroup, currentListId;
         for(var i in hangerGroups) {
           group = hangerGroups[i];
+          itemEl = $('div.closet-hangers-group[data-owned=' + group.owned + '] div.object[data-item-id=' + item.id + ']');
+          hangerInGroup = itemEl.length > 0;
+          currentListId = itemEl.closest('.closet-list').attr('data-id');
 
           groupInserts[groupInserts.length] = {
             group: group,
-            item: input.term,
-            label: input.term.label
+            item: item,
+            label: item.label,
+            hangerInGroup: hangerInGroup,
+            hangerInList: !!currentListId
           }
 
           for(var i = 0; i < group.lists.length; i++) {
             groupInserts[groupInserts.length] = {
               group: group,
-              item: input.term,
-              label: input.term.label,
-              list: group.lists[i]
+              item: item,
+              label: item.label,
+              list: group.lists[i],
+              hangerInGroup: hangerInGroup,
+              currentListId: currentListId
             }
           }
         }
@@ -258,10 +267,28 @@
     if(item.is_item) { // these are items from the server
       li.append("<a>Add <strong>" + item.label + "</strong>");
     } else if(item.list) { // these are list inserts
-      li.append("<a>Add to <strong>" + item.list.label + "</strong>").
-        addClass("closet-list-autocomplete-item");
+      if(item.hangerInGroup) {
+        if(item.currentListId == item.list.id) {
+          li.append("<span>It's in <strong>" + item.list.label + "</strong> now");
+        } else {
+          li.append("<a>Move to <strong>" + item.list.label + "</strong>");
+        }
+      } else {
+        li.append("<a>Add to <strong>" + item.list.label + "</strong>");
+      }
+      li.addClass("closet-list-autocomplete-item");
     } else { // these are group inserts
-		  li.append("<a>Add to <strong>" + item.group.label + "</strong>");
+      if(item.hangerInGroup) {
+        var groupName = item.group.label;
+        if(item.hangerInList) {
+          li.append("<a>Move to <strong>" + groupName.replace(/\s+$/, '') + "</strong>, no list");
+        } else {
+          li.append("<span>It's in <strong>" + groupName + "</strong> now");
+        }
+      } else {
+  		  li.append("<a>Add to <strong>" + item.group.label + "</strong>");
+		  }
+		  li.addClass('closet-hangers-group-autocomplete-item');
 		}
 		return li.appendTo(ul);
 	}

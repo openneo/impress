@@ -177,9 +177,15 @@ body.closet_hangers-index
     &:last-child
       border-bottom: 0
 
-  .closet-list-autocomplete-item a
-    font-size: 85%
-    padding-left: 2em
+  .closet-hangers-group-autocomplete-item, .closet-list-autocomplete-item
+    span
+      font-style: italic
+      padding: .2em .4em
+
+  .closet-list-autocomplete-item
+    a, span
+      font-size: 85%
+      padding-left: 2em
 
   &.current-user
     #closet-hangers
