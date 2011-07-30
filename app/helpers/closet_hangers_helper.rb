@@ -56,9 +56,10 @@ module ClosetHangersHelper
 
   def render_unlisted_closet_hangers(owned)
     if @unlisted_closet_hangers_by_owned[owned]
-      content = render :partial => 'closet_hanger',
+      hangers_content = render :partial => 'closet_hanger',
         :collection => @unlisted_closet_hangers_by_owned[owned],
         :locals => {:show_controls => !public_perspective?}
+      content = content_tag(:div, hangers_content, :class => 'closet-list-hangers')
       if has_lists?(owned)
         content = content_tag(:header, content_tag(:h4, '(Not in a list)')) + content
       end

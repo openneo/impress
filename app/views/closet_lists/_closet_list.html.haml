@@ -1,4 +1,4 @@
-.closet-list{'data-id' => closet_list.id}
+.closet-list{'data-id' => closet_list.id, :id => "closet-list-#{closet_list.id}"}
   %header
     - if show_controls
       .closet-list-controls
@@ -9,8 +9,10 @@
 
   - if closet_list.description?
     = closet_list_description_format closet_list
-  - unless closet_list.hangers.empty?
-    = render_sorted_hangers(closet_list, show_controls)
-  - else
-    %span.empty-list This list is empty.
+
+  .closet-list-hangers
+    - unless closet_list.hangers.empty?
+      = render_sorted_hangers(closet_list, show_controls)
+    - else
+      %span.empty-list This list is empty.
 

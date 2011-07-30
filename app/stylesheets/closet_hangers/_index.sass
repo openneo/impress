@@ -177,6 +177,26 @@ body.closet_hangers-index
     &:last-child
       border-bottom: 0
 
+    &.droppable-active
+      +border-radius(1em)
+      +module
+      border-bottom-width: 1px
+      border-style: dotted
+      margin: 1em 0
+
+      .object
+        // totally hiding these elements causes the original element to change
+        // position, throwing off the drag
+        +opacity(.25)
+        &.ui-draggable-dragging
+          +opacity(1)
+
+      .closet-list-controls
+        display: none
+
+      .closet-list-hangers
+        overflow: hidden
+
   .closet-hangers-group-autocomplete-item, .closet-list-autocomplete-item
     span
       font-style: italic

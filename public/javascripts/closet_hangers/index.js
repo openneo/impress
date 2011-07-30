@@ -1,4 +1,16 @@
 (function () {
+  var hangersInitCallbacks = [];
+
+  function onHangersInit(callback) {
+    hangersInitCallbacks[hangersInitCallbacks.length] = callback;
+  }
+
+  function hangersInit() {
+    for(var i = 0; i < hangersInitCallbacks.length; i++) {
+      hangersInitCallbacks[i]();
+    }
+  }
+
   /*
 
     Hanger groups
@@ -39,6 +51,14 @@
 
   */
 
+  $.fn.liveDraggable = function (opts) {
+    this.live("mouseover", function() {
+      if (!$(this).data("init")) {
+        $(this).data("init", true).draggable(opts);
+      }
+    });
+  };
+
   var body = $(document.body).addClass("js");
   if(!body.hasClass("current-user")) return false;
 
@@ -54,21 +74,34 @@
   }
 
   $.fn.hasChanged = function () {
-    return this.data('previousValue') != this.val();
+    return this.attr('data-previous-value') != this.val();
   }
 
   $.fn.revertValue = function () {
     return this.each(function () {
       var el = $(this);
-      el.val(el.data('previousValue'));
+      el.val(el.attr('data-previous-value'));
     });
   }
 
   $.fn.storeValue = function () {
     return this.each(function () {
       var el = $(this);
-      el.data('previousValue', el.val());
+      el.attr('data-previous-value', el.val());
     });
+  }
+
+  $.fn.insertIntoSortedList = function (list, compare) {
+    var newChild = this, inserted = false;
+    list.children().each(function () {
+      if(compare(newChild, $(this)) < 1) {
+        newChild.insertBefore(this);
+        inserted = true;
+        return false;
+      }
+    });
+    if(!inserted) newChild.appendTo(list);
+    return this;
   }
 
   function handleSaveError(xhr, action) {
@@ -89,24 +122,41 @@
     objectWrapper.hide(250);
   }
 
+  function compareItemsByName(a, b) {
+    return a.find('span.name').text().localeCompare(b.find('span.name').text());
+  }
+
+  function moveItemToList(item, listId) {
+    if(listId) {
+      var list = $('#closet-list-' + listId);
+    } else {
+      var list = item.closest('.closet-hangers-group').find('div.closet-list.unlisted');
+    }
+    var hangersWrapper = list.find('div.closet-list-hangers');
+    item.insertIntoSortedList(hangersWrapper, compareItemsByName);
+  }
+
   function submitUpdateForm(form) {
     if(form.data('loading')) return false;
-    var input = form.children("input[type=number]");
-    if(input.hasChanged()) {
+    var quantityEl = form.children("input[name=closet_hanger\[quantity\]]");
+    var listEl = form.children("input[name=closet_hanger\[list_id\]]");
+    var listChanged = listEl.hasChanged();
+    if(listChanged || quantityEl.hasChanged()) {
       var objectWrapper = form.closest(".object").addClass("loading");
-      var newQuantity = input.val();
-      var span = objectWrapper.find("span").text(newQuantity);
-      span.parent().attr('class', 'quantity quantity-' + newQuantity);
+      var newQuantity = quantityEl.val();
+      var quantitySpan = objectWrapper.find(".quantity span").text(newQuantity);
+      quantitySpan.parent().attr('class', 'quantity quantity-' + newQuantity);
       var data = form.serialize(); // get data before disabling inputs
       objectWrapper.disableForms();
       form.data('loading', true);
+      if(listChanged) moveItemToList(objectWrapper, listEl.val());
       $.ajax({
         url: form.attr("action") + ".json",
         type: "post",
         data: data,
         dataType: "json",
         complete: function (data) {
-          if(input.val() == 0) {
+          if(quantityEl.val() == 0) {
             objectRemoved(objectWrapper);
           } else {
             objectWrapper.removeClass("loading").enableForms();
@@ -114,11 +164,14 @@
           form.data('loading', false);
         },
         success: function () {
-          input.storeValue();
+          quantityEl.storeValue();
+          listEl.storeValue();
         },
         error: function (xhr) {
-          input.revertValue();
-          span.text(input.val());
+          quantityEl.revertValue();
+          listEl.revertValue();
+          if(listChanged) moveItemToList(objectWrapper, listEl.val());
+          quantitySpan.text(quantityEl.val());
 
           handleSaveError(xhr, "updating the quantity");
         }
@@ -131,14 +184,23 @@
     submitUpdateForm($(this));
   });
 
-  function quantityInputs() { return $(hangersElQuery + ' input[type=number]') }
+  function editableInputs() { return $(hangersElQuery).find('input[name=closet_hanger\[quantity\]], input[name=closet_hanger\[list_id\]]') }
 
-  quantityInputs().live('change', function () {
+  $(hangersElQuery + 'input[name=closet_hanger\[quantity\]]').live('change', function () {
     submitUpdateForm($(this).parent());
   }).storeValue();
 
+  onHangersInit(function () {
+    editableInputs().storeValue();
+  });
+
   $(hangersElQuery + ' div.object').live('mouseleave', function () {
     submitUpdateForm($(this).find('form.closet-hanger-update'));
+  }).liveDraggable({
+    appendTo: '#closet-hangers',
+    distance: 20,
+    helper: "clone",
+    revert: "invalid"
   });
 
   $(hangersElQuery + " form.closet-hanger-destroy").live("submit", function (e) {
@@ -205,7 +267,7 @@
           success: function (html) {
             var doc = $(html);
             hangersEl.html( doc.find('#closet-hangers').html() );
-            quantityInputs().storeValue(); // since all the quantity inputs are new, gotta store initial value again
+            hangersInit();
             doc.find('.flash').hide().insertBefore(hangersEl).show(500).delay(5000).hide(250);
             itemsSearchField.val("");
           },
@@ -354,5 +416,36 @@
 	$('input[type=submit][data-confirm]').live('click', function (e) {
     if(!confirm(this.getAttribute('data-confirm'))) e.preventDefault();
   });
+
+  /*
+    Closet list droppable
+  */
+
+  onHangersInit(function () {
+    $('.closet-hangers-group').each(function () {
+      var group = $(this);
+      group.find('div.closet-list').droppable({
+        accept: '#' + group.attr('id') + ' div.object',
+        activate: function () {
+          $(this).find('.closet-list-hangers').animate({opacity: 0, height: 100}, 250);
+        },
+        activeClass: 'droppable-active',
+        deactivate: function () {
+          $(this).find('.closet-list-hangers').css('height', 'auto').animate({opacity: 1}, 250);
+        },
+        drop: function (e, ui) {
+          var form = ui.draggable.find('form.closet-hanger-update');
+          form.find('input[name=closet_hanger\[list_id\]]').val(this.getAttribute('data-id'));
+          submitUpdateForm(form);
+        }
+      });
+    });
+  });
+
+  /*
+    Initialize
+  */
+
+  hangersInit();
 })();
 

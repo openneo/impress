@@ -31,22 +31,33 @@
         = f.submit "Save"
         %span#cancel-contact-link cancel
 
-%p
-  These are the items you are tracking on Dress to Impress. Hover over an
-  item to remove it from the list or to change the quantity.
+- unless public_perspective?
+  %p
+    These are the items you are tracking on Dress to Impress. Hover over an
+    item to remove it from the list or to change the quantity.
 
-%p
-  You can share
-  = link_to "this page", request.fullpath
-  with the world, and they'll be able to see what items you own and want.
-  It's also a good idea to
-  %span.edit-contact-link add your Neopets username
-  so that when other users see your items they will know how to contact you for
-  trades.
+  %p
+    %strong
+      You can share
+      = link_to "this page", request.fullpath
+      with the world,
+    and they'll be able to see what items you own and want.
+    It's also a good idea to
+    %span.edit-contact-link add your Neopets username
+    so that when other users see your items they will know how to contact you for
+    trades.
+
+  %p
+    You can also make lists of items.
+    %strong
+      = link_to 'Get started with an Up For Trade list',
+        new_user_closet_list_path(@user, :closet_list => {:hangers_owned => true, :name => 'Up For Trade'})
+    then start adding to it! You can use the search form at the top to find
+    items, and you can also drag-and-drop items in and out of lists. Enjoy!
 
 #closet-hangers{:class => public_perspective? ? nil : 'current-user'}
   - [true, false].each do |owned|
-    .closet-hangers-group{'data-owned' => owned.to_s}
+    .closet-hangers-group{'data-owned' => owned.to_s, :id => "closet-hangers-group-#{owned}"}
       %header
         %h3
           Items #{closet_hanger_subject} #{closet_hanger_verb(owned)}
