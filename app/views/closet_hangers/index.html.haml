@@ -67,16 +67,20 @@
           = link_to_add_closet_list 'Add new list', :owned => owned, :class => 'add-closet-list'
       .closet-hangers-group-content
         = render_closet_lists(@closet_lists_by_owned[owned])
-        - if @unlisted_closet_hangers_by_owned[owned]
-          .closet-list.unlisted
-            - if has_lists?(owned)
-              %header
-                %h4 (Not in a list)
-            = form_for @user, :html => {:class => 'visibility-form'} do |f|
-              = f.select hangers_group_visibility_field_name(owned),
-                hangers_group_visibility_choices(owned)
-              = f.submit "Save"
-            .closet-list-hangers= render_unlisted_closet_hangers(owned)
+        .closet-list.unlisted{'data-hangers-count' => unlisted_hangers_count(owned)}
+          - if has_lists?(owned)
+            %header
+              %h4 (Not in a list)
+          .closet-list-content
+            - unless public_perspective?
+              = form_for @user, :html => {:class => 'visibility-form'} do |f|
+                = f.select hangers_group_visibility_field_name(owned),
+                  hangers_group_visibility_choices(owned)
+                = f.submit "Save"
+            .closet-list-hangers
+              = render_unlisted_closet_hangers(owned)
+              %span.empty-list
+                All the items you #{closet_hanger_verb owned} are in lists.
         - if public_perspective?
           - unless has_hangers?(owned)
             %p #{@user.name} doesn't seem to #{closet_hanger_verb(owned, false)} anything.

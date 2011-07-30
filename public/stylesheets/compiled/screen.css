@@ -801,7 +801,7 @@ body.closet_hangers-index .closet-list .visibility-form {
   vertical-align: middle;
   *display: inline;
   *vertical-align: auto;
-  margin: 0 auto;
+  margin: 0 auto 1em;
   position: relative;
 }
 /* line 151, ../../../app/stylesheets/closet_hangers/_index.sass */
@@ -839,16 +839,17 @@ body.closet_hangers-index .closet-list h4 {
 }
 /* line 179, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index .closet-list .empty-list {
+  display: none;
   font-style: italic;
 }
-/* line 182, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 183, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index .closet-list .closet-list-controls {
   display: none;
   position: absolute;
   right: 1em;
   top: 0;
 }
-/* line 188, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 189, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index .closet-list .closet-list-controls a, body.closet_hangers-index .closet-list .closet-list-controls input[type=submit] {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
@@ -889,32 +890,36 @@ body.closet_hangers-index .closet-list .closet-list-controls a:active, body.clos
 body.closet_hangers-index .closet-list .closet-list-controls a:hover, body.closet_hangers-index .closet-list .closet-list-controls input[type=submit]:hover {
   background-color: #999999;
 }
-/* line 191, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 192, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index .closet-list .closet-list-controls form {
   display: inline;
 }
-/* line 195, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 196, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list[data-hangers-count="0"] .empty-list {
+  display: block;
+}
+/* line 200, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index .closet-list.unlisted h4 {
   font-size: 125%;
   font-style: italic;
 }
-/* line 201, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 206, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index .closet-list:hover .closet-list-controls {
   display: block;
 }
-/* line 205, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 210, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index .closet-list:hover .visibility-form input[type=submit] {
   visibility: visible;
 }
-/* line 208, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 213, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index .closet-list:hover .visibility-form select {
   border-color: #aaddaa;
 }
-/* line 211, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 216, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index .closet-list:last-child {
   border-bottom: 0;
 }
-/* line 214, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 219, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index .closet-list.droppable-active {
   -moz-border-radius: 1em;
   -webkit-border-radius: 1em;
@@ -925,49 +930,49 @@ body.closet_hangers-index .closet-list.droppable-active {
   border-style: dotted;
   margin: 1em 0;
 }
-/* line 221, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 226, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index .closet-list.droppable-active .object {
   -moz-opacity: 0.25;
   -webkit-opacity: 0.25;
   -o-opacity: 0.25;
   -khtml-opacity: 0.25;
 }
-/* line 225, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 230, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index .closet-list.droppable-active .object.ui-draggable-dragging {
   -moz-opacity: 1;
   -webkit-opacity: 1;
   -o-opacity: 1;
   -khtml-opacity: 1;
 }
-/* line 228, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 233, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index .closet-list.droppable-active .closet-list-controls {
   display: none;
 }
-/* line 231, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 236, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index .closet-list.droppable-active .closet-list-hangers {
   overflow: hidden;
 }
-/* line 235, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 240, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index .closet-hangers-group-autocomplete-item span, body.closet_hangers-index .closet-list-autocomplete-item span {
   font-style: italic;
   padding: 0.2em 0.4em;
 }
-/* line 240, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 245, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index .closet-list-autocomplete-item a, body.closet_hangers-index .closet-list-autocomplete-item span {
   font-size: 85%;
   padding-left: 2em;
 }
-/* line 247, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 252, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user #closet-hangers .object:hover form {
   display: inline;
 }
-/* line 250, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 255, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user #closet-hangers .object:hover .closet-hanger-destroy {
   position: absolute;
   right: 18px;
   top: 0;
 }
-/* line 255, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 260, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user #closet-hangers .object:hover .closet-hanger-destroy input {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
@@ -1008,7 +1013,7 @@ body.closet_hangers-index.current-user #closet-hangers .object:hover .closet-han
 body.closet_hangers-index.current-user #closet-hangers .object:hover .closet-hanger-destroy input:hover {
   background-color: #999999;
 }
-/* line 258, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 263, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user #closet-hangers .object:hover .quantity {
   -moz-opacity: 1;
   -webkit-opacity: 1;
@@ -1018,73 +1023,73 @@ body.closet_hangers-index.current-user #closet-hangers .object:hover .quantity {
   top: 56px;
   padding: 0;
 }
-/* line 264, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 269, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user #closet-hangers .object:hover .quantity span {
   display: none;
 }
-/* line 267, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 272, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user #closet-hangers .object:hover .quantity input[type=number] {
   padding: 2px;
   width: 2em;
 }
-/* line 271, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 276, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user #closet-hangers .object:hover .quantity input[type=submit] {
   font-size: 85%;
 }
-/* line 276, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 281, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user.js #closet-hangers .object:hover .quantity {
   display: block;
 }
-/* line 279, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 284, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user.js #closet-hangers .object:hover .quantity input[type=number] {
   width: 2.5em;
 }
-/* line 282, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 287, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user.js #closet-hangers .object:hover .quantity input[type=submit] {
   display: none;
 }
-/* line 285, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 290, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user.js #closet-hangers .object.loading {
   background: #eeffee;
   outline: 1px solid #006600;
 }
-/* line 289, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 294, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user.js #closet-hangers .object.loading .quantity {
   display: block;
 }
-/* line 292, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 297, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user.js #closet-hangers .object.loading .quantity span:after {
   content: "…";
 }
-/* line 296, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 301, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user.js #closet-hangers-contact form {
   display: none;
 }
-/* line 299, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 304, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user.js #closet-hangers-contact .edit-contact-link, body.closet_hangers-index.current-user.js #closet-hangers-contact #cancel-contact-link {
   display: inline;
 }
-/* line 303, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 308, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user.js #closet-hangers-contact.editing form {
   display: block;
 }
-/* line 306, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 311, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user.js #closet-hangers-contact.editing .edit-contact-link {
   display: none;
 }
-/* line 311, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 316, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user.js .closet-hangers-group header .show, body.closet_hangers-index.current-user.js .closet-hangers-group header .hide {
   cursor: pointer;
 }
-/* line 314, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 319, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user.js .closet-hangers-group header .hide {
   display: block;
 }
-/* line 318, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 323, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user.js .closet-hangers-group.hidden header .hide, body.closet_hangers-index.current-user.js .closet-hangers-group.hidden .closet-hangers-group-content {
   display: none;
 }
-/* line 321, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 326, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index.current-user.js .closet-hangers-group.hidden header .show {
   display: block;
 }
@@ -1105,31 +1110,32 @@ body.closet_lists-new #secondary-nav, body.closet_lists-create #secondary-nav, b
 }
 /* line 4, ../../../app/stylesheets/closet_lists/_form.sass */
 body.closet_lists-new form ul.fields, body.closet_lists-create form ul.fields, body.closet_lists-edit form ul.fields, body.closet_lists-update form ul.fields {
+  clear: both;
   list-style: none;
 }
-/* line 7, ../../../app/stylesheets/closet_lists/_form.sass */
+/* line 8, ../../../app/stylesheets/closet_lists/_form.sass */
 body.closet_lists-new form ul.fields label, body.closet_lists-create form ul.fields label, body.closet_lists-edit form ul.fields label, body.closet_lists-update form ul.fields label {
   float: left;
   font-weight: bold;
   margin-right: 1em;
 }
-/* line 12, ../../../app/stylesheets/closet_lists/_form.sass */
+/* line 13, ../../../app/stylesheets/closet_lists/_form.sass */
 body.closet_lists-new form ul.fields li, body.closet_lists-create form ul.fields li, body.closet_lists-edit form ul.fields li, body.closet_lists-update form ul.fields li {
   padding: 0.75em 0;
   width: 25em;
 }
-/* line 16, ../../../app/stylesheets/closet_lists/_form.sass */
+/* line 17, ../../../app/stylesheets/closet_lists/_form.sass */
 body.closet_lists-new form ul.fields input, body.closet_lists-new form ul.fields textarea, body.closet_lists-new form ul.fields select, body.closet_lists-create form ul.fields input, body.closet_lists-create form ul.fields textarea, body.closet_lists-create form ul.fields select, body.closet_lists-edit form ul.fields input, body.closet_lists-edit form ul.fields textarea, body.closet_lists-edit form ul.fields select, body.closet_lists-update form ul.fields input, body.closet_lists-update form ul.fields textarea, body.closet_lists-update form ul.fields select {
   clear: both;
   display: block;
   margin-top: 0.25em;
   width: 80%;
 }
-/* line 22, ../../../app/stylesheets/closet_lists/_form.sass */
+/* line 23, ../../../app/stylesheets/closet_lists/_form.sass */
 body.closet_lists-new form ul.fields textarea, body.closet_lists-create form ul.fields textarea, body.closet_lists-edit form ul.fields textarea, body.closet_lists-update form ul.fields textarea {
   height: 12em;
 }
-/* line 25, ../../../app/stylesheets/closet_lists/_form.sass */
+/* line 26, ../../../app/stylesheets/closet_lists/_form.sass */
 body.closet_lists-new form ul.fields .hint, body.closet_lists-create form ul.fields .hint, body.closet_lists-edit form ul.fields .hint, body.closet_lists-update form ul.fields .hint {
   display: block;
   font-size: 85%;

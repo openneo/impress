@@ -69,5 +69,10 @@ module ClosetHangersHelper
       :collection => @unlisted_closet_hangers_by_owned[owned],
       :locals => {:show_controls => !public_perspective?}
   end
+
+  def unlisted_hangers_count(owned)
+    hangers = @unlisted_closet_hangers_by_owned[owned]
+    hangers ? hangers.size : 0
+  end
 end
 

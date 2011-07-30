@@ -145,7 +145,7 @@ body.closet_hangers-index
 
     .visibility-form
       +inline-block
-      margin: 0 auto
+      margin: 0 auto 1em
       position: relative
 
       input, select
@@ -177,6 +177,7 @@ body.closet_hangers-index
       margin: 0 auto
 
     .empty-list
+      display: none
       font-style: italic
 
     .closet-list-controls
@@ -190,6 +191,10 @@ body.closet_hangers-index
 
       form
         display: inline
+
+    &[data-hangers-count="0"]
+      .empty-list
+        display: block
 
     &.unlisted
       h4

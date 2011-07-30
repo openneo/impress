@@ -126,14 +126,25 @@
     return a.find('span.name').text().localeCompare(b.find('span.name').text());
   }
 
-  function moveItemToList(item, listId) {
-    if(listId) {
-      var list = $('#closet-list-' + listId);
+  function findList(id, item) {
+    if(id) {
+      return $('#closet-list-' + id);
     } else {
-      var list = item.closest('.closet-hangers-group').find('div.closet-list.unlisted');
+      return item.closest('.closet-hangers-group').find('div.closet-list.unlisted');
     }
-    var hangersWrapper = list.find('div.closet-list-hangers');
+  }
+
+  function updateListHangersCount(el) {
+    el.attr('data-hangers-count', el.find('div.object').length);
+  }
+
+  function moveItemToList(item, listId) {
+    var newList = findList(listId, item);
+    var oldList = item.closest('div.closet-list');
+    var hangersWrapper = newList.find('div.closet-list-hangers');
     item.insertIntoSortedList(hangersWrapper, compareItemsByName);
+    updateListHangersCount(oldList);
+    updateListHangersCount(newList);
   }
 
   function submitUpdateForm(form) {
@@ -427,11 +438,11 @@
       group.find('div.closet-list').droppable({
         accept: '#' + group.attr('id') + ' div.object',
         activate: function () {
-          $(this).find('.closet-list-hangers').animate({opacity: 0, height: 100}, 250);
+          $(this).find('.closet-list-content').animate({opacity: 0, height: 100}, 250);
         },
         activeClass: 'droppable-active',
         deactivate: function () {
-          $(this).find('.closet-list-hangers').css('height', 'auto').animate({opacity: 1}, 250);
+          $(this).find('.closet-list-content').css('height', 'auto').animate({opacity: 1}, 250);
         },
         drop: function (e, ui) {
           var form = ui.draggable.find('form.closet-hanger-update');

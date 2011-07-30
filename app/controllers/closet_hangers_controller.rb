@@ -14,10 +14,13 @@ class ClosetHangersController < ApplicationController
 
   def index
     @user = User.find params[:user_id]
+    @public_perspective = params.has_key?(:public) || !user_is?(@user)
+    @perspective_user = current_user unless @public_perspective
+
     @closet_lists_by_owned = @user.closet_lists.alphabetical.
       includes(:hangers => :item).group_by(&:hangers_owned)
 
-    visible_groups = @user.closet_hangers_groups_visible_to(current_user)
+    visible_groups = @user.closet_hangers_groups_visible_to(@perspective_user)
     unless visible_groups.empty?
       @unlisted_closet_hangers_by_owned = @user.closet_hangers.unlisted.
         owned_before_wanted.alphabetical_by_item_name.includes(:item).
@@ -25,8 +28,6 @@ class ClosetHangersController < ApplicationController
     else
       @unlisted_closet_hangers_by_owned = {}
     end
-
-    @public_perspective = params.has_key?(:public) || !user_is?(@user)
   end
 
   # Since the user does not care about the idea of a hanger, but rather the
