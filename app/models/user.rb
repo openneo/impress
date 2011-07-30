@@ -14,7 +14,8 @@ class User < ActiveRecord::Base
 
   devise :rememberable
 
-  attr_accessible :neopets_username
+  attr_accessible :neopets_username, :owned_closet_hangers_visibility,
+    :wanted_closet_hangers_visibility
 
   def contribute!(pet)
     new_contributions = []
@@ -59,6 +60,14 @@ class User < ActiveRecord::Base
       else
         item.wanted = true
       end
+    end
+  end
+
+  def closet_hangers_groups_visible_to(user)
+    return [true, false] if user == self
+    [].tap do |groups|
+      groups << true if owned_closet_hangers_visibility >= ClosetVisibility[:public].id
+      groups << false if wanted_closet_hangers_visibility >= ClosetVisibility[:public].id
     end
   end
 

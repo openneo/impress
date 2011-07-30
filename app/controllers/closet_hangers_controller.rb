@@ -16,9 +16,16 @@ class ClosetHangersController < ApplicationController
     @user = User.find params[:user_id]
     @closet_lists_by_owned = @user.closet_lists.alphabetical.
       includes(:hangers => :item).group_by(&:hangers_owned)
-    @unlisted_closet_hangers_by_owned = @user.closet_hangers.unlisted.
-      owned_before_wanted.alphabetical_by_item_name.includes(:item).
-      group_by(&:owned)
+
+    visible_groups = @user.closet_hangers_groups_visible_to(current_user)
+    unless visible_groups.empty?
+      @unlisted_closet_hangers_by_owned = @user.closet_hangers.unlisted.
+        owned_before_wanted.alphabetical_by_item_name.includes(:item).
+        where(:owned => [visible_groups]).group_by(&:owned)
+    else
+      @unlisted_closet_hangers_by_owned = {}
+    end
+
     @public_perspective = params.has_key?(:public) || !user_is?(@user)
   end
 

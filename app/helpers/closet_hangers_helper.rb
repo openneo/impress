@@ -13,6 +13,16 @@ module ClosetHangersHelper
     public_perspective? ? @user.name : :you
   end
 
+  def hangers_group_visibility_field_name(owned)
+    owned ? :owned_closet_hangers_visibility : :wanted_closet_hangers_visibility
+  end
+
+  def hangers_group_visibility_choices(owned)
+    ClosetVisibility.levels.map do |level|
+      [level.description("these items"), level.id]
+    end
+  end
+
   # Do we have either unlisted hangers that are owned/wanted, or non-empty
   # owned/wanted lists?
   def has_hangers?(owned)
@@ -55,16 +65,9 @@ module ClosetHangersHelper
   end
 
   def render_unlisted_closet_hangers(owned)
-    if @unlisted_closet_hangers_by_owned[owned]
-      hangers_content = render :partial => 'closet_hanger',
-        :collection => @unlisted_closet_hangers_by_owned[owned],
-        :locals => {:show_controls => !public_perspective?}
-      content = content_tag(:div, hangers_content, :class => 'closet-list-hangers')
-      if has_lists?(owned)
-        content = content_tag(:header, content_tag(:h4, '(Not in a list)')) + content
-      end
-      content_tag(:div, content, :class => 'closet-list unlisted')
-    end
+    hangers_content = render :partial => 'closet_hanger',
+      :collection => @unlisted_closet_hangers_by_owned[owned],
+      :locals => {:show_controls => !public_perspective?}
   end
 end
 
