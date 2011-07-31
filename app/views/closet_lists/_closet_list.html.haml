@@ -1,6 +1,10 @@
 .closet-list{'data-id' => closet_list.id, 'data-hangers-count' => closet_list.hangers.count, :id => "closet-list-#{closet_list.id}"}
   %header
     - if show_controls
+      = form_for [closet_list.user, closet_list], :html => {:class => 'visibility-form'} do |f|
+        = f.select :visibility, closet_visibility_choices(:human_name)
+        = f.submit "Save"
+        = closet_visibility_descriptions('items in this list')
       .closet-list-controls
         = link_to 'Edit', edit_user_closet_list_path(closet_list.user, closet_list)
         = form_tag user_closet_list_path(closet_list.user, closet_list), :method => 'delete' do

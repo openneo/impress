@@ -23,10 +23,10 @@ module ClosetHangersHelper
     end
   end
 
-  def closet_visibility_descriptions
+  def closet_visibility_descriptions(subject='these items')
     content = ''
     ClosetVisibility.levels.each do |level|
-      content << content_tag(:li, level.description('these items'), 'data-id' => level.id)
+      content << content_tag(:li, level.description(subject), 'data-id' => level.id)
     end
     content_tag :ul, content.html_safe, :class => 'visibility-descriptions'
   end
