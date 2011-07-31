@@ -19,8 +19,16 @@ module ClosetHangersHelper
 
   def hangers_group_visibility_choices(owned)
     ClosetVisibility.levels.map do |level|
-      [level.description("these items"), level.id]
+      [level.name.to_s.humanize, level.id]
     end
+  end
+
+  def closet_visibility_descriptions
+    content = ''
+    ClosetVisibility.levels.each do |level|
+      content << content_tag(:li, level.description('these items'), 'data-id' => level.id)
+    end
+    content_tag :ul, content.html_safe, :class => 'visibility-descriptions'
   end
 
   # Do we have either unlisted hangers that are owned/wanted, or non-empty

@@ -68,15 +68,16 @@
       .closet-hangers-group-content
         = render_closet_lists(@closet_lists_by_owned[owned])
         .closet-list.unlisted{'data-hangers-count' => unlisted_hangers_count(owned)}
-          - if has_lists?(owned)
-            %header
-              %h4 (Not in a list)
-          .closet-list-content
+          %header
             - unless public_perspective?
               = form_for @user, :html => {:class => 'visibility-form'} do |f|
                 = f.select hangers_group_visibility_field_name(owned),
                   hangers_group_visibility_choices(owned)
                 = f.submit "Save"
+                = closet_visibility_descriptions
+            - if has_lists?(owned)
+              %h4 (Not in a list)
+          .closet-list-content
             .closet-list-hangers
               = render_unlisted_closet_hangers(owned)
               %span.empty-list

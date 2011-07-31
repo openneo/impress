@@ -31,7 +31,7 @@ module ClosetVisibility
     ),
     Level.new(
       :id => 2,
-      :name => :advertised,
+      :name => :trading,
       :description => "$SUBJECT will be publicly listed for trades"
     )
   ]

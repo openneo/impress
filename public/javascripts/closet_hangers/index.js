@@ -429,7 +429,9 @@
   });
 
   /*
+
     Closet list droppable
+
   */
 
   onHangersInit(function () {
@@ -454,7 +456,31 @@
   });
 
   /*
+
+    Visibility Descriptions
+
+  */
+
+  function updateVisibilityDescription() {
+    var descriptions = $(this).closest('.visibility-form').
+      find('ul.visibility-descriptions');
+
+    descriptions.children('li.current').removeClass('current');
+    descriptions.children('li[data-id=' + $(this).val() + ']').addClass('current');
+  }
+
+  function visibilitySelects() { return $('form.visibility-form select') }
+
+  visibilitySelects().live('change', updateVisibilityDescription);
+
+  onHangersInit(function () {
+    visibilitySelects().each(updateVisibilityDescription);
+  });
+
+  /*
+
     Initialize
+
   */
 
   hangersInit();

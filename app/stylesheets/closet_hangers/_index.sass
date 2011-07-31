@@ -144,12 +144,15 @@ body.closet_hangers-index
     position: relative
 
     .visibility-form
-      +inline-block
-      margin: 0 auto 1em
-      position: relative
+      font-size: 85%
+      left: .5em
+      position: absolute
+      text-align: left
+      top: .25em
+      z-index: 10
 
       input, select
-        font-size: 85%
+        font-size: inherit
         margin:
           bottom: 0
           top: 0
@@ -158,13 +161,24 @@ body.closet_hangers-index
         border-color: $background-color
 
       input[type=submit]
-        left: 100%
-        position: absolute
-        top: 0
         visibility: hidden
 
         &:active
           top: 1px
+
+      .visibility-descriptions
+        +opacity(.75)
+        background: $background-color
+        font-style: italic
+        list-style: none
+        padding: 0 .5em
+
+        li
+          display: none
+
+      &:hover
+        .visibility-descriptions li.current
+          display: block
 
     header
       display: block
@@ -174,7 +188,8 @@ body.closet_hangers-index
       +header-text
       font-size: 150%
       line-height: 1
-      margin: 0 auto
+      margin: 0 auto .67em
+      width: 50%
 
     .empty-list
       display: none
