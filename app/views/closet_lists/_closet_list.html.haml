@@ -11,10 +11,10 @@
           = submit_tag 'Delete', :confirm => closet_list_delete_confirmation(closet_list)
     %h4= closet_list.name
 
-  - if closet_list.description?
-    = closet_list_description_format closet_list
-
   .closet-list-content
+    - if closet_list.description?
+      = closet_list_description_format closet_list
+
     .closet-list-hangers
       - unless closet_list.hangers.empty?
         = render_sorted_hangers(closet_list, show_controls)
