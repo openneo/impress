@@ -119,7 +119,7 @@
   }
 
   function objectRemoved(objectWrapper) {
-    objectWrapper.hide(250);
+    objectWrapper.hide(250, $.proxy(objectWrapper, 'remove'));
   }
 
   function compareItemsByName(a, b) {
