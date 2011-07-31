@@ -77,20 +77,22 @@
   - if lists || unlisted_hangers_by_owned[owned]
     %h2.dti-item-group-header Items #OWNER #{ClosetHanger.verb(:someone, owned)}
     %ul.dti-item-group
-      - lists.each do |list|
-        - unless list.hangers.empty?
-          %li.dti-item-list
-            %h3= list.name
-            - if list.description?
-              .dti-item-list-desc
-                = closet_list_description_format list
-            %div.dti-items
-              = render_batched_petpage_hangers(list.hangers.sort { |a,b| a.item.name <=> b.item.name })
-      %li.dti-unlisted-items
-        - unless lists.empty?
-          %h3 (Not in a list)
-        %div
-          = render_batched_petpage_hangers(unlisted_hangers_by_owned[owned])
+      - if lists
+        - lists.each do |list|
+          - unless list.hangers.empty?
+            %li.dti-item-list
+              %h3= list.name
+              - if list.description?
+                .dti-item-list-desc
+                  = closet_list_description_format list
+              %div.dti-items
+                = render_batched_petpage_hangers(list.hangers.sort { |a,b| a.item.name <=> b.item.name })
+      - if unlisted_hangers_by_owned[owned]
+        %li.dti-unlisted-items
+          - unless lists.blank?
+            %h3 (Not in a list)
+          %div
+            = render_batched_petpage_hangers(unlisted_hangers_by_owned[owned])
 
 #dti-item-footer
   I made this list on Dress to Impress. You can, too!
