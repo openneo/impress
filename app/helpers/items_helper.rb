@@ -82,6 +82,12 @@ module ItemsHelper
     sprintf(NeoitemsURLFormat, CGI::escape(item.name))
   end
 
+  def render_trading_closet_hangers(owned)
+    @trading_closet_hangers_by_owned[owned].map do |hanger|
+      link_to hanger.user.name, user_closet_hangers_path(hanger.user)
+    end.to_sentence.html_safe
+  end
+
   def your_items_path
     user_signed_in? ? user_closet_hangers_path(current_user) : login_path
   end

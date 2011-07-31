@@ -1568,16 +1568,65 @@ body.items-show #item-preview-swf {
 body.items-show #item-zones {
   font-family: "Droid Serif", Georgia, "Times New Roman", Times, serif;
   font-size: 85%;
-}
-/* line 53, ../../../app/stylesheets/items/_show.sass */
-body.items-show #item-zones p:first-child {
-  margin-bottom: 0.25em;
+  margin-bottom: 1em;
 }
 /* line 55, ../../../app/stylesheets/items/_show.sass */
+body.items-show #item-zones p {
+  display: inline;
+}
+/* line 58, ../../../app/stylesheets/items/_show.sass */
+body.items-show #item-zones p:first-child {
+  margin-right: 1em;
+}
+/* line 60, ../../../app/stylesheets/items/_show.sass */
+body.items-show #trade-hangers {
+  font-size: 85%;
+  text-align: left;
+}
+/* line 64, ../../../app/stylesheets/items/_show.sass */
+body.items-show #trade-hangers p {
+  position: relative;
+}
+/* line 67, ../../../app/stylesheets/items/_show.sass */
+body.items-show #trade-hangers p:first-child {
+  margin-bottom: 0.5em;
+}
+/* line 71, ../../../app/stylesheets/items/_show.sass */
+body.items-show #trade-hangers p.overflows .toggle {
+  display: block;
+}
+/* line 76, ../../../app/stylesheets/items/_show.sass */
+body.items-show #trade-hangers p.showing-more .toggle .less {
+  display: block;
+}
+/* line 79, ../../../app/stylesheets/items/_show.sass */
+body.items-show #trade-hangers p.showing-more .toggle .more {
+  display: none;
+}
+/* line 82, ../../../app/stylesheets/items/_show.sass */
+body.items-show #trade-hangers .toggle {
+  background: white;
+  bottom: 0;
+  cursor: pointer;
+  display: none;
+  font-family: "Droid Sans", Helvetica, Arial, Verdana, sans-serif;
+  padding: 0 1em;
+  position: absolute;
+  right: 0;
+}
+/* line 92, ../../../app/stylesheets/items/_show.sass */
+body.items-show #trade-hangers .toggle:hover {
+  text-decoration: underline;
+}
+/* line 95, ../../../app/stylesheets/items/_show.sass */
+body.items-show #trade-hangers .toggle .less {
+  display: none;
+}
+/* line 98, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-header {
   margin-top: 3em;
 }
-/* line 57, ../../../app/stylesheets/items/_show.sass */
+/* line 100, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-header h3, body.items-show #item-preview-header a {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -1586,44 +1635,54 @@ body.items-show #item-preview-header h3, body.items-show #item-preview-header a 
   *display: inline;
   *vertical-align: auto;
 }
-/* line 59, ../../../app/stylesheets/items/_show.sass */
+/* line 102, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-header a {
   font-size: 85%;
   margin: -1.5em 0 0 1em;
 }
-/* line 62, ../../../app/stylesheets/items/_show.sass */
+/* line 105, ../../../app/stylesheets/items/_show.sass */
 body.items-show .nc-icon {
   height: 16px;
   width: 16px;
 }
-/* line 66, ../../../app/stylesheets/items/_show.sass */
+/* line 109, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers {
   border: 1px solid #006600;
   float: right;
   font-size: 85%;
+  margin-left: 1em;
   padding: 1em;
   width: 21em;
 }
-/* line 73, ../../../app/stylesheets/items/_show.sass */
+/* line 117, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers label, body.items-show #closet-hangers header {
   display: block;
   font-weight: bold;
 }
-/* line 77, ../../../app/stylesheets/items/_show.sass */
+/* line 121, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers header {
   font-size: 125%;
 }
-/* line 80, ../../../app/stylesheets/items/_show.sass */
+/* line 124, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers form {
   padding: 0.5em 0;
 }
-/* line 83, ../../../app/stylesheets/items/_show.sass */
+/* line 127, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers select {
   width: 9em;
 }
-/* line 86, ../../../app/stylesheets/items/_show.sass */
+/* line 130, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers input[type=number] {
   width: 4em;
+}
+/* line 135, ../../../app/stylesheets/items/_show.sass */
+body.items-show.js #trade-hangers p {
+  max-height: 3em;
+  overflow: hidden;
+}
+/* line 139, ../../../app/stylesheets/items/_show.sass */
+body.items-show.js #trade-hangers p.showing-more {
+  max-height: none;
 }
 
 @import url(../shared/jquery.jgrowl.css);

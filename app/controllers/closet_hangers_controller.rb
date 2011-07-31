@@ -37,7 +37,7 @@ class ClosetHangersController < ApplicationController
       @unlisted_closet_hangers_by_owned = {}
     end
 
-    if @public_perspective
+    if @public_perspective && user_signed_in?
       items = []
       @closet_lists_by_owned.each do |owned, lists|
         lists.each do |list|

@@ -39,8 +39,14 @@ class ItemsController < ApplicationController
 
   def show
     @item = Item.find params[:id]
+
+    @trading_closet_hangers_by_owned = {
+      true => @item.closet_hangers.owned_trading.newest.includes(:user),
+      false => @item.closet_hangers.wanted_trading.newest.includes(:user)
+    }
+
     if user_signed_in?
-      @hangers = [true, false].map do |owned|
+      @current_user_hangers = [true, false].map do |owned|
         hanger = current_user.closet_hangers.find_or_initialize_by_item_id_and_owned(@item.id, owned)
         hanger.quantity ||= 1
         hanger

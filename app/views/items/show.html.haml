@@ -11,12 +11,12 @@
         == Rarity: #{@item.rarity_index} (#{@item.rarity})
       = link_to 'NeoItems', neoitems_url_for(@item), :class => 'button'
 
-  - if @hangers
+  - if @current_user_hangers
     #closet-hangers
       %header
         Track this in
         = link_to 'Your Items', user_closet_hangers_path(current_user)
-      - @hangers.each do |hanger|
+      - @current_user_hangers.each do |hanger|
         = form_for(hanger, :url => user_item_closet_hanger_path(current_user, @item)) do |f|
           - if hanger.new_record?
             = f.hidden_field :quantity
@@ -42,6 +42,37 @@
         None
       - else
         = list_zones @item.restricted_zones
+
+  #trade-hangers
+    - [true, false].each do |owned|
+      %p
+        - unless @trading_closet_hangers_by_owned[owned].empty?
+          %strong
+            = pluralize @trading_closet_hangers_by_owned[owned].size, 'user'
+            - if owned
+              - if @trading_closet_hangers_by_owned[owned].size == 1
+                has
+              - else
+                have
+              this item up for trade:
+            - else
+              - if @trading_closet_hangers_by_owned[owned].size == 1
+                wants
+              - else
+                want
+              this item:
+          = render_trading_closet_hangers(owned)
+        - else
+          %strong
+            We don't know anyone who
+            - if owned
+              has this item up for trade.
+            - else
+              wants this item.
+        %span.toggle
+          %span.more more
+          %span.less less
+
 
   #item-preview-header
     %h3 Preview
