@@ -156,7 +156,7 @@
       var objectWrapper = form.closest(".object").addClass("loading");
       var newQuantity = quantityEl.val();
       var quantitySpan = objectWrapper.find(".quantity span").text(newQuantity);
-      quantitySpan.parent().attr('class', 'quantity quantity-' + newQuantity);
+      objectWrapper.attr('data-quantity', newQuantity);
       var data = form.serialize(); // get data before disabling inputs
       objectWrapper.disableForms();
       form.data('loading', true);

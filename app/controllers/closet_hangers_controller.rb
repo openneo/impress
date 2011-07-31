@@ -36,6 +36,21 @@ class ClosetHangersController < ApplicationController
     else
       @unlisted_closet_hangers_by_owned = {}
     end
+
+    if @public_perspective
+      items = []
+      @closet_lists_by_owned.each do |owned, lists|
+        lists.each do |list|
+          list.hangers.each { |hanger| items << hanger.item }
+        end
+      end
+
+      @unlisted_closet_hangers_by_owned.each do |owned, hangers|
+        hangers.each { |hanger| items << hanger.item }
+      end
+
+      current_user.assign_closeted_to_items!(items)
+    end
   end
 
   # Since the user does not care about the idea of a hanger, but rather the

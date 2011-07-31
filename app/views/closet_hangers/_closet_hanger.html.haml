@@ -1,5 +1,5 @@
 - show_controls ||= false # we could do user check here, but may as well do it once
-.object{'data-item-id' => closet_hanger.item_id}
+.object{'data-item-id' => closet_hanger.item_id, 'data-quantity' => closet_hanger.quantity}
   = render :partial => 'items/item_link', :locals => {:item => closet_hanger.item}
   .quantity{:class => "quantity-#{closet_hanger.quantity}"}
     %span= closet_hanger.quantity

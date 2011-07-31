@@ -82,12 +82,12 @@ body.closet_hangers-index
       .quantity
         +opacity(.75)
         background: white
-        padding: 2px 4px
+        padding: 6px 4px 4px
         position: absolute
         left: ($object-width - $object-img-size) / 2 + $object-padding
         line-height: 1
         text-align: left
-        top: $object-img-size - 20px
+        top: 0
 
         span, input[type=number]
           font-size: 16px
@@ -96,8 +96,9 @@ body.closet_hangers-index
       form
         display: none
 
-      .quantity-1
-        display: none
+      &[data-quantity="1"]
+        .quantity
+          display: none
 
   .closet-hangers-group
     border-top: 1px solid $module-border-color
@@ -275,7 +276,7 @@ body.closet_hangers-index
         .closet-hanger-destroy
           position: absolute
           right: ($object-width - $object-img-size) / 2 + $object-padding
-          top: 0
+          top: $object-img-size - 28px
 
           input
             +context-button
@@ -283,7 +284,7 @@ body.closet_hangers-index
         .quantity
           +opacity(1)
           background: transparent
-          top: $object-img-size - 24px
+          top: 0
           padding: 0
 
           span
