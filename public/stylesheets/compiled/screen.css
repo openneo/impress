@@ -1180,7 +1180,7 @@ body.closet_lists-new form ul.fields label, body.closet_lists-create form ul.fie
 /* line 13, ../../../app/stylesheets/closet_lists/_form.sass */
 body.closet_lists-new form ul.fields li, body.closet_lists-create form ul.fields li, body.closet_lists-edit form ul.fields li, body.closet_lists-update form ul.fields li {
   padding: 0.75em 0;
-  width: 25em;
+  width: 35em;
 }
 /* line 17, ../../../app/stylesheets/closet_lists/_form.sass */
 body.closet_lists-new form ul.fields input, body.closet_lists-new form ul.fields textarea, body.closet_lists-new form ul.fields select, body.closet_lists-create form ul.fields input, body.closet_lists-create form ul.fields textarea, body.closet_lists-create form ul.fields select, body.closet_lists-edit form ul.fields input, body.closet_lists-edit form ul.fields textarea, body.closet_lists-edit form ul.fields select, body.closet_lists-update form ul.fields input, body.closet_lists-update form ul.fields textarea, body.closet_lists-update form ul.fields select {

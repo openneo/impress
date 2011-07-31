@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110730174148) do
+ActiveRecord::Schema.define(:version => 20110731021808) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -34,9 +34,10 @@ ActiveRecord::Schema.define(:version => 20110730174148) do
     t.string   "name"
     t.text     "description"
     t.integer  "user_id"
-    t.boolean  "hangers_owned", :null => false
+    t.boolean  "hangers_owned",                :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "visibility",    :default => 1, :null => false
   end
 
   create_table "contributions", :force => true do |t|

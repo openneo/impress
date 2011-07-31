@@ -17,8 +17,16 @@ class ClosetHangersController < ApplicationController
     @public_perspective = params.has_key?(:public) || !user_is?(@user)
     @perspective_user = current_user unless @public_perspective
 
-    @closet_lists_by_owned = @user.closet_lists.alphabetical.
-      includes(:hangers => :item).group_by(&:hangers_owned)
+    @closet_lists_by_owned = @user.closet_lists.
+      alphabetical.includes(:hangers => :item)
+    unless @perspective_user == @user
+      # If we run this when the user matches, we'll end up with effectively:
+      # WHERE belongs_to_user AND (is_public OR belongs_to_user)
+      # and it's a bit silly to put the SQL server through a condition that's
+      # always true.
+      @closet_lists_by_owned = @closet_lists_by_owned.visible_to(@perspective_user)
+    end
+    @closet_lists_by_owned = @closet_lists_by_owned.group_by(&:hangers_owned)
 
     visible_groups = @user.closet_hangers_groups_visible_to(@perspective_user)
     unless visible_groups.empty?

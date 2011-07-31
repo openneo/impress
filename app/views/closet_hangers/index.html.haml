@@ -72,7 +72,7 @@
             - unless public_perspective?
               = form_for @user, :html => {:class => 'visibility-form'} do |f|
                 = f.select hangers_group_visibility_field_name(owned),
-                  hangers_group_visibility_choices(owned)
+                  closet_visibility_choices(:human_name)
                 = f.submit "Save"
                 = closet_visibility_descriptions
             - if has_lists?(owned)

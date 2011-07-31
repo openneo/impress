@@ -16,6 +16,10 @@ module ClosetVisibility
         @description
       end
     end
+
+    def human_name
+      name.to_s.humanize
+    end
   end
 
   LEVELS = [

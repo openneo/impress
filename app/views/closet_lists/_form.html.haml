@@ -11,6 +11,9 @@
       = f.label :hangers_owned, 'This is a list for&hellip;'.html_safe
       = f.select :hangers_owned, hangers_owned_options
     %li
+      = f.label :visibility, 'Who can see this list?'
+      = f.select :visibility, closet_visibility_choices(:description, 'Items in this list')
+    %li
       = f.label :description
       %span.hint
         Why are these items in a list? What are your terms for trading?

@@ -17,9 +17,9 @@ module ClosetHangersHelper
     owned ? :owned_closet_hangers_visibility : :wanted_closet_hangers_visibility
   end
 
-  def hangers_group_visibility_choices(owned)
+  def closet_visibility_choices(*args)
     ClosetVisibility.levels.map do |level|
-      [level.name.to_s.humanize, level.id]
+      [level.send(*args), level.id]
     end
   end
 
