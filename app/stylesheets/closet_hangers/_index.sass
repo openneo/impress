@@ -25,17 +25,24 @@ body.closet_hangers-index
 
   #closet-hangers-contact
     clear: both
-    font-size: 85%
+    color: $soft-text-color
     margin-bottom: 1em
     margin-left: 2em
     min-height: image-height("neomail.png")
 
-    a
+    a, > span
+      +hover-link
       background:
         image: image-url("neomail.png")
         position: left center
         repeat: no-repeat
-      padding-left: image-width("neomail.png") + 2px
+      color: inherit
+      float: left
+      height: 100%
+      padding-left: image-width("neomail.png") + 4px
+
+    > span
+      background-image: image-url("neomail_edit.png")
 
     input[type=text]
       width: 10em
