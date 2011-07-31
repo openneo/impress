@@ -32,28 +32,40 @@
         %span#cancel-contact-link cancel
 
 - unless public_perspective?
-  %p
-    These are the items you are tracking on Dress to Impress. Hover over an
-    item to remove it from the list or to change the quantity.
+  :markdown
+    **These are your items! You can track what items you want and own, and
+    share [this page](#{request.fullpath}) with the world**. Just look up an
+    item in the search form above to get started.
 
-  %p
-    %strong
-      You can share
-      = link_to "this page", request.fullpath
-      with the world,
-    and they'll be able to see what items you own and want.
-    It's also a good idea to
-    %span.edit-contact-link add your Neopets username
-    so that when other users see your items they will know how to contact you for
-    trades.
+    **You can also sort your items into lists.**
+    [Building an Up For Trade list is a good place to start][uft]. You can
+    make lists for trade items with different market values, a private list of
+    what you need for that next outfit, or whatever you like. You can also
+    drag-and-drop items in and out of lists. It's pretty fun.
 
-  %p
-    You can also make lists of items.
-    %strong
-      = link_to 'Get started with an Up For Trade list',
-        new_user_closet_list_path(@user, :closet_list => {:hangers_owned => true, :name => 'Up For Trade'})
-    then start adding to it! You can use the search form at the top to find
-    items, and you can also drag-and-drop items in and out of lists. Enjoy!
+    **Your items also have privacy settings.**
+    Items can be **private**, so only you can see them. They can be **public**,
+    so you can share this page with friends. They can even be **trading**,
+    meaning that we'll mention on the item's [Infinite Closet][ic] page that
+    you own or want that item.
+
+    **We try to make trading easy.** If there's some item you want, you can
+    pull up that item's [Infinite Closet][ic] page to see if anyone is offering
+    it, and see what *that* user wants
+    in exchange. It's all pretty spiffy. Also, if you plan to trade, your should
+    <span class="edit-contact-link">add your Neopets username</span> so that
+    when other users come here they know how to contact you.
+
+    **Have fun!** If you have any [neat ideas][suggestions] or [general praise and
+    bug reports][mail], we love to hear them. And, if you enjoy this feature,
+    [please consider donating to keep Dress to Impress running and improving][donate].
+    Thanks!
+
+    [donate]: #{donate_path}
+    [ic]: #{items_path}
+    [mail]: mailto:#{contact_email}
+    [suggestions]: #{feedback_url}
+    [uft]: #{new_user_closet_list_path(@user, :closet_list => {:hangers_owned => true, :name => 'Up For Trade', :visibility => ClosetVisibility[:trading].id})}
 
 #closet-hangers{:class => public_perspective? ? nil : 'current-user'}
   - [true, false].each do |owned|
@@ -81,29 +93,10 @@
             .closet-list-hangers
               = render_unlisted_closet_hangers(owned)
               %span.empty-list
-                All the items you #{closet_hanger_verb owned} are in lists.
+                There aren't any items here.
         - if public_perspective?
           - unless has_hangers?(owned)
             %p #{@user.name} doesn't seem to #{closet_hanger_verb(owned, false)} anything.
-        - else
-          - unless has_hangers?(owned)
-            %p
-              You haven't tracked any items you #{closet_hanger_verb(owned)} on
-              Dress to Impress. As you browse the site and create outfits, we'll
-              use this list to tell you what items you #{closet_hanger_verb(owned)},
-              and you can share this page with your friends, too.
-            %p
-              It's easy to get started! Use the search form at the top of the
-              page to find items to add, or add an item from its
-              = link_to 'Infinite Closet', items_path
-              page.
-            - if owned
-              %p
-                You can even
-                = succeed ',' do
-                  = link_to "import your Neopets closet in a few quick steps", new_closet_page_path
-                so why not?
-            %p Have fun!
 
 - content_for :stylesheets do
   = stylesheet_link_tag 'south-street/jquery-ui'

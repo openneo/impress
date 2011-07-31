@@ -33,6 +33,14 @@ module ApplicationHelper
     content_for :meta, tag(:link, :rel => 'canonical', :href => url_for(resource))
   end
 
+  def contact_email
+    "webmaster@openneo.net"
+  end
+
+  def feedback_url
+    "http://openneo.uservoice.com/forums/40720-dress-to-impress"
+  end
+
   def flashes
     raw(flash.inject('') do |html, pair|
       key, value = pair
