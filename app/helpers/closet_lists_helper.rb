@@ -3,7 +3,7 @@ module ClosetListsHelper
     "Are you sure you want to delete \"#{closet_list.name}\"?".tap do |msg|
       unless closet_list.hangers.empty?
         msg << " Even if you do, we'll remember that you " +
-          ClosetHanger.verb(closet_list.hangers_owned, :you) +
+          ClosetHanger.verb(:you, closet_list.hangers_owned) +
           " these items."
       end
     end
