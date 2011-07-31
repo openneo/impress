@@ -61,8 +61,28 @@ module ClosetHangersHelper
     link_to(content, path, options)
   end
 
+  def nc_icon_url
+    "http://#{request.host}#{image_path 'nc.png'}"
+  end
+
+  def petpage_item_name(item)
+    item.name.gsub(/ on/i, ' o<b></b>n')
+  end
+
   def public_perspective?
     @public_perspective
+  end
+
+  PETPAGE_HANGER_BATCH_SIZE = 5
+  def render_batched_petpage_hangers(hangers)
+    output do |html|
+      hangers.in_groups_of(PETPAGE_HANGER_BATCH_SIZE) do |batch|
+        content = batch.map do |hanger|
+          render 'petpage_hanger', :hanger => hanger if hanger
+        end.join.html_safe
+        html << content_tag(:div, content, :class => 'dti-item-row')
+      end
+    end
   end
 
   def render_closet_lists(lists)

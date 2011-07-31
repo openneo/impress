@@ -1,0 +1,97 @@
+%style{:type => 'text/css'}
+  :plain
+    .dti-item-group, .dti-item-list, .dti-unlisted-items {
+      margin: 0;
+      padding: 0;
+    }
+
+    .dti-item-group-header, .dti-item-group, #dti-item-footer {
+      color: #040;
+      font-family: Helvetica, Arial, Verdana, sans-serif;
+      line-height: 1.5;
+      margin: 0 auto;
+      text-align: center;
+      width: 560px;
+    }
+
+    .dti-item-group-header {
+      border-top: 1px solid #060;
+      font-size: 175%;
+      margin-top: 1em;
+    }
+
+    .dti-item-group-header, .dti-item-list {
+      border-bottom: 1px solid #ADA;
+    }
+
+    .dti-item-group {
+      list-style: none;
+    }
+
+    .dti-item-list h3 {
+      font-size: 150%;
+    }
+
+    .dti-items {
+      border-spacing: 10px;
+      display: table;
+    }
+
+    .dti-item-row {
+      display: table-row;
+    }
+
+    .dti-item {
+      display: table-cell;
+      margin: 0 10px;
+      padding: 8px;
+      text-align: right;
+      width: 84px;
+    }
+
+    .dti-item-thumbnail {
+      height: 80px;
+      width: 80px;
+    }
+
+    .dti-item span {
+      display: block;
+      text-align: center;
+    }
+
+    .dti-item-nc {
+      margin-top: -16px;
+    }
+
+    .dti-unlisted-items h3 {
+      font-style: italic;
+    }
+
+    #dti-item-footer {
+      font-size: 85%;
+      margin-top: 2em;
+    }
+
+- [true, false].each do |owned|
+  - lists = lists_by_owned[owned]
+  - if lists || unlisted_hangers_by_owned[owned]
+    %h2.dti-item-group-header Items #OWNER #{ClosetHanger.verb(:someone, owned)}
+    %ul.dti-item-group
+      - lists.each do |list|
+        - unless list.hangers.empty?
+          %li.dti-item-list
+            %h3= list.name
+            - if list.description?
+              .dti-item-list-desc
+                = closet_list_description_format list
+            %div.dti-items
+              = render_batched_petpage_hangers(list.hangers.sort { |a,b| a.item.name <=> b.item.name })
+      %li.dti-unlisted-items
+        - unless lists.empty?
+          %h3 (Not in a list)
+        %div
+          = render_batched_petpage_hangers(unlisted_hangers_by_owned[owned])
+
+#dti-item-footer
+  I made this list on Dress to Impress. You can, too!
+

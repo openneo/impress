@@ -1153,6 +1153,32 @@ body.closet_hangers-index.current-user.js .closet-hangers-group.hidden header .s
 }
 
 /* line 2, ../../../app/stylesheets/partials/_secondary_nav.sass */
+body.closet_hangers-petpage #title {
+  float: left;
+  margin-right: 0.5em;
+}
+/* line 6, ../../../app/stylesheets/partials/_secondary_nav.sass */
+body.closet_hangers-petpage .flash {
+  clear: both;
+}
+/* line 9, ../../../app/stylesheets/partials/_secondary_nav.sass */
+body.closet_hangers-petpage #secondary-nav {
+  display: block;
+  margin-top: 0.75em;
+}
+/* line 4, ../../../app/stylesheets/closet_hangers/_petpage.sass */
+body.closet_hangers-petpage #intro {
+  clear: both;
+}
+/* line 7, ../../../app/stylesheets/closet_hangers/_petpage.sass */
+body.closet_hangers-petpage #petpage-output {
+  display: block;
+  height: 30em;
+  margin: 0 auto;
+  width: 50%;
+}
+
+/* line 2, ../../../app/stylesheets/partials/_secondary_nav.sass */
 body.closet_lists-new #title, body.closet_lists-create #title, body.closet_lists-edit #title, body.closet_lists-update #title {
   float: left;
   margin-right: 0.5em;

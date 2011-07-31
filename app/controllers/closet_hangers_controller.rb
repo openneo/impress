@@ -1,6 +1,7 @@
 class ClosetHangersController < ApplicationController
-  before_filter :authorize_user!, :only => [:destroy, :create, :update]
+  before_filter :authorize_user!, :only => [:destroy, :create, :update, :petpage]
   before_filter :find_item, :only => [:destroy, :create, :update]
+  before_filter :find_user, :only => [:index, :petpage]
 
   def destroy
     raise ActiveRecord::RecordNotFound unless params[:closet_hanger]
@@ -13,29 +14,9 @@ class ClosetHangersController < ApplicationController
   end
 
   def index
-    @user = User.find params[:user_id]
     @public_perspective = params.has_key?(:public) || !user_is?(@user)
-    @perspective_user = current_user unless @public_perspective
 
-    @closet_lists_by_owned = @user.closet_lists.
-      alphabetical.includes(:hangers => :item)
-    unless @perspective_user == @user
-      # If we run this when the user matches, we'll end up with effectively:
-      # WHERE belongs_to_user AND (is_public OR belongs_to_user)
-      # and it's a bit silly to put the SQL server through a condition that's
-      # always true.
-      @closet_lists_by_owned = @closet_lists_by_owned.visible_to(@perspective_user)
-    end
-    @closet_lists_by_owned = @closet_lists_by_owned.group_by(&:hangers_owned)
-
-    visible_groups = @user.closet_hangers_groups_visible_to(@perspective_user)
-    unless visible_groups.empty?
-      @unlisted_closet_hangers_by_owned = @user.closet_hangers.unlisted.
-        owned_before_wanted.alphabetical_by_item_name.includes(:item).
-        where(:owned => [visible_groups]).group_by(&:owned)
-    else
-      @unlisted_closet_hangers_by_owned = {}
-    end
+    find_closet_hangers!
 
     if @public_perspective && user_signed_in?
       items = []
@@ -51,6 +32,11 @@ class ClosetHangersController < ApplicationController
 
       current_user.assign_closeted_to_items!(items)
     end
+  end
+
+  def petpage
+    @public_perspective = true
+    find_closet_hangers!
   end
 
   # Since the user does not care about the idea of a hanger, but rather the
@@ -106,6 +92,34 @@ class ClosetHangersController < ApplicationController
 
   def find_item
     @item = Item.find params[:item_id]
+  end
+
+  def find_user
+    @user = User.find params[:user_id]
+  end
+
+  def find_closet_hangers!
+    @perspective_user = current_user unless @public_perspective
+
+    @closet_lists_by_owned = @user.closet_lists.
+      alphabetical.includes(:hangers => :item)
+    unless @perspective_user == @user
+      # If we run this when the user matches, we'll end up with effectively:
+      # WHERE belongs_to_user AND (is_public OR belongs_to_user)
+      # and it's a bit silly to put the SQL server through a condition that's
+      # always true.
+      @closet_lists_by_owned = @closet_lists_by_owned.visible_to(@perspective_user)
+    end
+    @closet_lists_by_owned = @closet_lists_by_owned.group_by(&:hangers_owned)
+
+    visible_groups = @user.closet_hangers_groups_visible_to(@perspective_user)
+    unless visible_groups.empty?
+      @unlisted_closet_hangers_by_owned = @user.closet_hangers.unlisted.
+        owned_before_wanted.alphabetical_by_item_name.includes(:item).
+        where(:owned => [visible_groups]).group_by(&:owned)
+    else
+      @unlisted_closet_hangers_by_owned = {}
+    end
   end
 
   def owned

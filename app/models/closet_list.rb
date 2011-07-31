@@ -10,6 +10,7 @@ class ClosetList < ActiveRecord::Base
   validates :hangers_owned, :inclusion => {:in => [true, false], :message => "can't be blank"}
 
   scope :alphabetical, order(:name)
+  scope :public, where(arel_table[:visibility].gteq(ClosetVisibility[:public].id))
   scope :visible_to, lambda { |user|
     condition = arel_table[:visibility].gteq(ClosetVisibility[:public].id)
     condition = condition.or(arel_table[:user_id].eq(user.id)) if user

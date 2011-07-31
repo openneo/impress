@@ -1,4 +1,6 @@
 OpenneoImpressItems::Application.routes.draw do |map|
+  get "petpages/new"
+
   get "closet_lists/new"
 
   get "closet_lists/create"
@@ -41,7 +43,11 @@ OpenneoImpressItems::Application.routes.draw do |map|
 
   resources :users, :path => 'user', :only => [:update] do
     resources :contributions, :only => [:index]
-    resources :closet_hangers, :only => [:index], :path => 'closet'
+    resources :closet_hangers, :only => [:index], :path => 'closet' do
+      collection do
+        get :petpage
+      end
+    end
     resources :closet_lists, :only => [:new, :create, :edit, :update, :destroy], :path => 'closet/lists'
 
     resources :items, :only => [] do
