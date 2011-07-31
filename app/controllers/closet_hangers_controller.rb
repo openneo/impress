@@ -95,7 +95,11 @@ class ClosetHangersController < ApplicationController
   end
 
   def find_user
-    @user = User.find params[:user_id]
+    if params[:user_id]
+      @user = User.find params[:user_id]
+    else
+      redirect_to user_closet_hangers_path(current_user)
+    end
   end
 
   def find_closet_hangers!

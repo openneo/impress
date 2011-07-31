@@ -89,7 +89,7 @@ module ItemsHelper
   end
 
   def your_items_path
-    user_signed_in? ? user_closet_hangers_path(current_user) : login_path
+    user_signed_in? ? user_closet_hangers_path(current_user) : login_path(:return_to => current_user_items_path)
   end
 
   private

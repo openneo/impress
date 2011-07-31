@@ -55,6 +55,8 @@ OpenneoImpressItems::Application.routes.draw do |map|
     end
   end
 
+  match 'users/current-user/closet' => 'closet_hangers#index', :as => :current_user_items
+
   match 'users/top-contributors' => 'users#top_contributors', :as => :top_contributors
   match 'users/top_contributors' => redirect('/users/top-contributors')
 
