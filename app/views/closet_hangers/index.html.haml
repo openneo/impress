@@ -70,8 +70,14 @@
 
 - unless public_perspective?
   #closet-hangers-extras
+    #closet-hangers-share
+      %label{:for => 'closet-hangers-share-box'} Public URL:
+      %input#closet-hangers-share-box{:type => 'text', :value => user_closet_hangers_url(@user), :readonly => true}
+
     = link_to "Import from Neopets closet", new_closet_page_path
     = link_to "Export to Neopets petpage", petpage_user_closet_hangers_path(@user)
+
+
 
 #closet-hangers{:class => public_perspective? ? nil : 'current-user'}
   - [true, false].each do |owned|

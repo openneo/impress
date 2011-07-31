@@ -489,6 +489,18 @@
 
   /*
 
+    Share URL
+
+  */
+
+  $('#closet-hangers-share-box').mouseover(function () {
+    $(this).focus();
+  }).mouseout(function () {
+    $(this).blur();
+  });
+
+  /*
+
     Initialize
 
   */
