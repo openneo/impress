@@ -74,8 +74,18 @@ body.closet_hangers-index
   #cancel-contact-link
     margin-left: 1em
 
+  #toggle-help
+    +awesome-button
+    cursor: pointer
+    display: none
+
+  #closet-hangers-help.hidden
+    display: none
+
   #closet-hangers-extras
-    margin-bottom: 1em
+    margin:
+      bottom: 2em
+      top: 2em
     text-align: center
 
     a
@@ -354,4 +364,7 @@ body.closet_hangers-index
 
           header .show
             display: block
+
+      #toggle-help
+        display: inline
 

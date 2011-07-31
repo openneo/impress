@@ -479,6 +479,16 @@
 
   /*
 
+    Help
+
+  */
+
+  $('#toggle-help').click(function () {
+    $('#closet-hangers-help').toggleClass('hidden');
+  });
+
+  /*
+
     Initialize
 
   */

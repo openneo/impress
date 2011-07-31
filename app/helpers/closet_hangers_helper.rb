@@ -1,6 +1,10 @@
 require 'cgi'
 
 module ClosetHangersHelper
+  def closet_hangers_help_class
+    'hidden' unless @user.closet_hangers.empty?
+  end
+
   def closet_hanger_verb(owned, positive=true)
     ClosetHanger.verb(closet_hanger_subject, owned, positive)
   end
