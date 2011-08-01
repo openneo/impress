@@ -88,10 +88,6 @@ module ItemsHelper
     end.to_sentence.html_safe
   end
 
-  def your_items_path
-    user_signed_in? ? user_closet_hangers_path(current_user) : login_path(:return_to => current_user_items_path)
-  end
-
   private
 
   def build_on_pet_types(species, special_color=nil, &block)

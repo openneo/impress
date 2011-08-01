@@ -97,8 +97,10 @@ class ClosetHangersController < ApplicationController
   def find_user
     if params[:user_id]
       @user = User.find params[:user_id]
-    else
+    elsif user_signed_in?
       redirect_to user_closet_hangers_path(current_user)
+    else
+      redirect_to login_path(:return_to => request.fullpath)
     end
   end
 
