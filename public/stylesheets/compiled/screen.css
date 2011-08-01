@@ -3127,35 +3127,42 @@ body.outfits-edit form#save-outfit-form .outfit-star {
 body.outfits-edit .outfit-url {
   font-size: 75%;
 }
-/* line 550, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 549, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-search-form-error {
+  background: #fbe3e4;
+  border: 1px solid #fbc2c4;
+  color: #8a1f11;
+  padding: 0.25em 0.5em;
+}
+/* line 554, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #preview-sidebar-nav-outfits {
   display: block;
 }
-/* line 552, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 556, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit {
   display: inline-block;
 }
-/* line 556, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 560, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.active-outfit #save-outfit {
   display: none;
 }
-/* line 558, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 562, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.active-outfit #save-current-outfit, body.outfits-edit.user-signed-in #save-outfit-wrapper.active-outfit #save-outfit-copy {
   display: inline-block;
 }
-/* line 560, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 564, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.active-outfit #current-outfit-permalink {
   display: inline-block;
 }
-/* line 563, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 567, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #save-outfit-form {
   display: block;
 }
-/* line 565, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 569, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #save-outfit, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #save-current-outfit, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #save-outfit-copy, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #current-outfit-permalink, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #shared-outfit-permalink, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #share-outfit, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #shared-outfit-url {
   display: none;
 }
-/* line 567, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 571, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in .preview-search-form-your-items {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -3164,15 +3171,15 @@ body.outfits-edit.user-signed-in .preview-search-form-your-items {
   *display: inline;
   *vertical-align: auto;
 }
-/* line 571, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 575, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-not-signed-in #save-outfit-not-signed-in {
   display: inline-block;
 }
-/* line 575, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 579, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit-wrapper.shared-outfit #shared-outfit-permalink, body.outfits-edit #save-outfit-wrapper.shared-outfit #shared-outfit-url {
   display: inline-block;
 }
-/* line 577, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 581, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit-wrapper.shared-outfit #current-outfit-permalink {
   display: none !important;
 }

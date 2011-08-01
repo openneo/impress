@@ -210,18 +210,34 @@ function Wardrobe() {
 
   Item.loadByQuery = function (query, offset, success, error) {
     var page = Math.round(offset / Item.PER_PAGE) + 1;
-    $.getJSON('/items.json', {q: query, per_page: Item.PER_PAGE, page: page}, function (data) {
-      var items = [], item, item_data;
-      if(data.items) {
-        for(var i = 0; i < data.items.length; i++) {
-          item_data = data.items[i];
-          item = Item.find(item_data.id);
-          item.update(item_data);
-          items.push(item);
+    $.ajax({
+      url: '/items.json',
+      data: {q: query, per_page: Item.PER_PAGE, page: page},
+      dataType: 'json',
+      success: function (data) {
+        var items = [], item, item_data;
+        if(data.items) {
+          for(var i = 0; i < data.items.length; i++) {
+            item_data = data.items[i];
+            item = Item.find(item_data.id);
+            item.update(item_data);
+            items.push(item);
+          }
+          success(items, data.total_pages, page);
+        } else if(data.error) {
+          error(data.error);
         }
-        success(items, data.total_pages, page);
-      } else if(data.error) {
-        error(data.error);
+      },
+      error: function (xhr) {
+        console.log($.parseJSON(xhr.responseText));
+        try {
+          var json = $.parseJSON(xhr.responseText);
+        } catch(e) {
+          $.jGrowl("There was an error running that search, probably on our end. Try again?");
+          return false;
+        }
+
+        if(json.error) error(json.error);
       }
     });
   }
