@@ -34,10 +34,10 @@ GIT
     mysqlplus (0.1.1)
 
 GIT
-  remote: git://github.com/warhammerkid/rocket-amf.git
-  revision: aecb8ce8b54e822bb594a53371801b446ecb26af
+  remote: git://github.com/rubyamf/rocketamf.git
+  revision: fdef9d836f1ed27b06ce669ea05122fa0dec4a12
   specs:
-    RocketAMF (0.2.1)
+    RocketAMF (1.0.0)
 
 GEM
   remote: http://rubygems.org/
