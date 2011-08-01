@@ -106,9 +106,6 @@
               = render_unlisted_closet_hangers(owned)
               %span.empty-list
                 There aren't any items here.
-        - if public_perspective?
-          - unless has_hangers?(owned)
-            %p #{@user.name} doesn't seem to #{closet_hanger_verb(owned, false)} anything.
 
 - content_for :stylesheets do
   = stylesheet_link_tag 'south-street/jquery-ui'
