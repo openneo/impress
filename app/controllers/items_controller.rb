@@ -20,6 +20,7 @@ class ItemsController < ApplicationController
       rescue Item::SearchError
         respond_to do |format|
           format.html { flash.now[:alert] = $!.message }
+          format.json { render :json => {:error => $!.message} }
           format.js { render :json => {:error => $!.message}, :callback => params[:callback] }
         end
       end
