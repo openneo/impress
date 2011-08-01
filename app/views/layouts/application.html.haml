@@ -42,7 +42,7 @@
             You have
             = succeed '.' do
               = link_to "#{current_user.points} points", user_contributions_path(current_user)
-          = link_to 'Items', user_closet_hangers_path(current_user)
+          = link_to 'Items', user_closet_hangers_path(current_user), :id => 'userbar-items-link'
           = link_to 'Outfits', current_user_outfits_path
           = link_to 'Settings', Openneo::Auth.remote_settings_url
           = link_to 'Log out', logout_path_with_return_to

@@ -264,6 +264,24 @@ ul.buttons li, ul.buttons li form {
 }
 
 /* line 158, ../../../app/stylesheets/_layout.sass */
+#userbar-items-link {
+  text-decoration: none;
+  background: #eeffee;
+  padding: 0.25em 0.5em;
+}
+/* line 4, ../../../../../.rvm/gems/ree-1.8.7-2010.02/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/utilities/links/_hover-link.scss */
+#userbar-items-link:hover {
+  text-decoration: underline;
+}
+/* line 163, ../../../app/stylesheets/_layout.sass */
+#userbar-items-link:after {
+  color: red;
+  content: "new!";
+  font-size: 85%;
+  margin-left: 0.5em;
+}
+
+/* line 169, ../../../app/stylesheets/_layout.sass */
 .object {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -278,32 +296,32 @@ ul.buttons li, ul.buttons li form {
   vertical-align: top;
   width: 100px;
 }
-/* line 166, ../../../app/stylesheets/_layout.sass */
+/* line 177, ../../../app/stylesheets/_layout.sass */
 .object a {
   text-decoration: none;
 }
-/* line 168, ../../../app/stylesheets/_layout.sass */
+/* line 179, ../../../app/stylesheets/_layout.sass */
 .object a img {
   -moz-opacity: 0.75;
   -webkit-opacity: 0.75;
   -o-opacity: 0.75;
   -khtml-opacity: 0.75;
 }
-/* line 170, ../../../app/stylesheets/_layout.sass */
+/* line 181, ../../../app/stylesheets/_layout.sass */
 .object img {
   display: block;
   height: 80px;
   margin: 0 auto;
   width: 80px;
 }
-/* line 175, ../../../app/stylesheets/_layout.sass */
+/* line 186, ../../../app/stylesheets/_layout.sass */
 .object:hover img, .object a:hover img {
   -moz-opacity: 1;
   -webkit-opacity: 1;
   -o-opacity: 1;
   -khtml-opacity: 1;
 }
-/* line 181, ../../../app/stylesheets/_layout.sass */
+/* line 192, ../../../app/stylesheets/_layout.sass */
 .object .nc-icon, .object .closeted-icons {
   -moz-opacity: 1;
   -webkit-opacity: 1;
@@ -314,7 +332,7 @@ ul.buttons li, ul.buttons li form {
   position: absolute;
   top: 64px;
 }
-/* line 187, ../../../app/stylesheets/_layout.sass */
+/* line 198, ../../../app/stylesheets/_layout.sass */
 .object .nc-icon:hover, .object .closeted-icons:hover {
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
@@ -322,32 +340,32 @@ ul.buttons li, ul.buttons li form {
   -khtml-opacity: 0.5;
   background: transparent;
 }
-/* line 191, ../../../app/stylesheets/_layout.sass */
+/* line 202, ../../../app/stylesheets/_layout.sass */
 .object .nc-icon, .object .closeted-icons img {
   display: inline;
   height: 16px;
   width: 16px;
 }
-/* line 196, ../../../app/stylesheets/_layout.sass */
+/* line 207, ../../../app/stylesheets/_layout.sass */
 .object .nc-icon {
   right: 18px;
 }
-/* line 200, ../../../app/stylesheets/_layout.sass */
+/* line 211, ../../../app/stylesheets/_layout.sass */
 .object .closeted-icons {
   left: 18px;
 }
 
-/* line 203, ../../../app/stylesheets/_layout.sass */
+/* line 214, ../../../app/stylesheets/_layout.sass */
 dt {
   font-weight: bold;
 }
 
-/* line 206, ../../../app/stylesheets/_layout.sass */
+/* line 217, ../../../app/stylesheets/_layout.sass */
 dd {
   margin: 0 0 1.5em 1em;
 }
 
-/* line 209, ../../../app/stylesheets/_layout.sass */
+/* line 220, ../../../app/stylesheets/_layout.sass */
 #home-link {
   font-family: Delicious, Helvetica, Arial, Verdana, sans-serif;
   font-size: 175%;
@@ -358,21 +376,21 @@ dd {
   position: absolute;
   top: 0;
 }
-/* line 219, ../../../app/stylesheets/_layout.sass */
+/* line 230, ../../../app/stylesheets/_layout.sass */
 #home-link:hover {
   background: #eeffee;
   text-decoration: none;
 }
-/* line 222, ../../../app/stylesheets/_layout.sass */
+/* line 233, ../../../app/stylesheets/_layout.sass */
 #home-link span:before {
   content: "<< ";
 }
 
-/* line 226, ../../../app/stylesheets/_layout.sass */
+/* line 237, ../../../app/stylesheets/_layout.sass */
 .pagination a, .pagination span {
   margin: 0 0.5em;
 }
-/* line 228, ../../../app/stylesheets/_layout.sass */
+/* line 239, ../../../app/stylesheets/_layout.sass */
 .pagination .current {
   font-weight: bold;
 }
@@ -3530,6 +3548,14 @@ body.outfits-new #sections img:hover {
 /* line 137, ../../../app/stylesheets/outfits/_new.sass */
 body.outfits-new #read-more {
   float: right;
+}
+/* line 142, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #your-items-module h3:after {
+  color: red;
+  content: "new!";
+  font-size: 85%;
+  font-weight: bold;
+  margin-left: 0.5em;
 }
 
 /* line 2, ../../../app/stylesheets/partials/_campaign-progress.sass */
