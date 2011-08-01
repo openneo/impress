@@ -48,6 +48,28 @@ module ItemsHelper
     end
   end
 
+  def closeted_icons_for(item)
+    content = ''.html_safe
+
+    if item.owned?
+      content << image_tag(
+        'owned.png',
+        :title => 'You own this',
+        :alt => 'Own'
+      )
+    end
+
+    if item.wanted?
+      content << image_tag(
+        'wanted.png',
+        :title => 'You want this',
+        :alt => 'Want'
+      )
+    end
+
+    content_tag :div, content, :class => 'closeted-icons'
+  end
+
   def list_zones(zones, method=:label)
     zones.sort { |x,y| x.label <=> y.label }.map(&method).join(', ')
   end
@@ -58,6 +80,12 @@ module ItemsHelper
 
   def neoitems_url_for(item)
     sprintf(NeoitemsURLFormat, CGI::escape(item.name))
+  end
+
+  def render_trading_closet_hangers(owned)
+    @trading_closet_hangers_by_owned[owned].map do |hanger|
+      link_to hanger.user.name, user_closet_hangers_path(hanger.user)
+    end.to_sentence.html_safe
   end
 
   private

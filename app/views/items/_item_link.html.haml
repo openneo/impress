@@ -1,0 +1,6 @@
+= link_to item_path(item, :q => @query) do
+  = image_tag item.thumbnail_url, :alt => item.description, :title => item.description
+  %span.name= item.name
+  = nc_icon_for(item)
+  = closeted_icons_for(item)
+

@@ -1,0 +1,22 @@
+.closet-list{'data-id' => closet_list.id, 'data-hangers-count' => closet_list.hangers.count, :id => "closet-list-#{closet_list.id}"}
+  %header
+    - if show_controls
+      = form_for [closet_list.user, closet_list], :html => {:class => 'visibility-form'} do |f|
+        = f.select :visibility, closet_visibility_choices(:human_name)
+        = f.submit "Save"
+        = closet_visibility_descriptions('items in this list')
+      .closet-list-controls
+        = link_to 'Edit', edit_user_closet_list_path(closet_list.user, closet_list)
+        = form_tag user_closet_list_path(closet_list.user, closet_list), :method => 'delete' do
+          = submit_tag 'Delete', :confirm => closet_list_delete_confirmation(closet_list)
+    %h4= closet_list.name
+
+  .closet-list-content
+    - if closet_list.description?
+      = closet_list_description_format closet_list
+
+    .closet-list-hangers
+      - unless closet_list.hangers.empty?
+        = render_sorted_hangers(closet_list, show_controls)
+    %span.empty-list This list is empty.
+

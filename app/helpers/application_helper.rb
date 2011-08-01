@@ -29,10 +29,22 @@ module ApplicationHelper
     content_tag(:div, html, :class => 'campaign-progress-wrapper')
   end
 
+  def canonical_path(resource)
+    content_for :meta, tag(:link, :rel => 'canonical', :href => url_for(resource))
+  end
+
+  def contact_email
+    "webmaster@openneo.net"
+  end
+
+  def feedback_url
+    "http://openneo.uservoice.com/forums/40720-dress-to-impress"
+  end
+
   def flashes
     raw(flash.inject('') do |html, pair|
       key, value = pair
-      html + content_tag('p', value, :class => key)
+      html + content_tag('p', value, :class => "flash #{key}")
     end)
   end
 
@@ -84,6 +96,15 @@ module ApplicationHelper
 
   def origin_tag(value)
     hidden_field_tag 'origin', value, :id => nil
+  end
+
+  def return_to_field_tag
+    hidden_field_tag :return_to, request.fullpath
+  end
+
+  def secondary_nav(&block)
+    content_for :before_flashes,
+      content_tag(:nav, :id => 'secondary-nav', &block)
   end
 
   def show_title_header?

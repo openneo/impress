@@ -1,0 +1,22 @@
+- title 'Export to petpage'
+- secondary_nav do
+  = link_to 'Back to Your Items', user_closet_hangers_path(current_user), :class => 'button'
+
+#intro
+  %p
+    We took your public lists and created a nice, simple HTML file for your
+    Neopet's petpage. By default it's styled as a table, but it doesn't have to
+    be. The HTML is flexible, so, if you're the artsy type, you're free to mess
+    with the styles all you want!
+
+  %p
+    Copy the HTML from the box below, then paste it into
+    = succeed '.' do
+      = link_to "your pet's page", 'http://www.neopets.com/edithomepage.phtml'
+    Then head to the Neoboards to show off! Have fun!
+
+%textarea#petpage-output
+  = '' + render('petpage_content',
+    :lists_by_owned => @closet_lists_by_owned,
+    :unlisted_hangers_by_owned => @unlisted_closet_hangers_by_owned)
+

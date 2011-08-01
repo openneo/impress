@@ -1,4 +1,10 @@
 OpenneoImpressItems::Application.routes.draw do |map|
+  get "petpages/new"
+
+  get "closet_lists/new"
+
+  get "closet_lists/create"
+
   root :to => 'outfits#new'
 
   devise_for :users
@@ -24,6 +30,8 @@ OpenneoImpressItems::Application.routes.draw do |map|
   resources :pet_attributes, :only => [:index]
   resources :swf_assets, :only => [:index, :show]
 
+  resources :closet_pages, :only => [:new, :create], :path => 'closet/pages'
+
   match '/users/current-user/outfits' => 'outfits#index', :as => :current_user_outfits
 
   match '/pets/load' => 'pets#load', :method => :post, :as => :load_pet
@@ -33,9 +41,22 @@ OpenneoImpressItems::Application.routes.draw do |map|
   match '/logout' => 'sessions#destroy', :as => :logout
   match '/users/authorize' => 'sessions#create'
 
-  resources :user, :only => [] do
+  resources :users, :path => 'user', :only => [:update] do
     resources :contributions, :only => [:index]
+    resources :closet_hangers, :only => [:index], :path => 'closet' do
+      collection do
+        get :petpage
+      end
+    end
+    resources :closet_lists, :only => [:new, :create, :edit, :update, :destroy], :path => 'closet/lists'
+
+    resources :items, :only => [] do
+      resource :closet_hanger, :only => [:create, :update, :destroy]
+    end
   end
+
+  match 'users/current-user/closet' => 'closet_hangers#index', :as => :your_items
+
   match 'users/top-contributors' => 'users#top_contributors', :as => :top_contributors
   match 'users/top_contributors' => redirect('/users/top-contributors')
 

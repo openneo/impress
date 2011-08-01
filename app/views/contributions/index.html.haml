@@ -1,4 +1,7 @@
 - title 'Recent Contributions'
+- if @user
+  - canonical_path user_contributions_path(@user)
+
 %ul.buttons
   - if @user
     %li= link_to 'Recent Contributions', contributions_path, :class => 'button'
@@ -15,3 +18,4 @@
   = will_paginate @contributions
   %ul.contributions= render @contributions
   = will_paginate @contributions
+

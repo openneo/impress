@@ -260,3 +260,23 @@ window.MainWardrobe = {View: {Outfit: {setFlashIsReady: previewSWFIsReady}}}
 
 var SWFLog = $.noop;
 
+
+/*
+
+  Trade hangers
+
+*/
+
+$(document.body).addClass('js');
+
+$('#trade-hangers p').wrapInner('<div/>').each(function () {
+  var el = $(this);
+  if(el.height() < el.children().height()) {
+    el.addClass('overflows');
+  }
+});
+
+$('#trade-hangers .toggle').click(function () {
+  $(this).closest('p').toggleClass('showing-more');
+});
+
