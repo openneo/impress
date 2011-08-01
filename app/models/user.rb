@@ -1,14 +1,22 @@
 class User < ActiveRecord::Base
+  include PrettyParam
+
   DefaultAuthServerId = 1
   PreviewTopContributorsCount = 3
-  
+
+  has_many :closet_hangers
+  has_many :closet_lists
+  has_many :closeted_items, :through => :closet_hangers, :source => :item
   has_many :contributions
   has_many :outfits
-  
+
   scope :top_contributors, order('points DESC').where(arel_table[:points].gt(0))
-  
+
   devise :rememberable
-  
+
+  attr_accessible :neopets_username, :owned_closet_hangers_visibility,
+    :wanted_closet_hangers_visibility
+
   def contribute!(pet)
     new_contributions = []
     new_points = 0
@@ -38,7 +46,31 @@ class User < ActiveRecord::Base
     end
     new_points
   end
-  
+
+  def assign_closeted_to_items!(items)
+    # Assigning these items to a hash by ID means that we don't have to go
+    # N^2 searching the items list for items that match the given IDs or vice
+    # versa, and everything stays a lovely O(n)
+    items_by_id = {}
+    items.each { |item| items_by_id[item.id] = item }
+    closet_hangers.where(:item_id => items_by_id.keys).each do |hanger|
+      item = items_by_id[hanger.item_id]
+      if hanger.owned?
+        item.owned = true
+      else
+        item.wanted = true
+      end
+    end
+  end
+
+  def closet_hangers_groups_visible_to(user)
+    return [true, false] if user == self
+    [].tap do |groups|
+      groups << true if owned_closet_hangers_visibility >= ClosetVisibility[:public].id
+      groups << false if wanted_closet_hangers_visibility >= ClosetVisibility[:public].id
+    end
+  end
+
   def self.find_or_create_from_remote_auth_data(user_data)
     user = find_or_initialize_by_remote_id_and_auth_server_id(
       user_data['id'],
@@ -50,9 +82,10 @@ class User < ActiveRecord::Base
     end
     user
   end
-  
+
   def self.points_required_to_pass_top_contributor(offset)
     user = User.top_contributors.select(:points).limit(1).offset(offset).first
     user ? user.points : 0
   end
 end
+

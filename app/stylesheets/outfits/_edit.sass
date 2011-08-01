@@ -1,6 +1,7 @@
 @import ../shared/jquery.jgrowl
 @import partials/wardrobe
 
+@import "partials/context_button"
 @import "partials/icon"
 @import star
 
@@ -229,9 +230,10 @@ body.outfits-edit
     display: none
     font-size: 85%
     margin: 0 auto
-  #preview-mode-image-access-denied
+  #preview-mode-note
     display: block
     font-size: 75%
+    margin-top: .5em
     text-align: center
     text-decoration: none
     width: 100%
@@ -312,9 +314,14 @@ body.outfits-edit
       margin: 0 1em 0 0
     input
       +inline-block
+      &[type=submit]
+        margin-right: 2em
+  .preview-search-form-your-items
+    display: none
+    font-size: 85%
+    margin-right: 1em
   #preview-search-form-pagination
     +inline-block
-    margin-left: 2em
     a, span
       margin: 0 .25em
     .current
@@ -400,10 +407,7 @@ body.outfits-edit
       li
         margin-bottom: .25em
         a
-          +awesome-button
-          +awesome-button-color(#aaaaaa)
-          +opacity(0.9)
-          font-size: 80%
+          +context-button
     &:hover
       ul, .object-info
         display: block
@@ -560,6 +564,8 @@ body.outfits-edit
           display: block
         #save-outfit, #save-current-outfit, #save-outfit-copy, #current-outfit-permalink, #shared-outfit-permalink, #share-outfit, #shared-outfit-url
           display: none
+    .preview-search-form-your-items
+      +inline-block
 
   &.user-not-signed-in
     #save-outfit-not-signed-in

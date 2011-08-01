@@ -1,0 +1,119 @@
+- unless public_perspective?
+  - title 'Your Items'
+  - add_body_class 'current-user'
+  - secondary_nav do
+    %span#toggle-help Need help?
+    = form_tag items_path, :method => :get, :id => 'closet-hangers-items-search', 'data-current-user-id' => current_user.id do
+      = text_field_tag :q, nil, :placeholder => "Find items to add"
+      = submit_tag 'Search', :name => nil
+- else
+  - title "#{@user.name}'s Items"
+
+- canonical_path user_closet_hangers_path(@user)
+
+- content_for :before_flashes do
+  #closet-hangers-contact
+    - if public_perspective?
+      - if @user.neopets_username?
+        = link_to "Neomail #{@user.neopets_username}", send_neomail_url(@user)
+    - else
+      %span#edit-contact-link-to-replace-form.edit-contact-link{:class => @user.neopets_username? ? 'has-value' : nil}
+        %span#contact-link-no-value
+          Add your Neopets username
+        %span#contact-link-has-value
+          Edit
+          = surround '"' do
+            Neomail
+            %span= @user.neopets_username
+      = form_for @user do |f|
+        = f.label :neopets_username
+        = f.text_field :neopets_username
+        = f.submit "Save"
+        %span#cancel-contact-link cancel
+
+- unless public_perspective?
+  #closet-hangers-help{:class => closet_hangers_help_class}
+    :markdown
+      **These are your items! You can track what items you want and own, and
+      share [this page](#{request.fullpath}) with the world**. Just look up an
+      item in the search form above to get started.
+
+      **You can also sort your items into lists.**
+      [Building an Up For Trade list is a good place to start][uft]. You can
+      make lists for trade items with different market values, a private list of
+      what you need for that next outfit, or whatever you like. You can also
+      drag-and-drop items in and out of lists. It's pretty fun.
+
+      **Your items also have privacy settings.**
+      Items can be **private**, so only you can see them. They can be **public**,
+      so you can share this page with friends. They can even be **trading**,
+      meaning that we'll mention on the item's [Infinite Closet][ic] page that
+      you own or want that item.
+
+      **We try to make trading easy.** If there's some item you want, you can
+      pull up that item's [Infinite Closet][ic] page to see if anyone is offering
+      it, and see what *that* user wants
+      in exchange. It's all pretty spiffy. Also, if you plan to trade, your should
+      <span class="edit-contact-link">add your Neopets username</span> so that
+      when other users come here they know how to contact you.
+
+      **Have fun!** If you have any [neat ideas][suggestions] or [general praise and
+      bug reports][mail], we love to hear them. And, if you enjoy this feature,
+      [please consider donating to keep Dress to Impress running and improving][donate].
+      Thanks!
+
+      [donate]: #{donate_path}
+      [ic]: #{items_path}
+      [mail]: mailto:#{contact_email}
+      [suggestions]: #{feedback_url}
+      [uft]: #{new_user_closet_list_path(@user, :closet_list => {:hangers_owned => true, :name => 'Up For Trade', :visibility => ClosetVisibility[:trading].id})}
+
+- unless public_perspective?
+  #closet-hangers-extras
+    #closet-hangers-share
+      %label{:for => 'closet-hangers-share-box'} Public URL:
+      %input#closet-hangers-share-box{:type => 'text', :value => user_closet_hangers_url(@user), :readonly => true}
+
+    = link_to "Import from Neopets closet", new_closet_page_path
+    = link_to "Export to Neopets petpage", petpage_user_closet_hangers_path(@user)
+
+
+
+#closet-hangers{:class => public_perspective? ? nil : 'current-user'}
+  - [true, false].each do |owned|
+    .closet-hangers-group{'data-owned' => owned.to_s, :id => "closet-hangers-group-#{owned}"}
+      %header
+        %h3
+          Items #{closet_hanger_subject} #{closet_hanger_verb(owned)}
+        %span.toggle.show show
+        %span.toggle.hide hide
+        - unless public_perspective?
+          = link_to_add_closet_list 'Add new list', :owned => owned, :class => 'add-closet-list'
+      .closet-hangers-group-content
+        = render_closet_lists(@closet_lists_by_owned[owned])
+        .closet-list.unlisted{'data-hangers-count' => unlisted_hangers_count(owned)}
+          %header
+            - unless public_perspective?
+              = form_for @user, :html => {:class => 'visibility-form'} do |f|
+                = f.select hangers_group_visibility_field_name(owned),
+                  closet_visibility_choices(:human_name)
+                = f.submit "Save"
+                = closet_visibility_descriptions
+            - if has_lists?(owned)
+              %h4 (Not in a list)
+          .closet-list-content
+            .closet-list-hangers
+              = render_unlisted_closet_hangers(owned)
+              %span.empty-list
+                There aren't any items here.
+        - if public_perspective?
+          - unless has_hangers?(owned)
+            %p #{@user.name} doesn't seem to #{closet_hanger_verb(owned, false)} anything.
+
+- content_for :stylesheets do
+  = stylesheet_link_tag 'south-street/jquery-ui'
+
+- content_for :javascripts do
+  = include_javascript_libraries :jquery
+  = javascript_include_tag 'jquery.ui', 'jquery.jgrowl', 'placeholder', 'closet_hangers/index'
+

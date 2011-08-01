@@ -76,7 +76,7 @@ $container_width: 800px
 input, button, select, label
   cursor: pointer
 
-input[type=text], input[type=password], input[type=search], select
+input[type=text], input[type=password], input[type=search], input[type=number], select, textarea
   +border-radius(3px)
   background: #fff
   border: 1px solid $input-border-color
@@ -85,13 +85,13 @@ input[type=text], input[type=password], input[type=search], select
   &:focus, &:active
     color: inherit
 
+textarea
+  font: inherit
+
 a.button, input[type=submit], button
   +awesome-button
   &.loud
     +loud-awesome-button
-
-a.button
-  +arrowed-awesome-button
 
 ul.buttons
   margin-bottom: 1em
@@ -155,9 +155,21 @@ ul.buttons
   &:hover span
     text-decoration: none
 
+#userbar-items-link
+  +hover-link
+  background: $module-bg-color
+  padding: .25em .5em
+
+  &:after
+    color: red
+    content: "new!"
+    font-size: 85%
+    margin-left: .5em
+
 .object
   +inline-block
-  padding: .5em
+  margin: $object-padding 0
+  padding: 0 $object-padding
   position: relative
   text-align: center
   vertical-align: top
@@ -166,13 +178,38 @@ ul.buttons
     text-decoration: none
     img
       +opacity(0.75)
-    &:hover img
-      +opacity(1)
   img
     display: block
     height: $object-img-size
     margin: 0 auto
     width: $object-img-size
+  &:hover img, a:hover img
+    // behave in browsers that only respond to a:hover, but also be in the
+    // hover state more often for browsers who support div:hover
+    // (quantity form in user items)
+    +opacity(1)
+
+  .nc-icon, .closeted-icons
+    +opacity(1)
+    background: rgba(255, 255, 255, 0.75)
+    line-height: 1
+    position: absolute
+    top: $object-img-size - $nc-icon-size
+    &:hover
+      +opacity(0.5)
+      background: transparent
+
+  .nc-icon, .closeted-icons img
+    display: inline
+    height: $nc-icon-size
+    width: $nc-icon-size
+
+  .nc-icon
+    right: ($object-width - $object-img-size) / 2 + $object-padding
+
+  $closeted-icons-left: ($object-width - $object-img-size) / 2 + $object-padding
+  .closeted-icons
+    left: $closeted-icons-left
 
 dt
   font-weight: bold
@@ -201,15 +238,6 @@ dd
     margin: 0 .5em
   .current
     font-weight: bold
-
-.object .nc-icon
-  height: 16px
-  position: absolute
-  right: ($object-width - $object-img-size) / 2 + $object-padding
-  top: $object-img-size - $nc-icon-size
-  width: 16px
-  &:hover
-    +opacity(0.5)
 
 /* Fonts
 

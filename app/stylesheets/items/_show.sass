@@ -1,5 +1,5 @@
 body.items-show
-  header
+  #item-header
     border-bottom: 1px solid $module-border-color
     display: block
     margin-bottom: 1em
@@ -50,8 +50,51 @@ body.items-show
     font:
       family: $text-font
       size: 85%
-    p:first-child
-      margin-bottom: .25em
+    margin-bottom: 1em
+
+    p
+      display: inline
+
+      &:first-child
+        margin-right: 1em
+  #trade-hangers
+    font-size: 85%
+    text-align: left
+
+    p
+      position: relative
+
+      &:first-child
+        margin-bottom: .5em
+
+      &.overflows
+        .toggle
+          display: block
+
+      &.showing-more
+        .toggle
+          .less
+            display: block
+
+          .more
+            display: none
+
+    .toggle
+      background: white
+      bottom: 0
+      cursor: pointer
+      display: none
+      font-family: $main-font
+      padding: 0 1em
+      position: absolute
+      right: 0
+
+      &:hover
+        text-decoration: underline
+
+      .less
+        display: none
+
   #item-preview-header
     margin-top: 3em
     h3, a
@@ -62,3 +105,37 @@ body.items-show
   .nc-icon
     height: 16px
     width: 16px
+
+  #closet-hangers
+    border: 1px solid $module-border-color
+    float: right
+    font-size: 85%
+    margin-left: 1em
+    padding: 1em
+    width: 21em
+
+    label, header
+      display: block
+      font-weight: bold
+
+    header
+      font-size: 125%
+
+    form
+      padding: .5em 0
+
+    select
+      width: 9em
+
+    input[type=number]
+      width: 4em
+
+  &.js
+    #trade-hangers
+      p
+        max-height: 3em
+        overflow: hidden
+
+        &.showing-more
+          max-height: none
+

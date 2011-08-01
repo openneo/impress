@@ -30,16 +30,16 @@
 
 - cache :action_suffix => 'sections_and_description' do
   %ul#sections
-    %li
-      %a{:href => "http://forum.openneo.net"}
-        = image_tag 'forum.png'
+    %li#your-items-module
+      = link_to image_tag('your_items.png'), your_items_path
       %h3
-        %a{:href => "http://forum.openneo.net/"} Forum
+        = link_to 'Your Items', your_items_path
       %div
-        %h4 Join our community!
+        %h4 Track and trade!
         %p
-          Show off your designs, ask for advice, or play silly forum games
-          here.
+          Make lists of the items you own and want, and share them with the
+          world.
+
     %li
       %a{:href => items_path}
         = image_tag 'items.png'

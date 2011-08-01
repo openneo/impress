@@ -1,15 +1,18 @@
 # requires item sweeper at bottom
 
 class Item < ActiveRecord::Base
+  include PrettyParam
+
   SwfAssetType = 'object'
 
+  has_many :closet_hangers
   has_one :contribution, :as => :contributed
   has_many :parent_swf_asset_relationships, :foreign_key => 'parent_id',
     :conditions => {:swf_asset_type => SwfAssetType}
   has_many :swf_assets, :through => :parent_swf_asset_relationships, :source => :object_asset,
     :conditions => {:type => SwfAssetType}
 
-  attr_writer :current_body_id
+  attr_writer :current_body_id, :owned, :wanted
 
   NCRarities = [0, 500]
   PAINTBRUSH_SET_DESCRIPTION = 'This item is part of a deluxe paint brush set!'
@@ -42,10 +45,22 @@ class Item < ActiveRecord::Base
 
   scope :sitemap, select([:id, :name]).order(:id).limit(49999)
 
-  # Not defining validations, since this app is currently read-only
+  scope :with_closet_hangers, joins(:closet_hangers)
+
+  def closeted?
+    @owned || @wanted
+  end
 
   def nc?
     NCRarities.include?(rarity_index)
+  end
+
+  def owned?
+    @owned
+  end
+
+  def wanted?
+    @wanted
   end
 
   def restricted_zones
@@ -115,7 +130,7 @@ class Item < ActiveRecord::Base
     @supported_species ||= species_support_ids.blank? ? Species.all : species_support_ids.sort.map { |id| Species.find(id) }
   end
 
-  def self.search(query)
+  def self.search(query, user=nil)
     raise SearchError, "Please provide a search query" unless query
     query = query.strip
     raise SearchError, "Search queries should be at least 3 characters" if query.length < 3
@@ -143,7 +158,7 @@ class Item < ActiveRecord::Base
           limited_filters_used << condition.filter
         end
       end
-      condition.narrow(scope)
+      condition.narrow(scope, user)
     end
   end
 
@@ -154,17 +169,10 @@ class Item < ActiveRecord::Base
       :name => name,
       :thumbnail_url => thumbnail_url,
       :zones_restrict => zones_restrict,
-      :rarity_index => rarity_index
+      :rarity_index => rarity_index,
+      :owned => owned?,
+      :wanted => wanted?
     }
-  end
-
-  URL_CHAR_BLACKLIST = /[^a-z0-9\-]/i
-  def name_for_url
-    name.downcase.gsub(' ', '-').gsub(URL_CHAR_BLACKLIST, '')
-  end
-
-  def to_param
-    "#{id}-#{name_for_url}"
   end
 
   before_create do
@@ -631,6 +639,7 @@ class Item < ActiveRecord::Base
     name = name.to_s
     SearchFilterScopes << name
     LimitedSearchFilters << name if options[:limit]
+
     (class << self; self; end).instance_eval do
       if options[:full]
         define_method "search_filter_#{name}", &options[:full]
@@ -648,10 +657,13 @@ class Item < ActiveRecord::Base
     search_filter name, options, &block
   end
 
-  def self.search_filter_block(options, positive)
-    Proc.new { |str, scope|
-      condition = yield(str)
-      condition = "!(#{condition.to_sql})" unless positive
+  def self.search_filter_block(options, positive, &block)
+    Proc.new { |str, user, scope|
+      condition = block.arity == 1 ? block.call(str) : block.call(str, user)
+      unless positive
+        condition = condition.to_sql if condition.respond_to?(:to_sql)
+        condition = "!(#{condition})"
+      end
       scope = scope.send(options[:scope]) if options[:scope]
       scope.where(condition)
     }
@@ -677,6 +689,47 @@ class Item < ActiveRecord::Base
         "Did you mean is:nc or is:pb?"
     end
     filter
+  end
+
+  USER_ADJECTIVES = {
+    'own' => true,
+    'owns' => true,
+    'owned' => true,
+    'want' => false,
+    'wants' => false,
+    'wanted' => false,
+    'all' => nil,
+    'items' => nil
+  }
+  def self.parse_user_adjective(adjective, user)
+    unless USER_ADJECTIVES.has_key?(adjective)
+      raise SearchError, "We don't understand user:#{adjective}. " +
+        "Find items you own with user:owns, items you want with user:wants, or " +
+        "both with user:all"
+    end
+
+    unless user
+      raise SearchError, "It looks like you're not logged in, so you don't own any items."
+    end
+
+    USER_ADJECTIVES[adjective]
+  end
+
+  search_filter :user do |adjective, user|
+    # Though joins may seem more efficient here for the positive case, we need
+    # to be able to handle cases like "user:owns user:wants", which breaks on
+    # the JOIN approach. Just have to look up the IDs in advance.
+
+    owned_value = parse_user_adjective(adjective, user)
+    hangers = ClosetHanger.arel_table
+    items = user.closeted_items
+    items = items.where(ClosetHanger.arel_table[:owned].eq(owned_value)) unless owned_value.nil?
+    item_ids = items.map(&:id)
+    # Though it's best to do arel_table[:id].in(item_ids), it breaks in this
+    # version of Arel, and other conditions will overwrite this one. Since IDs
+    # are guaranteed to be integers, let's just build our own string condition
+    # and be done with it.
+    "id IN (#{item_ids.join(',')})"
   end
 
   search_filter :only do |species_name|
@@ -709,7 +762,7 @@ class Item < ActiveRecord::Base
     SwfAsset.arel_table[:zone_id].in(zone_set.map(&:id))
   end
 
-  single_search_filter :not_type, :full => lambda { |zone_set_name, scope|
+  single_search_filter :not_type, :full => lambda { |zone_set_name, user, scope|
     zone_set = Zone::ItemZoneSets[zone_set_name]
     raise SearchError, "Type \"#{zone_set_name}\" does not exist" unless zone_set
     psa = ParentSwfAssetRelationship.arel_table.alias
@@ -757,10 +810,10 @@ class Item < ActiveRecord::Base
       @positive = !@positive
     end
 
-    def narrow(scope)
+    def narrow(scope, user)
       if SearchFilterScopes.include?(filter)
         polarized_filter = @positive ? filter : "not_#{filter}"
-        Item.send("search_filter_#{polarized_filter}", self, scope)
+        Item.send("search_filter_#{polarized_filter}", self, user, scope)
       else
         raise SearchError, "Filter #{filter} does not exist"
       end

@@ -10,7 +10,8 @@ class ItemsController < ApplicationController
         else
           per_page = nil
         end
-        @items = Item.search(@query).alphabetize.paginate :page => params[:page], :per_page => per_page
+        @items = Item.search(@query, current_user).alphabetize.paginate :page => params[:page], :per_page => per_page
+        assign_closeted!
         respond_to do |format|
           format.html { render }
           format.json { render :json => {:items => @items, :total_pages => @items.total_pages} }
@@ -24,6 +25,7 @@ class ItemsController < ApplicationController
       end
     elsif params.has_key?(:ids) && params[:ids].is_a?(Array)
       @items = Item.find(params[:ids])
+      assign_closeted!
       respond_to do |format|
         format.json { render :json => @items }
       end
@@ -37,6 +39,19 @@ class ItemsController < ApplicationController
 
   def show
     @item = Item.find params[:id]
+
+    @trading_closet_hangers_by_owned = {
+      true => @item.closet_hangers.owned_trading.newest.includes(:user),
+      false => @item.closet_hangers.wanted_trading.newest.includes(:user)
+    }
+
+    if user_signed_in?
+      @current_user_hangers = [true, false].map do |owned|
+        hanger = current_user.closet_hangers.find_or_initialize_by_item_id_and_owned(@item.id, owned)
+        hanger.quantity ||= 1
+        hanger
+      end
+    end
   end
 
   def needed
@@ -50,11 +65,16 @@ class ItemsController < ApplicationController
       raise ActiveRecord::RecordNotFound, 'Pet type not found'
     end
     @items = @pet_type.needed_items.alphabetize
+    assign_closeted!
     @pet_name = params[:name]
     render :layout => 'application'
   end
 
-  private
+  protected
+
+  def assign_closeted!
+    current_user.assign_closeted_to_items!(@items) if user_signed_in?
+  end
 
   def set_query
     @query = params[:q]

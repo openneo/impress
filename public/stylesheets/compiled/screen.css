@@ -97,7 +97,7 @@ input, button, select, label {
 }
 
 /* line 79, ../../../app/stylesheets/_layout.sass */
-input[type=text], body.pets-bulk #bulk-pets-form textarea, input[type=password], input[type=search], select {
+input[type=text], body.pets-bulk #bulk-pets-form textarea, input[type=password], input[type=search], input[type=number], select, textarea {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   background: white;
@@ -106,11 +106,16 @@ input[type=text], body.pets-bulk #bulk-pets-form textarea, input[type=password],
   padding: 0.25em;
 }
 /* line 85, ../../../app/stylesheets/_layout.sass */
-input[type=text]:focus, body.pets-bulk #bulk-pets-form textarea:focus, input[type=text]:active, body.pets-bulk #bulk-pets-form textarea:active, input[type=password]:focus, input[type=password]:active, input[type=search]:focus, input[type=search]:active, select:focus, select:active {
+input[type=text]:focus, body.pets-bulk #bulk-pets-form textarea:focus, input[type=text]:active, body.pets-bulk #bulk-pets-form textarea:active, input[type=password]:focus, input[type=password]:active, input[type=search]:focus, input[type=search]:active, input[type=number]:focus, input[type=number]:active, select:focus, select:active, textarea:focus, textarea:active {
   color: inherit;
 }
 
 /* line 88, ../../../app/stylesheets/_layout.sass */
+textarea {
+  font: inherit;
+}
+
+/* line 91, ../../../app/stylesheets/_layout.sass */
 a.button, input[type=submit], button {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
@@ -141,7 +146,7 @@ a.button:hover, input[type=submit]:hover, button:hover {
 a.button:active, input[type=submit]:active, button:active {
   top: 1px;
 }
-/* line 90, ../../../app/stylesheets/_layout.sass */
+/* line 93, ../../../app/stylesheets/_layout.sass */
 a.button.loud, input[type=submit].loud, button.loud {
   background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
   font-size: 125%;
@@ -150,11 +155,6 @@ a.button.loud, input[type=submit].loud, button.loud {
 /* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
 a.button.loud:hover, input[type=submit].loud:hover, button.loud:hover {
   background-color: #ee4b00;
-}
-
-/* line 87, ../../../app/stylesheets/partials/clean/_mixins.sass */
-a.button:after {
-  content: " >>";
 }
 
 /* line 96, ../../../app/stylesheets/_layout.sass */
@@ -264,6 +264,24 @@ ul.buttons li, ul.buttons li form {
 }
 
 /* line 158, ../../../app/stylesheets/_layout.sass */
+#userbar-items-link {
+  text-decoration: none;
+  background: #eeffee;
+  padding: 0.25em 0.5em;
+}
+/* line 4, ../../../../../.rvm/gems/ree-1.8.7-2010.02/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/utilities/links/_hover-link.scss */
+#userbar-items-link:hover {
+  text-decoration: underline;
+}
+/* line 163, ../../../app/stylesheets/_layout.sass */
+#userbar-items-link:after {
+  color: red;
+  content: "new!";
+  font-size: 85%;
+  margin-left: 0.5em;
+}
+
+/* line 169, ../../../app/stylesheets/_layout.sass */
 .object {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -271,49 +289,83 @@ ul.buttons li, ul.buttons li form {
   vertical-align: middle;
   *display: inline;
   *vertical-align: auto;
-  padding: 0.5em;
+  margin: 8px 0;
+  padding: 0 8px;
   position: relative;
   text-align: center;
   vertical-align: top;
   width: 100px;
 }
-/* line 165, ../../../app/stylesheets/_layout.sass */
+/* line 177, ../../../app/stylesheets/_layout.sass */
 .object a {
   text-decoration: none;
 }
-/* line 167, ../../../app/stylesheets/_layout.sass */
+/* line 179, ../../../app/stylesheets/_layout.sass */
 .object a img {
   -moz-opacity: 0.75;
   -webkit-opacity: 0.75;
   -o-opacity: 0.75;
   -khtml-opacity: 0.75;
 }
-/* line 169, ../../../app/stylesheets/_layout.sass */
-.object a:hover img {
-  -moz-opacity: 1;
-  -webkit-opacity: 1;
-  -o-opacity: 1;
-  -khtml-opacity: 1;
-}
-/* line 171, ../../../app/stylesheets/_layout.sass */
+/* line 181, ../../../app/stylesheets/_layout.sass */
 .object img {
   display: block;
   height: 80px;
   margin: 0 auto;
   width: 80px;
 }
+/* line 186, ../../../app/stylesheets/_layout.sass */
+.object:hover img, .object a:hover img {
+  -moz-opacity: 1;
+  -webkit-opacity: 1;
+  -o-opacity: 1;
+  -khtml-opacity: 1;
+}
+/* line 192, ../../../app/stylesheets/_layout.sass */
+.object .nc-icon, .object .closeted-icons {
+  -moz-opacity: 1;
+  -webkit-opacity: 1;
+  -o-opacity: 1;
+  -khtml-opacity: 1;
+  background: rgba(255, 255, 255, 0.75);
+  line-height: 1;
+  position: absolute;
+  top: 64px;
+}
+/* line 198, ../../../app/stylesheets/_layout.sass */
+.object .nc-icon:hover, .object .closeted-icons:hover {
+  -moz-opacity: 0.5;
+  -webkit-opacity: 0.5;
+  -o-opacity: 0.5;
+  -khtml-opacity: 0.5;
+  background: transparent;
+}
+/* line 202, ../../../app/stylesheets/_layout.sass */
+.object .nc-icon, .object .closeted-icons img {
+  display: inline;
+  height: 16px;
+  width: 16px;
+}
+/* line 207, ../../../app/stylesheets/_layout.sass */
+.object .nc-icon {
+  right: 18px;
+}
+/* line 211, ../../../app/stylesheets/_layout.sass */
+.object .closeted-icons {
+  left: 18px;
+}
 
-/* line 177, ../../../app/stylesheets/_layout.sass */
+/* line 214, ../../../app/stylesheets/_layout.sass */
 dt {
   font-weight: bold;
 }
 
-/* line 180, ../../../app/stylesheets/_layout.sass */
+/* line 217, ../../../app/stylesheets/_layout.sass */
 dd {
   margin: 0 0 1.5em 1em;
 }
 
-/* line 183, ../../../app/stylesheets/_layout.sass */
+/* line 220, ../../../app/stylesheets/_layout.sass */
 #home-link {
   font-family: Delicious, Helvetica, Arial, Verdana, sans-serif;
   font-size: 175%;
@@ -324,39 +376,23 @@ dd {
   position: absolute;
   top: 0;
 }
-/* line 193, ../../../app/stylesheets/_layout.sass */
+/* line 230, ../../../app/stylesheets/_layout.sass */
 #home-link:hover {
   background: #eeffee;
   text-decoration: none;
 }
-/* line 196, ../../../app/stylesheets/_layout.sass */
+/* line 233, ../../../app/stylesheets/_layout.sass */
 #home-link span:before {
   content: "<< ";
 }
 
-/* line 200, ../../../app/stylesheets/_layout.sass */
+/* line 237, ../../../app/stylesheets/_layout.sass */
 .pagination a, .pagination span {
   margin: 0 0.5em;
 }
-/* line 202, ../../../app/stylesheets/_layout.sass */
+/* line 239, ../../../app/stylesheets/_layout.sass */
 .pagination .current {
   font-weight: bold;
-}
-
-/* line 205, ../../../app/stylesheets/_layout.sass */
-.object .nc-icon {
-  height: 16px;
-  position: absolute;
-  right: 16px;
-  top: 64px;
-  width: 16px;
-}
-/* line 211, ../../../app/stylesheets/_layout.sass */
-.object .nc-icon:hover {
-  -moz-opacity: 0.5;
-  -webkit-opacity: 0.5;
-  -o-opacity: 0.5;
-  -khtml-opacity: 0.5;
 }
 
 /* Fonts */
@@ -536,6 +572,876 @@ div.jGrowl div.jGrowl-closer {
   div.jGrowl {
     display: none;
   }
+}
+
+/* line 2, ../../../app/stylesheets/partials/_secondary_nav.sass */
+body.closet_hangers-index #title {
+  float: left;
+  margin-right: 0.5em;
+}
+/* line 6, ../../../app/stylesheets/partials/_secondary_nav.sass */
+body.closet_hangers-index .flash {
+  clear: both;
+}
+/* line 9, ../../../app/stylesheets/partials/_secondary_nav.sass */
+body.closet_hangers-index #secondary-nav {
+  display: block;
+  margin-top: 0.75em;
+}
+/* line 8, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #title {
+  margin-bottom: 0;
+}
+/* line 11, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #import-link {
+  /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  border: 0;
+  display: inline-block;
+  padding: 0.5em 0.75em 0.45em;
+  color: white;
+  text-decoration: none;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  position: relative;
+  font-weight: bold;
+  line-height: 1;
+  background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index #import-link:hover {
+  background-color: #005300;
+}
+/* line 53, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index #import-link:hover {
+  color: white;
+}
+/* line 55, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index #import-link:active {
+  top: 1px;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index #import-link:hover {
+  background-color: #ee4b00;
+}
+/* line 15, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers-items-search {
+  float: right;
+}
+/* line 19, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers-items-search input[name=q].loading {
+  background-image: url(/images/loading.gif);
+  background-position: 2px center;
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+/* line 26, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers-contact {
+  clear: both;
+  color: #448844;
+  margin-bottom: 1em;
+  margin-left: 2em;
+  min-height: 16px;
+}
+/* line 33, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers-contact a, body.closet_hangers-index #closet-hangers-contact > span {
+  text-decoration: none;
+  background-image: url('/images/neomail.png?1311877030');
+  background-position: left center;
+  background-repeat: no-repeat;
+  color: inherit;
+  float: left;
+  height: 100%;
+  padding-left: 20px;
+}
+/* line 4, ../../../../../.rvm/gems/ree-1.8.7-2010.02/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/utilities/links/_hover-link.scss */
+body.closet_hangers-index #closet-hangers-contact a:hover, body.closet_hangers-index #closet-hangers-contact > span:hover {
+  text-decoration: underline;
+}
+/* line 44, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers-contact > span {
+  background-image: url('/images/neomail_edit.png?1312153508');
+}
+/* line 47, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers-contact input[type=text], body.closet_hangers-index #closet-hangers-contact body.pets-bulk #bulk-pets-form textarea, body.pets-bulk #bulk-pets-form body.closet_hangers-index #closet-hangers-contact textarea {
+  width: 10em;
+}
+/* line 50, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers-contact label {
+  font-weight: bold;
+  margin-right: 0.5em;
+}
+/* line 54, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers-contact label:after {
+  content: ":";
+}
+/* line 57, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #edit-contact-link-to-replace-form, body.closet_hangers-index #cancel-contact-link {
+  display: none;
+}
+/* line 60, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .edit-contact-link, body.closet_hangers-index #cancel-contact-link {
+  cursor: pointer;
+  text-decoration: underline;
+}
+/* line 64, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .edit-contact-link:hover, body.closet_hangers-index #cancel-contact-link:hover {
+  text-decoration: none;
+}
+/* line 68, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #edit-contact-link-to-replace-form #contact-link-has-value {
+  display: none;
+}
+/* line 71, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #edit-contact-link-to-replace-form #contact-link-no-value {
+  display: inline;
+}
+/* line 75, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #edit-contact-link-to-replace-form.has-value #contact-link-has-value {
+  display: inline;
+}
+/* line 78, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #edit-contact-link-to-replace-form.has-value #contact-link-no-value {
+  display: none;
+}
+/* line 81, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #cancel-contact-link {
+  margin-left: 1em;
+}
+/* line 84, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #toggle-help {
+  /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  border: 0;
+  display: inline-block;
+  padding: 0.5em 0.75em 0.45em;
+  color: white;
+  text-decoration: none;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  position: relative;
+  font-weight: bold;
+  line-height: 1;
+  cursor: pointer;
+  display: none;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index #toggle-help:hover {
+  background-color: #005300;
+}
+/* line 53, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index #toggle-help:hover {
+  color: white;
+}
+/* line 55, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index #toggle-help:active {
+  top: 1px;
+}
+/* line 89, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers-help.hidden {
+  display: none;
+}
+/* line 92, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers-extras {
+  margin-bottom: 2em;
+  margin-top: 2em;
+  text-align: center;
+}
+/* line 98, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers-extras a {
+  /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  border: 0;
+  display: inline-block;
+  padding: 0.5em 0.75em 0.45em;
+  color: white;
+  text-decoration: none;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  position: relative;
+  font-weight: bold;
+  line-height: 1;
+  margin: 0 0.5em;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index #closet-hangers-extras a:hover {
+  background-color: #005300;
+}
+/* line 53, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index #closet-hangers-extras a:hover {
+  color: white;
+}
+/* line 55, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index #closet-hangers-extras a:active {
+  top: 1px;
+}
+/* line 102, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers-share {
+  font-size: 85%;
+  margin-bottom: 1em;
+}
+/* line 106, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers-share label {
+  font-weight: bold;
+  margin-right: 0.5em;
+}
+/* line 110, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers-share input {
+  width: 30em;
+}
+/* line 113, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers {
+  clear: both;
+  text-align: center;
+}
+/* line 118, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers .object .quantity {
+  -moz-opacity: 0.75;
+  -webkit-opacity: 0.75;
+  -o-opacity: 0.75;
+  -khtml-opacity: 0.75;
+  background: white;
+  padding: 6px 4px 4px;
+  position: absolute;
+  left: 18px;
+  line-height: 1;
+  text-align: left;
+  top: 0;
+}
+/* line 128, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers .object .quantity span, body.closet_hangers-index #closet-hangers .object .quantity input[type=number] {
+  font-size: 16px;
+  font-weight: bold;
+}
+/* line 132, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers .object form {
+  display: none;
+}
+/* line 136, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index #closet-hangers .object[data-quantity="1"] .quantity {
+  display: none;
+}
+/* line 139, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-hangers-group {
+  border-top: 1px solid #006600;
+  margin-bottom: 2em;
+  padding-bottom: 1em;
+}
+/* line 144, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-hangers-group > header {
+  border-bottom: 1px solid #aaddaa;
+  display: block;
+  margin-bottom: 0.25em;
+  padding: 0.25em 0;
+  position: relative;
+}
+/* line 151, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-hangers-group > header h3 {
+  font-size: 250%;
+  margin: 0;
+}
+/* line 155, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-hangers-group > header .add-closet-list {
+  /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  border: 0;
+  display: inline-block;
+  padding: 0.5em 0.75em 0.45em;
+  color: white;
+  text-decoration: none;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  position: relative;
+  font-weight: bold;
+  line-height: 1;
+  bottom: 50%;
+  margin-bottom: -1em;
+  position: absolute;
+  right: 1em;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index .closet-hangers-group > header .add-closet-list:hover {
+  background-color: #005300;
+}
+/* line 53, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index .closet-hangers-group > header .add-closet-list:hover {
+  color: white;
+}
+/* line 55, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index .closet-hangers-group > header .add-closet-list:active {
+  top: 1px;
+}
+/* line 162, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-hangers-group > header .add-closet-list:active {
+  margin-bottom: -1.1em;
+  top: auto;
+}
+/* line 166, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-hangers-group > header span.show, body.closet_hangers-index .closet-hangers-group > header span.hide {
+  color: #448844;
+  display: none;
+  font-size: 85%;
+  left: 1em;
+  position: absolute;
+  top: 1em;
+}
+/* line 174, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-hangers-group > header span.show:hover, body.closet_hangers-index .closet-hangers-group > header span.hide:hover {
+  color: inherit;
+  text-decoration: underline;
+}
+/* line 178, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list {
+  border-bottom: 1px solid #aaddaa;
+  padding: 0.5em 0;
+  position: relative;
+}
+/* line 183, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list .visibility-form {
+  font-size: 85%;
+  left: 0.5em;
+  position: absolute;
+  text-align: left;
+  top: 0.25em;
+  z-index: 10;
+}
+/* line 191, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list .visibility-form input, body.closet_hangers-index .closet-list .visibility-form select {
+  font-size: inherit;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+/* line 197, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list .visibility-form select {
+  border-color: white;
+}
+/* line 200, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list .visibility-form input[type=submit] {
+  /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  border: 0;
+  display: inline-block;
+  padding: 0.5em 0.75em 0.45em;
+  color: white;
+  text-decoration: none;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  position: relative;
+  font-weight: bold;
+  line-height: 1;
+  background: #aaaaaa url('/images/alert-overlay.png?1296599919') repeat-x;
+  -moz-opacity: 0.9;
+  -webkit-opacity: 0.9;
+  -o-opacity: 0.9;
+  -khtml-opacity: 0.9;
+  font-size: 80%;
+  font-size: inherit;
+  visibility: hidden;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index .closet-list .visibility-form input[type=submit]:hover {
+  background-color: #005300;
+}
+/* line 53, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index .closet-list .visibility-form input[type=submit]:hover {
+  color: white;
+}
+/* line 55, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index .closet-list .visibility-form input[type=submit]:active {
+  top: 1px;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index .closet-list .visibility-form input[type=submit]:hover {
+  background-color: #999999;
+}
+/* line 205, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list .visibility-form input[type=submit]:active {
+  top: 1px;
+}
+/* line 208, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list .visibility-form .visibility-descriptions {
+  -moz-opacity: 0.75;
+  -webkit-opacity: 0.75;
+  -o-opacity: 0.75;
+  -khtml-opacity: 0.75;
+  background: white;
+  font-style: italic;
+  list-style: none;
+  padding: 0 0.5em;
+}
+/* line 215, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list .visibility-form .visibility-descriptions li {
+  display: none;
+}
+/* line 219, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list .visibility-form:hover .visibility-descriptions li.current {
+  display: block;
+}
+/* line 222, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list header {
+  display: block;
+  position: relative;
+}
+/* line 226, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list h4 {
+  font-family: Delicious, Helvetica, Arial, Verdana, sans-serif;
+  font-size: 150%;
+  line-height: 1;
+  margin: 0 auto 0.67em;
+  width: 50%;
+}
+/* line 233, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list .empty-list {
+  display: none;
+  font-style: italic;
+}
+/* line 237, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list .closet-list-controls {
+  display: none;
+  position: absolute;
+  right: 1em;
+  top: 0;
+}
+/* line 243, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list .closet-list-controls a, body.closet_hangers-index .closet-list .closet-list-controls input[type=submit] {
+  /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  border: 0;
+  display: inline-block;
+  padding: 0.5em 0.75em 0.45em;
+  color: white;
+  text-decoration: none;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  position: relative;
+  font-weight: bold;
+  line-height: 1;
+  background: #aaaaaa url('/images/alert-overlay.png?1296599919') repeat-x;
+  -moz-opacity: 0.9;
+  -webkit-opacity: 0.9;
+  -o-opacity: 0.9;
+  -khtml-opacity: 0.9;
+  font-size: 80%;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index .closet-list .closet-list-controls a:hover, body.closet_hangers-index .closet-list .closet-list-controls input[type=submit]:hover {
+  background-color: #005300;
+}
+/* line 53, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index .closet-list .closet-list-controls a:hover, body.closet_hangers-index .closet-list .closet-list-controls input[type=submit]:hover {
+  color: white;
+}
+/* line 55, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index .closet-list .closet-list-controls a:active, body.closet_hangers-index .closet-list .closet-list-controls input[type=submit]:active {
+  top: 1px;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index .closet-list .closet-list-controls a:hover, body.closet_hangers-index .closet-list .closet-list-controls input[type=submit]:hover {
+  background-color: #999999;
+}
+/* line 246, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list .closet-list-controls form {
+  display: inline;
+}
+/* line 250, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list[data-hangers-count="0"] .empty-list {
+  display: block;
+}
+/* line 254, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list.unlisted h4 {
+  font-size: 125%;
+  font-style: italic;
+}
+/* line 260, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list:hover .closet-list-controls {
+  display: block;
+}
+/* line 264, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list:hover .visibility-form input[type=submit] {
+  visibility: visible;
+}
+/* line 267, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list:hover .visibility-form select {
+  border-color: #aaddaa;
+}
+/* line 270, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list:last-child {
+  border-bottom: 0;
+}
+/* line 273, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list.droppable-active {
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1em;
+  background: #eeffee;
+  border: 1px solid #006600;
+  padding: 1em;
+  border-bottom-width: 1px;
+  border-style: dotted;
+  margin: 1em 0;
+}
+/* line 280, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list.droppable-active .object {
+  -moz-opacity: 0.25;
+  -webkit-opacity: 0.25;
+  -o-opacity: 0.25;
+  -khtml-opacity: 0.25;
+}
+/* line 284, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list.droppable-active .object.ui-draggable-dragging {
+  -moz-opacity: 1;
+  -webkit-opacity: 1;
+  -o-opacity: 1;
+  -khtml-opacity: 1;
+}
+/* line 287, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list.droppable-active .closet-list-controls {
+  display: none;
+}
+/* line 290, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list.droppable-active .closet-list-hangers {
+  overflow: hidden;
+}
+/* line 293, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list.droppable-active .visibility-form {
+  display: none;
+}
+/* line 297, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-hangers-group-autocomplete-item span, body.closet_hangers-index .closet-list-autocomplete-item span {
+  font-style: italic;
+  padding: 0.2em 0.4em;
+}
+/* line 302, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index .closet-list-autocomplete-item a, body.closet_hangers-index .closet-list-autocomplete-item span {
+  font-size: 85%;
+  padding-left: 2em;
+}
+/* line 309, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user #closet-hangers .object:hover form {
+  display: inline;
+}
+/* line 312, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user #closet-hangers .object:hover .closet-hanger-destroy {
+  position: absolute;
+  right: 18px;
+  top: 52px;
+}
+/* line 317, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user #closet-hangers .object:hover .closet-hanger-destroy input {
+  /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  border: 0;
+  display: inline-block;
+  padding: 0.5em 0.75em 0.45em;
+  color: white;
+  text-decoration: none;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  position: relative;
+  font-weight: bold;
+  line-height: 1;
+  background: #aaaaaa url('/images/alert-overlay.png?1296599919') repeat-x;
+  -moz-opacity: 0.9;
+  -webkit-opacity: 0.9;
+  -o-opacity: 0.9;
+  -khtml-opacity: 0.9;
+  font-size: 80%;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index.current-user #closet-hangers .object:hover .closet-hanger-destroy input:hover {
+  background-color: #005300;
+}
+/* line 53, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index.current-user #closet-hangers .object:hover .closet-hanger-destroy input:hover {
+  color: white;
+}
+/* line 55, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index.current-user #closet-hangers .object:hover .closet-hanger-destroy input:active {
+  top: 1px;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_hangers-index.current-user #closet-hangers .object:hover .closet-hanger-destroy input:hover {
+  background-color: #999999;
+}
+/* line 320, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user #closet-hangers .object:hover .quantity {
+  -moz-opacity: 1;
+  -webkit-opacity: 1;
+  -o-opacity: 1;
+  -khtml-opacity: 1;
+  background: transparent;
+  top: 0;
+  padding: 0;
+}
+/* line 326, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user #closet-hangers .object:hover .quantity span {
+  display: none;
+}
+/* line 329, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user #closet-hangers .object:hover .quantity input[type=number] {
+  padding: 2px;
+  width: 2em;
+}
+/* line 333, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user #closet-hangers .object:hover .quantity input[type=submit] {
+  font-size: 85%;
+}
+/* line 338, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user.js #closet-hangers .object:hover .quantity {
+  display: block;
+}
+/* line 341, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user.js #closet-hangers .object:hover .quantity input[type=number] {
+  width: 2.5em;
+}
+/* line 344, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user.js #closet-hangers .object:hover .quantity input[type=submit] {
+  display: none;
+}
+/* line 347, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user.js #closet-hangers .object.loading {
+  background: #eeffee;
+  outline: 1px solid #006600;
+}
+/* line 351, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user.js #closet-hangers .object.loading .quantity {
+  display: block;
+}
+/* line 354, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user.js #closet-hangers .object.loading .quantity span:after {
+  content: "…";
+}
+/* line 358, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user.js #closet-hangers-contact form {
+  display: none;
+}
+/* line 361, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user.js #closet-hangers-contact .edit-contact-link, body.closet_hangers-index.current-user.js #closet-hangers-contact #cancel-contact-link {
+  display: inline;
+}
+/* line 365, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user.js #closet-hangers-contact.editing form {
+  display: block;
+}
+/* line 368, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user.js #closet-hangers-contact.editing .edit-contact-link {
+  display: none;
+}
+/* line 373, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user.js .closet-hangers-group header .show, body.closet_hangers-index.current-user.js .closet-hangers-group header .hide {
+  cursor: pointer;
+}
+/* line 376, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user.js .closet-hangers-group header .hide {
+  display: block;
+}
+/* line 380, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user.js .closet-hangers-group.hidden header .hide, body.closet_hangers-index.current-user.js .closet-hangers-group.hidden .closet-hangers-group-content {
+  display: none;
+}
+/* line 383, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user.js .closet-hangers-group.hidden header .show {
+  display: block;
+}
+/* line 386, ../../../app/stylesheets/closet_hangers/_index.sass */
+body.closet_hangers-index.current-user.js #toggle-help {
+  display: inline;
+}
+
+/* line 2, ../../../app/stylesheets/partials/_secondary_nav.sass */
+body.closet_hangers-petpage #title {
+  float: left;
+  margin-right: 0.5em;
+}
+/* line 6, ../../../app/stylesheets/partials/_secondary_nav.sass */
+body.closet_hangers-petpage .flash {
+  clear: both;
+}
+/* line 9, ../../../app/stylesheets/partials/_secondary_nav.sass */
+body.closet_hangers-petpage #secondary-nav {
+  display: block;
+  margin-top: 0.75em;
+}
+/* line 4, ../../../app/stylesheets/closet_hangers/_petpage.sass */
+body.closet_hangers-petpage #intro {
+  clear: both;
+}
+/* line 7, ../../../app/stylesheets/closet_hangers/_petpage.sass */
+body.closet_hangers-petpage #petpage-output {
+  display: block;
+  height: 30em;
+  margin: 0 auto;
+  width: 50%;
+}
+
+/* line 2, ../../../app/stylesheets/partials/_secondary_nav.sass */
+body.closet_lists-new #title, body.closet_lists-create #title, body.closet_lists-edit #title, body.closet_lists-update #title {
+  float: left;
+  margin-right: 0.5em;
+}
+/* line 6, ../../../app/stylesheets/partials/_secondary_nav.sass */
+body.closet_lists-new .flash, body.closet_lists-create .flash, body.closet_lists-edit .flash, body.closet_lists-update .flash {
+  clear: both;
+}
+/* line 9, ../../../app/stylesheets/partials/_secondary_nav.sass */
+body.closet_lists-new #secondary-nav, body.closet_lists-create #secondary-nav, body.closet_lists-edit #secondary-nav, body.closet_lists-update #secondary-nav {
+  display: block;
+  margin-top: 0.75em;
+}
+/* line 4, ../../../app/stylesheets/closet_lists/_form.sass */
+body.closet_lists-new form ul.fields, body.closet_lists-create form ul.fields, body.closet_lists-edit form ul.fields, body.closet_lists-update form ul.fields {
+  clear: both;
+  list-style: none;
+}
+/* line 8, ../../../app/stylesheets/closet_lists/_form.sass */
+body.closet_lists-new form ul.fields label, body.closet_lists-create form ul.fields label, body.closet_lists-edit form ul.fields label, body.closet_lists-update form ul.fields label {
+  float: left;
+  font-weight: bold;
+  margin-right: 1em;
+}
+/* line 13, ../../../app/stylesheets/closet_lists/_form.sass */
+body.closet_lists-new form ul.fields li, body.closet_lists-create form ul.fields li, body.closet_lists-edit form ul.fields li, body.closet_lists-update form ul.fields li {
+  padding: 0.75em 0;
+  width: 35em;
+}
+/* line 17, ../../../app/stylesheets/closet_lists/_form.sass */
+body.closet_lists-new form ul.fields input, body.closet_lists-new form ul.fields textarea, body.closet_lists-new form ul.fields select, body.closet_lists-create form ul.fields input, body.closet_lists-create form ul.fields textarea, body.closet_lists-create form ul.fields select, body.closet_lists-edit form ul.fields input, body.closet_lists-edit form ul.fields textarea, body.closet_lists-edit form ul.fields select, body.closet_lists-update form ul.fields input, body.closet_lists-update form ul.fields textarea, body.closet_lists-update form ul.fields select {
+  clear: both;
+  display: block;
+  margin-top: 0.25em;
+  width: 80%;
+}
+/* line 23, ../../../app/stylesheets/closet_lists/_form.sass */
+body.closet_lists-new form ul.fields textarea, body.closet_lists-create form ul.fields textarea, body.closet_lists-edit form ul.fields textarea, body.closet_lists-update form ul.fields textarea {
+  height: 12em;
+}
+/* line 26, ../../../app/stylesheets/closet_lists/_form.sass */
+body.closet_lists-new form ul.fields .hint, body.closet_lists-create form ul.fields .hint, body.closet_lists-edit form ul.fields .hint, body.closet_lists-update form ul.fields .hint {
+  display: block;
+  font-size: 85%;
+}
+
+/* line 3, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new #title, body.closet_pages-create #title {
+  float: left;
+}
+/* line 6, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new .flash, body.closet_pages-create .flash {
+  clear: both;
+}
+/* line 9, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new #back-to-items, body.closet_pages-create #back-to-items {
+  /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  border: 0;
+  display: inline-block;
+  padding: 0.5em 0.75em 0.45em;
+  color: white;
+  text-decoration: none;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  position: relative;
+  font-weight: bold;
+  line-height: 1;
+  margin-left: 1em;
+  margin-top: 0.75em;
+}
+/* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_pages-new #back-to-items:hover, body.closet_pages-create #back-to-items:hover {
+  background-color: #005300;
+}
+/* line 53, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_pages-new #back-to-items:hover, body.closet_pages-create #back-to-items:hover {
+  color: white;
+}
+/* line 55, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_pages-new #back-to-items:active, body.closet_pages-create #back-to-items:active {
+  top: 1px;
+}
+/* line 15, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new #closet-page-form, body.closet_pages-create #closet-page-form {
+  overflow: hidden;
+  display: inline-block;
+  clear: both;
+  margin-bottom: 1em;
+}
+/* line 8, ../../../app/stylesheets/partials/clean/_mixins.sass */
+body.closet_pages-new #closet-page-form, body.closet_pages-create #closet-page-form {
+  display: block;
+}
+/* line 20, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new #closet-page-frame-wrapper, body.closet_pages-create #closet-page-frame-wrapper {
+  float: left;
+  margin-right: 2%;
+  width: 48%;
+}
+/* line 25, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new #closet-page-frame, body.closet_pages-create #closet-page-frame {
+  height: 19em;
+  width: 100%;
+}
+/* line 29, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new #closet-page-source, body.closet_pages-create #closet-page-source {
+  float: left;
+  width: 50%;
+}
+/* line 33, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new #closet-page-source label, body.closet_pages-create #closet-page-source label {
+  font-weight: bold;
+}
+/* line 36, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new #closet-page-source textarea, body.closet_pages-create #closet-page-source textarea {
+  height: 19em;
+}
+/* line 40, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new ol, body.closet_pages-create ol {
+  padding-left: 1em;
+}
+/* line 43, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new ol > li, body.closet_pages-create ol > li {
+  margin-bottom: 1em;
+}
+/* line 46, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new ol ul, body.closet_pages-create ol ul {
+  font-size: 85%;
+  margin-bottom: 1em;
+  margin-top: 0;
+  padding-left: 1em;
+}
+/* line 53, ../../../app/stylesheets/closet_pages/_new.sass */
+body.closet_pages-new ol p, body.closet_pages-create ol p {
+  margin: 0;
 }
 
 /* line 1, ../../../app/stylesheets/contributions/_index.sass */
@@ -721,14 +1627,14 @@ body.items-index #species-search-links img {
 }
 
 /* line 2, ../../../app/stylesheets/items/_show.sass */
-body.items-show header {
+body.items-show #item-header {
   border-bottom: 1px solid #006600;
   display: block;
   margin-bottom: 1em;
   padding: 1em 0;
 }
 /* line 7, ../../../app/stylesheets/items/_show.sass */
-body.items-show header div, body.items-show header img {
+body.items-show #item-header div, body.items-show #item-header img {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
   display: inline-block;
@@ -737,11 +1643,11 @@ body.items-show header div, body.items-show header img {
   *vertical-align: auto;
 }
 /* line 9, ../../../app/stylesheets/items/_show.sass */
-body.items-show header div {
+body.items-show #item-header div {
   text-align: left;
 }
 /* line 11, ../../../app/stylesheets/items/_show.sass */
-body.items-show header a {
+body.items-show #item-header a {
   font-size: 75%;
   margin-left: 1em;
 }
@@ -811,16 +1717,65 @@ body.items-show #item-preview-swf {
 body.items-show #item-zones {
   font-family: "Droid Serif", Georgia, "Times New Roman", Times, serif;
   font-size: 85%;
-}
-/* line 53, ../../../app/stylesheets/items/_show.sass */
-body.items-show #item-zones p:first-child {
-  margin-bottom: 0.25em;
+  margin-bottom: 1em;
 }
 /* line 55, ../../../app/stylesheets/items/_show.sass */
+body.items-show #item-zones p {
+  display: inline;
+}
+/* line 58, ../../../app/stylesheets/items/_show.sass */
+body.items-show #item-zones p:first-child {
+  margin-right: 1em;
+}
+/* line 60, ../../../app/stylesheets/items/_show.sass */
+body.items-show #trade-hangers {
+  font-size: 85%;
+  text-align: left;
+}
+/* line 64, ../../../app/stylesheets/items/_show.sass */
+body.items-show #trade-hangers p {
+  position: relative;
+}
+/* line 67, ../../../app/stylesheets/items/_show.sass */
+body.items-show #trade-hangers p:first-child {
+  margin-bottom: 0.5em;
+}
+/* line 71, ../../../app/stylesheets/items/_show.sass */
+body.items-show #trade-hangers p.overflows .toggle {
+  display: block;
+}
+/* line 76, ../../../app/stylesheets/items/_show.sass */
+body.items-show #trade-hangers p.showing-more .toggle .less {
+  display: block;
+}
+/* line 79, ../../../app/stylesheets/items/_show.sass */
+body.items-show #trade-hangers p.showing-more .toggle .more {
+  display: none;
+}
+/* line 82, ../../../app/stylesheets/items/_show.sass */
+body.items-show #trade-hangers .toggle {
+  background: white;
+  bottom: 0;
+  cursor: pointer;
+  display: none;
+  font-family: "Droid Sans", Helvetica, Arial, Verdana, sans-serif;
+  padding: 0 1em;
+  position: absolute;
+  right: 0;
+}
+/* line 92, ../../../app/stylesheets/items/_show.sass */
+body.items-show #trade-hangers .toggle:hover {
+  text-decoration: underline;
+}
+/* line 95, ../../../app/stylesheets/items/_show.sass */
+body.items-show #trade-hangers .toggle .less {
+  display: none;
+}
+/* line 98, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-header {
   margin-top: 3em;
 }
-/* line 57, ../../../app/stylesheets/items/_show.sass */
+/* line 100, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-header h3, body.items-show #item-preview-header a {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -829,24 +1784,63 @@ body.items-show #item-preview-header h3, body.items-show #item-preview-header a 
   *display: inline;
   *vertical-align: auto;
 }
-/* line 59, ../../../app/stylesheets/items/_show.sass */
+/* line 102, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-header a {
   font-size: 85%;
   margin: -1.5em 0 0 1em;
 }
-/* line 62, ../../../app/stylesheets/items/_show.sass */
+/* line 105, ../../../app/stylesheets/items/_show.sass */
 body.items-show .nc-icon {
   height: 16px;
   width: 16px;
 }
+/* line 109, ../../../app/stylesheets/items/_show.sass */
+body.items-show #closet-hangers {
+  border: 1px solid #006600;
+  float: right;
+  font-size: 85%;
+  margin-left: 1em;
+  padding: 1em;
+  width: 21em;
+}
+/* line 117, ../../../app/stylesheets/items/_show.sass */
+body.items-show #closet-hangers label, body.items-show #closet-hangers header {
+  display: block;
+  font-weight: bold;
+}
+/* line 121, ../../../app/stylesheets/items/_show.sass */
+body.items-show #closet-hangers header {
+  font-size: 125%;
+}
+/* line 124, ../../../app/stylesheets/items/_show.sass */
+body.items-show #closet-hangers form {
+  padding: 0.5em 0;
+}
+/* line 127, ../../../app/stylesheets/items/_show.sass */
+body.items-show #closet-hangers select {
+  width: 9em;
+}
+/* line 130, ../../../app/stylesheets/items/_show.sass */
+body.items-show #closet-hangers input[type=number] {
+  width: 4em;
+}
+/* line 135, ../../../app/stylesheets/items/_show.sass */
+body.items-show.js #trade-hangers p {
+  max-height: 3em;
+  overflow: hidden;
+}
+/* line 139, ../../../app/stylesheets/items/_show.sass */
+body.items-show.js #trade-hangers p.showing-more {
+  max-height: none;
+}
 
 @import url(../shared/jquery.jgrowl.css);
-/* line 112, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 113, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-toolbar {
   margin-bottom: 0.5em;
   text-align: left;
 }
-/* line 115, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 116, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-toolbar form {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -856,23 +1850,23 @@ body.outfits-edit #preview-toolbar form {
   *vertical-align: auto;
   margin-right: 2em;
 }
-/* line 118, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 119, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #pet-info form {
   display: inline;
 }
-/* line 121, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 122, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #pet-state-form ul {
   list-style: none;
 }
-/* line 123, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 124, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #pet-state-form ul, body.outfits-edit #pet-state-form ul li {
   display: inline;
 }
-/* line 125, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 126, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #pet-state-form input {
   display: none;
 }
-/* line 127, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 128, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #pet-state-form label {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
@@ -904,7 +1898,7 @@ body.outfits-edit #pet-state-form label:hover {
 body.outfits-edit #pet-state-form label:active {
   top: 1px;
 }
-/* line 130, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 131, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #pet-state-form li.selected button {
   background: #0b61a4 url('/images/alert-overlay.png?1296599919') repeat-x;
 }
@@ -912,30 +1906,30 @@ body.outfits-edit #pet-state-form li.selected button {
 body.outfits-edit #pet-state-form li.selected button:hover {
   background-color: #005093;
 }
-/* line 132, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 133, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #pet-state-form.hidden {
   visibility: hidden;
 }
-/* line 134, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 135, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit-wrapper {
   float: right;
 }
-/* line 136, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 137, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit-wrapper button {
   display: none;
 }
-/* line 138, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 139, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit-wrapper #share-outfit {
   display: inline-block;
 }
-/* line 140, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 141, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit-wrapper.loading {
   background-image: url('/images/loading.gif?1296599919');
   background-position: left center;
   background-repeat: no-repeat;
   padding-left: 20px;
 }
-/* line 146, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 147, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit, body.outfits-edit #save-outfit-not-signed-in, body.outfits-edit #save-current-outfit, body.outfits-edit #save-outfit-copy, body.outfits-edit #save-outfit-finish {
   background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
 }
@@ -943,28 +1937,28 @@ body.outfits-edit #save-outfit, body.outfits-edit #save-outfit-not-signed-in, bo
 body.outfits-edit #save-outfit:hover, body.outfits-edit #save-outfit-not-signed-in:hover, body.outfits-edit #save-current-outfit:hover, body.outfits-edit #save-outfit-copy:hover, body.outfits-edit #save-outfit-finish:hover {
   background-color: #ee4b00;
 }
-/* line 148, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 149, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #current-outfit-permalink, body.outfits-edit #shared-outfit-permalink {
   display: none;
   margin-right: 0.25em;
 }
-/* line 151, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 152, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #current-outfit-permalink img, body.outfits-edit #shared-outfit-permalink img {
   bottom: -2px;
   height: 16px;
   position: relative;
   width: 16px;
 }
-/* line 153, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 154, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #shared-outfit-url {
   display: none;
   width: 15em;
 }
-/* line 156, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 157, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview {
   clear: both;
 }
-/* line 158, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 159, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-swf {
   float: left;
   height: 400px;
@@ -972,15 +1966,15 @@ body.outfits-edit #preview-swf {
   position: relative;
   width: 400px;
 }
-/* line 165, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 166, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-swf.swf-adapter #preview-image-container {
   display: none;
 }
-/* line 168, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 169, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-swf.image-adapter #preview-swf-container {
   display: none;
 }
-/* line 170, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 171, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-image-container {
   position: relative;
 }
@@ -990,12 +1984,12 @@ body.outfits-edit #preview-image-container img {
   position: absolute;
   top: 0;
 }
-/* line 173, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 174, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-image-container, body.outfits-edit #preview-image-container img {
   height: 100%;
   width: 100%;
 }
-/* line 176, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 177, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-swf-overlay {
   -moz-opacity: 0;
   -webkit-opacity: 0;
@@ -1008,7 +2002,7 @@ body.outfits-edit #preview-swf-overlay {
   top: 0;
   width: 100%;
 }
-/* line 184, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 185, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-images-pending {
   background: black;
   background: rgba(0, 0, 0, 0.75);
@@ -1020,11 +2014,11 @@ body.outfits-edit #preview-images-pending {
   right: 0;
   z-index: 1000;
 }
-/* line 194, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 195, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-images-pending.waiting-on-0 {
   display: none;
 }
-/* line 196, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 197, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-mode {
   margin-right: 1em;
   position: absolute;
@@ -1033,21 +2027,21 @@ body.outfits-edit #preview-mode {
   top: 0;
   width: 7em;
 }
-/* line 204, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 205, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-mode.flash-active #preview-mode-flash {
   color: #004400;
   font-weight: bold;
 }
-/* line 207, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 208, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-mode.image-active #preview-mode-image {
   color: #004400;
   font-weight: bold;
 }
-/* line 210, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 211, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-mode.image-active.can-download #preview-download-image {
   display: inline-block;
 }
-/* line 212, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 213, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-mode-toggle {
   -moz-border-radius: 0.5em;
   -webkit-border-radius: 0.5em;
@@ -1059,37 +2053,38 @@ body.outfits-edit #preview-mode-toggle {
   text-align: center;
   width: 5em;
 }
-/* line 221, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 222, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-mode-toggle li {
   border-top: 1px solid #aaddaa;
   cursor: pointer;
   padding: 0.125em 0;
   width: 100%;
 }
-/* line 226, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 227, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-mode-toggle li:first-child {
   border-top: 0;
 }
-/* line 228, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 229, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-download-image {
   display: none;
   font-size: 85%;
   margin: 0 auto;
 }
-/* line 232, ../../../app/stylesheets/outfits/_edit.sass */
-body.outfits-edit #preview-mode-image-access-denied {
+/* line 233, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-mode-note {
   display: block;
   font-size: 75%;
+  margin-top: 0.5em;
   text-align: center;
   text-decoration: none;
   width: 100%;
 }
-/* line 238, ../../../app/stylesheets/outfits/_edit.sass */
-body.outfits-edit #preview-mode-image-access-denied em {
+/* line 240, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-mode-note em {
   font-style: normal;
   text-decoration: underline;
 }
-/* line 241, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 243, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar {
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
@@ -1101,73 +2096,73 @@ body.outfits-edit #preview-sidebar {
   overflow: auto;
   width: 378px;
 }
-/* line 251, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 253, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar.viewing-outfits #preview-closet {
   display: none;
 }
-/* line 253, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 255, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar.viewing-outfits #preview-outfits {
   display: block;
 }
-/* line 255, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 257, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar.viewing-saving-outfit {
   height: auto;
   max-height: 100%;
 }
-/* line 258, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 260, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar.viewing-saving-outfit #preview-closet {
   display: none;
 }
-/* line 260, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 262, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar.viewing-saving-outfit #preview-saving-outfit {
   display: block;
 }
-/* line 263, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 265, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar .sidebar-view h2 {
   margin-bottom: 0.25em;
   margin-left: 24px;
 }
-/* line 268, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 270, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-closet h2 {
   margin-bottom: 0;
 }
-/* line 270, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 272, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-closet ul {
   text-align: center;
 }
-/* line 272, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 274, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-closet .object {
   background: #eeffee;
 }
-/* line 274, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 276, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-closet .object img {
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
   -o-opacity: 0.5;
   -khtml-opacity: 0.5;
 }
-/* line 276, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 278, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-closet .object.worn {
   background: transparent;
 }
-/* line 278, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 280, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-closet .object.worn img {
   -moz-opacity: 1;
   -webkit-opacity: 1;
   -o-opacity: 1;
   -khtml-opacity: 1;
 }
-/* line 280, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 282, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-closet .object.no-assets {
   background: #fbe3e4;
   color: #8a1f11;
   padding-bottom: 1.25em;
 }
-/* line 284, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 286, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-closet .object.no-assets .no-assets-message {
   display: block;
 }
-/* line 286, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 288, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .no-assets-message {
   background: #f3dbdc;
   bottom: 0;
@@ -1179,7 +2174,7 @@ body.outfits-edit .no-assets-message {
   position: absolute;
   width: 100%;
 }
-/* line 296, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 298, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #no-assets-full-message {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -1193,12 +2188,12 @@ body.outfits-edit #no-assets-full-message {
   top: -9999px;
   width: 30em;
 }
-/* line 307, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 309, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form {
   clear: both;
   text-align: left;
 }
-/* line 310, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 312, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form h2 {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -1208,7 +2203,7 @@ body.outfits-edit #preview-search-form h2 {
   *vertical-align: auto;
   margin: 0 1em 0 0;
 }
-/* line 313, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 315, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form input {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -1217,7 +2212,17 @@ body.outfits-edit #preview-search-form input {
   *display: inline;
   *vertical-align: auto;
 }
-/* line 315, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 317, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-search-form input[type=submit] {
+  margin-right: 2em;
+}
+/* line 319, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit .preview-search-form-your-items {
+  display: none;
+  font-size: 85%;
+  margin-right: 1em;
+}
+/* line 323, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form-pagination {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -1225,55 +2230,54 @@ body.outfits-edit #preview-search-form-pagination {
   vertical-align: middle;
   *display: inline;
   *vertical-align: auto;
-  margin-left: 2em;
 }
-/* line 318, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 325, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form-pagination a, body.outfits-edit #preview-search-form-pagination span {
   margin: 0 0.25em;
 }
-/* line 320, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 327, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form-pagination .current {
   font-weight: bold;
 }
-/* line 322, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 329, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form-clear {
   display: none;
   font-size: 87.5%;
   margin-left: 2em;
 }
-/* line 326, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 333, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form-loading {
   display: none;
   font-size: 75%;
   font-style: italic;
   margin-left: 2em;
 }
-/* line 332, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 339, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form-no-results {
   display: none;
 }
-/* line 334, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 341, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form-help {
   font-size: 87.5%;
   margin-left: 2em;
 }
-/* line 337, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 344, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .search-helper {
   font-family: inherit;
 }
-/* line 339, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 346, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .possible-error {
   display: none;
 }
-/* line 342, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 349, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #fullscreen-copyright {
   display: none;
 }
-/* line 344, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 351, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen {
   height: 100%;
 }
-/* line 347, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 354, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #container {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -1286,19 +2290,19 @@ body.outfits-edit.fullscreen #container {
   position: relative;
   width: 80%;
 }
-/* line 355, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 362, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen h1 {
   display: none;
 }
-/* line 357, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 364, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #short-url-response {
   position: static;
 }
-/* line 359, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 366, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #preview {
   width: 100%;
 }
-/* line 361, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 368, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #preview-sidebar {
   float: right;
   height: 100%;
@@ -1306,12 +2310,12 @@ body.outfits-edit.fullscreen #preview-sidebar {
   position: relative;
   width: 400px;
 }
-/* line 367, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 374, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #preview-sidebar.viewing-saving-outfit {
   height: auto;
   max-height: 100%;
 }
-/* line 370, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 377, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #preview-search-form {
   bottom: 1.5em;
   left: 0;
@@ -1320,7 +2324,7 @@ body.outfits-edit.fullscreen #preview-search-form {
   position: absolute;
   width: 100%;
 }
-/* line 378, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 385, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #preview-search-form-help div {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -1330,27 +2334,27 @@ body.outfits-edit.fullscreen #preview-search-form-help div {
   *vertical-align: auto;
   width: 48%;
 }
-/* line 381, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 388, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #footer {
   bottom: 0;
   left: 0;
   position: absolute;
   width: 100%;
 }
-/* line 386, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 393, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #footer ul, body.outfits-edit.fullscreen #footer p, body.outfits-edit.fullscreen #footer li {
   display: inline;
 }
-/* line 388, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 395, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #footer ul {
   margin-right: 2em;
 }
-/* line 391, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 398, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .object {
   padding: 6px;
   position: relative;
 }
-/* line 394, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 401, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .object ul {
   display: none;
   left: 0;
@@ -1358,11 +2362,11 @@ body.outfits-edit .object ul {
   position: absolute;
   top: 0;
 }
-/* line 400, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 407, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .object ul li {
   margin-bottom: 0.25em;
 }
-/* line 402, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 409, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .object ul li a {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
@@ -1403,13 +2407,13 @@ body.outfits-edit .object ul li a:active {
 body.outfits-edit .object ul li a:hover {
   background-color: #999999;
 }
-/* line 408, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 412, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .object:hover ul, body.outfits-edit .object:hover .object-info {
   display: block;
 }
-/* line 415, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 419, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .nc-icon {
-  background: url('/images/nc.png?1310662236') no-repeat;
+  background: url('/images/nc.png?1311877029') no-repeat;
   height: 16px;
   position: absolute;
   right: 16px;
@@ -1417,14 +2421,14 @@ body.outfits-edit .nc-icon {
   top: 64px;
   width: 16px;
 }
-/* line 423, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 427, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .nc-icon:hover {
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
   -o-opacity: 0.5;
   -khtml-opacity: 0.5;
 }
-/* line 426, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 430, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .object-info {
   -moz-border-radius: 12px;
   -webkit-border-radius: 12px;
@@ -1441,26 +2445,26 @@ body.outfits-edit .object-info {
   top: 0;
   width: 16px;
 }
-/* line 437, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 441, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .object-info span {
   font-family: "Droid Serif", Georgia, "Times New Roman", Times, serif;
   font-weight: bold;
   position: relative;
   top: -2px;
 }
-/* line 443, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 447, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .object-info:hover {
   -moz-opacity: 1;
   -webkit-opacity: 1;
   -o-opacity: 1;
   -khtml-opacity: 1;
 }
-/* line 446, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 450, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits {
   display: none;
   text-align: left;
 }
-/* line 449, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 453, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul {
   margin-left: 24px;
   margin-right: 24px;
@@ -1471,7 +2475,7 @@ body.outfits-edit #preview-outfits > ul {
   margin-bottom: 1em;
   min-height: 16px;
 }
-/* line 458, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 462, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li {
   padding: 0.25em 0;
 }
@@ -1506,7 +2510,7 @@ body.outfits-edit #preview-outfits > ul > li .outfit-star {
   margin-left: -24px;
   margin-right: 0;
 }
-/* line 37, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 38, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li img {
   height: 100px;
   left: -25px;
@@ -1514,7 +2518,7 @@ body.outfits-edit #preview-outfits > ul > li img {
   top: -25px;
   width: 100px;
 }
-/* line 43, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 44, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-delete {
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
@@ -1548,7 +2552,7 @@ body.outfits-edit #preview-outfits > ul > li .outfit-delete:hover {
 body.outfits-edit #preview-outfits > ul > li .outfit-delete:active {
   top: auto;
 }
-/* line 51, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 52, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-delete:hover {
   -moz-opacity: 1;
   -webkit-opacity: 1;
@@ -1556,29 +2560,29 @@ body.outfits-edit #preview-outfits > ul > li .outfit-delete:hover {
   -khtml-opacity: 1;
   background: #eeffee;
 }
-/* line 54, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 55, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li header {
   display: block;
   padding-left: 24px;
 }
-/* line 57, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 58, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li h4 {
   cursor: pointer;
   display: inline;
 }
-/* line 60, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 61, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li h4:hover {
   text-decoration: underline;
 }
-/* line 62, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 63, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li h4, body.outfits-edit #preview-outfits > ul > li .outfit-rename-field {
   font-size: 115%;
 }
-/* line 64, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 65, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-rename-button, body.outfits-edit #preview-outfits > ul > li .outfit-rename-form {
   display: none;
 }
-/* line 66, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 67, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-rename-button {
   -moz-opacity: 0.75;
   -webkit-opacity: 0.75;
@@ -1587,7 +2591,7 @@ body.outfits-edit #preview-outfits > ul > li .outfit-rename-button {
   font-size: 75%;
   margin-left: 1em;
 }
-/* line 70, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 71, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-url {
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
@@ -1597,7 +2601,7 @@ body.outfits-edit #preview-outfits > ul > li .outfit-url {
   border-width: 0;
   width: 284px;
 }
-/* line 75, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 76, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-url:hover {
   -moz-opacity: 1;
   -webkit-opacity: 1;
@@ -1605,63 +2609,63 @@ body.outfits-edit #preview-outfits > ul > li .outfit-url:hover {
   -khtml-opacity: 1;
   border-width: 1px;
 }
-/* line 78, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 79, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-delete-confirmation {
   display: none;
   font-size: 75%;
 }
-/* line 81, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 82, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-delete-confirmation span {
   color: red;
 }
-/* line 83, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 84, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-delete-confirmation a {
   margin: 0 0.25em;
 }
-/* line 85, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 86, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li.active {
   background: #eeffee;
 }
-/* line 88, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 89, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li.confirming-deletion .outfit-delete {
   visibility: hidden;
 }
-/* line 90, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 91, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li.confirming-deletion .outfit-url {
   display: none;
 }
-/* line 92, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 93, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li.confirming-deletion .outfit-delete-confirmation {
   display: block;
 }
-/* line 95, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 96, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li.renaming h4 {
   display: none;
 }
-/* line 97, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 98, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li.renaming .outfit-rename-form {
   display: inline;
 }
-/* line 100, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 101, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li.renaming:hover .outfit-rename-button {
   display: none;
 }
-/* line 103, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 104, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li:hover .outfit-rename-button {
   display: inline;
 }
-/* line 460, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 464, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul.loaded {
   background: transparent;
 }
-/* line 463, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 467, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .preview-sidebar-nav {
   float: right;
   font-size: 85%;
   margin-right: 24px;
   margin-top: 1em;
 }
-/* line 470, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 474, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-success, body.outfits-edit #save-error, body.outfits-edit #outfit-not-found, body.outfits-edit #preview-sidebar-donation-request {
   margin-left: 24px;
   margin-right: 24px;
@@ -1669,7 +2673,7 @@ body.outfits-edit #save-success, body.outfits-edit #save-error, body.outfits-edi
   margin-top: 1em;
   text-align: center;
 }
-/* line 477, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 481, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar-donation-request {
   background: #e6efc2;
   border: 1px solid #c6d880;
@@ -1677,23 +2681,23 @@ body.outfits-edit #preview-sidebar-donation-request {
   font-size: 85%;
   padding: 1em;
 }
-/* line 482, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 486, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar-donation-request-no-thanks {
   margin-left: 1em;
 }
-/* line 485, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 489, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-success {
   background: #e6efc2;
   border: 1px solid #c6d880;
   color: #264409;
 }
-/* line 488, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 492, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-error, body.outfits-edit #outfit-not-found {
   background: #fbe3e4;
   border: 1px solid #fbc2c4;
   color: #8a1f11;
 }
-/* line 491, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 495, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #userbar-message {
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
@@ -1701,7 +2705,7 @@ body.outfits-edit #userbar-message {
   -khtml-opacity: 0.5;
   display: none;
 }
-/* line 495, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 499, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit {
   padding: 0.25em 0;
   margin-left: 24px;
@@ -1739,7 +2743,7 @@ body.outfits-edit #new-outfit .outfit-star {
   margin-left: -24px;
   margin-right: 0;
 }
-/* line 37, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 38, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit img {
   height: 100px;
   left: -25px;
@@ -1747,7 +2751,7 @@ body.outfits-edit #new-outfit img {
   top: -25px;
   width: 100px;
 }
-/* line 43, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 44, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-delete {
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
@@ -1781,7 +2785,7 @@ body.outfits-edit #new-outfit .outfit-delete:hover {
 body.outfits-edit #new-outfit .outfit-delete:active {
   top: auto;
 }
-/* line 51, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 52, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-delete:hover {
   -moz-opacity: 1;
   -webkit-opacity: 1;
@@ -1789,29 +2793,29 @@ body.outfits-edit #new-outfit .outfit-delete:hover {
   -khtml-opacity: 1;
   background: #eeffee;
 }
-/* line 54, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 55, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit header {
   display: block;
   padding-left: 24px;
 }
-/* line 57, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 58, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit h4 {
   cursor: pointer;
   display: inline;
 }
-/* line 60, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 61, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit h4:hover {
   text-decoration: underline;
 }
-/* line 62, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 63, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit h4, body.outfits-edit #new-outfit .outfit-rename-field {
   font-size: 115%;
 }
-/* line 64, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 65, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-rename-button, body.outfits-edit #new-outfit .outfit-rename-form {
   display: none;
 }
-/* line 66, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 67, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-rename-button {
   -moz-opacity: 0.75;
   -webkit-opacity: 0.75;
@@ -1820,7 +2824,7 @@ body.outfits-edit #new-outfit .outfit-rename-button {
   font-size: 75%;
   margin-left: 1em;
 }
-/* line 70, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 71, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-url {
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
@@ -1830,7 +2834,7 @@ body.outfits-edit #new-outfit .outfit-url {
   border-width: 0;
   width: 284px;
 }
-/* line 75, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 76, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-url:hover {
   -moz-opacity: 1;
   -webkit-opacity: 1;
@@ -1838,78 +2842,78 @@ body.outfits-edit #new-outfit .outfit-url:hover {
   -khtml-opacity: 1;
   border-width: 1px;
 }
-/* line 78, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 79, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-delete-confirmation {
   display: none;
   font-size: 75%;
 }
-/* line 81, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 82, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-delete-confirmation span {
   color: red;
 }
-/* line 83, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 84, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-delete-confirmation a {
   margin: 0 0.25em;
 }
-/* line 85, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 86, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit.active {
   background: #eeffee;
 }
-/* line 88, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 89, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit.confirming-deletion .outfit-delete {
   visibility: hidden;
 }
-/* line 90, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 91, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit.confirming-deletion .outfit-url {
   display: none;
 }
-/* line 92, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 93, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit.confirming-deletion .outfit-delete-confirmation {
   display: block;
 }
-/* line 95, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 96, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit.renaming h4 {
   display: none;
 }
-/* line 97, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 98, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit.renaming .outfit-rename-form {
   display: inline;
 }
-/* line 100, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 101, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit.renaming:hover .outfit-rename-button {
   display: none;
 }
-/* line 103, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 104, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit:hover .outfit-rename-button {
   display: inline;
 }
-/* line 499, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 503, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit h4 {
   display: inline;
 }
-/* line 501, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 505, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit h4:hover {
   text-decoration: none;
 }
-/* line 503, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 507, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-star {
   margin-top: 0.5em;
 }
-/* line 506, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 510, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit-name {
   font: inherit;
   line-height: 1;
 }
-/* line 510, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 514, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-saving-outfit {
   display: none;
   padding-bottom: 1em;
 }
-/* line 514, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 518, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #pet-type-form, body.outfits-edit #pet-state-form, body.outfits-edit #preview-swf, body.outfits-edit #preview-search-form {
   position: relative;
 }
-/* line 517, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 521, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .control-overlay {
   height: 100%;
   left: 0;
@@ -1918,11 +2922,11 @@ body.outfits-edit .control-overlay {
   width: 100%;
   z-index: 5;
 }
-/* line 525, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 529, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar-nav-outfits, body.outfits-edit #save-outfit-signed-in {
   display: none;
 }
-/* line 528, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 532, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form {
   padding: 0.25em 0;
   display: none;
@@ -1960,7 +2964,7 @@ body.outfits-edit form#save-outfit-form .outfit-star {
   margin-left: -24px;
   margin-right: 0;
 }
-/* line 37, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 38, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form img {
   height: 100px;
   left: -25px;
@@ -1968,7 +2972,7 @@ body.outfits-edit form#save-outfit-form img {
   top: -25px;
   width: 100px;
 }
-/* line 43, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 44, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-delete {
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
@@ -2002,7 +3006,7 @@ body.outfits-edit form#save-outfit-form .outfit-delete:hover {
 body.outfits-edit form#save-outfit-form .outfit-delete:active {
   top: auto;
 }
-/* line 51, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 52, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-delete:hover {
   -moz-opacity: 1;
   -webkit-opacity: 1;
@@ -2010,29 +3014,29 @@ body.outfits-edit form#save-outfit-form .outfit-delete:hover {
   -khtml-opacity: 1;
   background: #eeffee;
 }
-/* line 54, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 55, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form header {
   display: block;
   padding-left: 24px;
 }
-/* line 57, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 58, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form h4 {
   cursor: pointer;
   display: inline;
 }
-/* line 60, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 61, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form h4:hover {
   text-decoration: underline;
 }
-/* line 62, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 63, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form h4, body.outfits-edit form#save-outfit-form .outfit-rename-field {
   font-size: 115%;
 }
-/* line 64, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 65, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-rename-button, body.outfits-edit form#save-outfit-form .outfit-rename-form {
   display: none;
 }
-/* line 66, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 67, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-rename-button {
   -moz-opacity: 0.75;
   -webkit-opacity: 0.75;
@@ -2041,7 +3045,7 @@ body.outfits-edit form#save-outfit-form .outfit-rename-button {
   font-size: 75%;
   margin-left: 1em;
 }
-/* line 70, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 71, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-url {
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
@@ -2051,7 +3055,7 @@ body.outfits-edit form#save-outfit-form .outfit-url {
   border-width: 0;
   width: 284px;
 }
-/* line 75, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 76, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-url:hover {
   -moz-opacity: 1;
   -webkit-opacity: 1;
@@ -2059,52 +3063,52 @@ body.outfits-edit form#save-outfit-form .outfit-url:hover {
   -khtml-opacity: 1;
   border-width: 1px;
 }
-/* line 78, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 79, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-delete-confirmation {
   display: none;
   font-size: 75%;
 }
-/* line 81, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 82, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-delete-confirmation span {
   color: red;
 }
-/* line 83, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 84, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-delete-confirmation a {
   margin: 0 0.25em;
 }
-/* line 85, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 86, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form.active {
   background: #eeffee;
 }
-/* line 88, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 89, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form.confirming-deletion .outfit-delete {
   visibility: hidden;
 }
-/* line 90, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 91, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form.confirming-deletion .outfit-url {
   display: none;
 }
-/* line 92, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 93, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form.confirming-deletion .outfit-delete-confirmation {
   display: block;
 }
-/* line 95, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 96, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form.renaming h4 {
   display: none;
 }
-/* line 97, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 98, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form.renaming .outfit-rename-form {
   display: inline;
 }
-/* line 100, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 101, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form.renaming:hover .outfit-rename-button {
   display: none;
 }
-/* line 103, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 104, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form:hover .outfit-rename-button {
   display: inline;
 }
-/* line 534, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 538, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-star, body.outfits-edit form#save-outfit-form input, body.outfits-edit form#save-outfit-form button {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -2115,51 +3119,60 @@ body.outfits-edit form#save-outfit-form .outfit-star, body.outfits-edit form#sav
   float: none;
   vertical-align: top;
 }
-/* line 539, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 543, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-star {
   margin-top: 0.25em;
 }
-/* line 542, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 546, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .outfit-url {
   font-size: 75%;
 }
-/* line 546, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 550, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #preview-sidebar-nav-outfits {
   display: block;
 }
-/* line 548, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 552, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit {
   display: inline-block;
 }
-/* line 552, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 556, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.active-outfit #save-outfit {
   display: none;
 }
-/* line 554, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 558, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.active-outfit #save-current-outfit, body.outfits-edit.user-signed-in #save-outfit-wrapper.active-outfit #save-outfit-copy {
   display: inline-block;
 }
-/* line 556, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 560, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.active-outfit #current-outfit-permalink {
   display: inline-block;
 }
-/* line 559, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 563, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #save-outfit-form {
   display: block;
 }
-/* line 561, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 565, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #save-outfit, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #save-current-outfit, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #save-outfit-copy, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #current-outfit-permalink, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #shared-outfit-permalink, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #share-outfit, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #shared-outfit-url {
   display: none;
 }
-/* line 565, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 567, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit.user-signed-in .preview-search-form-your-items {
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: middle;
+  *display: inline;
+  *vertical-align: auto;
+}
+/* line 571, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-not-signed-in #save-outfit-not-signed-in {
   display: inline-block;
 }
-/* line 569, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 575, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit-wrapper.shared-outfit #shared-outfit-permalink, body.outfits-edit #save-outfit-wrapper.shared-outfit #shared-outfit-url {
   display: inline-block;
 }
-/* line 571, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 577, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit-wrapper.shared-outfit #current-outfit-permalink {
   display: none !important;
 }
@@ -2536,11 +3549,21 @@ body.outfits-new #sections img:hover {
 body.outfits-new #read-more {
   float: right;
 }
+<<<<<<< HEAD
 /* line 135, ../../../app/stylesheets/outfits/_new.sass */
 body.outfits-new .beta-tag {
   color: red;
   font-size: 50%;
   vertical-align: super;
+=======
+/* line 142, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #your-items-module h3:after {
+  color: red;
+  content: "new!";
+  font-size: 85%;
+  font-weight: bold;
+  margin-left: 0.5em;
+>>>>>>> master
 }
 
 /* line 2, ../../../app/stylesheets/partials/_campaign-progress.sass */
