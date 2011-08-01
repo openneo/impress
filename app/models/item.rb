@@ -710,6 +710,12 @@ class Item < ActiveRecord::Base
     # version of Arel, and other conditions will overwrite this one. Since IDs
     # are guaranteed to be integers, let's just build our own string condition
     # and be done with it.
+
+    if item_ids.empty?
+      raise SearchError, "You don't #{ClosetHanger.verb :you, owned_value} " +
+        "any items yet. Head to Your Items to add some!"
+    end
+
     "id IN (#{item_ids.join(',')})"
   end
 
