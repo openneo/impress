@@ -41,14 +41,16 @@
           %li#preview-mode-flash.active Flash
           - if can_use_image_mode?
             %li#preview-mode-image Image
-        - unless can_use_image_mode?
-          = link_to(donate_path, :id => 'preview-mode-image-access-denied', :target => '_blank') do
+        - if can_use_image_mode?
+          %button#preview-download-image Download
+          = link_to 'Image mode FAQ', image_mode_path,
+            :id => 'preview-mode-note', :target => '_blank'
+        - else
+          = link_to(donate_path, :id => 'preview-mode-note', :target => '_blank') do
             %strong Image mode
             is available for early beta testing to users who
             %em donate
             at least $5 to help upgrade the server. Thanks!
-        - if can_use_image_mode?
-          %button#preview-download-image Download
     #preview-sidebar
       - unless can_use_image_mode?
         #preview-sidebar-donation-request
