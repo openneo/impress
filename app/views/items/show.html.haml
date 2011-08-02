@@ -1,93 +1,92 @@
 - title @item.name
 - canonical_path @item
 
-- cache "items_show_#{@item.id}_main_content" do
-  %header#item-header
-    = image_tag @item.thumbnail_url, :id => 'item-thumbnail'
-    %div
-      %h2#item-name= @item.name
-      = nc_icon_for(@item)
-      - unless @item.rarity.blank?
-        == Rarity: #{@item.rarity_index} (#{@item.rarity})
-      = link_to 'NeoItems', neoitems_url_for(@item), :class => 'button'
+%header#item-header
+  = image_tag @item.thumbnail_url, :id => 'item-thumbnail'
+  %div
+    %h2#item-name= @item.name
+    = nc_icon_for(@item)
+    - unless @item.rarity.blank?
+      == Rarity: #{@item.rarity_index} (#{@item.rarity})
+    = link_to 'NeoItems', neoitems_url_for(@item), :class => 'button'
 
-  - if @current_user_hangers
-    #closet-hangers
-      %header
-        Track this in
-        = link_to 'Your Items', user_closet_hangers_path(current_user)
-      - @current_user_hangers.each do |hanger|
-        = form_for(hanger, :url => user_item_closet_hanger_path(current_user, @item)) do |f|
-          - if hanger.new_record?
-            = f.hidden_field :quantity
-            = f.hidden_field :owned
-            = f.submit "I #{hanger.verb(:you)} this item!"
-          - else
-            = f.hidden_field :owned
-            = f.label :quantity, "How many of these do you #{hanger.verb(:you)}?"
-            = f.number_field :quantity, :min => 0, :required => true
-            - lists = current_user.closet_lists.where(:hangers_owned => hanger.owned).all
-            - unless lists.empty?
-              = f.collection_select :list_id, lists, :id, :name, :include_blank => 'Not in a list'
-            = f.submit "Save"
-  %p= @item.description
-
-  #item-zones
-    %p
-      %strong Occupies:
-      = list_zones @item.occupied_zones, :uncertain_label
-    %p
-      %strong Restricts:
-      - if @item.restricted_zones.empty?
-        None
-      - else
-        = list_zones @item.restricted_zones
-
-  #trade-hangers
-    - [true, false].each do |owned|
-      %p
-        - unless @trading_closet_hangers_by_owned[owned].empty?
-          %strong
-            = pluralize @trading_closet_hangers_by_owned[owned].size, 'user'
-            - if owned
-              - if @trading_closet_hangers_by_owned[owned].size == 1
-                has
-              - else
-                have
-              this item up for trade:
-            - else
-              - if @trading_closet_hangers_by_owned[owned].size == 1
-                wants
-              - else
-                want
-              this item:
-          = render_trading_closet_hangers(owned)
+- if @current_user_hangers
+  #closet-hangers
+    %header
+      Track this in
+      = link_to 'Your Items', user_closet_hangers_path(current_user)
+    - @current_user_hangers.each do |hanger|
+      = form_for(hanger, :url => user_item_closet_hanger_path(current_user, @item)) do |f|
+        - if hanger.new_record?
+          = f.hidden_field :quantity
+          = f.hidden_field :owned
+          = f.submit "I #{hanger.verb(:you)} this item!"
         - else
-          %strong
-            We don't know anyone who
-            - if owned
-              has this item up for trade.
+          = f.hidden_field :owned
+          = f.label :quantity, "How many of these do you #{hanger.verb(:you)}?"
+          = f.number_field :quantity, :min => 0, :required => true
+          - lists = current_user.closet_lists.where(:hangers_owned => hanger.owned).all
+          - unless lists.empty?
+            = f.collection_select :list_id, lists, :id, :name, :include_blank => 'Not in a list'
+          = f.submit "Save"
+%p= @item.description
+
+#item-zones
+  %p
+    %strong Occupies:
+    = list_zones @item.occupied_zones, :uncertain_label
+  %p
+    %strong Restricts:
+    - if @item.restricted_zones.empty?
+      None
+    - else
+      = list_zones @item.restricted_zones
+
+#trade-hangers
+  - [true, false].each do |owned|
+    %p
+      - unless @trading_closet_hangers_by_owned[owned].empty?
+        %strong
+          = pluralize @trading_closet_hangers_by_owned[owned].size, 'user'
+          - if owned
+            - if @trading_closet_hangers_by_owned[owned].size == 1
+              has
             - else
-              wants this item.
-        %span.toggle
-          %span.more more
-          %span.less less
+              have
+            this item up for trade:
+          - else
+            - if @trading_closet_hangers_by_owned[owned].size == 1
+              wants
+            - else
+              want
+            this item:
+        = render_trading_closet_hangers(owned)
+      - else
+        %strong
+          We don't know anyone who
+          - if owned
+            has this item up for trade.
+          - else
+            wants this item.
+      %span.toggle
+        %span.more more
+        %span.less less
 
 
-  #item-preview-header
-    %h3 Preview
-    %a#customize-more.button{:href => '/'} Customize more
+#item-preview-header
+  %h3 Preview
+  %a#customize-more.button{:href => '/'} Customize more
 
-  #item-preview
-    #item-preview-species= standard_species_images_for(@item)
-    #item-preview-error
-    #item-preview-swf
-      Javascript and Flash are required to preview wearables. Sorry!
+#item-preview
+  #item-preview-species= standard_species_images_for(@item)
+  #item-preview-error
+  #item-preview-swf
+    Javascript and Flash are required to preview wearables. Sorry!
 
-  :javascript
-    var CURRENT_ITEM_ZONES_RESTRICT = #{@item.zones_restrict.inspect},
-      IMPRESS_HOST = #{RemoteImpressHost.inspect};
+:javascript
+  var CURRENT_ITEM_ZONES_RESTRICT = #{@item.zones_restrict.inspect},
+    IMPRESS_HOST = #{RemoteImpressHost.inspect};
 
-  = include_javascript_libraries :jquery, :swfobject
-  = javascript_include_tag 'items/show'
+= include_javascript_libraries :jquery, :swfobject
+= javascript_include_tag 'items/show'
 
