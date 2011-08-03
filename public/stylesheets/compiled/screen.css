@@ -1348,16 +1348,16 @@ body.closet_lists-new form ul.fields .hint, body.closet_lists-create form ul.fie
   font-size: 85%;
 }
 
-/* line 3, ../../../app/stylesheets/closet_pages/_new.sass */
-body.closet_pages-new #title, body.closet_pages-create #title {
+/* line 3, ../../../app/stylesheets/neopets_pages/_new.sass */
+body.neopets_pages-new #title, body.neopets_pages-create #title {
   float: left;
 }
-/* line 6, ../../../app/stylesheets/closet_pages/_new.sass */
-body.closet_pages-new .flash, body.closet_pages-create .flash {
+/* line 6, ../../../app/stylesheets/neopets_pages/_new.sass */
+body.neopets_pages-new .flash, body.neopets_pages-create .flash {
   clear: both;
 }
-/* line 9, ../../../app/stylesheets/closet_pages/_new.sass */
-body.closet_pages-new #back-to-items, body.closet_pages-create #back-to-items {
+/* line 9, ../../../app/stylesheets/neopets_pages/_new.sass */
+body.neopets_pages-new #back-to-items, body.neopets_pages-create #back-to-items {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -1378,69 +1378,69 @@ body.closet_pages-new #back-to-items, body.closet_pages-create #back-to-items {
   margin-top: 0.75em;
 }
 /* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
-body.closet_pages-new #back-to-items:hover, body.closet_pages-create #back-to-items:hover {
+body.neopets_pages-new #back-to-items:hover, body.neopets_pages-create #back-to-items:hover {
   background-color: #005300;
 }
 /* line 53, ../../../app/stylesheets/partials/clean/_mixins.sass */
-body.closet_pages-new #back-to-items:hover, body.closet_pages-create #back-to-items:hover {
+body.neopets_pages-new #back-to-items:hover, body.neopets_pages-create #back-to-items:hover {
   color: white;
 }
 /* line 55, ../../../app/stylesheets/partials/clean/_mixins.sass */
-body.closet_pages-new #back-to-items:active, body.closet_pages-create #back-to-items:active {
+body.neopets_pages-new #back-to-items:active, body.neopets_pages-create #back-to-items:active {
   top: 1px;
 }
-/* line 15, ../../../app/stylesheets/closet_pages/_new.sass */
-body.closet_pages-new #closet-page-form, body.closet_pages-create #closet-page-form {
+/* line 15, ../../../app/stylesheets/neopets_pages/_new.sass */
+body.neopets_pages-new #closet-page-form, body.neopets_pages-create #closet-page-form {
   overflow: hidden;
   display: inline-block;
   clear: both;
   margin-bottom: 1em;
 }
 /* line 8, ../../../app/stylesheets/partials/clean/_mixins.sass */
-body.closet_pages-new #closet-page-form, body.closet_pages-create #closet-page-form {
+body.neopets_pages-new #closet-page-form, body.neopets_pages-create #closet-page-form {
   display: block;
 }
-/* line 20, ../../../app/stylesheets/closet_pages/_new.sass */
-body.closet_pages-new #closet-page-frame-wrapper, body.closet_pages-create #closet-page-frame-wrapper {
+/* line 20, ../../../app/stylesheets/neopets_pages/_new.sass */
+body.neopets_pages-new #closet-page-frame-wrapper, body.neopets_pages-create #closet-page-frame-wrapper {
   float: left;
   margin-right: 2%;
   width: 48%;
 }
-/* line 25, ../../../app/stylesheets/closet_pages/_new.sass */
-body.closet_pages-new #closet-page-frame, body.closet_pages-create #closet-page-frame {
+/* line 25, ../../../app/stylesheets/neopets_pages/_new.sass */
+body.neopets_pages-new #closet-page-frame, body.neopets_pages-create #closet-page-frame {
   height: 19em;
   width: 100%;
 }
-/* line 29, ../../../app/stylesheets/closet_pages/_new.sass */
-body.closet_pages-new #closet-page-source, body.closet_pages-create #closet-page-source {
+/* line 29, ../../../app/stylesheets/neopets_pages/_new.sass */
+body.neopets_pages-new #closet-page-source, body.neopets_pages-create #closet-page-source {
   float: left;
   width: 50%;
 }
-/* line 33, ../../../app/stylesheets/closet_pages/_new.sass */
-body.closet_pages-new #closet-page-source label, body.closet_pages-create #closet-page-source label {
+/* line 33, ../../../app/stylesheets/neopets_pages/_new.sass */
+body.neopets_pages-new #closet-page-source label, body.neopets_pages-create #closet-page-source label {
   font-weight: bold;
 }
-/* line 36, ../../../app/stylesheets/closet_pages/_new.sass */
-body.closet_pages-new #closet-page-source textarea, body.closet_pages-create #closet-page-source textarea {
+/* line 36, ../../../app/stylesheets/neopets_pages/_new.sass */
+body.neopets_pages-new #closet-page-source textarea, body.neopets_pages-create #closet-page-source textarea {
   height: 19em;
 }
-/* line 40, ../../../app/stylesheets/closet_pages/_new.sass */
-body.closet_pages-new ol, body.closet_pages-create ol {
+/* line 40, ../../../app/stylesheets/neopets_pages/_new.sass */
+body.neopets_pages-new ol, body.neopets_pages-create ol {
   padding-left: 1em;
 }
-/* line 43, ../../../app/stylesheets/closet_pages/_new.sass */
-body.closet_pages-new ol > li, body.closet_pages-create ol > li {
+/* line 43, ../../../app/stylesheets/neopets_pages/_new.sass */
+body.neopets_pages-new ol > li, body.neopets_pages-create ol > li {
   margin-bottom: 1em;
 }
-/* line 46, ../../../app/stylesheets/closet_pages/_new.sass */
-body.closet_pages-new ol ul, body.closet_pages-create ol ul {
+/* line 46, ../../../app/stylesheets/neopets_pages/_new.sass */
+body.neopets_pages-new ol ul, body.neopets_pages-create ol ul {
   font-size: 85%;
   margin-bottom: 1em;
   margin-top: 0;
   padding-left: 1em;
 }
-/* line 53, ../../../app/stylesheets/closet_pages/_new.sass */
-body.closet_pages-new ol p, body.closet_pages-create ol p {
+/* line 53, ../../../app/stylesheets/neopets_pages/_new.sass */
+body.neopets_pages-new ol p, body.neopets_pages-create ol p {
   margin: 0;
 }
 

@@ -30,7 +30,13 @@ OpenneoImpressItems::Application.routes.draw do |map|
   resources :pet_attributes, :only => [:index]
   resources :swf_assets, :only => [:index, :show]
 
-  resources :closet_pages, :only => [:new, :create], :path => 'closet/pages'
+  scope 'import' do
+    resources :closet_pages, :only => [:new, :create],
+      :controller => 'neopets_pages', :path => 'closet/pages', :type => 'closet'
+
+    resources :safety_deposit_pages, :only => [:new, :create],
+      :controller => 'neopets_pages', :path => 'sdb/pages', :type => 'sdb'
+  end
 
   match '/users/current-user/outfits' => 'outfits#index', :as => :current_user_outfits
 
