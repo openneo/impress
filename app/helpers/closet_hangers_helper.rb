@@ -73,6 +73,21 @@ module ClosetHangersHelper
     item.name.gsub(/ on/i, ' o<b></b>n')
   end
 
+  PETPAGE_IMAGE_URL_BLACKLIST = %w(window. ondrop)
+  def petpage_item_thumbnail_url(item)
+    url = item.thumbnail_url
+
+    # If the URL includes any of the blacklisted terms, use our redirect URL
+    PETPAGE_IMAGE_URL_BLACKLIST.each do |term|
+      if url.include?(term)
+        url = item_url(item, :format => :gif)
+        break
+      end
+    end
+
+    url
+  end
+
   def public_perspective?
     @public_perspective
   end
