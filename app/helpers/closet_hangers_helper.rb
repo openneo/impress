@@ -5,6 +5,13 @@ module ClosetHangersHelper
     'hidden' unless @user.closet_hangers.empty?
   end
 
+  def closet_hanger_partial_class(hanger)
+    'object'.tap do |class_name|
+      class_name << ' user-owns' if hanger.item.owned?
+      class_name << ' user-wants' if hanger.item.wanted?
+    end
+  end
+
   def closet_hanger_verb(owned, positive=true)
     ClosetHanger.verb(closet_hanger_subject, owned, positive)
   end

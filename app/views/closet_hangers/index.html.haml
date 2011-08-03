@@ -8,6 +8,8 @@
       = submit_tag 'Search', :name => nil
 - else
   - title "#{@user.name}'s Items"
+  - secondary_nav do
+    %span#toggle-compare Compare with Your Items
 
 - canonical_path user_closet_hangers_path(@user)
 
