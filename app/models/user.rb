@@ -52,13 +52,18 @@ class User < ActiveRecord::Base
     # N^2 searching the items list for items that match the given IDs or vice
     # versa, and everything stays a lovely O(n)
     items_by_id = {}
-    items.each { |item| items_by_id[item.id] = item }
+    items.each do |item|
+      items_by_id[item.id] ||= []
+      items_by_id[item.id] << item
+    end
     closet_hangers.where(:item_id => items_by_id.keys).each do |hanger|
-      item = items_by_id[hanger.item_id]
-      if hanger.owned?
-        item.owned = true
-      else
-        item.wanted = true
+      items = items_by_id[hanger.item_id]
+      items.each do |item|
+        if hanger.owned?
+          item.owned = true
+        else
+          item.wanted = true
+        end
       end
     end
   end
