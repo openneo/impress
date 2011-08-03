@@ -751,11 +751,12 @@ body.closet_hangers-index #closet-hangers-help.hidden {
 }
 /* line 92, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers-extras {
+  font-size: 85%;
   margin-bottom: 2em;
   margin-top: 2em;
   text-align: center;
 }
-/* line 98, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 99, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers-extras a {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
@@ -787,9 +788,8 @@ body.closet_hangers-index #closet-hangers-extras a:hover {
 body.closet_hangers-index #closet-hangers-extras a:active {
   top: 1px;
 }
-/* line 102, ../../../app/stylesheets/closet_hangers/_index.sass */
+/* line 103, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers-share {
-  font-size: 85%;
   margin-bottom: 1em;
 }
 /* line 106, ../../../app/stylesheets/closet_hangers/_index.sass */
@@ -1459,6 +1459,34 @@ body.neopets_pages-new ol ul, body.neopets_pages-create ol ul {
 /* line 53, ../../../app/stylesheets/neopets_pages/_new.sass */
 body.neopets_pages-new ol p, body.neopets_pages-create ol p {
   margin: 0;
+}
+
+/* line 2, ../../../app/stylesheets/partials/_secondary_nav.sass */
+body.neopets_users-new #title, body.neopets_users-create #title {
+  float: left;
+  margin-right: 0.5em;
+}
+/* line 6, ../../../app/stylesheets/partials/_secondary_nav.sass */
+body.neopets_users-new .flash, body.neopets_users-create .flash {
+  clear: both;
+}
+/* line 9, ../../../app/stylesheets/partials/_secondary_nav.sass */
+body.neopets_users-new #secondary-nav, body.neopets_users-create #secondary-nav {
+  display: block;
+  margin-top: 0.75em;
+}
+/* line 4, ../../../app/stylesheets/neopets_users/_form.sass */
+body.neopets_users-new #neopets-user-form, body.neopets_users-create #neopets-user-form {
+  clear: both;
+}
+/* line 7, ../../../app/stylesheets/neopets_users/_form.sass */
+body.neopets_users-new #neopets-user-form label, body.neopets_users-create #neopets-user-form label {
+  font-weight: bold;
+  margin-right: 1em;
+}
+/* line 11, ../../../app/stylesheets/neopets_users/_form.sass */
+body.neopets_users-new #neopets-user-form label:after, body.neopets_users-create #neopets-user-form label:after {
+  content: ":";
 }
 
 /* line 1, ../../../app/stylesheets/contributions/_index.sass */
