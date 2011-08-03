@@ -1,5 +1,5 @@
 %div.dti-item
-  = image_tag hanger.item.thumbnail_url, :alt => nil, :class => 'dti-item-thumbnail'
+  = image_tag petpage_item_thumbnail_url(hanger.item), :alt => nil, :class => 'dti-item-thumbnail'
   - if hanger.item.nc?
     = image_tag nc_icon_url, :alt => 'NC', :class => 'dti-item-nc', :title => 'This is an NC Mall item'
   %span= petpage_item_name hanger.item
