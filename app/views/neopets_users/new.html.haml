@@ -1,0 +1,17 @@
+- title 'Import from pets'
+- secondary_nav do
+  = link_to 'Back to Your Items', user_closet_hangers_path(current_user), :class => 'button'
+
+= form_for @neopets_user, :html => {:id => 'neopets-user-form'} do |f|
+  %p
+    Since the items your pets are wearing don't show up in the Neopets closet,
+    we have this tool to help you import those items without a second thought.
+
+  %p
+    Just enter your Neopets username in the box below, then we'll load all
+    your pets and import what they're wearing. Have fun!
+
+  = f.label :username, 'Neopets Username'
+  = f.text_field :username
+  = f.submit "Import pets"
+

@@ -36,6 +36,8 @@ OpenneoImpressItems::Application.routes.draw do |map|
 
     resources :safety_deposit_pages, :only => [:new, :create],
       :controller => 'neopets_pages', :path => 'sdb/pages', :type => 'sdb'
+
+    resources :neopets_users, :only => [:new, :create], :path => 'neopets-users'
   end
 
   match '/users/current-user/outfits' => 'outfits#index', :as => :current_user_outfits
