@@ -45,6 +45,19 @@
 	  $(this).closest('.closet-hangers-group').toggleClass('hidden');
 	});
 
+	var hangersElQuery = '#closet-hangers';
+  var hangersEl = $(hangersElQuery);
+
+	/*
+
+    Compare with Your Items
+
+  */
+
+  $('#toggle-compare').click(function () {
+    hangersEl.toggleClass('comparing');
+  });
+
   /*
 
     Hanger forms
@@ -61,9 +74,6 @@
 
   var body = $(document.body).addClass("js");
   if(!body.hasClass("current-user")) return false;
-
-  var hangersElQuery = '#closet-hangers';
-  var hangersEl = $(hangersElQuery);
 
   $.fn.disableForms = function () {
     return this.data("formsDisabled", true).find("input").attr("disabled", "disabled").end();

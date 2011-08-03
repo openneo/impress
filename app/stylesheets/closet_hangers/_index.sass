@@ -81,7 +81,7 @@ body.closet_hangers-index
   #cancel-contact-link
     margin-left: 1em
 
-  #toggle-help
+  #toggle-help, #toggle-compare
     +awesome-button
     cursor: pointer
     display: none
@@ -303,6 +303,11 @@ body.closet_hangers-index
       font-size: 85%
       padding-left: 2em
 
+  .closet-hangers-group
+    &[data-owned=true] .user-wants, &[data-owned=false] .user-owns
+      background: $module-bg-color
+      font-weight: bold
+
   &.current-user
     #closet-hangers
       .object:hover
@@ -385,4 +390,16 @@ body.closet_hangers-index
 
       #toggle-help
         display: inline
+
+  &.js
+    #toggle-compare
+      display: inline
+
+    #closet-hangers.comparing
+      .object
+        display: none
+
+      .closet-hangers-group
+        &[data-owned=true] .user-wants, &[data-owned=false] .user-owns
+          display: inline-block
 
