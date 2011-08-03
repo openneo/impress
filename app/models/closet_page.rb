@@ -4,7 +4,7 @@ class ClosetPage
   include ActiveModel::Conversion
   extend ActiveModel::Naming
 
-  SELECTORS = {
+  @selectors = {
     :items          => "form[action=\"process_closet.phtml\"] tr[bgcolor!=silver][bgcolor!=\"#E4E4E4\"]",
     :item_thumbnail => "img",
     :item_name      => "td:nth-child(2)",
@@ -24,6 +24,10 @@ class ClosetPage
 
   def last?
     @index == @total_pages
+  end
+
+  def name
+    'closet'
   end
 
   def persisted?
@@ -58,47 +62,79 @@ class ClosetPage
   protected
 
   def element(selector_name, parent)
-    parent.at_css(SELECTORS[selector_name]) ||
-      raise(ParseError, "Closet #{selector_name} element not found in #{parent.inspect}")
+    parent.at_css(self.class.selectors[selector_name]) ||
+      raise(ParseError, "#{selector_name} element not found")
   end
 
   def elements(selector_name, parent)
-    parent.css(SELECTORS[selector_name])
+    parent.css(self.class.selectors[selector_name])
+  end
+
+  def find_id(row)
+    element(:item_remove, row)['name']
+  end
+
+  def find_index(page_selector)
+    element(:selected, page_selector)['value'].to_i
+  end
+
+  def find_items(doc)
+    elements(:items, doc)
+  end
+
+  def find_name(row)
+    # For normal items, the td contains essentially:
+    # <b>NAME<br/><span>OPTIONAL ADJECTIVE</span></b>
+    # For PB items, the td contains:
+    # NAME<br/><span>OPTIONAL ADJECTIVE</span>
+    # So, we want the first text node. If it's a PB item, that's the first
+    # child. If it's a normal item, it's the first child <b>'s child.
+    name_el = element(:item_name, row).children[0]
+    name_el = name_el.children[0] if name_el.name == 'b'
+    name_el.text
+  end
+
+  def find_page_selector(doc)
+    element(:page_select, doc)
+  end
+
+  def find_quantity(row)
+    element(:item_quantity, row).text.to_i
+  end
+
+  def find_thumbnail_url(row)
+    element(:item_thumbnail, row)['src']
+  end
+
+  def find_total_pages(page_selector)
+    page_selector.children.size
   end
 
   def parse_source!(source)
     doc = Nokogiri::HTML(source)
 
-    page_selector = element(:page_select, doc)
-    @total_pages = page_selector.children.size
-    @index = element(:selected, page_selector)['value'].to_i
+    page_selector = find_page_selector(doc)
+    @total_pages = find_total_pages(page_selector)
+    @index = find_index(page_selector)
 
     items_data = {
       :id => {},
       :thumbnail_url => {}
     }
 
-    # Go through the items, and find the ID/thumbnail for each and data with it
-    elements(:items, doc).each do |row|
-      # For normal items, the td contains essentially:
-      # <b>NAME<br/><span>OPTIONAL ADJECTIVE</span></b>
-      # For PB items, the td contains:
-      # NAME<br/><span>OPTIONAL ADJECTIVE</span>
-      # So, we want the first text node. If it's a PB item, that's the first
-      # child. If it's a normal item, it's the first child <b>'s child.
-      name_el = element(:item_name, row).children[0]
-      name_el = name_el.children[0] if name_el.name == 'b'
 
+    # Go through the items, and find the ID/thumbnail for each and data with it
+    find_items(doc).each do |row|
       data = {
-        :name => name_el.text,
-        :quantity => element(:item_quantity, row).text.to_i
+        :name => find_name(row),
+        :quantity => find_quantity(row)
       }
 
-      if id = element(:item_remove, row)['name']
+      if id = find_id(row)
         id = id.to_i
         items_data[:id][id] = data
       else # if this is a pb item, which does not give ID, go by thumbnail
-        thumbnail_url = element(:item_thumbnail, row)['src']
+        thumbnail_url = find_thumbnail_url(row)
         items_data[:thumbnail_url][thumbnail_url] = data
       end
     end
@@ -131,6 +167,10 @@ class ClosetPage
         @unknown_item_names << data[:name]
       end
     end
+  end
+
+  def self.selectors
+    @selectors
   end
 
   class ParseError < RuntimeError;end

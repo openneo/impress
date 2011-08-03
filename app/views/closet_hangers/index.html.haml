@@ -74,8 +74,9 @@
       %label{:for => 'closet-hangers-share-box'} Public URL:
       %input#closet-hangers-share-box{:type => 'text', :value => user_closet_hangers_url(@user), :readonly => true}
 
-    = link_to "Import from Neopets closet", new_closet_page_path
-    = link_to "Export to Neopets petpage", petpage_user_closet_hangers_path(@user)
+    = link_to "Import from closet", new_closet_page_path
+    = link_to "Import from SDB", new_safety_deposit_page_path
+    = link_to "Export to petpage", petpage_user_closet_hangers_path(@user)
 
 
 
