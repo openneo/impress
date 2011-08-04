@@ -38,7 +38,7 @@ class Item < ActiveRecord::Base
     "LEFT JOIN #{SwfAsset.table_name} sa ON sa.type = 'object' AND sa.id = psa.swf_asset_id"
   ).where('sa.id IS NULL')
 
-  scope :newest, order(arel_table[:created_at].desc)
+  scope :newest, order(arel_table[:created_at].desc) if arel_table[:created_at]
 
   scope :spidered_longest_ago, order(["(#{Item.arel_table[:last_spidered].eq(nil).to_sql}) DESC", arel_table[:last_spidered].desc])
 
