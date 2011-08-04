@@ -33,8 +33,7 @@ class ItemsController < ApplicationController
     else
       respond_to do |format|
         format.html {
-          @newest_items = Item.newest.limit(9)
-          render
+          @newest_items = Item.newest.limit(18)
         }
         format.js { render :json => {:error => '$q required'}}
       end
