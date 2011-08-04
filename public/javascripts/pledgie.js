@@ -30,6 +30,7 @@
     $('span.campaign-goal').text(campaign.goal);
 
     var campaign_percent = campaign.amount_raised / campaign.goal * 100;
+    if(campaign_percent > 100) campaign_percent = 100;
     $('div.campaign-progress').css('width', campaign_percent + '%');
 
     $(document.body).addClass('campaign-loaded');
