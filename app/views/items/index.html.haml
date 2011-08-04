@@ -13,26 +13,31 @@
     = render @items
     = will_paginate @items
 - else
-  #search-help
-    %h2 Find what you're looking for
-    %dl
-      %dt kreludor  "altador cup" -background
-      %dd
-        returns any item with the word "kreludor" and the phrase "altador cup"
-        in it, but not the word "background"
-      %dt hat user:owns
-      %dd
-        returns
-        = link_to 'items that you own', your_items_path
-        with the word "hat"
-      %dt blue is:nc
-      %dd returns any NC Mall item with the word "blue" in it
-      %dt collar -is:pb
-      %dd returns any item with the word "collar" in it that isn't from a paint brush
-      %dt species:shoyru
-      %dd returns any item a Shoyru can wear
-      %dt type:hat
-      %dd returns any item that fills a "hat" zone
+  #search-info
+    #search-help
+      %h2 Find what you're looking for
+      %dl
+        %dt kreludor  "altador cup" -background
+        %dd
+          returns any item with the word "kreludor" and the phrase "altador cup"
+          in it, but not the word "background"
+        %dt hat user:owns
+        %dd
+          returns
+          = link_to 'items that you own', your_items_path
+          with the word "hat"
+        %dt blue is:nc
+        %dd returns any NC Mall item with the word "blue" in it
+        %dt collar -is:pb
+        %dd returns any item with the word "collar" in it that isn't from a paint brush
+        %dt species:shoyru
+        %dd returns any item a Shoyru can wear
+        %dt type:hat
+        %dd returns any item that fills a "hat" zone
+
+    #search-new-items
+      %h2 Newest items
+      = render @newest_items
 
   #species-search-links
     %h2 Can't decide? Search by species
