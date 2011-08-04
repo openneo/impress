@@ -20,8 +20,8 @@ module ApplicationHelper
     if block_given?
       content = capture(&block)
     else
-      content = link_to('We need your help to keep growing and stay online!', donate_path) +
-        link_to('Donate now!', donate_path, :class => 'button')
+      content = link_to('We made it! The server will be upgrading tonight.', donate_path) +
+        link_to('Read more', donate_path, :class => 'button')
     end
 
     html = content_tag(:div, nil, :class => 'campaign-progress') +
