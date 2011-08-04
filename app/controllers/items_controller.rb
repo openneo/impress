@@ -34,6 +34,7 @@ class ItemsController < ApplicationController
       respond_to do |format|
         format.html {
           @newest_items = Item.newest.limit(18)
+          current_user.assign_closeted_to_items!(@newest_items) if user_signed_in?
         }
         format.js { render :json => {:error => '$q required'}}
       end
