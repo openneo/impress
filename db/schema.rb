@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110731021808) do
+ActiveRecord::Schema.define(:version => 20110804134432) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -86,6 +86,8 @@ ActiveRecord::Schema.define(:version => 20110731021808) do
     t.text     "species_support_ids", :limit => 16777215
     t.boolean  "sold_in_mall",                            :null => false
     t.datetime "last_spidered"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "objects", ["last_spidered"], :name => "objects_last_spidered"

@@ -1638,21 +1638,21 @@ body.items-index form {
   margin-bottom: 2em;
 }
 /* line 11, ../../../app/stylesheets/items/_index.sass */
-body.items-index #search-help {
+body.items-index #search-info {
   float: left;
   width: 49%;
   padding-right: 1%;
 }
 /* line 4, ../../../app/stylesheets/items/_index.sass */
-body.items-index #search-help h2 {
+body.items-index #search-info h2 {
   font-size: 125%;
 }
 /* line 14, ../../../app/stylesheets/items/_index.sass */
-body.items-index #search-help dl {
+body.items-index #search-info dl {
   text-align: left;
 }
 /* line 16, ../../../app/stylesheets/items/_index.sass */
-body.items-index #search-help dd {
+body.items-index #search-info dd {
   margin-bottom: 1em;
 }
 /* line 19, ../../../app/stylesheets/items/_index.sass */
