@@ -1,6 +1,17 @@
 class UsersController < ApplicationController
   before_filter :find_and_authorize_user!, :only => [:update]
 
+  def index # search, really
+    name = params[:name]
+    @user = User.find_by_name(name)
+    if @user
+      redirect_to user_closet_hangers_path(@user)
+    else
+      flash[:alert] = "We don't have a user named \"#{name}\". Did you spell it correctly?"
+      redirect_to root_path
+    end
+  end
+
   def top_contributors
     @users = User.top_contributors.paginate :page => params[:page], :per_page => 20
   end
