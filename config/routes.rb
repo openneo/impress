@@ -49,7 +49,7 @@ OpenneoImpressItems::Application.routes.draw do |map|
   match '/logout' => 'sessions#destroy', :as => :logout
   match '/users/authorize' => 'sessions#create'
 
-  resources :users, :path => 'user', :only => [:update] do
+  resources :users, :path => 'user', :only => [:index, :update] do
     resources :contributions, :only => [:index]
     resources :closet_hangers, :only => [:index], :path => 'closet' do
       collection do

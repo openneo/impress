@@ -3598,16 +3598,23 @@ body.outfits-new #sections img:hover {
   -khtml-opacity: 1;
 }
 /* line 137, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #sections p {
+  min-height: 4.5em;
+}
+/* line 139, ../../../app/stylesheets/outfits/_new.sass */
 body.outfits-new #read-more {
   float: right;
 }
+
 /* line 139, ../../../app/stylesheets/outfits/_new.sass */
 body.outfits-new .beta-tag {
   color: red;
   font-size: 50%;
   vertical-align: super;
 }
-/* line 146, ../../../app/stylesheets/outfits/_new.sass */
+
+/* line 144, ../../../app/stylesheets/outfits/_new.sass */
+
 body.outfits-new #your-items-module h3:after {
   color: red;
   content: "new!";
@@ -4013,3 +4020,4 @@ body.users-top_contributors #top-contributors td, body.users-top_contributors #t
   border-width: 0 0 1px 1px;
   padding: 0.5em 1em;
 }
+

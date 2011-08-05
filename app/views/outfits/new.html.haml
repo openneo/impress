@@ -39,6 +39,9 @@
         %p
           Make lists of the items you own and want, and share them with the
           world.
+        = form_tag users_path, :method => 'get' do
+          = text_field_tag 'name', '', :placeholder => raw('find a user&hellip;'), :type => 'search'
+          = submit_tag 'search'
 
     %li
       %a{:href => items_path}
@@ -51,7 +54,7 @@
         %p
           Take a look through our wearables database!
         = form_tag items_path, :method => 'get' do
-          = text_field_tag 'q', '', :placeholder => raw('search items&hellip;'), :type => 'search'
+          = text_field_tag 'q', '', :placeholder => raw('find an item&hellip;'), :type => 'search'
           = submit_tag 'search'
     %li#blog-preview
       %a{:href => "http://blog.openneo.net"}
