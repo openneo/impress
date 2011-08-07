@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   end
 
   def can_use_image_mode?
-    user_signed_in? && current_user.image_mode_tester?
+    true
   end
 
   class AccessDenied < StandardError;end
