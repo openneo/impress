@@ -19,5 +19,12 @@ class AssetImageConversionRequest
 
     @queue = :requested_asset_images_on_creation
   end
+
+  class OnBrokenImageReport < AssetImageConversionRequest
+    @retry_limit = 5
+    @retry_delay = 60
+
+    @queue = :reportedly_broken_asset_images
+  end
 end
 

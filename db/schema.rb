@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110804134432) do
+ActiveRecord::Schema.define(:version => 20110807212936) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -156,15 +156,17 @@ ActiveRecord::Schema.define(:version => 20110804134432) do
   end
 
   create_table "swf_assets", :id => false, :force => true do |t|
-    t.string   "type",            :limit => 7,                           :null => false
-    t.integer  "id",              :limit => 3,                           :null => false
-    t.text     "url",             :limit => 16777215,                    :null => false
-    t.integer  "zone_id",         :limit => 1,                           :null => false
-    t.text     "zones_restrict",                                         :null => false
-    t.datetime "created_at",                                             :null => false
-    t.integer  "body_id",         :limit => 2,                           :null => false
-    t.boolean  "has_image",                           :default => false, :null => false
-    t.boolean  "image_requested",                     :default => false, :null => false
+    t.string   "type",               :limit => 7,                           :null => false
+    t.integer  "id",                 :limit => 3,                           :null => false
+    t.text     "url",                :limit => 16777215,                    :null => false
+    t.integer  "zone_id",            :limit => 1,                           :null => false
+    t.text     "zones_restrict",                                            :null => false
+    t.datetime "created_at",                                                :null => false
+    t.integer  "body_id",            :limit => 2,                           :null => false
+    t.boolean  "has_image",                              :default => false, :null => false
+    t.boolean  "image_requested",                        :default => false, :null => false
+    t.datetime "reported_broken_at"
+    t.datetime "converted_at"
   end
 
   add_index "swf_assets", ["body_id"], :name => "swf_assets_body_id_and_object_id"
