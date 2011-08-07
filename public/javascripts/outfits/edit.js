@@ -857,6 +857,27 @@ View.PreviewAdapterForm = function (wardrobe) {
   }
 }
 
+View.ReportBrokenImage = function (wardrobe) {
+  var link = $('#report-broken-image');
+  var baseURL = link.attr('data-base-url');
+
+  function updateLink() {
+    var assets = wardrobe.outfit.getVisibleAssets();
+    var url = baseURL + "?";
+
+    for(var i = 0; i < assets.length; i++) {
+      if(i > 0) url += "&";
+      url += "asset_ids[]=" + assets[i].id;
+    }
+
+    link.attr('href', url);
+  }
+
+  wardrobe.outfit.bind('updateWornItems', updateLink);
+  wardrobe.outfit.bind('updateItemAssets', updateLink);
+  wardrobe.outfit.bind('updatePetState', updateLink);
+}
+
 View.Search = function (wardrobe) {
   var form_selector = '#preview-search-form', form = $(form_selector),
     item_set = new Partial.ItemSet(wardrobe, form_selector + ' ul'),

@@ -45,6 +45,8 @@
           %button#preview-download-image Download
           = link_to 'Image mode FAQ', image_mode_path,
             :id => 'preview-mode-note', :target => '_blank'
+          = link_to 'Broken image?', '#', :id => 'report-broken-image',
+            :target => '_blank', 'data-base-url' => '/FIXME'
         - else
           = link_to(donate_path, :id => 'preview-mode-note', :target => '_blank') do
             %strong Image mode

@@ -207,6 +207,8 @@ body.outfits-edit
     &.image-active
       #preview-mode-image
         +active-mode
+      #report-broken-image
+        display: block
       &.can-download
         #preview-download-image
           display: inline-block
@@ -230,7 +232,7 @@ body.outfits-edit
     display: none
     font-size: 85%
     margin: 0 auto
-  #preview-mode-note
+  #preview-mode-note, #report-broken-image
     display: block
     font-size: 75%
     margin-top: .5em
@@ -240,6 +242,8 @@ body.outfits-edit
     em
       font-style: normal
       text-decoration: underline
+  #report-broken-image
+    display: none
   #preview-sidebar
     +border-radius(10px)
     border: 1px solid $soft-border-color
