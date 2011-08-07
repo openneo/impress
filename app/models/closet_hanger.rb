@@ -20,7 +20,9 @@ class ClosetHanger < ActiveRecord::Base
     scope "#{name}_trading", joins(:user).includes(:list).
       where(:owned => owned).
       where((
-        User.arel_table["#{name}_closet_hangers_visibility"].gteq(ClosetVisibility[:trading].id)
+        arel_table[:list_id].eq(nil).and(
+          User.arel_table["#{name}_closet_hangers_visibility"].gteq(ClosetVisibility[:trading].id)
+        )
         ).or(
         ClosetList.arel_table[:visibility].gteq(ClosetVisibility[:trading].id)
       ))
