@@ -574,6 +574,38 @@ div.jGrowl div.jGrowl-closer {
   }
 }
 
+/* line 4, ../../../app/stylesheets/broken_image_reports/_new.sass */
+body.broken_image_reports-new #report-assets li {
+  -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: middle;
+  *display: inline;
+  *vertical-align: auto;
+  border: 1px solid #aaddaa;
+  margin: 0.5em;
+  padding: 0.5em;
+  text-align: center;
+  vertical-align: top;
+  width: 150px;
+}
+/* line 14, ../../../app/stylesheets/broken_image_reports/_new.sass */
+body.broken_image_reports-new #report-assets li img, body.broken_image_reports-new #report-assets li span, body.broken_image_reports-new #report-assets li input {
+  display: block;
+  width: 100%;
+}
+/* line 18, ../../../app/stylesheets/broken_image_reports/_new.sass */
+body.broken_image_reports-new #report-assets li img {
+  height: 150px;
+  width: 150px;
+}
+/* line 22, ../../../app/stylesheets/broken_image_reports/_new.sass */
+body.broken_image_reports-new #report-assets li span {
+  font-size: 85%;
+}
+
 /* line 2, ../../../app/stylesheets/partials/_secondary_nav.sass */
 body.closet_hangers-index #title {
   float: left;

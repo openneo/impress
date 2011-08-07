@@ -867,7 +867,7 @@ View.ReportBrokenImage = function (wardrobe) {
 
     for(var i = 0; i < assets.length; i++) {
       if(i > 0) url += "&";
-      url += "asset_ids[]=" + assets[i].id;
+      url += "asset_ids[" + assets[i].type + "][]=" + assets[i].id;
     }
 
     link.attr('href', url);

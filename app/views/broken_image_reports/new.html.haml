@@ -1,0 +1,31 @@
+- title 'Report broken image'
+
+%p
+  Thanks for helping us find broken image! Sometimes the converters don't get
+  things quite right, and sometimes that can be fixed by just trying the
+  conversion again. If reconversion doesn't seem to solve the issue, consider
+  sending us a bug report at #{mail_to 'webmaster@openneo.net'}. Thanks!
+
+%p
+  Which of these images looked broken? We'll put it in line for reconversion.
+
+%ul#report-assets
+  - @swf_assets.each do |swf_asset|
+    %li
+      = link_to image_tag(swf_asset.s3_url([150, 150])), swf_asset.url
+      - unless swf_asset.image_pending_repair?
+        = form_tag(:action => :create) do
+          = hidden_field_tag 'swf_asset_id', swf_asset.id
+          = submit_tag 'Report as broken'
+
+        - if swf_asset.converted_at?
+          %span.converted-at
+            Converted
+            = time_ago_in_words swf_asset.converted_at
+            ago
+      - else
+        %span.reported-broken-at
+          Reported
+          = time_ago_in_words swf_asset.reported_broken_at
+          ago
+

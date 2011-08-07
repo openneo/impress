@@ -46,6 +46,10 @@ class SwfAsset < ActiveRecord::Base
       FileUtils.rm path
     end
     FileUtils.rmdir swf_image_dir
+
+    self.converted_at = Time.now
+    self.has_image = true
+    self.save!
   end
 
   def s3_key(size)
@@ -53,7 +57,11 @@ class SwfAsset < ActiveRecord::Base
   end
 
   def s3_path
-    "#{type}/#{s3_partition_path}#{self.id}"
+    "#{self['type']}/#{s3_partition_path}#{self.id}"
+  end
+
+  def s3_url(size)
+    "#{IMAGE_BUCKET.public_link}/#{s3_path}/#{size.join 'x'}.png"
   end
 
   PARTITION_COUNT = 3
@@ -68,13 +76,11 @@ class SwfAsset < ActiveRecord::Base
   end
 
   def convert_swf_if_not_converted!
-    if has_image?
-      false
-    else
+    if needs_conversion?
       convert_swf!
-      self.has_image = true
-      save!
       true
+    else
+      false
     end
   end
 
@@ -87,6 +93,24 @@ class SwfAsset < ActiveRecord::Base
       save!
       true
     end
+  end
+
+  def report_broken
+    if image_pending_repair?
+      return false
+    end
+
+    Resque.enqueue(AssetImageConversionRequest::OnBrokenImageReport, self.type, self.id)
+    self.reported_broken_at = Time.now
+    self.save
+  end
+
+  def needs_conversion?
+    !has_image? || image_pending_repair?
+  end
+
+  def image_pending_repair?
+    reported_broken_at && (converted_at.nil? || reported_broken_at > converted_at)
   end
 
   attr_accessor :item

@@ -46,7 +46,7 @@
           = link_to 'Image mode FAQ', image_mode_path,
             :id => 'preview-mode-note', :target => '_blank'
           = link_to 'Broken image?', '#', :id => 'report-broken-image',
-            :target => '_blank', 'data-base-url' => '/FIXME'
+            :target => '_blank', 'data-base-url' => new_broken_image_report_path
         - else
           = link_to(donate_path, :id => 'preview-mode-note', :target => '_blank') do
             %strong Image mode
