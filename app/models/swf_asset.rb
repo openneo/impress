@@ -109,8 +109,11 @@ class SwfAsset < ActiveRecord::Base
     !has_image? || image_pending_repair?
   end
 
+  REPAIR_PENDING_EXPIRES = 1.hour
   def image_pending_repair?
-    reported_broken_at && (converted_at.nil? || reported_broken_at > converted_at)
+    reported_broken_at &&
+      (converted_at.nil? || reported_broken_at > converted_at) &&
+      reported_broken_at > REPAIR_PENDING_EXPIRES.ago
   end
 
   attr_accessor :item
