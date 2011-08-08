@@ -7,10 +7,6 @@
     %span.campaign-raised
   exceeding our goal for the upgrade. Thanks so much!
 
-- if can_use_image_mode?
-  %p.success
-    Thank you for your help! Image Mode should be live on your account. Enjoy!
-
 %section#image-mode-data
   %figure#image-mode-preview
     = image_tag 'image_mode_preview.png'
@@ -23,12 +19,12 @@
 #image-mode-description
   :markdown
     **Hooray!** We made our fundraising goal, and now have enough funds to run
-    on the upgraded server for the next year. I'm pretty darn excited about all
-    this.
+    on the upgraded server for the next year. We completed our server upgrade
+    around 9PM NST on August 4.
 
-    The server upgrade went through around 9PM NST on August 4, and the SWF
-    converters are now running. We'll let them work for a bit until almost all
-    of the SWFs are converted, then we'll release Image Mode to the public.
+    **Image Mode is now out of beta, and is open to the public.** Just head to
+    the home page and start dressing up a pet like normal, then hit the
+    **Image** button in the top left corner. Congrats! You're in!
 
     Thanks again for all your help. Dress to Impress runs on you, from our data
     to our funds. You make this site the great resource that it is, and I'm
@@ -43,8 +39,13 @@
     = pledgie_amount_field_tag
     %button{:type => 'submit'} Donate now!
 
-  %p All donations go directly to hosting costs.
-  %p Thanks so much for your help!
+  %p
+    A
+    = link_to 'Linode 768 VPS', 'http://www.linode.com/'
+    costs about $360 a year.
+
+  %p
+    All donations go directly to hosting costs. Thanks so much for your help!
 
 
 #image-mode-comments

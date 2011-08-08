@@ -1213,8 +1213,9 @@ Wardrobe.getStandardView = function (options) {
     var preview = this;
     var preview_el = $(options.Preview.wrapper),
       preview_swf_placeholder = $(options.Preview.placeholder);
+    var Adapter = {};
 
-    function SWFAdapter() {
+    Adapter.SWF = function () {
       var preview_swf_id = preview_swf_placeholder.attr('id'),
         preview_swf,
         update_pending_flash = false;
@@ -1254,7 +1255,7 @@ Wardrobe.getStandardView = function (options) {
       }
     }
 
-    function ImageAdapter() {
+    Adapter.Image = function () {
       var pendingAssets = {}, pendingAssetIds = [], pendingInterval,
         pendingAssetsCount = 0,
         pendingMessageEl = $('<span/>', {id: 'preview-images-pending'}),
@@ -1460,7 +1461,11 @@ Wardrobe.getStandardView = function (options) {
       }
     }
 
-    this.adapter = new SWFAdapter();
+    if(typeof options.Preview.image_container == 'undefined' || document.cookie.indexOf('previewAdapter=Image') == -1) {
+      this.adapter = new Adapter.SWF();
+    } else {
+      this.adapter = new Adapter.Image();
+    }
 
     function updateAssets() {
       preview.adapter.updateAssets();
@@ -1470,12 +1475,27 @@ Wardrobe.getStandardView = function (options) {
     wardrobe.outfit.bind('updateItemAssets', updateAssets);
     wardrobe.outfit.bind('updatePetState', updateAssets);
 
-    this.useSWFAdapter = function () { preview.adapter = new SWFAdapter(); updateAssets(); }
-    this.useImageAdapter = function () { preview.adapter = new ImageAdapter(); updateAssets(); }
-    this.toggleAdapter = function () {
-      var nextAdapter = preview.adapter.constructor == SWFAdapter ? ImageAdapter : SWFAdapter;
-      preview.adapter = new nextAdapter();
+    function useAdapter(name) {
+      preview.adapter = new Adapter[name]();
       updateAssets();
+      var expiryDate = new Date();
+      expiryDate.setTime(expiryDate.getTime() + 365*24*60*60*1000); // one year from now
+      document.cookie = "previewAdapter=" + name + "; expires=" + expiryDate.toGMTString();
+    }
+
+    this.useSWFAdapter = function () { useAdapter('SWF') }
+    this.useImageAdapter = function () { useAdapter('Image') }
+    this.toggleAdapter = function () {
+      var nextAdapter = preview.adapter.constructor == 'SWF' ? 'Image' : 'SWF';
+      useAdapter(nextAdapter);
+    }
+
+    this.usingSWFAdapter = function () {
+      return preview.adapter.constructor == Adapter.SWF;
+    }
+
+    this.usingImageAdapter = function () {
+      return preview.adapter.constructor == Adapter.Image;
     }
   }
 

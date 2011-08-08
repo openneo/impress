@@ -837,15 +837,19 @@ View.PreviewAdapterForm = function (wardrobe) {
     $(el).addClass('active');
   }
 
-  $('#preview-mode-flash').click(function () {
+  var flashToggle = $('#preview-mode-flash').click(function () {
     activate(this, 'flash', 'image');
     preview.useSWFAdapter();
   });
 
-  $('#preview-mode-image').click(function () {
+  var imageToggle = $('#preview-mode-image').click(function () {
     activate(this, 'image', 'flash');
     preview.useImageAdapter();
   });
+
+  if(preview.usingImageAdapter()) {
+    activate(imageToggle, 'image', 'flash');
+  }
 
   $('#preview-download-image').click(function () {
     preview.adapter.saveImage();

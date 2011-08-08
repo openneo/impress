@@ -20,7 +20,7 @@ module ApplicationHelper
     if block_given?
       content = capture(&block)
     else
-      content = link_to('We made it! The server has been upgraded.', donate_path) +
+      content = link_to('We made it! Image Mode has been released.', donate_path) +
         link_to('Read more', donate_path, :class => 'button')
     end
 
