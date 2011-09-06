@@ -123,14 +123,17 @@ class SwfAsset < ActiveRecord::Base
     :conditions => {:swf_asset_type => 'object'}
 
   delegate :depth, :to => :zone
+  
+  def self.body_ids_fitting_standard
+    @body_ids_fitting_standard ||= PetType.standard_body_ids + [0]
+  end
 
   scope :fitting_body_id, lambda { |body_id|
     where(arel_table[:body_id].in([body_id, 0]))
   }
 
-  BodyIdsFittingStandard = PetType::StandardBodyIds + [0]
   scope :fitting_standard_body_ids, lambda {
-    where(arel_table[:body_id].in(BodyIdsFittingStandard))
+    where(arel_table[:body_id].in(body_ids_fitting_standard))
   }
 
   scope :fitting_color, lambda { |color|
@@ -138,8 +141,8 @@ class SwfAsset < ActiveRecord::Base
     where(arel_table[:body_id].in(body_ids))
   }
 
-  scope :biology_assets, where(arel_table[:type].eq(PetState::SwfAssetType))
-  scope :object_assets, where(arel_table[:type].eq(Item::SwfAssetType))
+  scope :biology_assets, where(:type => PetState::SwfAssetType)
+  scope :object_assets, where(:type => Item::SwfAssetType)
   scope :for_item_ids, lambda { |item_ids|
     joins(:object_asset_relationships).
       where(ParentSwfAssetRelationship.arel_table[:parent_id].in(item_ids))
