@@ -120,7 +120,7 @@ a.button, input[type=submit], button {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #006400 url('/images/alert-overlay.png?1315327995') repeat-x;
   border: 0;
   display: inline-block;
   padding: 0.5em 0.75em 0.45em;
@@ -148,7 +148,7 @@ a.button:active, input[type=submit]:active, button:active {
 }
 /* line 93, ../../../app/stylesheets/_layout.sass */
 a.button.loud, input[type=submit].loud, button.loud {
-  background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #ff5c00 url('/images/alert-overlay.png?1315327995') repeat-x;
   font-size: 125%;
   padding: 8px 14px 9px;
 }
@@ -269,7 +269,7 @@ ul.buttons li, ul.buttons li form {
   background: #eeffee;
   padding: 0.25em 0.5em;
 }
-/* line 4, ../../../../../.rvm/gems/ree-1.8.7-2010.02/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/utilities/links/_hover-link.scss */
+/* line 4, ../../../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/utilities/links/_hover-link.scss */
 #userbar-items-link:hover {
   text-decoration: underline;
 }
@@ -629,7 +629,7 @@ body.closet_hangers-index #import-link {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #006400 url('/images/alert-overlay.png?1315327995') repeat-x;
   border: 0;
   display: inline-block;
   padding: 0.5em 0.75em 0.45em;
@@ -642,7 +642,7 @@ body.closet_hangers-index #import-link {
   position: relative;
   font-weight: bold;
   line-height: 1;
-  background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #ff5c00 url('/images/alert-overlay.png?1315327995') repeat-x;
 }
 /* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
 body.closet_hangers-index #import-link:hover {
@@ -682,7 +682,7 @@ body.closet_hangers-index #closet-hangers-contact {
 /* line 33, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers-contact a, body.closet_hangers-index #closet-hangers-contact > span {
   text-decoration: none;
-  background-image: url('/images/neomail.png?1312167956');
+  background-image: url('/images/neomail.png?1315327995');
   background-position: left center;
   background-repeat: no-repeat;
   color: inherit;
@@ -690,13 +690,13 @@ body.closet_hangers-index #closet-hangers-contact a, body.closet_hangers-index #
   height: 100%;
   padding-left: 20px;
 }
-/* line 4, ../../../../../.rvm/gems/ree-1.8.7-2010.02/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/utilities/links/_hover-link.scss */
+/* line 4, ../../../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/utilities/links/_hover-link.scss */
 body.closet_hangers-index #closet-hangers-contact a:hover, body.closet_hangers-index #closet-hangers-contact > span:hover {
   text-decoration: underline;
 }
 /* line 44, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers-contact > span {
-  background-image: url('/images/neomail_edit.png?1312167956');
+  background-image: url('/images/neomail_edit.png?1315327995');
 }
 /* line 47, ../../../app/stylesheets/closet_hangers/_index.sass */
 body.closet_hangers-index #closet-hangers-contact input[type=text], body.closet_hangers-index #closet-hangers-contact body.pets-bulk #bulk-pets-form textarea, body.pets-bulk #bulk-pets-form body.closet_hangers-index #closet-hangers-contact textarea {
@@ -749,7 +749,7 @@ body.closet_hangers-index #toggle-help, body.closet_hangers-index #toggle-compar
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #006400 url('/images/alert-overlay.png?1315327995') repeat-x;
   border: 0;
   display: inline-block;
   padding: 0.5em 0.75em 0.45em;
@@ -793,7 +793,7 @@ body.closet_hangers-index #closet-hangers-extras a {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #006400 url('/images/alert-overlay.png?1315327995') repeat-x;
   border: 0;
   display: inline-block;
   padding: 0.5em 0.75em 0.45em;
@@ -889,7 +889,7 @@ body.closet_hangers-index .closet-hangers-group > header .add-closet-list {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #006400 url('/images/alert-overlay.png?1315327995') repeat-x;
   border: 0;
   display: inline-block;
   padding: 0.5em 0.75em 0.45em;
@@ -968,7 +968,7 @@ body.closet_hangers-index .closet-list .visibility-form input[type=submit] {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #006400 url('/images/alert-overlay.png?1315327995') repeat-x;
   border: 0;
   display: inline-block;
   padding: 0.5em 0.75em 0.45em;
@@ -981,7 +981,7 @@ body.closet_hangers-index .closet-list .visibility-form input[type=submit] {
   position: relative;
   font-weight: bold;
   line-height: 1;
-  background: #aaaaaa url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #aaaaaa url('/images/alert-overlay.png?1315327995') repeat-x;
   -moz-opacity: 0.9;
   -webkit-opacity: 0.9;
   -o-opacity: 0.9;
@@ -1059,7 +1059,7 @@ body.closet_hangers-index .closet-list .closet-list-controls a, body.closet_hang
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #006400 url('/images/alert-overlay.png?1315327995') repeat-x;
   border: 0;
   display: inline-block;
   padding: 0.5em 0.75em 0.45em;
@@ -1072,7 +1072,7 @@ body.closet_hangers-index .closet-list .closet-list-controls a, body.closet_hang
   position: relative;
   font-weight: bold;
   line-height: 1;
-  background: #aaaaaa url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #aaaaaa url('/images/alert-overlay.png?1315327995') repeat-x;
   -moz-opacity: 0.9;
   -webkit-opacity: 0.9;
   -o-opacity: 0.9;
@@ -1191,7 +1191,7 @@ body.closet_hangers-index.current-user #closet-hangers .object:hover .closet-han
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #006400 url('/images/alert-overlay.png?1315327995') repeat-x;
   border: 0;
   display: inline-block;
   padding: 0.5em 0.75em 0.45em;
@@ -1204,7 +1204,7 @@ body.closet_hangers-index.current-user #closet-hangers .object:hover .closet-han
   position: relative;
   font-weight: bold;
   line-height: 1;
-  background: #aaaaaa url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #aaaaaa url('/images/alert-overlay.png?1315327995') repeat-x;
   -moz-opacity: 0.9;
   -webkit-opacity: 0.9;
   -o-opacity: 0.9;
@@ -1410,7 +1410,7 @@ body.neopets_pages-new #back-to-items, body.neopets_pages-create #back-to-items 
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #006400 url('/images/alert-overlay.png?1315327995') repeat-x;
   border: 0;
   display: inline-block;
   padding: 0.5em 0.75em 0.45em;
@@ -1594,7 +1594,7 @@ body.items .campaign-progress-wrapper {
 }
 /* line 13, ../../../app/stylesheets/partials/_campaign-progress.sass */
 body.items .campaign-progress-wrapper .button {
-  background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #ff5c00 url('/images/alert-overlay.png?1315327995') repeat-x;
   font-size: 75%;
   margin-left: 1em;
   padding: 0.25em 0.75em;
@@ -1948,7 +1948,7 @@ body.outfits-edit #pet-state-form label {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #006400 url('/images/alert-overlay.png?1315327995') repeat-x;
   border: 0;
   display: inline-block;
   padding: 0.5em 0.75em 0.45em;
@@ -1977,7 +1977,7 @@ body.outfits-edit #pet-state-form label:active {
 }
 /* line 131, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #pet-state-form li.selected button {
-  background: #0b61a4 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #0b61a4 url('/images/alert-overlay.png?1315327995') repeat-x;
 }
 /* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
 body.outfits-edit #pet-state-form li.selected button:hover {
@@ -2001,14 +2001,14 @@ body.outfits-edit #save-outfit-wrapper #share-outfit {
 }
 /* line 141, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit-wrapper.loading {
-  background-image: url('/images/loading.gif?1296599919');
+  background-image: url('/images/loading.gif?1315327995');
   background-position: left center;
   background-repeat: no-repeat;
   padding-left: 20px;
 }
 /* line 147, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit, body.outfits-edit #save-outfit-not-signed-in, body.outfits-edit #save-current-outfit, body.outfits-edit #save-outfit-copy, body.outfits-edit #save-outfit-finish {
-  background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #ff5c00 url('/images/alert-overlay.png?1315327995') repeat-x;
 }
 /* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
 body.outfits-edit #save-outfit:hover, body.outfits-edit #save-outfit-not-signed-in:hover, body.outfits-edit #save-current-outfit:hover, body.outfits-edit #save-outfit-copy:hover, body.outfits-edit #save-outfit-finish:hover {
@@ -2456,7 +2456,7 @@ body.outfits-edit .object ul li a {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #006400 url('/images/alert-overlay.png?1315327995') repeat-x;
   border: 0;
   display: inline-block;
   padding: 0.5em 0.75em 0.45em;
@@ -2469,7 +2469,7 @@ body.outfits-edit .object ul li a {
   position: relative;
   font-weight: bold;
   line-height: 1;
-  background: #aaaaaa url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #aaaaaa url('/images/alert-overlay.png?1315327995') repeat-x;
   -moz-opacity: 0.9;
   -webkit-opacity: 0.9;
   -o-opacity: 0.9;
@@ -2498,7 +2498,7 @@ body.outfits-edit .object:hover ul, body.outfits-edit .object:hover .object-info
 }
 /* line 423, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .nc-icon {
-  background: url('/images/nc.png?1312167956') no-repeat;
+  background: url('/images/nc.png?1315327995') no-repeat;
   height: 16px;
   position: absolute;
   right: 16px;
@@ -2553,7 +2553,7 @@ body.outfits-edit #preview-outfits {
 body.outfits-edit #preview-outfits > ul {
   margin-left: 24px;
   margin-right: 24px;
-  background: url('/images/loading.gif?1296599919') no-repeat center top;
+  background: url('/images/loading.gif?1315327995') no-repeat center top;
   display: block;
   font-family: "Droid Sans", Helvetica, Arial, Verdana, sans-serif;
   list-style: none;
@@ -2570,7 +2570,7 @@ body.outfits-edit #preview-outfits > ul > li .outfit-star {
   height: 16px;
   position: relative;
   width: 16px;
-  background-image: url('/images/unstarred.png?1296599919');
+  background-image: url('/images/unstarred.png?1315327995');
   background-position: left top;
   background-repeat: no-repeat;
   cursor: pointer;
@@ -2580,15 +2580,15 @@ body.outfits-edit #preview-outfits > ul > li .outfit-star {
 }
 /* line 14, ../../../app/stylesheets/outfits/_star.sass */
 body.outfits-edit #preview-outfits > ul > li.starred .outfit-star {
-  background-image: url('/images/star.png?1296599919');
+  background-image: url('/images/star.png?1315327995');
 }
 /* line 16, ../../../app/stylesheets/outfits/_star.sass */
 body.outfits-edit #preview-outfits > ul > li.loading .outfit-star {
-  background-image: url('/images/loading.gif?1296599919');
+  background-image: url('/images/loading.gif?1315327995');
 }
 /* line 18, ../../../app/stylesheets/outfits/_star.sass */
 body.outfits-edit #preview-outfits > ul > li.loading.active .outfit-star {
-  background-image: url('/images/loading_current_outfit.gif?1296599919');
+  background-image: url('/images/loading_current_outfit.gif?1315327995');
 }
 /* line 24, ../../../app/stylesheets/outfits/_star.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-star {
@@ -2803,7 +2803,7 @@ body.outfits-edit #new-outfit .outfit-star {
   height: 16px;
   position: relative;
   width: 16px;
-  background-image: url('/images/unstarred.png?1296599919');
+  background-image: url('/images/unstarred.png?1315327995');
   background-position: left top;
   background-repeat: no-repeat;
   cursor: pointer;
@@ -2813,15 +2813,15 @@ body.outfits-edit #new-outfit .outfit-star {
 }
 /* line 14, ../../../app/stylesheets/outfits/_star.sass */
 body.outfits-edit #new-outfit.starred .outfit-star {
-  background-image: url('/images/star.png?1296599919');
+  background-image: url('/images/star.png?1315327995');
 }
 /* line 16, ../../../app/stylesheets/outfits/_star.sass */
 body.outfits-edit #new-outfit.loading .outfit-star {
-  background-image: url('/images/loading.gif?1296599919');
+  background-image: url('/images/loading.gif?1315327995');
 }
 /* line 18, ../../../app/stylesheets/outfits/_star.sass */
 body.outfits-edit #new-outfit.loading.active .outfit-star {
-  background-image: url('/images/loading_current_outfit.gif?1296599919');
+  background-image: url('/images/loading_current_outfit.gif?1315327995');
 }
 /* line 24, ../../../app/stylesheets/outfits/_star.sass */
 body.outfits-edit #new-outfit .outfit-star {
@@ -3024,7 +3024,7 @@ body.outfits-edit form#save-outfit-form .outfit-star {
   height: 16px;
   position: relative;
   width: 16px;
-  background-image: url('/images/unstarred.png?1296599919');
+  background-image: url('/images/unstarred.png?1315327995');
   background-position: left top;
   background-repeat: no-repeat;
   cursor: pointer;
@@ -3034,15 +3034,15 @@ body.outfits-edit form#save-outfit-form .outfit-star {
 }
 /* line 14, ../../../app/stylesheets/outfits/_star.sass */
 body.outfits-edit form#save-outfit-form.starred .outfit-star {
-  background-image: url('/images/star.png?1296599919');
+  background-image: url('/images/star.png?1315327995');
 }
 /* line 16, ../../../app/stylesheets/outfits/_star.sass */
 body.outfits-edit form#save-outfit-form.loading .outfit-star {
-  background-image: url('/images/loading.gif?1296599919');
+  background-image: url('/images/loading.gif?1315327995');
 }
 /* line 18, ../../../app/stylesheets/outfits/_star.sass */
 body.outfits-edit form#save-outfit-form.loading.active .outfit-star {
-  background-image: url('/images/loading_current_outfit.gif?1296599919');
+  background-image: url('/images/loading_current_outfit.gif?1315327995');
 }
 /* line 24, ../../../app/stylesheets/outfits/_star.sass */
 body.outfits-edit form#save-outfit-form .outfit-star {
@@ -3285,7 +3285,7 @@ body.outfits-index #outfits li .outfit-star {
   height: 16px;
   position: relative;
   width: 16px;
-  background-image: url('/images/unstarred.png?1296599919');
+  background-image: url('/images/unstarred.png?1315327995');
   background-position: left top;
   background-repeat: no-repeat;
   cursor: pointer;
@@ -3295,15 +3295,15 @@ body.outfits-index #outfits li .outfit-star {
 }
 /* line 14, ../../../app/stylesheets/outfits/_star.sass */
 body.outfits-index #outfits li.starred .outfit-star {
-  background-image: url('/images/star.png?1296599919');
+  background-image: url('/images/star.png?1315327995');
 }
 /* line 16, ../../../app/stylesheets/outfits/_star.sass */
 body.outfits-index #outfits li.loading .outfit-star {
-  background-image: url('/images/loading.gif?1296599919');
+  background-image: url('/images/loading.gif?1315327995');
 }
 /* line 18, ../../../app/stylesheets/outfits/_star.sass */
 body.outfits-index #outfits li.loading.active .outfit-star {
-  background-image: url('/images/loading_current_outfit.gif?1296599919');
+  background-image: url('/images/loading_current_outfit.gif?1315327995');
 }
 /* line 13, ../../../app/stylesheets/outfits/_index.sass */
 body.outfits-index #outfits h4 {
@@ -3321,7 +3321,7 @@ body.outfits-index #outfits .outfit-edit-link {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  background: #006400 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #006400 url('/images/alert-overlay.png?1315327995') repeat-x;
   border: 0;
   display: inline-block;
   padding: 0.5em 0.75em 0.45em;
@@ -3368,7 +3368,7 @@ body.outfits-new .campaign-progress-wrapper {
 }
 /* line 13, ../../../app/stylesheets/partials/_campaign-progress.sass */
 body.outfits-new .campaign-progress-wrapper .button {
-  background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #ff5c00 url('/images/alert-overlay.png?1315327995') repeat-x;
   font-size: 75%;
   margin-left: 1em;
   padding: 0.25em 0.75em;
@@ -3500,7 +3500,7 @@ body.outfits-new #load-pet-to-wardrobe input {
 }
 /* line 57, ../../../app/stylesheets/outfits/_new.sass */
 body.outfits-new #load-pet-to-wardrobe button {
-  background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #ff5c00 url('/images/alert-overlay.png?1315327995') repeat-x;
   font-size: 125%;
   padding: 8px 14px 9px;
   font-size: 67%;
@@ -3645,16 +3645,13 @@ body.outfits-new #sections p {
 body.outfits-new #read-more {
   float: right;
 }
-
-/* line 139, ../../../app/stylesheets/outfits/_new.sass */
+/* line 141, ../../../app/stylesheets/outfits/_new.sass */
 body.outfits-new .beta-tag {
   color: red;
   font-size: 50%;
   vertical-align: super;
 }
-
-/* line 144, ../../../app/stylesheets/outfits/_new.sass */
-
+/* line 148, ../../../app/stylesheets/outfits/_new.sass */
 body.outfits-new #your-items-module h3:after {
   color: red;
   content: "new!";
@@ -3679,7 +3676,7 @@ body.outfits-show .campaign-progress-wrapper {
 }
 /* line 13, ../../../app/stylesheets/partials/_campaign-progress.sass */
 body.outfits-show .campaign-progress-wrapper .button {
-  background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #ff5c00 url('/images/alert-overlay.png?1315327995') repeat-x;
   font-size: 75%;
   margin-left: 1em;
   padding: 0.25em 0.75em;
@@ -3855,7 +3852,7 @@ body.static-donate .campaign-progress-wrapper {
 }
 /* line 13, ../../../app/stylesheets/partials/_campaign-progress.sass */
 body.static-donate .campaign-progress-wrapper .button {
-  background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #ff5c00 url('/images/alert-overlay.png?1315327995') repeat-x;
   font-size: 75%;
   margin-left: 1em;
   padding: 0.25em 0.75em;
@@ -4011,7 +4008,7 @@ body.static-donate #image-mode-beta form input {
 }
 /* line 114, ../../../app/stylesheets/static/_donate.sass */
 body.static-donate #image-mode-beta form button {
-  background: #ff5c00 url('/images/alert-overlay.png?1296599919') repeat-x;
+  background: #ff5c00 url('/images/alert-overlay.png?1315327995') repeat-x;
 }
 /* line 34, ../../../app/stylesheets/partials/clean/_mixins.sass */
 body.static-donate #image-mode-beta form button:hover {
@@ -4060,4 +4057,3 @@ body.users-top_contributors #top-contributors td, body.users-top_contributors #t
   border-width: 0 0 1px 1px;
   padding: 0.5em 1em;
 }
-

@@ -11,23 +11,29 @@ class PetType < ActiveRecord::Base
 
   BasicHashes = YAML::load_file(Rails.root.join('config', 'basic_type_hashes.yml'))
 
-  StandardPetTypesBySpeciesId = PetType.where(arel_table[:color_id].in(Color::BasicIds)).group_by(&:species_id)
-  StandardBodyIds = [].tap do |body_ids|
-    StandardPetTypesBySpeciesId.each do |species_id, pet_types|
-      body_ids.concat(pet_types.map(&:body_id))
-    end
-  end
-
   # Returns all pet types of a single standard color. The caller shouldn't care
   # which, though, in this implemention, it's always Blue. Don't depend on that.
   scope :single_standard_color, where(:color_id => Color::BasicIds[0])
 
   scope :nonstandard_colors, where(:color_id => Color.nonstandard_ids)
+  
+  def self.standard_pet_types_by_species_id
+    @standard_pet_types_by_species_id ||=
+      PetType.where(:color_id => Color::BasicIds).group_by(&:species_id)
+  end
+  
+  def self.standard_body_ids
+    @standard_body_ids ||= [].tap do |body_ids|
+      standard_pet_types_by_species_id.each do |species_id, pet_types|
+        body_ids.concat(pet_types.map(&:body_id))
+      end
+    end
+  end
 
   def self.random_basic_per_species(species_ids)
     random_pet_types = []
     species_ids.each do |species_id|
-      pet_types = StandardPetTypesBySpeciesId[species_id]
+      pet_types = standard_pet_types_by_species_id[species_id]
       random_pet_types << pet_types[rand(pet_types.size)] if pet_types
     end
     random_pet_types

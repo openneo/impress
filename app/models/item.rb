@@ -40,7 +40,7 @@ class Item < ActiveRecord::Base
 
   scope :newest, order(arel_table[:created_at].desc) if arel_table[:created_at]
 
-  scope :spidered_longest_ago, order(["(#{Item.arel_table[:last_spidered].eq(nil).to_sql}) DESC", arel_table[:last_spidered].desc])
+  scope :spidered_longest_ago, order(["(last_spidered IS NULL) DESC", "last_spidered DESC"])
 
   scope :sold_in_mall, where(:sold_in_mall => true)
   scope :not_sold_in_mall, where(:sold_in_mall => false)
@@ -678,13 +678,16 @@ class Item < ActiveRecord::Base
   search_filter :description do |description|
     arel_table[:description].matches("%#{description}%")
   end
+  
+  def self.adjective_filters
+    @adjective_filters ||= {
+      'nc' => arel_table[:rarity_index].in(NCRarities),
+      'pb' => arel_table[:description].eq(PAINTBRUSH_SET_DESCRIPTION)
+    }
+  end
 
-  ADJECTIVE_FILTERS = {
-    'nc' => arel_table[:rarity_index].in(NCRarities),
-    'pb' => arel_table[:description].eq(PAINTBRUSH_SET_DESCRIPTION)
-  }
   search_filter :is do |adjective|
-    filter = ADJECTIVE_FILTERS[adjective]
+    filter = adjective_filters[adjective]
     unless filter
       raise SearchError,
         "We don't know how an item can be \"#{adjective}\". " +

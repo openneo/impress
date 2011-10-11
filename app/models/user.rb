@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   has_many :contributions
   has_many :outfits
 
-  scope :top_contributors, order('points DESC').where(arel_table[:points].gt(0))
+  scope :top_contributors, order('points DESC').where('points > 0')
 
   devise :rememberable
 
