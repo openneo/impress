@@ -95,21 +95,22 @@
           = link_to_add_closet_list 'Add new list', :owned => owned, :class => 'add-closet-list'
       .closet-hangers-group-content
         = render_closet_lists(@closet_lists_by_owned[owned])
-        .closet-list.unlisted{'data-hangers-count' => unlisted_hangers_count(owned)}
-          %header
-            - unless public_perspective?
-              = form_for @user, :html => {:class => 'visibility-form'} do |f|
-                = f.select hangers_group_visibility_field_name(owned),
-                  closet_visibility_choices(:human_name)
-                = f.submit "Save"
-                = closet_visibility_descriptions
-            - if has_lists?(owned)
-              %h4 (Not in a list)
-          .closet-list-content
-            .closet-list-hangers
-              = render_unlisted_closet_hangers(owned)
-              %span.empty-list
-                There aren't any items here.
+        - if !public_perspective? || unlisted_hangers_count(owned) > 0
+          .closet-list.unlisted{'data-hangers-count' => unlisted_hangers_count(owned)}
+            %header
+              - unless public_perspective?
+                = form_for @user, :html => {:class => 'visibility-form'} do |f|
+                  = f.select hangers_group_visibility_field_name(owned),
+                    closet_visibility_choices(:human_name)
+                  = f.submit "Save"
+                  = closet_visibility_descriptions
+              - if has_lists?(owned)
+                %h4 (Not in a list)
+            .closet-list-content
+              .closet-list-hangers
+                = render_unlisted_closet_hangers(owned)
+                %span.empty-list
+                  There aren't any items here.
 
 - content_for :stylesheets do
   = stylesheet_link_tag 'south-street/jquery-ui'

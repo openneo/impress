@@ -229,7 +229,6 @@ function Wardrobe() {
         }
       },
       error: function (xhr) {
-        console.log($.parseJSON(xhr.responseText));
         try {
           var json = $.parseJSON(xhr.responseText);
         } catch(e) {

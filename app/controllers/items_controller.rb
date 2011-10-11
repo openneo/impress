@@ -54,10 +54,20 @@ class ItemsController < ApplicationController
         }
 
         if user_signed_in?
-          @current_user_hangers = [true, false].map do |owned|
-            hanger = current_user.closet_hangers.find_or_initialize_by_item_id_and_owned(@item.id, owned)
-            hanger.quantity ||= 1
-            hanger
+          # Empty arrays are important so that we can loop over this and still
+          # show the generic no-list case
+          @current_user_lists = {true => [], false => []}
+          current_user.closet_lists.alphabetical.each do |list|
+            @current_user_lists[list.hangers_owned] << list
+          end
+          
+          @current_user_quantities = Hash.new(0) # default is zero
+          hangers = current_user.closet_hangers.where(:item_id => @item.id).
+            select([:owned, :list_id, :quantity])
+            
+          hangers.each do |hanger|
+            key = hanger.list_id || hanger.owned
+            @current_user_quantities[key] = hanger.quantity
           end
         end
 

@@ -47,6 +47,10 @@ module ItemsHelper
       )
     end
   end
+  
+  def closet_list_verb(owned)
+    ClosetHanger.verb(:you, owned)
+  end
 
   def closeted_icons_for(item)
     content = ''.html_safe

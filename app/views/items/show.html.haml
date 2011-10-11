@@ -10,25 +10,34 @@
       == Rarity: #{@item.rarity_index} (#{@item.rarity})
     = link_to 'NeoItems', neoitems_url_for(@item), :class => 'button'
 
-- if @current_user_hangers
+- if user_signed_in?
   #closet-hangers
-    %header
+    %h3
       Track this in
       = link_to 'Your Items', user_closet_hangers_path(current_user)
-    - @current_user_hangers.each do |hanger|
-      = form_for(hanger, :url => user_item_closet_hanger_path(current_user, @item)) do |f|
-        - if hanger.new_record?
-          = f.hidden_field :quantity
-          = f.hidden_field :owned
-          = f.submit "I #{hanger.verb(:you)} this item!"
-        - else
-          = f.hidden_field :owned
-          = f.label :quantity, "How many of these do you #{hanger.verb(:you)}?"
-          = f.number_field :quantity, :min => 0, :required => true
-          - lists = current_user.closet_lists.where(:hangers_owned => hanger.owned).all
-          - unless lists.empty?
-            = f.collection_select :list_id, lists, :id, :name, :include_blank => 'Not in a list'
-          = f.submit "Save"
+    = form_tag update_quantities_user_item_closet_hangers_path(:user_id => current_user, :item_id => @item), :method => :put do
+      #closet-hangers-ownership-groups
+        - @current_user_lists.each do |owned, lists|
+          %div
+            %h4 Items you #{closet_list_verb(owned)}
+            %ul
+              - lists.each do |list|
+                %li
+                  = number_field_tag "quantity[#{list.id}]",
+                    @current_user_quantities[list.id], :min => 0
+                  = label_tag "quantity[#{list.id}]", list.name
+              
+              %li
+                = number_field_tag "quantity[#{owned}]",
+                    @current_user_quantities[owned], :min => 0
+                    
+                - unless lists.empty?
+                  = label_tag "quantity[#{owned}]" do
+                    Not in a list
+                - else
+                  = label_tag "quantity[#{owned}]" do
+                    How many?
+      = submit_tag 'Save to Your Items'
 %p= @item.description
 
 #item-zones

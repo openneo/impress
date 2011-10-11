@@ -112,14 +112,33 @@ body.items-show
     font-size: 85%
     margin-left: 1em
     padding: 1em
-    width: 21em
+    width: 30em
+    
+    // compete with #trade-hangers
+    position: relative
+    z-index: 2
 
-    label, header
-      display: block
+    h3
+      font-size: 150%
       font-weight: bold
-
-    header
-      font-size: 125%
+      margin-bottom: .25em
+    
+    #closet-hangers-ownership-groups
+      +clearfix
+      margin-bottom: .5em
+    
+      div
+        float: left
+        margin: 0 5%
+        text-align: left
+        width: 40%
+        
+        li
+          list-style: none
+          word-wrap: break-word
+          
+          &.unlisted
+            font-style: italic
 
     form
       padding: .5em 0
@@ -128,7 +147,8 @@ body.items-show
       width: 9em
 
     input[type=number]
-      width: 4em
+      margin-right: .5em
+      width: 3em
 
   &.js
     #trade-hangers

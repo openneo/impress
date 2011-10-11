@@ -136,11 +136,11 @@
     return a.find('span.name').text().localeCompare(b.find('span.name').text());
   }
 
-  function findList(id, item) {
+  function findList(owned, id, item) {
     if(id) {
       return $('#closet-list-' + id);
     } else {
-      return item.closest('.closet-hangers-group').find('div.closet-list.unlisted');
+      return $("div.closet-hangers-group[data-owned=" + owned + "] div.closet-list.unlisted");
     }
   }
 
@@ -148,8 +148,8 @@
     el.attr('data-hangers-count', el.find('div.object').length);
   }
 
-  function moveItemToList(item, listId) {
-    var newList = findList(listId, item);
+  function moveItemToList(item, owned, listId) {
+    var newList = findList(owned, listId, item);
     var oldList = item.closest('div.closet-list');
     var hangersWrapper = newList.find('div.closet-list-hangers');
     item.insertIntoSortedList(hangersWrapper, compareItemsByName);
@@ -160,8 +160,9 @@
   function submitUpdateForm(form) {
     if(form.data('loading')) return false;
     var quantityEl = form.children("input[name=closet_hanger\[quantity\]]");
+    var ownedEl = form.children("input[name=closet_hanger\[owned\]]");
     var listEl = form.children("input[name=closet_hanger\[list_id\]]");
-    var listChanged = listEl.hasChanged();
+    var listChanged = ownedEl.hasChanged() || listEl.hasChanged();
     if(listChanged || quantityEl.hasChanged()) {
       var objectWrapper = form.closest(".object").addClass("loading");
       var newQuantity = quantityEl.val();
@@ -170,7 +171,7 @@
       var data = form.serialize(); // get data before disabling inputs
       objectWrapper.disableForms();
       form.data('loading', true);
-      if(listChanged) moveItemToList(objectWrapper, listEl.val());
+      if(listChanged) moveItemToList(objectWrapper, ownedEl.val(), listEl.val());
       $.ajax({
         url: form.attr("action") + ".json",
         type: "post",
@@ -185,13 +186,37 @@
           form.data('loading', false);
         },
         success: function () {
+          // Now that the move was successful, let's merge it with any
+          // conflicting hangers
+          var id = objectWrapper.attr("data-item-id");
+          var conflictingHanger = findList(ownedEl.val(), listEl.val(), objectWrapper).
+            find("div[data-item-id=" +  id + "]").not(objectWrapper);
+          if(conflictingHanger.length) {
+            var conflictingQuantity = parseInt(
+              conflictingHanger.attr('data-quantity'),
+              10
+            );
+            
+            var currentQuantity = parseInt(newQuantity, 10);
+            
+            var mergedQuantity = conflictingQuantity + currentQuantity;
+            
+            quantitySpan.text(mergedQuantity);
+            quantityEl.val(mergedQuantity);
+            objectWrapper.attr('data-quantity', mergedQuantity);
+            
+            conflictingHanger.remove();
+          }
+          
           quantityEl.storeValue();
+          ownedEl.storeValue();
           listEl.storeValue();
         },
         error: function (xhr) {
           quantityEl.revertValue();
+          ownedEl.revertValue();
           listEl.revertValue();
-          if(listChanged) moveItemToList(objectWrapper, listEl.val());
+          if(listChanged) moveItemToList(objectWrapper, ownedEl.val(), listEl.val());
           quantitySpan.text(quantityEl.val());
 
           handleSaveError(xhr, "updating the quantity");
@@ -205,7 +230,13 @@
     submitUpdateForm($(this));
   });
 
-  function editableInputs() { return $(hangersElQuery).find('input[name=closet_hanger\[quantity\]], input[name=closet_hanger\[list_id\]]') }
+  function editableInputs() {
+    return $(hangersElQuery).find(
+      'input[name=closet_hanger\[quantity\]], ' + 
+      'input[name=closet_hanger\[owned\]], ' +
+      'input[name=closet_hanger\[list_id\]]'
+    )
+  }
 
   $(hangersElQuery + 'input[name=closet_hanger\[quantity\]]').live('change', function () {
     submitUpdateForm($(this).parent());
@@ -264,7 +295,9 @@
     select: function (e, ui) {
       if(ui.item.is_item) {
         // Let the autocompleter finish up this search before starting a new one
-        setTimeout(function () { itemsSearchField.autocomplete("search", ui.item) }, 0);
+        setTimeout(function () {
+          itemsSearchField.autocomplete("search", ui.item);
+        }, 0);
       } else {
         var item = ui.item.item;
         var group = ui.item.group;
@@ -276,10 +309,10 @@
           list_id: ui.item.list ? ui.item.list.id : ''
         };
 
-        if(!item.hangerInGroup) closetHanger.quantity = 1;
+        if(!item.hasHanger) closetHanger.quantity = 1;
 
         $.ajax({
-          url: "/user/" + itemsSearchForm.data("current-user-id") + "/items/" + item.id + "/closet_hanger",
+          url: "/user/" + itemsSearchForm.data("current-user-id") + "/items/" + item.id + "/closet_hangers",
           type: "post",
           data: {closet_hanger: closetHanger, return_to: window.location.pathname + window.location.search},
           complete: function () {
@@ -312,29 +345,29 @@
         });
       } else { // item was chosen, now choose a group to insert
         var groupInserts = [], group;
-        var item = input.term, itemEl, hangerInGroup, currentListId;
+        var item = input.term, itemEl, occupiedGroups, hasHanger;
         for(var i in hangerGroups) {
           group = hangerGroups[i];
           itemEl = $('div.closet-hangers-group[data-owned=' + group.owned + '] div.object[data-item-id=' + item.id + ']');
-          hangerInGroup = itemEl.length > 0;
-          currentListId = itemEl.closest('.closet-list').attr('data-id');
+          occupiedGroups = itemEl.closest('.closet-list');
+          hasHanger = occupiedGroups.filter('.unlisted').length > 0;
 
           groupInserts[groupInserts.length] = {
             group: group,
             item: item,
             label: item.label,
-            hangerInGroup: hangerInGroup,
-            hangerInList: !!currentListId
+            hasHanger: hasHanger
           }
 
           for(var i = 0; i < group.lists.length; i++) {
+            hasHanger = occupiedGroups.
+              filter("[data-id=" + group.lists[i].id + "]").length > 0;
             groupInserts[groupInserts.length] = {
               group: group,
               item: item,
               label: item.label,
               list: group.lists[i],
-              hangerInGroup: hangerInGroup,
-              currentListId: currentListId
+              hasHanger: hasHanger
             }
           }
         }
@@ -350,27 +383,19 @@
     if(item.is_item) { // these are items from the server
       li.append("<a>Add <strong>" + item.label + "</strong>");
     } else if(item.list) { // these are list inserts
-      if(item.hangerInGroup) {
-        if(item.currentListId == item.list.id) {
-          li.append("<span>It's in <strong>" + item.list.label + "</strong> now");
-        } else {
-          li.append("<a>Move to <strong>" + item.list.label + "</strong>");
-        }
+      if(item.hasHanger) {
+        li.append("<span>It's already in <strong>" + item.list.label + "</strong>");
       } else {
         li.append("<a>Add to <strong>" + item.list.label + "</strong>");
       }
       li.addClass("closet-list-autocomplete-item");
     } else { // these are group inserts
-      if(item.hangerInGroup) {
-        var groupName = item.group.label;
-        if(item.hangerInList) {
-          li.append("<a>Move to <strong>" + groupName.replace(/\s+$/, '') + "</strong>, no list");
-        } else {
-          li.append("<span>It's in <strong>" + groupName + "</strong> now");
-        }
+      var groupName = item.group.label;
+      if(!item.hasHanger) {
+        li.append("<a>Add to <strong>" + groupName.replace(/\s+$/, '') + "</strong>, no list");
       } else {
-  		  li.append("<a>Add to <strong>" + item.group.label + "</strong>");
-		  }
+        li.append("<span>It's already in <strong>" + groupName + "</strong>");
+      }
 		  li.addClass('closet-hangers-group-autocomplete-item');
 		}
 		return li.appendTo(ul);
@@ -445,23 +470,23 @@
   */
 
   onHangersInit(function () {
-    $('.closet-hangers-group').each(function () {
-      var group = $(this);
-      group.find('div.closet-list').droppable({
-        accept: '#' + group.attr('id') + ' div.object',
-        activate: function () {
-          $(this).find('.closet-list-content').animate({opacity: 0, height: 100}, 250);
-        },
-        activeClass: 'droppable-active',
-        deactivate: function () {
-          $(this).find('.closet-list-content').css('height', 'auto').animate({opacity: 1}, 250);
-        },
-        drop: function (e, ui) {
-          var form = ui.draggable.find('form.closet-hanger-update');
-          form.find('input[name=closet_hanger\[list_id\]]').val(this.getAttribute('data-id'));
-          submitUpdateForm(form);
-        }
-      });
+    $('div.closet-list').droppable({
+      accept: 'div.object',
+      activate: function () {
+        $(this).find('.closet-list-content').animate({opacity: 0, height: 100}, 250);
+      },
+      activeClass: 'droppable-active',
+      deactivate: function () {
+        $(this).find('.closet-list-content').css('height', 'auto').animate({opacity: 1}, 250);
+      },
+      drop: function (e, ui) {
+        var form = ui.draggable.find('form.closet-hanger-update');
+        form.find('input[name=closet_hanger\[list_id\]]').
+          val(this.getAttribute('data-id'));
+        form.find('input[name=closet_hanger\[owned\]]').
+          val($(this).closest('.closet-hangers-group').attr('data-owned'));
+        submitUpdateForm(form);
+      }
     });
   });
 

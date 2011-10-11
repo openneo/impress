@@ -1,7 +1,7 @@
 class ClosetHangersController < ApplicationController
-  before_filter :authorize_user!, :only => [:destroy, :create, :update, :petpage]
-  before_filter :find_item, :only => [:destroy, :create, :update]
-  before_filter :find_user, :only => [:index, :petpage]
+  before_filter :authorize_user!, :only => [:destroy, :create, :update, :update_quantities, :petpage]
+  before_filter :find_item, :only => [:destroy, :create, :update_quantities]
+  before_filter :find_user, :only => [:index, :petpage, :update_quantities]
 
   def destroy
     raise ActiveRecord::RecordNotFound unless params[:closet_hanger]
@@ -39,19 +39,38 @@ class ClosetHangersController < ApplicationController
     find_closet_hangers!
   end
 
-  # Since the user does not care about the idea of a hanger, but rather the
-  # quantity of an item they own, the user would expect a create form to work
-  # even after the record already exists, and an update form to work even after
-  # the record is deleted. So, create and update are aliased, and both find
-  # the record if it exists or create a new one if it does not. They will even
-  # delete the record if quantity is zero.
-  #
-  # This is kinda a violation of REST. It's not worth breaking user
-  # expectations, though, and I can't really think of a genuinely RESTful way
-  # to pull this off.
+  def create
+    @closet_hanger = current_user.closet_hangers.build(params[:closet_hanger])
+    @closet_hanger.item = @item
+    
+    if @closet_hanger.save
+      respond_to do |format|
+        format.html {
+          message = "Success! You #{@closet_hanger.verb(:you)} #{@closet_hanger.quantity} "
+          message << ((@closet_hanger.quantity > 1) ? @item.name.pluralize : @item.name)
+          message << " in the \"#{@closet_hanger.list.name}\" list" if @closet_hanger.list
+          flash[:success] = "#{message}."
+          redirect_back!(@item)
+        }
+
+        format.json { render :json => true }
+      end
+    else
+      respond_to do |format|
+        format.html {
+          flash[:alert] = "We couldn't save how many of this item you #{@closet_hanger.verb(:you)}: #{@closet_hanger.errors.full_messages.to_sentence}"
+          redirect_back!(@item)
+        }
+
+        format.json { render :json => {:errors => @closet_hanger.errors.full_messages}, :status => :unprocessable_entity }
+      end
+    end
+  end
+  
   def update
-    @closet_hanger = current_user.closet_hangers.find_or_initialize_by_item_id_and_owned(@item.id, owned)
+    @closet_hanger = current_user.closet_hangers.find(params[:id])
     @closet_hanger.attributes = params[:closet_hanger]
+    @item = @closet_hanger.item
 
     unless @closet_hanger.quantity == 0 # save the hanger, new record or not
       if @closet_hanger.save
@@ -85,8 +104,21 @@ class ClosetHangersController < ApplicationController
       end
     end
   end
-
-  alias_method :create, :update
+  
+  def update_quantities
+    begin
+      ClosetHanger.transaction do
+        params[:quantity].each do |key, quantity|
+          ClosetHanger.set_quantity!(quantity, :user_id => @user.id,
+            :item_id => @item.id, :key => key)
+        end
+        flash[:success] = "Successfully saved how many #{@item.name} you own and want."
+      end
+    rescue ActiveRecord::RecordInvalid => e
+      flash[:alert] = "We couldn't save those quantities. #{e.message}"
+    end
+    redirect_to @item
+  end
 
   protected
 
