@@ -203,7 +203,10 @@ class Item < ActiveRecord::Base
           where(rels[:swf_asset_id].in(ids_to_delete)).
           delete_all
       end
-      @parent_swf_asset_relationships_to_update.each(&:save!)
+      @parent_swf_asset_relationships_to_update.each do |rel|
+        rel.save!
+        rel.swf_asset.save!
+      end
     end
   end
 
