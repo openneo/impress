@@ -52,7 +52,7 @@ OpenneoImpressItems::Application.routes.draw do |map|
 
   resources :users, :path => 'user', :only => [:index, :update] do
     resources :contributions, :only => [:index]
-    resources :closet_hangers, :only => [:index, :update], :path => 'closet' do
+    resources :closet_hangers, :only => [:index, :update, :destroy], :path => 'closet' do
       collection do
         get :petpage
       end
@@ -65,8 +65,6 @@ OpenneoImpressItems::Application.routes.draw do |map|
           put :update_quantities
         end
       end
-      
-      resource :closet_hanger, :only => [:update, :destroy]
     end
   end
 

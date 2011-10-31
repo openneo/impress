@@ -1,11 +1,10 @@
 class ClosetHangersController < ApplicationController
   before_filter :authorize_user!, :only => [:destroy, :create, :update, :update_quantities, :petpage]
-  before_filter :find_item, :only => [:destroy, :create, :update_quantities]
+  before_filter :find_item, :only => [:create, :update_quantities]
   before_filter :find_user, :only => [:index, :petpage, :update_quantities]
 
   def destroy
-    raise ActiveRecord::RecordNotFound unless params[:closet_hanger]
-    @closet_hanger = current_user.closet_hangers.find_by_item_id_and_owned!(@item.id, owned)
+    @closet_hanger = current_user.closet_hangers.find params[:id]
     @closet_hanger.destroy
     respond_to do |format|
       format.html { redirect_after_destroy! }

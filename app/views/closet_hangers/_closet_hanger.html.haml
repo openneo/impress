@@ -11,7 +11,7 @@
         = f.number_field :quantity, :min => 0, :required => true, :title => "You own #{pluralize closet_hanger.quantity, closet_hanger.item.name}"
         = f.submit "Save"
   - if show_controls
-    = form_tag user_item_closet_hanger_path(current_user, closet_hanger.item), :method => :delete, :class => 'closet-hanger-destroy' do
+    = form_tag [current_user, closet_hanger], :method => :delete, :class => 'closet-hanger-destroy' do
       = return_to_field_tag
       = hidden_field_tag 'closet_hanger[owned]', closet_hanger.owned
       = submit_tag "Remove"
