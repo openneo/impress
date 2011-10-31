@@ -53,6 +53,12 @@ class PetState < ActiveRecord::Base
   def swf_asset_ids=(ids)
     self['swf_asset_ids'] = ids
   end
+  
+  def handle_assets!
+    parent_swf_asset_relationships.each do |rel|
+      rel.swf_asset.save!
+    end
+  end
 
   def self.from_pet_type_and_biology_info(pet_type, info)
     swf_asset_ids = []
