@@ -57,7 +57,7 @@ class SwfAsset < ActiveRecord::Base
   end
 
   def s3_path
-    "#{self['type']}/#{s3_partition_path}#{self.id}"
+    "#{self['type']}/#{s3_partition_path}#{self.remote_id}"
   end
 
   def s3_url(size)
@@ -68,7 +68,7 @@ class SwfAsset < ActiveRecord::Base
   PARTITION_DIGITS = 3
   PARTITION_ID_LENGTH = PARTITION_COUNT * PARTITION_DIGITS
   def s3_partition_path
-    (id / 10**PARTITION_DIGITS).to_s.rjust(PARTITION_ID_LENGTH, '0').tap do |id_str|
+    (remote_id / 10**PARTITION_DIGITS).to_s.rjust(PARTITION_ID_LENGTH, '0').tap do |id_str|
       PARTITION_COUNT.times do |n|
         id_str.insert(PARTITION_ID_LENGTH - (n * PARTITION_DIGITS), '/')
       end
@@ -88,7 +88,7 @@ class SwfAsset < ActiveRecord::Base
     if image_requested?
       false
     else
-      Resque.enqueue(AssetImageConversionRequest, self.type, self.id)
+      Resque.enqueue(AssetImageConversionRequest, self.id)
       self.image_requested = true
       save!
       true
@@ -100,7 +100,7 @@ class SwfAsset < ActiveRecord::Base
       return false
     end
 
-    Resque.enqueue(AssetImageConversionRequest::OnBrokenImageReport, self.type, self.id)
+    Resque.enqueue(AssetImageConversionRequest::OnBrokenImageReport, self.id)
     self.reported_broken_at = Time.now
     self.save
   end
@@ -119,8 +119,7 @@ class SwfAsset < ActiveRecord::Base
   attr_accessor :item
 
   has_one :contribution, :as => :contributed
-  has_many :object_asset_relationships, :class_name => 'ParentSwfAssetRelationship',
-    :conditions => {:swf_asset_type => 'object'}
+  has_many :parent_swf_asset_relationships
 
   delegate :depth, :to => :zone
   
@@ -144,7 +143,7 @@ class SwfAsset < ActiveRecord::Base
   scope :biology_assets, where(:type => PetState::SwfAssetType)
   scope :object_assets, where(:type => Item::SwfAssetType)
   scope :for_item_ids, lambda { |item_ids|
-    joins(:object_asset_relationships).
+    joins(:parent_swf_asset_relationships).
       where(ParentSwfAssetRelationship.arel_table[:parent_id].in(item_ids))
   }
 
@@ -154,7 +153,7 @@ class SwfAsset < ActiveRecord::Base
 
   def as_json(options={})
     json = {
-      :id => id,
+      :id => remote_id,
       :type => type,
       :depth => depth,
       :body_id => body_id,
@@ -236,7 +235,7 @@ class SwfAsset < ActiveRecord::Base
   end
 
   after_commit :on => :create do
-    Resque.enqueue(AssetImageConversionRequest::OnCreation, self.type, self.id)
+    Resque.enqueue(AssetImageConversionRequest::OnCreation, self.id)
   end
 
   class DownloadError < Exception;end

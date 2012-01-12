@@ -1,55 +1,61 @@
 GIT
   remote: git://github.com/eventmachine/eventmachine.git
-  revision: 1d9b28eae110457ef3915aef380319a95697a167
+  revision: 69151c3ebb3e4ecf2bb9b6e2fab2022dc34f8541
   specs:
-    eventmachine (1.0.0.beta.2)
+    eventmachine (1.0.0.beta.4)
 
 GIT
   remote: git://github.com/igrigorik/em-http-request.git
-  revision: bbf9c11e02aaa91f5d1149319dcab59f410426e8
+  revision: ce50f322ce08d43a4a747cf333ea576765d764c4
   specs:
-    em-http-request (0.3.0)
-      addressable (>= 2.0.0)
-      escape_utils
-      eventmachine (>= 0.12.9)
+    em-http-request (1.0.1)
+      addressable (>= 2.2.3)
+      cookiejar
+      em-socksify
+      eventmachine (>= 1.0.0.beta.4)
+      http_parser.rb (>= 0.5.3)
 
 GIT
   remote: git://github.com/igrigorik/em-mysqlplus.git
-  revision: 35320562abc914cc7d9fd203abb746f99796739e
+  revision: 11d6e1123654b948c1d0a8c9d9077e82420b2846
   specs:
     em-mysqlplus (0.1.5)
       eventmachine (>= 0.12.9)
 
 GIT
   remote: git://github.com/igrigorik/em-synchrony.git
-  revision: f59169c5c8f893336802f1de2970ee9dd8755158
+  revision: c7209a58f9eb92e1dc81fb141297f9f257c2fdcb
   specs:
-    em-synchrony (0.2.0)
-      eventmachine (>= 0.12.9)
+    em-synchrony (1.0.0)
+      eventmachine (>= 1.0.0.beta.1)
 
 GIT
   remote: git://github.com/oldmoe/mysqlplus.git
-  revision: 2daef86c487ec1c531ecfe84ed342d15a1c89554
+  revision: 3dbaa7c00ff0bb75ad9538cdef176c72de35d231
   specs:
     mysqlplus (0.1.1)
 
 GIT
   remote: git://github.com/rubyamf/rocketamf.git
-  revision: fdef9d836f1ed27b06ce669ea05122fa0dec4a12
+  revision: ed82db7659f624d6c3ca244e4127dad270a484c7
   specs:
     RocketAMF (1.0.0)
 
 GEM
   remote: http://rubygems.org/
   specs:
+    POpen4 (0.1.4)
+      Platform (>= 0.4.0)
+      open4
+    Platform (0.4.0)
     aaronh-chronic (0.3.9)
     abstract (1.0.0)
-    actionmailer (3.0.4)
-      actionpack (= 3.0.4)
+    actionmailer (3.0.5)
+      actionpack (= 3.0.5)
       mail (~> 2.2.15)
-    actionpack (3.0.4)
-      activemodel (= 3.0.4)
-      activesupport (= 3.0.4)
+    actionpack (3.0.5)
+      activemodel (= 3.0.5)
+      activesupport (= 3.0.5)
       builder (~> 2.1.2)
       erubis (~> 2.6.6)
       i18n (~> 0.4)
@@ -57,83 +63,88 @@ GEM
       rack-mount (~> 0.6.13)
       rack-test (~> 0.5.7)
       tzinfo (~> 0.3.23)
-    activemodel (3.0.4)
-      activesupport (= 3.0.4)
+    activemodel (3.0.5)
+      activesupport (= 3.0.5)
       builder (~> 2.1.2)
       i18n (~> 0.4)
-    activerecord (3.0.4)
-      activemodel (= 3.0.4)
-      activesupport (= 3.0.4)
+    activerecord (3.0.5)
+      activemodel (= 3.0.5)
+      activesupport (= 3.0.5)
       arel (~> 2.0.2)
       tzinfo (~> 0.3.23)
-    activeresource (3.0.4)
-      activemodel (= 3.0.4)
-      activesupport (= 3.0.4)
-    activesupport (3.0.4)
-    addressable (2.2.4)
-    arel (2.0.8)
+    activeresource (3.0.5)
+      activemodel (= 3.0.5)
+      activesupport (= 3.0.5)
+    activesupport (3.0.5)
+    addressable (2.2.6)
+    arel (2.0.10)
     bcrypt-ruby (2.1.4)
     builder (2.1.2)
     character-encodings (0.4.1)
-    closure-compiler (1.0.0)
+    closure-compiler (1.1.4)
     compass (0.10.6)
       haml (>= 3.0.4)
-    devise (1.1.5)
+    cookiejar (0.3.0)
+    devise (1.1.9)
       bcrypt-ruby (~> 2.1.2)
       warden (~> 1.0.2)
-    diff-lcs (1.1.2)
+    diff-lcs (1.1.3)
+    em-socksify (0.1.0)
+      eventmachine
     erubis (2.6.6)
       abstract (>= 1.0.0)
-    escape_utils (0.1.9)
-    factory_girl (1.3.3)
-    factory_girl_rails (1.0.1)
-      factory_girl (~> 1.3)
+    factory_girl (2.3.2)
+      activesupport
+    factory_girl_rails (1.4.0)
+      factory_girl (~> 2.3.0)
       railties (>= 3.0.0)
     haml (3.0.25)
-    hoptoad_notifier (2.4.5)
+    hoptoad_notifier (2.4.11)
       activesupport
       builder
-    i18n (0.5.0)
+    http_parser.rb (0.5.3)
+    i18n (0.6.0)
     jammit (0.5.4)
       closure-compiler (>= 0.1.0)
       yui-compressor (>= 0.9.1)
     json (1.4.6)
-    mail (2.2.15)
+    mail (2.2.19)
       activesupport (>= 2.3.6)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     memcache-client (1.8.5)
-    mime-types (1.16)
-    msgpack (0.4.4)
-    mysql2 (0.2.6)
+    mime-types (1.17.2)
+    msgpack (0.4.6)
+    mysql2 (0.3.11)
     nokogiri (1.5.0)
+    open4 (1.3.0)
     openneo-auth-signatory (0.1.0)
       ruby-hmac
-    polyglot (0.3.1)
-    rack (1.2.3)
-    rack-fiber_pool (0.9.1)
-    rack-mount (0.6.13)
+    polyglot (0.3.3)
+    rack (1.2.5)
+    rack-fiber_pool (0.9.2)
+    rack-mount (0.6.14)
       rack (>= 1.0.0)
     rack-test (0.5.7)
       rack (>= 1.0)
-    rails (3.0.4)
-      actionmailer (= 3.0.4)
-      actionpack (= 3.0.4)
-      activerecord (= 3.0.4)
-      activeresource (= 3.0.4)
-      activesupport (= 3.0.4)
+    rails (3.0.5)
+      actionmailer (= 3.0.5)
+      actionpack (= 3.0.5)
+      activerecord (= 3.0.5)
+      activeresource (= 3.0.5)
+      activesupport (= 3.0.5)
       bundler (~> 1.0)
-      railties (= 3.0.4)
-    railties (3.0.4)
-      actionpack (= 3.0.4)
-      activesupport (= 3.0.4)
+      railties (= 3.0.5)
+    railties (3.0.5)
+      actionpack (= 3.0.5)
+      activesupport (= 3.0.5)
       rake (>= 0.8.7)
       thor (~> 0.14.4)
-    rake (0.8.7)
+    rake (0.9.2.2)
     rdiscount (1.6.8)
-    redis (2.2.1)
-    redis-namespace (1.0.3)
+    redis (2.2.2)
+    redis-namespace (1.1.0)
       redis (< 3.0.0)
     resque (1.15.0)
       json (~> 1.4.6)
@@ -143,9 +154,9 @@ GEM
     resque-retry (0.1.0)
       resque (>= 1.8.0)
       resque-scheduler (>= 1.8.0)
-    resque-scheduler (2.0.0.d)
+    resque-scheduler (2.0.0.e)
       redis (>= 2.0.1)
-      resque (>= 1.8.0)
+      resque (>= 1.15.0)
       rufus-scheduler
     right_aws (2.1.0)
       right_http_connection (>= 1.2.5)
@@ -163,28 +174,30 @@ GEM
     rspec-rails (2.0.1)
       rspec (~> 2.0.0)
     ruby-hmac (0.4.0)
-    rufus-scheduler (2.0.9)
+    rufus-scheduler (2.0.16)
       tzinfo (>= 0.3.23)
     sanitize (2.0.3)
       nokogiri (< 1.6, >= 1.4.4)
-    sinatra (1.2.6)
+    sinatra (1.2.8)
       rack (~> 1.1)
-      tilt (< 2.0, >= 1.2.2)
+      tilt (>= 1.2.2, < 2.0)
     swf_converter (0.0.3)
     thor (0.14.6)
-    tilt (1.3.2)
-    treetop (1.4.9)
+    tilt (1.3.3)
+    treetop (1.4.10)
+      polyglot
       polyglot (>= 0.3.1)
-    tzinfo (0.3.28)
+    tzinfo (0.3.31)
     vegas (0.1.8)
       rack (>= 1.0.0)
-    warden (1.0.3)
-      rack (>= 1.0.0)
-    whenever (0.6.2)
+    warden (1.0.6)
+      rack (>= 1.0)
+    whenever (0.6.8)
       aaronh-chronic (>= 0.3.9)
       activesupport (>= 2.3.4)
-    will_paginate (3.0.pre2)
-    yui-compressor (0.9.3)
+    will_paginate (3.0.2)
+    yui-compressor (0.9.6)
+      POpen4 (>= 0.1.4)
 
 PLATFORMS
   ruby
@@ -210,7 +223,7 @@ DEPENDENCIES
   nokogiri (~> 1.5.0)
   openneo-auth-signatory (~> 0.1.0)
   rack-fiber_pool
-  rails (= 3.0.4)
+  rails (= 3.0.5)
   rdiscount (~> 1.6.5)
   resque (~> 1.15.0)
   resque-retry (~> 0.1.0)

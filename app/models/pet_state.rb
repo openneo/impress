@@ -1,12 +1,10 @@
 class PetState < ActiveRecord::Base
   SwfAssetType = 'biology'
-
+  
   has_many :contributions, :as => :contributed # in case of duplicates being merged
   has_many :outfits
-  has_many :parent_swf_asset_relationships, :foreign_key => 'parent_id',
-    :conditions => {:swf_asset_type => SwfAssetType}
-  has_many :swf_assets, :through => :parent_swf_asset_relationships, :source => :biology_asset,
-    :conditions => {:type => SwfAssetType}
+  has_many :parent_swf_asset_relationships, :foreign_key => 'parent_id'
+  has_many :swf_assets, :through => :parent_swf_asset_relationships
 
   belongs_to :pet_type
 
@@ -14,9 +12,9 @@ class PetState < ActiveRecord::Base
 
   bio_effect_zone_id = 4
   scope :emotion_order, joins(:parent_swf_asset_relationships).
-    joins("LEFT JOIN swf_assets effect_assets ON effect_assets.id = parents_swf_assets.swf_asset_id AND effect_assets.type = 'biology' AND effect_assets.zone_id = #{bio_effect_zone_id}").
+    joins("LEFT JOIN swf_assets effect_assets ON effect_assets.remote_id = parents_swf_assets.swf_asset_id AND effect_assets.zone_id = #{bio_effect_zone_id}").
     group("pet_states.id").
-    order("COUNT(effect_assets.id) ASC, COUNT(parents_swf_assets.swf_asset_id) DESC, SUM(parents_swf_assets.swf_asset_id) ASC")
+    order("COUNT(effect_assets.remote_id) ASC, COUNT(parents_swf_assets.swf_asset_id) DESC, SUM(parents_swf_assets.swf_asset_id) ASC")
 
   def reassign_children_to!(main_pet_state)
     self.contributions.each do |contribution|
@@ -76,7 +74,7 @@ class PetState < ActiveRecord::Base
           swf_asset_ids_str
         )
     end
-    existing_swf_assets = SwfAsset.biology_assets.find_all_by_id(swf_asset_ids)
+    existing_swf_assets = SwfAsset.biology_assets.find_all_by_remote_id(swf_asset_ids)
     existing_swf_assets_by_id = {}
     existing_swf_assets.each do |swf_asset|
       existing_swf_assets_by_id[swf_asset.id] = swf_asset
@@ -95,18 +93,17 @@ class PetState < ActiveRecord::Base
         swf_asset = existing_swf_assets_by_id[swf_asset_id]
         unless swf_asset
           swf_asset = SwfAsset.new
-          swf_asset.id = swf_asset_id
+          swf_asset.remote_id = swf_asset_id
         end
         swf_asset.origin_biology_data = asset_info
         swf_asset.origin_pet_type = pet_type
         relationship = existing_relationships_by_swf_asset_id[swf_asset_id]
         unless relationship
           relationship ||= ParentSwfAssetRelationship.new
-          relationship.parent_id = pet_state.id
-          relationship.swf_asset_type = SwfAssetType
+          relationship.parent = pet_state
           relationship.swf_asset_id = swf_asset.id
         end
-        relationship.biology_asset = swf_asset
+        relationship.swf_asset = swf_asset
         relationships << relationship
       end
     end

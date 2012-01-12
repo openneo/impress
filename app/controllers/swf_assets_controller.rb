@@ -29,10 +29,10 @@ class SwfAssetsController < ApplicationController
     elsif params[:ids]
       @swf_assets = []
       if params[:ids][:biology]
-        @swf_assets += SwfAsset.biology_assets.where(:id => params[:ids][:biology]).all
+        @swf_assets += SwfAsset.biology_assets.where(:remote_id => params[:ids][:biology]).all
       end
       if params[:ids][:object]
-        @swf_assets += SwfAsset.object_assets.where(:id => params[:ids][:object]).all
+        @swf_assets += SwfAsset.object_assets.where(:remote_id => params[:ids][:object]).all
       end
     end
     if @swf_assets

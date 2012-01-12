@@ -41,7 +41,11 @@ class PetType < ActiveRecord::Base
 
   def as_json(options={})
     if options[:for] == 'wardrobe'
-      {:id => id, :body_id => body_id, :pet_state_ids => pet_states.select('pet_states.id').emotion_order.map(&:id)}
+      {
+        :id => id,
+        :body_id => body_id,
+        :pet_state_ids => pet_state_ids
+      }
     else
       {:image_hash => image_hash}
     end
@@ -103,7 +107,8 @@ class PetType < ActiveRecord::Base
         species_condition = condition
       end
     end
-    unneeded_item_ids = Item.select(items[:id]).joins(:parent_swf_asset_relationships => :object_asset).
+    unneeded_item_ids = Item.select(items[:id]).
+      joins(:parent_swf_asset_relationships => :swf_asset).
       where(SwfAsset.arel_table[:body_id].in([0, self.body_id])).map(&:id)
     Item.where(items[:id].not_in(unneeded_item_ids)).
       where(species_condition)
@@ -112,6 +117,10 @@ class PetType < ActiveRecord::Base
   def add_pet_state_from_biology!(biology)
     pet_state = PetState.from_pet_type_and_biology_info(self, biology)
     pet_state
+  end
+  
+  def pet_state_ids
+    pet_states.select('pet_states.id').emotion_order.map(&:id)
   end
 
   before_save do

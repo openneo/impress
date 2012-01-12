@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110807212936) do
+ActiveRecord::Schema.define(:version => 20120112204234) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -38,6 +38,11 @@ ActiveRecord::Schema.define(:version => 20110807212936) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "visibility",    :default => 1, :null => false
+  end
+
+  create_table "colors", :force => true do |t|
+    t.string  "name"
+    t.boolean "basic", :default => false, :null => false
   end
 
   create_table "contributions", :force => true do |t|
@@ -102,13 +107,13 @@ ActiveRecord::Schema.define(:version => 20110807212936) do
     t.boolean  "starred",      :default => false, :null => false
   end
 
-  create_table "parents_swf_assets", :id => false, :force => true do |t|
-    t.integer "parent_id",      :limit => 3, :null => false
-    t.integer "swf_asset_id",   :limit => 3, :null => false
-    t.string  "swf_asset_type", :limit => 7, :null => false
+  create_table "parents_swf_assets", :force => true do |t|
+    t.integer "parent_id",    :limit => 3, :null => false
+    t.integer "swf_asset_id", :limit => 3, :null => false
+    t.string  "parent_type",  :limit => 8, :null => false
   end
 
-  add_index "parents_swf_assets", ["parent_id", "swf_asset_id", "swf_asset_type"], :name => "unique_parents_swf_assets", :unique => true
+  add_index "parents_swf_assets", ["parent_id", "swf_asset_id"], :name => "unique_parents_swf_assets", :unique => true
   add_index "parents_swf_assets", ["parent_id"], :name => "parent_swf_assets_parent_id"
   add_index "parents_swf_assets", ["swf_asset_id"], :name => "parents_swf_assets_swf_asset_id"
 
@@ -151,13 +156,9 @@ ActiveRecord::Schema.define(:version => 20110807212936) do
     t.datetime "updated_at"
   end
 
-  create_table "schema_info", :id => false, :force => true do |t|
-    t.integer "version", :default => 0, :null => false
-  end
-
-  create_table "swf_assets", :id => false, :force => true do |t|
+  create_table "swf_assets", :force => true do |t|
     t.string   "type",               :limit => 7,                           :null => false
-    t.integer  "id",                 :limit => 3,                           :null => false
+    t.integer  "remote_id",          :limit => 3,                           :null => false
     t.text     "url",                :limit => 16777215,                    :null => false
     t.integer  "zone_id",            :limit => 1,                           :null => false
     t.text     "zones_restrict",                                            :null => false
@@ -170,7 +171,7 @@ ActiveRecord::Schema.define(:version => 20110807212936) do
   end
 
   add_index "swf_assets", ["body_id"], :name => "swf_assets_body_id_and_object_id"
-  add_index "swf_assets", ["type", "id"], :name => "swf_assets_type_and_id"
+  add_index "swf_assets", ["type", "remote_id"], :name => "swf_assets_type_and_id"
   add_index "swf_assets", ["zone_id"], :name => "idx_swf_assets_zone_id"
 
   create_table "topics", :force => true do |t|

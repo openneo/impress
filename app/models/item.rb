@@ -7,10 +7,8 @@ class Item < ActiveRecord::Base
 
   has_many :closet_hangers
   has_one :contribution, :as => :contributed
-  has_many :parent_swf_asset_relationships, :foreign_key => 'parent_id',
-    :conditions => {:swf_asset_type => SwfAssetType}
-  has_many :swf_assets, :through => :parent_swf_asset_relationships, :source => :object_asset,
-    :conditions => {:type => SwfAssetType}
+  has_many :parent_swf_asset_relationships, :as => :parent
+  has_many :swf_assets, :through => :parent_swf_asset_relationships
 
   attr_writer :current_body_id, :owned, :wanted
 
@@ -29,14 +27,7 @@ class Item < ActiveRecord::Base
 
   scope :alphabetize, order('name ASC')
 
-  scope :join_swf_assets, joins("INNER JOIN #{ParentSwfAssetRelationship.table_name} psa ON psa.swf_asset_type = 'object' AND psa.parent_id = objects.id").
-    joins("INNER JOIN #{SwfAsset.table_name} swf_assets ON swf_assets.id = psa.swf_asset_id").
-    group('objects.id')
-
-  scope :without_swf_assets, joins(
-    "LEFT JOIN #{ParentSwfAssetRelationship.table_name} psa ON psa.swf_asset_type = 'object' AND psa.parent_id = #{table_name}.id " +
-    "LEFT JOIN #{SwfAsset.table_name} sa ON sa.type = 'object' AND sa.id = psa.swf_asset_id"
-  ).where('sa.id IS NULL')
+  scope :join_swf_assets, joins(:swf_assets).group('objects.id')
 
   scope :newest, order(arel_table[:created_at].desc) if arel_table[:created_at]
 
@@ -191,15 +182,13 @@ class Item < ActiveRecord::Base
       # but doesn't in this sample, the two have been unbound. Delete the
       # relationship.
       ids_to_delete = self.parent_swf_asset_relationships.
-        select(:id).
-        joins(:object_asset).
+        select(:remote_id).
+        joins(:swf_asset).
         where(rels[:swf_asset_id].not_in(new_swf_asset_ids)).
         where(swf_assets[:body_id].in([@current_body_id, 0])).
-        map(&:id)
+        map(&:remote_id)
       unless ids_to_delete.empty?
-        ParentSwfAssetRelationship.
-          where(rels[:parent_id].eq(self.id)).
-          where(rels[:swf_asset_type].eq(SwfAssetType)).
+        self.parent_swf_asset_relationships.
           where(rels[:swf_asset_id].in(ids_to_delete)).
           delete_all
       end
@@ -241,7 +230,10 @@ class Item < ActiveRecord::Base
       swf_assets_by_id[id] = swf_asset
       swf_asset_ids << id
     end
-    SwfAsset.select('id, parent_id').object_assets.joins(:object_asset_relationships).
+    SwfAsset.select([
+        SwfAsset.arel_table[:id],
+        ParentSwfAssetRelationship.arel_table[:parent_id]
+      ]).object_assets.joins(:parent_swf_asset_relationships).
       where(SwfAsset.arel_table[:id].in(swf_asset_ids)).each do |row|
         item_id = row.parent_id.to_i
         swf_assets_by_parent_id[item_id] ||= []
@@ -291,7 +283,7 @@ class Item < ActiveRecord::Base
     asset_registry.each do |asset_id, asset_data|
       swf_asset_ids << asset_id.to_i if asset_data
     end
-    existing_swf_assets = SwfAsset.object_assets.find_all_by_id swf_asset_ids
+    existing_swf_assets = SwfAsset.object_assets.find_all_by_remote_id swf_asset_ids
     existing_swf_assets_by_id = {}
     existing_swf_assets.each do |swf_asset|
       existing_swf_assets_by_id[swf_asset.id] = swf_asset
@@ -318,7 +310,7 @@ class Item < ActiveRecord::Base
         swf_asset = existing_swf_assets_by_id[swf_asset_id]
         unless swf_asset
           swf_asset = SwfAsset.new
-          swf_asset.id = swf_asset_id
+          swf_asset.remote_id = swf_asset_id
         end
         swf_asset.origin_object_data = asset_data
         swf_asset.origin_pet_type = pet_type
@@ -327,11 +319,10 @@ class Item < ActiveRecord::Base
         relationship = existing_relationships_by_item_id_and_swf_asset_id[item.id][swf_asset_id] rescue nil
         unless relationship
           relationship = ParentSwfAssetRelationship.new
-          relationship.parent_id = item.id
-          relationship.swf_asset_type = SwfAssetType
+          relationship.parent = item
           relationship.swf_asset_id = swf_asset.id
         end
-        relationship.object_asset = swf_asset
+        relationship.swf_asset = swf_asset
         relationships_by_item_id[item_id] ||= []
         relationships_by_item_id[item_id] << relationship
       end
@@ -787,7 +778,7 @@ class Item < ActiveRecord::Base
     # the zone requirement. If that max was NULL, return the object.
     item_ids = select(arel_table[:id]).joins(
         "LEFT JOIN #{ParentSwfAssetRelationship.table_name} #{psa.name} ON " +
-        psa[:swf_asset_type].eq(SwfAssetType).
+        psa[:parent_type].eq(self.name).
         and(psa[:parent_id].eq(arel_table[:id])).
         to_sql
       ).

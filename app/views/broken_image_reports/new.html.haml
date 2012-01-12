@@ -15,7 +15,8 @@
       = link_to image_tag(swf_asset.s3_url([150, 150])), swf_asset.url
       - unless swf_asset.image_pending_repair?
         = form_tag(:action => :create) do
-          = hidden_field_tag 'swf_asset_id', swf_asset.id
+          = hidden_field_tag 'swf_asset_remote_id', swf_asset.remote_id
+          = hidden_field_tag 'swf_asset_type', swf_asset.type
           = submit_tag 'Report as broken'
 
         - if swf_asset.converted_at?
