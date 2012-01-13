@@ -77,7 +77,7 @@ class PetState < ActiveRecord::Base
     existing_swf_assets = SwfAsset.biology_assets.find_all_by_remote_id(swf_asset_ids)
     existing_swf_assets_by_id = {}
     existing_swf_assets.each do |swf_asset|
-      existing_swf_assets_by_id[swf_asset.id] = swf_asset
+      existing_swf_assets_by_id[swf_asset.remote_id] = swf_asset
     end
     existing_relationships_by_swf_asset_id = {}
     unless pet_state.new_record?
