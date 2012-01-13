@@ -10,6 +10,8 @@ class PetState < ActiveRecord::Base
   belongs_to :pet_type
 
   alias_method :swf_asset_ids_from_association, :swf_asset_ids
+  
+  attr_writer :parent_swf_asset_relationships_to_update
 
   bio_effect_zone_id = 4
   scope :emotion_order, joins(:parent_swf_asset_relationships).
@@ -54,7 +56,7 @@ class PetState < ActiveRecord::Base
   end
   
   def handle_assets!
-    parent_swf_asset_relationships.each do |rel|
+    @parent_swf_asset_relationships_to_update.each do |rel|
       rel.swf_asset.save!
       rel.save!
     end
@@ -109,7 +111,7 @@ class PetState < ActiveRecord::Base
         relationships << relationship
       end
     end
-    pet_state.parent_swf_asset_relationships = relationships
+    pet_state.parent_swf_asset_relationships_to_update = relationships
     pet_state
   end
 
