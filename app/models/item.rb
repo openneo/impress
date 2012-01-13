@@ -526,7 +526,7 @@ class Item < ActiveRecord::Base
           data[item_id_key]['asset_data'].map do |asset_id_str, asset_data|
             item.zones_restrict = asset_data['restrict']
             item.save
-            swf_asset = SwfAsset.find_or_initialize_by_type_and_id(SwfAssetType, asset_id_str.to_i)
+            swf_asset = SwfAsset.find_or_initialize_by_type_and_remote_id(SwfAssetType, asset_id_str.to_i)
             swf_asset.type = SwfAssetType
             swf_asset.body_id = pet_type.body_id
             swf_asset.mall_data = asset_data
