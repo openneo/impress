@@ -284,9 +284,9 @@ class Item < ActiveRecord::Base
       swf_asset_ids << asset_id.to_i if asset_data
     end
     existing_swf_assets = SwfAsset.object_assets.find_all_by_remote_id swf_asset_ids
-    existing_swf_assets_by_id = {}
+    existing_swf_assets_by_remote_id = {}
     existing_swf_assets.each do |swf_asset|
-      existing_swf_assets_by_id[swf_asset.remote_id] = swf_asset
+      existing_swf_assets_by_remote_id[swf_asset.remote_id] = swf_asset
     end
 
     # With each asset in the registry,
@@ -306,11 +306,11 @@ class Item < ActiveRecord::Base
         item.current_body_id = pet_type.body_id
 
         # Build and update the SWF
-        swf_asset_id = asset_data[:asset_id].to_i
-        swf_asset = existing_swf_assets_by_id[swf_asset_id]
+        swf_asset_remote_id = asset_data[:asset_id].to_i
+        swf_asset = existing_swf_assets_by_remote_id[swf_asset_remote_id]
         unless swf_asset
           swf_asset = SwfAsset.new
-          swf_asset.remote_id = swf_asset_id
+          swf_asset.remote_id = swf_asset_remote_id
         end
         swf_asset.origin_object_data = asset_data
         swf_asset.origin_pet_type = pet_type
@@ -320,7 +320,6 @@ class Item < ActiveRecord::Base
         unless relationship
           relationship = ParentSwfAssetRelationship.new
           relationship.parent = item
-          relationship.swf_asset_id = swf_asset.id
         end
         relationship.swf_asset = swf_asset
         relationships_by_item_id[item_id] ||= []

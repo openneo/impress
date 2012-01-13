@@ -66,14 +66,14 @@ class Pet < ActiveRecord::Base
   before_validation do
     pet_type.save!
     if @pet_state
-      @pet_state.handle_assets!
       @pet_state.save!
+      @pet_state.handle_assets!
     end
     
     if @items
       @items.each do |item|
-        item.handle_assets!
         item.save!
+        item.handle_assets!
       end
     end
   end
