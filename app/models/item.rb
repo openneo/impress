@@ -316,7 +316,7 @@ class Item < ActiveRecord::Base
         swf_asset.origin_pet_type = pet_type
 
         # Build and update the relationship
-        relationship = existing_relationships_by_item_id_and_swf_asset_id[item.id][swf_asset_id] rescue nil
+        relationship = existing_relationships_by_item_id_and_swf_asset_id[item.id][swf_asset.id] rescue nil
         unless relationship
           relationship = ParentSwfAssetRelationship.new
           relationship.parent = item

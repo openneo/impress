@@ -97,7 +97,7 @@ class PetState < ActiveRecord::Base
         end
         swf_asset.origin_biology_data = asset_info
         swf_asset.origin_pet_type = pet_type
-        relationship = existing_relationships_by_swf_asset_id[swf_asset_id]
+        relationship = existing_relationships_by_swf_asset_id[swf_asset.id]
         unless relationship
           relationship ||= ParentSwfAssetRelationship.new
           relationship.parent = pet_state
