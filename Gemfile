@@ -55,7 +55,7 @@ group :development_async do
 end
 
 group :production do
-  gem 'mysql2'
+  gem 'mysql2', '< 0.3'
   gem 'memcache-client', '~> 1.8.5', :require => 'memcache'
 end
 
