@@ -18,6 +18,7 @@ class ItemsController < ApplicationController
           format.js { render :json => {:items => @items, :total_pages => @items.total_pages}, :callback => params[:callback] }
         end
       rescue Item::SearchError
+        @items = []
         respond_to do |format|
           format.html { flash.now[:alert] = $!.message }
           format.json { render :json => {:error => $!.message} }
