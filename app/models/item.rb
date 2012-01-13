@@ -734,7 +734,7 @@ class Item < ActiveRecord::Base
         "any items yet. Head to Your Items to add some!"
     end
 
-    "id IN (#{item_ids.join(',')})"
+    arel_table[:id].in(item_ids)
   end
 
   search_filter :only do |species_name|
