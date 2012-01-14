@@ -42,11 +42,19 @@
           - if can_use_image_mode?
             %li#preview-mode-image Image
         - if can_use_image_mode?
-          %button#preview-download-image Download
           = link_to 'Image mode FAQ', image_mode_path,
             :id => 'preview-mode-note', :target => '_blank'
           = link_to 'Broken image?', '#', :id => 'report-broken-image',
             :target => '_blank', 'data-base-url' => new_broken_image_report_path
+          #preview-download-image
+            %h3 Download
+            %ul
+              %li
+                %button{'data-download-size' => 'small'} Small
+              %li
+                %button{'data-download-size' => 'medium'} Medium
+              %li
+                %button{'data-download-size' => 'large'} Large
         - else
           = link_to(donate_path, :id => 'preview-mode-note', :target => '_blank') do
             %strong Image mode

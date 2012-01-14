@@ -851,8 +851,15 @@ View.PreviewAdapterForm = function (wardrobe) {
     activate(imageToggle, 'image', 'flash');
   }
 
-  $('#preview-download-image').click(function () {
-    preview.adapter.saveImage();
+  var DOWNLOAD_SIZES = {
+    'small': [150, 150],
+    'medium': [300, 300],
+    'large': [600, 600]
+  };
+  
+  $('#preview-download-image button').click(function () {
+    var size = DOWNLOAD_SIZES[this.getAttribute('data-download-size')];
+    preview.adapter.saveImage(size);
   });
 
   if(document.createElement('canvas').getContext) {

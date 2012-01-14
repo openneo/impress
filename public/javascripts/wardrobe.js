@@ -1285,7 +1285,7 @@ Wardrobe.getStandardView = function (options) {
         ).appendTo(document.body);
       }
 
-      this.saveImage = function () {
+      this.saveImage = function (size) {
         /*
           Since browser security policy denies access to canvas image data
           if we include assets from other domains, and our assets are on S3,
@@ -1298,14 +1298,20 @@ Wardrobe.getStandardView = function (options) {
           It then prompts the user to download a WIDTHxHEIGHT image of the
           IMAGEURLs layered in order.
         */
-        var size = bestSize();
-
+        
         var url = Wardrobe.IMAGE_CONFIG.base_url + "preview_export.html?" +
-          size[0] + "," + size[1];
-
-        previewImageContainer.children('img').each(function () {
-          url += "," + encodeURIComponent(this.src);
+          size[0] + "," + size[1];        
+          
+        // Get a copy of the visible assets, then sort them in ascending zone
+        // order.
+        var assets = wardrobe.outfit.getVisibleAssets().slice(0);
+        assets.sort(function (a, b) {
+          return a.zone_id - b.zone_id;
         });
+
+        for(var i = 0; i < assets.length; i++) {
+          url += "," + encodeURIComponent(assets[i].imageURL(size));
+        }
 
         exportIframe.attr('src', url);
       }
