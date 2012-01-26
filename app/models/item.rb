@@ -178,20 +178,21 @@ class Item < ActiveRecord::Base
       new_swf_asset_ids = @parent_swf_asset_relationships_to_update.map(&:swf_asset_id)
       rels = ParentSwfAssetRelationship.arel_table
       swf_assets = SwfAsset.arel_table
+      
       # If a relationship used to bind an item and asset for this body type,
       # but doesn't in this sample, the two have been unbound. Delete the
       # relationship.
       ids_to_delete = self.parent_swf_asset_relationships.
-        select(:remote_id).
+        select(rels[:id]).
         joins(:swf_asset).
         where(rels[:swf_asset_id].not_in(new_swf_asset_ids)).
         where(swf_assets[:body_id].in([@current_body_id, 0])).
-        map(&:remote_id)
+        map(&:id)
+      
       unless ids_to_delete.empty?
-        self.parent_swf_asset_relationships.
-          where(rels[:swf_asset_id].in(ids_to_delete)).
-          delete_all
+        ParentSwfAssetRelationship.where(:id => ids_to_delete).delete_all
       end
+      
       @parent_swf_asset_relationships_to_update.each do |rel|
         rel.save!
         rel.swf_asset.save!
