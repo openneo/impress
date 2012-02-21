@@ -3,7 +3,7 @@ class PetState < ActiveRecord::Base
   
   has_many :contributions, :as => :contributed # in case of duplicates being merged
   has_many :outfits
-  has_many :parent_swf_asset_relationships, :foreign_key => 'parent_id',
+  has_many :parent_swf_asset_relationships, :as => :parent,
     :autosave => false
   has_many :swf_assets, :through => :parent_swf_asset_relationships
 
