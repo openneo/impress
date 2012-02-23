@@ -1306,7 +1306,7 @@ Wardrobe.getStandardView = function (options) {
         // order.
         var assets = wardrobe.outfit.getVisibleAssets().slice(0);
         assets.sort(function (a, b) {
-          return a.zone_id - b.zone_id;
+          return a.depth - b.depth;
         });
 
         for(var i = 0; i < assets.length; i++) {
