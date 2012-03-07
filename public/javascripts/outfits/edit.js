@@ -356,21 +356,21 @@ View.Hash = function (wardrobe) {
   }
 
   singleOutfitResponse('updateClosetItems', function (items) {
-    var item_ids = items.map('id');
+    var item_ids = items.mapProperty('id');
     if(!arraysMatch(item_ids, data.closet)) {
       changeQuery({closet: item_ids});
     }
   });
 
   singleOutfitResponse('updateWornItems', function (items) {
-    var item_ids = items.map('id'), changes = {};
+    var item_ids = items.mapProperty('id'), changes = {};
     if(!arraysMatch(item_ids, data.objects)) {
       changes.objects = item_ids;
     }
     if(arraysMatch(item_ids, data.closet) || arraysMatch(item_ids, data.objects)) {
       changes.closet = undefined;
     } else {
-      changes.closet = wardrobe.outfit.getClosetItems().map('id');
+      changes.closet = wardrobe.outfit.getClosetItems().mapProperty('id');
     }
     if(changes.objects || changes.closet) changeQuery(changes);
   });

@@ -28,7 +28,7 @@ function arraysMatch(array1, array2) {
   return true;
 }
 
-Array.prototype.map = function (property) {
+Array.prototype.mapProperty = function (property) {
   return $.map(this, function (element) {
     return element[property];
   });
@@ -327,11 +327,11 @@ function Wardrobe() {
         new_items = [], new_worn_item_ids = [];
       if(added_item) {
         // now that we've loaded, check for conflicts on the added item
-        item_zones = added_item.getAssetsFitting(outfit.pet_type).map('zone_id');
+        item_zones = added_item.getAssetsFitting(outfit.pet_type).mapProperty('zone_id');
         item_zones_length = item_zones.length;
         for(var i = 0; i < outfit.worn_items.length; i++) {
           existing_item = outfit.worn_items[i];
-          existing_item_zones = existing_item.getAssetsFitting(outfit.pet_type).map('zone_id');
+          existing_item_zones = existing_item.getAssetsFitting(outfit.pet_type).mapProperty('zone_id');
           passed = true;
           if(existing_item != added_item) {
             for(var j = 0; j < item_zones_length; j++) {
@@ -1307,6 +1307,7 @@ Wardrobe.getStandardView = function (options) {
         assets.sort(function (a, b) {
           return a.depth - b.depth;
         });
+        console.log(assets.mapProperty('id'));return;
 
         for(var i = 0; i < assets.length; i++) {
           url += "," + encodeURIComponent(assets[i].imageURL(size));
