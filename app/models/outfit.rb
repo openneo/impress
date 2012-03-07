@@ -64,9 +64,11 @@ class Outfit < ActiveRecord::Base
     end
     self.item_outfit_relationships = new_rels
   end
-
-  def worn_item_ids
-    worn_and_unworn_item_ids[:worn]
+  
+  # Returns the array of SwfAssets representing each layer of the output image,
+  # ordered from bottom to top.
+  def layered_assets
+    visible_assets.sort { |a, b| a.zone.depth <=> b.zone.depth }
   end
 
   def self.build_for_user(user, params)
@@ -81,6 +83,32 @@ class Outfit < ActiveRecord::Base
       end
       outfit.attributes = params
     end
+  end
+  
+  protected
+  
+  def visible_assets
+    biology_assets = pet_state.swf_assets
+    object_assets = SwfAsset.object_assets.
+      fitting_body_id(pet_state.pet_type.body_id).for_item_ids(worn_item_ids)
+    
+    # Now for fun with bitmasks! Rather than building a bunch of integer arrays
+    # here, we instead go low-level and use bit-level operations. Build the
+    # bitmask by parsing the binary string (reversing it to get the lower zone
+    # numbers on the right), then OR them all together to get the mask
+    # representing all the restricted zones. (Note to self: why not just store
+    # in this format in the first place?)
+    restrictors = biology_assets + worn_items
+    restricted_zones_mask = restrictors.inject(0) do |mask, restrictor|
+      mask | restrictor.zones_restrict.reverse.to_i(2)
+    end
+    
+    # Now, check each asset's zone is not restricted in the bitmask using
+    # bitwise operations: shift 1 to the zone_id position, then AND it with
+    # the restricted zones mask. If we get 0, then the bit for that zone ID was
+    # not turned on, so the zone is not restricted and this asset is visible.
+    all_assets = biology_assets + object_assets
+    all_assets.select { |a| (1 << (a.zone_id - 1)) & restricted_zones_mask == 0 }
   end
 end
 
