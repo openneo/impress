@@ -12,6 +12,8 @@ class Outfit < ActiveRecord::Base
   attr_accessible :name, :pet_state_id, :starred, :worn_and_unworn_item_ids
 
   scope :wardrobe_order, order('starred DESC', :name)
+  
+  mount_uploader :image, OutfitImageUploader
 
   def as_json(more_options={})
     serializable_hash :only => [:id, :name, :pet_state_id, :starred],
@@ -70,6 +72,22 @@ class Outfit < ActiveRecord::Base
   def layered_assets
     visible_assets.sort { |a, b| a.zone.depth <=> b.zone.depth }
   end
+  
+  # Creates and writes the thumbnail images for this outfit. (Writes to file in
+  # development, S3 in production.) Runs #save! on the record, so any other
+  # changes will also be saved.
+  def write_image!
+    Tempfile.open(['outfit_image', '.png']) do |image|
+      create_image! image
+      self.image = image
+      save!
+    end
+    self.image
+  end
+  
+  def s3_key(size)
+    URI.encode("#{id}/#{size.join 'x'}.png")
+  end
 
   def self.build_for_user(user, params)
     Outfit.new.tap do |outfit|
@@ -86,6 +104,28 @@ class Outfit < ActiveRecord::Base
   end
   
   protected
+  
+  # Creates a 600x600 PNG image of this outfit, writing to the given output
+  # file.
+  def create_image!(output)
+    layers = self.layered_assets
+    base_layer = layers.shift
+    write_temp_swf_asset_image! base_layer, output
+    output.close
+
+    Tempfile.open(['outfit_overlay', '.png']) do |overlay|
+      layers.each do |layer|
+        overlay.open
+        write_temp_swf_asset_image! layer, overlay
+        overlay.close
+        
+        previous_image = MiniMagick::Image.open(output.path)
+        overlay_image = MiniMagick::Image.open(overlay.path)
+        output_image = previous_image.composite(overlay_image)
+        output_image.write output.path
+      end
+    end
+  end
   
   def visible_assets
     biology_assets = pet_state.swf_assets
@@ -109,6 +149,16 @@ class Outfit < ActiveRecord::Base
     # not turned on, so the zone is not restricted and this asset is visible.
     all_assets = biology_assets + object_assets
     all_assets.select { |a| (1 << (a.zone_id - 1)) & restricted_zones_mask == 0 }
+  end
+  
+  IMAGE_BASE_SIZE = [600, 600]
+  def write_temp_swf_asset_image!(swf_asset, file)
+    key = swf_asset.s3_key(IMAGE_BASE_SIZE)
+    bucket = SwfAsset::IMAGE_BUCKET
+    data = bucket.get(key)
+    file.binmode # write in binary mode
+    file.truncate(0) # clear the file
+    file.write data # write the new data
   end
 end
 
