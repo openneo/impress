@@ -15,7 +15,7 @@ class PetState < ActiveRecord::Base
 
   bio_effect_zone_id = 4
   scope :emotion_order, joins(:parent_swf_asset_relationships).
-    joins("LEFT JOIN swf_assets effect_assets ON effect_assets.remote_id = parents_swf_assets.swf_asset_id AND effect_assets.zone_id = #{bio_effect_zone_id}").
+    joins("LEFT JOIN swf_assets effect_assets ON effect_assets.id = parents_swf_assets.swf_asset_id AND effect_assets.zone_id = #{bio_effect_zone_id}").
     group("pet_states.id").
     order("COUNT(effect_assets.remote_id) ASC, COUNT(parents_swf_assets.swf_asset_id) DESC, SUM(parents_swf_assets.swf_asset_id) ASC")
 
