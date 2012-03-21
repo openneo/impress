@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120112204234) do
+ActiveRecord::Schema.define(:version => 20120321231507) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -30,6 +30,10 @@ ActiveRecord::Schema.define(:version => 20120112204234) do
     t.integer  "list_id"
   end
 
+  add_index "closet_hangers", ["item_id", "owned"], :name => "index_closet_hangers_on_item_id_and_owned"
+  add_index "closet_hangers", ["list_id"], :name => "index_closet_hangers_on_list_id"
+  add_index "closet_hangers", ["user_id"], :name => "index_closet_hangers_on_user_id"
+
   create_table "closet_lists", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -39,6 +43,8 @@ ActiveRecord::Schema.define(:version => 20120112204234) do
     t.datetime "updated_at"
     t.integer  "visibility",    :default => 1, :null => false
   end
+
+  add_index "closet_lists", ["user_id"], :name => "index_closet_lists_on_user_id"
 
   create_table "colors", :force => true do |t|
     t.string  "name"
@@ -51,6 +57,9 @@ ActiveRecord::Schema.define(:version => 20120112204234) do
     t.integer  "user_id",                       :null => false
     t.datetime "created_at",                    :null => false
   end
+
+  add_index "contributions", ["contributed_id", "contributed_type"], :name => "index_contributions_on_contributed_id_and_contributed_type"
+  add_index "contributions", ["user_id"], :name => "index_contributions_on_user_id"
 
   create_table "forums", :force => true do |t|
     t.string   "name"
@@ -67,6 +76,9 @@ ActiveRecord::Schema.define(:version => 20120112204234) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "item_outfit_relationships", ["item_id"], :name => "index_item_outfit_relationships_on_item_id"
+  add_index "item_outfit_relationships", ["outfit_id", "is_worn"], :name => "index_item_outfit_relationships_on_outfit_id_and_is_worn"
 
   create_table "login_cookies", :force => true do |t|
     t.integer "user_id", :null => false
@@ -105,7 +117,11 @@ ActiveRecord::Schema.define(:version => 20120112204234) do
     t.datetime "updated_at"
     t.string   "name"
     t.boolean  "starred",      :default => false, :null => false
+    t.string   "image"
   end
+
+  add_index "outfits", ["pet_state_id"], :name => "index_outfits_on_pet_state_id"
+  add_index "outfits", ["user_id"], :name => "index_outfits_on_user_id"
 
   create_table "parents_swf_assets", :force => true do |t|
     t.integer "parent_id",    :limit => 3, :null => false
@@ -113,8 +129,8 @@ ActiveRecord::Schema.define(:version => 20120112204234) do
     t.string  "parent_type",  :limit => 8, :null => false
   end
 
+  add_index "parents_swf_assets", ["parent_id", "parent_type"], :name => "index_parents_swf_assets_on_parent_id_and_parent_type"
   add_index "parents_swf_assets", ["parent_id", "swf_asset_id"], :name => "unique_parents_swf_assets", :unique => true
-  add_index "parents_swf_assets", ["parent_id"], :name => "parent_swf_assets_parent_id"
   add_index "parents_swf_assets", ["swf_asset_id"], :name => "parents_swf_assets_swf_asset_id"
 
   create_table "pet_loads", :force => true do |t|
