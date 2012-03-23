@@ -32,7 +32,7 @@
                     @current_user_quantities[owned], :min => 0
                     
                 - unless lists.empty?
-                  = label_tag "quantity[#{owned}]" do
+                  = label_tag "quantity[#{owned}]", :class => 'unlisted' do
                     Not in a list
                 - else
                   = label_tag "quantity[#{owned}]" do
