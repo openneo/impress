@@ -28,4 +28,8 @@ class OutfitImageUploader < CarrierWave::Uploader::Base
     partition_dir = "%03d" % partition_id
     "outfits/#{partition_dir}/#{model.id}"
   end
+  
+  def default_url
+    "/images/outfits/" + [version_name, "default.png"].compact.join('_')
+  end
 end
