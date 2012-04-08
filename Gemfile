@@ -37,6 +37,8 @@ gem "nokogiri", "~> 1.5.0"
 
 gem 'sanitize', '~> 2.0.3'
 
+gem 'newrelic_rpm'
+
 group :development_async do
   # async wrappers
   gem 'eventmachine',     :git => 'git://github.com/eventmachine/eventmachine.git'
