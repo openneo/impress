@@ -6,6 +6,7 @@ class ClosetHangersController < ApplicationController
   def destroy
     @closet_hanger = current_user.closet_hangers.find params[:id]
     @closet_hanger.destroy
+    @item = @closet_hanger.item
     respond_to do |format|
       format.html { redirect_after_destroy! }
       format.json { render :json => true }
