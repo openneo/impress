@@ -77,7 +77,7 @@ module ClosetHangersHelper
   end
 
   def petpage_item_name(item)
-    item.name.gsub(/ on/i, ' o<b></b>n')
+    item.name.gsub(/ On/i, ' O<b></b>n').html_safe
   end
 
   PETPAGE_IMAGE_URL_BLACKLIST = %w(window. ondrop)
