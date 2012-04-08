@@ -69,7 +69,14 @@ class User < ActiveRecord::Base
   end
 
   def closet_hangers_groups_visible_to(user)
-    return [true, false] if user == self
+    if user == self
+      [true, false]
+    else
+      public_closet_hangers_groups
+    end
+  end
+  
+  def public_closet_hangers_groups
     [].tap do |groups|
       groups << true if owned_closet_hangers_visibility >= ClosetVisibility[:public].id
       groups << false if wanted_closet_hangers_visibility >= ClosetVisibility[:public].id

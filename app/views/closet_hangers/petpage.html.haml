@@ -15,8 +15,27 @@
       = link_to "your pet's page", 'http://www.neopets.com/edithomepage.phtml'
     Then head to the Neoboards to show off! Have fun!
 
+= form_tag petpage_user_closet_hangers_path(@user), :method => :get, :id => 'petpage-closet-lists' do
+  = hidden_field_tag 'filter', '1'
+  - @closet_lists_by_owned.each do |owned, closet_lists|
+    %div
+      %h4 Items you #{closet_list_verb(owned)}
+      %ul
+        - closet_lists.each do |closet_list|
+          %li
+            = label_tag do
+              = check_box_tag "lists[#{closet_list.id}]", '1', petpage_closet_list_checked(closet_list, owned)
+              = closet_list.name
+        %li.unlisted
+          = label_tag do
+            = check_box_tag "groups[#{owned}]", '1', petpage_group_checked(owned)
+            Not in a list
+  = submit_tag 'Export checked lists to petpage'
+
 %textarea#petpage-output
   = '' + render('petpage_content',
-    :lists_by_owned => @closet_lists_by_owned,
-    :unlisted_hangers_by_owned => @unlisted_closet_hangers_by_owned)
+    :lists_by_owned => @visible_closet_lists_by_owned,
+    :unlisted_hangers_by_owned => @visible_unlisted_closet_hangers_by_owned)
 
+= include_javascript_libraries :jquery
+= javascript_include_tag 'closet_hangers/petpage'

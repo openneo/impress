@@ -75,6 +75,15 @@ module ClosetHangersHelper
   def nc_icon_url
     "http://#{request.host}#{image_path 'nc.png'}"
   end
+  
+  def petpage_closet_list_checked(closet_list, owned)
+    @visible_closet_lists_by_owned.has_key?(owned) &&
+      @visible_closet_lists_by_owned[owned].include?(closet_list)
+  end
+  
+  def petpage_group_checked(owned)
+    @visible_groups.include?(owned)
+  end
 
   def petpage_item_name(item)
     item.name.gsub(/ On/i, ' O<b></b>n').html_safe
