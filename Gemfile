@@ -33,11 +33,13 @@ gem 'right_aws', '~> 2.1.0'
 
 gem "character-encodings", "~> 0.4.1", :platforms => :ruby_18
 
-gem "nokogiri", "~> 1.5.0"
+gem "nokogiri", "~> 1.5.2"
 
 gem 'sanitize', '~> 2.0.3'
 
 gem 'newrelic_rpm'
+
+gem 'neopets', :git => 'git://github.com/matchu/neopets.git'
 
 group :development_async do
   # async wrappers

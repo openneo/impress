@@ -12,17 +12,15 @@ class NeopetsUser
   end
 
   def load!
-    doc = Nokogiri::HTML(open(url))
-
-    unless pets_wrapper = doc.at('#userneopets')
-      raise NotFound, "Could not find user #{username}"
+    user = Neopets::User.new(@username)
+    
+    begin
+      pets = user.pets
+    rescue Neopets::User::Error => e
+      raise NotFound, e.message
     end
 
-    pets = pets_wrapper.css('a[href^="/petlookup.phtml"]').map do |link|
-      name = link['href'].split('=').last
-      Pet.find_or_initialize_by_name(name)
-    end
-
+    pets = pets.map { |pet| Pet.find_or_initialize_by_name(pet.name) }
     items = pets.each(&:load!).map(&:items).flatten
     item_ids = items.map(&:id)
 
@@ -45,14 +43,7 @@ class NeopetsUser
   def persisted?
     false
   end
-
-  protected
-
-  URL_PREFIX = 'http://www.neopets.com/userlookup.phtml?user='
-  def url
-    URL_PREFIX + @username
-  end
-
-  class NotFound < RuntimeError;end
+  
+  class NotFound < RuntimeError; end
 end
 
