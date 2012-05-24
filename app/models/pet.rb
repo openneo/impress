@@ -39,6 +39,7 @@ class Pet < ActiveRecord::Base
     biology = pet_data.biology_by_zone
     biology[0] = nil # remove effects if present
     @pet_state = self.pet_type.add_pet_state_from_biology! biology
+    @pet_state.label_by_pet(self, pet_data.owner)
     @items = Item.collection_from_pet_type_and_registries(self.pet_type,
       contents.object_info_registry, contents.object_asset_registry)
     true

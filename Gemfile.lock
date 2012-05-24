@@ -31,7 +31,7 @@ GIT
 
 GIT
   remote: git://github.com/matchu/neopets.git
-  revision: c00b44ab75064815c5d433f0053bbf612c8465fd
+  revision: d0127de12eae650fd85c56b45bc0b52e64e34ffe
   specs:
     neopets (0.0.1)
       nokogiri (~> 1.5.2)
