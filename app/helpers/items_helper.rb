@@ -85,6 +85,22 @@ module ItemsHelper
   def neoitems_url_for(item)
     sprintf(NeoitemsURLFormat, CGI::escape(item.name))
   end
+  
+  def shop_wizard_url_for(item)
+    "http://www.neopets.com/market.phtml?type=wizard&string=#{CGI::escape item.name}"
+  end
+  
+  def super_shop_wizard_url_for(item)
+    "http://www.neopets.com/portal/supershopwiz.phtml?string=#{CGI::escape item.name}"
+  end
+  
+  def trading_post_url_for(item)
+    "http://www.neopets.com/island/tradingpost.phtml?type=browse&criteria=item_exact&search_string=#{CGI::escape item.name}"
+  end
+  
+  def auction_genie_url_for(item)
+    "http://www.neopets.com/genie.phtml?type=process_genie&criteria=exact&auctiongenie=#{CGI::escape item.name}"
+  end
 
   def render_trading_closet_hangers(owned)
     @trading_closet_hangers_by_owned[owned].map do |hanger|

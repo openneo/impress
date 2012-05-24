@@ -8,7 +8,12 @@
     = nc_icon_for(@item)
     - unless @item.rarity.blank?
       == Rarity: #{@item.rarity_index} (#{@item.rarity})
-    = link_to 'NeoItems', neoitems_url_for(@item), :class => 'button'
+    = link_to 'NeoItems', neoitems_url_for(@item)
+    - unless @item.nc?
+      = link_to 'Shop Wizard', shop_wizard_url_for(@item)
+      = link_to 'Super Wizard', super_shop_wizard_url_for(@item)
+      = link_to 'Trades', trading_post_url_for(@item)
+      = link_to 'Auctions', trading_post_url_for(@item)
 
 - if user_signed_in?
   #closet-hangers
