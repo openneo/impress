@@ -69,11 +69,17 @@ class PetState < ActiveRecord::Base
     
     # Find this pet on the owner's userlookup, where we can get both its gender
     # and its mood.
-    user_pet = Neopets::User.new(username).pets.
-      find { |user_pet| user_pet.name.downcase == pet.name.downcase }
-    self.female = user_pet.female?
-    self.mood_id = user_pet.mood.id
-    self.labeled = true
+    begin
+      user_pet = Neopets::User.new(username).pets.
+        find { |user_pet| user_pet.name.downcase == pet.name.downcase }
+      self.female = user_pet.female?
+      self.mood_id = user_pet.mood.id
+      self.labeled = true
+    rescue Neopets::User::Error
+      # If there's an error loading the userlookup data (e.g. account is
+      # frozen), no big deal; we just won't label the pet right now. Proceed
+      # as usual.
+    end
     
     true
   end
