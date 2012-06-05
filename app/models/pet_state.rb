@@ -71,7 +71,7 @@ class PetState < ActiveRecord::Base
     # and its mood.
     begin
       user_pet = Neopets::User.new(username).pets.
-        find { |user_pet| user_pet.name.downcase == pet.name.downcase }
+        find { |user_pet| user_pet.name.downcase == pet.name.strip.downcase }
       self.female = user_pet.female?
       self.mood_id = user_pet.mood.id
       self.labeled = true
