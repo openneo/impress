@@ -69,6 +69,16 @@ class OutfitsController < ApplicationController
       format.json { render :json => @outfit }
     end
   end
+  
+  def start
+    @species = Species.find_by_name params[:species_name]
+    @color = Color.find_by_name params[:color_name]
+    if @species && @color
+      redirect_to wardrobe_path(:species => @species.id, :color => @color.id)
+    else
+      not_found('species/color')
+    end
+  end
 
   def update
     if @outfit.update_attributes(params[:outfit])

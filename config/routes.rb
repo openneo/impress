@@ -74,6 +74,7 @@ OpenneoImpressItems::Application.routes.draw do |map|
   match 'users/top_contributors' => redirect('/users/top-contributors')
 
   match '/wardrobe' => 'outfits#edit', :as => :wardrobe
+  match '/start/:color_name/:species_name' => 'outfits#start'
 
   match '/donate' => 'static#donate', :as => :donate
   match 'image-mode' => 'static#image_mode', :as => :image_mode
