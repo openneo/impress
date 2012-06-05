@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120321231507) do
+ActiveRecord::Schema.define(:version => 20120521164652) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -140,8 +140,12 @@ ActiveRecord::Schema.define(:version => 20120321231507) do
   end
 
   create_table "pet_states", :force => true do |t|
-    t.integer "pet_type_id",   :limit => 3, :null => false
-    t.text    "swf_asset_ids",              :null => false
+    t.integer "pet_type_id",   :limit => 3,                    :null => false
+    t.text    "swf_asset_ids",                                 :null => false
+    t.boolean "female"
+    t.integer "mood_id"
+    t.boolean "unconverted"
+    t.boolean "labeled",                    :default => false, :null => false
   end
 
   add_index "pet_states", ["pet_type_id"], :name => "pet_states_pet_type_id"
