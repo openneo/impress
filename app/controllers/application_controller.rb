@@ -14,6 +14,10 @@ class ApplicationController < ActionController::Base
   def can_use_image_mode?
     true
   end
+  
+  def not_found(record_name='record')
+    raise ActionController::RoutingError.new("#{record_name} not found")
+  end
 
   class AccessDenied < StandardError;end
 
