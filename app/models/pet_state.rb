@@ -13,11 +13,27 @@ class PetState < ActiveRecord::Base
   
   attr_writer :parent_swf_asset_relationships_to_update
 
+  # Our ideal order is: happy, sad, sick, UC, any+effects, with male before
+  # female within those groups for consistency. We therefore order as follows,
+  # listed in order of priority:
+  # * Bring known happy states to the front (we don't want to sort by mood_id
+  #   DESC first because then labeled sad will appear before unlabeled happy)
+  # * Send states with effect assets to the back
+  # * Bring state with more assets forward (that is, send UC near the back)
+  # * Bring males forward
+  # * Bring states with a lower asset ID sum forward (the idea being that
+  #   sad/female states are usually created after a happy/male base, but that's
+  #   becoming increasingly untrue over time - this is a very last resort)
+  #
+  # Maybe someday, when most states are labeled, we can depend exclusively on
+  # their labels - or at least use more than is-happy and is-female. For now,
+  # though, this strikes a good balance of bringing default to the front for
+  # many pet types (the highest priority!) and otherwise doing decent sorting.
   bio_effect_zone_id = 4
   scope :emotion_order, joins(:parent_swf_asset_relationships).
     joins("LEFT JOIN swf_assets effect_assets ON effect_assets.id = parents_swf_assets.swf_asset_id AND effect_assets.zone_id = #{bio_effect_zone_id}").
     group("pet_states.id").
-    order("COUNT(effect_assets.remote_id) ASC, COUNT(parents_swf_assets.swf_asset_id) DESC, SUM(parents_swf_assets.swf_asset_id) ASC")
+    order("(mood_id = 1) DESC, COUNT(effect_assets.remote_id) ASC, COUNT(parents_swf_assets.swf_asset_id) DESC, female ASC, SUM(parents_swf_assets.swf_asset_id) ASC")
 
   def reassign_children_to!(main_pet_state)
     self.contributions.each do |contribution|
