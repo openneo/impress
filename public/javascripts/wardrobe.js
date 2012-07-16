@@ -78,9 +78,20 @@ function Wardrobe() {
 
   function Asset(newData) {
     var asset = this;
+    
+    function size_key(size) {
+      return size[0] + 'x' + size[1];
+    }
+    
+    this.image_urls_by_size_key = {};
+    var image;
+    for(var i = 0; i < newData.images.length; i++) {
+      image = newData.images[i];
+      this.image_urls_by_size_key[size_key(image.size)] = image.url;
+    }
 
     this.imageURL = function (size) {
-      return Wardrobe.IMAGE_CONFIG.base_url + this.s3_path + "/" + size[0] + "x" + size[1] + ".png";
+      return this.image_urls_by_size_key[size_key(size)];
     }
 
     this.update = function (data) {
@@ -1376,10 +1387,9 @@ Wardrobe.getStandardView = function (options) {
       for(var i in sizes) {
         if(!sizes.hasOwnProperty(i)) continue;
         size = sizes[i];
-        size[2] = size[0] * size[1];
         inserted = false;
         for(var i in SIZES_SMALL_TO_LARGE) {
-          if(SIZES_SMALL_TO_LARGE[i][2] > size[2]) {
+          if(SIZES_SMALL_TO_LARGE[i][0] * SIZES_SMALL_TO_LARGE[i][1] > size[0] * size[1]) {
             SIZES_SMALL_TO_LARGE.splice(i, 0, size);
             inserted = true;
             break;
