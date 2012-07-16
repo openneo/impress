@@ -3,7 +3,7 @@
 # this to use S3 on all environments for those images only.)
 
 CarrierWave.configure do |config|
-  if Rails.env.production? || true # REMOVE
+  if Rails.env.production?
     s3_config = YAML.load_file Rails.root.join('config', 'aws_s3.yml')
     access_key_id = s3_config['access_key_id']
     secret_access_key = s3_config['secret_access_key']

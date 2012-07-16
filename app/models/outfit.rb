@@ -14,6 +14,8 @@ class Outfit < ActiveRecord::Base
   scope :wardrobe_order, order('starred DESC', :name)
   
   mount_uploader :image, OutfitImageUploader
+  
+  after_commit :enqueue_image!
 
   def as_json(more_options={})
     serializable_hash :only => [:id, :name, :pet_state_id, :starred],
@@ -68,21 +70,33 @@ class Outfit < ActiveRecord::Base
   end
   
   # Returns the array of SwfAssets representing each layer of the output image,
-  # ordered from bottom to top.
-  def layered_assets
-    visible_assets.sort { |a, b| a.zone.depth <=> b.zone.depth }
+  # ordered from bottom to top. Careful: this method is memoized, so if the
+  # image layers change after its first call we'll get bad results.
+  def image_layers
+    @image_layers ||= visible_assets_with_images.sort { |a, b| a.zone.depth <=> b.zone.depth }
   end
   
-  # Creates and writes the thumbnail images for this outfit. (Writes to file in
-  # development, S3 in production.) Runs #save! on the record, so any other
-  # changes will also be saved.
+  # Creates and writes the thumbnail images for this outfit iff the new image
+  # would be different than the current one. (Writes to file in development,
+  # S3 in production.) If the image is updated, updates the image layers hash
+  # and runs #save! on the record, so any other changes will also be saved.
   def write_image!
-    Tempfile.open(['outfit_image', '.png']) do |image|
-      create_image! image
-      self.image = image
-      save!
+    if image_layers_dirty?
+      Tempfile.open(['outfit_image', '.png']) do |image|
+        create_image! image
+        self.image_layers_hash = generate_image_layers_hash
+        self.image = image
+        save!
+      end
     end
+    
     self.image
+  end
+  
+  # Enqueue an image write iff the new image would be different than the
+  # current one.
+  def enqueue_image!
+    Resque.enqueue(OutfitImageUpdate, id) if image_layers_dirty?
   end
   
   def s3_key(size)
@@ -108,13 +122,13 @@ class Outfit < ActiveRecord::Base
   # Creates a 600x600 PNG image of this outfit, writing to the given output
   # file.
   def create_image!(output)
-    layers = self.layered_assets
-    base_layer = layers.shift
+    base_layer = image_layers.first
+    above_layers = image_layers[1..-1]
     write_temp_swf_asset_image! base_layer, output
     output.close
 
     Tempfile.open(['outfit_overlay', '.png']) do |overlay|
-      layers.each do |layer|
+      above_layers.each do |layer|
         overlay.open
         write_temp_swf_asset_image! layer, overlay
         overlay.close
@@ -149,6 +163,21 @@ class Outfit < ActiveRecord::Base
     # not turned on, so the zone is not restricted and this asset is visible.
     all_assets = biology_assets + object_assets
     all_assets.select { |a| (1 << (a.zone_id - 1)) & restricted_zones_mask == 0 }
+  end
+  
+  def visible_assets_with_images
+    visible_assets.select(&:has_image?)
+  end
+  
+  # Generate 8-char hex digest representing visible image layers for this outfit.
+  # Hash function should be decently collision-resistant.
+  def generate_image_layers_hash
+    @generated_image_layers_hash ||=
+      Digest::MD5.hexdigest(image_layers.map(&:id).join(',')).first(8)
+  end
+  
+  def image_layers_dirty?
+    generate_image_layers_hash != self.image_layers_hash
   end
   
   IMAGE_BASE_SIZE = [600, 600]
