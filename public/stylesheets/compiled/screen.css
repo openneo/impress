@@ -2046,12 +2046,12 @@ body.items-show.js #trade-hangers p.showing-more {
 }
 
 @import url(../shared/jquery.jgrowl.css);
-/* line 113, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 117, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-toolbar {
   margin-bottom: 0.5em;
   text-align: left;
 }
-/* line 116, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 120, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-toolbar form {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -2064,23 +2064,23 @@ body.outfits-edit #preview-toolbar form {
 body.outfits-edit #preview-toolbar form {
   *display: inline;
 }
-/* line 119, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 123, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #pet-info form {
   display: inline;
 }
-/* line 122, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 126, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #pet-state-form ul {
   list-style: none;
 }
-/* line 124, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 128, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #pet-state-form ul, body.outfits-edit #pet-state-form ul li {
   display: inline;
 }
-/* line 126, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 130, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #pet-state-form input {
   display: none;
 }
-/* line 128, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 132, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #pet-state-form label {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
@@ -2116,7 +2116,7 @@ body.outfits-edit #pet-state-form label:hover {
 body.outfits-edit #pet-state-form label:active {
   top: 1px;
 }
-/* line 131, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 135, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #pet-state-form li.selected button {
   background: #0b61a4 url('/images/alert-overlay.png?1315327995') repeat-x;
 }
@@ -2124,30 +2124,30 @@ body.outfits-edit #pet-state-form li.selected button {
 body.outfits-edit #pet-state-form li.selected button:hover {
   background-color: #005093;
 }
-/* line 133, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 137, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #pet-state-form.hidden {
   visibility: hidden;
 }
-/* line 135, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 139, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit-wrapper {
   float: right;
 }
-/* line 137, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 141, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit-wrapper button {
   display: none;
 }
-/* line 139, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 143, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit-wrapper #share-outfit {
   display: inline-block;
 }
-/* line 141, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 145, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit-wrapper.loading {
   background-image: url('/images/loading.gif?1315327995');
   background-position: left center;
   background-repeat: no-repeat;
   padding-left: 20px;
 }
-/* line 147, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 151, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit, body.outfits-edit #save-outfit-not-signed-in, body.outfits-edit #save-current-outfit, body.outfits-edit #save-outfit-copy, body.outfits-edit #save-outfit-finish {
   background: #ff5c00 url('/images/alert-overlay.png?1315327995') repeat-x;
 }
@@ -2155,28 +2155,28 @@ body.outfits-edit #save-outfit, body.outfits-edit #save-outfit-not-signed-in, bo
 body.outfits-edit #save-outfit:hover, body.outfits-edit #save-outfit-not-signed-in:hover, body.outfits-edit #save-current-outfit:hover, body.outfits-edit #save-outfit-copy:hover, body.outfits-edit #save-outfit-finish:hover {
   background-color: #ee4b00;
 }
-/* line 149, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 153, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #current-outfit-permalink, body.outfits-edit #shared-outfit-permalink {
   display: none;
   margin-right: 0.25em;
 }
-/* line 152, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 156, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #current-outfit-permalink img, body.outfits-edit #shared-outfit-permalink img {
   bottom: -2px;
   height: 16px;
   position: relative;
   width: 16px;
 }
-/* line 154, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 158, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #shared-outfit-url {
   display: none;
   width: 15em;
 }
-/* line 157, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 161, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview {
   clear: both;
 }
-/* line 159, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 163, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-swf {
   float: left;
   height: 400px;
@@ -2184,15 +2184,15 @@ body.outfits-edit #preview-swf {
   position: relative;
   width: 400px;
 }
-/* line 166, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 170, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-swf.swf-adapter #preview-image-container {
   display: none;
 }
-/* line 169, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 173, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-swf.image-adapter #preview-swf-container {
   display: none;
 }
-/* line 171, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 175, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-image-container {
   position: relative;
 }
@@ -2202,12 +2202,12 @@ body.outfits-edit #preview-image-container img {
   position: absolute;
   top: 0;
 }
-/* line 174, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 178, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-image-container, body.outfits-edit #preview-image-container img {
   height: 100%;
   width: 100%;
 }
-/* line 177, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 181, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-swf-overlay {
   -moz-opacity: 0;
   -webkit-opacity: 0;
@@ -2220,7 +2220,7 @@ body.outfits-edit #preview-swf-overlay {
   top: 0;
   width: 100%;
 }
-/* line 185, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 189, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-images-pending {
   background: black;
   background: rgba(0, 0, 0, 0.75);
@@ -2232,11 +2232,11 @@ body.outfits-edit #preview-images-pending {
   right: 0;
   z-index: 1000;
 }
-/* line 195, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 199, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-images-pending.waiting-on-0 {
   display: none;
 }
-/* line 197, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 201, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-mode {
   margin-right: 1em;
   position: absolute;
@@ -2245,25 +2245,25 @@ body.outfits-edit #preview-mode {
   top: 0;
   width: 7em;
 }
-/* line 205, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 209, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-mode.flash-active #preview-mode-flash {
   color: #004400;
   font-weight: bold;
 }
-/* line 208, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 212, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-mode.image-active #preview-mode-image {
   color: #004400;
   font-weight: bold;
 }
-/* line 210, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 214, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-mode.image-active #report-broken-image {
   display: block;
 }
-/* line 213, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 217, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-mode.image-active.can-download #preview-download-image {
   display: inline-block;
 }
-/* line 215, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 219, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-mode-toggle {
   -moz-border-radius: 0.5em;
   -webkit-border-radius: 0.5em;
@@ -2279,37 +2279,37 @@ body.outfits-edit #preview-mode-toggle {
   text-align: center;
   width: 5em;
 }
-/* line 224, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 228, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-mode-toggle li {
   border-top: 1px solid #aaddaa;
   cursor: pointer;
   padding: 0.125em 0;
   width: 100%;
 }
-/* line 229, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 233, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-mode-toggle li:first-child {
   border-top: 0;
 }
-/* line 231, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 235, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-download-image {
   display: none;
   margin: 1em auto;
 }
-/* line 234, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 238, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-download-image h3 {
   font-size: 125%;
   margin-bottom: 0.5em;
 }
-/* line 237, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 241, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-download-image ul {
   list-style: none;
 }
-/* line 239, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 243, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-download-image button {
   font-size: 75%;
   width: 100%;
 }
-/* line 242, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 246, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-mode-note, body.outfits-edit #report-broken-image {
   display: block;
   font-size: 75%;
@@ -2318,16 +2318,16 @@ body.outfits-edit #preview-mode-note, body.outfits-edit #report-broken-image {
   text-decoration: none;
   width: 100%;
 }
-/* line 249, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 253, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-mode-note em, body.outfits-edit #report-broken-image em {
   font-style: normal;
   text-decoration: underline;
 }
-/* line 252, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 256, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #report-broken-image {
   display: none;
 }
-/* line 254, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 258, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar {
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
@@ -2343,68 +2343,68 @@ body.outfits-edit #preview-sidebar {
   overflow: auto;
   width: 378px;
 }
-/* line 264, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 268, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar.viewing-outfits #preview-closet {
   display: none;
 }
-/* line 266, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 270, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar.viewing-outfits #preview-outfits {
   display: block;
 }
-/* line 269, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 273, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar.sharing #preview-closet {
   display: none;
 }
-/* line 271, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 275, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar.sharing #preview-sharing {
   display: block;
 }
-/* line 274, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 278, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar .sidebar-view h2 {
   margin-bottom: 0.25em;
   margin-left: 24px;
 }
-/* line 279, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 283, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-closet h2 {
   margin-bottom: 0;
 }
-/* line 281, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 285, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-closet ul {
   text-align: center;
 }
-/* line 283, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 287, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-closet .object {
   background: #eeffee;
 }
-/* line 285, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 289, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-closet .object img {
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
   -o-opacity: 0.5;
   -khtml-opacity: 0.5;
 }
-/* line 287, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 291, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-closet .object.worn {
   background: transparent;
 }
-/* line 289, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 293, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-closet .object.worn img {
   -moz-opacity: 1;
   -webkit-opacity: 1;
   -o-opacity: 1;
   -khtml-opacity: 1;
 }
-/* line 291, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 295, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-closet .object.no-assets {
   background: #fbe3e4;
   color: #8a1f11;
   padding-bottom: 1.25em;
 }
-/* line 295, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 299, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-closet .object.no-assets .no-assets-message {
   display: block;
 }
-/* line 297, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 301, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .no-assets-message {
   background: #f3dbdc;
   bottom: 0;
@@ -2416,7 +2416,7 @@ body.outfits-edit .no-assets-message {
   position: absolute;
   width: 100%;
 }
-/* line 307, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 311, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #no-assets-full-message {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -2434,12 +2434,12 @@ body.outfits-edit #no-assets-full-message {
   top: -9999px;
   width: 30em;
 }
-/* line 318, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 322, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form {
   clear: both;
   text-align: left;
 }
-/* line 321, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 325, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form h2 {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -2452,7 +2452,7 @@ body.outfits-edit #preview-search-form h2 {
 body.outfits-edit #preview-search-form h2 {
   *display: inline;
 }
-/* line 324, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 328, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form input {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -2464,17 +2464,17 @@ body.outfits-edit #preview-search-form input {
 body.outfits-edit #preview-search-form input {
   *display: inline;
 }
-/* line 326, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 330, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form input[type=submit] {
   margin-right: 2em;
 }
-/* line 328, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 332, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .preview-search-form-your-items {
   display: none;
   font-size: 85%;
   margin-right: 1em;
 }
-/* line 332, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 336, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form-pagination {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -2486,53 +2486,53 @@ body.outfits-edit #preview-search-form-pagination {
 body.outfits-edit #preview-search-form-pagination {
   *display: inline;
 }
-/* line 334, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 338, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form-pagination a, body.outfits-edit #preview-search-form-pagination span {
   margin: 0 0.25em;
 }
-/* line 336, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 340, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form-pagination .current {
   font-weight: bold;
 }
-/* line 338, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 342, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form-clear {
   display: none;
   font-size: 87.5%;
   margin-left: 2em;
 }
-/* line 342, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 346, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form-loading {
   display: none;
   font-size: 75%;
   font-style: italic;
   margin-left: 2em;
 }
-/* line 348, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 352, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form-no-results {
   display: none;
 }
-/* line 350, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 354, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form-help {
   font-size: 87.5%;
   margin-left: 2em;
 }
-/* line 353, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 357, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .search-helper {
   font-family: inherit;
 }
-/* line 355, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 359, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .possible-error {
   display: none;
 }
-/* line 358, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 362, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #fullscreen-copyright {
   display: none;
 }
-/* line 360, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 364, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen {
   height: 100%;
 }
-/* line 363, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 367, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #container {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -2545,19 +2545,19 @@ body.outfits-edit.fullscreen #container {
   position: relative;
   width: 80%;
 }
-/* line 371, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 375, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen h1 {
   display: none;
 }
-/* line 373, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 377, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #short-url-response {
   position: static;
 }
-/* line 375, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 379, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #preview {
   width: 100%;
 }
-/* line 377, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 381, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #preview-sidebar {
   float: right;
   height: 100%;
@@ -2565,12 +2565,12 @@ body.outfits-edit.fullscreen #preview-sidebar {
   position: relative;
   width: 400px;
 }
-/* line 383, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 387, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #preview-sidebar.viewing-saving-outfit {
   height: auto;
   max-height: 100%;
 }
-/* line 386, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 390, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #preview-search-form {
   bottom: 1.5em;
   left: 0;
@@ -2579,7 +2579,7 @@ body.outfits-edit.fullscreen #preview-search-form {
   position: absolute;
   width: 100%;
 }
-/* line 394, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 398, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #preview-search-form-help div {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -2592,27 +2592,27 @@ body.outfits-edit.fullscreen #preview-search-form-help div {
 body.outfits-edit.fullscreen #preview-search-form-help div {
   *display: inline;
 }
-/* line 397, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 401, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #footer {
   bottom: 0;
   left: 0;
   position: absolute;
   width: 100%;
 }
-/* line 402, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 406, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #footer ul, body.outfits-edit.fullscreen #footer p, body.outfits-edit.fullscreen #footer li {
   display: inline;
 }
-/* line 404, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 408, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.fullscreen #footer ul {
   margin-right: 2em;
 }
-/* line 407, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 411, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .object {
   padding: 6px;
   position: relative;
 }
-/* line 410, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 414, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .object ul {
   display: none;
   left: 0;
@@ -2620,11 +2620,11 @@ body.outfits-edit .object ul {
   position: absolute;
   top: 0;
 }
-/* line 416, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 420, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .object ul li {
   margin-bottom: 0.25em;
 }
-/* line 418, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 422, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .object ul li a {
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html */
   -moz-border-radius: 5px;
@@ -2669,11 +2669,11 @@ body.outfits-edit .object ul li a:active {
 body.outfits-edit .object ul li a:hover {
   background-color: #999999;
 }
-/* line 421, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 425, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .object:hover ul, body.outfits-edit .object:hover .object-info {
   display: block;
 }
-/* line 428, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 432, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .nc-icon {
   background: url('/images/nc.png?1315327995') no-repeat;
   height: 16px;
@@ -2683,14 +2683,14 @@ body.outfits-edit .nc-icon {
   top: 64px;
   width: 16px;
 }
-/* line 436, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 440, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .nc-icon:hover {
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
   -o-opacity: 0.5;
   -khtml-opacity: 0.5;
 }
-/* line 439, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 443, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .object-info {
   -moz-border-radius: 12px;
   -webkit-border-radius: 12px;
@@ -2711,26 +2711,26 @@ body.outfits-edit .object-info {
   top: 0;
   width: 16px;
 }
-/* line 450, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 454, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .object-info span {
   font-family: "Droid Serif", Georgia, "Times New Roman", Times, serif;
   font-weight: bold;
   position: relative;
   top: -2px;
 }
-/* line 456, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 460, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .object-info:hover {
   -moz-opacity: 1;
   -webkit-opacity: 1;
   -o-opacity: 1;
   -khtml-opacity: 1;
 }
-/* line 459, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 463, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits {
   display: none;
   text-align: left;
 }
-/* line 462, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 466, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul {
   margin-left: 24px;
   margin-right: 24px;
@@ -2741,7 +2741,7 @@ body.outfits-edit #preview-outfits > ul {
   margin-bottom: 1em;
   min-height: 16px;
 }
-/* line 471, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 475, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li {
   padding: 0.25em 0;
 }
@@ -2776,7 +2776,7 @@ body.outfits-edit #preview-outfits > ul > li .outfit-star {
   margin-left: -24px;
   margin-right: 0;
 }
-/* line 38, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 42, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li img {
   height: 100px;
   left: -25px;
@@ -2784,7 +2784,7 @@ body.outfits-edit #preview-outfits > ul > li img {
   top: -25px;
   width: 100px;
 }
-/* line 44, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 48, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-delete {
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
@@ -2822,7 +2822,7 @@ body.outfits-edit #preview-outfits > ul > li .outfit-delete:hover {
 body.outfits-edit #preview-outfits > ul > li .outfit-delete:active {
   top: auto;
 }
-/* line 52, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 56, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-delete:hover {
   -moz-opacity: 1;
   -webkit-opacity: 1;
@@ -2830,29 +2830,29 @@ body.outfits-edit #preview-outfits > ul > li .outfit-delete:hover {
   -khtml-opacity: 1;
   background: #eeffee;
 }
-/* line 55, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 59, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li header {
   display: block;
   padding-left: 24px;
 }
-/* line 58, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 62, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li h4 {
   cursor: pointer;
   display: inline;
 }
-/* line 61, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 65, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li h4:hover {
   text-decoration: underline;
 }
-/* line 63, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 67, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li h4, body.outfits-edit #preview-outfits > ul > li .outfit-rename-field {
   font-size: 115%;
 }
-/* line 65, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 69, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-rename-button, body.outfits-edit #preview-outfits > ul > li .outfit-rename-form {
   display: none;
 }
-/* line 67, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 71, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-rename-button {
   -moz-opacity: 0.75;
   -webkit-opacity: 0.75;
@@ -2861,7 +2861,7 @@ body.outfits-edit #preview-outfits > ul > li .outfit-rename-button {
   font-size: 75%;
   margin-left: 1em;
 }
-/* line 71, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 75, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-url {
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
@@ -2871,7 +2871,7 @@ body.outfits-edit #preview-outfits > ul > li .outfit-url {
   border-width: 0;
   width: 284px;
 }
-/* line 76, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 80, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-url:hover {
   -moz-opacity: 1;
   -webkit-opacity: 1;
@@ -2879,81 +2879,151 @@ body.outfits-edit #preview-outfits > ul > li .outfit-url:hover {
   -khtml-opacity: 1;
   border-width: 1px;
 }
-/* line 79, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 83, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-delete-confirmation {
   display: none;
   font-size: 75%;
 }
-/* line 82, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 86, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-delete-confirmation span {
   color: red;
 }
-/* line 84, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 88, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li .outfit-delete-confirmation a {
   margin: 0 0.25em;
 }
-/* line 86, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 90, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li.active {
   background: #eeffee;
 }
-/* line 89, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 93, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li.confirming-deletion .outfit-delete {
   visibility: hidden;
 }
-/* line 91, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 95, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li.confirming-deletion .outfit-url {
   display: none;
 }
-/* line 93, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 97, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li.confirming-deletion .outfit-delete-confirmation {
   display: block;
 }
-/* line 96, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 100, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li.renaming h4 {
   display: none;
 }
-/* line 98, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 102, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li.renaming .outfit-rename-form {
   display: inline;
 }
-/* line 101, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 105, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li.renaming:hover .outfit-rename-button {
   display: none;
 }
-/* line 104, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 108, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li:hover .outfit-rename-button {
   display: inline;
 }
-/* line 473, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 477, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul.loaded {
   background: transparent;
 }
-/* line 476, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 480, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sharing {
   display: none;
 }
-/* line 479, ../../../app/stylesheets/outfits/_edit.sass */
-body.outfits-edit #preview-sharing > ul {
+/* line 483, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-sharing #preview-sharing-urls {
   margin-left: 24px;
   margin-right: 24px;
 }
-/* line 482, ../../../app/stylesheets/outfits/_edit.sass */
-body.outfits-edit #preview-sharing > ul li {
+/* line 486, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-sharing #preview-sharing-urls li {
   display: block;
   padding: 0.25em 0;
   width: 100%;
 }
-/* line 487, ../../../app/stylesheets/outfits/_edit.sass */
-body.outfits-edit #preview-sharing > ul li label {
+/* line 491, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-sharing #preview-sharing-urls li label {
   display: block;
   font-weight: bold;
 }
-/* line 491, ../../../app/stylesheets/outfits/_edit.sass */
-body.outfits-edit #preview-sharing > ul li input {
+/* line 495, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-sharing #preview-sharing-urls li input {
   display: block;
   width: 100%;
 }
-/* line 495, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 499, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-sharing #preview-sharing-url-formats {
+  margin-left: 24px;
+  margin-right: 24px;
+  select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+  font-size: 0;
+  margin-top: 12px;
+  text-align: center;
+}
+/* line 507, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-sharing #preview-sharing-url-formats li {
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  border: 1px solid #006600;
+  border-left-width: 0;
+  border-right-color: #aaddaa;
+  color: #448844;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0 0.75em;
+}
+/* line 7, ../../../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/css3/_inline-block.scss */
+body.outfits-edit #preview-sharing #preview-sharing-url-formats li {
+  *display: inline;
+}
+/* line 518, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-sharing #preview-sharing-url-formats li.active {
+  background: #eeffee;
+  color: inherit;
+  font-weight: bold;
+}
+/* line 523, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-sharing #preview-sharing-url-formats li:first-child {
+  -moz-border-radius-topleft: 5px;
+  -webkit-border-top-left-radius: 5px;
+  -o-border-top-left-radius: 5px;
+  -ms-border-top-left-radius: 5px;
+  -khtml-border-top-left-radius: 5px;
+  border-top-left-radius: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -o-border-bottom-left-radius: 5px;
+  -ms-border-bottom-left-radius: 5px;
+  -khtml-border-bottom-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-left-width: 1px;
+}
+/* line 528, ../../../app/stylesheets/outfits/_edit.sass */
+body.outfits-edit #preview-sharing #preview-sharing-url-formats li:last-child {
+  -moz-border-radius-topright: 5px;
+  -webkit-border-top-right-radius: 5px;
+  -o-border-top-right-radius: 5px;
+  -ms-border-top-right-radius: 5px;
+  -khtml-border-top-right-radius: 5px;
+  border-top-right-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  -o-border-bottom-right-radius: 5px;
+  -ms-border-bottom-right-radius: 5px;
+  -khtml-border-bottom-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-right-color: #006600;
+}
+/* line 533, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sharing #preview-sharing-thumbnail-wrapper {
   border: 1px solid #aaddaa;
   display: block;
@@ -2961,40 +3031,42 @@ body.outfits-edit #preview-sharing #preview-sharing-thumbnail-wrapper {
   margin: 0 auto;
   width: 150px;
 }
-/* line 502, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 540, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sharing #preview-sharing-thumbnail-wrapper #preview-sharing-thumbnail-loading {
+  height: 100%;
   position: relative;
+  width: 100%;
 }
-/* line 505, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 545, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sharing #preview-sharing-thumbnail-wrapper #preview-sharing-thumbnail-loading span {
   color: #448844;
   font-size: 85%;
-  margin-top: -1em;
+  margin-top: -0.75em;
   position: absolute;
   text-align: center;
   top: 50%;
   width: 100%;
 }
-/* line 514, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 554, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sharing #preview-sharing-thumbnail-wrapper #preview-sharing-thumbnail {
   display: none;
 }
-/* line 518, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 558, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sharing #preview-sharing-thumbnail-wrapper.loaded #preview-sharing-thumbnail-loading {
   display: none;
 }
-/* line 521, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 561, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sharing #preview-sharing-thumbnail-wrapper.loaded #preview-sharing-thumbnail {
   display: block;
 }
-/* line 524, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 564, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .preview-sidebar-nav {
   float: right;
   font-size: 85%;
   margin-right: 24px;
   margin-top: 1em;
 }
-/* line 531, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 571, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-success, body.outfits-edit #save-error, body.outfits-edit #outfit-not-found, body.outfits-edit #preview-sidebar-donation-request {
   margin-left: 24px;
   margin-right: 24px;
@@ -3002,7 +3074,7 @@ body.outfits-edit #save-success, body.outfits-edit #save-error, body.outfits-edi
   margin-top: 1em;
   text-align: center;
 }
-/* line 538, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 578, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar-donation-request {
   background: #e6efc2;
   border: 1px solid #c6d880;
@@ -3010,23 +3082,23 @@ body.outfits-edit #preview-sidebar-donation-request {
   font-size: 85%;
   padding: 1em;
 }
-/* line 543, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 583, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar-donation-request-no-thanks {
   margin-left: 1em;
 }
-/* line 546, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 586, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-success {
   background: #e6efc2;
   border: 1px solid #c6d880;
   color: #264409;
 }
-/* line 549, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 589, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-error, body.outfits-edit #outfit-not-found {
   background: #fbe3e4;
   border: 1px solid #fbc2c4;
   color: #8a1f11;
 }
-/* line 552, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 592, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #userbar-message {
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
@@ -3034,7 +3106,7 @@ body.outfits-edit #userbar-message {
   -khtml-opacity: 0.5;
   display: none;
 }
-/* line 556, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 596, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit {
   padding: 0.25em 0;
   margin-left: 24px;
@@ -3072,7 +3144,7 @@ body.outfits-edit #new-outfit .outfit-star {
   margin-left: -24px;
   margin-right: 0;
 }
-/* line 38, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 42, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit img {
   height: 100px;
   left: -25px;
@@ -3080,7 +3152,7 @@ body.outfits-edit #new-outfit img {
   top: -25px;
   width: 100px;
 }
-/* line 44, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 48, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-delete {
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
@@ -3118,7 +3190,7 @@ body.outfits-edit #new-outfit .outfit-delete:hover {
 body.outfits-edit #new-outfit .outfit-delete:active {
   top: auto;
 }
-/* line 52, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 56, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-delete:hover {
   -moz-opacity: 1;
   -webkit-opacity: 1;
@@ -3126,29 +3198,29 @@ body.outfits-edit #new-outfit .outfit-delete:hover {
   -khtml-opacity: 1;
   background: #eeffee;
 }
-/* line 55, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 59, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit header {
   display: block;
   padding-left: 24px;
 }
-/* line 58, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 62, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit h4 {
   cursor: pointer;
   display: inline;
 }
-/* line 61, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 65, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit h4:hover {
   text-decoration: underline;
 }
-/* line 63, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 67, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit h4, body.outfits-edit #new-outfit .outfit-rename-field {
   font-size: 115%;
 }
-/* line 65, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 69, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-rename-button, body.outfits-edit #new-outfit .outfit-rename-form {
   display: none;
 }
-/* line 67, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 71, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-rename-button {
   -moz-opacity: 0.75;
   -webkit-opacity: 0.75;
@@ -3157,7 +3229,7 @@ body.outfits-edit #new-outfit .outfit-rename-button {
   font-size: 75%;
   margin-left: 1em;
 }
-/* line 71, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 75, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-url {
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
@@ -3167,7 +3239,7 @@ body.outfits-edit #new-outfit .outfit-url {
   border-width: 0;
   width: 284px;
 }
-/* line 76, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 80, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-url:hover {
   -moz-opacity: 1;
   -webkit-opacity: 1;
@@ -3175,73 +3247,73 @@ body.outfits-edit #new-outfit .outfit-url:hover {
   -khtml-opacity: 1;
   border-width: 1px;
 }
-/* line 79, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 83, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-delete-confirmation {
   display: none;
   font-size: 75%;
 }
-/* line 82, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 86, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-delete-confirmation span {
   color: red;
 }
-/* line 84, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 88, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-delete-confirmation a {
   margin: 0 0.25em;
 }
-/* line 86, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 90, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit.active {
   background: #eeffee;
 }
-/* line 89, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 93, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit.confirming-deletion .outfit-delete {
   visibility: hidden;
 }
-/* line 91, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 95, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit.confirming-deletion .outfit-url {
   display: none;
 }
-/* line 93, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 97, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit.confirming-deletion .outfit-delete-confirmation {
   display: block;
 }
-/* line 96, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 100, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit.renaming h4 {
   display: none;
 }
-/* line 98, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 102, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit.renaming .outfit-rename-form {
   display: inline;
 }
-/* line 101, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 105, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit.renaming:hover .outfit-rename-button {
   display: none;
 }
-/* line 104, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 108, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit:hover .outfit-rename-button {
   display: inline;
 }
-/* line 560, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 600, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit h4 {
   display: inline;
 }
-/* line 562, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 602, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit h4:hover {
   text-decoration: none;
 }
-/* line 564, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 604, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit .outfit-star {
   margin-top: 0.5em;
 }
-/* line 567, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 607, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #new-outfit-name {
   font: inherit;
   line-height: 1;
 }
-/* line 571, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 611, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #pet-type-form, body.outfits-edit #pet-state-form, body.outfits-edit #preview-swf, body.outfits-edit #preview-search-form {
   position: relative;
 }
-/* line 574, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 614, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .control-overlay {
   height: 100%;
   left: 0;
@@ -3250,11 +3322,11 @@ body.outfits-edit .control-overlay {
   width: 100%;
   z-index: 5;
 }
-/* line 582, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 622, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-sidebar-nav-outfits, body.outfits-edit #save-outfit-signed-in {
   display: none;
 }
-/* line 585, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 625, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form {
   padding: 0.25em 0;
   display: none;
@@ -3292,7 +3364,7 @@ body.outfits-edit form#save-outfit-form .outfit-star {
   margin-left: -24px;
   margin-right: 0;
 }
-/* line 38, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 42, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form img {
   height: 100px;
   left: -25px;
@@ -3300,7 +3372,7 @@ body.outfits-edit form#save-outfit-form img {
   top: -25px;
   width: 100px;
 }
-/* line 44, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 48, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-delete {
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
@@ -3338,7 +3410,7 @@ body.outfits-edit form#save-outfit-form .outfit-delete:hover {
 body.outfits-edit form#save-outfit-form .outfit-delete:active {
   top: auto;
 }
-/* line 52, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 56, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-delete:hover {
   -moz-opacity: 1;
   -webkit-opacity: 1;
@@ -3346,29 +3418,29 @@ body.outfits-edit form#save-outfit-form .outfit-delete:hover {
   -khtml-opacity: 1;
   background: #eeffee;
 }
-/* line 55, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 59, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form header {
   display: block;
   padding-left: 24px;
 }
-/* line 58, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 62, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form h4 {
   cursor: pointer;
   display: inline;
 }
-/* line 61, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 65, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form h4:hover {
   text-decoration: underline;
 }
-/* line 63, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 67, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form h4, body.outfits-edit form#save-outfit-form .outfit-rename-field {
   font-size: 115%;
 }
-/* line 65, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 69, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-rename-button, body.outfits-edit form#save-outfit-form .outfit-rename-form {
   display: none;
 }
-/* line 67, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 71, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-rename-button {
   -moz-opacity: 0.75;
   -webkit-opacity: 0.75;
@@ -3377,7 +3449,7 @@ body.outfits-edit form#save-outfit-form .outfit-rename-button {
   font-size: 75%;
   margin-left: 1em;
 }
-/* line 71, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 75, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-url {
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
@@ -3387,7 +3459,7 @@ body.outfits-edit form#save-outfit-form .outfit-url {
   border-width: 0;
   width: 284px;
 }
-/* line 76, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 80, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-url:hover {
   -moz-opacity: 1;
   -webkit-opacity: 1;
@@ -3395,52 +3467,52 @@ body.outfits-edit form#save-outfit-form .outfit-url:hover {
   -khtml-opacity: 1;
   border-width: 1px;
 }
-/* line 79, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 83, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-delete-confirmation {
   display: none;
   font-size: 75%;
 }
-/* line 82, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 86, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-delete-confirmation span {
   color: red;
 }
-/* line 84, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 88, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-delete-confirmation a {
   margin: 0 0.25em;
 }
-/* line 86, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 90, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form.active {
   background: #eeffee;
 }
-/* line 89, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 93, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form.confirming-deletion .outfit-delete {
   visibility: hidden;
 }
-/* line 91, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 95, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form.confirming-deletion .outfit-url {
   display: none;
 }
-/* line 93, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 97, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form.confirming-deletion .outfit-delete-confirmation {
   display: block;
 }
-/* line 96, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 100, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form.renaming h4 {
   display: none;
 }
-/* line 98, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 102, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form.renaming .outfit-rename-form {
   display: inline;
 }
-/* line 101, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 105, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form.renaming:hover .outfit-rename-button {
   display: none;
 }
-/* line 104, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 108, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form:hover .outfit-rename-button {
   display: inline;
 }
-/* line 591, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 631, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-star, body.outfits-edit form#save-outfit-form input, body.outfits-edit form#save-outfit-form button {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -3454,50 +3526,50 @@ body.outfits-edit form#save-outfit-form .outfit-star, body.outfits-edit form#sav
 body.outfits-edit form#save-outfit-form .outfit-star, body.outfits-edit form#save-outfit-form input, body.outfits-edit form#save-outfit-form button {
   *display: inline;
 }
-/* line 596, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 636, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit form#save-outfit-form .outfit-star {
   margin-top: 0.25em;
 }
-/* line 599, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 639, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit .outfit-url {
   font-size: 75%;
 }
-/* line 602, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 642, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-search-form-error {
   background: #fbe3e4;
   border: 1px solid #fbc2c4;
   color: #8a1f11;
   padding: 0.25em 0.5em;
 }
-/* line 607, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 647, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #preview-sidebar-nav-outfits {
   display: block;
 }
-/* line 609, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 649, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit {
   display: inline-block;
 }
-/* line 613, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 653, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.active-outfit #save-outfit {
   display: none;
 }
-/* line 615, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 655, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.active-outfit #save-current-outfit, body.outfits-edit.user-signed-in #save-outfit-wrapper.active-outfit #save-outfit-copy {
   display: inline-block;
 }
-/* line 617, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 657, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.active-outfit #current-outfit-permalink {
   display: inline-block;
 }
-/* line 620, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 660, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #save-outfit-form {
   display: block;
 }
-/* line 622, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 662, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #save-outfit, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #save-current-outfit, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #save-outfit-copy, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #current-outfit-permalink, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #shared-outfit-permalink, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #share-outfit, body.outfits-edit.user-signed-in #save-outfit-wrapper.saving-outfit #shared-outfit-url {
   display: none;
 }
-/* line 624, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 664, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-signed-in .preview-search-form-your-items {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -3509,15 +3581,15 @@ body.outfits-edit.user-signed-in .preview-search-form-your-items {
 body.outfits-edit.user-signed-in .preview-search-form-your-items {
   *display: inline;
 }
-/* line 628, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 668, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit.user-not-signed-in #save-outfit-not-signed-in {
   display: inline-block;
 }
-/* line 632, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 672, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit-wrapper.shared-outfit #shared-outfit-permalink, body.outfits-edit #save-outfit-wrapper.shared-outfit #shared-outfit-url {
   display: inline-block;
 }
-/* line 634, ../../../app/stylesheets/outfits/_edit.sass */
+/* line 674, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #save-outfit-wrapper.shared-outfit #current-outfit-permalink {
   display: none !important;
 }

@@ -445,13 +445,7 @@ View.Outfits = function (wardrobe) {
     stars = $('#preview-outfits div.outfit-star'),
     sidebar_el = $('#preview-sidebar'),
     signed_in,
-    previously_viewing = '',
-    sharing_url_els = {
-      permalink: $('#preview-sharing-permalink-url'),
-      large_image: $('#preview-sharing-large-image-url'),
-      medium_image: $('#preview-sharing-medium-image-url'),
-      small_image: $('#preview-sharing-small-image-url'),
-    };
+    previously_viewing = '';
 
   function liForOutfit(outfit) {
     return $('li.outfit-' + outfit.id);
@@ -652,64 +646,128 @@ View.Outfits = function (wardrobe) {
   
   /* Sharing */
   
-  function setSharingUrls(outfit) {
-    var small_image_url = pathToUrl(outfit.image_versions.small);
-    sharing_thumbnail.setUrl(small_image_url);
-    sharing_url_els.small_image.val(small_image_url);
+  var sharing = new function Sharing() {
+    var sharing_url_els = {
+      permalink: $('#preview-sharing-permalink-url'),
+      large_image: $('#preview-sharing-large-image-url'),
+      medium_image: $('#preview-sharing-medium-image-url'),
+      small_image: $('#preview-sharing-small-image-url'),
+    };
+    var format_selector_els = $('#preview-sharing-url-formats li');
     
-    sharing_url_els.permalink.val(generateOutfitPermalink(outfit));
-    sharing_url_els.large_image.val(pathToUrl(outfit.image_versions.large));
-    sharing_url_els.medium_image.val(pathToUrl(outfit.image_versions.medium));
-  }
-  
-  var sharing_thumbnail = new function SharingThumbnail() {
-    var WRAPPER = $('#preview-sharing-thumbnail-wrapper');
-    var IMAGE = $('#preview-sharing-thumbnail');
-    var RETRY_DELAY = 2000; // 2 seconds
-    var url = null;
-    var xhr = null;
-    
-    function abort() {
-      if(xhr && xhr.readystate != 4) {
-        log("Aborting sharing thumbnail XHR");
-        xhr.abort();
+    var formats = {
+      plain: {
+        image: function (url) { return url },
+        text: function (url) { return url }
+      },
+      html: {
+        image: function (url, permalink) {
+          return '<a href="' + permalink + '"><img src="' + url + '" /></a>';
+        },
+        text: function (url) {
+          return '<a href="' + url + '">Dress to Impress</a>';
+        }
+      },
+      bbcode: {
+        image: function (url, permalink) {
+          return '[URL=' + permalink + '][IMG]' + url + '[/IMG][/URL]';
+        },
+        text: function (url) {
+          return '[URL=' + url + ']Dress to Impress[/URL]';
+        }
       }
+    };
+    
+    var format = formats.plain;
+    var urls = {permalink: null, small_image: null, medium_image: null,
+      large_image: null};
+    
+    format_selector_els.click(function () {
+      var selector_el = $(this);
+      format_selector_els.removeClass('active');
+      selector_el.addClass('active');
+      log("Setting sharing URL format:", selector_el.attr('data-format'));
+      format = formats[selector_el.attr('data-format')];
+      formatUrls();
+    });
+    
+    this.setOutfit = function (outfit) {
+      urls.permalink = generateOutfitPermalink(outfit);
+      urls.small_image = pathToUrl(outfit.image_versions.small);
+      urls.medium_image = pathToUrl(outfit.image_versions.medium);
+      urls.large_image = pathToUrl(outfit.image_versions.large);
+      thumbnail.setUrl(urls.small_image);
+      formatUrls();
     }
     
-    function hide() {
-      WRAPPER.removeClass('loaded');
+    function formatUrls() {
+      formatImageUrl('small_image');
+      formatImageUrl('medium_image');
+      formatImageUrl('large_image');
+      formatTextUrl('permalink');
     }
     
-    function load() {
-      log("Loading sharing thumbnail", url);
-      xhr = $.ajax({
-        type: 'HEAD',
-        cache: false, // in case some browser tries to cache a 404
-        url: url,
-        success: show,
-        error: retry
-      });
+    function formatTextUrl(key) {
+      formatUrl(key, format.text(urls[key]));
     }
     
-    function retry() {
-      log("Sharing thumbnail not found, retry in", RETRY_DELAY);
-      setTimeout(load, RETRY_DELAY);
+    function formatImageUrl(key) {
+      formatUrl(key, format.image(urls[key], urls.permalink));
     }
     
-    function show() {
-      log("Sharing thumbnail found");
-      IMAGE.attr('src', url);
-      WRAPPER.addClass('loaded');
+    function formatUrl(key, url) {
+      sharing_url_els[key].val(url);
     }
-    
-    this.setUrl = function (newUrl) {
-      if(newUrl != url) {
-        abort();
-        hide();
-        url = newUrl;
-        load();
-      } else {
-        log("Sharing thumbnail URLs are identical; no change.");
+  
+    var thumbnail = new function SharingThumbnail() {
+      var WRAPPER = $('#preview-sharing-thumbnail-wrapper');
+      var IMAGE = $('#preview-sharing-thumbnail');
+      var RETRY_DELAY = 2000; // 2 seconds
+      var url = null;
+      var xhr = null;
+      
+      function abort() {
+        if(xhr && xhr.readystate != 4) {
+          log("Aborting sharing thumbnail XHR");
+          xhr.abort();
+        }
+      }
+      
+      function hide() {
+        WRAPPER.removeClass('loaded');
+      }
+      
+      function load() {
+        log("Loading sharing thumbnail", url);
+        xhr = $.ajax({
+          type: 'HEAD',
+          cache: false, // in case some browser tries to cache a 404
+          url: url,
+          success: show,
+          error: retry
+        });
+      }
+      
+      function retry() {
+        log("Sharing thumbnail not found, retry in", RETRY_DELAY);
+        setTimeout(load, RETRY_DELAY);
+      }
+      
+      function show() {
+        log("Sharing thumbnail found");
+        IMAGE.attr('src', url);
+        WRAPPER.addClass('loaded');
+      }
+      
+      this.setUrl = function (newUrl) {
+        if(newUrl != url) {
+          abort();
+          hide();
+          url = newUrl;
+          load();
+        } else {
+          log("Sharing thumbnail URLs are identical; no change.");
+        }
       }
     }
   }
@@ -763,7 +821,7 @@ View.Outfits = function (wardrobe) {
   function shareComplete(outfit) {
     save_outfit_wrapper_el.stopLoading().addClass('shared-outfit');
     setSharedOutfitPermalink(outfit);
-    setSharingUrls(outfit);
+    sharing.setOutfit(outfit);
     showSharing();
   }
 

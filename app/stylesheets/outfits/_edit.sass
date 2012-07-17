@@ -21,6 +21,10 @@ $outfit-header-padding: 24px
 $outfit-content-width: $sidebar-unit-inner-width - $outfit-thumbnail-size - $outfit-thumbnail-margin - 32px
 $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
 
+=user-select($select)
+  select: unquote($select)
+  +experimental(user-select, $select, -moz, -webkit, not -o, not -ms, -khtml, official)
+
 =active-mode
   color: $text-color
   font-weight: bold
@@ -476,7 +480,7 @@ body.outfits-edit
   #preview-sharing
     display: none
     
-    > ul
+    #preview-sharing-urls
       +sidebar-view-child
     
       li
@@ -492,6 +496,40 @@ body.outfits-edit
           display: block
           width: 100%
     
+    #preview-sharing-url-formats
+      +sidebar-view-child
+      +user-select(none)
+      // remove whitespace between inline-block elements
+      font-size: 0
+      margin-top: 12px
+      text-align: center
+      
+      li
+        +inline-block
+        
+        border: 1px solid $module-border-color
+        border-left-width: 0
+        border-right-color: $soft-border-color
+        color: $soft-text-color
+        cursor: pointer
+        font-size: 12px
+        padding: 0 .75em
+        
+        &.active
+          background: $module-bg-color
+          color: inherit
+          font-weight: bold
+        
+        &:first-child
+          +border-top-left-radius(5px)
+          +border-bottom-left-radius(5px)
+          border-left-width: 1px
+        
+        &:last-child
+          +border-top-right-radius(5px)
+          +border-bottom-right-radius(5px)
+          border-right-color: $module-border-color
+    
     #preview-sharing-thumbnail-wrapper
       border: 1px solid $soft-border-color
       display: block
@@ -500,12 +538,14 @@ body.outfits-edit
       width: 150px
       
       #preview-sharing-thumbnail-loading
+        height: 100%
         position: relative
+        width: 100%
         
         span
           color: $soft-text-color
           font-size: 85%
-          margin-top: -1em
+          margin-top: -0.75em
           position: absolute
           text-align: center
           top: 50%
