@@ -265,12 +265,10 @@ body.outfits-edit
         display: none
       #preview-outfits
         display: block
-    &.viewing-saving-outfit
-      height: auto
-      max-height: 100%
+    &.sharing
       #preview-closet
         display: none
-      #preview-saving-outfit
+      #preview-sharing
         display: block
     .sidebar-view
       h2
@@ -474,6 +472,25 @@ body.outfits-edit
         +outfit
       &.loaded
         background: transparent
+  
+  #preview-sharing
+    display: none
+    
+    > ul
+      +sidebar-view-child
+    
+      li
+        display: block
+        padding: .25em 0
+        width: 100%
+        
+        label
+          display: block
+          font-weight: bold
+        
+        input
+          display: block
+          width: 100%
 
   .preview-sidebar-nav
     float: right
@@ -521,10 +538,6 @@ body.outfits-edit
   #new-outfit-name
     font: inherit
     line-height: 1
-
-  #preview-saving-outfit
-    display: none
-    padding-bottom: 1em
 
   #pet-type-form, #pet-state-form, #preview-swf, #preview-search-form
     position: relative

@@ -445,7 +445,13 @@ View.Outfits = function (wardrobe) {
     stars = $('#preview-outfits div.outfit-star'),
     sidebar_el = $('#preview-sidebar'),
     signed_in,
-    previously_viewing = '';
+    previously_viewing = '',
+    sharing_url_els = {
+      permalink: $('#preview-sharing-permalink-url'),
+      large_image: $('#preview-sharing-large-image-url'),
+      medium_image: $('#preview-sharing-medium-image-url'),
+      small_image: $('#preview-sharing-small-image-url'),
+    };
 
   function liForOutfit(outfit) {
     return $('li.outfit-' + outfit.id);
@@ -483,6 +489,10 @@ View.Outfits = function (wardrobe) {
     wardrobe.user.loadOutfits();
     navigateTo('viewing-outfits');
   }
+  
+  function showSharing() {
+    navigateTo('sharing');
+  }
 
   function showNewOutfitForm() {
     new_outfit_name_el.val('');
@@ -497,7 +507,7 @@ View.Outfits = function (wardrobe) {
 
   $('#preview-sidebar-nav-outfits').click(navLinkTo(showOutfits));
 
-  $('#preview-sidebar-nav-closet').click(navLinkTo(showCloset));
+  $('.preview-sidebar-nav-closet').click(navLinkTo(showCloset));
 
   $('#save-outfit, #save-outfit-copy').click(showNewOutfitForm);
 
@@ -592,11 +602,13 @@ View.Outfits = function (wardrobe) {
     el.closest('li').startLoading();
     wardrobe.user.toggleOutfitStar(el.tmplItem().data);
   });
+  
+  function generateOutfitPermalink(outfit) {
+    return pathToUrl("/outfits/" + outfit.id);
+  }
 
   function setOutfitPermalink(outfit, outfit_permalink_el, outfit_url_el) {
-    var url = document.location.protocol + "//" + document.location.host;
-    if(document.location.port) url += ":" + document.location.port;
-    url += "/outfits/" + outfit.id;
+    var url = generateOutfitPermalink(outfit);
     outfit_permalink_el.attr('href', url);
     if(outfit_url_el) outfit_url_el.val(url);
   }
@@ -607,6 +619,19 @@ View.Outfits = function (wardrobe) {
 
   function setSharedOutfitPermalink(outfit) {
     setOutfitPermalink(outfit, shared_outfit_permalink_el, shared_outfit_url_el);
+  }
+  
+  function pathToUrl(path) {
+    var host = document.location.protocol + "//" + document.location.host;
+    if(document.location.port) host += ":" + document.location.port;
+    return host + path;
+  }
+  
+  function setSharingUrls(outfit) {
+    sharing_url_els.permalink.val(generateOutfitPermalink(outfit));
+    sharing_url_els.large_image.val(pathToUrl(outfit.image_versions.large));
+    sharing_url_els.medium_image.val(pathToUrl(outfit.image_versions.medium));
+    sharing_url_els.small_image.val(pathToUrl(outfit.image_versions.small));
   }
 
   function setActiveOutfit(outfit) {
@@ -646,7 +671,7 @@ View.Outfits = function (wardrobe) {
 
   $('#share-outfit').click(function () {
     save_outfit_wrapper_el.startLoading();
-    wardrobe.outfit.share();
+    wardrobe.outfit.saveAnonymously();
   });
 
   new_outfit_form_el.find('div.outfit-star').click(function () {
@@ -677,11 +702,16 @@ View.Outfits = function (wardrobe) {
   wardrobe.outfit.bind('updateSuccess', function (outfit) {
     wardrobe.user.updateOutfit(outfit);
   });
-
-  wardrobe.outfit.bind('shareSuccess', function (outfit) {
+  
+  function shareComplete(outfit) {
     save_outfit_wrapper_el.stopLoading().addClass('shared-outfit');
     setSharedOutfitPermalink(outfit);
-  });
+    setSharingUrls(outfit);
+    showSharing();
+  }
+
+  wardrobe.outfit.bind('shareSuccess', shareComplete);
+  wardrobe.outfit.bind('shareSkipped', shareComplete);
 
   function clearSharedOutfit() {
     save_outfit_wrapper_el.removeClass('shared-outfit');

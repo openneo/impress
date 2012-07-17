@@ -73,19 +73,25 @@
           Images © 2000-2010 Neopets, Inc. All Rights Reserved.
           Used With Permission
       #preview-outfits.sidebar-view
-        %a#preview-sidebar-nav-closet.preview-sidebar-nav{:href => "#"} &larr; Back to Closet
+        %a.preview-sidebar-nav-closet.preview-sidebar-nav{:href => "#"} &larr; Back to Closet
         %h2 Your outfits
         %ul
-      #preview-saving-outfit.sidebar-view
-        %a#preview-sidebar-nav-cancel-save.preview-sidebar-nav{:href => '#'} &larr; Cancel
-        %h2 Saving new outfit
-        #new-outfit
-          %form#new-outfit-form
-            %header
-              .outfit-star
-              %h4
-                %input#new-outfit-name{:type => 'text', :placeholder => 'Outfit name'}
-              %button{:type => 'submit'} Save
+      #preview-sharing.sidebar-view
+        %a.preview-sidebar-nav-closet.preview-sidebar-nav{:href => '#'} &larr; Back to Closet
+        %h2 Sharing
+        %ul
+          %li
+            %label{:for => 'preview-sharing-permalink-url'} Outfit page
+            %input#preview-sharing-permalink-url.outfit-url{:type => 'text'}
+          %li
+            %label{:for => 'preview-sharing-large-image-url'} Large image
+            %input#preview-sharing-large-image-url.outfit-url{:type => 'text'}
+          %li
+            %label{:for => 'preview-sharing-medium-image-url'} Medium image
+            %input#preview-sharing-medium-image-url.outfit-url{:type => 'text'}
+          %li
+            %label{:for => 'preview-sharing-small-image-url'} Small image
+            %input#preview-sharing-small-image-url.outfit-url{:type => 'text'}
   %form#preview-search-form
     %header
       %h2 Add an item

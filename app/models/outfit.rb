@@ -19,7 +19,15 @@ class Outfit < ActiveRecord::Base
 
   def as_json(more_options={})
     serializable_hash :only => [:id, :name, :pet_state_id, :starred],
-      :methods => [:color_id, :species_id, :worn_and_unworn_item_ids]
+      :methods => [:color_id, :species_id, :worn_and_unworn_item_ids,
+                   :image_versions]
+  end
+  
+  def image_versions
+    {}.tap do |versions|
+      versions[:large] = image.url
+      image.versions.each { |name, version| versions[name] = version.url }
+    end
   end
 
   def closet_item_ids
@@ -122,22 +130,28 @@ class Outfit < ActiveRecord::Base
   # Creates a 600x600 PNG image of this outfit, writing to the given output
   # file.
   def create_image!(output)
-    base_layer = image_layers.first
-    above_layers = image_layers[1..-1]
-    write_temp_swf_asset_image! base_layer, output
-    output.close
+    unless image_layers.empty?
+      base_layer = image_layers.first
+      above_layers = image_layers[1..-1]
+      write_temp_swf_asset_image!(base_layer, output)
+      output.close
 
-    Tempfile.open(['outfit_overlay', '.png']) do |overlay|
-      above_layers.each do |layer|
-        overlay.open
-        write_temp_swf_asset_image! layer, overlay
-        overlay.close
-        
-        previous_image = MiniMagick::Image.open(output.path)
-        overlay_image = MiniMagick::Image.open(overlay.path)
-        output_image = previous_image.composite(overlay_image)
-        output_image.write output.path
+      unless above_layers.empty?
+        Tempfile.open(['outfit_overlay', '.png']) do |overlay|
+          above_layers.each do |layer|
+            overlay.open
+            write_temp_swf_asset_image! layer, overlay
+            overlay.close
+            
+            previous_image = MiniMagick::Image.open(output.path)
+            overlay_image = MiniMagick::Image.open(overlay.path)
+            output_image = previous_image.composite(overlay_image)
+            output_image.write output.path
+          end
+        end
       end
+    else
+      output.close
     end
   end
   

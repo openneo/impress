@@ -286,6 +286,7 @@ function Wardrobe() {
       this.pet_state_id = data.pet_state_id;
       this.starred = data.starred;
       this.species_id = data.species_id;
+      this.image_versions = data.image_versions;
       this.setWornAndUnwornItemIds(data.worn_and_unworn_item_ids);
       new_record = false;
     }
@@ -426,6 +427,14 @@ function Wardrobe() {
       });
       return visible_assets;
     }
+    
+    this.isIdenticalTo = function (other) {
+      return other && // other exists
+             this.constructor == other.constructor && // other is an outfit
+             this.getPetStateId() == other.getPetStateId() &&
+             arraysMatch(this.getWornItemIds(), other.getWornItemIds()) &&
+             arraysMatch(this.getClosetItemIds(), other.getClosetItemIds());
+    }
 
     this.rename = function (new_name, success, failure) {
       this.updateAttributes({name: new_name}, success, failure);
@@ -565,10 +574,12 @@ function Wardrobe() {
         url: '/outfits',
         type: 'post',
         data: {outfit: getAttributes()},
+        dataType: 'json',
         success: function (data) {
           new_record = false;
-          outfit.id = data;
-          Outfit.cache[data] = outfit;
+          outfit.id = data.id;
+          outfit.image_versions = data.image_versions;
+          Outfit.cache[outfit.id] = outfit;
           success(outfit);
         },
         error: function (xhr) {
@@ -800,7 +811,7 @@ function Wardrobe() {
   Controller.all = {};
 
   Controller.all.Outfit = function OutfitController() {
-    var controller = this, outfit = new Outfit;
+    var controller = this, outfit = new Outfit, last_saved_outfit = null;
 
     this.in_transaction = false;
 
@@ -930,13 +941,17 @@ function Wardrobe() {
       );
     }
 
-    this.share = function () {
-      var sharedOutfit = outfit.clone();
-      sharedOutfit.anonymous = true;
-      sharedOutfit.create(
-        controller.event('shareSuccess'),
-        controller.event('shareFailure')
-      );
+    this.saveAnonymously = function () {
+      if(!outfit.isIdenticalTo(last_saved_outfit)) {
+        last_saved_outfit = outfit.clone();
+        last_saved_outfit.anonymous = true;
+        last_saved_outfit.create(
+          controller.event('shareSuccess'),
+          controller.event('shareFailure')
+        );
+      } else {
+        controller.events.trigger('shareSkipped', last_saved_outfit);
+      }
     }
 
     this.unclosetItem = function (item) {

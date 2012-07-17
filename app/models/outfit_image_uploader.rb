@@ -15,7 +15,7 @@ class OutfitImageUploader < CarrierWave::Uploader::Base
     process :resize_to_fill => [300, 300]
   end
   
-  version :small do
+  version :small, :from_version => :medium do
     process :resize_to_fill => [150, 150]
   end
   
@@ -27,9 +27,5 @@ class OutfitImageUploader < CarrierWave::Uploader::Base
     partition_id = model.id / 1000
     partition_dir = "%03d" % partition_id
     "outfits/#{partition_dir}/#{model.id}"
-  end
-  
-  def default_url
-    "/images/outfits/" + [version_name, "default.png"].compact.join('_')
   end
 end

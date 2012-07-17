@@ -2,18 +2,11 @@ class OutfitsController < ApplicationController
   before_filter :find_authorized_outfit, :only => [:update, :destroy]
 
   def create
-    Rails.logger.debug "Signed in?: #{user_signed_in?}"
-    Rails.logger.debug "User 1: #{current_user.inspect}"
     @outfit = Outfit.build_for_user(current_user, params[:outfit])
-    Rails.logger.debug "User 2: #{current_user.inspect}"
     if @outfit.save
-      Rails.logger.debug "User 3: #{current_user.inspect}"
-      render :json => @outfit.id
-      Rails.logger.debug "User 4: #{current_user.inspect}"
+      render :json => @outfit
     else
-      Rails.logger.debug "User 5: #{current_user.inspect}"
       render_outfit_errors
-      Rails.logger.debug "User 6: #{current_user.inspect}"
     end
   end
 
