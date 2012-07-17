@@ -79,6 +79,11 @@
       #preview-sharing.sidebar-view
         %a.preview-sidebar-nav-closet.preview-sidebar-nav{:href => '#'} &larr; Back to Closet
         %h2 Sharing
+        #preview-sharing-thumbnail-wrapper
+          #preview-sharing-thumbnail-loading
+            = image_tag 'outfits/small_loading.gif'
+            %span Generating&hellip;
+          %img#preview-sharing-thumbnail
         %ul
           %li
             %label{:for => 'preview-sharing-permalink-url'} Outfit page

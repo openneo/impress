@@ -491,6 +491,35 @@ body.outfits-edit
         input
           display: block
           width: 100%
+    
+    #preview-sharing-thumbnail-wrapper
+      border: 1px solid $soft-border-color
+      display: block
+      height: 150px
+      margin: 0 auto
+      width: 150px
+      
+      #preview-sharing-thumbnail-loading
+        position: relative
+        
+        span
+          color: $soft-text-color
+          font-size: 85%
+          margin-top: -1em
+          position: absolute
+          text-align: center
+          top: 50%
+          width: 100%
+      
+      #preview-sharing-thumbnail
+        display: none
+      
+      &.loaded
+        #preview-sharing-thumbnail-loading
+          display: none
+        
+        #preview-sharing-thumbnail
+          display: block
 
   .preview-sidebar-nav
     float: right

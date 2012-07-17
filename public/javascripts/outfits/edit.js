@@ -603,6 +603,12 @@ View.Outfits = function (wardrobe) {
     wardrobe.user.toggleOutfitStar(el.tmplItem().data);
   });
   
+  function pathToUrl(path) {
+    var host = document.location.protocol + "//" + document.location.host;
+    if(document.location.port) host += ":" + document.location.port;
+    return host + path;
+  }
+  
   function generateOutfitPermalink(outfit) {
     return pathToUrl("/outfits/" + outfit.id);
   }
@@ -619,19 +625,6 @@ View.Outfits = function (wardrobe) {
 
   function setSharedOutfitPermalink(outfit) {
     setOutfitPermalink(outfit, shared_outfit_permalink_el, shared_outfit_url_el);
-  }
-  
-  function pathToUrl(path) {
-    var host = document.location.protocol + "//" + document.location.host;
-    if(document.location.port) host += ":" + document.location.port;
-    return host + path;
-  }
-  
-  function setSharingUrls(outfit) {
-    sharing_url_els.permalink.val(generateOutfitPermalink(outfit));
-    sharing_url_els.large_image.val(pathToUrl(outfit.image_versions.large));
-    sharing_url_els.medium_image.val(pathToUrl(outfit.image_versions.medium));
-    sharing_url_els.small_image.val(pathToUrl(outfit.image_versions.small));
   }
 
   function setActiveOutfit(outfit) {
@@ -656,6 +649,70 @@ View.Outfits = function (wardrobe) {
       save_current_outfit_name_el.text(outfit.name);
     }
   });
+  
+  /* Sharing */
+  
+  function setSharingUrls(outfit) {
+    var small_image_url = pathToUrl(outfit.image_versions.small);
+    sharing_thumbnail.setUrl(small_image_url);
+    sharing_url_els.small_image.val(small_image_url);
+    
+    sharing_url_els.permalink.val(generateOutfitPermalink(outfit));
+    sharing_url_els.large_image.val(pathToUrl(outfit.image_versions.large));
+    sharing_url_els.medium_image.val(pathToUrl(outfit.image_versions.medium));
+  }
+  
+  var sharing_thumbnail = new function SharingThumbnail() {
+    var WRAPPER = $('#preview-sharing-thumbnail-wrapper');
+    var IMAGE = $('#preview-sharing-thumbnail');
+    var RETRY_DELAY = 2000; // 2 seconds
+    var url = null;
+    var xhr = null;
+    
+    function abort() {
+      if(xhr && xhr.readystate != 4) {
+        log("Aborting sharing thumbnail XHR");
+        xhr.abort();
+      }
+    }
+    
+    function hide() {
+      WRAPPER.removeClass('loaded');
+    }
+    
+    function load() {
+      log("Loading sharing thumbnail", url);
+      xhr = $.ajax({
+        type: 'HEAD',
+        cache: false, // in case some browser tries to cache a 404
+        url: url,
+        success: show,
+        error: retry
+      });
+    }
+    
+    function retry() {
+      log("Sharing thumbnail not found, retry in", RETRY_DELAY);
+      setTimeout(load, RETRY_DELAY);
+    }
+    
+    function show() {
+      log("Sharing thumbnail found");
+      IMAGE.attr('src', url);
+      WRAPPER.addClass('loaded');
+    }
+    
+    this.setUrl = function (newUrl) {
+      if(newUrl != url) {
+        abort();
+        hide();
+        url = newUrl;
+        load();
+      } else {
+        log("Sharing thumbnail URLs are identical; no change.");
+      }
+    }
+  }
 
   /* Saving */
 

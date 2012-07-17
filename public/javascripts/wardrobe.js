@@ -7,9 +7,6 @@ function arraysMatch(array1, array2) {
     return array1 == array2;
   }
   temp = [];
-  if ( (!array1[0]) || (!array2[0]) ) {
-    return false;
-  }
   if (array1.length != array2.length) {
     return false;
   }
