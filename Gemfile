@@ -21,7 +21,7 @@ gem 'hoptoad_notifier'
 
 gem 'addressable', :require => ['addressable/template', 'addressable/uri']
 
-gem 'whenever', '~> 0.6.2', :require => false
+gem 'whenever', '~> 0.7.3', :require => false
 
 gem 'swf_converter', '~> 0.0.3'
 
