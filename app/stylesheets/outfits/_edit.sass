@@ -8,7 +8,7 @@
 $object-padding: 6px
 $nc-icon-size: 16px
 
-$preview-dimension: 400px
+$preview-dimension: 380px
 $sidebar-margin: 20px
 $sidebar-width: 400px
 $sidebar-unit-horizontal-padding: 24px
@@ -27,6 +27,16 @@ $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
 
 =active-mode
   color: $text-color
+  font-weight: bold
+
+=sidebar-navbar-unselected
+  background: transparent
+  border-bottom: 1px solid $soft-border-color
+  font-weight: normal
+
+=sidebar-navbar-selected
+  background: white
+  border-bottom-color: white
   font-weight: bold
 
 =outfit
@@ -148,7 +158,7 @@ body.outfits-edit
         position: left center
         repeat: no-repeat
       padding-left: 20px
-  #save-outfit, #save-outfit-not-signed-in, #save-current-outfit, #save-outfit-copy, #save-outfit-finish
+  #save-outfit, #save-outfit-not-signed-in, #save-current-outfit, #save-outfit-finish
     +loud-awesome-button-color
   #current-outfit-permalink, #shared-outfit-permalink
     display: none
@@ -211,11 +221,14 @@ body.outfits-edit
     &.image-active
       #preview-mode-image
         +active-mode
-      #report-broken-image
+      #preview-mode-note, #report-broken-image
         display: block
-      &.can-download
-        #preview-download-image
-          display: inline-block
+      // Phasing out the image download section. Not confident enough yet to
+      // *remove* it, depending on user feedback, but that's a TODO for down
+      // the road if hiding goes well.
+      // &.can-download
+        // #preview-download-image
+          // display: inline-block
   #preview-mode-toggle
     +border-radius(.5em)
     border: 1px solid $module-border-color
@@ -253,17 +266,15 @@ body.outfits-edit
     em
       font-style: normal
       text-decoration: underline
-  #report-broken-image
+  #preview-mode-note, #report-broken-image
     display: none
+  
   #preview-sidebar
-    +border-radius(10px)
-    border: 1px solid $soft-border-color
     float: left
     height: $preview-dimension
     margin-left: $sidebar-margin
     margin-bottom: 1em
-    overflow: auto
-    width: $container_width - $preview-dimension - $sidebar-margin - 2px
+    width: $container_width - $preview-dimension - $sidebar-margin
     &.viewing-outfits
       #preview-closet
         display: none
@@ -275,10 +286,7 @@ body.outfits-edit
       #preview-sharing
         display: block
     .sidebar-view
-      h2
-        margin:
-          bottom: .25em
-          left: $sidebar-unit-horizontal-padding
+      margin-top: 1.5em
   #preview-closet
     h2
       margin-bottom: 0
@@ -380,7 +388,6 @@ body.outfits-edit
       width: 100%
     #preview-sidebar
       float: right
-      height: 100%
       margin: 0
       position: relative
       width: $sidebar-width
@@ -463,10 +470,11 @@ body.outfits-edit
   #preview-outfits
     display: none
     text-align: left
+    
     > ul
       +sidebar-view-child
       background: image-url("loading.gif") no-repeat center top
-      display: block
+      display: none
       font-family: $main-font
       list-style: none
       margin:
@@ -476,12 +484,39 @@ body.outfits-edit
         +outfit
       &.loaded
         background: transparent
+    
+    #preview-outfits-not-logged-in
+      text-align: center
+      
+      img
+        border:
+          color: $module-border-color
+          style: solid
+          width: 1px 0
+      
+      figure
+        display: block
+        margin: 0 0 1em 0
+        padding: 0
+      
+      figcaption
+        display: block
+        font-weight: bold
+      
+      p
+        +sidebar-view-child
+        font-size: 85%
+      
+      #preview-outfits-log-in
+        +awesome-button
+        +loud-awesome-button-color
   
   #preview-sharing
     display: none
     
     #preview-sharing-urls
       +sidebar-view-child
+      display: none
       margin:
         bottom: 1em
         top: 1em
@@ -503,6 +538,7 @@ body.outfits-edit
       +sidebar-view-child
       +user-select(none)
       // remove whitespace between inline-block elements
+      display: none
       font-size: 0
       text-align: center
       
@@ -536,32 +572,39 @@ body.outfits-edit
       border: 1px solid $soft-border-color
       display: block
       height: 150px
-      margin: 0 auto
+      margin: 1em auto 0
       width: 150px
       
-      #preview-sharing-thumbnail-loading
-        height: 100%
-        position: relative
-        width: 100%
-        
-        span
-          color: $soft-text-color
-          font-size: 85%
-          margin-top: -0.75em
-          position: absolute
-          text-align: center
-          top: 50%
-          width: 100%
+    #preview-sharing-thumbnail-loading
+      height: 100%
+      position: relative
+      width: 100%
       
-      #preview-sharing-thumbnail
+      span
+        color: $soft-text-color
+        font-size: 85%
+        margin-top: -0.75em
+        position: absolute
+        text-align: center
+        top: 50%
+        width: 100%
+    
+    #preview-sharing-thumbnail, #preview-sharing-thumbnail-generating
+      display: none
+      
+    &.urls-loaded
+      #preview-sharing-thumbnail-saving
         display: none
       
-      &.loaded
-        #preview-sharing-thumbnail-loading
-          display: none
-        
-        #preview-sharing-thumbnail
-          display: block
+      #preview-sharing-urls, #preview-sharing-url-formats, #preview-sharing-thumbnail-generating
+        display: block
+      
+    &.urls-loaded.thumbnail-loaded
+      #preview-sharing-thumbnail-loading
+        display: none
+      
+      #preview-sharing-thumbnail
+        display: block
 
   .preview-sidebar-nav
     float: right
@@ -569,6 +612,48 @@ body.outfits-edit
     margin:
       right: $sidebar-unit-horizontal-padding
       top: 1em
+  
+  $sidebar-border-radius: 10px
+  $sidebar-navbar-inner-width: $sidebar-width - 2px
+  $sidebar-navbar-child-outer-width: floor($sidebar-navbar-inner-width / 3)
+  
+  #preview-sidebar
+    #preview-sidebar-navbar-closet
+      +sidebar-navbar-selected
+    
+    &.viewing-outfits, &.sharing
+      #preview-sidebar-navbar-closet
+        +sidebar-navbar-unselected
+    
+    &.viewing-outfits #preview-sidebar-navbar-outfits, &.sharing #preview-sidebar-navbar-sharing
+      +sidebar-navbar-selected
+  
+  #preview-sidebar-navbar
+    +border-radius($sidebar-border-radius $sidebar-border-radius 0 0)
+    +clearfix
+    +header-text
+    background: $module-bg-color
+    border: 1px solid $soft-border-color
+    border-bottom: 0
+    font-size: 150%
+    
+    > div
+      +sidebar-navbar-unselected
+      cursor: pointer
+      float: left
+      border-left: 1px solid $soft-border-color
+      padding: .5em 0
+      text-align: center
+      width: $sidebar-navbar-child-outer-width
+      
+      &:first-child
+        border-left: 0
+  
+  #preview-sidebar-content
+    +border-radius(0 0 $sidebar-border-radius $sidebar-border-radius)
+    border: 1px solid $soft-border-color
+    border-top: 0
+    overflow: auto
 
   #save-success, #save-error, #outfit-not-found, #preview-sidebar-donation-request
     +sidebar-view-child
@@ -656,8 +741,11 @@ body.outfits-edit
           display: none
         #save-current-outfit, #save-outfit-copy
           display: inline-block
-        #current-outfit-permalink
-          display: inline-block
+        // Phasing out permalink. Shared outfit links have been straight-up
+        // removed, but this may stay depending on user feedback. Otherwise,
+        // removing it is TODO down the road.
+        // #current-outfit-permalink
+          // display: inline-block
       &.saving-outfit
         #save-outfit-form
           display: block
@@ -665,6 +753,10 @@ body.outfits-edit
           display: none
     .preview-search-form-your-items
       +inline-block
+    #preview-outfits-not-logged-in
+      display: none
+    #preview-outfits-list
+      display: block
 
   &.user-not-signed-in
     #save-outfit-not-signed-in

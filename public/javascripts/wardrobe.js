@@ -808,7 +808,7 @@ function Wardrobe() {
   Controller.all = {};
 
   Controller.all.Outfit = function OutfitController() {
-    var controller = this, outfit = new Outfit, last_saved_outfit = null;
+    var controller = this, outfit = new Outfit, last_shared_outfit = null;
 
     this.in_transaction = false;
 
@@ -938,16 +938,24 @@ function Wardrobe() {
       );
     }
 
-    this.saveAnonymously = function () {
-      if(!outfit.isIdenticalTo(last_saved_outfit)) {
-        last_saved_outfit = outfit.clone();
-        last_saved_outfit.anonymous = true;
-        last_saved_outfit.create(
+    this.share = function () {
+      if(outfit.id) {
+        // If this is a user-saved outfit (user is logged in), no need to
+        // re-share it. Skip to using the current outfit.
+        controller.events.trigger('shareSkipped', outfit);
+      } else if(outfit.isIdenticalTo(last_shared_outfit)) {
+        // If the outfit hasn't changed since last time we shared it, no need to
+        // re-share it. Skip to using the last shared outfit.
+        controller.events.trigger('shareSkipped', last_shared_outfit);
+      } else {
+        // Otherwise, this is a fresh outfit that needs to be shared. Try, and
+        // report success or failure.
+        last_shared_outfit = outfit.clone();
+        last_shared_outfit.anonymous = true;
+        last_shared_outfit.create(
           controller.event('shareSuccess'),
           controller.event('shareFailure')
         );
-      } else {
-        controller.events.trigger('shareSkipped', last_saved_outfit);
       }
     }
 
