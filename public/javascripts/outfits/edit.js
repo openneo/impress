@@ -184,6 +184,7 @@ View.Fullscreen = function (wardrobe) {
         if(!full) {
           preview_swf.removeAttr('style').css('visibility', 'visible');
           preview_el.removeAttr('style');
+          sidebar_content_el.removeAttr('style');
         }
       }
     }
