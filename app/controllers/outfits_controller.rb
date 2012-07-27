@@ -75,7 +75,7 @@ class OutfitsController < ApplicationController
 
   def update
     if @outfit.update_attributes(params[:outfit])
-      render :json => true
+      render :json => @outfit
     else
       render_outfit_errors
     end

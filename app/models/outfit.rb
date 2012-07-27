@@ -15,12 +15,13 @@ class Outfit < ActiveRecord::Base
   
   mount_uploader :image, OutfitImageUploader
   
+  before_save :update_enqueued_image
   after_commit :enqueue_image!
 
   def as_json(more_options={})
     serializable_hash :only => [:id, :name, :pet_state_id, :starred],
       :methods => [:color_id, :species_id, :worn_and_unworn_item_ids,
-                   :image_versions]
+                   :image_versions, :image_enqueued, :image_layers_hash]
   end
   
   def image_versions
@@ -94,6 +95,7 @@ class Outfit < ActiveRecord::Base
         create_image! image
         self.image_layers_hash = generate_image_layers_hash
         self.image = image
+        self.image_enqueued = false
         save!
       end
     end
@@ -104,7 +106,12 @@ class Outfit < ActiveRecord::Base
   # Enqueue an image write iff the new image would be different than the
   # current one.
   def enqueue_image!
-    Resque.enqueue(OutfitImageUpdate, id) if image_layers_dirty?
+    Resque.enqueue(OutfitImageUpdate, id)
+  end
+  
+  def update_enqueued_image
+    self.image_enqueued = (image_layers_dirty?)
+    true
   end
   
   def s3_key(size)

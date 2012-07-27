@@ -573,11 +573,14 @@ body.outfits-edit
       display: block
       height: 150px
       margin: 1em auto 0
+      position: relative
       width: 150px
       
     #preview-sharing-thumbnail-loading
       height: 100%
-      position: relative
+      left: 0
+      position: absolute
+      top: 0
       width: 100%
       
       span
@@ -602,6 +605,13 @@ body.outfits-edit
     &.urls-loaded.thumbnail-loaded
       #preview-sharing-thumbnail-loading
         display: none
+      
+      #preview-sharing-thumbnail
+        display: block
+    
+    &.urls-loaded.thumbnail-available
+      #preview-sharing-thumbnail-loading
+        +opacity(0.85)
       
       #preview-sharing-thumbnail
         display: block

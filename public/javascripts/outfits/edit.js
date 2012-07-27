@@ -57,7 +57,7 @@ Partial.ItemSet = function ItemSet(wardrobe, selector) {
     var item, no_assets, li, no_assets_message;
     for(var i = 0, l = specific_items.length; i < l; i++) {
       item = specific_items[i];
-      no_assets = item.couldNotLoadAssetsFitting(wardrobe.outfit.getPetType());
+      no_assets = item.couldNotLoadAssetsFitting(wardrobe.outfits.getPetType());
       li = $('li.object-' + item.id).toggleClass('no-assets', no_assets);
       (function (li) {
         no_assets_message = li.find('span.no-assets-message');
@@ -103,8 +103,8 @@ Partial.ItemSet = function ItemSet(wardrobe, selector) {
       }
       li.append(img).append(controls).append(info_link).append(item.name).appendTo(ul);
     }
-    setClosetItems(wardrobe.outfit.getClosetItems());
-    setOutfitItems(wardrobe.outfit.getWornItems());
+    setClosetItems(wardrobe.outfits.getClosetItems());
+    setOutfitItems(wardrobe.outfits.getWornItems());
   }
 
   $('span.no-assets-message').live('mouseover', function () {
@@ -117,9 +117,9 @@ Partial.ItemSet = function ItemSet(wardrobe, selector) {
     no_assets_full_message.removeAttr('style');
   });
 
-  wardrobe.outfit.bind('updateItemAssets', function () { setHasAssets(wardrobe.outfit.getWornItems()) });
-  wardrobe.outfit.bind('updateWornItems', setOutfitItems);
-  wardrobe.outfit.bind('updateClosetItems', setClosetItems);
+  wardrobe.outfits.bind('updateItemAssets', function () { setHasAssets(wardrobe.outfits.getWornItems()) });
+  wardrobe.outfits.bind('updateWornItems', setOutfitItems);
+  wardrobe.outfits.bind('updateClosetItems', setClosetItems);
 }
 
 Partial.ItemSet.CONTROL_SETS = {};
@@ -151,12 +151,12 @@ Partial.ItemSet.setWardrobe = function (wardrobe) {
   }
 
   toggle_fn.closeted = {};
-  toggle_fn.closeted[true] = $.proxy(wardrobe.outfit, 'closetItem');
-  toggle_fn.closeted[false] = $.proxy(wardrobe.outfit, 'unclosetItem');
+  toggle_fn.closeted[true] = $.proxy(wardrobe.outfits, 'closetItem');
+  toggle_fn.closeted[false] = $.proxy(wardrobe.outfits, 'unclosetItem');
 
   toggle_fn.worn = {};
-  toggle_fn.worn[true] = $.proxy(wardrobe.outfit, 'wearItem');
-  toggle_fn.worn[false] = $.proxy(wardrobe.outfit, 'unwearItem');
+  toggle_fn.worn[true] = $.proxy(wardrobe.outfits, 'wearItem');
+  toggle_fn.worn[false] = $.proxy(wardrobe.outfits, 'unwearItem');
 
   Partial.ItemSet.setWardrobe = $.noop;
 }
@@ -164,7 +164,7 @@ Partial.ItemSet.setWardrobe = function (wardrobe) {
 View.Closet = function (wardrobe) {
   var item_set = new Partial.ItemSet(wardrobe, '#preview-closet ul');
 
-  wardrobe.outfit.bind('updateClosetItems', $.proxy(item_set, 'setItems'));
+  wardrobe.outfits.bind('updateClosetItems', $.proxy(item_set, 'setItems'));
 }
 
 View.Fullscreen = function (wardrobe) {
@@ -281,32 +281,32 @@ View.Hash = function (wardrobe) {
     }
 
     if(new_data.color !== data.color || new_data.species !== data.species) {
-      wardrobe.outfit.setPetTypeByColorAndSpecies(new_data.color, new_data.species);
+      wardrobe.outfits.setPetTypeByColorAndSpecies(new_data.color, new_data.species);
     }
     if(new_data.closet) {
       if(!arraysMatch(new_data.closet, data.closet)) {
-        wardrobe.outfit.setClosetItemsByIds(new_data.closet.slice(0));
+        wardrobe.outfits.setClosetItemsByIds(new_data.closet.slice(0));
       }
     } else if(new_data.objects && !arraysMatch(new_data.objects, data.closet)) {
-      wardrobe.outfit.setClosetItemsByIds(new_data.objects.slice(0));
+      wardrobe.outfits.setClosetItemsByIds(new_data.objects.slice(0));
     } else {
-      wardrobe.outfit.setClosetItemsByIds([]);
+      wardrobe.outfits.setClosetItemsByIds([]);
     }
     if(new_data.objects) {
       if(!arraysMatch(new_data.objects, data.objects)) {
-        wardrobe.outfit.setWornItemsByIds(new_data.objects.slice(0));
+        wardrobe.outfits.setWornItemsByIds(new_data.objects.slice(0));
       }
     } else {
-      wardrobe.outfit.setWornItemsByIds([]);
+      wardrobe.outfits.setWornItemsByIds([]);
     }
     if(new_data.name != data.name && new_data.name) {
       wardrobe.base_pet.setName(new_data.name);
     }
     if(new_data.state != data.state) {
-      wardrobe.outfit.setPetStateById(new_data.state);
+      wardrobe.outfits.setPetStateById(new_data.state);
     }
     if(new_data.outfit != data.outfit) {
-      wardrobe.outfit.setId(new_data.outfit);
+      wardrobe.outfits.setId(new_data.outfit);
     }
     if(new_data.search != data.search || new_data.search_offset != data.search_offset) {
       wardrobe.search.setItemsByQuery(new_data.search, {offset: new_data.search_offset});
@@ -358,8 +358,8 @@ View.Hash = function (wardrobe) {
   }
 
   function singleOutfitResponse(event_name, response) {
-    wardrobe.outfit.bind(event_name, function () {
-      if(!wardrobe.outfit.in_transaction) response.apply(this, arguments);
+    wardrobe.outfits.bind(event_name, function () {
+      if(!wardrobe.outfits.in_transaction) response.apply(this, arguments);
     });
   }
 
@@ -378,7 +378,7 @@ View.Hash = function (wardrobe) {
     if(arraysMatch(item_ids, data.closet) || arraysMatch(item_ids, data.objects)) {
       changes.closet = undefined;
     } else {
-      changes.closet = wardrobe.outfit.getClosetItems().mapProperty('id');
+      changes.closet = wardrobe.outfits.getClosetItems().mapProperty('id');
     }
     if(changes.objects || changes.closet) changeQuery(changes);
   });
@@ -398,7 +398,7 @@ View.Hash = function (wardrobe) {
   });
 
   singleOutfitResponse('updatePetState', function (pet_state) {
-    var pet_type = wardrobe.outfit.getPetType();
+    var pet_type = wardrobe.outfits.getPetType();
     if(pet_state.id != data.state && pet_type && (data.state || pet_state.id != pet_type.pet_state_ids[0])) {
       changeQuery({state: pet_state.id});
     }
@@ -410,7 +410,7 @@ View.Hash = function (wardrobe) {
     }
   });
 
-  wardrobe.outfit.bind('loadOutfit', function (outfit) {
+  wardrobe.outfits.bind('loadOutfit', function (outfit) {
     changeQuery({
       closet: outfit.getClosetItemIds(),
       color: outfit.pet_type.color_id,
@@ -421,7 +421,7 @@ View.Hash = function (wardrobe) {
     });
   });
 
-  wardrobe.outfit.bind('outfitNotFound', function (outfit) {
+  wardrobe.outfits.bind('outfitNotFound', function (outfit) {
     var new_id = outfit ? outfit.id : undefined;
     changeQuery({outfit: new_id});
   });
@@ -475,15 +475,18 @@ View.Outfits = function (wardrobe) {
   /* Nav */
 
   function showCloset() {
+    sharing.onHide();
     navigateTo('');
   }
 
   function showOutfits() {
-    wardrobe.user.loadOutfits();
+    sharing.onHide();
+    wardrobe.outfits.loadOutfits();
     navigateTo('viewing-outfits');
   }
   
   function showSharing() {
+    sharing.onShow();
     navigateTo('sharing');
   }
 
@@ -501,7 +504,7 @@ View.Outfits = function (wardrobe) {
   $('#preview-sidebar-navbar-closet').click(showCloset);
   $('#preview-sidebar-navbar-sharing').click(function () {
     sharing.startLoading();
-    wardrobe.outfit.share();
+    wardrobe.outfits.share();
     showSharing();
   });
   $('#preview-sidebar-navbar-outfits').click(showOutfits);
@@ -518,13 +521,13 @@ View.Outfits = function (wardrobe) {
 
   $('#outfit-template').template('outfitTemplate');
 
-  wardrobe.user.bind('outfitsLoaded', function (outfits) {
+  wardrobe.outfits.bind('outfitsLoaded', function (outfits) {
     var outfit_els = $.tmpl('outfitTemplate', outfits);
     outfits_list_el.html('').append(outfit_els).addClass('loaded');
     updateActiveOutfit();
   });
 
-  wardrobe.user.bind('addOutfit', function (outfit, i) {
+  wardrobe.outfits.bind('addOutfit', function (outfit, i) {
     var next_child = outfits_list_el.children().not('.hiding').eq(i),
       outfit_el = $.tmpl('outfitTemplate', outfit);
     if(next_child.length) {
@@ -536,13 +539,13 @@ View.Outfits = function (wardrobe) {
     outfit_el.hide().show('normal');
   });
 
-  wardrobe.user.bind('removeOutfit', function (outfit, i) {
+  wardrobe.outfits.bind('removeOutfit', function (outfit, i) {
     var outfit_el = outfits_list_el.children().not('.hiding').eq(i);
     outfit_el.addClass('hiding').stop(true).hide('normal', function () { outfit_el.remove() });
   });
 
   $('#preview-outfits h4').live('click', function () {
-    wardrobe.outfit.load($(this).tmplItem().data.id);
+    wardrobe.outfits.load($(this).tmplItem().data.id);
   });
 
   $('a.outfit-rename-button').live('click', function (e) {
@@ -557,7 +560,7 @@ View.Outfits = function (wardrobe) {
       li = el.closest('li').removeClass('renaming');
     if(new_name != outfit.name) {
       li.startLoading();
-      wardrobe.user.renameOutfit(outfit, new_name);
+      wardrobe.outfits.renameOutfit(outfit, new_name);
     }
   }
 
@@ -583,9 +586,9 @@ View.Outfits = function (wardrobe) {
   $('a.outfit-delete-confirmation-yes').live('click', function (e) {
     var outfit = $(this).tmplItem().data;
     e.preventDefault();
-    wardrobe.user.destroyOutfit(outfit);
-    if(wardrobe.outfit.getOutfit().id == outfit.id) {
-      wardrobe.outfit.setId(null);
+    wardrobe.outfits.destroyOutfit(outfit);
+    if(wardrobe.outfits.getOutfit().id == outfit.id) {
+      wardrobe.outfits.setId(null);
     }
   });
 
@@ -597,7 +600,7 @@ View.Outfits = function (wardrobe) {
   stars.live('click', function () {
     var el = $(this);
     el.closest('li').startLoading();
-    wardrobe.user.toggleOutfitStar(el.tmplItem().data);
+    wardrobe.outfits.toggleOutfitStar(el.tmplItem().data);
   });
   
   function pathToUrl(path) {
@@ -631,14 +634,14 @@ View.Outfits = function (wardrobe) {
   }
 
   function updateActiveOutfit() {
-    setActiveOutfit(wardrobe.outfit.getOutfit());
+    setActiveOutfit(wardrobe.outfits.getOutfit());
   }
 
-  wardrobe.outfit.bind('setOutfit', setActiveOutfit);
-  wardrobe.outfit.bind('outfitNotFound', setActiveOutfit);
+  wardrobe.outfits.bind('setOutfit', setActiveOutfit);
+  wardrobe.outfits.bind('outfitNotFound', setActiveOutfit);
 
-  wardrobe.user.bind('outfitRenamed', function (outfit) {
-    if(outfit.id == wardrobe.outfit.getId()) {
+  wardrobe.outfits.bind('outfitRenamed', function (outfit) {
+    if(outfit.id == wardrobe.outfits.getId()) {
       save_current_outfit_name_el.text(outfit.name);
     }
   });
@@ -654,6 +657,7 @@ View.Outfits = function (wardrobe) {
       small_image: $('#preview-sharing-small-image-url'),
     };
     var format_selector_els = $('#preview-sharing-url-formats li');
+    var thumbnail_el = $('#preview-sharing-thumbnail');
     
     var formats = {
       plain: {
@@ -691,18 +695,64 @@ View.Outfits = function (wardrobe) {
       formatUrls();
     });
     
+    var image_subscription = null;
+    function unsubscribeFromImage() {
+      if(image_subscription !== null) {
+        wardrobe.image_subscriptions.unsubscribe(image_subscription);
+        image_subscription = null;
+      }
+    }
+    
+    function subscribeToImage(outfit) {
+      image_subscription = wardrobe.image_subscriptions.subscribe(outfit);
+    }
+    
+    function subscribeToImageIfVisible() {
+      if(current_shared_outfit && sidebar_el.hasClass('sharing')) {
+        subscribeToImage(current_shared_outfit);
+      }
+    }
+    
+    var current_shared_outfit = {id: null};
     this.setOutfit = function (outfit) {
-      urls.permalink = generateOutfitPermalink(outfit);
-      urls.small_image = pathToUrl(outfit.image_versions.small);
-      urls.medium_image = pathToUrl(outfit.image_versions.medium);
-      urls.large_image = pathToUrl(outfit.image_versions.large);
-      thumbnail.setUrl(urls.small_image);
-      formatUrls();
+      // If outfit has no ID but we're already on the Sharing tab (e.g. user is
+      // on Sharing but goes back in history to a no-ID outfit), we can't
+      // exactly do anything with it but submit it for sharing.
+      if(!outfit.id) {
+        sharing.startLoading();
+        wardrobe.outfits.share(outfit);
+        return false;
+      }
+      
+      // But if the outfit does have a valid ID, we're good to go. If it's the
+      // same as the currently shared outfit ID, then don't even change
+      // anything. If it's new, then change everything.
+      if(outfit.id != current_shared_outfit.id) {
+        // The current shared outfit needs to be a clone, or else modifications
+        // to the active outfit will show up here, too, and then our comparison
+        // to discover if this is a new outfit ID or not fails.
+        current_shared_outfit = outfit.clone();
+        urls.permalink = generateOutfitPermalink(outfit);
+        urls.small_image = pathToUrl(outfit.image_versions.small);
+        urls.medium_image = pathToUrl(outfit.image_versions.medium);
+        urls.large_image = pathToUrl(outfit.image_versions.large);
+        formatUrls();
+        WRAPPER.removeClass('thumbnail-available');
+        subscribeToImageIfVisible();
+      }
       WRAPPER.addClass('urls-loaded');
     }
     
     this.startLoading = function () {
       WRAPPER.removeClass('urls-loaded');
+    }
+    
+    this.onHide = function () {
+      unsubscribeFromImage();
+    }
+    
+    this.onShow = function () {
+      subscribeToImageIfVisible();
     }
     
     function formatUrls() {
@@ -723,69 +773,45 @@ View.Outfits = function (wardrobe) {
     function formatUrl(key, url) {
       sharing_url_els[key].val(url);
     }
-  
-    var thumbnail = new function SharingThumbnail() {
-      var IMAGE = $('#preview-sharing-thumbnail');
-      var RETRY_DELAY = 2000; // 2 seconds
-      var url = null;
-      var xhr = null;
+    
+    wardrobe.image_subscriptions.bind('imageEnqueued', function (outfit) {
+      log("Sharing thumbnail enqueued for outfit", outfit);
       
-      function abort() {
-        if(xhr && xhr.readystate != 4) {
-          log("Aborting sharing thumbnail XHR");
-          xhr.abort();
-        }
-      }
+      WRAPPER.removeClass('thumbnail-loaded');
+    });
+    
+    wardrobe.image_subscriptions.bind('imageReady', function (outfit) {
+      log("Sharing thumbnail ready for outfit", outfit);
       
-      function hide() {
-        WRAPPER.removeClass('thumbnail-loaded');
+      var src = outfit.image_versions.small + '?' + outfit.image_layers_hash;
+      thumbnail_el.attr('src', src);
+      WRAPPER.addClass('thumbnail-loaded');
+      WRAPPER.addClass('thumbnail-available');
+      image_subscription = null;
+    });
+    
+    wardrobe.outfits.bind('updateSuccess', function (outfit) {
+      if(sidebar_el.hasClass('sharing')) {
+        subscribeToImage(outfit);
       }
-      
-      function load() {
-        log("Loading sharing thumbnail", url);
-        xhr = $.ajax({
-          type: 'HEAD',
-          cache: false, // in case some browser tries to cache a 404
-          url: url,
-          success: show,
-          error: retry
-        });
-      }
-      
-      function retry() {
-        log("Sharing thumbnail not found, retry in", RETRY_DELAY);
-        setTimeout(load, RETRY_DELAY);
-      }
-      
-      function show() {
-        log("Sharing thumbnail found");
-        IMAGE.attr('src', url);
-        WRAPPER.addClass('thumbnail-loaded');
-      }
-      
-      this.setUrl = function (newUrl) {
-        if(newUrl != url) {
-          abort();
-          hide();
-          url = newUrl;
-          load();
-        } else {
-          log("Sharing thumbnail URLs are identical; no change.");
-        }
-      }
-    }
+    });
+    
+    wardrobe.outfits.bind('setOutfit', function (outfit) {
+      log("Sharing sees the setOutfit signal, and will set", outfit);
+      sharing.setOutfit(outfit);
+    });
   }
 
   /* Saving */
 
   save_current_outfit_el.click(function () {
-    wardrobe.outfit.update();
+    wardrobe.outfits.update();
   });
 
   new_outfit_form_el.submit(function (e) {
     e.preventDefault();
     new_outfit_form_el.startLoading();
-    wardrobe.outfit.create({starred: new_outfit_form_el.hasClass('starred'), name: new_outfit_name_el.val()});
+    wardrobe.outfits.create({starred: new_outfit_form_el.hasClass('starred'), name: new_outfit_name_el.val()});
   });
 
   new_outfit_form_el.find('div.outfit-star').click(function () {
@@ -803,19 +829,13 @@ View.Outfits = function (wardrobe) {
     save_error_el.text(text).notify();
   }
 
-  wardrobe.outfit.bind('saveSuccess', function (outfit) {
+  wardrobe.outfits.bind('saveSuccess', function (outfit) {
     save_success_el.notify();
-    sharing.setOutfit(outfit);
   });
 
-  wardrobe.outfit.bind('createSuccess', function (outfit) {
-    wardrobe.user.addOutfit(outfit);
+  wardrobe.outfits.bind('createSuccess', function (outfit) {
     showOutfits();
     hideNewOutfitForm();
-  });
-
-  wardrobe.outfit.bind('updateSuccess', function (outfit) {
-    wardrobe.user.updateOutfit(outfit);
   });
   
   function shareComplete(outfit) {
@@ -824,16 +844,16 @@ View.Outfits = function (wardrobe) {
     showSharing();
   }
 
-  wardrobe.outfit.bind('shareSuccess', shareComplete);
-  wardrobe.outfit.bind('shareSkipped', shareComplete);
+  wardrobe.outfits.bind('shareSuccess', shareComplete);
+  wardrobe.outfits.bind('shareSkipped', shareComplete);
 
   function clearSharedOutfit() {
     save_outfit_wrapper_el.removeClass('shared-outfit');
   }
 
-  wardrobe.outfit.bind('updateClosetItems', clearSharedOutfit);
-  wardrobe.outfit.bind('updateWornItems', clearSharedOutfit);
-  wardrobe.outfit.bind('updatePetState', clearSharedOutfit);
+  wardrobe.outfits.bind('updateClosetItems', clearSharedOutfit);
+  wardrobe.outfits.bind('updateWornItems', clearSharedOutfit);
+  wardrobe.outfits.bind('updatePetState', clearSharedOutfit);
 
   function saveFailure(outfit, response) {
     var errors = response.errors;
@@ -856,16 +876,16 @@ View.Outfits = function (wardrobe) {
     liForOutfit(outfit).stopLoading();
   }
 
-  wardrobe.outfit.bind('saveFailure', saveFailure);
-  wardrobe.user.bind('saveFailure', saveFailure)
-  wardrobe.outfit.bind('shareFailure', function (outfit, response) {
+  wardrobe.outfits.bind('saveFailure', saveFailure);
+  wardrobe.outfits.bind('saveFailure', saveFailure)
+  wardrobe.outfits.bind('shareFailure', function (outfit, response) {
     save_outfit_wrapper_el.stopLoading();
     saveFailure(outfit, response);
   });
 
   /* Error */
 
-  wardrobe.outfit.bind('outfitNotFound', function () {
+  wardrobe.outfits.bind('outfitNotFound', function () {
     outfit_not_found_el.notify();
   });
 }
@@ -877,7 +897,7 @@ View.PetStateForm = function (wardrobe) {
     button_query = form_query + ' button';
   $(button_query).live('click', function (e) {
     e.preventDefault();
-    wardrobe.outfit.setPetStateById(+$(this).data('value'));
+    wardrobe.outfits.setPetStateById(+$(this).data('value'));
   });
 
   function updatePetState(pet_state) {
@@ -887,7 +907,7 @@ View.PetStateForm = function (wardrobe) {
     }
   }
 
-  wardrobe.outfit.bind('petTypeLoaded', function (pet_type) {
+  wardrobe.outfits.bind('petTypeLoaded', function (pet_type) {
     var ids = pet_type.pet_state_ids, i, id, li, button, label;
     ul.children().remove();
     if(ids.length == 1) {
@@ -905,18 +925,18 @@ View.PetStateForm = function (wardrobe) {
         button.appendTo(li);
         li.appendTo(ul);
       }
-      updatePetState(wardrobe.outfit.getPetState());
+      updatePetState(wardrobe.outfits.getPetState());
     }
   });
 
-  wardrobe.outfit.bind('updatePetState', updatePetState);
+  wardrobe.outfits.bind('updatePetState', updatePetState);
 }
 
 View.PetTypeForm = function (wardrobe) {
   var form = $('#pet-type-form'), dropdowns = {}, loaded = false;
   form.submit(function (e) {
     e.preventDefault();
-    wardrobe.outfit.setPetTypeByColorAndSpecies(
+    wardrobe.outfits.setPetTypeByColorAndSpecies(
       +dropdowns.color.val(), +dropdowns.species.val()
     );
   }).children('select').each(function () {
@@ -947,12 +967,12 @@ View.PetTypeForm = function (wardrobe) {
       });
     });
     loaded = true;
-    updatePetType(wardrobe.outfit.getPetType());
+    updatePetType(wardrobe.outfits.getPetType());
   });
 
-  wardrobe.outfit.bind('updatePetType', updatePetType);
+  wardrobe.outfits.bind('updatePetType', updatePetType);
 
-  wardrobe.outfit.bind('petTypeNotFound', function () {
+  wardrobe.outfits.bind('petTypeNotFound', function () {
     $('#pet-type-not-found').show('normal').delay(3000).hide('fast');
   });
 }
@@ -1009,7 +1029,7 @@ View.ReportBrokenImage = function (wardrobe) {
   var baseURL = link.attr('data-base-url');
 
   function updateLink() {
-    var assets = wardrobe.outfit.getVisibleAssets();
+    var assets = wardrobe.outfits.getVisibleAssets();
     var url = baseURL + "?";
 
     for(var i = 0; i < assets.length; i++) {
@@ -1020,9 +1040,9 @@ View.ReportBrokenImage = function (wardrobe) {
     link.attr('href', url);
   }
 
-  wardrobe.outfit.bind('updateWornItems', updateLink);
-  wardrobe.outfit.bind('updateItemAssets', updateLink);
-  wardrobe.outfit.bind('updatePetState', updateLink);
+  wardrobe.outfits.bind('updateWornItems', updateLink);
+  wardrobe.outfits.bind('updateItemAssets', updateLink);
+  wardrobe.outfits.bind('updatePetState', updateLink);
 }
 
 View.Search = function (wardrobe) {
