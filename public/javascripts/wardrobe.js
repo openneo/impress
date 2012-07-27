@@ -1137,25 +1137,41 @@ function Wardrobe() {
     }
     
     this.subscribe = function (outfit) {
-      if(!(outfit.id in outfitSubscriptionTotals)) {
-        outfitSubscriptionTotals[outfit.id] = 0;
-      }
-      outfitSubscriptionTotals[outfit.id] += 1;
-      
-      if(outfit.image_enqueued) {
-        // If the image is enqueued, trigger that event and start checking.
-        controller.events.trigger('imageEnqueued', outfit);
-        checkSubscription(outfit);
-        return outfit;
+      if(outfit.id in outfitSubscriptionTotals) {
+        // The subscription is already running. Just mark that one more
+        // consumer is interested in it, and they'll all get a response soon.
+        outfitSubscriptionTotals[outfit.id] += 1;
       } else {
-        // Otherwise, never bother checking: skip straight to the ready phase.
-        controller.events.trigger('imageReady', outfit);
-        return null;
+        // This is a new subscription!
+        outfitSubscriptionTotals[outfit.id] = 1;
+      
+        if(outfit.image_enqueued) {
+          // If the image is enqueued, trigger that event and start checking.
+          controller.events.trigger('imageEnqueued', outfit);
+          checkSubscription(outfit);
+        } else {
+          // Otherwise, never bother checking: skip straight to the ready phase.
+          // Give it an instant timeout so that we're sure the consumer is ready
+          // for the event. (It can be tricky when the consumer assigns this
+          // return value somewhere to know if it cares about the event, so the
+          // event can't fire before the return.)
+          setTimeout(function () {
+            controller.events.trigger('imageReady', outfit)
+          }, 0);
+        }
+        
+        return outfit;
       }
     }
     
     this.unsubscribe = function (outfit) {
-      outfitSubscriptionTotals[outfit.id] -= 1;
+      if(outfit && outfit.id in outfitSubscriptionTotals) {
+        if(outfitSubscriptionTotals[outfit.id] > 1) {
+          outfitSubscriptionTotals[outfit.id] -= 1;
+        } else {
+          delete outfitSubscriptionTotals[outfit.id];
+        }
+      }
     }
   }
 

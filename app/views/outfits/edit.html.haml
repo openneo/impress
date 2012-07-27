@@ -160,18 +160,19 @@
   %script#outfit-template{:type => 'text/x-jquery-tmpl'}
     <li class="outfit-${id}{{if starred}} starred{{/if}}">
     %header
-      %button.outfit-delete &times;
       .outfit-star
-      %h4 ${name}
-      %a.outfit-rename-button{:href => '#'} rename
+      %span.outfit-name ${name}
       %form.outfit-rename-form
         %input.outfit-rename-field{:type => 'text'}
-    %input.outfit-url{:type => 'text', :value => "http://#{request.host}/outfits/${id}"}
+    %footer
+      %a.outfit-rename-button{:href => '#'} rename
+      %a.outfit-delete{:href => '#'} delete
+    %img.outfit-thumbnail
     .outfit-delete-confirmation
-      %span Delete forever?
+      %span Delete?
       %a.outfit-delete-confirmation-yes{:href => '#'} yes
       \/
-      %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
+      %a.outfit-delete-confirmation-no{:href => '#'} no
     </li>
 - content_for :javascripts do
   = include_javascript_libraries :jquery, :swfobject, :jquery_tmpl

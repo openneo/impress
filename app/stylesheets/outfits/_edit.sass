@@ -39,85 +39,6 @@ $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
   border-bottom-color: white
   font-weight: bold
 
-=outfit
-  +outfit-star-shifted
-  padding: .25em 0
-  //.outfit-thumbnail
-    float: left
-    height: $outfit-thumbnail-size
-    margin-right: $outfit-thumbnail-margin
-    overflow: hidden
-    position: relative
-    width: $outfit-thumbnail-size
-  img
-    height: $outfit-thumbnail-original-size
-    left: -$outfit-thumbnail-original-size / 4
-    position: absolute
-    top: -$outfit-thumbnail-original-size / 4
-    width: $outfit-thumbnail-original-size
-  .outfit-delete
-    +reset-awesome-button
-    +opacity(.5)
-    font-size: 150%
-    float: right
-    line-height: 1
-    margin-top: -.125em
-    padding: .125em .25em
-    &:hover
-      +opacity(1)
-      background: $module-bg-color
-  header
-    display: block
-    padding-left: $outfit-header-padding
-  h4
-    cursor: pointer
-    display: inline
-    &:hover
-      text-decoration: underline
-  h4, .outfit-rename-field
-    font-size: 115%
-  .outfit-rename-button, .outfit-rename-form
-    display: none
-  .outfit-rename-button
-    +opacity(.75)
-    font-size: 75%
-    margin-left: 1em
-  .outfit-url
-    +opacity(.5)
-    background: transparent
-    border-width: 0
-    width: $outfit-content-inner-width
-    &:hover
-      +opacity(1)
-      border-width: 1px
-  .outfit-delete-confirmation
-    display: none
-    font-size: 75%
-    span
-      color: red
-    a
-      margin: 0 .25em
-  &.active
-    background: $module-bg-color
-  &.confirming-deletion
-    .outfit-delete
-      visibility: hidden
-    .outfit-url
-      display: none
-    .outfit-delete-confirmation
-      display: block
-  &.renaming
-    h4
-      display: none
-    .outfit-rename-form
-      display: inline
-    &:hover
-      .outfit-rename-button
-        display: none
-  &:hover
-    .outfit-rename-button
-      display: inline
-
 =sidebar-view-child
   margin:
     left: $sidebar-unit-horizontal-padding
@@ -471,19 +392,143 @@ body.outfits-edit
     display: none
     text-align: left
     
+    $outfit-inner-size: 110px
+    $outfit-margin: 1px
+    $outfit-outer-size: $outfit-inner-size + ($outfit-margin * 2)
     > ul
       +sidebar-view-child
       background: image-url("loading.gif") no-repeat center top
       display: none
       font-family: $main-font
       list-style: none
-      margin:
-        bottom: 1em
+      margin: 0 auto 1em
       min-height: 16px
-      > li
-        +outfit
+      width: $outfit-outer-size * 3
+      
       &.loaded
         background: transparent
+      
+      > li
+        +inline-block
+        +outfit-star
+        height: $outfit-inner-size
+        margin: $outfit-margin
+        width: $outfit-inner-size
+        overflow: hidden
+        position: relative
+        
+        $outfit-header-h-padding: 4px
+        $outfit-header-v-padding: 2px
+        $outfit-header-inner-width: $outfit-inner-size - (2 * $outfit-header-h-padding)
+        header, footer, .outfit-delete-confirmation
+          color: white
+          font-size: 85%
+          left: 0
+          padding: $outfit-header-v-padding $outfit-header-h-padding
+          position: absolute
+          width: $outfit-header-inner-width
+          z-index: 2
+        
+        header, footer
+          background: black
+          background: rgba(0, 0, 0, 0.75)
+        
+        header
+          +opacity(0.75)
+          bottom: 0
+          cursor: pointer
+        
+        footer, .outfit-delete-confirmation
+          display: none
+          top: 0
+        
+        .outfit-delete-confirmation
+          background: red
+          background: rgba(255, 50, 50, 0.75)
+          text-align: center
+          top: 0
+          
+          span
+            font-weight: bold
+        
+        $outfit-thumbnail-size: 150px
+        $outfit-thumbnail-offset: ($outfit-inner-size - $outfit-thumbnail-size) / 2
+        .outfit-thumbnail
+          +opacity(.5)
+          cursor: pointer
+          display: none
+          left: $outfit-thumbnail-offset
+          position: absolute
+          top: $outfit-thumbnail-offset
+          z-index: 1
+        
+        .outfit-star
+          bottom: 0
+          margin-right: 4px
+        
+        .outfit-delete
+          float: right
+        
+        .outfit-rename-button
+          float: left
+        
+        .outfit-rename-button, .outfit-delete
+          font-size: 85%
+          text-decoration: none
+          
+          &:hover
+            text-decoration: underline
+        
+        .outfit-rename-form
+          display: none
+          
+          input
+            background: transparent
+            border: 1px solid white
+            width: 6em
+        
+        a
+          color: white
+        
+        &:hover
+          header
+            +opacity(1)
+          
+          .outfit-thumbnail
+            +opacity(0.75)
+          
+          footer
+            display: block
+        
+        &.active
+          header
+            +opacity(1)
+            font-weight: bold
+          
+          .outfit-thumbnail
+            +opacity(1)
+        
+        &.confirming-deletion
+          footer
+            display: none
+          
+          .outfit-delete-confirmation
+            display: block
+        
+        &.renaming
+          .outfit-name
+            display: none
+          
+          .outfit-rename-form
+            display: inline
+        
+        &.thumbnail-available
+          .outfit-thumbnail
+            display: block
+        
+        &.loading
+          .outfit-star
+            background-image: image-url("loading_outfit_pane.gif")
     
     #preview-outfits-not-logged-in
       text-align: center
@@ -690,17 +735,6 @@ body.outfits-edit
     +opacity(.5)
     display: none
 
-  #new-outfit
-    +outfit
-    +sidebar-view-child
-    display: none
-    h4
-      display: inline
-      &:hover
-        text-decoration: none
-    .outfit-star
-      margin-top: .5em
-
   #new-outfit-name
     font: inherit
     line-height: 1
@@ -720,10 +754,10 @@ body.outfits-edit
     display: none
 
   form#save-outfit-form
-    +outfit
+    +outfit-star-shifted
     display: none
     margin-right: 0
-    padding: 0
+    padding: 0    
 
     .outfit-star, input, button
       +inline-block
