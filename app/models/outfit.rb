@@ -138,25 +138,28 @@ class Outfit < ActiveRecord::Base
   # file.
   def create_image!(output)
     unless image_layers.empty?
-      base_layer = image_layers.first
-      above_layers = image_layers[1..-1]
-      write_temp_swf_asset_image!(base_layer, output)
-      output.close
-
-      unless above_layers.empty?
-        Tempfile.open(['outfit_overlay', '.png']) do |overlay|
-          above_layers.each do |layer|
-            overlay.open
-            write_temp_swf_asset_image! layer, overlay
-            overlay.close
-            
-            previous_image = MiniMagick::Image.open(output.path)
-            overlay_image = MiniMagick::Image.open(overlay.path)
-            output_image = previous_image.composite(overlay_image)
-            output_image.write output.path
-          end
-        end
+      temp_image_files = Parallel.map(image_layers, :in_threads => 8) do |swf_asset|
+        image_file = Tempfile.open(['outfit_layer', '.png'])
+        write_temp_swf_asset_image!(swf_asset, image_file)
+        image_file.close
+        image_file
       end
+      
+      # Here we do some awkwardness to get the exact ImageMagick command we
+      # want, though it's still less awkward than handling the command
+      # ourselves. Give all of the temporary images as input, flatten them and
+      # write them to the output path.
+      command = MiniMagick::CommandBuilder.new('convert')
+      temp_image_files.each { |image_file| command.push image_file.path }
+      command.layers 'flatten'
+      command.push output.path
+      
+      # Though the above command really is sufficient, we still need a dummy
+      # image to handle execution.
+      output_image = MiniMagick::Image.new(output.path)
+      output_image.run(command)
+      
+      temp_image_files.each(&:unlink)
     else
       output.close
     end

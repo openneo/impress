@@ -46,6 +46,8 @@ gem "mini_magick", "~> 3.4"
 gem "fog", "~> 1.1.2"
 gem "carrierwave", "~> 0.5.8"
 
+gem "parallel", "~> 0.5.17"
+
 group :development_async do
   # async wrappers
   gem 'eventmachine',     :git => 'git://github.com/eventmachine/eventmachine.git'
