@@ -420,9 +420,11 @@ body.outfits-edit
         $outfit-header-h-padding: 4px
         $outfit-header-v-padding: 2px
         $outfit-header-inner-width: $outfit-inner-size - (2 * $outfit-header-h-padding)
+        $outfit-header-inner-height: 12px
+        $outfit-header-outer-height: $outfit-header-inner-height + (2 * $outfit-header-v-padding)
         header, footer, .outfit-delete-confirmation
           color: white
-          font-size: 85%
+          font-size: $outfit-header-inner-height
           left: 0
           padding: $outfit-header-v-padding $outfit-header-h-padding
           position: absolute
@@ -452,14 +454,15 @@ body.outfits-edit
             font-weight: bold
         
         $outfit-thumbnail-size: 150px
-        $outfit-thumbnail-offset: ($outfit-inner-size - $outfit-thumbnail-size) / 2
+        $outfit-thumbnail-h-offset: ($outfit-inner-size - $outfit-thumbnail-size) / 2
+        $outfit-thumbnail-v-offset: $outfit-thumbnail-h-offset - ($outfit-header-outer-height / 4)
         .outfit-thumbnail
           +opacity(.5)
           cursor: pointer
           display: none
-          left: $outfit-thumbnail-offset
+          left: $outfit-thumbnail-h-offset
           position: absolute
-          top: $outfit-thumbnail-offset
+          top: $outfit-thumbnail-v-offset
           z-index: 1
         
         .outfit-star
