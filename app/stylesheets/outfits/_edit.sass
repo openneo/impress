@@ -3,6 +3,7 @@
 
 @import "partials/context_button"
 @import "partials/icon"
+@import "partials/outfit"
 @import star
 
 $object-padding: 6px
@@ -396,11 +397,11 @@ body.outfits-edit
     $outfit-margin: 1px
     $outfit-outer-size: $outfit-inner-size + ($outfit-margin * 2)
     > ul
+      +outfits-list
       +sidebar-view-child
       background: image-url("loading.gif") no-repeat center top
       display: none
       font-family: $main-font
-      list-style: none
       margin: 0 auto 1em
       min-height: 16px
       width: $outfit-outer-size * 3
@@ -409,13 +410,9 @@ body.outfits-edit
         background: transparent
       
       > li
-        +inline-block
-        +outfit-star
         height: $outfit-inner-size
         margin: $outfit-margin
         width: $outfit-inner-size
-        overflow: hidden
-        position: relative
         
         $outfit-header-h-padding: 4px
         $outfit-header-v-padding: 2px
@@ -423,17 +420,9 @@ body.outfits-edit
         $outfit-header-inner-height: 12px
         $outfit-header-outer-height: $outfit-header-inner-height + (2 * $outfit-header-v-padding)
         header, footer, .outfit-delete-confirmation
-          color: white
           font-size: $outfit-header-inner-height
-          left: 0
           padding: $outfit-header-v-padding $outfit-header-h-padding
-          position: absolute
           width: $outfit-header-inner-width
-          z-index: 2
-        
-        header, footer
-          background: black
-          background: rgba(0, 0, 0, 0.75)
         
         header
           +opacity(0.75)
@@ -442,11 +431,10 @@ body.outfits-edit
         
         footer, .outfit-delete-confirmation
           display: none
-          top: 0
         
         .outfit-delete-confirmation
-          background: red
-          background: rgba(255, 50, 50, 0.75)
+          +outfit-banner
+          +outfit-banner-background(rgb(255, 50, 50))
           text-align: center
           top: 0
           
@@ -458,12 +446,9 @@ body.outfits-edit
         $outfit-thumbnail-v-offset: $outfit-thumbnail-h-offset - ($outfit-header-outer-height / 4)
         .outfit-thumbnail
           +opacity(.5)
-          cursor: pointer
           display: none
           left: $outfit-thumbnail-h-offset
-          position: absolute
           top: $outfit-thumbnail-v-offset
-          z-index: 1
         
         .outfit-star
           bottom: 0
@@ -489,9 +474,6 @@ body.outfits-edit
             background: transparent
             border: 1px solid white
             width: 6em
-        
-        a
-          color: white
         
         &:hover
           header

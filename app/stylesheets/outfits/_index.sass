@@ -1,27 +1,55 @@
+@import "partials/outfit"
 @import star
+
+$outfit-inner-height: 150px
+$outfit-inner-width: 150px
+$outfit-banner-h-padding: 4px
+$outfit-banner-v-padding: 2px
+$outfit-banner-inner-width: $outfit-inner-width - (2 * $outfit-banner-h-padding)
 
 body.outfits-index
   #outfits
-    list-style: none
-
-    li
-      +outfit-star
-      clear: left
-      float: left
-      margin-bottom: .5em
-
-    h4
-      float: left
-      width: 12em
-
-    .outfit-edit-link, form
-      float: left
-      font-size: 85%
-      margin-left: 1em
-
-    .outfit-edit-link
-      +awesome-button
-
+    +outfits-list
+    
+    > li
+      height: $outfit-inner-height
+      margin: 2px
+      width: $outfit-inner-width
+      
+      header, footer
+        padding: $outfit-banner-v-padding $outfit-banner-h-padding
+        width: $outfit-banner-inner-width
+      
+      footer
+        display: none
+        
+        .outfit-edit-link
+          float: left
+          text-decoration: none
+        
+        form
+          float: right
+          
+          .outfit-delete-button
+            margin: 0
+            padding: 0
+        
+        .outfit-edit-link, .outfit-delete-button
+          &:hover
+            text-decoration: underline
+      
+      .outfit-star
+        cursor: auto
+      
+      .outfit-name
+        text-decoration: none
+        
+        &:hover
+          text-decoration: underline
+      
+      &:hover
+        footer
+          display: block
+    
     .outfit-delete-button
-      margin: 0
-
+      +reset-awesome-button
