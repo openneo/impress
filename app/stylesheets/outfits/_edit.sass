@@ -444,11 +444,22 @@ body.outfits-edit
         $outfit-thumbnail-size: 150px
         $outfit-thumbnail-h-offset: ($outfit-inner-size - $outfit-thumbnail-size) / 2
         $outfit-thumbnail-v-offset: $outfit-thumbnail-h-offset - ($outfit-header-outer-height / 4)
-        .outfit-thumbnail
+        .outfit-thumbnail-wrapper
           +opacity(.5)
-          display: none
+          background:
+            image: url(/images/outfits/small_default.png)
+            position: center center
+            size: $outfit-inner-size $outfit-inner-size
+          cursor: pointer
+          height: $outfit-thumbnail-size
           left: $outfit-thumbnail-h-offset
+          position: absolute
           top: $outfit-thumbnail-v-offset
+          width: $outfit-thumbnail-size
+          z-index: 1
+        
+        .outfit-thumbnail
+          display: none
         
         .outfit-star
           bottom: 0
@@ -508,6 +519,11 @@ body.outfits-edit
             display: inline
         
         &.thumbnail-available
+          background: transparent
+          
+          .outfit-thumbnail-wrapper
+            background-image: none
+          
           .outfit-thumbnail
             display: block
         

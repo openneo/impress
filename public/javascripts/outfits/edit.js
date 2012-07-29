@@ -570,7 +570,7 @@ View.Outfits = function (wardrobe) {
     listUnsubscribeFromImage(outfit);
   });
 
-  $('#preview-outfits li header, #preview-outfits li .outfit-thumbnail').live('click', function () {
+  $('#preview-outfits li header, #preview-outfits li .outfit-thumbnail-wrapper').live('click', function () {
     wardrobe.outfits.load($(this).tmplItem().data.id);
   });
 
@@ -696,7 +696,7 @@ View.Outfits = function (wardrobe) {
       
       var src = outfit.image_versions.small + '?' + (new Date()).getTime();
       outfitElement(outfit).addClass('thumbnail-loaded').addClass('thumbnail-available').
-        children('img.outfit-thumbnail').attr('src', src);
+        find('img.outfit-thumbnail').attr('src', src);
     }
   });
   
