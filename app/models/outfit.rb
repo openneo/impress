@@ -140,10 +140,16 @@ class Outfit < ActiveRecord::Base
     unless image_layers.empty?
       temp_image_files = Parallel.map(image_layers, :in_threads => 8) do |swf_asset|
         image_file = Tempfile.open(['outfit_layer', '.png'])
-        write_temp_swf_asset_image!(swf_asset, image_file)
-        image_file.close
-        image_file
-      end
+        begin
+          write_temp_swf_asset_image!(swf_asset, image_file)
+        rescue RightAws::AwsError
+          nil # skip broken images
+        else
+          image_file
+        ensure
+          image_file.close
+        end
+      end.compact # remove nils for broken images
       
       # Here we do some awkwardness to get the exact ImageMagick command we
       # want, though it's still less awkward than handling the command
