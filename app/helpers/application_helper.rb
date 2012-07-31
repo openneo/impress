@@ -1,4 +1,12 @@
 module ApplicationHelper
+  def absolute_url(path_or_url)
+    if path_or_url.include?('://') # already an absolute URL
+      path_or_url
+    else # a relative path
+      request.protocol + request.host_with_port + path_or_url
+    end
+  end
+  
   def add_body_class(class_name)
     @body_class ||= ''
     @body_class << " #{class_name}"
@@ -99,6 +107,23 @@ module ApplicationHelper
 
   def origin_tag(value)
     hidden_field_tag 'origin', value, :id => nil
+  end
+  
+  def open_graph(properties)
+    if @open_graph
+      @open_graph.merge! properties
+    else
+      @open_graph = properties
+    end
+  end
+  
+  def open_graph_tags
+    if @open_graph
+      @open_graph.inject('') do |output, property|
+        key, value = property
+        output + tag(:meta, :property => "og:#{key}", :content => value)
+      end.html_safe
+    end
   end
 
   def return_to_field_tag

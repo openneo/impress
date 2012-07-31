@@ -7,4 +7,4 @@ var main_wardrobe = new Wardrobe(), View = Wardrobe.getStandardView({
 });
 main_wardrobe.registerViews(View);
 main_wardrobe.initialize();
-main_wardrobe.outfit.loadData(INITIAL_OUTFIT_DATA);
+main_wardrobe.outfits.loadData(INITIAL_OUTFIT_DATA);

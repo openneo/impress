@@ -1,0 +1,37 @@
+=outfit
+  +inline-block
+  +outfit-star
+  overflow: hidden
+  position: relative
+  
+  header, footer
+    +outfit-banner
+    +outfit-banner-background(black)
+  
+  header
+    bottom: 0
+  
+  footer
+    top: 0
+  
+  a
+    color: white
+
+=outfits-list
+  // remove whitespace between inline-block elements
+  font-size: 0
+  list-style: none
+  
+  > li
+    +outfit
+    font-size: 14px
+
+=outfit-banner
+  color: white
+  left: 0
+  position: absolute
+  z-index: 2
+
+=outfit-banner-background($color)
+  background: $color
+  background: rgba($color, 0.75)

@@ -17,14 +17,10 @@
     #save-outfit-wrapper
       %a#current-outfit-permalink{:target => '_blank'}
         = image_tag 'link_go.png', :alt => 'Permalink', :title => 'Permalink to current outfit'
-      %a#shared-outfit-permalink{:target => '_blank'}
-        = image_tag 'link_go.png', :alt => 'Permalink', :title => 'Permalink to shared outfit'
-      %input#shared-outfit-url.outfit-url{:type => 'text'}
-      %button#share-outfit Share outfit
       %button#save-outfit Save outfit
       %button#save-outfit-not-signed-in Log in to save
+      %button#save-outfit-copy Save as…
       %button#save-current-outfit Save &quot;<span>current outfit</span>&quot;
-      %button#save-outfit-copy Save a copy
       %form#save-outfit-form
         .outfit-star
         %input#save-outfit-name{:type => 'text', :placeholder => 'Outfit name'}
@@ -62,30 +58,67 @@
             %em donate
             at least $5 to help upgrade the server. Thanks!
     #preview-sidebar
-      #outfit-not-found Outfit not found
-      #save-success Outfit successfully saved
-      #save-error
-      #preview-closet.sidebar-view
-        %a#preview-sidebar-nav-outfits.preview-sidebar-nav{:href => '#'} Your outfits
-        %h2 Closet
-        %ul
-        %p#fullscreen-copyright
-          Images © 2000-2010 Neopets, Inc. All Rights Reserved.
-          Used With Permission
-      #preview-outfits.sidebar-view
-        %a#preview-sidebar-nav-closet.preview-sidebar-nav{:href => "#"} &larr; Back to Closet
-        %h2 Your outfits
-        %ul
-      #preview-saving-outfit.sidebar-view
-        %a#preview-sidebar-nav-cancel-save.preview-sidebar-nav{:href => '#'} &larr; Cancel
-        %h2 Saving new outfit
-        #new-outfit
-          %form#new-outfit-form
-            %header
-              .outfit-star
-              %h4
-                %input#new-outfit-name{:type => 'text', :placeholder => 'Outfit name'}
-              %button{:type => 'submit'} Save
+      %nav#preview-sidebar-navbar
+        #preview-sidebar-navbar-closet Closet
+        #preview-sidebar-navbar-sharing Sharing
+        #preview-sidebar-navbar-outfits Outfits
+      #preview-sidebar-content
+        #outfit-not-found Outfit not found
+        #save-success Outfit successfully saved
+        #save-error
+        #preview-closet.sidebar-view
+          %ul
+          %p#fullscreen-copyright
+            Images © 2000-2010 Neopets, Inc. All Rights Reserved.
+            Used With Permission
+        #preview-outfits.sidebar-view
+          %ul#preview-outfits-list
+          #preview-outfits-not-logged-in
+            %figure
+              = image_tag 'outfits_welcome.png'
+              %figcaption Ready to become a pro designer?
+            :markdown
+              We know how hard it can be to keep track of your ideas,
+              especially if you end up having a lot of them.
+              **But Dress to Impress makes it easy.**
+            
+              Once you have an idea for an outfit, you can **build it,
+              save it, and view it again later**, either to update your
+              design or finally make your dream a reality.
+            
+              **Thousands of users have already saved tens of thousands of
+              outfits &mdash; will you be next?**
+            
+            = link_to 'Log in to save this outfit', login_path_with_return_to, :id => 'preview-outfits-log-in'
+        #preview-sharing.sidebar-view
+          #preview-sharing-thumbnail-wrapper
+            #preview-sharing-thumbnail-loading
+              = image_tag 'outfits/small_loading.gif'
+              %span#preview-sharing-thumbnail-saving Saving&hellip;
+              %span#preview-sharing-thumbnail-generating Generating&hellip;
+            %img#preview-sharing-thumbnail
+          %p#preview-sharing-beta-note
+            We're currently beta testing outfit image generation. It might be
+            slow or not work at all, and we might have to take it down.
+            Still, we're really excited about this feature, and we hope you
+            are, too!
+          %ul#preview-sharing-urls
+            %li
+              %label{:for => 'preview-sharing-permalink-url'} Outfit page
+              %input#preview-sharing-permalink-url.outfit-url{:type => 'text'}
+            %li
+              %label{:for => 'preview-sharing-large-image-url'} Large image
+              %input#preview-sharing-large-image-url.outfit-url{:type => 'text'}
+            %li
+              %label{:for => 'preview-sharing-medium-image-url'} Medium image
+              %input#preview-sharing-medium-image-url.outfit-url{:type => 'text'}
+            %li
+              %label{:for => 'preview-sharing-small-image-url'} Small image
+              %input#preview-sharing-small-image-url.outfit-url{:type => 'text'}
+          %ul#preview-sharing-url-formats
+            %li.active{'data-format' => 'plain'} Plain
+            %li{'data-format' => 'html'} HTML
+            %li{'data-format' => 'bbcode'} BBCode
   %form#preview-search-form
     %header
       %h2 Add an item
@@ -132,18 +165,20 @@
   %script#outfit-template{:type => 'text/x-jquery-tmpl'}
     <li class="outfit-${id}{{if starred}} starred{{/if}}">
     %header
-      %button.outfit-delete &times;
       .outfit-star
-      %h4 ${name}
-      %a.outfit-rename-button{:href => '#'} rename
+      %span.outfit-name ${name}
       %form.outfit-rename-form
         %input.outfit-rename-field{:type => 'text'}
-    %input.outfit-url{:type => 'text', :value => "http://#{request.host}/outfits/${id}"}
+    %footer
+      %a.outfit-rename-button{:href => '#'} rename
+      %a.outfit-delete{:href => '#'} delete
+    .outfit-thumbnail-wrapper
+      %img.outfit-thumbnail
     .outfit-delete-confirmation
-      %span Delete forever?
+      %span Delete?
       %a.outfit-delete-confirmation-yes{:href => '#'} yes
       \/
-      %a.outfit-delete-confirmation-no{:href => '#'} no, thanks
+      %a.outfit-delete-confirmation-no{:href => '#'} no
     </li>
 - content_for :javascripts do
   = include_javascript_libraries :jquery, :swfobject, :jquery_tmpl

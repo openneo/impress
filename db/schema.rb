@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120521164652) do
+ActiveRecord::Schema.define(:version => 20120725232903) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -116,8 +116,10 @@ ActiveRecord::Schema.define(:version => 20120521164652) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
-    t.boolean  "starred",      :default => false, :null => false
+    t.boolean  "starred",           :default => false, :null => false
     t.string   "image"
+    t.string   "image_layers_hash"
+    t.boolean  "image_enqueued",    :default => false, :null => false
   end
 
   add_index "outfits", ["pet_state_id"], :name => "index_outfits_on_pet_state_id"

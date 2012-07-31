@@ -1,6 +1,14 @@
 = outfit_li_for(outfit) do
-  .outfit-star
-  %h4= link_to outfit.name, outfit
-  = link_to_edit_outfit 'Edit', outfit, :class => 'outfit-edit-link'
-  = button_to('Delete', outfit, :method => 'delete', :class => 'outfit-delete-button', :confirm => "Are you sure you want to delete the outfit #{outfit.name}?")
+  - if outfit.image?
+    = link_to image_tag(outfit.image.small.url), outfit
+  
+  %header
+    .outfit-star
+    = link_to outfit.name, outfit, :class => 'outfit-name'
+  
+  %footer
+    = link_to_edit_outfit 'edit', outfit, :class => 'outfit-edit-link'
+    = button_to 'delete', outfit, :method => 'delete', :class => 'outfit-delete-button', :confirm => "Are you sure you want to delete the outfit #{outfit.name}?"
+  
+  
 

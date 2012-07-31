@@ -15,8 +15,14 @@ class SwfAsset < ActiveRecord::Base
 
   set_inheritance_column 'inheritance_type'
 
+  IMAGE_SIZES = {
+    :small => [150, 150],
+    :medium => [300, 300],
+    :large => [600, 600]
+  }
+
   include SwfConverter
-  converts_swfs :size => [600, 600], :output_sizes => [[150, 150], [300, 300], [600, 600]]
+  converts_swfs :size => IMAGE_SIZES[:large], :output_sizes => IMAGE_SIZES.values
 
   def local_swf_path
     LOCAL_ASSET_DIR.join(local_path_within_outfit_swfs)
@@ -73,6 +79,21 @@ class SwfAsset < ActiveRecord::Base
         id_str.insert(PARTITION_ID_LENGTH - (n * PARTITION_DIGITS), '/')
       end
     end
+  end
+  
+  def image_version
+    converted_at.to_i
+  end
+  
+  def image_url(size=IMAGE_SIZES[:large])
+    host = ASSET_HOSTS[:swf_asset_images]
+    size_key = size.join('x')
+    
+    "http://#{host}/#{s3_path}/#{size_key}.png?#{image_version}"
+  end
+  
+  def images
+    IMAGE_SIZES.values.map { |size| {:size => size, :url => image_url(size)} }
   end
 
   def convert_swf_if_not_converted!
@@ -161,7 +182,7 @@ class SwfAsset < ActiveRecord::Base
       :zones_restrict => zones_restrict,
       :is_body_specific => body_specific?,
       :has_image => has_image?,
-      :s3_path => s3_path
+      :images => images
     }
     if options[:for] == 'wardrobe'
       json[:local_path] = local_url
