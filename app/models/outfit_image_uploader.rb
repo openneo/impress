@@ -20,12 +20,20 @@ class OutfitImageUploader < CarrierWave::Uploader::Base
   end
   
   def filename
-    "thumb.png"
+    "preview.png"
   end
   
   def store_dir
-    partition_id = model.id / 1000
-    partition_dir = "%03d" % partition_id
-    "outfits/#{partition_dir}/#{model.id}"
+    "outfits/#{partition_dir}"
+  end
+  
+  # 123006789 => "123/006/789"
+  def partition_dir
+    partitions.map { |partition| "%03d" % partition }.join('/')
+  end
+  
+  # 123006789 => [123, 6, 789]
+  def partitions
+    [6, 3, 0].map { |n| model.id / 10**n % 1000 }
   end
 end
