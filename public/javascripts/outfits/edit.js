@@ -631,14 +631,17 @@ View.Outfits = function (wardrobe) {
     wardrobe.outfits.toggleOutfitStar(el.tmplItem().data);
   });
   
-  function pathToUrl(path) {
-    var host = document.location.protocol + "//" + document.location.host;
-    if(document.location.port) host += ":" + document.location.port;
-    return host + path;
+  function absoluteUrl(path_or_url) {
+    if(path_or_url.indexOf('://') == -1) {
+      var host = document.location.protocol + "//" + document.location.host;
+      return host + path_or_url;
+    } else {
+      return path_or_url;
+    }
   }
   
   function generateOutfitPermalink(outfit) {
-    return pathToUrl("/outfits/" + outfit.id);
+    return absoluteUrl("/outfits/" + outfit.id);
   }
 
   function setOutfitPermalink(outfit, outfit_permalink_el, outfit_url_el) {
@@ -785,9 +788,9 @@ View.Outfits = function (wardrobe) {
         // to discover if this is a new outfit ID or not fails.
         current_shared_outfit = outfit.clone();
         urls.permalink = generateOutfitPermalink(outfit);
-        urls.small_image = pathToUrl(outfit.image_versions.small);
-        urls.medium_image = pathToUrl(outfit.image_versions.medium);
-        urls.large_image = pathToUrl(outfit.image_versions.large);
+        urls.small_image = absoluteUrl(outfit.image_versions.small);
+        urls.medium_image = absoluteUrl(outfit.image_versions.medium);
+        urls.large_image = absoluteUrl(outfit.image_versions.large);
         formatUrls();
         WRAPPER.removeClass('thumbnail-available');
         subscribeToImageIfVisible(current_shared_outfit);
