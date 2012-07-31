@@ -2892,7 +2892,7 @@ body.outfits-edit #preview-outfits > ul > li:hover header {
   -khtml-opacity: 1;
 }
 /* line 493, ../../../app/stylesheets/outfits/_edit.sass */
-body.outfits-edit #preview-outfits > ul > li:hover .outfit-thumbnail {
+body.outfits-edit #preview-outfits > ul > li:hover .outfit-thumbnail-wrapper {
   -moz-opacity: 0.75;
   -webkit-opacity: 0.75;
   -o-opacity: 0.75;
@@ -2911,7 +2911,7 @@ body.outfits-edit #preview-outfits > ul > li.active header {
   font-weight: bold;
 }
 /* line 504, ../../../app/stylesheets/outfits/_edit.sass */
-body.outfits-edit #preview-outfits > ul > li.active .outfit-thumbnail {
+body.outfits-edit #preview-outfits > ul > li.active .outfit-thumbnail-wrapper {
   -moz-opacity: 1;
   -webkit-opacity: 1;
   -o-opacity: 1;
@@ -2947,7 +2947,7 @@ body.outfits-edit #preview-outfits > ul > li.thumbnail-available .outfit-thumbna
 }
 /* line 531, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits > ul > li.loading .outfit-star {
-  background-image: url('/images/loading_outfit_pane.gif?1343373151');
+  background-image: url('/images/loading_outfit_pane.gif?1343748088');
 }
 /* line 534, ../../../app/stylesheets/outfits/_edit.sass */
 body.outfits-edit #preview-outfits #preview-outfits-not-logged-in {
