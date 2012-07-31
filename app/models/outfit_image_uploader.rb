@@ -5,7 +5,7 @@ class OutfitImageUploader < CarrierWave::Uploader::Base
   include CarrierWave::MiniMagick
   
   # Settings for S3 storage. Will only be used on production.
-  fog_directory 'impress-outfit-images'
+  fog_directory 'openneo-uploads'
   fog_attributes 'Cache-Control' => "max-age=#{15.minutes}",
     'Content-Type' => 'image/png'
   
