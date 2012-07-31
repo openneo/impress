@@ -550,7 +550,7 @@ View.Outfits = function (wardrobe) {
 
   wardrobe.outfits.bind('addOutfit', function (outfit, i) {
     var next_child = outfits_list_el.children().not('.hiding').eq(i),
-      outfit_el = $.tmpl('outfitTemplate', outfit);
+      outfit_el = $.tmpl('outfitTemplate', outfit.clone());
     if(next_child.length) {
       outfit_el.insertBefore(next_child);
     } else {
@@ -558,8 +558,8 @@ View.Outfits = function (wardrobe) {
     }
     updateActiveOutfit();
     
-    var naturalWidth = outfit_el.width();
-    log("Natural width is", naturalWidth);
+    var naturalWidth = outfit_el.css('width');
+    log("Natural width is", naturalWidth, outfit_el.width());
     outfit_el.width(0).animate({width: naturalWidth}, 'normal');
     listSubscribeToImage(outfit);
   });

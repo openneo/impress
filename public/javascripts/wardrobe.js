@@ -1119,21 +1119,24 @@ function Wardrobe() {
     var DELAY = 5000;
     var controller = this;
     
-    function checkSubscription(outfit) {
-      outfit.reload(function () {
-        if(outfitSubscriptionTotals[outfit.id] > 0) {
-          if(outfit.image_enqueued) {
-            log("Outfit image still enqueued; will try again soon", outfit);
-            setTimeout(function () { checkSubscription(outfit) }, DELAY);
+    function checkSubscription(outfit_id) {
+      Outfit.find(outfit_id, function (outfit) {
+        log("Checking image for", outfit);
+        outfit.reload(function () {
+          if(outfitSubscriptionTotals[outfit_id] > 0) {
+            if(outfit.image_enqueued) {
+              log("Outfit image still enqueued; will try again soon", outfit);
+              setTimeout(function () { checkSubscription(outfit_id) }, DELAY);
+            } else {
+              // Unsubscribe everyone from this outfit and fire ready events
+              delete outfitSubscriptionTotals[outfit_id];
+              controller.events.trigger('imageReady', outfit);
+            }
           } else {
-            // Unsubscribe everyone from this outfit and fire ready events
-            delete outfitSubscriptionTotals[outfit.id];
-            controller.events.trigger('imageReady', outfit);
+            log("Outfit was unsubscribed", outfit);
+            delete outfitSubscriptionTotals[outfit_id];
           }
-        } else {
-          log("Outfit was unsubscribed", outfit);
-          delete outfitSubscriptionTotals[outfit.id];
-        }
+        });
       });
     }
     
@@ -1146,7 +1149,7 @@ function Wardrobe() {
         } else {
           // This is a new subscription! Let's start checking it.
           outfitSubscriptionTotals[outfit.id] = 1;
-          checkSubscription(outfit); 
+          checkSubscription(outfit.id);
         }
         
         // Regardless, trigger the enqueued event for the new consumer's sake.
