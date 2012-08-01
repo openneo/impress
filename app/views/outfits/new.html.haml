@@ -54,65 +54,42 @@
         = form_tag items_path, :method => 'get' do
           = text_field_tag 'q', '', :placeholder => raw('find an item&hellip;'), :type => 'search'
           = submit_tag 'search'
-    %li#blog-preview
-      %a{:href => "http://blog.openneo.net"}
-        = image_tag 'blog.png'
+    %li
+      %a{:href => bulk_pets_path}
+        = image_tag 'http://images.neopets.com/items/mall_ac_garland_spotlight.gif'
       %h3
-        %a{:href => "http://blog.openneo.net/"} OpenNeo Blog
+        %a{:href => bulk_pets_path}
+          Modeling
       %div
-        %h4 We'll keep you posted!
+        %h4 Found something?
         %p
-          Dress to Impress is always improving, and you can always stay in
-          the loop through our blog.
-  #description
-    %h2 Built by you, just for you!
-    %p
-      Dress to Impress lets you plan how you want to dress up your Neopets,
-      before you even go shopping! Whenever you give us a Neopet's name, we
-      automatically look up what it's wearing and organize the data into
-      our own wearables database &mdash; a community closet, if you will.
-      Then you can plan your outfit, mixing and matching various items, so
-      you can have the best-dressed Neopet in all of Neopia!
-    %p
-      To make all this possible, though, we need your help &mdash; and if
-      you log in at the top, we'll keep track of your
-      = link_to 'contributions', contributions_path
-      and award
-      = link_to 'points', top_contributors_path
-      so you can show off just how dedicated you really are!
-- cache :action_suffix => 'top_contributors' do
-  #top-contributors
-    %h3 Top Contributors
-    %ol
-      - @top_contributors.each do |user|
-        %li
-          = link_to user.name, user_contributions_path(user)
-          &mdash;
-          = user.points
-    %a{:href => top_contributors_path} see more
-= form_tag load_pet_path, :id => 'how-can-i-help' do
-  - cache :action_suffix => 'how_can_i_help_form_content' do
-    = destination_tag 'needed_items'
-    = origin_tag root_path
-    %h2 How can I help?
-    %p
-      Enter your pet's name, and we'll tell you what items you can help us
-      model. Thanks so much!
-    = pet_name_tag
-    %button{:type => "submit"}
-      Let's model!
-= form_tag load_pet_path, :id => 'i-found-something' do
-  - cache :action_suffix => 'i_found_something_form_content' do
-    = origin_tag root_path
-    %a{:href => bulk_pets_path}
-      add many pets
-    %h2 I found something!
-    %p
-      Enter the name of the pet you found, and we'll keep a copy of what
-      it's wearing. Thanks so much!
-    = pet_name_tag
-    %button{:type => "submit"}
-      I pwn!
+          Enter a pet's name here and we'll keep a copy of what it's wearing.
+          Thanks so much!
+        = form_tag load_pet_path do
+          = origin_tag root_path
+          = pet_name_tag :placeholder => raw('model a pet&hellip;')
+          = submit_tag 'submit'
+  #latest-contribution
+    = link_to 'Contributions:', contributions_path, :id => 'recent-contributions-link'
+    = link_to @latest_contribution.user.name, user_contributions_path(@latest_contribution.user)
+    showed us
+    = succeed '.' do
+      = contributed_description @latest_contribution.contributed, false
+    Thanks,
+    = succeed '!' do
+      = link_to @latest_contribution.user.name, user_contributions_path(@latest_contribution.user)
+    %span#latest-contribution-created-at{:title => @latest_contribution.created_at.to_s}
+      #{time_ago_in_words @latest_contribution.created_at} ago
+  #whats-new
+    #blog-preview
+      %h2
+      %div
+      %a#blog-preview-linkback{:href => 'http://blog.openneo.net/'} OpenNeo Blog
+    #newest-items
+      %h2 New Items
+      %ul
+        - @newest_items.each do |item|
+          = link_to image_tag(item.thumbnail_url), item
 - content_for :javascripts do
   = include_javascript_libraries :jquery
   = include_javascripts :new_outfit_package

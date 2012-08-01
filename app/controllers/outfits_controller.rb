@@ -50,9 +50,14 @@ class OutfitsController < ApplicationController
       @colors = Color.all_ordered_by_name
       @species = Species.all_ordered_by_name
     end
+    
     unless fragment_exist?(:action_suffix => 'top_contributors')
       @top_contributors = User.top_contributors.limit(User::PreviewTopContributorsCount)
     end
+    
+    @newest_items = Item.newest.select([:id, :name, :thumbnail_url]).limit(9)
+    @latest_contribution = Contribution.recent.first
+    Contribution.preload_contributeds_and_parents([@latest_contribution])
   end
 
   def show

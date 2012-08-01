@@ -1,3 +1,4 @@
+@import "compass/css3/gradient"
 @import "partials/campaign-progress"
 
 body.outfits-new
@@ -6,7 +7,6 @@ body.outfits-new
   #outfit-forms
     +clearfix
     +module
-    margin-bottom: 3em
     position: relative
     h1
       margin-bottom: 0
@@ -103,7 +103,7 @@ body.outfits-new
     +clearfix
     display: table
     list-style: none
-    margin-bottom: 1em
+    margin-top: 1em
     h3
       margin-bottom: .25em
     li
@@ -136,8 +136,6 @@ body.outfits-new
         +opacity(1)
     p
       min-height: 4.5em
-  #read-more
-    float: right
 
   #your-items-module
     h3
@@ -147,4 +145,82 @@ body.outfits-new
         font-size: 85%
         font-weight: bold
         margin-left: .5em
+
+  $container-width: 800px
+  $blog-preview-outer-width: $container-width * (2 / 3)
+  $newest-items-outer-width: $container-width * (1 / 3)
+  $whats-new-height: 300px
+  $whats-new-gutter: 12px
+  #whats-new
+    +clearfix
+    height: 300px
+    margin-bottom: 1em
+    
+    $blog-preview-border-width: 1px
+    $blog-preview-padding: 12px
+    $blog-preview-inner-width: $blog-preview-outer-width - (2 * $blog-preview-border-width) - (2 * $blog-preview-padding) - $whats-new-gutter
+    $blog-preview-inner-height: $whats-new-height - (2 * $blog-preview-border-width) - (2 * $blog-preview-padding)
+    #blog-preview
+      background: $module-bg-color
+      border: $blog-preview-border-width solid $module-border-color
+      display: none
+      float: left
+      height: $blog-preview-inner-height
+      margin-right: $whats-new-gutter
+      padding: $blog-preview-padding
+      width: $blog-preview-inner-width
+      
+      > h2
+        font-size: 150%
+      
+      > div, > a
+        font-size: 85%
+      
+      > div
+        height: 200px
+        margin-bottom: .75em
+        overflow: auto
+        position: relative
+        
+        ul, ol
+          margin-bottom: 1em
+          padding: 0 1.5em
+      
+      #blog-preview-linkback
+        float: left
+      
+      #blog-preview-comments
+        float: right
+        font-size: 85%
+        margin-left: 1em
+    
+    #newest-items
+      float: right
+      text-align: center
+      width: $newest-items-outer-width
+      
+      h2
+        font-size: 150%
+      
+      img
+        height: 80px
+        width: 80px
+  
+  #latest-contribution
+    border:
+      color: $soft-border-color
+      style: solid
+      width: 1px 0
+    font-size: 85%
+    margin: 1em 0
+    padding: .5em 0
+    text-align: center
+    
+    #recent-contributions-link
+      font-weight: bold
+      margin-right: .5em
+    
+    #latest-contribution-created-at
+      color: $soft-text-color
+      margin-left: .5em
 

@@ -1,3 +1,5 @@
+var disqus_shortname = 'dresstoimpress';
+
 (function () { // don't need to export anything in here
 
 var preview_el = $('#pet-preview'),
@@ -144,7 +146,7 @@ $(function () {
   $.getJSON('http://blog.openneo.net/api/read/json?callback=?', function (data) {
     var post = data.posts[0], el = $('#blog-preview'),
       url = post['url-with-slug'], header = "Here's the latest!", body = '',
-      truncate_body_at = 100, image;
+      truncate_body_at = 500, image;
     if(post.type == 'regular') {
       header = post['regular-title'];
       body = post['regular-body'];
@@ -155,20 +157,28 @@ $(function () {
       body = post['photo-caption'];
       image = post['photo-url-75'];
     }
-    body = body.replace(/(<\/?[\S][^>]*>)/gi, '');
+    // No truncation on this new layout
+    /*body = body.replace(/(<\/?[\S][^>]*>)/gi, '');
     if(body.length > truncate_body_at) {
       body = body.substring(0, truncate_body_at);
       body = body.replace(/\s+\w+$/, '');
       body += '&hellip;';
-    }
-    el.find('h4').text(header).wrapInner($('<a/>', {href: url}));
-    el.find('p').html(body);
-    $('<a/>', {'id': 'read-more', href: url, text: 'read more'}).appendTo(el.find('div'));
+    }*/
+    el.find('h2').text(header).wrapInner($('<a/>', {href: url}));
+    el.find('div').html(body);
+    $('<a/>', {'id': 'blog-preview-comments', href: url + '#disqus_thread'}).appendTo(el);
     if(image) {
       el.find('img').attr('src', image).parent().attr('href', url);
     }
-    el.children('div').hide().fadeIn('slow');
+    el.fadeIn('medium');
+    addDisqusCount();
   });
 });
 
+function addDisqusCount() { 
+  var s = document.createElement('script'); s.async = true;
+  s.type = 'text/javascript';
+  s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}
 })();
+
