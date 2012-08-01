@@ -9,6 +9,7 @@
       %span
     %h1 Dress to Impress
     %h2 Neopets wearables made easy!
+  
   = form_tag load_pet_path, :id => 'load-pet-to-wardrobe' do
     - cache :action_suffix => 'main_load_pet_form_content' do
       = origin_tag root_path
@@ -18,6 +19,7 @@
         = pet_name_tag :id => 'main-pet-name'
         %button{:type => "submit"}
           Plan my outfit!
+ 
   = form_tag wardrobe_path, :method => 'get', :id => 'start-from-scratch' do
     - cache :action_suffix => 'start_from_scratch_form_content' do
       %fieldset
@@ -54,6 +56,7 @@
         = form_tag items_path, :method => 'get' do
           = text_field_tag 'q', '', :placeholder => raw('find an item&hellip;'), :type => 'search'
           = submit_tag 'search'
+    
     %li
       %a{:href => bulk_pets_path}
         = image_tag 'http://images.neopets.com/items/mall_ac_garland_spotlight.gif'
@@ -69,27 +72,31 @@
           = origin_tag root_path
           = pet_name_tag :placeholder => raw('model a pet&hellip;')
           = submit_tag 'submit'
-  #latest-contribution
-    = link_to 'Contributions:', contributions_path, :id => 'recent-contributions-link'
+
+#latest-contribution
+  = link_to 'Contributions:', contributions_path, :id => 'recent-contributions-link'
+  = link_to @latest_contribution.user.name, user_contributions_path(@latest_contribution.user)
+  showed us
+  = succeed '.' do
+    = contributed_description @latest_contribution.contributed, false
+  Thanks,
+  = succeed '!' do
     = link_to @latest_contribution.user.name, user_contributions_path(@latest_contribution.user)
-    showed us
-    = succeed '.' do
-      = contributed_description @latest_contribution.contributed, false
-    Thanks,
-    = succeed '!' do
-      = link_to @latest_contribution.user.name, user_contributions_path(@latest_contribution.user)
-    %span#latest-contribution-created-at{:title => @latest_contribution.created_at.to_s}
-      #{time_ago_in_words @latest_contribution.created_at} ago
-  #whats-new
-    #blog-preview
-      %h2
-      %div
-      %a#blog-preview-linkback{:href => 'http://blog.openneo.net/'} OpenNeo Blog
-    #newest-items
-      %h2 New Items
-      %ul
-        - @newest_items.each do |item|
-          = link_to image_tag(item.thumbnail_url), item
+  %span#latest-contribution-created-at{:title => @latest_contribution.created_at.to_s}
+    #{time_ago_in_words @latest_contribution.created_at} ago
+
+#whats-new
+  #blog-preview
+    %h2
+    %div
+    %a#blog-preview-linkback{:href => 'http://blog.openneo.net/'} OpenNeo Blog
+  
+  #newest-items
+    %h2 New Items
+    %ul
+      - @newest_items.each do |item|
+        = link_to image_tag(item.thumbnail_url), item
+
 - content_for :javascripts do
   = include_javascript_libraries :jquery
   = include_javascripts :new_outfit_package
