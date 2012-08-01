@@ -12,7 +12,7 @@ module ContributionHelper
     end
   end
   
-  def contributed_item(item, image = true, adverbial)
+  def contributed_item(item, image, adverbial)
     if item
       output do |html|
         html << 'the'
@@ -26,7 +26,7 @@ module ContributionHelper
   end
   
   PET_TYPE_IMAGE_FORMAT = 'http://pets.neopets.com/cp/%s/1/3.png'
-  def contributed_pet_type(pet_type, image = true, options)
+  def contributed_pet_type(pet_type, image, options)
     options[:before] ||= 'the'
     output do |html|
       html << options[:before]
