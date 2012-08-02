@@ -91,12 +91,15 @@ class Outfit < ActiveRecord::Base
   # and runs #save! on the record, so any other changes will also be saved.
   def write_image!
     if image_layers_dirty?
-      Tempfile.open(['outfit_image', '.png']) do |image|
+      image = Tempfile.open(['outfit_image', '.png'])
+      begin
         create_image! image
         self.image_layers_hash = generate_image_layers_hash
         self.image = image
         self.image_enqueued = false
         save!
+      ensure
+        image.close!
       end
     end
     
