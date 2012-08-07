@@ -1,7 +1,7 @@
 - title 'Modeling Hub'
 
-- cache do
-  = form_tag load_pet_path, :id => 'needed-items-form' do
+= form_tag load_pet_path, :id => 'needed-items-form' do
+  - cache :action_suffix => 'needed_items_content' do
     %h3 Looking for ways to contribute?
     
     %p
@@ -27,7 +27,8 @@
       
       %ul#needed-items-pet-items
 
-  = form_tag load_pet_path, :id => 'bulk-pets-form' do
+= form_tag load_pet_path, :id => 'bulk-pets-form' do
+  - cache :action_suffix => 'bulk_pets_content' do
     %h3 Model pets in bulk
     
     %p
@@ -46,6 +47,7 @@
       %button#bulk-pets-form-clear{:type => "button"} Clear
       %ul
 
+- cache :action_suffix => 'item_template' do
   %script#item-template{:type => 'text/x-jquery-tmpl'}
     %li{:class => 'object{{if owned}} owned{{/if}}'}
       = link_to item_path(':id').sub(':id', '${id}') do

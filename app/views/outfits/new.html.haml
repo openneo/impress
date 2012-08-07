@@ -28,8 +28,8 @@
         = pet_attribute_select 'species', @species
         %input{:type => "submit", :value => "Go"}
 
-- cache :action_suffix => 'sections_and_description' do
-  %ul#sections
+%ul#sections
+  - cache :action_suffix => 'your_items_module' do
     %li#your-items-module
       = link_to image_tag('your_items.png'), your_items_path
       %h3
@@ -43,6 +43,7 @@
           = text_field_tag 'name', '', :placeholder => raw('find a user&hellip;'), :type => 'search'
           = submit_tag 'search'
 
+  - cache :action_suffix => 'infinite_closet_module' do
     %li
       %a{:href => items_path}
         = image_tag 'items.png'
@@ -57,21 +58,21 @@
           = text_field_tag 'q', '', :placeholder => raw('find an item&hellip;'), :type => 'search'
           = submit_tag 'search'
     
-    %li
+  %li
+    %a{:href => bulk_pets_path}
+      = image_tag 'http://images.neopets.com/items/mall_ac_garland_spotlight.gif'
+    %h3
       %a{:href => bulk_pets_path}
-        = image_tag 'http://images.neopets.com/items/mall_ac_garland_spotlight.gif'
-      %h3
-        %a{:href => bulk_pets_path}
-          Modeling Hub
-      %div
-        %h4 Found something?
-        %p
-          Enter a pet's name here and we'll keep a copy of what it's wearing.
-          Thanks so much!
-        = form_tag load_pet_path do
-          = origin_tag root_path
-          = pet_name_tag :placeholder => raw('model a pet&hellip;')
-          = submit_tag 'submit'
+        Modeling Hub
+    %div
+      %h4 Found something?
+      %p
+        Enter a pet's name here and we'll keep a copy of what it's wearing.
+        Thanks so much!
+      = form_tag load_pet_path do
+        = origin_tag root_path
+        = pet_name_tag :placeholder => raw('model a pet&hellip;')
+        = submit_tag 'submit'
 
 #latest-contribution
   = link_to 'Contributions:', contributions_path, :id => 'recent-contributions-link'
@@ -85,17 +86,18 @@
   %span#latest-contribution-created-at{:title => @latest_contribution.created_at.to_s}
     #{time_ago_in_words @latest_contribution.created_at} ago
 
-#whats-new
-  #blog-preview
-    %h2
-    %div
-    %a#blog-preview-linkback{:href => 'http://blog.openneo.net/'} OpenNeo Blog
-  
-  #newest-items
-    %h2 New Items
-    %ul
-      - @newest_items.each do |item|
-        = link_to image_tag(item.thumbnail_url), item
+- cache :action_suffix => 'whats_new' do
+  #whats-new
+    #blog-preview
+      %h2
+      %div
+      %a#blog-preview-linkback{:href => 'http://blog.openneo.net/'} OpenNeo Blog
+    
+    #newest-items
+      %h2 New Items
+      %ul
+        - @newest_items.each do |item|
+          = link_to image_tag(item.thumbnail_url), item
 
 - content_for :javascripts do
   = include_javascript_libraries :jquery
