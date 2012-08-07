@@ -164,7 +164,8 @@ class Item < ActiveRecord::Base
       :zones_restrict => zones_restrict,
       :rarity_index => rarity_index,
       :owned => owned?,
-      :wanted => wanted?
+      :wanted => wanted?,
+      :nc => nc?
     }
   end
 

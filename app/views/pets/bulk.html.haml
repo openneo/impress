@@ -1,33 +1,74 @@
-- unless user_signed_in?
-  %p.warning
-    = link_to 'You are not logged in!', login_path(:return_to => bulk_pets_path)
-    We award points for each new contribution to our database, and we don't want
-    you to miss out, since our users have made the Dress to Impress database
-    what it is today. Thanks for all your hard work!
-%p.noscript
-  Note that submitting pets in bulk requires Javascript.
-%p.script-only
-  We like to make it as easy as possible for you to contribute, so we thought
-  this might help!
-  %strong
-    Type a pet's name in the box below, and we'll
-    start loading it the moment you press enter!
-  If you're a power-user,
-  you can even submit a whole list at once &mdash; just put one pet per line, and
-  copy-paste it into the box. We do the rest!
-%p
-  %strong
-    Thanks for all your hard work!
-= form_tag load_pet_path, :id => 'bulk-pets-form' do
-  = origin_tag bulk_pets_path
-  %span.noscript
-    %input{:name => "name", :type => "text"}/
-    %input{:type => "submit", :value => "Load pet"}/
-  %span.script-only
-    %ul
-    %textarea
-    %button#bulk-pets-form-add{:type => "button"} Add
-    %button#bulk-pets-form-clear{:type => "button"} Clear
+- title 'Modeling Hub'
+
+- cache do
+  = form_tag load_pet_path, :id => 'needed-items-form' do
+    %h3 Looking for ways to contribute?
+    
+    %p
+      Enter your pet's name below and we'll tell you what items you can help us
+      model. Thanks for your help!
+    
+    = origin_tag bulk_pets_path
+    = destination_tag 'needed_items'
+    
+    %input#needed-items-pet-name-field{:type => "text", :name => "name"}/
+    %input{:type => "submit", :value => "Submit"}/
+    
+    #needed-items-alert.alert
+    
+    #needed-items-pet.script-only
+      %h4
+        %img#needed-items-pet-thumbnail.inline-image
+        Items
+        %span#needed-items-pet-name
+        can model
+        
+        %button#needed-items-reload Reload
+      
+      %ul#needed-items-pet-items
+
+  = form_tag load_pet_path, :id => 'bulk-pets-form' do
+    %h3 Model pets in bulk
+    
+    %p
+      Got a lot of pets to model? Just keep typing them into the box below, or
+      even paste in a whole list of names, one name per line. Thanks for your
+      help!
+    
+    = origin_tag bulk_pets_path
+   
+    %div.noscript
+      %input{:name => "name", :type => "text"}/
+      %input{:type => "submit", :value => "Load pet"}/
+    %div.script-only
+      %textarea
+      %button#bulk-pets-form-add{:type => "button"} Add
+      %button#bulk-pets-form-clear{:type => "button"} Clear
+      %ul
+
+  %script#item-template{:type => 'text/x-jquery-tmpl'}
+    %li{:class => 'object{{if owned}} owned{{/if}}'}
+      = link_to item_path(':id').sub(':id', '${id}') do
+        %img{:src => '${thumbnail_url}', :alt => '${description}', :title => '${description}'}
+        %span.name ${name}
+    
+      {{if nc}}
+      = nc_icon
+      {{/if}}
+      
+      .closeted-icons
+        {{if owned}}
+        = owned_icon
+        {{/if}}
+        
+        {{if wanted}}
+        = wanted_icon
+        {{/if}}
+      
+      {{if owned}}
+      %span.object-owned You own this item
+      {{/if}}
+
 - content_for :javascripts do
-  = include_javascript_libraries :jquery
+  = include_javascript_libraries :jquery, :jquery_tmpl
   = include_javascripts :bulk_pets_package

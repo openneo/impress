@@ -87,13 +87,18 @@ class ItemsController < ApplicationController
         params[:species]
       )
     end
+    
     unless @pet_type
       raise ActiveRecord::RecordNotFound, 'Pet type not found'
     end
+    
     @items = @pet_type.needed_items.alphabetize
     assign_closeted!
-    @pet_name = params[:name]
-    render :layout => 'application'
+    
+    respond_to do |format|
+      format.html { @pet_name = params[:name] ; render :layout => 'application' }
+      format.json { render :json => @items }
+    end
   end
 
   protected

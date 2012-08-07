@@ -1,9 +1,71 @@
 body.pets-bulk
-  text-align: center
+  #needed-items-form, #bulk-pets-form
+    text-align: center
+  
+  #needed-items-form
+    #needed-items-pet
+      border-top: 1px solid $soft-border-color
+      display: none
+      margin-top: 1em
+      padding-top: 1em
+      
+      h4
+        font-size: 150%
+        margin-bottom: .5em
+    
+      #needed-items-reload
+        +inline-block
+        font-size: 12px
+        margin-left: 1em
+        vertical-align: middle
+    
+    #needed-items-alert
+      display: none
+      margin-top: .5em
+    
+    #needed-items-pet-thumbnail
+      height: 50px
+      width: 50px
+    
+    #needed-items-pet-items
+      li.owned
+        background: $module-bg-color
+        border: 1px solid $module-border-color
+    
+    .object-owned
+      color: $soft-text-color
+      display: block
+      font-size: 75%
+      font-style: italic
+      padding-bottom: .25em
+    
+    &.loading-pet, &.loading-items
+      #needed-items-pet-name-field
+        background:
+          image: image-url("loading.gif")
+          position: center right
+          repeat: no-repeat
+      
+      #needed-items-pet-items
+        +opacity(.50)
+    
+    &.loading-pet
+      #needed-items-pet h4
+        +opacity(.50)
+    
+    &.loaded
+      #needed-items-pet
+        display: block
+    
+    &.failed
+      #needed-items-alert
+        display: block
   
   #bulk-pets-form
-    textarea, div
-      +inline-block
+    border-top: 1px solid $module-border-color
+    margin-top: 12px
+    padding-top: 12px
+    
     textarea
       +inline-block
       @extend input[type=text]
@@ -14,7 +76,7 @@ body.pets-bulk
       resize: none
     ul
       list-style: none
-      margin-bottom: 1em
+      margin-top: 1em
       li
         +inline-block
         background: #eee

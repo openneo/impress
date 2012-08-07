@@ -51,25 +51,20 @@ module ItemsHelper
   def closet_list_verb(owned)
     ClosetHanger.verb(:you, owned)
   end
+  
+  def owned_icon
+    image_tag 'owned.png', :title => 'You own this', :alt => 'Own'
+  end
+  
+  def wanted_icon
+    image_tag 'wanted.png', :title => 'You want this', :alt => 'Want'
+  end
 
   def closeted_icons_for(item)
     content = ''.html_safe
 
-    if item.owned?
-      content << image_tag(
-        'owned.png',
-        :title => 'You own this',
-        :alt => 'Own'
-      )
-    end
-
-    if item.wanted?
-      content << image_tag(
-        'wanted.png',
-        :title => 'You want this',
-        :alt => 'Want'
-      )
-    end
+    content << owned_icon if item.owned?
+    content << wanted_icon if item.wanted?
 
     content_tag :div, content, :class => 'closeted-icons'
   end
@@ -77,9 +72,14 @@ module ItemsHelper
   def list_zones(zones, method=:label)
     zones.sort { |x,y| x.label <=> y.label }.map(&method).join(', ')
   end
+  
+  def nc_icon
+    image_tag 'nc.png', :title => 'NC Mall Item', :alt => 'NC',
+              :class => 'nc-icon'
+  end
 
   def nc_icon_for(item)
-    image_tag 'nc.png', :title => 'NC Mall Item', :alt => 'NC', :class => 'nc-icon' if item.nc?
+    nc_icon if item.nc?
   end
 
   def neoitems_url_for(item)

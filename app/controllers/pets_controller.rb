@@ -4,12 +4,6 @@ class PetsController < ApplicationController
   rescue_from Pet::DownloadError, :with => :pet_download_error
   
   cache_sweeper :user_sweeper
-  
-  DESTINATIONS = {
-    'needed_items' => '?',
-    'root' => '#',
-    'wardrobe' => '#'
-  }
 
   def load
     if params[:name] == '!'
@@ -25,21 +19,26 @@ class PetsController < ApplicationController
       end
       respond_to do |format|
         format.html do
-          destination = params[:destination] || params[:origin]
-          destination = 'root' unless DESTINATIONS[destination]
-          query_joiner = DESTINATIONS[destination]
-          path = send("#{destination}_path") + query_joiner + @pet.wardrobe_query
+          path = destination + @pet.wardrobe_query
           redirect_to path
         end
         
         format.json do
-          render :json => points
+          render :json => {:points => points, :query => @pet.wardrobe_query}
         end
       end
     end
   end
   
   protected
+  
+  def destination
+    case (params[:destination] || params[:origin])
+      when 'wardrobe'     then wardrobe_path     + '#'
+      when 'needed_items' then needed_items_path + '?'
+      else                     root_path         + '#'
+    end
+  end
   
   def pet_not_found
     pet_load_error :long_message => 'Could not find any pet by that name. Did you spell it correctly?',
@@ -73,7 +72,7 @@ class PetsController < ApplicationController
       end
       
       format.json do
-        render :text => options[:short_message], :status => options[:status]
+        render :text => options[:long_message], :status => options[:status]
       end
     end
   end

@@ -44,7 +44,7 @@ OpenneoImpressItems::Application.routes.draw do |map|
   match '/users/current-user/outfits' => 'outfits#index', :as => :current_user_outfits
 
   match '/pets/load' => 'pets#load', :method => :post, :as => :load_pet
-  match '/pets/bulk' => 'pets#bulk', :as => :bulk_pets
+  match '/modeling' => 'pets#bulk', :as => :bulk_pets
 
   match '/login' => 'sessions#new', :as => :login
   match '/logout' => 'sessions#destroy', :as => :logout

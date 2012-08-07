@@ -4041,23 +4041,95 @@ body.outfits-show #outfit-items {
   text-align: center;
 }
 
-/* line 1, ../../../app/stylesheets/pets/_bulk.sass */
-body.pets-bulk {
+/* line 2, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #needed-items-form, body.pets-bulk #bulk-pets-form {
   text-align: center;
 }
-/* line 5, ../../../app/stylesheets/pets/_bulk.sass */
-body.pets-bulk #bulk-pets-form textarea, body.pets-bulk #bulk-pets-form div {
+/* line 6, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #needed-items-form #needed-items-pet {
+  border-top: 1px solid #aaddaa;
+  display: none;
+  margin-top: 1em;
+  padding-top: 1em;
+}
+/* line 12, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #needed-items-form #needed-items-pet h4 {
+  font-size: 150%;
+  margin-bottom: 0.5em;
+}
+/* line 16, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #needed-items-form #needed-items-pet #needed-items-reload {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
   display: inline-block;
   vertical-align: middle;
   *vertical-align: auto;
+  font-size: 12px;
+  margin-left: 1em;
+  vertical-align: middle;
 }
 /* line 7, ../../../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/css3/_inline-block.scss */
-body.pets-bulk #bulk-pets-form textarea, body.pets-bulk #bulk-pets-form div {
+body.pets-bulk #needed-items-form #needed-items-pet #needed-items-reload {
   *display: inline;
 }
-/* line 7, ../../../app/stylesheets/pets/_bulk.sass */
+/* line 22, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #needed-items-form #needed-items-alert {
+  display: none;
+  margin-top: 0.5em;
+}
+/* line 26, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #needed-items-form #needed-items-pet-thumbnail {
+  height: 50px;
+  width: 50px;
+}
+/* line 31, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #needed-items-form #needed-items-pet-items li.owned {
+  background: #eeffee;
+  border: 1px solid #006600;
+}
+/* line 35, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #needed-items-form .object-owned {
+  color: #448844;
+  display: block;
+  font-size: 75%;
+  font-style: italic;
+  padding-bottom: 0.25em;
+}
+/* line 43, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #needed-items-form.loading-pet #needed-items-pet-name-field, body.pets-bulk #needed-items-form.loading-items #needed-items-pet-name-field {
+  background-image: url('/images/loading.gif?1315327995');
+  background-position: center right;
+  background-repeat: no-repeat;
+}
+/* line 49, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #needed-items-form.loading-pet #needed-items-pet-items, body.pets-bulk #needed-items-form.loading-items #needed-items-pet-items {
+  -moz-opacity: 0.5;
+  -webkit-opacity: 0.5;
+  -o-opacity: 0.5;
+  -khtml-opacity: 0.5;
+}
+/* line 53, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #needed-items-form.loading-pet #needed-items-pet h4 {
+  -moz-opacity: 0.5;
+  -webkit-opacity: 0.5;
+  -o-opacity: 0.5;
+  -khtml-opacity: 0.5;
+}
+/* line 57, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #needed-items-form.loaded #needed-items-pet {
+  display: block;
+}
+/* line 61, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #needed-items-form.failed #needed-items-alert {
+  display: block;
+}
+/* line 64, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #bulk-pets-form {
+  border-top: 1px solid #006600;
+  margin-top: 12px;
+  padding-top: 12px;
+}
+/* line 69, ../../../app/stylesheets/pets/_bulk.sass */
 body.pets-bulk #bulk-pets-form textarea {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -4074,12 +4146,12 @@ body.pets-bulk #bulk-pets-form textarea {
 body.pets-bulk #bulk-pets-form textarea {
   *display: inline;
 }
-/* line 15, ../../../app/stylesheets/pets/_bulk.sass */
+/* line 77, ../../../app/stylesheets/pets/_bulk.sass */
 body.pets-bulk #bulk-pets-form ul {
   list-style: none;
-  margin-bottom: 1em;
+  margin-top: 1em;
 }
-/* line 18, ../../../app/stylesheets/pets/_bulk.sass */
+/* line 80, ../../../app/stylesheets/pets/_bulk.sass */
 body.pets-bulk #bulk-pets-form ul li {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -4095,39 +4167,39 @@ body.pets-bulk #bulk-pets-form ul li {
 body.pets-bulk #bulk-pets-form ul li {
   *display: inline;
 }
-/* line 24, ../../../app/stylesheets/pets/_bulk.sass */
+/* line 86, ../../../app/stylesheets/pets/_bulk.sass */
 body.pets-bulk #bulk-pets-form ul li.loaded {
   background: #e6efc2;
 }
-/* line 26, ../../../app/stylesheets/pets/_bulk.sass */
+/* line 88, ../../../app/stylesheets/pets/_bulk.sass */
 body.pets-bulk #bulk-pets-form ul li.failed {
   background: #fbe3e4;
 }
-/* line 28, ../../../app/stylesheets/pets/_bulk.sass */
+/* line 90, ../../../app/stylesheets/pets/_bulk.sass */
 body.pets-bulk #bulk-pets-form ul img {
   float: left;
   height: 50px;
   width: 50px;
 }
-/* line 33, ../../../app/stylesheets/pets/_bulk.sass */
+/* line 95, ../../../app/stylesheets/pets/_bulk.sass */
 body.pets-bulk #bulk-pets-form ul span {
   display: block;
 }
-/* line 35, ../../../app/stylesheets/pets/_bulk.sass */
+/* line 97, ../../../app/stylesheets/pets/_bulk.sass */
 body.pets-bulk #bulk-pets-form ul .response {
   font-size: 75%;
   font-style: italic;
   margin-left: 75px;
 }
-/* line 42, ../../../app/stylesheets/pets/_bulk.sass */
+/* line 104, ../../../app/stylesheets/pets/_bulk.sass */
 body.pets-bulk.js .noscript {
   display: none;
 }
-/* line 44, ../../../app/stylesheets/pets/_bulk.sass */
+/* line 106, ../../../app/stylesheets/pets/_bulk.sass */
 body.pets-bulk.js .script-only {
   display: block;
 }
-/* line 47, ../../../app/stylesheets/pets/_bulk.sass */
+/* line 109, ../../../app/stylesheets/pets/_bulk.sass */
 body.pets-bulk .script-only {
   display: none;
 }
