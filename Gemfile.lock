@@ -86,6 +86,8 @@ GEM
     arel (2.0.10)
     bcrypt-ruby (2.1.4)
     builder (2.1.2)
+    bullet (4.1.5)
+      uniform_notifier (~> 1.0.0)
     carrierwave (0.5.8)
       activesupport (~> 3.0)
     character-encodings (0.4.1)
@@ -218,6 +220,7 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.31)
+    uniform_notifier (1.0.2)
     vegas (0.1.8)
       rack (>= 1.0.0)
     warden (1.0.6)
@@ -235,6 +238,7 @@ PLATFORMS
 DEPENDENCIES
   RocketAMF!
   addressable
+  bullet (~> 4.1.5)
   carrierwave (~> 0.5.8)
   character-encodings (~> 0.4.1)
   compass (~> 0.10.1)

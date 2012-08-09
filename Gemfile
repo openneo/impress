@@ -48,6 +48,10 @@ gem "carrierwave", "~> 0.5.8"
 
 gem "parallel", "~> 0.5.17"
 
+group :development do
+  gem "bullet", "~> 4.1.5"
+end
+
 group :development_async do
   # async wrappers
   gem 'eventmachine',     :git => 'git://github.com/eventmachine/eventmachine.git'

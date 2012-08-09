@@ -13,7 +13,7 @@ module OutfitsHelper
       outfit = outfit_or_options
     end
     query = outfit.to_query
-    query << "&outfit=#{outfit.id}" if user_signed_in? && outfit.user == current_user
+    query << "&outfit=#{outfit.id}" if user_signed_in? && outfit.user_id == current_user.id
     link_to content, wardrobe_path(:anchor => query), options
   end
 

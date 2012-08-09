@@ -44,10 +44,12 @@ class Outfit < ActiveRecord::Base
   end
 
   def to_query
+    ids = self.worn_and_unworn_item_ids
+    
     {
-      :closet => closet_item_ids,
+      :closet => ids[:worn] + ids[:unworn],
       :color => color_id,
-      :objects => worn_item_ids,
+      :objects => ids[:worn],
       :species => species_id,
       :state => pet_state_id
     }.to_query

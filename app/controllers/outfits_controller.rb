@@ -12,7 +12,9 @@ class OutfitsController < ApplicationController
 
   def index
     if user_signed_in?
-      @outfits = current_user.outfits.wardrobe_order
+      @outfits = current_user.outfits.
+        includes(:item_outfit_relationships, {:pet_state => :pet_type}).
+        wardrobe_order
       respond_to do |format|
         format.html { render }
         format.json { render :json => @outfits }
