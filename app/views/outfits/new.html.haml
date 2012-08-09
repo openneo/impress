@@ -86,18 +86,19 @@
   %span#latest-contribution-created-at{:title => @latest_contribution.created_at.to_s}
     #{time_ago_in_words @latest_contribution.created_at} ago
 
-- cache :action_suffix => 'whats_new' do
-  #whats-new
+
+#whats-new
+  - cache :action_suffix => 'blog_preview' do
     #blog-preview
       %h2
       %div
       %a#blog-preview-linkback{:href => 'http://blog.openneo.net/'} OpenNeo Blog
-    
-    #newest-items
-      %h2 New Items
-      %ul
-        - @newest_items.each do |item|
-          = link_to image_tag(item.thumbnail_url), item
+  
+  #newest-items
+    %h2 New Items
+    %ul
+      - @newest_items.each do |item|
+        = link_to image_tag(item.thumbnail_url), item
 
 - content_for :javascripts do
   = include_javascript_libraries :jquery
