@@ -1,5 +1,3 @@
-# requires item sweeper at bottom
-
 class Item < ActiveRecord::Base
   include PrettyParam
 
@@ -836,6 +834,3 @@ class Item < ActiveRecord::Base
 
   class SearchError < ArgumentError;end
 end
-
-require 'item_sweeper'
-
