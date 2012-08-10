@@ -61,8 +61,10 @@ class OutfitsController < ApplicationController
       @newest_items = Item.newest.select([:id, :name, :thumbnail_url]).limit(9)
     end
     
-    @latest_contribution = Contribution.recent.first
-    Contribution.preload_contributeds_and_parents([@latest_contribution])
+    unless fragment_exist?('outfits#new latest_contribution')
+      @latest_contribution = Contribution.recent.first
+      Contribution.preload_contributeds_and_parents([@latest_contribution])
+    end
   end
 
   def show

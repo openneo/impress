@@ -14,6 +14,7 @@ javascripts:
     - public/javascripts/outfits/edit.js
   
   new_outfit_package:
+    - public/javascripts/jquery.timeago.js
     - public/javascripts/pet_query.js
     - public/javascripts/outfits/new.js
   

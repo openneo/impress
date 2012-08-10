@@ -182,3 +182,4 @@ function addDisqusCount() {
   (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);}
 })();
 
+$('#latest-contribution-created-at').timeago();

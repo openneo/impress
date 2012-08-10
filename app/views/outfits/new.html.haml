@@ -74,17 +74,17 @@
         = pet_name_tag :placeholder => raw('model a pet&hellip;')
         = submit_tag 'submit'
 
-#latest-contribution
-  = link_to 'Contributions:', contributions_path, :id => 'recent-contributions-link'
-  = link_to @latest_contribution.user.name, user_contributions_path(@latest_contribution.user)
-  showed us
-  = succeed '.' do
-    = contributed_description @latest_contribution.contributed, false
-  Thanks,
-  = succeed '!' do
+- cache 'outfits#new latest_contribution' do
+  #latest-contribution
+    = link_to 'Contributions:', contributions_path, :id => 'recent-contributions-link'
     = link_to @latest_contribution.user.name, user_contributions_path(@latest_contribution.user)
-  %span#latest-contribution-created-at{:title => @latest_contribution.created_at.to_s}
-    #{time_ago_in_words @latest_contribution.created_at} ago
+    showed us
+    = succeed '.' do
+      = contributed_description @latest_contribution.contributed, false
+    Thanks,
+    = succeed '!' do
+      = link_to @latest_contribution.user.name, user_contributions_path(@latest_contribution.user)
+    %abbr#latest-contribution-created-at{:title => @latest_contribution.created_at.getutc.iso8601}
 
 
 #whats-new
