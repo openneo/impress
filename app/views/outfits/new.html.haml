@@ -94,11 +94,12 @@
       %div
       %a#blog-preview-linkback{:href => 'http://blog.openneo.net/'} OpenNeo Blog
   
-  #newest-items
-    %h2 New Items
-    %ul
-      - @newest_items.each do |item|
-        = link_to image_tag(item.thumbnail_url), item
+  - cache 'outfits#new newest_items' do
+    #newest-items
+      %h2 New Items
+      %ul
+        - @newest_items.each do |item|
+          = link_to image_tag(item.thumbnail_url), item
 
 - content_for :javascripts do
   = include_javascript_libraries :jquery

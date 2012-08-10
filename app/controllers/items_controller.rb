@@ -34,8 +34,9 @@ class ItemsController < ApplicationController
     else
       respond_to do |format|
         format.html {
-          @newest_items = Item.newest.limit(18)
-          current_user.assign_closeted_to_items!(@newest_items) if user_signed_in?
+          unless fragment_exist?('items#index newest_items')
+            @newest_items = Item.newest.limit(18)
+          end
         }
         format.js { render :json => {:error => '$q required'}}
       end
