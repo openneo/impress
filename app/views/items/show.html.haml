@@ -1,19 +1,20 @@
 - title @item.name
 - canonical_path @item
 
-%header#item-header
-  = image_tag @item.thumbnail_url, :id => 'item-thumbnail'
-  %div
-    %h2#item-name= @item.name
-    = nc_icon_for(@item)
-    - unless @item.rarity.blank?
-      == Rarity: #{@item.rarity_index} (#{@item.rarity})
-    = link_to 'NeoItems', neoitems_url_for(@item)
-    - unless @item.nc?
-      = link_to 'Shop Wizard', shop_wizard_url_for(@item)
-      = link_to 'Super Wizard', super_shop_wizard_url_for(@item)
-      = link_to 'Trades', trading_post_url_for(@item)
-      = link_to 'Auctions', auction_genie_url_for(@item)
+- cache "items/#{@item.id} header" do
+  %header#item-header
+    = image_tag @item.thumbnail_url, :id => 'item-thumbnail'
+    %div
+      %h2#item-name= @item.name
+      = nc_icon_for(@item)
+      - unless @item.rarity.blank?
+        == Rarity: #{@item.rarity_index} (#{@item.rarity})
+      = link_to 'NeoItems', neoitems_url_for(@item)
+      - unless @item.nc?
+        = link_to 'Shop Wizard', shop_wizard_url_for(@item)
+        = link_to 'Super Wizard', super_shop_wizard_url_for(@item)
+        = link_to 'Trades', trading_post_url_for(@item)
+        = link_to 'Auctions', auction_genie_url_for(@item)
 
 - if user_signed_in?
   #closet-hangers
@@ -34,7 +35,7 @@
               
               %li
                 = number_field_tag "quantity[#{owned}]",
-                    @current_user_quantities[owned], :min => 0
+                  @current_user_quantities[owned], :min => 0
                     
                 - unless lists.empty?
                   = label_tag "quantity[#{owned}]", :class => 'unlisted' do
@@ -43,18 +44,20 @@
                   = label_tag "quantity[#{owned}]" do
                     How many?
       = submit_tag 'Save to Your Items'
-%p= @item.description
 
-#item-zones
-  %p
-    %strong Occupies:
-    = list_zones @item.occupied_zones, :uncertain_label
-  %p
-    %strong Restricts:
-    - if @item.restricted_zones.empty?
-      None
-    - else
-      = list_zones @item.restricted_zones
+- cache "items/#{@item.id} info" do
+  %p= @item.description
+
+  #item-zones
+    %p
+      %strong Occupies:
+      = list_zones @item.occupied_zones, :uncertain_label
+    %p
+      %strong Restricts:
+      - if @item.restricted_zones.empty?
+        None
+      - else
+        = list_zones @item.restricted_zones
 
 #trade-hangers
   - [true, false].each do |owned|
@@ -86,10 +89,10 @@
         %span.more more
         %span.less less
 
-
-#item-preview-header
-  %h3 Preview
-  %a#customize-more.button{:href => '/'} Customize more
+- cache 'items#show preview_header' do
+  #item-preview-header
+    %h3 Preview
+    %a#customize-more.button{:href => '/'} Customize more
 
 #item-preview
   #item-preview-species= standard_species_images_for(@item)

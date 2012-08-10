@@ -22,6 +22,8 @@ class ItemObserver < ActionController::Caching::Sweeper
   
   def expire_cache_for(item)
     controller.expire_fragment("items/#{item.id}#item_link_partial")
+    controller.expire_fragment("items/#{item.id} header")
+    controller.expire_fragment("items/#{item.id} info")
   end
   
   def expire_newest_items
