@@ -8,8 +8,8 @@ module RocketAMF
         @name = name
       end
       
-      def fetch(method, *params)
-        Request.new(self, method, *params).fetch
+      def request(method, *params)
+        Request.new(self, method, *params)
       end
     end
   end

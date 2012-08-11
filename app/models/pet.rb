@@ -19,7 +19,8 @@ class Pet < ActiveRecord::Base
   def load!
     require 'ostruct'
     begin
-      envelope = Pet.amf_service.fetch(PET_VIEWER_METHOD, name, nil)
+      envelope = Pet.amf_service.request(PET_VIEWER_METHOD, name, nil).
+        fetch(:timeout => 2)
     rescue RocketAMF::RemoteGateway::AMFError => e
       if e.message == PET_NOT_FOUND_REMOTE_ERROR
         raise PetNotFound, "Pet #{name.inspect} does not exist"

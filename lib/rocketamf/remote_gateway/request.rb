@@ -9,43 +9,44 @@ module RocketAMF
         @params = params
       end
       
-      def fetch
+      def fetch(options={})
         uri = @service.gateway.uri
         data = envelope.serialize
-        # TODO: re-enable if we go back to using threads
-        if false && defined?(EventMachine) && EventMachine.respond_to?(:reactor_running?) && EventMachine.reactor_running?
-          req = EM::HttpRequest.new(uri).post :body => data
-          response_body = req.response
-        else
-          req = Net::HTTP::Post.new(uri.path)
-          req.body = data
-          begin
-            res = Net::HTTP.new(uri.host, uri.port).start { |http| http.request(req) }
-          rescue Exception => e
-            raise ConnectionError, e.message
-          end
-          case res
-          when Net::HTTPSuccess
-            response_body = res.body
-          else
-            error = nil
-            begin
-              res.error!
-            rescue Exception => scoped_error
-              error = scoped_error
-            end
-            raise ConnectionError, error.message
-          end
+
+        req = Net::HTTP::Post.new(uri.path)
+        req.body = data
+        
+        begin
+          http = Net::HTTP.new(uri.host, uri.port)
+          http.read_timeout = options[:timeout] if options[:timeout]
+          res = http.request(req)
+        rescue Exception => e
+          raise ConnectionError, e.message
         end
+        
+        if res.is_a?(Net::HTTPSuccess)
+          response_body = res.body
+        else
+          error = nil
+          begin
+            res.error!
+          rescue Exception => scoped_error
+            error = scoped_error
+          end
+          raise ConnectionError, error.message
+        end
+        
         begin
           result = RocketAMF::Envelope.new.populate_from_stream(response_body)
         rescue Exception => e
           raise ConnectionError, e.message
         end
+        
         first_message_data = result.messages[0].data
         if first_message_data.respond_to?(:[]) && first_message_data[:code] == ERROR_CODE
           raise AMFError.new(first_message_data)
         end
+        
         result
       end
       
