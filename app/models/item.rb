@@ -12,7 +12,8 @@ class Item < ActiveRecord::Base
 
   NCRarities = [0, 500]
   PAINTBRUSH_SET_DESCRIPTION = 'This item is part of a deluxe paint brush set!'
-  SPECIAL_COLOR_DESCRIPTION_REGEX = /This item is only wearable by Neopets painted ([a-zA-Z]+)\./
+  SPECIAL_COLOR_DESCRIPTION_REGEX =
+    /This item is only wearable by Neopets painted ([a-zA-Z]+)\.|WARNING: This [a-zA-Z]+ can be worn by ([a-zA-Z]+) [a-zA-Z]+ ONLY!/
 
   SPECIAL_PAINTBRUSH_COLORS_PATH = Rails.root.join('config', 'colors_with_unique_bodies.txt')
   SPECIAL_PAINTBRUSH_COLORS = File.read(SPECIAL_PAINTBRUSH_COLORS_PATH).split("\n").map { |name| Color.find_by_name(name) }
@@ -102,7 +103,8 @@ class Item < ActiveRecord::Base
 
     match = description.match(SPECIAL_COLOR_DESCRIPTION_REGEX)
     if match
-      return Color.find_by_name(match[1].downcase)
+      color = match[1] || match[2]
+      return Color.find_by_name(color.downcase)
     end
   end
   public
