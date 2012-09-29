@@ -1,3 +1,5 @@
+require 'timeout'
+
 module RocketAMF
   class RemoteGateway
     class Request
@@ -16,12 +18,14 @@ module RocketAMF
         req = Net::HTTP::Post.new(uri.path)
         req.body = data
         
-        begin
-          http = Net::HTTP.new(uri.host, uri.port)
-          http.read_timeout = options[:timeout] if options[:timeout]
-          res = http.request(req)
-        rescue Exception => e
-          raise ConnectionError, e.message
+        res = nil
+        
+        if options[:timeout]
+          Timeout.timeout(options[:timeout], ConnectionError) do
+            res = send_request(uri, req)
+          end
+        else
+          res = send_request(uri, req)
         end
         
         if res.is_a?(Net::HTTPSuccess)
@@ -68,6 +72,15 @@ module RocketAMF
         message.operation = @method
         message.body = @params
         message
+      end
+      
+      def send_request(uri, req)
+        begin
+          http = Net::HTTP.new(uri.host, uri.port)
+          return http.request(req)
+        rescue Exception => e
+          raise ConnectionError, e.message
+        end
       end
     end
     
