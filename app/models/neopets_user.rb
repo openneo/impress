@@ -23,15 +23,19 @@ class NeopetsUser
     pets = pets.map { |pet| Pet.find_or_initialize_by_name(pet.name) }
     items = pets.each(&:load!).map(&:items).flatten
     item_ids = items.map(&:id)
-
     existing_hanger_item_ids = @app_user.closet_hangers.select(:item_id).where(:item_id => item_ids).map(&:item_id)
+    item_quantities = {}
+    items.each do |i|
+      item_quantities[i] ||= 0
+      item_quantities[i] += 1
+    end
 
     @hangers = []
-    items.each do |item|
+    item_quantities.each do |item, quantity|
       next if existing_hanger_item_ids.include?(item.id)
       hanger = @app_user.closet_hangers.build
       hanger.item = item
-      hanger.quantity = 1
+      hanger.quantity = quantity
       @hangers << hanger
     end
   end
