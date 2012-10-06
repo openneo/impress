@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120725232903) do
+ActiveRecord::Schema.define(:version => 20121006010446) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -90,21 +90,22 @@ ActiveRecord::Schema.define(:version => 20120725232903) do
   add_index "login_cookies", ["user_id"], :name => "login_cookies_user_id"
 
   create_table "objects", :force => true do |t|
-    t.text     "zones_restrict",                          :null => false
-    t.text     "thumbnail_url",       :limit => 16777215, :null => false
-    t.string   "name",                :limit => 100,      :null => false
-    t.text     "description",         :limit => 16777215, :null => false
-    t.string   "category",            :limit => 50
-    t.string   "type",                :limit => 50
-    t.string   "rarity",              :limit => 25
-    t.integer  "rarity_index",        :limit => 2
-    t.integer  "price",               :limit => 3,        :null => false
-    t.integer  "weight_lbs",          :limit => 2
-    t.text     "species_support_ids", :limit => 16777215
-    t.boolean  "sold_in_mall",                            :null => false
+    t.text     "zones_restrict",                                                  :null => false
+    t.text     "thumbnail_url",            :limit => 16777215,                    :null => false
+    t.string   "name",                     :limit => 100,                         :null => false
+    t.text     "description",              :limit => 16777215,                    :null => false
+    t.string   "category",                 :limit => 50
+    t.string   "type",                     :limit => 50
+    t.string   "rarity",                   :limit => 25
+    t.integer  "rarity_index",             :limit => 2
+    t.integer  "price",                    :limit => 3,                           :null => false
+    t.integer  "weight_lbs",               :limit => 2
+    t.text     "species_support_ids",      :limit => 16777215
+    t.boolean  "sold_in_mall",                                                    :null => false
     t.datetime "last_spidered"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "explicitly_body_specific",                     :default => false, :null => false
   end
 
   add_index "objects", ["last_spidered"], :name => "objects_last_spidered"

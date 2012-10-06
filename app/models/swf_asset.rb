@@ -194,7 +194,11 @@ class SwfAsset < ActiveRecord::Base
   end
 
   def body_specific?
-    self.zone.type_id < 3
+    # If we already have assigned this a non-zero body id, or if the asset is
+    # in a body-specific zone, or if the item is explicitly labeled as
+    # body-specific (like Encased In Ice, which is body-specific but whose
+    # assets occupy Background Item), then this asset is body-specific.
+    (body_id? && body_id > 0) || self.zone.type_id < 3 || (@item && @item.explicitly_body_specific?)
   end
 
   def zone
