@@ -764,7 +764,7 @@ class Item < ActiveRecord::Base
   end
 
   single_search_filter :type, {:limit => true, :scope => :join_swf_assets} do |zone_set_name|
-    zone_set = Zone::ItemZoneSets[zone_set_name]
+    zone_set = Zone.find_set(zone_set_name)
     raise SearchError, "Type \"#{zone_set_name}\" does not exist" unless zone_set
     SwfAsset.arel_table[:zone_id].in(zone_set.map(&:id))
   end
