@@ -129,6 +129,10 @@ module ApplicationHelper
   def return_to_field_tag
     hidden_field_tag :return_to, request.fullpath
   end
+  
+  def safely_to_json(obj)
+    obj.to_json.gsub('/', '\/')
+  end
 
   def secondary_nav(&block)
     content_for :before_flashes,

@@ -21,7 +21,7 @@
 #outfit-items= render @outfit.worn_items
 - content_for :javascripts do
   :javascript
-    var INITIAL_OUTFIT_DATA = #{@outfit.to_json};
+    var INITIAL_OUTFIT_DATA = #{safely_to_json @outfit};
   = include_javascript_libraries :jquery, :swfobject
   = include_javascripts :show_outfit_package
 
