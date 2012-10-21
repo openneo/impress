@@ -1,5 +1,6 @@
 module ItemsHelper
-  NeoitemsURLFormat = 'http://neoitems.net/search2.php?Name=%s&AndOr=and&Category=All&Special=0&Status=Active&Sort=ItemID&results=15&SearchType=8'
+  JNItemsURLFormat = 'http://items.jellyneo.net/index.php?go=show_items&name=%s&name_type=exact'
+  
   module PetTypeImage
     Format = 'http://pets.neopets.com/cp/%s/%i/%i.png'
 
@@ -82,8 +83,8 @@ module ItemsHelper
     nc_icon if item.nc?
   end
 
-  def neoitems_url_for(item)
-    sprintf(NeoitemsURLFormat, CGI::escape(item.name))
+  def jn_items_url_for(item)
+    sprintf(JNItemsURLFormat, CGI::escape(item.name))
   end
   
   def shop_wizard_url_for(item)
