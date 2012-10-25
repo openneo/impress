@@ -108,6 +108,24 @@ body.items-show
 
       .less
         display: none
+  
+  #item-contributors
+    +subtle-banner
+    clear: both
+    
+    header
+      display: inline
+      font-weight: bold
+      margin-right: .25em
+    
+    footer
+      display: inline
+    
+    ul
+      +comma-delimited-list
+      
+      li:last-child::after
+        content: "."
 
   #item-preview-header
     clear: both

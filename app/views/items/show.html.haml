@@ -89,6 +89,15 @@
         %span.more more
         %span.less less
 
+- cache "items/#{@item.id} contributors" do
+  - unless @contributors_with_counts.empty?
+    #item-contributors
+      %header Brought to you by:
+      %ul
+        - @contributors_with_counts.each do |contributor, count|
+          %li #{link_to contributor.name, user_contributions_path(contributor)} #{format_contribution_count(count)}
+      %footer Thanks, everybody!
+
 - cache 'items#show preview_header' do
   #item-preview-header
     %h3 Preview

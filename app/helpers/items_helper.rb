@@ -108,6 +108,10 @@ module ItemsHelper
       link_to hanger.user.name, user_closet_hangers_path(hanger.user)
     end.to_sentence.html_safe
   end
+  
+  def format_contribution_count(count)
+    "(&times;#{count})".html_safe if count > 1
+  end
 
   private
 

@@ -48,6 +48,9 @@ class ItemsController < ApplicationController
 
     respond_to do |format|
       format.html do
+        unless fragment_exist?("items/#{@item.id} contributors")
+          @contributors_with_counts = @item.contributors_with_counts
+        end
 
         @trading_closet_hangers_by_owned = {
           true => @item.closet_hangers.owned_trading.newest.includes(:user),

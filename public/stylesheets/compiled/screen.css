@@ -1935,10 +1935,53 @@ body.items-show #trade-hangers .toggle .less {
   display: none;
 }
 /* line 112, ../../../app/stylesheets/items/_show.sass */
+body.items-show #item-contributors {
+  border-color: #aaddaa;
+  border-style: solid;
+  border-width: 1px 0;
+  font-size: 85%;
+  margin: 1em 0;
+  padding: 0.5em 0;
+  text-align: center;
+  clear: both;
+}
+/* line 116, ../../../app/stylesheets/items/_show.sass */
+body.items-show #item-contributors header {
+  display: inline;
+  font-weight: bold;
+  margin-right: 0.25em;
+}
+/* line 121, ../../../app/stylesheets/items/_show.sass */
+body.items-show #item-contributors footer {
+  display: inline;
+}
+/* line 124, ../../../app/stylesheets/items/_show.sass */
+body.items-show #item-contributors ul {
+  list-style-type: none;
+}
+/* line 5, ../../../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/utilities/lists/_inline-list.scss */
+body.items-show #item-contributors ul, body.items-show #item-contributors ul li {
+  margin: 0px;
+  padding: 0px;
+  display: inline;
+}
+/* line 24, ../../../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/utilities/lists/_inline-list.scss */
+body.items-show #item-contributors ul li:after {
+  content: ", ";
+}
+/* line 26, ../../../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/utilities/lists/_inline-list.scss */
+body.items-show #item-contributors ul li:last-child:after, body.items-show #item-contributors ul li.last:after {
+  content: "";
+}
+/* line 127, ../../../app/stylesheets/items/_show.sass */
+body.items-show #item-contributors ul li:last-child::after {
+  content: ".";
+}
+/* line 130, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-header {
   clear: both;
 }
-/* line 115, ../../../app/stylesheets/items/_show.sass */
+/* line 133, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-header h3, body.items-show #item-preview-header a {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -1950,17 +1993,17 @@ body.items-show #item-preview-header h3, body.items-show #item-preview-header a 
 body.items-show #item-preview-header h3, body.items-show #item-preview-header a {
   *display: inline;
 }
-/* line 117, ../../../app/stylesheets/items/_show.sass */
+/* line 135, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-header a {
   font-size: 85%;
   margin: -1.5em 0 0 1em;
 }
-/* line 121, ../../../app/stylesheets/items/_show.sass */
+/* line 139, ../../../app/stylesheets/items/_show.sass */
 body.items-show .nc-icon {
   height: 16px;
   width: 16px;
 }
-/* line 125, ../../../app/stylesheets/items/_show.sass */
+/* line 143, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers {
   border: 1px solid #006600;
   float: right;
@@ -1972,13 +2015,13 @@ body.items-show #closet-hangers {
   position: relative;
   z-index: 2;
 }
-/* line 138, ../../../app/stylesheets/items/_show.sass */
+/* line 156, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers h3 {
   font-size: 150%;
   font-weight: bold;
   margin-bottom: 0.25em;
 }
-/* line 143, ../../../app/stylesheets/items/_show.sass */
+/* line 161, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers #closet-hangers-ownership-groups {
   overflow: hidden;
   display: inline-block;
@@ -1988,41 +2031,41 @@ body.items-show #closet-hangers #closet-hangers-ownership-groups {
 body.items-show #closet-hangers #closet-hangers-ownership-groups {
   display: block;
 }
-/* line 147, ../../../app/stylesheets/items/_show.sass */
+/* line 165, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers #closet-hangers-ownership-groups div {
   float: left;
   margin: 0 5%;
   text-align: left;
   width: 40%;
 }
-/* line 153, ../../../app/stylesheets/items/_show.sass */
+/* line 171, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers #closet-hangers-ownership-groups div li {
   list-style: none;
   word-wrap: break-word;
 }
-/* line 157, ../../../app/stylesheets/items/_show.sass */
+/* line 175, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers #closet-hangers-ownership-groups div li label.unlisted {
   font-style: italic;
 }
-/* line 160, ../../../app/stylesheets/items/_show.sass */
+/* line 178, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers form {
   padding: 0.5em 0;
 }
-/* line 163, ../../../app/stylesheets/items/_show.sass */
+/* line 181, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers select {
   width: 9em;
 }
-/* line 166, ../../../app/stylesheets/items/_show.sass */
+/* line 184, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers input[type=number] {
   margin-right: 0.5em;
   width: 3em;
 }
-/* line 172, ../../../app/stylesheets/items/_show.sass */
+/* line 190, ../../../app/stylesheets/items/_show.sass */
 body.items-show.js #trade-hangers p {
   max-height: 3em;
   overflow: hidden;
 }
-/* line 176, ../../../app/stylesheets/items/_show.sass */
+/* line 194, ../../../app/stylesheets/items/_show.sass */
 body.items-show.js #trade-hangers p.showing-more {
   max-height: none;
 }
@@ -3932,12 +3975,12 @@ body.outfits-new #latest-contribution {
   padding: 0.5em 0;
   text-align: center;
 }
-/* line 210, ../../../app/stylesheets/outfits/_new.sass */
+/* line 203, ../../../app/stylesheets/outfits/_new.sass */
 body.outfits-new #latest-contribution #recent-contributions-link {
   font-weight: bold;
   margin-right: 0.5em;
 }
-/* line 214, ../../../app/stylesheets/outfits/_new.sass */
+/* line 207, ../../../app/stylesheets/outfits/_new.sass */
 body.outfits-new #latest-contribution #latest-contribution-created-at {
   color: #448844;
   margin-left: 0.5em;

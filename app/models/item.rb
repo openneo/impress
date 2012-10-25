@@ -42,6 +42,32 @@ class Item < ActiveRecord::Base
   def closeted?
     @owned || @wanted
   end
+  
+  # Return an OrderedHash mapping users to the number of times they
+  # contributed to this item's assets, from most contributions to least.
+  def contributors_with_counts
+    # Get contributing users' IDs
+    swf_asset_ids = swf_assets.select(SwfAsset.arel_table[:id]).map(&:id)
+    swf_asset_contributions = Contribution.select('user_id').
+      where(:contributed_type => 'SwfAsset', :contributed_id => swf_asset_ids)
+    contributor_ids = swf_asset_contributions.map(&:user_id)
+    
+    # Get the users, mapped by ID
+    contributors_by_id = {}
+    User.find(contributor_ids).each { |u| contributors_by_id[u.id] = u }
+    
+    # Count each user's contributions
+    contributor_counts_by_id = Hash.new(0)
+    contributor_ids.each { |id| contributor_counts_by_id[id] += 1 }
+    
+    # Build an OrderedHash mapping users to counts in descending order
+    contributors_with_counts = ActiveSupport::OrderedHash.new
+    contributor_counts_by_id.sort_by { |k, v| v }.reverse.each do |id, count|
+      contributor = contributors_by_id[id]
+      contributors_with_counts[contributor] = count
+    end
+    contributors_with_counts
+  end
 
   def nc?
     NCRarities.include?(rarity_index)
