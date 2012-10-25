@@ -110,7 +110,7 @@ module ItemsHelper
   end
   
   def format_contribution_count(count)
-    "(&times;#{count})".html_safe if count > 1
+    " (&times;#{count})".html_safe if count > 1
   end
 
   private

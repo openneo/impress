@@ -89,15 +89,6 @@
         %span.more more
         %span.less less
 
-- cache "items/#{@item.id} contributors" do
-  - unless @contributors_with_counts.empty?
-    #item-contributors
-      %header Brought to you by:
-      %ul
-        - @contributors_with_counts.each do |contributor, count|
-          %li #{link_to contributor.name, user_contributions_path(contributor)} #{format_contribution_count(count)}
-      %footer Thanks, everybody!
-
 - cache 'items#show preview_header' do
   #item-preview-header
     %h3 Preview
@@ -108,6 +99,15 @@
   #item-preview-error
   #item-preview-swf
     Javascript and Flash are required to preview wearables. Sorry!
+
+- cache "items/#{@item.id} contributors" do
+  - unless @contributors_with_counts.empty?
+    #item-contributors
+      %header Brought to you by:
+      %ul
+        - @contributors_with_counts.each do |contributor, count|
+          %li= link_to(contributor.name, user_contributions_path(contributor)) + format_contribution_count(count)
+      %footer Thanks!
 
 :javascript
   var CURRENT_ITEM_ZONES_RESTRICT = #{@item.zones_restrict.inspect},
