@@ -1,6 +1,9 @@
 require 'resque-retry'
+require 'timeout'
 
 class AssetImageConversionRequest
+  TIMEOUT_IN_SECONDS = 30
+  
   extend Resque::Plugins::Retry
 
   @retry_limit = 5
@@ -9,8 +12,10 @@ class AssetImageConversionRequest
   @queue = :requested_asset_images
 
   def self.perform(asset_id)
-    asset = SwfAsset.find(asset_id)
-    asset.convert_swf_if_not_converted!
+    Timeout::timeout(TIMEOUT_IN_SECONDS) do
+      asset = SwfAsset.find(asset_id)
+      asset.convert_swf_if_not_converted!
+    end
   end
 
   class OnCreation < AssetImageConversionRequest
