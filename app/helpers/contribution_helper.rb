@@ -2,13 +2,17 @@ module ContributionHelper
   def contributed_description(contributed, image = true)
     case contributed
     when Item
-      contributed_item(contributed, image, 'for the first time')
+      suffix = translate_contributed_description('item_suffix')
+      contributed_item(contributed, image, suffix)
     when SwfAsset
-      contributed_item(contributed.item, image, 'on a new body type')
+      suffix = translate_contributed_description('swf_asset_suffix')
+      contributed_item(contributed.item, image, suffix)
     when PetType
-      contributed_pet_type(contributed, image, :after => 'for the first time')
+      suffix = translate_contributed_description('pet_type_suffix')
+      contributed_pet_type(contributed, image, :after => suffix)
     when PetState
-      contributed_pet_type(contributed.pet_type, image, :before => 'a new pose for')
+      prefix = translate_contributed_description('pet_state_prefix')
+      contributed_pet_type(contributed.pet_type, image, :before => prefix)
     end
   end
   
@@ -40,5 +44,9 @@ module ContributionHelper
   
   def output(&block)
     raw([].tap(&block).join(' '))
+  end
+  
+  def translate_contributed_description(key)
+    translate "contributions.contributed_description.#{key}"
   end
 end

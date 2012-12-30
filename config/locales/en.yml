@@ -1,5 +1,68 @@
-# Sample localization file for English. Add more files in this directory for other locales.
-# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
-
 en:
-  hello: "Hello world"
+  app_name: Dress to Impress
+  organization_name: OpenNeo
+  your_items: Your Items
+  infinite_closet: Infinite Closet
+  modeling_hub: Modeling Hub
+  
+  layouts:
+    application:
+      title_tagline: Preview customized Neopets' clothing and wearables
+      
+      userbar:
+        greeting: Hey, %{user_name}!
+        contributions_summary_html: You have %{contributions_link}.
+        contributions_link_content: "%{user_points} points"
+        items: Items
+        outfits: Outfits
+        settings: Settings
+        logout: Log out
+        login: Log in
+      
+      footer:
+        blog: Blog
+        source_code: Source Code
+        terms: Terms of Use
+        contact: Contact
+        suggestions: Suggestions
+        email: Questions, comments, bugs
+        copyright:
+          Images © 2000–%{year} Neopets, Inc. All Rights Reserved.
+          Used With Permission
+  
+  outfits:
+    new:
+      tagline: Neopets wearables made easy!
+      load_pet_legend: Enter your pet's name
+      load_pet_submit: Plan my outfit!
+      start_from_scratch_legend: Or start from scratch
+      start_from_scratch_submit: Go
+      your_items_tagline: Track and trade!
+      your_items_description:
+        Make lists of the items you own and want,
+        and share them with the world.
+      your_items_user_search_placeholder: find a user…
+      your_items_user_search_submit: search
+      infinite_closet_tagline: Looking for something?
+      infinite_closet_description: Take a look through our wearables database!
+      infinite_closet_item_search_placeholder: find an item…
+      infinite_closet_item_search_submit: search
+      modeling_hub_tagline: Found something?
+      modeling_hub_description:
+        Enter a pet's name here and we'll keep a copy of what it's wearing.
+        Thanks so much!
+      modeling_hub_load_pet_placeholder: model a pet…
+      modeling_hub_load_pet_submit: submit
+      latest_contribution_header: Contributions
+      latest_contribution_description_html:
+        "%{user_link} showed us %{contributed_description}.
+        Thanks, %{user_link}!"
+      blog_linkback: OpenNeo Blog
+      newest_items_header: New Items
+  
+  contributions:
+    contributed_description:
+      item_suffix: "for the first time"
+      swf_asset_suffix: "on a new body type"
+      pet_type_suffix: "for the first time"
+      pet_state_prefix: "a new pose for"

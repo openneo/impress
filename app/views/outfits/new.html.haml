@@ -3,100 +3,86 @@
 = campaign_progress
 
 #outfit-forms
-  - cache :action_suffix => 'outfit_forms_intro' do
+  - localized_cache :action_suffix => 'outfit_forms_intro' do
     #pet-preview
       = image_tag 'default_preview.png', :alt => ''
       %span
-    %h1 Dress to Impress
-    %h2 Neopets wearables made easy!
+    %h1= t 'app_name'
+    %h2= t '.tagline'
   
   = form_tag load_pet_path, :id => 'load-pet-to-wardrobe' do
-    - cache :action_suffix => 'main_load_pet_form_content' do
+    - localized_cache :action_suffix => 'main_load_pet_form_content' do
       = origin_tag root_path
       = destination_tag 'wardrobe'
       %fieldset
-        %legend Enter your pet's name
+        %legend= t '.load_pet_legend'
         = pet_name_tag :id => 'main-pet-name'
         %button{:type => "submit"}
-          Plan my outfit!
+          = t '.load_pet_submit'
  
   = form_tag wardrobe_path, :method => 'get', :id => 'start-from-scratch' do
-    - cache :action_suffix => 'start_from_scratch_form_content' do
+    - localized_cache :action_suffix => 'start_from_scratch_form_content' do
       %fieldset
-        %legend Or start from scratch
+        %legend= t '.start_from_scratch_legend'
         = pet_attribute_select 'color', @colors, 8
         = pet_attribute_select 'species', @species
-        %input{:type => "submit", :value => "Go"}
+        %input{:type => "submit", :value => t('.start_from_scratch_submit')}
 
 %ul#sections
-  - cache :action_suffix => 'your_items_module' do
+  - localized_cache :action_suffix => 'your_items_module' do
     %li#your-items-module
       = link_to image_tag('your_items.png'), your_items_path
-      %h3
-        = link_to 'Your Items', your_items_path
+      %h3= link_to t('your_items'), your_items_path
       %div
-        %h4 Track and trade!
-        %p
-          Make lists of the items you own and want, and share them with the
-          world.
+        %h4= t '.your_items_tagline'
+        %p= t '.your_items_description'
         = form_tag users_path, :method => 'get' do
-          = text_field_tag 'name', '', :placeholder => raw('find a user&hellip;'), :type => 'search'
-          = submit_tag 'search'
+          = text_field_tag 'name', '', :type => 'search',
+            :placeholder => t('.your_items_user_search_placeholder')
+          = submit_tag t('.your_items_user_search_submit')
 
-  - cache :action_suffix => 'infinite_closet_module' do
+  - localized_cache :action_suffix => 'infinite_closet_module' do
     %li
-      %a{:href => items_path}
-        = image_tag 'items.png'
-      %h3
-        %a{:href => items_path}
-          Infinite Closet
+      = link_to image_tag('items.png'), items_path
+      %h3= link_to t('infinite_closet'), items_path
       %div
-        %h4 Looking for something?
-        %p
-          Take a look through our wearables database!
+        %h4= t '.infinite_closet_tagline'
+        %p= t '.infinite_closet_description'
         = form_tag items_path, :method => 'get' do
-          = text_field_tag 'q', '', :placeholder => raw('find an item&hellip;'), :type => 'search'
-          = submit_tag 'search'
+          = text_field_tag 'q', '', :type => 'search',
+            :placeholder => t('.infinite_closet_item_search_placeholder')
+          = submit_tag t('.infinite_closet_item_search_submit')
     
   %li
-    %a{:href => bulk_pets_path}
+    = link_to bulk_pets_path do
       = image_tag 'http://images.neopets.com/items/mall_ac_garland_spotlight.gif'
-    %h3
-      %a{:href => bulk_pets_path}
-        Modeling Hub
+    %h3= link_to t('modeling_hub'), bulk_pets_path
     %div
-      %h4 Found something?
-      %p
-        Enter a pet's name here and we'll keep a copy of what it's wearing.
-        Thanks so much!
+      %h4= t '.modeling_hub_tagline'
+      %p= t '.modeling_hub_description'
       = form_tag load_pet_path do
         = origin_tag root_path
-        = pet_name_tag :placeholder => raw('model a pet&hellip;')
-        = submit_tag 'submit'
+        = pet_name_tag :placeholder => t('.modeling_hub_load_pet_placeholder')
+        = submit_tag t('.modeling_hub_load_pet_submit')
 
-- cache 'outfits#new latest_contribution' do
+- localized_cache 'outfits#new latest_contribution' do
   #latest-contribution
-    = link_to 'Contributions:', contributions_path, :id => 'recent-contributions-link'
-    = link_to @latest_contribution.user.name, user_contributions_path(@latest_contribution.user)
-    showed us
-    = succeed '.' do
-      = contributed_description @latest_contribution.contributed, false
-    Thanks,
-    = succeed '!' do
-      = link_to @latest_contribution.user.name, user_contributions_path(@latest_contribution.user)
+    = link_to t('.latest_contribution_header'), contributions_path, :id => 'recent-contributions-link'
+    = latest_contribution_description(@latest_contribution)
     %abbr#latest-contribution-created-at{:title => @latest_contribution.created_at.getutc.iso8601}
 
 
 #whats-new
-  - cache :action_suffix => 'blog_preview' do
+  - localized_cache :action_suffix => 'blog_preview' do
     #blog-preview
       %h2
       %div
-      %a#blog-preview-linkback{:href => 'http://blog.openneo.net/'} OpenNeo Blog
+      %a#blog-preview-linkback{:href => 'http://blog.openneo.net/'}
+        = t '.blog_linkback'
   
-  - cache 'outfits#new newest_items' do
+  - localized_cache 'outfits#new newest_items' do
     #newest-items
-      %h2 New Items
+      %h2= t '.newest_items_header'
       %ul
         - @newest_items.each do |item|
           = link_to image_tag(item.thumbnail_url), item

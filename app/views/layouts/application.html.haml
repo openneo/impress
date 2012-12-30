@@ -8,7 +8,7 @@
       - if content_for? :title_category
         = yield :title_category
       - else
-        Dress to Impress: Preview customized Neopets' clothing and wearables
+        #{t 'app_name'}: #{t '.title_tagline'}
     /[if IE]
       = include_javascript_libraries :html5
     = yield :stylesheets
@@ -34,45 +34,34 @@
 
       - if home_link?
         %a#home-link{:href => root_path}
-          %span Dress to Impress
+          %span= t 'app_name'
 
       #userbar
         - if user_signed_in?
           %span
-            Hey, #{current_user.name}!
-            You have
-            = succeed '.' do
-              = link_to "#{current_user.points} points", user_contributions_path(current_user)
-          = link_to 'Items', user_closet_hangers_path(current_user), :id => 'userbar-items-link'
-          = link_to 'Outfits', current_user_outfits_path
-          = link_to 'Settings', Openneo::Auth.remote_settings_url
-          = link_to 'Log out', logout_path_with_return_to
+            = t '.userbar.greeting', :user_name => current_user.name
+            = userbar_contributions_summary(current_user)
+          = link_to t('.userbar.items'), user_closet_hangers_path(current_user), :id => 'userbar-items-link'
+          = link_to t('.userbar.outfits'), current_user_outfits_path
+          = link_to t('.userbar.settings'), Openneo::Auth.remote_settings_url
+          = link_to t('.userbar.logout'), logout_path_with_return_to
         - else
           = link_to login_path_with_return_to, :id => 'userbar-log-in' do
             = image_tag auth_server_icon_url
-            %span Log in
+            %span= t('.userbar.login')
 
       #footer
         %ul
-          %li
-            %a{:href => "http://openneo.net/", :target => "_blank"} OpenNeo
-          %li
-            %a{:href => "http://blog.openneo.net/", :target => "_blank"} Blog
-          %li
-            %a{:href => "http://forum.openneo.net/", :target => "_blank"} Forum
-          %li
-            %a{:href => "http://github.com/matchu/openneo-impress-rails"} Source Code
-          %li
-            %a{:href => terms_path} Terms of Use
+          %li= link_to t('organization_name'), 'http://openneo.net/'
+          %li= link_to t('.footer.blog'), 'http://blog.openneo.net/'
+          %li= link_to t('.footer.source_code'),
+                      'http://github.com/matchu/openneo-impress-rails'
+          %li= link_to t('.footer.terms'), terms_path
         %div
-          Contact:
+          #{t('.footer.contact')}:
           %ul
-            %li
-              %a{:href => feedback_url} Suggestions
-            %li
-              %a{:href => "mailto:#{contact_email}"} Questions, comments, bugs
-        %p
-          Images &copy; 2000&ndash;#{Date.today.year} Neopets, Inc. All Rights Reserved.
-          Used With Permission
+            %li= link_to t('.footer.suggestions'), feedback_url
+            %li= mail_to contact_email, t('.footer.email')
+        %p= t '.footer.copyright', :year => Date.today.year
       = yield(:javascripts)
 
