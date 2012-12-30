@@ -1,0 +1,67 @@
+en-meep:
+  app_name: Dreep to Impreep
+  organization_name: OpenMeep
+  your_items: Your Meeps
+  infinite_closet: Infinite Meepit
+  modeling_hub: Meepiting Hub
+  
+  layouts:
+    application:
+      title_tagline: Preview customized Neopets' meeps and meepits
+      
+      userbar:
+        greeting: Meep, %{user_name}!
+        contributions_summary_html: You have %{contributions_link}.
+        contributions_link_content: "%{user_points} meeps"
+        items: Iteeps
+        outfits: Outfeeps
+        settings: Setteeps
+        logout: Meep out
+        login: Meep in
+      
+      footer:
+        blog: Bleep
+        source_code: Source Meep
+        terms: Terms of Meep
+        contact: Meeptact
+        suggestions: Suggesteeps
+        email: Questions, comments, meepits
+        copyright:
+          Images © 2000–%{year} Neopets, Inc. All Rights Reserved.
+          Used With Permission. Meep.
+  
+  outfits:
+    new:
+      tagline: Meeps made meepy!
+      load_pet_legend: Enter your pet's meep
+      load_pet_submit: Meep my outfit!
+      start_from_scratch_legend: Or meep from scratch
+      start_from_scratch_submit: Meep
+      your_items_tagline: Meep and meep!
+      your_items_description:
+        Meep lists of the items you own and want, and meep them with the world.
+      your_items_user_search_placeholder: meep a user…
+      your_items_user_search_submit: meep
+      infinite_closet_tagline: Meeping for something?
+      infinite_closet_description: Take a meep through our wearables meep!
+      infinite_closet_item_search_placeholder: meep an item…
+      infinite_closet_item_search_submit: meep
+      modeling_hub_tagline: Found somemeep?
+      modeling_hub_description:
+        Meep a pet's meep here and we'll meep a meep of what it's wearing.
+        Thanks so meep!
+      modeling_hub_load_pet_placeholder: meep a pet…
+      modeling_hub_load_pet_submit: meep
+      latest_contribution_header: Contribumeeps
+      latest_contribution_description_html:
+        "%{user_link} meeped us %{contributed_description}.
+        Meep, %{user_link}!"
+      blog_linkback: OpenNeo Meep
+      newest_items_header: New Meeps
+  
+  contributions:
+    contributed_description:
+      item_suffix: "for the first meep"
+      swf_asset_suffix: "on a new body meep"
+      pet_type_suffix: "for the first meep"
+      pet_state_prefix: "a new meep for"

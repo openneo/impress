@@ -1,4 +1,6 @@
 class ItemObserver < ActionController::Caching::Sweeper
+  include FragmentExpiration
+  
   def after_create(item)
     Rails.logger.debug "Item #{item.id} was just created"
     expire_newest_items
@@ -16,18 +18,14 @@ class ItemObserver < ActionController::Caching::Sweeper
 
   private
   
-  def controller
-    @controller ||= ActionController::Base.new
-  end
-  
   def expire_cache_for(item)
-    controller.expire_fragment("items/#{item.id}#item_link_partial")
-    controller.expire_fragment("items/#{item.id} header")
-    controller.expire_fragment("items/#{item.id} info")
+    expire_fragment("items/#{item.id}#item_link_partial")
+    expire_fragment("items/#{item.id} header")
+    expire_fragment("items/#{item.id} info")
   end
   
   def expire_newest_items
-    controller.expire_fragment('outfits#new newest_items')
-    controller.expire_fragment('items#index newest_items')
+    expire_fragment_in_all_locales('outfits#new newest_items')
+    expire_fragment('items#index newest_items')
   end
 end

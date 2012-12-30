@@ -1,4 +1,6 @@
 module ApplicationHelper
+  include FragmentLocalization
+  
   def absolute_url(path_or_url)
     if path_or_url.include?('://') # already an absolute URL
       path_or_url
@@ -96,6 +98,11 @@ module ApplicationHelper
       html + javascript_include_tag(JAVASCRIPT_LIBRARIES[name])
     end)
   end
+  
+  def localized_cache(key, &block)
+    localized_key = localize_fragment_key(key, locale)
+    cache(localized_key, &block)
+  end
 
   def login_path_with_return_to
     login_path :return_to => request.fullpath
@@ -149,6 +156,15 @@ module ApplicationHelper
 
   def title(value)
     content_for :title, value
+  end
+  
+  def userbar_contributions_summary(user)
+    contributions_link_content = translate('.userbar.contributions_link_content',
+                                           :user_points => user.points)
+    contributions_link = link_to(contributions_link_content,
+                                 user_contributions_path(user))
+    translate '.userbar.contributions_summary_html',
+              :contributions_link => contributions_link
   end
 end
 

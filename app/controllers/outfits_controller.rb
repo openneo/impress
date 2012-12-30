@@ -48,20 +48,16 @@ class OutfitsController < ApplicationController
   end
 
   def new
-    unless fragment_exist?(:action_suffix => 'start_from_scratch_form_content')
+    unless localized_fragment_exist?(:action_suffix => 'start_from_scratch_form_content')
       @colors = Color.all_ordered_by_name
       @species = Species.all_ordered_by_name
     end
     
-    unless fragment_exist?(:action_suffix => 'top_contributors')
-      @top_contributors = User.top_contributors.limit(User::PreviewTopContributorsCount)
-    end
-    
-    unless fragment_exist?('outfits#new newest_items')
+    unless localized_fragment_exist?('outfits#new newest_items')
       @newest_items = Item.newest.select([:id, :name, :thumbnail_url]).limit(9)
     end
     
-    unless fragment_exist?('outfits#new latest_contribution')
+    unless localized_fragment_exist?('outfits#new latest_contribution')
       @latest_contribution = Contribution.recent.first
       Contribution.preload_contributeds_and_parents([@latest_contribution])
     end

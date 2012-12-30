@@ -3992,6 +3992,10 @@ body.outfits-new #latest-contribution #recent-contributions-link {
   margin-right: 0.5em;
 }
 /* line 207, ../../../app/stylesheets/outfits/_new.sass */
+body.outfits-new #latest-contribution #recent-contributions-link::after {
+  content: ":";
+}
+/* line 210, ../../../app/stylesheets/outfits/_new.sass */
 body.outfits-new #latest-contribution #latest-contribution-created-at {
   color: #448844;
   margin-left: 0.5em;

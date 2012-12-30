@@ -2,6 +2,14 @@ module OutfitsHelper
   def destination_tag(value)
     hidden_field_tag 'destination', value, :id => nil
   end
+  
+  def latest_contribution_description(contribution)
+    user = contribution.user
+    contributed = contribution.contributed
+    t 'outfits.new.latest_contribution_description_html',
+      :user_link => link_to(user.name, user_contributions_path(user)),
+      :contributed_description => contributed_description(contributed, false)
+  end
 
   def link_to_edit_outfit(content_or_outfit, outfit_or_options, options={})
     if block_given?
