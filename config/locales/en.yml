@@ -72,3 +72,10 @@ en:
       swf_asset_suffix: "on a new body type"
       pet_type_suffix: "for the first time"
       pet_state_prefix: "a new pose for"
+  
+  users:
+    top_contributors:
+      header: Top Contributors
+      rank: Rank
+      user: User
+      points: Points

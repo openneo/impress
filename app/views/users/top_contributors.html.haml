@@ -1,11 +1,11 @@
-- title 'Top Contributors'
+- title t('.header')
 = will_paginate @users
 %table#top-contributors
   %thead
     %tr
-      %th{:scope => 'column'} Rank
-      %th{:scope => 'column'} User
-      %th{:scope => 'column'} Points
+      %th{:scope => 'column'}= t('.rank')
+      %th{:scope => 'column'}= t('.user')
+      %th{:scope => 'column'}= t('.points')
   %tbody
     - @users.each_with_index do |user, rank|
       %tr
