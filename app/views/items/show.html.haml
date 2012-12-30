@@ -1,31 +1,32 @@
 - title @item.name
 - canonical_path @item
 
-- cache "items/#{@item.id} header" do
+- localized_cache "items/#{@item.id} header" do
   %header#item-header
     = image_tag @item.thumbnail_url, :id => 'item-thumbnail'
     %div
       %h2#item-name= @item.name
       = nc_icon_for(@item)
       - unless @item.rarity.blank?
-        == Rarity: #{@item.rarity_index} (#{@item.rarity})
-      = link_to 'JN Items', jn_items_url_for(@item)
+        == #{t '.rarity'}: #{@item.rarity_index} (#{@item.rarity})
+      = link_to t('.jn_items'), jn_items_url_for(@item)
       - unless @item.nc?
-        = link_to 'Shop Wizard', shop_wizard_url_for(@item)
-        = link_to 'Super Wizard', super_shop_wizard_url_for(@item)
-        = link_to 'Trades', trading_post_url_for(@item)
-        = link_to 'Auctions', auction_genie_url_for(@item)
+        = link_to t('.shop_wizard'), shop_wizard_url_for(@item)
+        = link_to t('.super_shop_wizard'), super_shop_wizard_url_for(@item)
+        = link_to t('.trading_post'), trading_post_url_for(@item)
+        = link_to t('.auction_genie'), auction_genie_url_for(@item)
 
 - if user_signed_in?
   #closet-hangers
     %h3
-      Track this in
-      = link_to 'Your Items', user_closet_hangers_path(current_user)
+      = t '.hangers_header_html',
+          :user_items_link => link_to(t('your_items'),
+                                      user_closet_hangers_path(current_user))
     = form_tag update_quantities_user_item_closet_hangers_path(:user_id => current_user, :item_id => @item), :method => :put do
       #closet-hangers-ownership-groups
         - @current_user_lists.each do |owned, lists|
           %div
-            %h4 Items you #{closet_list_verb(owned)}
+            %h4= closet_lists_group_name(:you, owned)
             %ul
               - lists.each do |list|
                 %li
@@ -38,81 +39,69 @@
                   @current_user_quantities[owned], :min => 0
                     
                 - unless lists.empty?
-                  = label_tag "quantity[#{owned}]", :class => 'unlisted' do
-                    Not in a list
+                  = label_tag "quantity[#{owned}]",
+                              t('closet_lists.unlisted_name'),
+                              :class => 'unlisted'
                 - else
-                  = label_tag "quantity[#{owned}]" do
-                    How many?
-      = submit_tag 'Save to Your Items'
+                  = label_tag "quantity[#{owned}]", t('.quantity_label')
+      = submit_tag t('.submit_hangers')
 
-- cache "items/#{@item.id} info" do
+- localized_cache "items/#{@item.id} info" do
   %p= @item.description
 
   #item-zones
     %p
-      %strong Occupies:
+      %strong #{t '.occupied_zones_header'}:
       = list_zones @item.occupied_zones, :uncertain_label
     %p
-      %strong Restricts:
+      %strong #{t '.restricted_zones_header'}:
       - if @item.restricted_zones.empty?
-        None
+        = t '.no_restricted_zones'
       - else
         = list_zones @item.restricted_zones
 
 #trade-hangers
   - [true, false].each do |owned|
     %p
-      - unless @trading_closet_hangers_by_owned[owned].empty?
-        %strong
-          = pluralize @trading_closet_hangers_by_owned[owned].size, 'user'
-          - if owned
-            - if @trading_closet_hangers_by_owned[owned].size == 1
-              has
-            - else
-              have
-            this item up for trade:
-          - else
-            - if @trading_closet_hangers_by_owned[owned].size == 1
-              wants
-            - else
-              want
-            this item:
-        = render_trading_closet_hangers(owned)
-      - else
-        %strong
-          We don't know anyone who
-          - if owned
-            has this item up for trade.
-          - else
-            wants this item.
+      %strong
+        = trading_closet_hangers_header(owned, @trading_closet_hangers_by_owned[owned].size)
+      = render_trading_closet_hangers(owned)
       %span.toggle
-        %span.more more
-        %span.less less
+        %span.more= t '.trading_closet_hangers.show_more'
+        %span.less= t '.trading_closet_hangers.show_less'
 
-- cache 'items#show preview_header' do
+- localized_cache 'items#show preview_header' do
   #item-preview-header
-    %h3 Preview
-    %a#customize-more.button{:href => '/'} Customize more
+    %h3= t '.preview_header'
+    = link_to t('.customize_more'), root_path, :id => 'customize-more',
+                                               :class => 'button'
 
 #item-preview
   #item-preview-species= standard_species_images_for(@item)
   #item-preview-error
-  #item-preview-swf
-    Javascript and Flash are required to preview wearables. Sorry!
+  #item-preview-swf= t '.preview_requirements_not_met'
 
-- cache "items/#{@item.id} contributors" do
+- localized_cache "items/#{@item.id} contributors" do
   - unless @contributors_with_counts.empty?
     #item-contributors
-      %header Brought to you by:
+      %header #{t '.contributors_header'}:
       %ul
         - @contributors_with_counts.each do |contributor, count|
           %li= link_to(contributor.name, user_contributions_path(contributor)) + format_contribution_count(count)
-      %footer Thanks!
+      %footer= t '.contributors_footer'
 
 :javascript
   var CURRENT_ITEM_ZONES_RESTRICT = #{@item.zones_restrict.inspect},
     IMPRESS_HOST = #{RemoteImpressHost.inspect};
 
-= include_javascript_libraries :jquery, :swfobject
-= javascript_include_tag 'items/show'
+%script#swf-assets-not-found-template{:type => 'text/x-jquery-tmpl'}
+  = t '.swf_assets_not_found_html', :item_name => h(@item.name),
+      :species_name => '${species_name}',
+      :color_name => '${color_name}',
+      :modeling_link => link_to(t('.swf_assets_not_found_modeling_link_content'),
+                                root_path)
+
+- content_for :javascripts do
+  = include_javascript_libraries :jquery, :swfobject, :jquery_tmpl
+  = javascript_include_tag 'items/show'
 

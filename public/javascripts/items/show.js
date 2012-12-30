@@ -16,29 +16,8 @@ String.prototype.capitalize = function () {
   return this.charAt(0).toUpperCase() + this.substr(1);
 }
 
-String.prototype.article = function () {
-  return 'aeiou'.indexOf(this.charAt(0).toLowerCase()) == -1 ? 'a' : 'an'
-}
-
 function impressUrl(path) {
   return 'http://' + IMPRESS_HOST + path;
-}
-
-function LoadError(base_msg) {
-  this.render = function (args) {
-    var msg = base_msg, token, article_token;
-    for(var i in args) {
-      token = "$" + i;
-      article_token = token + "_article";
-      if(msg.indexOf(article_token) != -1) {
-        msg = msg.replace(article_token, args[i].article());
-      }
-      msg = msg.replace(token, args[i]);
-    }
-    return "Whoops - we've never seen " + msg + " before! If you have, please " +
-    "<a href='http://" + IMPRESS_HOST + "'>submit that pet's name</a> as soon as you " +
-    "get the chance! Thanks!";
-  }
 }
 
 function PetType() {
@@ -47,23 +26,17 @@ function PetType() {
   this.activated = true;
   this.assets = [];
 
-  this.deactivate = function (error, args) {
+  this.deactivate = function () {
     var msg;
     this.activated = false;
-    if(typeof args == 'undefined') args = {};
-    args.color = this.color_name.capitalize();
-    args.species = this.species_name.capitalize();
-    this.deactivation_msg = error.render(args);
+    this.deactivation_msg = $('#swf-assets-not-found-template').tmpl({
+      color_name: this.color_name.capitalize(),
+      species_name: this.species_name.capitalize()
+    });
     if(this == PetType.current) showDeactivationMsg();
     var img = this.link.children('img').get(0);
     this.link.addClass('deactivated');
     img.src = img.src.replace('/1/', '/2/');
-  }
-
-  this.deactivateWithItem = function (item) {
-    pet_type.deactivate(Item.LOAD_ERROR, {
-      item: item.name
-    });
   }
 
   this.load = function () {
@@ -108,8 +81,6 @@ function PetType() {
 }
 
 PetType.all = {};
-
-PetType.LOAD_ERROR = new LoadError("$color_article $color $species");
 PetType.DASH_REGEX = /-/g;
 
 PetType.createFromLink = function (link) {
@@ -148,7 +119,7 @@ function Item(id) {
       });
       $.each(PetType.all, function () {
         if(item.getAssetsForPetType(this).length == 0) {
-          this.deactivateWithItem(item);
+          this.deactivate();
         }
       });
     });
@@ -167,12 +138,10 @@ function Item(id) {
       this.assets_by_body_id[pet_type.body_id] = assets;
       pet_type.onUpdate();
     } else {
-      pet_type.deactivateWithItem(this);
+      pet_type.deactivate();
     }
   }
 }
-
-Item.LOAD_ERROR = new LoadError("$species_article $species wear a $item");
 
 Item.createFromLocation = function () {
   var item = new Item(parseInt(document.location.pathname.substr(7), 10)),
@@ -197,7 +166,7 @@ Preview = new function Preview() {
 
   this.update = function (assets) {
     var assets;
-    if(swf) {
+    if(swf && typeof swf.setAssets == 'function') {
       log('now doing update');
       assets = PetType.current.assets.concat(
         Item.current.getAssetsForPetType(PetType.current)
@@ -228,9 +197,9 @@ Preview = new function Preview() {
     );
   }
 
-  this.disable = function (msg) {
+  this.disable = function (errorMessage) {
     $('#' + swf_id).hide();
-    $('#item-preview-error').html(msg).show();
+    $('#item-preview-error').empty().append(errorMessage).show();
   }
 
   this.enable = function () {

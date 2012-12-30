@@ -48,6 +48,16 @@ en-meep:
       converted_at_html: Conveeped %{converted_at_ago} ago
       reported_at_html: Repeeped %{reported_at_ago} ago
   
+  closet_lists:
+    unlisted_name: Not in a meep
+    groups:
+      owned_by:
+        you:  Meeps you own
+        another_user: Meeps %{user_name} owns
+      wanted_by:
+        you: Meeps you want
+        another_user: Meeps %{user_name} wants
+  
   contributions:
     contributed_description:
       item_suffix: for the first meep
@@ -96,6 +106,43 @@ en-meep:
       type_example_description: returns any item that fills a "hat" meep
       newest_items_header: New Meeps
       species_search_header: Can't decide? Meep by species
+    
+    show:
+      rarity: Meepity
+      jn_items: JN Meepits
+      shop_wizard: Meep Wizard
+      super_shop_wizard: Meeper Wizard
+      trading_post: Treeps
+      auction_genie: Aucteeps
+      hangers_header_html: Meep this in %{user_items_link}
+      quantity_label: How meepy?
+      submit_hangers: Save to Your Meeps
+      occupied_zones_header: Occupeeps
+      restricted_zones_header: Restreeps
+      no_restricted_zones: Meepless
+      trading_closet_hangers:
+        header:
+          owned:
+            zero: We don't know anymeep who has this item meep for trade.
+            one: "1 user has this item meep for trade:"
+            other: "%{count} users have this item meep for trade:"
+          wanted:
+            zero: "We don't know anymeep who meeps this item."
+            one: "1 user meeps this item:"
+            other: "%{count} users meep this item:"
+        show_more: meep more
+        show_less: meep less
+      preview_header: Meepview
+      customize_more: Customize meep
+      preview_requirements_not_met:
+        Javascript and Flash are required to preview meepits. Meep!
+      contributors_header: Meeped to you by
+      contributors_footer: Meep!
+      swf_assets_not_found_html:
+        We've never meeped the %{item_name} on the %{color_name}
+        %{species_name} before. Have you? If so, please %{modeling_link} and
+        we'll meep our datameep instantly. Meep!
+      swf_assets_not_found_modeling_link_content: meep it for us
   
   outfits:
     new:
