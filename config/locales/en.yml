@@ -49,6 +49,17 @@ en:
       converted_at_html: Converted %{converted_at_ago} ago
       reported_at_html: Reported %{reported_at_ago} ago
   
+  closet_lists:
+    unlisted_name: Not in a list
+    groups:
+      owned_by:
+        you:  Items you own
+        another_user: Items %{user_name} owns
+      wanted_by:
+        you: Items you want
+        another_user: Items %{user_name} wants
+        
+  
   contributions:
     contributed_description:
       item_suffix: for the first time
@@ -97,6 +108,43 @@ en:
       type_example_description: returns any item that fills a "hat" zone
       newest_items_header: Newest items
       species_search_header: Can't decide? Search by species
+    
+    show:
+      rarity: Rarity
+      jn_items: JN Items
+      shop_wizard: Shop Wizard
+      super_shop_wizard: Super Wizard
+      trading_post: Trades
+      auction_genie: Auctions
+      hangers_header_html: Track this in %{user_items_link}
+      quantity_label: How many?
+      submit_hangers: Save to Your Items
+      occupied_zones_header: Occupies
+      restricted_zones_header: Restricts
+      no_restricted_zones: None
+      trading_closet_hangers:
+        header:
+          owned:
+            zero: We don't know anyone who has this item up for trade.
+            one: "1 user has this item up for trade:"
+            other: "%{count} users have this item up for trade:"
+          wanted:
+            zero: "We don't know anyone who wants this item."
+            one: "1 user wants this item:"
+            other: "%{count} users want this item:"
+        show_more: more
+        show_less: less
+      preview_header: Preview
+      customize_more: Customize more
+      preview_requirements_not_met:
+        Javascript and Flash are required to preview wearables. Sorry!
+      contributors_header: Brought to you by
+      contributors_footer: Thanks!
+      swf_assets_not_found_html:
+        We've never seen the %{item_name} on the %{color_name}
+        %{species_name} before. Have you? If so, please %{modeling_link} and
+        we'll update our database instantly. Thanks!
+      swf_assets_not_found_modeling_link_content: model it for us
   
   outfits:
     new:

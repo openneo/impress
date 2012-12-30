@@ -20,8 +20,8 @@ class ItemObserver < ActionController::Caching::Sweeper
   
   def expire_cache_for(item)
     expire_fragment("items/#{item.id}#item_link_partial")
-    expire_fragment("items/#{item.id} header")
-    expire_fragment("items/#{item.id} info")
+    expire_fragment_in_all_locales("items/#{item.id} header")
+    expire_fragment_in_all_locales("items/#{item.id} info")
   end
   
   def expire_newest_items

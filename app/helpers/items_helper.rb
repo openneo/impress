@@ -102,6 +102,11 @@ module ItemsHelper
   def auction_genie_url_for(item)
     "http://www.neopets.com/genie.phtml?type=process_genie&criteria=exact&auctiongenie=#{CGI::escape item.name}"
   end
+  
+  def trading_closet_hangers_header(owned, count)
+    ownership_key = owned ? 'owned' : 'wanted'
+    translate ".trading_closet_hangers.header.#{ownership_key}", :count => count
+  end
 
   def render_trading_closet_hangers(owned)
     @trading_closet_hangers_by_owned[owned].map do |hanger|

@@ -137,5 +137,15 @@ module ClosetHangersHelper
     hangers = @unlisted_closet_hangers_by_owned[owned]
     hangers ? hangers.size : 0
   end
+  
+  def closet_lists_group_name(subject, owned)
+    ownership_key = owned ? 'owned_by' : 'wanted_by'
+    if subject == :you
+      translate "closet_lists.groups.#{ownership_key}.you"
+    else
+      translate "closet_lists.groups.#{ownership_key}.another_user",
+        :user_name => subject.name
+    end
+  end
 end
 

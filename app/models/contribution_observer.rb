@@ -6,7 +6,7 @@ class ContributionObserver < ActiveRecord::Observer
     
     if contribution.contributed_type == 'SwfAsset'
       item = contribution.contributed.item
-      expire_fragment("items/#{item.id} contributors")
+      expire_fragment_in_all_locales("items/#{item.id} contributors")
     end
   end
 end

@@ -48,7 +48,7 @@ class ItemsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        unless fragment_exist?("items/#{@item.id} contributors")
+        unless localized_fragment_exist?("items/#{@item.id} contributors")
           @contributors_with_counts = @item.contributors_with_counts
         end
 
