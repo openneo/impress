@@ -4201,38 +4201,39 @@ body.pets-bulk #bulk-pets-form ul li {
   *display: inline;
 }
 /* line 86, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #bulk-pets-form ul li .waiting-message, body.pets-bulk #bulk-pets-form ul li .loading-message, body.pets-bulk #bulk-pets-form ul li .response {
+  display: none;
+  font-size: 75%;
+  font-style: italic;
+  margin-left: 75px;
+}
+/* line 92, ../../../app/stylesheets/pets/_bulk.sass */
+body.pets-bulk #bulk-pets-form ul li.waiting .waiting-message, body.pets-bulk #bulk-pets-form ul li.loading .loading-message, body.pets-bulk #bulk-pets-form ul li.loaded .response, body.pets-bulk #bulk-pets-form ul li.failed .response {
+  display: block;
+}
+/* line 94, ../../../app/stylesheets/pets/_bulk.sass */
 body.pets-bulk #bulk-pets-form ul li.loaded {
   background: #e6efc2;
 }
-/* line 88, ../../../app/stylesheets/pets/_bulk.sass */
+/* line 96, ../../../app/stylesheets/pets/_bulk.sass */
 body.pets-bulk #bulk-pets-form ul li.failed {
   background: #fbe3e4;
 }
-/* line 90, ../../../app/stylesheets/pets/_bulk.sass */
+/* line 98, ../../../app/stylesheets/pets/_bulk.sass */
 body.pets-bulk #bulk-pets-form ul img {
   float: left;
   height: 50px;
   width: 50px;
 }
-/* line 95, ../../../app/stylesheets/pets/_bulk.sass */
-body.pets-bulk #bulk-pets-form ul span {
-  display: block;
-}
-/* line 97, ../../../app/stylesheets/pets/_bulk.sass */
-body.pets-bulk #bulk-pets-form ul .response {
-  font-size: 75%;
-  font-style: italic;
-  margin-left: 75px;
-}
-/* line 104, ../../../app/stylesheets/pets/_bulk.sass */
+/* line 105, ../../../app/stylesheets/pets/_bulk.sass */
 body.pets-bulk.js .noscript {
   display: none;
 }
-/* line 106, ../../../app/stylesheets/pets/_bulk.sass */
+/* line 107, ../../../app/stylesheets/pets/_bulk.sass */
 body.pets-bulk.js .script-only {
   display: block;
 }
-/* line 109, ../../../app/stylesheets/pets/_bulk.sass */
+/* line 110, ../../../app/stylesheets/pets/_bulk.sass */
 body.pets-bulk .script-only {
   display: none;
 }

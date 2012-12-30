@@ -83,6 +83,14 @@ body.pets-bulk
         margin: 0 auto
         min-width: 25%
         text-align: left
+        .waiting-message, .loading-message, .response
+          display: none
+          font:
+            size: 75%
+            style: italic
+          margin-left: 75px
+        &.waiting .waiting-message, &.loading .loading-message, &.loaded .response, &.failed .response
+          display: block
         &.loaded
           background: $notice-bg-color
         &.failed
@@ -92,13 +100,6 @@ body.pets-bulk
         float: left
         height: 50px
         width: 50px
-      span
-        display: block
-      .response
-        font:
-          size: 75%
-          style: italic
-        margin-left: 75px
 
   &.js
     .noscript

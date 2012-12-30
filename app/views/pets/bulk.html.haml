@@ -1,53 +1,45 @@
-- title 'Modeling Hub'
+- title t('modeling_hub')
 
 = form_tag load_pet_path, :id => 'needed-items-form' do
-  - cache :action_suffix => 'needed_items_content' do
-    %h3 Looking for ways to contribute?
+  - localized_cache :action_suffix => 'needed_items_content' do
+    %h3= t '.needed_items.header'
     
-    %p
-      Enter your pet's name below and we'll tell you what items you can help us
-      model. Thanks for your help!
+    %p= t '.needed_items.explanation'
     
     = origin_tag bulk_pets_path
     = destination_tag 'needed_items'
     
     %input#needed-items-pet-name-field{:type => "text", :name => "name"}/
-    %input{:type => "submit", :value => "Submit"}/
+    %input{:type => "submit", :value => t('.needed_items.submit')}/
     
     #needed-items-alert.alert
     
     #needed-items-pet.script-only
       %h4
         %img#needed-items-pet-thumbnail.inline-image
-        Items
-        %span#needed-items-pet-name
-        can model
-        
-        %button#needed-items-reload Reload
+        %span#needed-items-pet-header
+        %button#needed-items-reload= t '.needed_items.reload'
       
       %ul#needed-items-pet-items
 
 = form_tag load_pet_path, :id => 'bulk-pets-form' do
-  - cache :action_suffix => 'bulk_pets_content' do
-    %h3 Model pets in bulk
+  - localized_cache :action_suffix => 'bulk_pets_content' do
+    %h3= t '.bulk_pets.header'
     
-    %p
-      Got a lot of pets to model? Just keep typing them into the box below, or
-      even paste in a whole list of names, one name per line. Thanks for your
-      help!
+    %p= t '.bulk_pets.explanation'
     
     = origin_tag bulk_pets_path
    
     %div.noscript
       %input{:name => "name", :type => "text"}/
-      %input{:type => "submit", :value => "Load pet"}/
+      %input{:type => "submit", :value => t('.bulk_pets.submit')}/
     %div.script-only
       %textarea
-      %button#bulk-pets-form-add{:type => "button"} Add
-      %button#bulk-pets-form-clear{:type => "button"} Clear
+      %button#bulk-pets-form-add{:type => "button"}= t '.bulk_pets.add'
+      %button#bulk-pets-form-clear{:type => "button"}= t '.bulk_pets.clear'
       %ul
 
-- cache :action_suffix => 'item_template' do
+- localized_cache :action_suffix => 'templates' do
   %script#item-template{:type => 'text/x-jquery-tmpl'}
     %li{:class => 'object{{if owned}} owned{{/if}}'}
       = link_to item_path(':id').sub(':id', '${id}') do
@@ -68,8 +60,22 @@
         {{/if}}
       
       {{if owned}}
-      %span.object-owned You own this item
+      %span.object-owned= t '.needed_items.item_owned'
       {{/if}}
+  
+  %script#needed-items-pet-header-template{:type => 'text/x-jquery/tmpl'}
+    = t '.needed_items.pet_header', :pet_name => '${pet_name}'
+  
+  %script#bulk-pets-submission-template{:type => 'text/x-jquery/tmpl'}
+    %li.waiting
+      %img{:src => 'http://pets.neopets.com/cpn/${pet_name}/1/1.png'}
+      %span.name ${pet_name}
+      %span.waiting-message= t '.bulk_pets.waiting'
+      %span.loading-message= t '.bulk_pets.loading'
+      %span.response
+    
+  %script#bulk-pets-submission-success-template{:type => 'text/x-jquery/tmpl'}
+    = t '.bulk_pets.submission_success', :points => '${points}'
 
 - content_for :javascripts do
   = include_javascript_libraries :jquery, :jquery_tmpl

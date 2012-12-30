@@ -189,6 +189,30 @@ en-meep:
       clone: Meep a copy
       creation_summary_html: Meeped by %{user_link}, %{created_at_ago} ago
   
+  pets:
+    bulk:
+      needed_items:
+        header: Looking for ways to contreepute?
+        explanation:
+          Meep your pet's name below and we'll tell you what items you can
+          meep. Thanks for your meep!
+        submit: Meep
+        pet_header: Items %{pet_name} can meep
+        reload: Remeep
+        item_owned: You own this meepit
+      bulk_pets:
+        header: Meep pets in bulk
+        explanation:
+          Got a lot of pets to meep? Just keep meeping them into the box below,
+          or even meep in a whole list of names, one name per line. Thanks for
+          your meep!
+        submit: Meep pet
+        add: Meep
+        clear: Cleer
+        waiting: Weeting…
+        loading: Leeding…
+        submission_success: "%{points} peeps"
+  
   users:
     top_contributors:
       title: Top Conmeeputors
