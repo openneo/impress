@@ -1,13 +1,8 @@
-- title 'Report broken image'
+- title t('.title')
 
-%p
-  Thanks for helping us find broken image! Sometimes the converters don't get
-  things quite right, and sometimes that can be fixed by just trying the
-  conversion again. If reconversion doesn't seem to solve the issue, consider
-  sending us a bug report at #{mail_to 'webmaster@openneo.net'}. Thanks!
+%p= t '.explanation_html', :contact_link => mail_to(contact_email)
 
-%p
-  Which of these images looked broken? We'll put it in line for reconversion.
+%p= t '.call_to_action'
 
 %ul#report-assets
   - @swf_assets.each do |swf_asset|
@@ -17,16 +12,10 @@
         = form_tag(:action => :create) do
           = hidden_field_tag 'swf_asset_remote_id', swf_asset.remote_id
           = hidden_field_tag 'swf_asset_type', swf_asset.type
-          = submit_tag 'Report as broken'
+          = submit_tag t('.submit')
 
         - if swf_asset.converted_at?
-          %span.converted-at
-            Converted
-            = time_ago_in_words swf_asset.converted_at
-            ago
+          %span.converted-at= format_converted_at(swf_asset.converted_at)
       - else
-        %span.reported-broken-at
-          Reported
-          = time_ago_in_words swf_asset.reported_broken_at
-          ago
+        %span.reported-broken-at= format_reported_at(swf_asset.reported_broken_at)
 

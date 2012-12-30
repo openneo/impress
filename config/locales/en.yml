@@ -30,6 +30,21 @@ en:
           Images © 2000–%{year} Neopets, Inc. All Rights Reserved.
           Used With Permission
   
+  broken_image_reports:
+    new:
+      title: Report broken image
+      explanation_html:
+        Thanks for helping us find broken images! Sometimes the converters
+        don't get things quite right, and sometimes that can be fixed by just
+        trying the conversion again. If reconversion doesn't seem to solve the
+        issue, consider sending us a bug report at %{contact_link}. Thanks!
+      call_to_action:
+        Which of these images looked broken?
+        We'll put it in line for reconversion.
+      submit: Report as broken
+      converted_at_html: Converted %{converted_at_ago} ago
+      reported_at_html: Reported %{reported_at_ago} ago
+  
   outfits:
     new:
       tagline: Neopets wearables made easy!

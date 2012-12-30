@@ -30,6 +30,20 @@ en-meep:
           Images © 2000–%{year} Neopets, Inc. All Rights Reserved.
           Used With Permission. Meep.
   
+  broken_image_reports:
+    new:
+      title: Meep broken image
+      explanation_html:
+        Thanks for helping us find broken meeps! Sometimes the meepits don't
+        get things quite right, and sometimes that can be meeped by just
+        meeping the conversion again. If reconversion doesn't seem to meep the
+        meep, consider sending us a meep at %{contact_link}. Meep!
+      call_to_action:
+        Which of these meeps looked meeped? We'll put it in line for remeeping.
+      submit: Meep as broken
+      converted_at_html: Conveeped %{converted_at_ago} ago
+      reported_at_html: Repeeped %{reported_at_ago} ago
+  
   outfits:
     new:
       tagline: Meeps made meepy!
