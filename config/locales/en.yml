@@ -192,6 +192,30 @@ en:
       clone: Edit a copy
       creation_summary_html: Created by %{user_link}, %{created_at_ago} ago
   
+  pets:
+    bulk:
+      needed_items:
+        header: Looking for ways to contribute?
+        explanation:
+          Enter your pet's name below and we'll tell you what items you can
+          model. Thanks for your help!
+        submit: Submit
+        pet_header: Items %{pet_name} can model
+        reload: Reload
+        item_owned: You own this item
+      bulk_pets:
+        header: Model pets in bulk
+        explanation:
+          Got a lot of pets to model? Just keep typing them into the box below,
+          or even paste in a whole list of names, one name per line. Thanks for
+          your help!
+        submit: Load pet
+        add: Add
+        clear: Clear
+        waiting: Waiting…
+        loading: Loading…
+        submission_success: "%{points} points"
+  
   users:
     top_contributors:
       title: Top Contributors

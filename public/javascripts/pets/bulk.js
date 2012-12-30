@@ -1,4 +1,4 @@
-var DEBUG = (document.location.search == '?debug');
+var DEBUG = (document.location.search.substr(0, 6) == '?debug');
 
 /* Needed items form */
 (function () {
@@ -7,7 +7,7 @@ var DEBUG = (document.location.search == '?debug');
   UI.alert = $('#needed-items-alert');
   UI.pet_name_field = $('#needed-items-pet-name-field');
   UI.pet_thumbnail = $('#needed-items-pet-thumbnail');
-  UI.pet_name = $('#needed-items-pet-name');
+  UI.pet_header = $('#needed-items-pet-header');
   UI.reload = $('#needed-items-reload');
   UI.pet_items = $('#needed-items-pet-items');
   UI.item_template = $('#item-template');
@@ -23,6 +23,8 @@ var DEBUG = (document.location.search == '?debug');
   }
   
   /* Pet */
+  
+  var last_successful_pet_name = null;
   
   function loadPet(pet_name) {
     // If there is a request in progress, kill it. Our new pet request takes
@@ -52,8 +54,11 @@ var DEBUG = (document.location.search == '?debug');
   }
   
   function petSuccess(data, pet_name) {
+    last_successful_pet_name = pet_name;
     UI.pet_thumbnail.attr('src', petThumbnailUrl(pet_name));
-    UI.pet_name.text(pet_name);
+    UI.pet_header.empty();
+    $('#needed-items-pet-header-template').tmpl({pet_name: pet_name}).
+      appendTo(UI.pet_header);
     loadItems(data.query);
   }
   
@@ -92,8 +97,9 @@ var DEBUG = (document.location.search == '?debug');
     loadPet(UI.pet_name_field.val());
   });
   
-  UI.reload.click(function () {
-    loadPet(UI.pet_name.text());
+  UI.reload.click(function (e) {
+    e.preventDefault();
+    loadPet(last_successful_pet_name);
   });
 })();
 
@@ -109,20 +115,15 @@ var DEBUG = (document.location.search == '?debug');
   $(document.body).addClass('js');
 
   bulk_load_queue = new (function BulkLoadQueue() {
-    var pets = [],
-      standard_pet_el = $('<li/>'),
-      url = form.attr('action') + '.json';
-    standard_pet_el.append('<img/>').append($('<span/>', {'class': 'name'}))
-      .append($('<span/>', {'class': 'response', text: 'Waiting...'}));
+    var pets = [], url = form.attr('action') + '.json';
     
     function Pet(name) {
-      var el = standard_pet_el.clone()
-        .children('img').attr('src', petImage('cpn/' + name, 1)).end()
-        .children('span.name').text(name).end();
-      el.appendTo(queue_el);
+      var el = $('#bulk-pets-submission-template').tmpl({pet_name: name}).
+        appendTo(queue_el);
       
       this.load = function () {
-        var response_el = el.children('span.response').text('Loading...');
+        el.removeClass('waiting').addClass('loading');
+        var response_el = el.find('span.response');
         $.ajax({
           complete: function (data) {
             pets.shift();
@@ -133,14 +134,14 @@ var DEBUG = (document.location.search == '?debug');
           data: {name: name},
           dataType: 'json',
           error: function (xhr) {
-            el.addClass('failed');
+            el.removeClass('loading').addClass('failed');
             response_el.text(xhr.responseText);
           },
           success: function (data) {
             var points = data.points;
-            var response = (points === true) ? 'Thanks!' : points + ' points';
-            el.addClass('loaded');
-            response_el.text(response);
+            el.removeClass('loading').addClass('loaded');
+            $('#bulk-pets-submission-success-template').tmpl({points: points}).
+              appendTo(response_el);
           },
           type: 'post',
           url: url
