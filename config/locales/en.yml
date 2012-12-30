@@ -49,6 +49,22 @@ en:
       converted_at_html: Converted %{converted_at_ago} ago
       reported_at_html: Reported %{reported_at_ago} ago
   
+  contributions:
+    contributed_description:
+      item_suffix: for the first time
+      swf_asset_suffix: on a new body type
+      pet_type_suffix: for the first time
+      pet_state_prefix: a new pose for
+    
+    contribution:
+      description_html: "%{user_link} showed us %{contributed_description}"
+      created_at_html: "%{created_at_ago} ago"
+    
+    index:
+      title: Recent Contributions
+      user_summary: "%{user_name} currently has %{user_points} points"
+      no_contributions: There are no contributions here.
+  
   items:
     index:
       title_with_query: Searching Infinite Closet for "%{query}"
@@ -118,16 +134,9 @@ en:
       clone: Edit a copy
       creation_summary_html: Created by %{user_link}, %{created_at_ago} ago
   
-  contributions:
-    contributed_description:
-      item_suffix: "for the first time"
-      swf_asset_suffix: "on a new body type"
-      pet_type_suffix: "for the first time"
-      pet_state_prefix: "a new pose for"
-  
   users:
     top_contributors:
-      header: Top Contributors
+      title: Top Contributors
       rank: Rank
       user: User
       points: Points

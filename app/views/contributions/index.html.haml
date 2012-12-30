@@ -1,19 +1,17 @@
-- title 'Recent Contributions'
+- title t('.title')
 - if @user
   - canonical_path user_contributions_path(@user)
 
 %ul.buttons
   - if @user
-    %li= link_to 'Recent Contributions', contributions_path, :class => 'button'
-  %li= link_to 'Top Contributors', top_contributors_path, :class => 'button'
+    %li= link_to t('.title'), contributions_path, :class => 'button'
+  %li
+    = link_to t('users.top_contributors.title'), top_contributors_path,
+              :class => 'button'
 - if @user
-  %p
-    = @user.name
-    currently has
-    = @user.points
-    points
+  %p= t('.user_summary', :user_name => @user.name, :user_points => @user.points)
 - if @contributions.empty?
-  %p No contributions to see here!
+  %p= t('.no_contributions')
 - else
   = will_paginate @contributions
   %ul.contributions= render @contributions

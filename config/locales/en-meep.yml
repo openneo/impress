@@ -47,7 +47,23 @@ en-meep:
       submit: Meep as broken
       converted_at_html: Conveeped %{converted_at_ago} ago
       reported_at_html: Repeeped %{reported_at_ago} ago
+  
+  contributions:
+    contributed_description:
+      item_suffix: for the first meep
+      swf_asset_suffix: on a new body meep
+      pet_type_suffix: for the first meep
+      pet_state_prefix: a new meep for
     
+    contribution:
+      description_html: "%{user_link} meeped us %{contributed_description}"
+      created_at_html: "%{created_at_ago} ameep"
+    
+    index:
+      title: Recent Contribeeptions
+      user_summary: "%{user_name} currently has %{user_points} meeps"
+      no_contributions: There are no contribeeptions here.  
+  
   items:
     index:
       title_with_query: Searching Infinite Meepit for "%{query}"
@@ -116,16 +132,9 @@ en-meep:
       clone: Meep a copy
       creation_summary_html: Meeped by %{user_link}, %{created_at_ago} ago
   
-  contributions:
-    contributed_description:
-      item_suffix: "for the first meep"
-      swf_asset_suffix: "on a new body meep"
-      pet_type_suffix: "for the first meep"
-      pet_state_prefix: "a new meep for"
-  
   users:
     top_contributors:
-      header: Top Conmeeputors
+      title: Top Conmeeputors
       rank: Reep
       user: Meepit
       points: Peeps

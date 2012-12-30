@@ -1639,12 +1639,12 @@ body.contributions-index .contributions img {
   width: 80px;
   z-index: 2;
 }
-/* line 34, ../../../app/stylesheets/contributions/_index.sass */
-body.contributions-index .contributions span.username, body.contributions-index .contributions span.contributed-name {
+/* line 33, ../../../app/stylesheets/contributions/_index.sass */
+body.contributions-index .contributions .username, body.contributions-index .contributions .contributed-name {
   font-weight: bold;
 }
-/* line 36, ../../../app/stylesheets/contributions/_index.sass */
-body.contributions-index .contributions span.time-ago {
+/* line 35, ../../../app/stylesheets/contributions/_index.sass */
+body.contributions-index .contributions .time-ago {
   display: block;
   font-size: 75%;
 }
