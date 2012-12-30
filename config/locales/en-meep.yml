@@ -144,6 +144,16 @@ en-meep:
         we'll meep our datameep instantly. Meep!
       swf_assets_not_found_modeling_link_content: meep it for us
   
+  neopets_users:
+    new:
+      title: Meemport from pets
+      your_items_link: Back to Your Meeps
+      explanation:
+        Meep your Neopets username below, and we'll meemport all the wearables
+        from all your pets. It's meepy!
+      username_label: Meopets Username
+      submit: Meemport all pets
+  
   outfits:
     new:
       tagline: Meeps made meepy!
