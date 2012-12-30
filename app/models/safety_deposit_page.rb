@@ -10,7 +10,7 @@ class SafetyDepositPage < ClosetPage
   }
 
   def name
-    'SDB'
+    I18n.translate('neopets_pages.names.safety_deposit')
   end
 
   def url
