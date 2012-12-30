@@ -1,57 +1,70 @@
-- title "Import from #{@neopets_page.name}, Page #{@neopets_page.index}"
+- title t('.title', :name => @neopets_page.name, :index => @neopets_page.index)
 - content_for :before_flashes do
-  = link_to 'Back to Your Items', user_closet_hangers_path(current_user), :id => 'back-to-items'
+  = link_to t('.your_items_link'), user_closet_hangers_path(current_user), :id => 'back-to-items'
 
 = form_for @neopets_page, :html => {:id => 'closet-page-form'} do |f|
   = f.hidden_field :index
   #closet-page-frame-wrapper
     %span
-      %strong Page #{@neopets_page.index}
-      of your #{@neopets_page.name}
+      %strong
+        = t '.frame_header', :name => @neopets_page.name,
+            :index => @neopets_page.index
     %iframe#closet-page-frame{:src => @neopets_page.url}
   #closet-page-source
-    = f.label :source, "Paste source code below"
+    = f.label :source, t('.source_header')
     = f.text_area :source
-  = f.submit 'Import items'
+  = f.submit t('.submit')
 
-:markdown
-  **Welcome to the bulk #{@neopets_page.name} importer!** We're going to make it as
-  easy as possible to import your Neopets.com #{@neopets_page.name} data into your Dress to
-  Impress items list. Here's how it works.
-
-  1. Check the framed Neopets.com window on the left, pointing to
-    [page #{@neopets_page.index} of your #{@neopets_page.name}][cp].
-      * **Confirm that you're logged in.** If you're logged into
-        Neopets, but the above frame says that you're not, try enabling
-        "third-party cookies" in your browser. (Most have that on by default.)
-      * **If you haven't logged in, #{link_to_neopets_login "do so in another window"}</a>.**
-        It's never a good idea to log in inside of a frame, unless you're a
-        web programmer pro who can check that the frame does, in fact, point
-        to Neopets.com. To be safe,
-        #{link_to_neopets_login "pull up another window, check the URL, and log in safely"}.
-      * **Confirm that the page is, in fact, your #{@neopets_page.name}.** Similarly, don't
-        just trust a website when they tell you to copy-paste the source code
-        of another site. Instead, check that the page is what it is supposed to
-        be and does not contain any information you didn't mean to give out.
-
-  2. View the frame's source code.
-      * **In Google Chrome,** right-click the frame and choose **View Frame Source**.
-      * **In Firefox,** right-click the frame, choose **This Frame**, then **View Frame Source**.
-      * In other browsers, right-click, and look for something similar. If you're
-        still having trouble, try
-        #{link_to "viewing the page in a new window", @neopets_page.url, :target => "_blank"},
-        right-clicking, and choosing View Source.
-
-  3. Highlight the entire source code, and copy-paste it into the box on the right.
-      * Some nifty shortcuts: Ctrl-A to select all the text, Ctrl-C to copy it,
-        Ctrl-V to paste it in.
-
-  4. Submit!
-      * We'll analyze the code you sent us, grab exclusively the identity and
-        quantity of items in your #{@neopets_page.name}, and add that to your Dress to Impress
-        items list. I promise it's all safe, but, if you're concerned, find a
-        programmer buddy and [check out the source code to be sure][source].
-
-  [cp]: #{@neopets_page.url}
-  [source]: http://github.com/matchu/openneo-impress-rails
-
+- localized_cache :action_suffix => 'explanation' do
+  %p
+    = t '.help.welcome', :name => @neopets_page.name
+    = t '.help.intro', :name => @neopets_page.name
+  
+  %ol
+    %li
+      = t '.help.check_frame.header_html',
+          :page_link => link_to(t('.help.check_frame.page_link_content',
+                                  :name => @neopets_page.name,
+                                  :index => @neopets_page.index),
+                                @neopets_page.url)
+      %ul
+        %li
+          %strong= t '.help.check_frame.check_login.summary'
+          = t '.help.check_frame.check_login.details'
+        %li
+          %strong
+            = t '.help.check_frame.login.summary_html',
+                :login_link => link_to_neopets_login(t('.help.check_frame.login.summary_login_link_content'))
+          = t '.help.check_frame.login.details_html',
+              :login_link => link_to_neopets_login(t('.help.check_frame.login.details_login_link_content'))
+        %li
+          %strong
+            = t '.help.check_frame.check_content.summary',
+                :name => @neopets_page.name
+          = t '.help.check_frame.check_content.details'
+    
+    %li
+      = t '.help.view_source.header'
+      %ul
+        %li
+          = t '.help.view_source.chrome_html'
+        %li
+          = t '.help.view_source.firefox_html'
+        %li
+          = t '.help.view_source.other_html'
+        %li
+          = t '.help.view_source.troubleshooting_html',
+              :page_link => link_to(t('.help.view_source.troubleshooting_page_link_content'),
+                                      @neopets_page.url)
+    
+    %li
+      = t '.help.copy_source.header'
+      %ul
+        %li
+          = t '.help.copy_source.shortcuts'
+    
+    %li
+      = t '.help.submit.header'
+      %ul
+        %li
+          = t '.help.submit.description', :name => @neopets_page.name

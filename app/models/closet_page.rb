@@ -27,7 +27,7 @@ class ClosetPage
   end
 
   def name
-    'closet'
+    I18n.translate('neopets_pages.names.closet')
   end
 
   def persisted?

@@ -144,6 +144,80 @@ en-meep:
         we'll meep our datameep instantly. Meep!
       swf_assets_not_found_modeling_link_content: meep it for us
   
+  neopets_pages:
+    names:
+      closet: meepit
+      safety_deposit: safety demeepit
+    
+    new:
+      title: Meeport from %{name}, Page %{index}
+      your_items_link: Back to Your Meeps
+      frame_header: Meep %{index} of your %{name}
+      source_header: Meep source code below
+      submit: Meep items
+      help:
+        welcome: Welcome to the bulk %{name} meeporter!
+        intro:
+          We're going to meep it as easy as possible to meeport your
+          Neopets.com %{name} data into your Dress to Impress meepit list.
+          Here's how it meeps.
+        check_frame:
+          header_html:
+            Check the framed Neopets.com meep on the left,
+            meeping to %{page_link}.
+          page_link_content:
+            meep %{index} of your %{name}
+          check_login:
+            summary: Confirm that you're meeped in.
+            details:
+              If you're meeped into Neopets, but the above frame says that
+              you're not, try enabling "third-party cookies" in your browser.
+              (Most have meeped on by default.)
+          login:
+            summary_html: If you haven't meeped in, %{login_link}.
+            summary_login_link_content: do so in another meepit
+            details_html:
+              It's never a good idea to meep in inside of a frame, unless
+              you're a web programmer pro who can meep that the frame does, in
+              fact, meep to Neopets.com. To be safe, %{login_link}.
+            details_login_link_content:
+              meep up another window, meep the URL, and meep in safely
+          check_content:
+            summary: Meep that the page is, in fact, your %{name}.
+            details:
+              Don't just meep a website when they tell you to meepy-paste the
+              source code of another site. Instead, check that the meep is what
+              it is supposed to be and doesn't meep any private information.
+        view_source:
+          header: Meep the frame's source code.
+          chrome_html:
+            <strong>In Google Chrome</strong>, right-meep the frame and choose
+            <strong>View Frame Source</strong>.
+          firefox_html:
+            <strong>In Firefox</strong>, right-meep the frame, choose
+            <strong>This Frame</strong>, then <strong>View Frame
+            Source</strong>.
+          other_html:
+            In other meepits, right-meep and look for something similar.
+          troubleshooting_html:
+            If you're still having trouble, try %{page_link}, right-meeping,
+            and meeping View Source.
+          troubleshooting_page_link_content: meeping the page in a new window
+        copy_source:
+          header:
+            Meeplight the entire source code,
+            and meepy-paste it into the box on the right.
+          shortcuts:
+            "Some meepy shortcuts: Ctrl-A to select all the text, Ctrl-C to
+            copy it, Ctrl-V to paste it in."
+        submit:
+          header: Submeep!
+          description:
+            We'll analyze the meep you sent us, grab exclusively the identity
+            and quantity of meepits in your %{name}, and add that to your Dress
+            to Impress meepit list. I meep that it's all safe, but, if you're
+            concerned, find a meepit and meep out the source code to be sure.
+  
   neopets_users:
     new:
       title: Meemport from pets
