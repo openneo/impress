@@ -34,7 +34,7 @@ class ItemsController < ApplicationController
     else
       respond_to do |format|
         format.html {
-          unless fragment_exist?('items#index newest_items')
+          unless localized_fragment_exist?('items#index newest_items')
             @newest_items = Item.newest.limit(18)
           end
         }

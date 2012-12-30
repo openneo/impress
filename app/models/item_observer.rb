@@ -26,6 +26,6 @@ class ItemObserver < ActionController::Caching::Sweeper
   
   def expire_newest_items
     expire_fragment_in_all_locales('outfits#new newest_items')
-    expire_fragment('items#index newest_items')
+    expire_fragment_in_all_locales('items#index newest_items')
   end
 end

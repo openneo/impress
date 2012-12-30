@@ -1,48 +1,42 @@
 - if @items
-  - title "Searching Infinite Closet for \"#{@query}\""
+  - title t('.title_with_query', :query => @query)
   - if @items.empty?
-    :markdown
-      We couldn't find any wearables that matched **#{h @query}**. Sorry!
-
-      Are we missing something? To add an item to our database, just
-      [show us a pet who is wearing it][1]. That's it!
-
-      [1]: /
+    %p= t '.no_results_html', :query_html => content_tag(:strong, @query)
+    %p= t '.modeling_request_html',
+      :modeling_link => link_to(t('.modeling_link_content'), root_path)
   - else
     = will_paginate @items
     = render @items
     = will_paginate @items
 - else
   #search-info
-    - cache :action_suffix => 'search_help' do
+    - localized_cache :action_suffix => 'search_help' do
       #search-help
-        %h2 Find what you're looking for
+        %h2= t '.search_help_header'
         %dl
-          %dt kreludor  "altador cup" -background
+          %dt= t '.basic_example_query'
+          %dd= t '.basic_example_description'
+          %dt= t '.user_items_example_query'
           %dd
-            returns any item with the word "kreludor" and the phrase "altador cup"
-            in it, but not the word "background"
-          %dt hat user:owns
-          %dd
-            returns
-            = link_to 'items that you own', your_items_path
-            with the word "hat"
-          %dt blue is:nc
-          %dd returns any NC Mall item with the word "blue" in it
-          %dt collar -is:pb
-          %dd returns any item with the word "collar" in it that isn't from a paint brush
-          %dt species:shoyru
-          %dd returns any item a Shoyru can wear
-          %dt type:hat
-          %dd returns any item that fills a "hat" zone
+            = t '.user_items_example_description_html',
+              :user_items_link => link_to(t('.user_items_example_link_content'),
+                                          your_items_path)
+          %dt= t '.nc_example_query'
+          %dd= t '.nc_example_description'
+          %dt= t '.pb_example_query'
+          %dd= t '.pb_example_description'
+          %dt= t '.species_example_query'
+          %dd= t '.species_example_description'
+          %dt= t '.type_example_query'
+          %dd= t '.type_example_description'
 
-    - cache 'items#index newest_items' do
+    - localized_cache 'items#index newest_items' do
       #search-new-items
-        %h2 Newest items
+        %h2= t '.newest_items_header'
         = render @newest_items
 
-  - cache :action_suffix => 'species_search_links' do
+  - localized_cache :action_suffix => 'species_search_links' do
     #species-search-links
-      %h2 Can't decide? Search by species
+      %h2= t '.species_search_header'
       = standard_species_search_links
 
