@@ -146,6 +146,16 @@ en:
         we'll update our database instantly. Thanks!
       swf_assets_not_found_modeling_link_content: model it for us
   
+  neopets_users:
+    new:
+      title: Import from pets
+      your_items_link: Back to Your Items
+      explanation:
+        Enter your Neopets username below, and we'll import all the wearables
+        from all your pets. It's easy!
+      username_label: Neopets Username
+      submit: Import all pets
+  
   outfits:
     new:
       tagline: Neopets wearables made easy!
