@@ -29,6 +29,10 @@ en:
         copyright:
           Images © 2000–%{year} Neopets, Inc. All Rights Reserved.
           Used With Permission
+    
+    items:
+      title_tagline: Neopets customization clothing and wearables database
+      search: Search
   
   broken_image_reports:
     new:
@@ -44,6 +48,39 @@ en:
       submit: Report as broken
       converted_at_html: Converted %{converted_at_ago} ago
       reported_at_html: Reported %{reported_at_ago} ago
+  
+  items:
+    index:
+      title_with_query: Searching Infinite Closet for "%{query}"
+      no_results_html:
+        We couldn't find any wearables that matched %{query_html}.
+        Sorry!
+      modeling_request_html:
+        Are we missing something? To add an item to our database, just
+        %{modeling_link}, and we'll update our database instantly. Thanks!
+      modeling_link_content: show us a pet who is wearing it
+      search_help_header: Find what you're looking for
+      basic_example_query: kreludor "altador cup" -background
+      basic_example_description:
+        returns any item with the word "kreludor" and the phrase "altador cup"
+        in it, but not the word "background"
+      user_items_example_query: hat user:owns
+      user_items_example_description_html:
+        returns %{user_items_link} with the word "hat"
+      user_items_example_link_content: items that you own
+      nc_example_query: blue is:nc
+      nc_example_description:
+        returns any NC Mall item with the word "blue" in it
+      pb_example_query: collar -is:pb
+      pb_example_description:
+        returns any item with the word "collar" in it that isn't from a paint
+        brush
+      species_example_query: species:shoyru
+      species_example_description: returns any item a Shoyru can wear
+      type_example_query: type:hat
+      type_example_description: returns any item that fills a "hat" zone
+      newest_items_header: Newest items
+      species_search_header: Can't decide? Search by species
   
   outfits:
     new:

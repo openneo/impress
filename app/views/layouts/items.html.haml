@@ -1,15 +1,15 @@
 - content_for :before_title, campaign_progress
 - content_for :title_category do
-  Infinite Closet: Neopets customization clothing and wearables database
+  #{t 'infinite_closet'}: #{t '.title_tagline'}
 - content_for :before_flashes do
   %h1
     = link_to items_path do
       = image_tag 'http://images.neopets.com/items/mall_floatingneggfaerie.gif'
-      %span Infinite Closet
+      %span= t 'infinite_closet'
 - content_for :content do
   = form_tag items_path, :method => :get do
     = text_field_tag :q, @query
-    = submit_tag 'Search', :name => nil
+    = submit_tag t('.search'), :name => nil
   = yield
 = render :file => 'layouts/application'
 
