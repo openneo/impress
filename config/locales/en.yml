@@ -59,6 +59,12 @@ en:
         Thanks, %{user_link}!"
       blog_linkback: OpenNeo Blog
       newest_items_header: New Items
+    
+    show:
+      default_outfit_name: Shared outfit
+      edit: Edit
+      clone: Edit a copy
+      creation_summary_html: Created by %{user_link}, %{created_at_ago} ago
   
   contributions:
     contributed_description:

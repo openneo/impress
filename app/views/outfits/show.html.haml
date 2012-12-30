@@ -1,4 +1,4 @@
-- title(@outfit.name || "Shared outfit")
+- title(@outfit.name || t('.default_outfit_name'))
 - content_for :before_title, campaign_progress
 
 - open_graph :type => 'openneo-impress:outfit', :title => yield(:title),
@@ -7,15 +7,14 @@
   - open_graph :image => absolute_url(@outfit.image.url)
 
 = link_to_edit_outfit(@outfit, :class => 'button', :id => 'outfit-wardrobe-link') do
-  Edit
-  - unless user_signed_in? && @outfit.user == current_user
-    a copy
+  - if user_signed_in? && @outfit.user == current_user
+    = t '.edit'
+  - else
+    = t '.clone'
+  
 - if @outfit.user_id
   #outfit-user
-    Created by
-    == #{link_to @outfit.user.name, user_contributions_path(@outfit.user)},
-    %span{:title => @outfit.created_at}= time_ago_in_words @outfit.created_at
-    ago
+    = outfit_creation_summary(@outfit)
 #preview-wrapper
   #preview-swf
 #outfit-items= render @outfit.worn_items

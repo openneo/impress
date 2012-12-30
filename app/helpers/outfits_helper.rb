@@ -24,6 +24,16 @@ module OutfitsHelper
     query << "&outfit=#{outfit.id}" if user_signed_in? && outfit.user_id == current_user.id
     link_to content, wardrobe_path(:anchor => query), options
   end
+  
+  def outfit_creation_summary(outfit)
+    user = outfit.user
+    user_link = link_to(user.name, user_contributions_path(user))
+    created_at_ago = content_tag(:abbr, time_ago_in_words(@outfit.created_at),
+                                 :title => @outfit.created_at)
+    translate 'outfits.show.creation_summary_html',
+      :user_link => user_link,
+      :created_at_ago => created_at_ago
+  end
 
   def outfit_li_for(outfit)
     class_name = outfit.starred? ? 'starred' : nil

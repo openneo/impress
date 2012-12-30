@@ -58,6 +58,12 @@ en-meep:
         Meep, %{user_link}!"
       blog_linkback: OpenNeo Meep
       newest_items_header: New Meeps
+    
+    show:
+      default_outfit_name: Meeped outfit
+      edit: Meep
+      clone: Meep a copy
+      creation_summary_html: Meeped by %{user_link}, %{created_at_ago} ago
   
   contributions:
     contributed_description:
