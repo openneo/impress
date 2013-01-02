@@ -420,8 +420,15 @@ en-meep:
         submission_success: "%{points} peeps"
   
   users:
+    index:
+      not_found: We don't have a meepit named %{name}. Is it meeped correctly?
+    
     top_contributors:
       title: Top Conmeeputors
       rank: Reep
       user: Meepit
       points: Peeps
+    
+    update:
+      success: Settings successfully meeped.
+      invalid: "Could not meep settings: %{errors}"

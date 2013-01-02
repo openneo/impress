@@ -422,8 +422,15 @@ en:
         submission_success: "%{points} points"
   
   users:
+    index:
+      not_found: We don't have a user named %{name}. Is it spelled correctly?
+    
     top_contributors:
       title: Top Contributors
       rank: Rank
       user: User
       points: Points
+    
+    update:
+      success: Settings successfully saved.
+      invalid: "Could not save settings: %{errors}"
