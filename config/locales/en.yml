@@ -44,6 +44,14 @@ en:
       search: Search
   
   broken_image_reports:
+    create:
+      success:
+        Thanks! This image will be reconverted soon. If it looks the same after
+        conversion, please consider sending a bug report.
+      already_reported:
+        This image is already in line for reconversion. We'll get to it soon,
+        don't worry.
+    
     new:
       title: Report broken image
       explanation_html:
