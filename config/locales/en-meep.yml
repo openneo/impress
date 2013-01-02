@@ -5,6 +5,15 @@ en-meep:
   infinite_closet: Infinite Meepit
   modeling_hub: Meepiting Hub
   
+  activerecord:
+    attributes:
+      closet_list:
+        name: Nameep
+        description: Descreeption
+      
+      user:
+        neopets_username: Neopets usermeep
+  
   layouts:
     application:
       title_tagline: Preview customized Neopets' meeps and meepits
@@ -48,8 +57,89 @@ en-meep:
       converted_at_html: Conveeped %{converted_at_ago} ago
       reported_at_html: Repeeped %{reported_at_ago} ago
   
+  closet_hangers:
+    closet_hanger:
+      submit: Submeep
+      delete: Deleep
+    
+    index:
+      title_for:
+        you: Your Meeps
+        another_user: "%{user_name}'s meeps"
+      toggle_help: Need meep?
+      item_search_placeholder: Find meeps to add
+      item_search_submit: Meep
+      send_neomail: Neomeep %{neopets_username}
+      neopets_username:
+        add: Add your Neopets usermeep
+        edit: Edit "Neomeep %{neopets_username}"
+        submit: Meep
+        cancel: Unmeep
+      public_url_label: "Public Meepit:"
+      import_from:
+        closet: Impeep from closet
+        safety_deposit: Impeep from SDB
+        neopets_user: Impeep from pets
+      export_to:
+        petpage: Expeep to petpage
+      toggle_group:
+        show: meep
+        hide: unmeep
+      add_list: Meep new list
+      unlisted:
+        submit: Meep
+        header: (Not in a meepit)
+        empty: There aren't any meepits here.
+        
+    visibility:
+      private:
+        name: Preevate
+        description:
+          items: Only you can meep these items
+          list: Only you can meep this list
+      public:
+        name: Publeek
+        description:
+          items: Anyone who looks up your items can meep these items
+          list: Anyone who looks up your items can meep this list
+      trading:
+        name: Tradeeng
+        description:
+          items: These items will be publicly meeped for trades
+          list: Items in this list will be publicly meeped for trades
+  
   closet_lists:
-    unlisted_name: Not in a meep
+    closet_list:
+      submit: Submeep
+      edit: Meepit
+      delete: Deleep
+      delete_confirmation:
+        owned:
+          Are you sure you want to deleep "%{list_name}"? Even if you do, we'll
+          remember that you own these items.
+        wanted:
+          Are you sure you want to deleep "%{list_name}"? Even if you do, we'll
+          remember that you want these items.
+      empty: This meep is empty.
+      
+    edit:
+      title: Meepiting list "%{list_name}"
+    
+    form:
+      your_items_link: Back to Your Meeps
+      name_hint: Like "meep for trade" or "NC meeplist"
+      hangers_owned_label: This is a meep for…
+      hangers_owned_options:
+        owned: Meepits you own
+        wanted: Meepits you want
+      visibility_label: Who can meep this list?
+      description_hint:
+        Why are these meepits in the same meep? What are your terms for meeping?
+        Or you can meep this blank.
+      description_markup_hint_html:
+        We _<em>support</em>_ **<strong>Meepdown</strong>** and some HTML.
+      submit: Meep list
+    
     groups:
       owned_by:
         you:  Meeps you own
@@ -57,6 +147,11 @@ en-meep:
       wanted_by:
         you: Meeps you want
         another_user: Meeps %{user_name} wants
+    
+    new:
+      title: Meep an items list
+    
+    unlisted_name: Not in a meep
   
   contributions:
     contributed_description:

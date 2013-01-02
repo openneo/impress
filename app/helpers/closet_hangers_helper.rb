@@ -1,8 +1,8 @@
 require 'cgi'
 
 module ClosetHangersHelper
-  def closet_hangers_help_class
-    'hidden' unless @user.closet_hangers.empty?
+  def closet_hangers_help_class(user)
+    'hidden' unless user.closet_hangers.empty?
   end
 
   def closet_hanger_partial_class(hanger)
@@ -12,16 +12,8 @@ module ClosetHangersHelper
     end
   end
 
-  def closet_hanger_verb(owned, positive=true)
-    ClosetHanger.verb(closet_hanger_subject, owned, positive)
-  end
-
   def send_neomail_url(user)
     "http://www.neopets.com/neomessages.phtml?type=send&recipient=#{CGI.escape @user.neopets_username}"
-  end
-
-  def closet_hanger_subject
-    public_perspective? ? @user.name : :you
   end
 
   def hangers_group_visibility_field_name(owned)
@@ -34,7 +26,7 @@ module ClosetHangersHelper
     end
   end
 
-  def closet_visibility_descriptions(subject='these items')
+  def closet_visibility_descriptions(subject=:items)
     content = ''
     ClosetVisibility.levels.each do |level|
       content << content_tag(:li, level.description(subject), 'data-id' => level.id)
@@ -70,6 +62,12 @@ module ClosetHangersHelper
     path = new_user_closet_list_path current_user,
       :closet_list => {:hangers_owned => owned}
     link_to(content, path, options)
+  end
+  
+  def long_closet_visibility_choices(subject)
+    ClosetVisibility.levels.map do |level|
+      ["#{level.human_name}: #{level.description(subject)}", level.id]
+    end
   end
 
   def nc_icon_url
@@ -144,8 +142,12 @@ module ClosetHangersHelper
       translate "closet_lists.groups.#{ownership_key}.you"
     else
       translate "closet_lists.groups.#{ownership_key}.another_user",
-        :user_name => subject.name
+        :user_name => subject
     end
+  end
+  
+  def closet_hangers_subject(user)
+    public_perspective? ? user.name : :you
   end
 end
 

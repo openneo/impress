@@ -3,12 +3,12 @@
     - if show_controls
       = form_for [current_user, closet_list], :html => {:class => 'visibility-form'} do |f|
         = f.select :visibility, closet_visibility_choices(:human_name)
-        = f.submit "Save"
-        = closet_visibility_descriptions('items in this list')
+        = f.submit t('.submit')
+        = closet_visibility_descriptions(:list)
       .closet-list-controls
-        = link_to 'Edit', edit_user_closet_list_path(closet_list.user_id, closet_list)
+        = link_to t('.edit'), edit_user_closet_list_path(closet_list.user_id, closet_list)
         = form_tag user_closet_list_path(closet_list.user_id, closet_list), :method => 'delete' do
-          = submit_tag 'Delete', :confirm => closet_list_delete_confirmation(closet_list)
+          = submit_tag t('.delete'), :confirm => closet_list_delete_confirmation(closet_list)
     %h4= closet_list.name
 
   .closet-list-content
@@ -18,5 +18,6 @@
     .closet-list-hangers
       - unless closet_list.hangers.empty?
         = render_sorted_hangers(closet_list, show_controls)
-    %span.empty-list This list is empty.
+    
+    %span.empty-list= t('.empty')
 

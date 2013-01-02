@@ -1,12 +1,8 @@
 module ClosetListsHelper
   def closet_list_delete_confirmation(closet_list)
-    "Are you sure you want to delete \"#{closet_list.name}\"?".tap do |msg|
-      unless closet_list.hangers.empty?
-        msg << " Even if you do, we'll remember that you " +
-          ClosetHanger.verb(:you, closet_list.hangers_owned) +
-          " these items."
-      end
-    end
+    ownership_key = closet_list.hangers_owned? ? 'owned' : 'wanted'
+    translate("closet_lists.closet_list.delete_confirmation.#{ownership_key}",
+              :list_name => closet_list.name)
   end
 
   def closet_list_description_format(list)
@@ -15,10 +11,10 @@ module ClosetListsHelper
   end
 
   def hangers_owned_options
-    @hangers_owned_options ||= [true, false].map do |owned|
-      verb = ClosetHanger.verb(:i, owned)
-      ["items I #{verb}", owned]
-    end
+    [
+      [translate("closet_lists.form.hangers_owned_options.owned"), true],
+      [translate("closet_lists.form.hangers_owned_options.wanted"), false]
+    ]
   end
 
   def render_sorted_hangers(list, show_controls)

@@ -5,6 +5,15 @@ en:
   infinite_closet: Infinite Closet
   modeling_hub: Modeling Hub
   
+  activerecord:
+    attributes:
+      closet_list:
+        name: Name
+        description: Description
+      
+      user:
+        neopets_username: Neopets username
+  
   layouts:
     application:
       title_tagline: Preview customized Neopets' clothing and wearables
@@ -49,8 +58,89 @@ en:
       converted_at_html: Converted %{converted_at_ago} ago
       reported_at_html: Reported %{reported_at_ago} ago
   
+  closet_hangers:
+    closet_hanger:
+      submit: Save
+      delete: Remove
+    
+    index:
+      title_for:
+        you: Your Items
+        another_user: "%{user_name}'s items"
+      toggle_help: Need help?
+      item_search_placeholder: Find items to add
+      item_search_submit: Search
+      send_neomail: Neomail %{neopets_username}
+      neopets_username:
+        add: Add your Neopets username
+        edit: Edit "Neomail %{neopets_username}"
+        submit: Save
+        cancel: Cancel
+      public_url_label: "Public URL:"
+      import_from:
+        closet: Import from closet
+        safety_deposit: Import from SDB
+        neopets_user: Import from pets
+      export_to:
+        petpage: Export to petpage
+      toggle_group:
+        show: show
+        hide: hide
+      add_list: Add new list
+      unlisted:
+        submit: Save
+        header: (Not in a list)
+        empty: There aren't any items here.
+    
+    visibility:
+      private:
+        name: Private
+        description:
+          items: Only you can see these items
+          list: Only you can see this list
+      public:
+        name: Public
+        description:
+          items: Anyone who looks up your items can see these items
+          list: Anyone who looks up your items can see this list
+      trading:
+        name: Trading
+        description:
+          items: These items will be publicly listed for trades
+          list: Items in this list will be publicly listed for trades
+  
   closet_lists:
-    unlisted_name: Not in a list
+    closet_list:
+      submit: Save
+      edit: Edit
+      delete: Delete
+      delete_confirmation:
+        owned:
+          Are you sure you want to delete "%{list_name}"? Even if you do, we'll
+          remember that you own these items.
+        wanted:
+          Are you sure you want to delete "%{list_name}"? Even if you do, we'll
+          remember that you want these items.
+      empty: This list is empty.
+      
+    edit:
+      title: Editing list "%{list_name}"
+    
+    form:
+      your_items_link: Back to Your Items
+      name_hint: Like "up for trade" or "NC wishlist"
+      hangers_owned_label: This is a list for…
+      hangers_owned_options:
+        owned: Items you own
+        wanted: Items you want
+      visibility_label: Who can see this list?
+      description_hint:
+        Why are these items in the same list? What are your terms for trading?
+        Or you can leave this blank.
+      description_markup_hint_html:
+        We _<em>support</em>_ **<strong>Markdown</strong>** and some HTML.
+      submit: Save list
+    
     groups:
       owned_by:
         you:  Items you own
@@ -58,7 +148,11 @@ en:
       wanted_by:
         you: Items you want
         another_user: Items %{user_name} wants
-        
+    
+    new:
+      title: Create an items list
+    
+    unlisted_name: Not in a list
   
   contributions:
     contributed_description:

@@ -1,31 +1,22 @@
 - secondary_nav do
-  = link_to 'Back to Your Items', user_closet_hangers_path(current_user), :class => 'button'
+  = link_to t('.your_items_link'), user_closet_hangers_path(current_user), :class => 'button'
 
 = form_for [@closet_list.user, @closet_list] do |f|
   %ul.fields
     %li
       = f.label :name
-      %span.hint Like "up for trade" or "NC wishlist"
+      %span.hint= t '.name_hint'
       = f.text_field :name, :required => true
     %li
-      = f.label :hangers_owned, 'This is a list for&hellip;'.html_safe
+      = f.label :hangers_owned, t('.hangers_owned_label')
       = f.select :hangers_owned, hangers_owned_options
     %li
-      = f.label :visibility, 'Who can see this list?'
-      = f.select :visibility, closet_visibility_choices(:description, 'Items in this list')
+      = f.label :visibility, t('.visibility_label')
+      = f.select :visibility, long_closet_visibility_choices(:list)
     %li
       = f.label :description
-      %span.hint
-        Why are these items in a list? What are your terms for trading?
-        Or you can leave this blank.
+      %span.hint= t '.description_hint'
       = f.text_area :description
-      %span.hint
-        We
-        = surround '_' do
-          %em support
-        = surround '**' do
-          %strong Markdown
-        and
-        some HTML.
-  = f.submit 'Save list'
+      %span.hint= t '.description_markup_hint_html'
+  = f.submit t('.submit')
 
