@@ -75,8 +75,8 @@ module ItemsHelper
   end
   
   def nc_icon
-    image_tag 'nc.png', :title => 'NC Mall Item', :alt => 'NC',
-              :class => 'nc-icon'
+    image_tag 'nc.png', :title => t('items.item.nc.description'),
+              :alt => t('items.item.nc.abbr'), :class => 'nc-icon'
   end
 
   def nc_icon_for(item)

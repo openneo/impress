@@ -1357,24 +1357,23 @@ body.closet_hangers-petpage #petpage-closet-lists h4 {
   display: inline-block;
   vertical-align: middle;
   *vertical-align: auto;
-  width: 8em;
   vertical-align: middle;
 }
 /* line 7, ../../../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.10.6/frameworks/compass/stylesheets/compass/css3/_inline-block.scss */
 body.closet_hangers-petpage #petpage-closet-lists h4 {
   *display: inline;
 }
-/* line 25, ../../../app/stylesheets/closet_hangers/_petpage.sass */
+/* line 24, ../../../app/stylesheets/closet_hangers/_petpage.sass */
 body.closet_hangers-petpage #petpage-closet-lists h4::after {
   content: ":";
 }
-/* line 28, ../../../app/stylesheets/closet_hangers/_petpage.sass */
+/* line 27, ../../../app/stylesheets/closet_hangers/_petpage.sass */
 body.closet_hangers-petpage #petpage-closet-lists ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-/* line 33, ../../../app/stylesheets/closet_hangers/_petpage.sass */
+/* line 32, ../../../app/stylesheets/closet_hangers/_petpage.sass */
 body.closet_hangers-petpage #petpage-closet-lists ul li {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -1389,11 +1388,11 @@ body.closet_hangers-petpage #petpage-closet-lists ul li {
 body.closet_hangers-petpage #petpage-closet-lists ul li {
   *display: inline;
 }
-/* line 39, ../../../app/stylesheets/closet_hangers/_petpage.sass */
+/* line 38, ../../../app/stylesheets/closet_hangers/_petpage.sass */
 body.closet_hangers-petpage #petpage-closet-lists ul li label {
   padding: 0.25em 0.75em 0.25em 0.25em;
 }
-/* line 42, ../../../app/stylesheets/closet_hangers/_petpage.sass */
+/* line 41, ../../../app/stylesheets/closet_hangers/_petpage.sass */
 body.closet_hangers-petpage #petpage-closet-lists ul li.checked {
   background: #eeffee;
   -moz-border-radius: 3px;
@@ -1405,15 +1404,15 @@ body.closet_hangers-petpage #petpage-closet-lists ul li.checked {
   border: 1px solid #006600;
   padding: 0;
 }
-/* line 48, ../../../app/stylesheets/closet_hangers/_petpage.sass */
+/* line 47, ../../../app/stylesheets/closet_hangers/_petpage.sass */
 body.closet_hangers-petpage #petpage-closet-lists ul li.unlisted {
   font-style: italic;
 }
-/* line 51, ../../../app/stylesheets/closet_hangers/_petpage.sass */
+/* line 50, ../../../app/stylesheets/closet_hangers/_petpage.sass */
 body.closet_hangers-petpage #petpage-closet-lists input[type=submit] {
   float: right;
 }
-/* line 54, ../../../app/stylesheets/closet_hangers/_petpage.sass */
+/* line 53, ../../../app/stylesheets/closet_hangers/_petpage.sass */
 body.closet_hangers-petpage #petpage-output {
   display: block;
   height: 30em;

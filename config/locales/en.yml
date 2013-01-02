@@ -92,6 +92,24 @@ en:
         header: (Not in a list)
         empty: There aren't any items here.
     
+    petpage:
+      title: Export to petpage
+      your_items_link: Back to Your Items
+      submit: Export checked lists to petpage
+      description:
+        We took your public lists and created a nice, simple HTML file for your
+        Neopet's petpage. By default it's styled as a table, but it doesn't
+        have to be. The HTML is flexible, so, if you're the artsy type, you're
+        free to mess with the styles all you want!
+      instructions_html:
+        Copy the HTML from the box below, then paste it into
+        %{edit_petpage_link}. Then head to the Neoboards to show off! Have fun!
+      instructions_edit_petpage_link_content: your pet's page
+    
+    petpage_content:
+      unlisted_header: (Not in a list)
+      footer: I made this list on Dress to Impress. You can, too!
+    
     visibility:
       private:
         name: Private
@@ -202,6 +220,11 @@ en:
       type_example_description: returns any item that fills a "hat" zone
       newest_items_header: Newest items
       species_search_header: Can't decide? Search by species
+    
+    item:
+      nc:
+        abbr: NC
+        description: This is an NC Mall item
     
     show:
       rarity: Rarity
