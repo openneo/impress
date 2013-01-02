@@ -351,6 +351,17 @@ en-meep:
             concerned, find a meepit and meep out the source code to be sure.
   
   neopets_users:
+    create:
+      success:
+        zero:
+          Okay. We meeped %{user_name}'s pets, but already had these items
+          meeped to your account.
+        one:
+          Success! We meeped %{user_name}'s pets, and meeped 1 item.
+        other:
+          Success! We meeped %{user_name}'s pets, and meeped %{count} items.
+      not_found: Could not meep user %{user_name}. Is it meeped correctly?
+    
     new:
       title: Meemport from pets
       your_items_link: Back to Your Meeps

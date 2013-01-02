@@ -352,6 +352,17 @@ en:
             be sure.
   
   neopets_users:
+    create:
+      success:
+        zero:
+          Okay. We loaded %{user_name}'s pets, but already had these items
+          recorded to your account.
+        one:
+          Success! We loaded %{user_name}'s pets, and added 1 item.
+        other:
+          Success! We loaded %{user_name}'s pets, and added %{count} items.
+      not_found: Could not find user %{user_name}. Is it spelled correctly?
+      
     new:
       title: Import from pets
       your_items_link: Back to Your Items

@@ -12,14 +12,9 @@ class NeopetsUsersController < ApplicationController
     @neopets_user.load!
     @neopets_user.save_hangers!
 
-    message = "Success! We loaded user \"#{@neopets_user.username}\""
-    unless @neopets_user.hangers.empty?
-      message << " and added #{@neopets_user.hangers.size} items."
-    else
-      message << ", but already had all of this data recorded."
-    end
-
-    flash[:success] = message
+    flash[:success] = t('neopets_users.create.success',
+                        :user_name => @neopets_user.username,
+                        :count => @neopets_user.hangers.size)
     redirect_to user_closet_hangers_path(current_user)
   end
 
@@ -30,7 +25,8 @@ class NeopetsUsersController < ApplicationController
   end
 
   def not_found
-    flash.now[:alert] = "Could not find user \"#{@neopets_user.username}\". Did you spell it correctly?"
+    flash.now[:alert] = t('neopets_users.create.not_found',
+                          :user_name => @neopets_user.username)
     render :action => :new
   end
 end
