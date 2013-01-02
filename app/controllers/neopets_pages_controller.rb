@@ -10,40 +10,48 @@ class NeopetsPagesController < ApplicationController
       @neopets_page.index = @page_params[:index]
       @neopets_page.source = @page_params[:source]
 
-      saved_counts = @neopets_page.save_hangers!
+      messages = [t('neopets_pages.create.success',
+                    :index => @neopets_page.index)]
 
+      saved_counts = @neopets_page.save_hangers!
       any_created = saved_counts[:created] > 0
       any_updated = saved_counts[:updated] > 0
-      if any_created || any_updated
-        message = "Page #{@neopets_page.index} saved! We "
-        message << "added " + pluralize(saved_counts[:created], 'item') + " to the items you own" if any_created
-        message << " and " if any_created && any_updated
-        message << "updated the count on " + pluralize(saved_counts[:updated], 'item') if any_updated
-        message << ". "
-      elsif @neopets_page.hangers.size > 1
-        message = "Success! We checked that page, and we already had all this data recorded. "
-      else
-        message = "Success! We checked that page, and there were no wearables to add. "
+      if any_created && any_updated
+        created_msg = t('neopets_pages.create.created_and_updated_hangers.created_msg',
+                        :count => saved_counts[:created])
+        updated_msg = t('neopets_pages.create.created_and_updated_hangers.updated_msg',
+                        :count => saved_counts[:updated])
+        messages << t('neopets_pages.create.created_and_updated_hangers.text',
+                      :created_msg => created_msg,
+                      :updated_msg => updated_msg)
+      elsif any_created
+        messages << t('neopets_pages.create.created_hangers',
+                      :count => saved_counts[:created])
+      elsif any_updated
+        messages << t('neopets_pages.create.updated_hangers',
+                      :count => saved_counts[:updated])
+      elsif @neopets_page.hangers.size > 1 # saw items, but at same quantities
+        messages << t('neopets_pages.create.no_changes')
+      else # no items recognized
+        messages << t('neopets_pages.create.no_data')
       end
 
       unless @neopets_page.unknown_item_names.empty?
-        message << "We also found " +
-          pluralize(@neopets_page.unknown_item_names.size, 'item') +
-          " we didn't recognize: " +
-          @neopets_page.unknown_item_names.to_sentence +
-          ". Please put each item on your pet and type its name in on the " +
-          "home page so we can have a record of it. Thanks! "
+        messages << t('neopets_pages.create.unknown_items',
+                      :item_names => @neopets_page.unknown_item_names.to_sentence,
+                      :count => @neopets_page.unknown_item_names.size)
       end
 
       if @neopets_page.last?
-        message << "That was the last page of your Neopets #{@neopets_page.name}."
+        messages << t('neopets_pages.create.done', :name => @neopets_page.name)
         destination = user_closet_hangers_path(current_user)
       else
-        message << "Now the frame should contain page #{@neopets_page.index + 1}. Paste that source code over, too."
+        messages << t('neopets_pages.create.next_page',
+                      :next_index => (@neopets_page.index + 1))
         destination = {:action => :new, :index => (@neopets_page.index + 1)}
       end
 
-      flash[:success] = message
+      flash[:success] = messages.join(' ')
       redirect_to destination
     else
       redirect_to :action => :new
@@ -70,9 +78,7 @@ class NeopetsPagesController < ApplicationController
 
   def on_parse_error(e)
     Rails.logger.info "Neopets page parse error: #{e.message}"
-    flash[:alert] = "We had trouble reading your source code. Is it a valid " +
-      "HTML document? Make sure you pasted the computery-looking result of " +
-      "clicking View Frame Source, and not the pretty page itself. "
+    flash[:alert] = t('neopets_pages.create.parse_error')
     render :action => :new
   end
 end

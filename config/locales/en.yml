@@ -278,9 +278,46 @@ en:
       swf_assets_not_found_modeling_link_content: model it for us
   
   neopets_pages:
+    create:
+      success: Page %{index} saved!
+      created_and_updated_hangers:
+        text: "%{created_msg} and %{updated_msg}."
+        created_msg:
+          one: We added 1 item
+          other: We added %{count} items
+        updated_msg:
+          one: updated the quantity for 1 more
+          other: updated the quantity for %{count} more
+      created_hangers:
+        one: We added 1 new item to the list of items you own.
+        other: We added %{count} new items to the list of items you own.
+      updated_hangers:
+        one: We updated the quantity for 1 of your items.
+        other: We updated the quantity for %{count} of your items.
+      no_changes:
+        We already had this data recorded to your account, so we didn't make any changes.
+      no_data: We didn't see any wearables, so we didn't make any changes.
+      unknown_items:
+        one:
+          "We also found an item we didn't recognize: %{item_names}. Please
+          model it for us and we'll update our database instantly. Thanks!"
+        other:
+          "We also found %{count} items we didn't recognize: %{item_names}.
+          Please model them for us and we'll update our database instantly.
+          Thanks!"
+      next_page:
+        Now the frame should contain page %{next_index}.
+        Paste that source code over, too.
+      done: That was the last page of your Neopets %{name}.
+      parse_error:
+        We had trouble reading your source code. Is it a valid HTML document?
+        Make sure you pasted the computery-looking result of clicking View
+        Frame Source, and not the pretty-looking page itself.
+    
     names:
       closet: closet
       safety_deposit: safety deposit
+    
     new:
       title: Import from %{name}, Page %{index}
       your_items_link: Back to Your Items
