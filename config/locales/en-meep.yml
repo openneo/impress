@@ -277,6 +277,43 @@ en-meep:
       swf_assets_not_found_modeling_link_content: meep it for us
   
   neopets_pages:
+    create:
+      success: Page %{index} meeped!
+      created_and_updated_hangers:
+        text: "%{created_msg} meep %{updated_msg}."
+        created_msg:
+          one: We added 1 meepit
+          other: We added %{count} meepit
+        updated_msg:
+          one: updated the meepity for 1 more
+          other: updated the meepity for %{count} more
+      created_hangers:
+        one: We added 1 new meepit to the list of meepits you own.
+        other: We added %{count} new meepits to the list of meepits you own.
+      updated_hangers:
+        one: We updated the quantity for 1 of your meepits.
+        other: We updated the quantity for %{count} of your meepits.
+      no_changes:
+        We already had this data meeped to your account,
+        so we didn't meep any changes.
+      no_data: We didn't meep any wearables, so we didn't meep any changes.
+      unknown_items:
+        one:
+          "We also meeped an item we didn't recognize: %{item_names}. Please
+          meep it for us and we'll update our database instantly. Thanks!"
+        other:
+          "We also meeped %{count} items we didn't recognize: %{item_names}.
+          Please meep them for us and we'll update our database instantly.
+          Thanks!"
+      next_page:
+        Now the frame should contain page %{next_index}.
+        Meep that source code over, too.
+      done: That was the last meepit of your Neopets %{name}.
+      parse_error:
+        We had trouble meeping your source code. Is it a valid HTML document?
+        Make sure you meeped the computery-looking result of clicking View
+        Frame Source, and not the pretty-looking page itself.
+    
     names:
       closet: meepit
       safety_deposit: safety demeepit
