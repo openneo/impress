@@ -225,6 +225,12 @@ en:
       nc:
         abbr: NC
         description: This is an NC Mall item
+      owned:
+        abbr: Owned
+        description: You own this item
+      wanted:
+        abbr: Wanted
+        description: You want this item
     
     show:
       rarity: Rarity
