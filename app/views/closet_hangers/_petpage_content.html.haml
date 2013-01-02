@@ -77,7 +77,7 @@
 - [true, false].each do |owned|
   - lists = lists_by_owned[owned]
   - if lists || unlisted_hangers_by_owned[owned]
-    %h2.dti-item-group-header Items #OWNER #{ClosetHanger.verb(:someone, owned)}
+    %h2.dti-item-group-header= closet_lists_group_name '#OWNER', true
     %ul.dti-item-group
       - if lists
         - lists.each do |list|
@@ -92,10 +92,9 @@
       - if unlisted_hangers_by_owned[owned]
         %li.dti-unlisted-items
           - unless lists.blank?
-            %h3 (Not in a list)
+            %h3= t '.unlisted_header'
           %div
             = render_batched_petpage_hangers(unlisted_hangers_by_owned[owned])
 
-#dti-item-footer
-  I made this list on Dress to Impress. You can, too!
+#dti-item-footer= t '.footer'
 
