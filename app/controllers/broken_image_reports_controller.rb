@@ -12,14 +12,11 @@ class BrokenImageReportsController < ApplicationController
   def create
     swf_asset = SwfAsset.where(:type => params[:swf_asset_type]).
       find_by_remote_id(params[:swf_asset_remote_id])
-      
 
     if swf_asset.report_broken
-      flash[:success] = "Thanks! This image will be reconverted soon. If it " +
-        "looks the same after conversion, please consider sending a bug report."
+      flash[:success] = t('broken_image_reports.create.success')
     else
-      flash[:alert] = "This image is already in line for reconversion. We'll " +
-        "get to it soon, don't worry."
+      flash[:alert] = t('broken_image_reports.create.already_reported')
     end
 
     redirect_to :back
