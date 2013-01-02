@@ -224,6 +224,12 @@ en-meep:
       nc:
         abbr: MC
         description: This is a MC Meep item
+      owned:
+        abbr: Meened
+        description: You own this meepit
+      wanted:
+        abbr: Weented
+        description: You want this meepit
     
     show:
       rarity: Meepity

@@ -54,11 +54,13 @@ module ItemsHelper
   end
   
   def owned_icon
-    image_tag 'owned.png', :title => 'You own this', :alt => 'Own'
+    image_tag 'owned.png', :title => t('items.item.owned.description'),
+              :alt => t('items.item.owned.abbr')
   end
   
   def wanted_icon
-    image_tag 'wanted.png', :title => 'You want this', :alt => 'Want'
+    image_tag 'wanted.png', :title => t('items.item.wanted.description'),
+              :alt => t('items.item.wanted.abbr')
   end
 
   def closeted_icons_for(item)
