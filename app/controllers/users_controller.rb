@@ -7,7 +7,7 @@ class UsersController < ApplicationController
     if @user
       redirect_to user_closet_hangers_path(@user)
     else
-      flash[:alert] = "We don't have a user named \"#{name}\". Did you spell it correctly?"
+      flash[:alert] = t('users.index.not_found', :name => name)
       redirect_to root_path
     end
   end
@@ -21,10 +21,11 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html {
         if success
-          flash[:success] = "Settings successfully saved"
+          flash[:success] = t('users.update.success')
           redirect_back! user_closet_hangers_path(@user)
         else
-          flash[:alert] = "Error saving user settings: #{@user.errors.full_messages.to_sentence}"
+          flash[:alert] = t('users.update.invalid',
+                            :errors => @user.errors.full_messages.to_sentence)
         end
       }
 
