@@ -9,34 +9,27 @@ module ClosetVisibility
       end
     end
 
-    def description(subject=nil)
-      if subject
-        @description.sub('$SUBJECT', subject).capitalize
-      else
-        @description
-      end
+    def description(subject=:items)
+      I18n.translate "closet_hangers.visibility.#{name}.description.#{subject}"
     end
 
     def human_name
-      name.to_s.humanize
+      I18n.translate "closet_hangers.visibility.#{name}.name"
     end
   end
 
   LEVELS = [
     Level.new(
       :id => 0,
-      :name => :private,
-      :description => "Only you can see $SUBJECT"
+      :name => :private
     ),
     Level.new(
       :id => 1,
-      :name => :public,
-      :description => "Anyone who visits this page can see $SUBJECT"
+      :name => :public
     ),
     Level.new(
       :id => 2,
-      :name => :trading,
-      :description => "$SUBJECT will be publicly listed for trades"
+      :name => :trading
     )
   ]
 
