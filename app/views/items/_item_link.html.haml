@@ -1,4 +1,4 @@
-- cache "items/#{item.id}#item_link_partial" do
+- localized_cache "items/#{item.id}#item_link_partial" do
   = link_to item_path(item, :q => @query) do
     = image_tag item.thumbnail_url, :alt => item.description, :title => item.description
     %span.name= item.name
