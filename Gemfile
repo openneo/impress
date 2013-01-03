@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.5'
+gem 'rails', '3.0.18'
 #gem 'sqlite3-ruby', '~> 1.3.1', :require => 'sqlite3'
 
 gem 'compass', '~> 0.10.1'
