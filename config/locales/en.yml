@@ -71,6 +71,25 @@ en:
       submit: Save
       delete: Remove
     
+    create:
+      success:
+        owned:
+          in_list:
+            Success! You own %{count} of the %{item_name} in the %{list_name} list.
+          unlisted: Success! You own of the %{count} %{item_name}.
+        wanted:
+          in_list:
+            Success! You want %{count} of the %{item_name} in the %{list_name} list.
+          unlisted: Success! You want %{count} of the %{item_name}.
+      invalid:
+        owned: "We couldn't save how many %{item_name} you own: %{errors}"
+        wanted: "We couldn't save how many %{item_name} you want: %{errors}"
+    
+    destroy:
+      success:
+        owned: Success! You do not own the %{item_name}.
+        wanted: Success! You do not want the %{item_name}.
+    
     index:
       title_for:
         you: Your Items
@@ -134,6 +153,10 @@ en:
         description:
           items: These items will be publicly listed for trades
           list: Items in this list will be publicly listed for trades
+    
+    update_quantities:
+      success: Successfully saved how many of the %{item_name} you own and want.
+      invalid: "We couldn't save those quantities: %{errors}"
   
   closet_lists:
     closet_list:

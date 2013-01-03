@@ -70,6 +70,25 @@ en-meep:
       submit: Submeep
       delete: Deleep
     
+    create:
+      success:
+        owned:
+          in_list:
+            Meep! You own %{count} of the %{item_name} in the %{list_name} list.
+          unlisted: eep! You own of the %{count} %{item_name}.
+        wanted:
+          in_list:
+            Meep! You want %{count} of the %{item_name} in the %{list_name} list.
+          unlisted: Meep! You want %{count} of the %{item_name}.
+      invalid:
+        owned: "We couldn't meep how many %{item_name} you own: %{errors}"
+        wanted: "We couldn't meep how many %{item_name} you want: %{errors}"
+    
+    destroy:
+      success:
+        owned: Meep! You do not own the %{item_name}.
+        wanted: Meep! You do not want the %{item_name}.
+    
     index:
       title_for:
         you: Your Meeps
@@ -133,6 +152,10 @@ en-meep:
         description:
           items: These items will be publicly meeped for trades
           list: Items in this list will be publicly meeped for trades
+    
+    update_quantities:
+      success: Successfully meeped how many of the %{item_name} you own and want.
+      invalid: "We couldn't meep those quantities: %{errors}"
   
   closet_lists:
     closet_list:
