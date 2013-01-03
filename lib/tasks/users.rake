@@ -2,13 +2,13 @@ namespace :users do
   namespace :image_mode do
 
     desc "Grants given username access to image mode"
-    task :add, :username, :needs => :environment do |t, args|
+    task :add, [:username] => :environment do |t, args|
       user = toggle_user_image_mode(args, true)
       puts "#{user.name} has gained access to image mode"
     end
 
     desc "Removes given username's access to image mode"
-    task :remove, :username, :needs => :environment do |t, args|
+    task :remove, [:username] => :environment do |t, args|
       user = toggle_user_image_mode(args, false)
       puts "#{user.name} has lost access to image mode"
     end
