@@ -19,36 +19,36 @@
 
   var hangerGroups = [];
 
-	$('div.closet-hangers-group').each(function () {
-	  var el = $(this);
-	  var lists = [];
+  $('div.closet-hangers-group').each(function () {
+    var el = $(this);
+    var lists = [];
 
-	  el.find('div.closet-list').each(function () {
-	    var el = $(this);
-	    var id = el.attr('data-id');
-	    if(id) {
-	      lists[lists.length] = {
-	        id: parseInt(id, 10),
-	        label: el.find('h4').text()
-	      }
-	    }
-	  });
+    el.find('div.closet-list').each(function () {
+      var el = $(this);
+      var id = el.attr('data-id');
+      if(id) {
+        lists[lists.length] = {
+          id: parseInt(id, 10),
+          label: el.find('h4').text()
+        }
+      }
+    });
 
-	  hangerGroups[hangerGroups.length] = {
-	    label: el.find('h3').text(),
-	    lists: lists,
-	    owned: (el.attr('data-owned') == 'true')
-	  };
-	});
+    hangerGroups[hangerGroups.length] = {
+      label: el.find('h3').text(),
+      lists: lists,
+      owned: (el.attr('data-owned') == 'true')
+    };
+  });
 
-	$('div.closet-hangers-group span.toggle').live('click', function () {
-	  $(this).closest('.closet-hangers-group').toggleClass('hidden');
-	});
+  $('div.closet-hangers-group span.toggle').live('click', function () {
+    $(this).closest('.closet-hangers-group').toggleClass('hidden');
+  });
 
-	var hangersElQuery = '#closet-hangers';
+  var hangersElQuery = '#closet-hangers';
   var hangersEl = $(hangersElQuery);
 
-	/*
+  /*
 
     Compare with Your Items
 
@@ -381,85 +381,90 @@
   autocompleter._renderItem = function( ul, item ) {
     var li = $("<li></li>").data("item.autocomplete", item);
     if(item.is_item) { // these are items from the server
-      li.append("<a>Add <strong>" + item.label + "</strong>");
+      $('#autocomplete-item-tmpl').tmpl({item_name: item.label}).appendTo(li);
     } else if(item.list) { // these are list inserts
+      var listName = item.list.label;
       if(item.hasHanger) {
-        li.append("<span>It's already in <strong>" + item.list.label + "</strong>");
+        $('#autocomplete-already-in-collection-tmpl').
+          tmpl({collection_name: listName}).appendTo(li);
       } else {
-        li.append("<a>Add to <strong>" + item.list.label + "</strong>");
+        $('#autocomplete-add-to-list-tmpl').tmpl({list_name: listName}).
+          appendTo(li);
       }
       li.addClass("closet-list-autocomplete-item");
     } else { // these are group inserts
       var groupName = item.group.label;
       if(!item.hasHanger) {
-        li.append("<a>Add to <strong>" + groupName.replace(/\s+$/, '') + "</strong>, no list");
+        $('#autocomplete-add-to-group-tmpl').
+          tmpl({group_name: groupName.replace(/\s+$/, '')}).appendTo(li);
       } else {
-        li.append("<span>It's already in <strong>" + groupName + "</strong>");
+        $('#autocomplete-already-in-collection-tmpl').
+          tmpl({collection_name: groupName}).appendTo(li);
       }
-		  li.addClass('closet-hangers-group-autocomplete-item');
-		}
-		return li.appendTo(ul);
-	}
+      li.addClass('closet-hangers-group-autocomplete-item');
+    }
+    return li.appendTo(ul);
+  }
 
-	/*
+  /*
 
-	  Contact Neopets username form
+    Contact Neopets username form
 
-	*/
+  */
 
-	var contactEl = $('#closet-hangers-contact');
-	var editContactLink = $('.edit-contact-link');
-	var contactForm = contactEl.children('form');
-	var cancelContactLink = $('#cancel-contact-link');
-	var contactFormUsername = contactForm.children('input[type=text]');
-	var editContactLinkUsername = $('#contact-link-has-value span');
+  var contactEl = $('#closet-hangers-contact');
+  var editContactLink = $('.edit-contact-link');
+  var contactForm = contactEl.children('form');
+  var cancelContactLink = $('#cancel-contact-link');
+  var contactFormUsername = contactForm.children('input[type=text]');
+  var editContactLinkUsername = $('#contact-link-has-value span');
 
-	function closeContactForm() {
-	  contactEl.removeClass('editing');
-	}
+  function closeContactForm() {
+    contactEl.removeClass('editing');
+  }
 
-	editContactLink.click(function () {
-	  contactEl.addClass('editing');
-	  contactFormUsername.focus();
-	});
+  editContactLink.click(function () {
+    contactEl.addClass('editing');
+    contactFormUsername.focus();
+  });
 
-	cancelContactLink.click(closeContactForm);
+  cancelContactLink.click(closeContactForm);
 
-	contactForm.submit(function (e) {
-	  var data = contactForm.serialize();
-	  contactForm.disableForms();
-	  $.ajax({
-	    url: contactForm.attr('action') + '.json',
-	    type: 'post',
-	    data: data,
-	    dataType: 'json',
-	    complete: function () {
-	      contactForm.enableForms();
-	    },
-	    success: function () {
-	      var newName = contactFormUsername.val();
-	      if(newName.length > 0) {
-	        editContactLink.addClass('has-value');
-	        editContactLinkUsername.text(newName);
-	      } else {
-	        editContactLink.removeClass('has-value');
-	      }
-	      closeContactForm();
+  contactForm.submit(function (e) {
+    var data = contactForm.serialize();
+    contactForm.disableForms();
+    $.ajax({
+      url: contactForm.attr('action') + '.json',
+      type: 'post',
+      data: data,
+      dataType: 'json',
+      complete: function () {
+        contactForm.enableForms();
       },
-	    error: function (xhr) {
-	      handleSaveError(xhr, 'saving Neopets username');
-	    }
-	  });
-	  e.preventDefault();
-	});
+      success: function () {
+        var newName = contactFormUsername.val();
+        if(newName.length > 0) {
+          editContactLink.addClass('has-value');
+          editContactLinkUsername.text(newName);
+        } else {
+          editContactLink.removeClass('has-value');
+        }
+        closeContactForm();
+      },
+      error: function (xhr) {
+        handleSaveError(xhr, 'saving Neopets username');
+      }
+    });
+    e.preventDefault();
+  });
 
-	/*
+  /*
 
-	  Hanger list controls
+    Hanger list controls
 
-	*/
+  */
 
-	$('input[type=submit][data-confirm]').live('click', function (e) {
+  $('input[type=submit][data-confirm]').live('click', function (e) {
     if(!confirm(this.getAttribute('data-confirm'))) e.preventDefault();
   });
 
