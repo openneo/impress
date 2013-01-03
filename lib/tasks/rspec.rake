@@ -6,6 +6,7 @@ rescue MissingSourceFile
     module Core
       class RakeTask
         def initialize(name)
+          include Rake::DSL
           task name do
             # if rspec-rails is a configured gem, this will output helpful material and exit ...
             require File.expand_path(File.dirname(__FILE__) + "/../../config/environment")
