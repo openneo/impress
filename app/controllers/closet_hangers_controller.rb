@@ -7,10 +7,7 @@ class ClosetHangersController < ApplicationController
     @closet_hanger = current_user.closet_hangers.find params[:id]
     @closet_hanger.destroy
     @item = @closet_hanger.item
-    respond_to do |format|
-      format.html { redirect_after_destroy! }
-      format.json { render :json => true }
-    end
+    closet_hanger_destroyed
   end
 
   def index
@@ -85,26 +82,9 @@ class ClosetHangersController < ApplicationController
     @closet_hanger.item = @item
     
     if @closet_hanger.save
-      respond_to do |format|
-        format.html {
-          message = "Success! You #{@closet_hanger.verb(:you)} #{@closet_hanger.quantity} "
-          message << ((@closet_hanger.quantity > 1) ? @item.name.pluralize : @item.name)
-          message << " in the \"#{@closet_hanger.list.name}\" list" if @closet_hanger.list
-          flash[:success] = "#{message}."
-          redirect_back!(@item)
-        }
-
-        format.json { render :json => true }
-      end
+      closet_hanger_saved
     else
-      respond_to do |format|
-        format.html {
-          flash[:alert] = "We couldn't save how many of this item you #{@closet_hanger.verb(:you)}: #{@closet_hanger.errors.full_messages.to_sentence}"
-          redirect_back!(@item)
-        }
-
-        format.json { render :json => {:errors => @closet_hanger.errors.full_messages}, :status => :unprocessable_entity }
-      end
+      closet_hanger_invalid
     end
   end
   
@@ -115,34 +95,13 @@ class ClosetHangersController < ApplicationController
 
     unless @closet_hanger.quantity == 0 # save the hanger, new record or not
       if @closet_hanger.save
-        respond_to do |format|
-          format.html {
-            message = "Success! You #{@closet_hanger.verb(:you)} #{@closet_hanger.quantity} "
-            message << ((@closet_hanger.quantity > 1) ? @item.name.pluralize : @item.name)
-            message << " in the \"#{@closet_hanger.list.name}\" list" if @closet_hanger.list
-            flash[:success] = "#{message}."
-            redirect_back!(@item)
-          }
-
-          format.json { render :json => true }
-        end
+        closet_hanger_saved
       else
-        respond_to do |format|
-          format.html {
-            flash[:alert] = "We couldn't save how many of this item you #{@closet_hanger.verb(:you)}: #{@closet_hanger.errors.full_messages.to_sentence}"
-            redirect_back!(@item)
-          }
-
-          format.json { render :json => {:errors => @closet_hanger.errors.full_messages}, :status => :unprocessable_entity }
-        end
+        closet_hanger_invalid
       end
     else # delete the hanger since the user doesn't want it
       @closet_hanger.destroy
-      respond_to do |format|
-        format.html { redirect_after_destroy! }
-
-        format.json { render :json => true }
-      end
+      closet_hanger_destroyed
     end
   end
   
@@ -153,15 +112,65 @@ class ClosetHangersController < ApplicationController
           ClosetHanger.set_quantity!(quantity, :user_id => @user.id,
             :item_id => @item.id, :key => key)
         end
-        flash[:success] = "Successfully saved how many #{@item.name} you own and want."
+        flash[:success] = t('closet_hangers.update_quantities.success',
+                            :item_name => @item.name)
       end
     rescue ActiveRecord::RecordInvalid => e
-      flash[:alert] = "We couldn't save those quantities. #{e.message}"
+      flash[:alert] = t('closet_hangers.update_quantities.invalid',
+                        :errors => e.message)
     end
     redirect_to @item
   end
 
-  protected
+  private
+  
+  def closet_hanger_destroyed
+    respond_to do |format|
+      format.html {
+        ownership_key = @closet_hanger.owned? ? 'owned' : 'wanted'
+        flash[:success] = t("closet_hangers.destroy.success.#{ownership_key}",
+                            :item_name => @item.name)
+        redirect_back!(@item)
+      }
+      
+      format.json { render :json => true }
+    end
+  end
+  
+  def closet_hanger_invalid
+    respond_to do |format|
+      format.html {
+        ownership_key = @closet_hanger.owned? ? 'owned' : 'wanted'
+        flash[:alert] = t("closet_hangers.create.invalid.#{ownership_key}",
+                          :item_name => @item.name,
+                          :errors => @closet_hanger.errors.full_messages.to_sentence)
+        redirect_back!(@item)
+      }
+      
+      format.json { render :json => {:errors => @closet_hanger.errors.full_messages}, :status => :unprocessable_entity }
+    end
+  end
+  
+  def closet_hanger_saved
+    respond_to do |format|
+      format.html {
+        ownership_key = @closet_hanger.owned? ? 'owned' : 'wanted'
+        if @closet_hanger.list
+          flash[:success] = t("closet_hangers.create.success.#{ownership_key}.in_list",
+                              :item_name => @item.name,
+                              :list_name => @closet_hanger.list.name,
+                              :count => @closet_hanger.quantity)
+        else
+          flash[:success] = t("closet_hangers.create.success.#{ownership_key}.unlisted",
+                              :item_name => @item.name,
+                              :count => @closet_hanger.quantity)
+        end
+        redirect_back!(@item)
+      }
+      
+      format.json { render :json => true }
+    end
+  end
 
   def find_item
     @item = Item.find params[:item_id]
@@ -201,11 +210,6 @@ class ClosetHangersController < ApplicationController
         when 'false', '0' then false
       end
     end
-  end
-
-  def redirect_after_destroy!
-    flash[:success] = "Success! You do not #{@closet_hanger.verb(:you)} #{@item.name}."
-    redirect_back!(@item)
   end
 end
 
