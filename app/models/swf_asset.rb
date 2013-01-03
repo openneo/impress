@@ -167,6 +167,9 @@ class SwfAsset < ActiveRecord::Base
     joins(:parent_swf_asset_relationships).
       where(ParentSwfAssetRelationship.arel_table[:parent_id].in(item_ids))
   }
+  scope :with_parent_ids, lambda {
+    select('swf_assets.*, parents_swf_assets.parent_id')
+  }
 
   def local_url
     '/' + File.join(PUBLIC_ASSET_DIR, local_path_within_outfit_swfs)

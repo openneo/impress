@@ -148,6 +148,10 @@ class Item < ActiveRecord::Base
   def supported_species
     @supported_species ||= species_support_ids.blank? ? Species.all : species_support_ids.sort.map { |id| Species.find(id) }
   end
+  
+  def support_species?(species)
+    species_support_ids.blank? || species_support_ids.include?(species.id)
+  end
 
   def self.search(query, user=nil)
     raise SearchError, "Please provide a search query" unless query

@@ -11,10 +11,13 @@ OpenneoImpressItems::Application.routes.draw do |map|
 
   match '/item_zone_sets.json' => 'ItemZoneSets#index'
 
+  # DEPRECATED
   match '/bodies/:body_id/swf_assets.json' => 'swf_assets#index', :as => :body_swf_assets
+  
   match '/items/:item_id/swf_assets.json' => 'swf_assets#index', :as => :item_swf_assets
   match '/items/:item_id/bodies/:body_id/swf_assets.json' => 'swf_assets#index', :as => :item_swf_assets_for_body_id
   match '/pet_types/:pet_type_id/swf_assets.json' => 'swf_assets#index', :as => :pet_type_swf_assets
+  match '/pet_types/:pet_type_id/items/swf_assets.json' => 'swf_assets#index', :as => :item_swf_assets_for_pet_type
   match '/pet_states/:pet_state_id/swf_assets.json' => 'swf_assets#index', :as => :pet_state_swf_assets
   match '/species/:species_id/color/:color_id/pet_type.json' => 'pet_types#show'
 

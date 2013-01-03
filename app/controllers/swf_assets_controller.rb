@@ -13,12 +13,16 @@ class SwfAssetsController < ApplicationController
         end
         json = @swf_assets.all.group_by(&:body_id)
       end
-    elsif params[:body_id] && params[:item_ids]
-      swf_assets = SwfAsset.arel_table
+    elsif params[:pet_type_id] && params[:item_ids]
+      pet_type = PetType.find(params[:pet_type_id], :select => [:body_id, :species_id])
+      items = Item.find(params[:item_ids], :select => [:id, :species_support_ids])
+      compatible_items = items.select { |i| i.support_species?(pet_type.species) }
+      compatible_item_ids = compatible_items.map(&:id)
+      
       @swf_assets = SwfAsset.object_assets.
-        select('swf_assets.*, parents_swf_assets.parent_id').
-        fitting_body_id(params[:body_id]).
-        for_item_ids(params[:item_ids])
+        fitting_body_id(pet_type.body_id).
+        for_item_ids(compatible_item_ids).
+        with_parent_ids
       json = @swf_assets.map { |a| a.as_json(:parent_id => a.parent_id.to_i, :for => 'wardrobe') }
     elsif params[:pet_state_id]
       @swf_assets = PetState.find(params[:pet_state_id]).swf_assets.all
@@ -34,6 +38,14 @@ class SwfAssetsController < ApplicationController
       if params[:ids][:object]
         @swf_assets += SwfAsset.object_assets.where(:remote_id => params[:ids][:object]).all
       end
+    elsif params[:body_id] && params[:item_ids]
+      # DEPRECATED in favor of pet_type_id and item_ids
+      swf_assets = SwfAsset.arel_table
+      @swf_assets = SwfAsset.object_assets.
+        select('swf_assets.*, parents_swf_assets.parent_id').
+        fitting_body_id(params[:body_id]).
+        for_item_ids(params[:item_ids])
+      json = @swf_assets.map { |a| a.as_json(:parent_id => a.parent_id.to_i, :for => 'wardrobe') }
     end
     if @swf_assets
       @swf_assets = @swf_assets.all unless @swf_assets.is_a? Array

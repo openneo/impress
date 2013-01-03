@@ -742,7 +742,7 @@ function Wardrobe() {
         if(!item.hasAssetsFitting(pet_type)) item_ids_needed.push(id);
       }
       if(item_ids_needed.length) {
-        $.getJSON('/bodies/' + pet_type.body_id + '/swf_assets.json', {
+        $.getJSON('/pet_types/' + pet_type.id + '/items/swf_assets.json', {
           item_ids: item_ids_needed
         }, function (data) {
           var item;
