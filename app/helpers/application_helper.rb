@@ -162,6 +162,32 @@ module ApplicationHelper
     content_for :title, value
   end
   
+  def translate_with_links(key, options={})
+    nonlink_options = {}
+    link_urls = {}
+    
+    options.each do |key, value|
+      str_key = key.to_s
+      if str_key.end_with? '_link_url'
+        link_key = str_key[0..-5] # "abcdef_link_url" => "abcdef_link"
+        link_urls[link_key] = value
+      else
+        nonlink_options[key] = value
+      end
+    end
+    
+    link_options = {}
+    link_urls.each do |link_key, url|
+      content = translate("#{key}.#{link_key}_content", nonlink_options)
+      link_options[link_key.to_sym] = link_to(content, url)
+    end
+    
+    converted_options = link_options.merge(nonlink_options)
+    translate("#{key}.main_html", converted_options)
+  end
+  
+  alias_method :twl, :translate_with_links
+  
   def userbar_contributions_summary(user)
     contributions_link_content = translate('.userbar.contributions_link_content',
                                            :user_points => user.points)

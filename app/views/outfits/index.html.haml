@@ -1,22 +1,11 @@
-- title 'Your outfits'
-%p
-  These are the outfits that you've saved to Dress to Impress so far. To save
-  some more, head to the wardrobe and click Save Outfit in the top right
-  corner.
-%p
-  The link for each outfit is totally public, so please feel free to share the
-  URL with the whole wide world.
+- title t('.title')
+
 - unless @outfits.empty?
+  %p= t '.intro.saving'
+  %p= t '.intro.linking'
   %ul#outfits= render @outfits
 - else
-  %p
-    You haven't saved any outfits yet.
-    - succeed ',' do
-      = link_to 'Start at the home page', root_path
-    enter a pet name or choose a color combination, create the outfit of your
-    dreams, and click "Save Outfit" in the top right corner.
-  %p
-    It'll be fantastic. Promise.
+  %p= twl '.no_outfits', :start_link_url => root_path
 
 - content_for :javascripts do
   = include_javascript_libraries :jquery
