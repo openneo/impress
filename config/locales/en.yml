@@ -439,6 +439,9 @@ en:
       submit: Import all pets
   
   outfits:
+    destroy:
+      success: Outfit "%{outfit_name}" successfully deleted.
+    
     new:
       tagline: Neopets wearables made easy!
       load_pet_legend: Enter your pet's name

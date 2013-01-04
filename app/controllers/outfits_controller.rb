@@ -28,22 +28,15 @@ class OutfitsController < ApplicationController
   end
 
   def destroy
-    if @outfit.destroy
-      respond_to do |format|
-        format.html {
-          flash[:success] = "Outfit #{@outfit.name} successfully deleted"
-          redirect_to current_user_outfits_path
-        }
-        format.json { render :json => true }
-      end
-    else
-      respond_to do |format|
-        format.html {
-          flash[:alert] = "Error deleting outfit. Try again?"
-          redirect_to current_user_outfits_path, :status => :bad_request
-        }
-        format.json { render :json => false, :status => :bad_request }
-      end
+    @outfit.destroy
+    
+    respond_to do |format|
+      format.html {
+        flash[:success] = t('outfits.destroy.success',
+                            :outfit_name => @outfit.name)
+        redirect_to current_user_outfits_path
+      }
+      format.json { render :json => true }
     end
   end
 

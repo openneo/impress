@@ -438,6 +438,9 @@ en-meep:
       submit: Meemport all pets
   
   outfits:
+    destroy:
+      success: Outfit "%{outfit_name}" succeessfully demeeped.
+    
     new:
       tagline: Meeps made meepy!
       load_pet_legend: Enter your pet's meep
