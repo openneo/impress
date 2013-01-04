@@ -442,6 +442,24 @@ en:
     destroy:
       success: Outfit "%{outfit_name}" successfully deleted.
     
+    index:
+      title: Your Outfits
+      intro:
+        saving:
+          These are the outfits that you've saved to Dress to Impress so far.
+          When you design an outfit you like, click Save Outfit in the top
+          right corner and it'll appear in this list.
+        linking:
+          The link for each outfit is totally public, so feel free to share
+          them with the world.
+      no_outfits:
+        main_html:
+          You haven't saved any outfits yet. %{start_link}, enter a pet's name
+          or choose a color combination, create the outfit of your dreams, and
+          click "Save Outfit" in the top right corner. It'll be great, I
+          promise.
+        start_link_content: Start at the home page
+    
     new:
       tagline: Neopets wearables made easy!
       load_pet_legend: Enter your pet's name
