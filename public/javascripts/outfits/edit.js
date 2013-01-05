@@ -715,26 +715,53 @@ View.Outfits = function (wardrobe) {
     };
     var format_selector_els = $('#preview-sharing-url-formats li');
     var thumbnail_el = $('#preview-sharing-thumbnail');
+    var templates = {
+      html: {
+        image: $('#sharing-html-image-template'),
+        text: $('#sharing-html-text-template')
+      },
+      bbcode: {
+        image: $('#sharing-bbcode-image-template'),
+        text: $('#sharing-bbcode-text-template')
+      }
+    }
     
+    function templateHTML(template, options) {
+      var contents = template.tmpl(options);
+      var contentsHTML = contents.clone().wrap('<div>').parent().html();
+      return contentsHTML;
+    }
+    
+    // The HTML and BBCode formats could probably be handled more dynamic-like.
     var formats = {
       plain: {
-        image: function (url) { return url },
-        text: function (url) { return url }
+        image: function (image_url) { return image_url },
+        text: function (permalink) { return permalink }
       },
       html: {
-        image: function (url, permalink) {
-          return '<a href="' + permalink + '"><img src="' + url + '" /></a>';
+        image: function (image_url, permalink) {
+          return templateHTML(templates.html.image, {
+            image_url: image_url,
+            permalink: permalink
+          });
         },
-        text: function (url) {
-          return '<a href="' + url + '">Dress to Impress</a>';
+        text: function (permalink) {
+          return templateHTML(templates.html.text, {
+            permalink: permalink
+          });
         }
       },
       bbcode: {
-        image: function (url, permalink) {
-          return '[URL=' + permalink + '][IMG]' + url + '[/IMG][/URL]';
+        image: function (image_url, permalink) {
+          return templateHTML(templates.bbcode.image, {
+            image_url: image_url,
+            permalink: permalink
+          });
         },
-        text: function (url) {
-          return '[URL=' + url + ']Dress to Impress[/URL]';
+        text: function (permalink) {
+          return templateHTML(templates.bbcode.text, {
+            permalink: permalink
+          });
         }
       }
     };
