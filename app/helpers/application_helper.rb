@@ -99,7 +99,7 @@ module ApplicationHelper
     end)
   end
   
-  def localized_cache(key, &block)
+  def localized_cache(key={}, &block)
     localized_key = localize_fragment_key(key, locale)
     cache(localized_key, &block)
   end
@@ -161,6 +161,12 @@ module ApplicationHelper
   def title(value)
     content_for :title, value
   end
+  
+  def translate_markdown(key, options={})
+    RDiscount.new(translate(key, options)).to_html.html_safe
+  end
+  
+  alias_method :tmd, :translate_markdown
   
   def translate_with_links(key, options={})
     nonlink_options = {}

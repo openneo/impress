@@ -1063,22 +1063,6 @@ View.PreviewAdapterForm = function (wardrobe) {
   if(preview.usingImageAdapter()) {
     activate(imageToggle, 'image', 'flash');
   }
-
-  var DOWNLOAD_SIZES = {
-    'small': [150, 150],
-    'medium': [300, 300],
-    'large': [600, 600]
-  };
-  
-  $('#preview-download-image button').click(function () {
-    var size = DOWNLOAD_SIZES[this.getAttribute('data-download-size')];
-    preview.adapter.saveImage(size);
-  });
-
-  if(document.createElement('canvas').getContext) {
-    // If browser supports canvas
-    modeWrapper.addClass('can-download');
-  }
 }
 
 View.ReportBrokenImage = function (wardrobe) {
@@ -1280,13 +1264,14 @@ View.Search = function (wardrobe) {
   });
 
   help_el.find('dt a').live('click', function (e) {
-    var el = $(this), siblings = el.parent().children(), query;
+    var el = $(this), siblings = el.parent().contents(), query;
     e.preventDefault();
     if(siblings.length > 1) {
       query = siblings.map(function () {
         var el = $(this);
         return el[el.is('select') ? 'val' : 'text']();
       }).get().join('');
+      query = $.trim(query);
     } else {
       query = el.text();
     }
@@ -1322,12 +1307,6 @@ View.Search = function (wardrobe) {
 
   wardrobe.pet_attributes.bind('update', prepBuildHelper('species', getSpecies));
   //wardrobe.pet_attributes.bind('update', prepBuildHelper('only', getSpecies));
-}
-
-View.Title = function (wardrobe) {
-  wardrobe.base_pet.bind('updateName', function (name) {
-    $('#title').text("Planning " + name + "'s outfit");
-  });
 }
 
 var userbar_sessions_link = $('#userbar a:last'),

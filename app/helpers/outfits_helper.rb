@@ -25,6 +25,24 @@ module OutfitsHelper
     link_to content, wardrobe_path(:anchor => query), options
   end
   
+  def search_helper(filter)
+    key = translate("#{filter}.key")
+    default_value = translate("#{filter}.default_value")
+    content_tag :span, default_value, :class => 'search-helper',
+      'data-search-filter' => key
+  end
+  
+  def search_query_description(base)
+    translate "#{base}.description_html",
+              :default_value => search_helper("#{base}.filter")
+  end
+  
+  def search_query_with_helper(base)
+    translate "#{base}.query_html",
+              :filter_key => content_tag(:span, translate("#{base}.filter.key")),
+              :filter_value => search_helper("#{base}.filter")
+  end
+  
   def outfit_creation_summary(outfit)
     user = outfit.user
     user_link = link_to(user.name, user_contributions_path(user))

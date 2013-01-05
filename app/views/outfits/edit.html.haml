@@ -1,162 +1,126 @@
 - add_body_class 'fullscreen'
-- cache :action_suffix => "image_mode_#{can_use_image_mode?}" do
-  %a#home-link{:href => "/"}
-    %span Dress to Impress
-  %h1#title Planning an outfit
+- localized_cache do
   #pet-type-not-found.possible-error
-    We haven't seen that combination before. Have you?
-    Submit the pet's name if you have!
+    = t '.pet_type.not_found'
   #preview-toolbar
     %form#pet-type-form
       %select{:name => "color"}
       %select{:name => "species"}
-      %input{:type => "submit", :value => "Go"}/
+      %input{:type => "submit", :value => t('.pet_type.form.submit')}
     %form#pet-state-form
-      Gender/Emotions:
+      = t '.pet_state_form.header'
       %ul
     #save-outfit-wrapper
       %a#current-outfit-permalink{:target => '_blank'}
-        = image_tag 'link_go.png', :alt => 'Permalink', :title => 'Permalink to current outfit'
-      %button#save-outfit Save outfit
-      %button#save-outfit-not-signed-in Log in to save
-      %button#save-outfit-copy Save as…
-      %button#save-current-outfit Save &quot;<span>current outfit</span>&quot;
+        = image_tag 'link_go.png', :alt => t('.outfit.permalink.name'),
+          :title => t('.outfit.permalink.description')
+      %button#save-outfit= t '.outfit.save'
+      %button#save-outfit-not-signed-in= t '.outfit.sign_in_to_save'
+      %button#save-outfit-copy= t '.outfit.save_copy'
+      %button#save-current-outfit
+        = t '.outfit.save_current_outfit.main_html',
+          :outfit_name => content_tag(:span, t('.outfit.save_current_outfit.default_outfit_name'))
       %form#save-outfit-form
         .outfit-star
-        %input#save-outfit-name{:type => 'text', :placeholder => 'Outfit name'}
-        %button#save-outfit-finish{:type => 'submit'} Save
-        %button#save-outfit-cancel{:type => 'button'} Cancel
+        %input#save-outfit-name{:type => 'text', :placeholder => t('.outfit.form.name_placeholder')}
+        %button#save-outfit-finish{:type => 'submit'}= t '.outfit.form.submit'
+        %button#save-outfit-cancel{:type => 'button'}= t '.outfit.form.cancel'
   #preview
     #preview-swf
       #preview-swf-container
-        %p Flash and Javascript (but not Java!) are required to preview outfits.
-        %p If this message stays after the page is done loading, check those first.
+        %p= t '.preview.requirements'
       #preview-image-container
       #preview-mode
         %ul#preview-mode-toggle
-          %li#preview-mode-flash.active Flash
-          - if can_use_image_mode?
-            %li#preview-mode-image Image
-        - if can_use_image_mode?
-          = link_to 'Image mode FAQ', image_mode_path,
-            :id => 'preview-mode-note', :target => '_blank'
-          = link_to 'Broken image?', '#', :id => 'report-broken-image',
-            :target => '_blank', 'data-base-url' => new_broken_image_report_path
-          #preview-download-image
-            %h3 Download
-            %ul
-              %li
-                %button{'data-download-size' => 'small'} Small
-              %li
-                %button{'data-download-size' => 'medium'} Medium
-              %li
-                %button{'data-download-size' => 'large'} Large
-        - else
-          = link_to(donate_path, :id => 'preview-mode-note', :target => '_blank') do
-            %strong Image mode
-            is available for early beta testing to users who
-            %em donate
-            at least $5 to help upgrade the server. Thanks!
+          %li#preview-mode-flash.active= t '.preview.mode.flash.name'
+          %li#preview-mode-image= t '.preview.mode.image.name'
+        = link_to t('.preview.mode.image.faq'), image_mode_path,
+          :id => 'preview-mode-note', :target => '_blank'
+        = link_to t('.preview.mode.image.report_broken'), '#',
+          :id => 'report-broken-image', :target => '_blank', 'data-base-url' => new_broken_image_report_path
     #preview-sidebar
       %nav#preview-sidebar-navbar
-        #preview-sidebar-navbar-closet Closet
-        #preview-sidebar-navbar-sharing Sharing
-        #preview-sidebar-navbar-outfits Outfits
+        #preview-sidebar-navbar-closet= t '.sidebar.nav.closet'
+        #preview-sidebar-navbar-sharing= t '.sidebar.nav.sharing'
+        #preview-sidebar-navbar-outfits= t '.sidebar.nav.outfits'
       #preview-sidebar-content
-        #outfit-not-found Outfit not found
-        #save-success Outfit successfully saved
+        #outfit-not-found= t '.sidebar.notifications.outfits.not_found'
+        #save-success= t '.sidebar.notifications.outfits.save.success'
         #save-error
         #preview-closet.sidebar-view
           %ul
-          %p#fullscreen-copyright
-            Images © 2000-2010 Neopets, Inc. All Rights Reserved.
-            Used With Permission
         #preview-outfits.sidebar-view
           %ul#preview-outfits-list
           #preview-outfits-not-logged-in
             %figure
               = image_tag 'outfits_welcome.png'
-              %figcaption Ready to become a pro designer?
-            :markdown
-              We know how hard it can be to keep track of your ideas,
-              especially if you end up having a lot of them.
-              **But Dress to Impress makes it easy.**
-            
-              Once you have an idea for an outfit, you can **build it,
-              save it, and view it again later**, either to update your
-              design or finally make your dream a reality.
-            
-              **Thousands of users have already saved tens of thousands of
-              outfits &mdash; will you be next?**
-            
-            = link_to 'Log in to save this outfit', login_path_with_return_to, :id => 'preview-outfits-log-in'
+              %figcaption= t '.sidebar.outfits.not_signed_in.header'
+            = tmd '.sidebar.outfits.not_signed_in.pitch_markdown'
+            = link_to t('.sidebar.outfits.not_signed_in.sign_in'),
+              login_path_with_return_to, :id => 'preview-outfits-log-in'
         #preview-sharing.sidebar-view
           #preview-sharing-thumbnail-wrapper
             #preview-sharing-thumbnail-loading
               = image_tag 'outfits/small_loading.gif'
-              %span#preview-sharing-thumbnail-saving Saving&hellip;
-              %span#preview-sharing-thumbnail-generating Generating&hellip;
+              %span#preview-sharing-thumbnail-saving
+                = t '.sidebar.sharing.thumbnail.saving'
+              %span#preview-sharing-thumbnail-generating
+                = t '.sidebar.sharing.thumbnail.generating'
             %img#preview-sharing-thumbnail
           %ul#preview-sharing-urls
             %li
-              %label{:for => 'preview-sharing-permalink-url'} Outfit page
+              %label{:for => 'preview-sharing-permalink-url'}
+                = t '.sidebar.sharing.links.permalink'
               %input#preview-sharing-permalink-url.outfit-url{:type => 'text'}
             %li
-              %label{:for => 'preview-sharing-large-image-url'} Large image
+              %label{:for => 'preview-sharing-large-image-url'}
+                = t '.sidebar.sharing.links.images.large'
               %input#preview-sharing-large-image-url.outfit-url{:type => 'text'}
             %li
-              %label{:for => 'preview-sharing-medium-image-url'} Medium image
+              %label{:for => 'preview-sharing-medium-image-url'}
+                = t '.sidebar.sharing.links.images.medium'
               %input#preview-sharing-medium-image-url.outfit-url{:type => 'text'}
             %li
-              %label{:for => 'preview-sharing-small-image-url'} Small image
+              %label{:for => 'preview-sharing-small-image-url'}
+                = t '.sidebar.sharing.links.images.small'
               %input#preview-sharing-small-image-url.outfit-url{:type => 'text'}
           %ul#preview-sharing-url-formats
-            %li.active{'data-format' => 'plain'} Plain
-            %li{'data-format' => 'html'} HTML
-            %li{'data-format' => 'bbcode'} BBCode
+            %li.active{'data-format' => 'plain'}
+              = t '.sidebar.sharing.formats.plain'
+            %li{'data-format' => 'html'}
+              = t '.sidebar.sharing.formats.html'
+            %li{'data-format' => 'bbcode'}
+              =t '.sidebar.sharing.formats.bbcode'
   %form#preview-search-form
     %header
-      %h2 Add an item
-      %input{:name => "query", :placeholder => "Search items...", :type => "search"}/
-      %input{:type => "submit", :value => "Go"}/
-      %a.preview-search-form-your-items{:href => '#', 'data-search-value' => 'owns'} Items you own
-      %a.preview-search-form-your-items{:href => '#', 'data-search-value' => 'wants'} Items you want
+      %h2= t '.search.header'
+      %input{:name => "query", :placeholder => t('.search.form.query_placeholder'), :type => "search"}/
+      %input{:type => "submit", :value => t('.search.form.submit')}/
+      %a.preview-search-form-your-items{:href => '#', 'data-search-value' => 'owns'}
+        = closet_lists_group_name :you, true
+      %a.preview-search-form-your-items{:href => '#', 'data-search-value' => 'wants'}
+        = closet_lists_group_name :you, false
       #preview-search-form-pagination
-      %a#preview-search-form-clear{:href => "#"} clear
+      %a#preview-search-form-clear{:href => "#"}= t '.search.form.clear'
     %dl#preview-search-form-help
       %div
-        %dt kreludor "altador cup" -background
-        %dd
-          returns any item with the word "kreludor" and the phrase "altador cup"
-          in it, but not the word "background"
+        %dt= t '.search.examples.basic.query'
+        %dd= t '.search.examples.basic.description'
       %div
-        %dt collar -is:nc -is:pb
-        %dd
-          returns any item with the word "collar" in it, but is not from the NC
-          mall, and is not from a deluxe paint brush set
+        %dt= t '.search.examples.flags.query'
+        %dd= t '.search.examples.flags.description'
       %div
-        %dt
-          %span species:
-          %span.search-helper{"data-search-filter" => "species"} Acara
-        %dd
-          returns any item a
-          %span.search-helper{"data-search-filter" => "species"} Acara
-          can wear
+        %dt= search_query_with_helper '.search.examples.species'
+        %dd= search_query_description '.search.examples.species'
       %div
-        %dt
-          %span type:
-          %span.search-helper{"data-search-filter" => "type"} background
-        %dd
-          returns any item that fills a
-          %span.search-helper{"data-search-filter" => "type"} background
-          zone
-    #preview-search-form-loading Loading...
+        %dt= search_query_with_helper '.search.examples.type'
+        %dd= search_query_description '.search.examples.type'
+    #preview-search-form-loading= '.search.loading'
     #preview-search-form-error.possible-error
     #preview-search-form-no-results
-      No results for "<span></span>"
+      = t '.search.no_results_html', :query => content_tag(:span)
     %ul
-  #no-assets-full-message
-    We haven't seen this item on this body type before. Have you? Submit its name on the home page if you have!
+  #no-assets-full-message= t '.sidebar.closet.no_data.description'
   %script#outfit-template{:type => 'text/x-jquery-tmpl'}
     <li class="outfit-${id}{{if starred}} starred{{/if}}">
     %header
@@ -165,15 +129,19 @@
       %form.outfit-rename-form
         %input.outfit-rename-field{:type => 'text'}
     %footer
-      %a.outfit-rename-button{:href => '#'} rename
-      %a.outfit-delete{:href => '#'} delete
+      %a.outfit-rename-button{:href => '#'}
+        = t '.sidebar.outfits.outfit.rename'
+      %a.outfit-delete{:href => '#'}
+        = t '.sidebar.outfits.outfit.delete'
     .outfit-thumbnail-wrapper
       %img.outfit-thumbnail
     .outfit-delete-confirmation
-      %span Delete?
-      %a.outfit-delete-confirmation-yes{:href => '#'} yes
+      %span= t '.sidebar.outfits.outfit.delete_confirmation.header'
+      %a.outfit-delete-confirmation-yes{:href => '#'}
+        = t '.sidebar.outfits.outfit.delete_confirmation.delete'
       \/
-      %a.outfit-delete-confirmation-no{:href => '#'} no
+      %a.outfit-delete-confirmation-no{:href => '#'}
+        = t '.sidebar.outfits.outfit.delete_confirmation.cancel'
     </li>
 - content_for :javascripts do
   = include_javascript_libraries :jquery, :swfobject, :jquery_tmpl

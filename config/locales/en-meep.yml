@@ -441,6 +441,124 @@ en-meep:
     destroy:
       success: Outfit "%{outfit_name}" succeessfully demeeped.
     
+    edit:
+      pet_type:
+        not_found:
+          We haven't meeped that combination before. Have you?
+          Meep the pet's name if you have!
+        form:
+          submit: Meep
+      pet_state_form:
+        header: "Gender/Emeepshuns:"
+      outfit:
+        permalink:
+          name: Permameep
+          description: Permameep to current outfeet
+        save: Meep outfit
+        sign_in_to_save: Log in to meep
+        save_copy: Meep as…
+        save_current_outfit:
+          main_html: Meep "%{outfit_name}"
+          default_outfit_name: current outfeet
+        form:
+          name_placeholder: Outfeet name
+          submit: Meep
+          cancel: Unmeep
+      preview:
+        requirements:
+          Flash and Javascript (but not Java!) are required to meep outfeets.
+        mode:
+          flash:
+            name: Fleesh
+          image:
+            name: Imeege
+            faq: Imeege Mode FAQ
+            report_broken: Broken imeege?
+      sidebar:
+        nav:
+          closet: Closeet
+          sharing: Sheering
+          outfits: Outfeets
+        notifications:
+          outfits:
+            not_found: Outfeet not found
+            save:
+              success: Outfeet successfully meeped
+        closet:
+          no_data:
+            description:
+              We haven't meeped this item on this body type before. Have you?
+              Meep it for us on the home page if you have!
+        outfits:
+          not_signed_in:
+            header: Ready to become a professional meepit?
+            pitch_markdown: |
+              We know how hard it can be to meep track of your ideas,
+              especially if you end up having a lot of them.
+              **But Dress to Impress makes it meepy.**
+            
+              Once you have an idea for an outfit, you can **meep it, meep it,
+              and meep it again later**, either to update your design or
+              finally make your dream a reality.
+            
+              **Thousands of users have already meeped tens of thousands of
+              outfits. Will you be next?**
+            sign_in: Log in to meep this outfit
+          outfit:
+            rename: remeep
+            delete: unmeep
+            delete_confirmation:
+              header: Unmeep?
+              delete: ja
+              cancel: nü
+        sharing:
+          thumbnail:
+            saving: Seeving…
+            generating: Genereeting…
+          links:
+            permalink: Outfeet page
+            images:
+              large: Leerge
+              medium: Meedium
+              small: Smeell
+          formats:
+            plain: Pleen
+            html: HTMeepL
+            bbcode: BBMeep
+      search:
+        header: Meep an item
+        form:
+          query_placeholder: Meep items…
+          submit: Meep
+          clear: unmeep
+        loading: Meeping…
+        no_results_html: No meepits for "%{query}"
+        examples:
+          basic:
+            query: kreludor "altador cup" -background
+            description:
+              meeps any item with the word "kreludor" and the phrase "altador
+              cup" in it, but not the word "background"
+          flags:
+            query: collar -is:nc -is:pb
+            description:
+              meeps any item with the word "collar" in it, but is not from
+              the NC mall, and is not from a deluxe paint brush set
+          species:
+            filter:
+              key: species
+              default_value: Acara
+            query_html: "%{filter_key}:%{filter_value}"
+            description_html:
+              meeps any item a %{default_value} can wear
+          type:
+            filter:
+              key: type
+              default_value: background
+            query_html: "%{filter_key}:%{filter_value}"
+            description_html:
+              meeps any item that occupies a %{default_value} zone
+    
     new:
       tagline: Meeps made meepy!
       load_pet_legend: Enter your pet's meep
