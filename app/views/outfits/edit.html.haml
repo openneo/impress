@@ -151,6 +151,13 @@
       %a.outfit-delete-confirmation-no{:href => '#'}
         = t '.sidebar.outfits.outfit.delete_confirmation.cancel'
     </li>
+
+%span#userbar-session-message
+  - if user_signed_in?
+    = t '.userbar.session_message.signed_in'
+  - else
+    = t '.userbar.session_message.not_signed_in'
+
 - content_for :javascripts do
   = include_javascript_libraries :jquery, :swfobject, :jquery_tmpl
   = include_javascripts :edit_outfit_package

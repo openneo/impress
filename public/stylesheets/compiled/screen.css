@@ -3318,7 +3318,7 @@ body.outfits-edit #save-error, body.outfits-edit #outfit-not-found {
   color: #8a1f11;
 }
 /* line 740, ../../../app/stylesheets/outfits/_edit.sass */
-body.outfits-edit #userbar-message {
+body.outfits-edit #userbar-session-message {
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
   -o-opacity: 0.5;

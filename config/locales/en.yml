@@ -559,6 +559,12 @@ en:
             query_html: "%{filter_key}:%{filter_value}"
             description_html:
               returns any item that occupies a %{default_value} zone
+      userbar:
+        session_message:
+          signed_in:
+            You will be logged out, then brought back to this exact outfit.
+          not_signed_in:
+            You will be logged in, then brought back to this exact outfit.
     
     index:
       title: Your Outfits

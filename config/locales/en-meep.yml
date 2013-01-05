@@ -558,6 +558,12 @@ en-meep:
             query_html: "%{filter_key}:%{filter_value}"
             description_html:
               meeps any item that occupies a %{default_value} zone
+      userbar:
+        session_message:
+          signed_in:
+            You will be meeped out, then brought back to this exact outfit.
+          not_signed_in:
+            You will be meeped in, then brought back to this exact outfit.
     
     new:
       tagline: Meeps made meepy!
