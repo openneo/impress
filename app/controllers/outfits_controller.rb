@@ -90,7 +90,9 @@ class OutfitsController < ApplicationController
   end
 
   def render_outfit_errors
-    render :json => {:errors => @outfit.errors}, :status => :bad_request
+    render :json => {:errors => @outfit.errors,
+                     :full_error_messages => @outfit.errors.full_messages},
+           :status => :bad_request
   end
 end
 

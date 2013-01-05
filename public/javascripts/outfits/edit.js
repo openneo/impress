@@ -902,13 +902,6 @@ View.Outfits = function (wardrobe) {
     new_outfit_form_el.toggleClass('starred');
   });
 
-  var SAVE_ERRORS = {
-      'item_outfit_relationships': "Item not found. How odd. Pull some items out of your closet and try again.",
-      'pet_state': "Pet state not found. How odd. Try picking a new Gender/Emotion.",
-      'name': true,
-      'user': "You must be logged in to save outfits"
-    };
-
   function saveErrorMessage(text) {
     save_error_el.text(text).notify();
   }
@@ -940,21 +933,10 @@ View.Outfits = function (wardrobe) {
   wardrobe.outfits.bind('updatePetState', clearSharedOutfit);
 
   function saveFailure(outfit, response) {
-    var errors = response.errors;
-    if(typeof errors == 'undefined') {
-      saveErrorMessage("Whoops! The save failed, but the server didn't say why. Please try again.");
+    if(typeof response.full_error_messages !== 'undefined') {
+      saveErrorMessage(response.full_error_messages.join(', '));
     } else {
-      for(var key in SAVE_ERRORS) {
-        if(SAVE_ERRORS.hasOwnProperty(key) && typeof errors[key] != 'undefined') {
-          var message = SAVE_ERRORS[key];
-          if(message === true) {
-            message = key.charAt(0).toUpperCase() + key.substr(1) + ' ' +
-              errors[key];
-          }
-          saveErrorMessage(message);
-          break;
-        }
-      }
+      saveErrorMessage("Could not save outfit. Please try again.");
     }
     new_outfit_form_el.stopLoading();
     liForOutfit(outfit).stopLoading();
@@ -1336,12 +1318,8 @@ View.Search = function (wardrobe) {
   //wardrobe.pet_attributes.bind('update', prepBuildHelper('only', getSpecies));
 }
 
-var userbar_sessions_link = $('#userbar a:last'),
-  userbar_message_verb = userbar_sessions_link.text() == 'Log out' ? 'logged out' : 'sent to the login page',
-  userbar_message_el = $('<span/>', {
-    id: 'userbar-message',
-    text: "You will be " + userbar_message_verb + ", then brought back to this exact outfit you've made."
-  }).prependTo('#userbar');
+var userbar_sessions_link = $('#userbar a:last');
+var userbar_message_el = $('#userbar-session-message').prependTo('#userbar');
 
 userbar_sessions_link.hover(function () {
   userbar_message_el.stop().fadeTo('normal', .5);
