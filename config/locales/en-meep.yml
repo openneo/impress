@@ -486,6 +486,7 @@ en-meep:
               success: Outfeet successfully meeped
         closet:
           no_data:
+            summary: No meepits yet
             description:
               We haven't meeped this item on this body type before. Have you?
               Meep it for us on the home page if you have!

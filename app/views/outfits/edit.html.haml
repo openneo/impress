@@ -151,6 +151,26 @@
       %a.outfit-delete-confirmation-no{:href => '#'}
         = t '.sidebar.outfits.outfit.delete_confirmation.cancel'
     </li>
+  %script#item-template{:type => 'text/x-jquery-tmpl'}
+    %li{:class => 'object object-${id}'}
+      %img{:src => '${thumbnail_url}', :title => '${description}', :alt => ''}
+      ${name}
+      %ul
+      = link_to '${url}', :target => '_blank', :class => 'object-info' do
+        %span i
+      {{if nc}}
+      = nc_icon
+      {{/if}}
+      {{if owned || wanted}}
+      .closeted-icons
+        {{if owned}}
+        = owned_icon
+        {{/if}}
+        {{if wanted}}
+        = wanted_icon
+        {{/if}}
+      {{/if}}
+      %span.no-assets-message= t '.sidebar.closet.no_data.summary'
 
 %span#userbar-session-message
   - if user_signed_in?

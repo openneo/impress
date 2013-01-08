@@ -26,7 +26,7 @@ var Partial = {}, main_wardrobe,
 Partial.ItemSet = function ItemSet(wardrobe, selector) {
   var item_set = this, ul = $(selector), items = [], setClosetItems,
     setOutfitItems, setOutfitItemsControls, no_assets_full_message = $('#no-assets-full-message'),
-    container = $('#container');
+    container = $('#container'), item_template = $('#item-template');
 
   Partial.ItemSet.setWardrobe(wardrobe);
 
@@ -59,13 +59,6 @@ Partial.ItemSet = function ItemSet(wardrobe, selector) {
       item = specific_items[i];
       no_assets = item.couldNotLoadAssetsFitting(wardrobe.outfits.getPetType());
       li = $('li.object-' + item.id).toggleClass('no-assets', no_assets);
-      (function (li) {
-        no_assets_message = li.find('span.no-assets-message');
-        no_assets_message.remove();
-        if(no_assets) {
-          $('<span/>', {'class': 'no-assets-message', text: 'No data yet'}).appendTo(li);
-        }
-      })(li);
     }
   }
 
@@ -75,33 +68,17 @@ Partial.ItemSet = function ItemSet(wardrobe, selector) {
     ul.children().remove();
     for(var i = 0; i < items.length; i++) {
       item = items[i];
-      li = $('<li/>', {'class': 'object object-' + item.id});
-      img = $('<img/>', {
-        'src': item.thumbnail_url,
-        'alt': item.description,
-        'title': item.description
+      li = item_template.tmpl({
+        id: item.id,
+        name: item.name,
+        thumbnail_url: item.thumbnail_url,
+        url: item.getURL(),
+        nc: typeof item.rarity_index != 'undefined' &&
+            (item.rarity_index == 500 || item.rarity_index == 0),
+        owned: item.owned,
+        wanted: item.wanted
       });
-      controls = $('<ul/>');
-      info_link = $('<a/>', {
-        'class': 'object-info',
-        html: '<span>i</span>',
-        href: item.getURL(),
-        target: '_blank'
-      });
-      if(
-        typeof item.rarity_index != 'undefined' &&
-        (item.rarity_index == 500 || item.rarity_index == 0)
-      ) {
-        $('<div/>', {'class': 'nc-icon', text: 'NC', title: 'NC'}).appendTo(li);
-      }
-      if(item.owned || item.wanted) {
-        var iconsWrapper = $('<div/>', {'class': 'closeted-icons'}).appendTo(li);
-        if(item.owned) {
-          $('<img/>', {alt: 'Own', title: 'You own this', src: '/images/owned.png'}).appendTo(iconsWrapper);
-          $('<img/>', {alt: 'Want', title: 'You want this', src: '/images/wanted.png'}).appendTo(iconsWrapper);
-        }
-      }
-      li.append(img).append(controls).append(info_link).append(item.name).appendTo(ul);
+      li.appendTo(ul);
     }
     setClosetItems(wardrobe.outfits.getClosetItems());
     setOutfitItems(wardrobe.outfits.getWornItems());
