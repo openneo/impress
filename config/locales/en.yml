@@ -487,6 +487,7 @@ en:
               success: Outfit successfully saved
         closet:
           no_data:
+            summary: No data yet
             description:
               We haven't seen this item on this body type before. Have you?
               Model it for us on the home page if you have!
