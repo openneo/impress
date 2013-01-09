@@ -20,8 +20,9 @@ en:
       
       userbar:
         greeting: Hey, %{user_name}!
-        contributions_summary_html: You have %{contributions_link}.
-        contributions_link_content: "%{user_points} points"
+        contributions_summary:
+          main_html: You have %{contributions_link}.
+          contributions_link_content: "%{user_points} points"
         items: Items
         outfits: Outfits
         settings: Settings
