@@ -119,11 +119,11 @@ en-meep:
         header: (Not in a meepit)
         empty: There aren't any meepits here.
       autocomplete:
-        add_item_html: Meep <strong>%{item_name}</strong>
-        add_to_list_html: Meep to <strong>%{list_name}</strong>
-        add_to_group_html: Meep to <strong>%{group_name}</strong>, no list
-        already_in_collection_html:
-          It's already meeped in <strong>%{collection_name}</strong>
+        add_item_markdown: Meep **%{item_name}**
+        add_to_list_markdown: Meep to **%{list_name}**
+        add_to_group_markdown: Meep to **%{group_name}**, no list
+        already_in_collection_markdown:
+          It's already meeped in **%{collection_name}**
     
     petpage:
       title: Export to meeppage
