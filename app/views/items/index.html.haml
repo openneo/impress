@@ -2,8 +2,7 @@
   - title t('.title_with_query', :query => @query)
   - if @items.empty?
     %p= t '.no_results_html', :query_html => content_tag(:strong, @query)
-    %p= t '.modeling_request_html',
-      :modeling_link => link_to(t('.modeling_link_content'), root_path)
+    %p= twl '.modeling_request', :modeling_link_url => root_path
   - else
     = will_paginate @items
     = render @items
@@ -14,29 +13,28 @@
       #search-help
         %h2= t '.search_help_header'
         %dl
-          %dt= t '.basic_example_query'
-          %dd= t '.basic_example_description'
-          %dt= t '.user_items_example_query'
+          %dt= t '.examples.basic.query'
+          %dd= t '.examples.basic.description'
+          %dt= t '.examples.user_items.query'
           %dd
-            = t '.user_items_example_description_html',
-              :user_items_link => link_to(t('.user_items_example_link_content'),
-                                          your_items_path)
-          %dt= t '.nc_example_query'
-          %dd= t '.nc_example_description'
-          %dt= t '.pb_example_query'
-          %dd= t '.pb_example_description'
-          %dt= t '.species_example_query'
-          %dd= t '.species_example_description'
-          %dt= t '.type_example_query'
-          %dd= t '.type_example_description'
+            = twl '.examples.user_items.description',
+              :user_items_link_url => your_items_path
+          %dt= t '.examples.nc.query'
+          %dd= t '.examples.nc.description'
+          %dt= t '.examples.pb.query'
+          %dd= t '.examples.pb.description'
+          %dt= t '.examples.species.query'
+          %dd= t '.examples.species.description'
+          %dt= t '.examples.type.query'
+          %dd= t '.examples.type.description'
 
     - localized_cache 'items#index newest_items' do
       #search-new-items
-        %h2= t '.newest_items_header'
+        %h2= t '.newest_items.header'
         = render @newest_items
 
   - localized_cache :action_suffix => 'species_search_links' do
     #species-search-links
-      %h2= t '.species_search_header'
+      %h2= t '.species_search.header'
       = standard_species_search_links
 
