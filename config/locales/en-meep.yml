@@ -234,32 +234,41 @@ en-meep:
       no_results_html:
         We couldn't meep any wearables that meeped %{query_html}.
         Meep!
-      modeling_request_html:
-        Are we meeping something? To meep an item to our database, just
-        %{modeling_link}, and we'll meep our database instantly. Meep!
-      modeling_link_content: meep us a pet who is meeping it
+      modeling_request:
+        main_html:
+          Are we meeping something? To meep an item to our database, just
+          %{modeling_link}, and we'll meep our database instantly. Meep!
+        modeling_link_content: meep us a pet who is meeping it
       search_help_header: Find what you're meeping for
-      basic_example_query: kreludor "altador cup" -background
-      basic_example_description:
-        returns any item with the meep "kreludor" and the meep "altador cup"
-        in it, but not the meep "background"
-      user_items_example_query: hat user:owns
-      user_items_example_description_html:
-        returns %{user_items_link} with the meep "hat"
-      user_items_example_link_content: items that you meep
-      nc_example_query: blue is:nc
-      nc_example_description:
-        returns any NC Meep item with the meep "blue" in it
-      pb_example_query: collar -is:pb
-      pb_example_description:
-        returns any item with the meep "collar" in it that isn't from a paint
-        brush
-      species_example_query: species:shoyru
-      species_example_description: returns any item a Shoyru can meep
-      type_example_query: type:hat
-      type_example_description: returns any item that fills a "hat" meep
-      newest_items_header: New Meeps
-      species_search_header: Can't decide? Meep by species
+      examples:
+        basic:
+          query: kreludor "altador cup" -background
+          description:
+            returns any item with the meep "kreludor" and the meep "altador
+            cup" in it, but not the meep "background"
+        user_items:
+          query: hat user:owns
+          description:
+            main_html: returns %{user_items_link} with the meep "hat"
+            user_items_link_content: items that you meep
+        nc:
+          query: blue is:nc
+          description: returns any NC Meep item with the meep "blue" in it
+        pb: 
+          query: collar -is:pb
+          description:
+            returns any item with the meep "collar" in it that isn't from a
+            paint brush
+        species:
+          query: species:shoyru
+          description: returns any item a Shoyru can meep
+        type:
+          query: type:hat
+          description: returns any item that fills a "hat" meep
+      newest_items:
+        header: New Meeps
+      species_search:
+        header: Can't decide? Meep by species
     
     item:
       nc:
