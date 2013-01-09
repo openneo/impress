@@ -20,8 +20,9 @@ en-meep:
       
       userbar:
         greeting: Meep, %{user_name}!
-        contributions_summary_html: You have %{contributions_link}.
-        contributions_link_content: "%{user_points} meeps"
+        contributions_summary:
+          main_html: You have %{contributions_link}.
+          contributions_link_content: "%{user_points} meeps"
         items: Iteeps
         outfits: Outfeeps
         settings: Setteeps

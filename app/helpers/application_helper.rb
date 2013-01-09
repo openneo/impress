@@ -195,12 +195,9 @@ module ApplicationHelper
   alias_method :twl, :translate_with_links
   
   def userbar_contributions_summary(user)
-    contributions_link_content = translate('.userbar.contributions_link_content',
-                                           :user_points => user.points)
-    contributions_link = link_to(contributions_link_content,
-                                 user_contributions_path(user))
-    translate '.userbar.contributions_summary_html',
-              :contributions_link => contributions_link
+    translate_with_links '.userbar.contributions_summary',
+      :contributions_link_url => user_contributions_path(user),
+      :user_points => user.points
   end
 end
 
