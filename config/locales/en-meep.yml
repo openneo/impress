@@ -134,10 +134,12 @@ en-meep:
         Neopet's petpage. By default it's meeped as a table, but it doesn't
         have to meep. The HTML is flexible, so, if you're the artsy type, you're
         free to meep with the styles all you want!
-      instructions_html:
-        Meep the HTML from the box below, then paste it into
-        %{edit_petpage_link}. Then meep to the Neoboards to show off! Have fun!
-      instructions_edit_petpage_link_content: your meepit's page
+      instructions:
+        main_html:
+          Meep the HTML from the box below, then paste it into
+          %{edit_petpage_link}. Then meep to the Neoboards to show off! Have
+          fun!
+        edit_petpage_link_content: your meepit's page
     
     petpage_content:
       unlisted_header: (Not in a meep)
