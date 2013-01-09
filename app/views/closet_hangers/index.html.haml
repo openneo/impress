@@ -76,19 +76,19 @@
 - localized_cache :action_suffix => 'autocomplete_tmpls' do
   %script#autocomplete-item-tmpl{:type => 'text/x-jquery-tmpl'}
     %a
-      = t '.autocomplete.add_item_html', :item_name => '${item_name}'
+      = tmd '.autocomplete.add_item', :item_name => '${item_name}'
 
   %script#autocomplete-add-to-list-tmpl{:type => 'text/x-jquery-tmpl'}
     %a
-      = t '.autocomplete.add_to_list_html', :list_name => '${list_name}'
+      = tmd '.autocomplete.add_to_list', :list_name => '${list_name}'
 
   %script#autocomplete-add-to-group-tmpl{:type => 'text/x-jquery-tmpl'}
     %a
-      = t '.autocomplete.add_to_group_html', :group_name => '${group_name}'
+      = tmd '.autocomplete.add_to_group', :group_name => '${group_name}'
 
   %script#autocomplete-already-in-collection-tmpl{:type => 'text/x-jquery-tmpl'}
     %span
-      = t '.autocomplete.already_in_collection_html',
+      = tmd '.autocomplete.already_in_collection',
           :collection_name => '${collection_name}'
 
 - content_for :stylesheets do
