@@ -185,17 +185,18 @@ en-meep:
     
     form:
       your_items_link: Back to Your Meeps
-      name_hint: Like "meep for trade" or "NC meeplist"
-      hangers_owned_label: This is a meep for…
-      hangers_owned_options:
-        owned: Meepits you own
-        wanted: Meepits you want
-      visibility_label: Who can meep this list?
-      description_hint:
-        Why are these meepits in the same meep? What are your terms for meeping?
-        Or you can meep this blank.
-      description_markup_hint_html:
-        We _<em>support</em>_ **<strong>Meepdown</strong>** and some HTML.
+      name:
+        hint: Like "meep for trade" or "NC meeplist"
+      hangers_owned:
+        label: This is a meep for…
+      visibility:
+        label: Who can meep this list?
+      description:
+        hint:
+          Why are these meepits in the same meep? What are your terms for
+          meeping? Or you can meep this blank.
+        markup_hint_html:
+          We _<em>support</em>_ **<strong>Meepdown</strong>** and some HTML.
       submit: Meep list
     
     groups:

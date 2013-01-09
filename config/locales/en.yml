@@ -186,17 +186,18 @@ en:
     
     form:
       your_items_link: Back to Your Items
-      name_hint: Like "up for trade" or "NC wishlist"
-      hangers_owned_label: This is a list for…
-      hangers_owned_options:
-        owned: Items you own
-        wanted: Items you want
-      visibility_label: Who can see this list?
-      description_hint:
-        Why are these items in the same list? What are your terms for trading?
-        Or you can leave this blank.
-      description_markup_hint_html:
-        We _<em>support</em>_ **<strong>Markdown</strong>** and some HTML.
+      name:
+        hint: Like "up for trade" or "NC wishlist"
+      hangers_owned:
+        label: This is a list for…
+      visibility:
+        label: Who can see this list?
+      description:
+        hint:
+          Why are these items in the same list? What are your terms for trading?
+          Or you can leave this blank.
+        markup_hint_html:
+          We _<em>support</em>_ **<strong>Markdown</strong>** and some HTML.
       submit: Save list
     
     groups:
