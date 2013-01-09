@@ -5,18 +5,18 @@
   %ul.fields
     %li
       = f.label :name
-      %span.hint= t '.name_hint'
+      %span.hint= t '.name.hint'
       = f.text_field :name, :required => true
     %li
-      = f.label :hangers_owned, t('.hangers_owned_label')
+      = f.label :hangers_owned, t('.hangers_owned.label')
       = f.select :hangers_owned, hangers_owned_options
     %li
-      = f.label :visibility, t('.visibility_label')
+      = f.label :visibility, t('.visibility.label')
       = f.select :visibility, long_closet_visibility_choices(:list)
     %li
       = f.label :description
-      %span.hint= t '.description_hint'
+      %span.hint= t '.description.hint'
       = f.text_area :description
-      %span.hint= t '.description_markup_hint_html'
+      %span.hint= t '.description.markup_hint_html'
   = f.submit t('.submit')
 

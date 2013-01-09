@@ -12,8 +12,8 @@ module ClosetListsHelper
 
   def hangers_owned_options
     [
-      [translate("closet_lists.form.hangers_owned_options.owned"), true],
-      [translate("closet_lists.form.hangers_owned_options.wanted"), false]
+      [closet_lists_group_name(:you, true), true],
+      [closet_lists_group_name(:you, false), false]
     ]
   end
 
