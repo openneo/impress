@@ -41,25 +41,19 @@ class PetsController < ApplicationController
   end
   
   def pet_not_found
-    pet_load_error :long_message => 'Could not find any pet by that name. Did you spell it correctly?',
-      :short_message => 'Pet not found',
-      :status => :not_found
+    pet_load_error :long_message => t('pets.load.not_found'),
+                   :status => :not_found
   end
   
   def asset_download_error(e)
     Rails.logger.warn e.message
-    pet_load_error :long_message => "We found the pet all right, but the " +
-      "Neopets image server didn't respond to our download request. Maybe it's " +
-      "down, or maybe it's just having trouble. Try again later, maybe. Sorry!",
-      :short_message => 'Neopets seems down. Try again?',
-      :status => :gateway_timeout
+    pet_load_error :long_message => t('pets.load.asset_download_error'),
+                   :status => :gateway_timeout
   end
   
   def pet_download_error(e)
     Rails.logger.warn e.message
-    pet_load_error :long_message => "Could not connect to the Neopets server " +
-      "to look up the pet. Maybe they're down. Try again later, maybe. Sorry!",
-      :short_message => 'Neopets seems down. Try again?',
+    pet_load_error :long_message => t('pets.load.pet_download_error'),
       :status => :gateway_timeout
   end
   
