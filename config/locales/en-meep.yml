@@ -379,11 +379,11 @@ en-meep:
           Neopets.com %{name} data into your Dress to Impress meepit list.
           Here's how it meeps.
         check_frame:
-          header_html:
-            Check the framed Neopets.com meep on the left,
-            meeping to %{page_link}.
-          page_link_content:
-            meep %{index} of your %{name}
+          header:
+            main_html:
+              Check the framed Neopets.com meep on the left,
+              meeping to %{page_link}.
+            page_link_content: meep %{index} of your %{name}
           check_login:
             summary: Confirm that you're meeped in.
             details:
@@ -391,14 +391,16 @@ en-meep:
               you're not, try enabling "third-party cookies" in your browser.
               (Most have meeped on by default.)
           login:
-            summary_html: If you haven't meeped in, %{login_link}.
-            summary_login_link_content: do so in another meepit
-            details_html:
-              It's never a good idea to meep in inside of a frame, unless
-              you're a web programmer pro who can meep that the frame does, in
-              fact, meep to Neopets.com. To be safe, %{login_link}.
-            details_login_link_content:
-              meep up another window, meep the URL, and meep in safely
+            summary:
+              main_html: If you haven't meeped in, %{login_link}.
+              login_link_content: do so in another meepit
+            details:
+              main_html:
+                It's never a good idea to meep in inside of a frame, unless
+                you're a web programmer pro who can meep that the frame does,
+                in fact, meep to Neopets.com. To be safe, %{login_link}.
+              login_link_content:
+                meep up another window, meep the URL, and meep in safely
           check_content:
             summary: Meep that the page is, in fact, your %{name}.
             details:
@@ -416,10 +418,11 @@ en-meep:
             Source</strong>.
           other_html:
             In other meepits, right-meep and look for something similar.
-          troubleshooting_html:
-            If you're still having trouble, try %{page_link}, right-meeping,
-            and meeping View Source.
-          troubleshooting_page_link_content: meeping the page in a new window
+          troubleshooting:
+            main_html:
+              If you're still having trouble, try %{page_link}, right-meeping,
+              and meeping View Source.
+            page_link_content: meeping the page in a new window
         copy_source:
           header:
             Meeplight the entire source code,

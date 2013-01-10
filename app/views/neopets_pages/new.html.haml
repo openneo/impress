@@ -22,21 +22,18 @@
   
   %ol
     %li
-      = t '.help.check_frame.header_html',
-          :page_link => link_to(t('.help.check_frame.page_link_content',
-                                  :name => @neopets_page.name,
-                                  :index => @neopets_page.index),
-                                @neopets_page.url)
+      = twl '.help.check_frame.header', :page_link_url => @neopets_page.url,
+            :name => @neopets_page.name, :index => @neopets_page.index
       %ul
         %li
           %strong= t '.help.check_frame.check_login.summary'
           = t '.help.check_frame.check_login.details'
         %li
           %strong
-            = t '.help.check_frame.login.summary_html',
-                :login_link => link_to_neopets_login(t('.help.check_frame.login.summary_login_link_content'))
-          = t '.help.check_frame.login.details_html',
-              :login_link => link_to_neopets_login(t('.help.check_frame.login.details_login_link_content'))
+            = twl '.help.check_frame.login.summary',
+                  :login_link_url => neopets_login_url
+          = twl '.help.check_frame.login.details',
+                :login_link_url => neopets_login_url
         %li
           %strong
             = t '.help.check_frame.check_content.summary',
@@ -51,11 +48,10 @@
         %li
           = t '.help.view_source.firefox_html'
         %li
-          = t '.help.view_source.other_html'
+          = t '.help.view_source.other'
         %li
-          = t '.help.view_source.troubleshooting_html',
-              :page_link => link_to(t('.help.view_source.troubleshooting_page_link_content'),
-                                      @neopets_page.url)
+          = twl '.help.view_source.troubleshooting',
+              :page_link_url => @neopets_page.url
     
     %li
       = t '.help.copy_source.header'
