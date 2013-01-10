@@ -676,6 +676,15 @@ en:
         waiting: Waiting…
         loading: Loading…
         submission_success: "%{points} points"
+    
+    load:
+      not_found: We couldn't find a pet by that name. Is it spelled correctly?
+      asset_download_error:
+        We found the pet and what it's wearing, but couldn't download the
+        associated Flash files. Maybe Neopets is down. Please try again later!
+      pet_download_error:
+        We couldn't connect to Neopets to look up the pet. Maybe they're down.
+        Please try again later!
   
   users:
     index:
