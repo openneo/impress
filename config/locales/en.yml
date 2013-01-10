@@ -120,11 +120,11 @@ en:
         header: (Not in a list)
         empty: There aren't any items here.
       autocomplete:
-        add_item_markdown: Add **%{item_name}**
-        add_to_list_markdown: Add to **%{list_name}**
-        add_to_group_markdown: Add to **%{group_name}**, no list
-        already_in_collection_markdown:
-          It's already in **%{collection_name}**
+        add_item_html: Add <strong>%{item_name}</strong>
+        add_to_list_html: Add to <strong>%{list_name}</strong>
+        add_to_group_html: Add to <strong>%{group_name}</strong>, no list
+        already_in_collection_html:
+          It's already in <strong>%{collection_name}</strong>
     
     petpage:
       title: Export to petpage
