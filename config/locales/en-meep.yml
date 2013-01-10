@@ -76,7 +76,7 @@ en-meep:
         owned:
           in_list:
             Meep! You own %{count} of the %{item_name} in the %{list_name} list.
-          unlisted: eep! You own of the %{count} %{item_name}.
+          unlisted: Meep! You own %{count} of the %{item_name}.
         wanted:
           in_list:
             Meep! You want %{count} of the %{item_name} in the %{list_name} list.
