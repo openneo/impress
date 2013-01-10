@@ -284,17 +284,20 @@ en:
     
     show:
       rarity: Rarity
-      jn_items: JN Items
-      shop_wizard: Shop Wizard
-      super_shop_wizard: Super Wizard
-      trading_post: Trades
-      auction_genie: Auctions
-      hangers_header_html: Track this in %{user_items_link}
-      quantity_label: How many?
-      submit_hangers: Save to Your Items
-      occupied_zones_header: Occupies
-      restricted_zones_header: Restricts
-      no_restricted_zones: None
+      resources:
+        jn_items: JN Items
+        shop_wizard: Shop Wizard
+        super_shop_wizard: Super Wizard
+        trading_post: Trades
+        auction_genie: Auctions
+      closet_hangers:
+        header_html: Track this in %{user_items_link}
+        quantity_label: How many?
+        submit: Save to Your Items
+      zones:
+        occupied_header: Occupies
+        restricted_header: Restricts
+        none: None
       trading_closet_hangers:
         header:
           owned:
@@ -307,17 +310,20 @@ en:
             other: "%{count} users want this item:"
         show_more: more
         show_less: less
-      preview_header: Preview
-      customize_more: Customize more
-      preview_requirements_not_met:
-        Javascript and Flash are required to preview wearables. Sorry!
-      contributors_header: Brought to you by
-      contributors_footer: Thanks!
-      swf_assets_not_found_html:
-        We've never seen the %{item_name} on the %{color_name}
-        %{species_name} before. Have you? If so, please %{modeling_link} and
-        we'll update our database instantly. Thanks!
-      swf_assets_not_found_modeling_link_content: model it for us
+      preview:
+        header: Preview
+        customize_more: Customize more
+        requirements_not_met:
+          Javascript and Flash are required to preview wearables.
+        not_found:
+          main_html:
+            We've never seen the %{item_name} on the %{color_name}
+            %{species_name} before. Have you? If so, please %{modeling_link} and
+            we'll update our database instantly. Thanks!
+          modeling_link_content: model it for us
+      contributors:
+        header: Brought to you by
+        footer: Thanks!
   
   neopets_pages:
     create:

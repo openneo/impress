@@ -9,17 +9,17 @@
       = nc_icon_for(@item)
       - unless @item.rarity.blank?
         == #{t '.rarity'}: #{@item.rarity_index} (#{@item.rarity})
-      = link_to t('.jn_items'), jn_items_url_for(@item)
+      = link_to t('.resources.jn_items'), jn_items_url_for(@item)
       - unless @item.nc?
-        = link_to t('.shop_wizard'), shop_wizard_url_for(@item)
-        = link_to t('.super_shop_wizard'), super_shop_wizard_url_for(@item)
-        = link_to t('.trading_post'), trading_post_url_for(@item)
-        = link_to t('.auction_genie'), auction_genie_url_for(@item)
+        = link_to t('.resources.shop_wizard'), shop_wizard_url_for(@item)
+        = link_to t('.resources.super_shop_wizard'), super_shop_wizard_url_for(@item)
+        = link_to t('.resources.trading_post'), trading_post_url_for(@item)
+        = link_to t('.resources.auction_genie'), auction_genie_url_for(@item)
 
 - if user_signed_in?
   #closet-hangers
     %h3
-      = t '.hangers_header_html',
+      = t '.closet_hangers.header_html',
           :user_items_link => link_to(t('your_items'),
                                       user_closet_hangers_path(current_user))
     = form_tag update_quantities_user_item_closet_hangers_path(:user_id => current_user, :item_id => @item), :method => :put do
@@ -43,20 +43,21 @@
                               t('closet_lists.unlisted_name'),
                               :class => 'unlisted'
                 - else
-                  = label_tag "quantity[#{owned}]", t('.quantity_label')
-      = submit_tag t('.submit_hangers')
+                  = label_tag "quantity[#{owned}]",
+                              t('.closet_hangers.quantity_label')
+      = submit_tag t('.closet_hangers.submit')
 
 - localized_cache "items/#{@item.id} info" do
   %p= @item.description
 
   #item-zones
     %p
-      %strong #{t '.occupied_zones_header'}:
+      %strong #{t '.zones.occupied_header'}:
       = list_zones @item.occupied_zones, :uncertain_label
     %p
-      %strong #{t '.restricted_zones_header'}:
+      %strong #{t '.zones.restricted_header'}:
       - if @item.restricted_zones.empty?
-        = t '.no_restricted_zones'
+        = t '.zones.none'
       - else
         = list_zones @item.restricted_zones
 
@@ -72,34 +73,33 @@
 
 - localized_cache 'items#show preview_header' do
   #item-preview-header
-    %h3= t '.preview_header'
-    = link_to t('.customize_more'), root_path, :id => 'customize-more',
-                                               :class => 'button'
+    %h3= t '.preview.header'
+    = link_to t('.preview.customize_more'), root_path, :id => 'customize-more',
+                                            :class => 'button'
 
 #item-preview
   #item-preview-species= standard_species_images_for(@item)
   #item-preview-error
-  #item-preview-swf= t '.preview_requirements_not_met'
+  #item-preview-swf= t '.preview.requirements_not_met'
 
 - localized_cache "items/#{@item.id} contributors" do
   - unless @contributors_with_counts.empty?
     #item-contributors
-      %header #{t '.contributors_header'}:
+      %header #{t '.contributors.header'}:
       %ul
         - @contributors_with_counts.each do |contributor, count|
           %li= link_to(contributor.name, user_contributions_path(contributor)) + format_contribution_count(count)
-      %footer= t '.contributors_footer'
+      %footer= t '.contributors.footer'
 
 :javascript
   var CURRENT_ITEM_ZONES_RESTRICT = #{@item.zones_restrict.inspect},
     IMPRESS_HOST = #{RemoteImpressHost.inspect};
 
 %script#swf-assets-not-found-template{:type => 'text/x-jquery-tmpl'}
-  = t '.swf_assets_not_found_html', :item_name => h(@item.name),
-      :species_name => '${species_name}',
-      :color_name => '${color_name}',
-      :modeling_link => link_to(t('.swf_assets_not_found_modeling_link_content'),
-                                root_path)
+  = twl '.preview.not_found', :item_name => h(@item.name),
+        :species_name => '${species_name}',
+        :color_name => '${color_name}',
+        :modeling_link_url => root_path
 
 - content_for :javascripts do
   = include_javascript_libraries :jquery, :swfobject, :jquery_tmpl
