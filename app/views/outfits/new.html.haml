@@ -15,18 +15,18 @@
       = origin_tag root_path
       = destination_tag 'wardrobe'
       %fieldset
-        %legend= t '.load_pet_legend'
+        %legend= t '.load_pet.legend'
         = pet_name_tag :id => 'main-pet-name'
         %button{:type => "submit"}
-          = t '.load_pet_submit'
+          = t '.load_pet.submit'
  
   = form_tag wardrobe_path, :method => 'get', :id => 'start-from-scratch' do
     - localized_cache :action_suffix => 'start_from_scratch_form_content' do
       %fieldset
-        %legend= t '.start_from_scratch_legend'
+        %legend= t '.start_from_scratch.legend'
         = pet_attribute_select 'color', @colors, 8
         = pet_attribute_select 'species', @species
-        %input{:type => "submit", :value => t('.start_from_scratch_submit')}
+        %input{:type => "submit", :value => t('.start_from_scratch.submit')}
 
 %ul#sections
   - localized_cache :action_suffix => 'your_items_module' do
@@ -34,40 +34,40 @@
       = link_to image_tag('your_items.png'), your_items_path
       %h3= link_to t('your_items'), your_items_path
       %div
-        %h4= t '.your_items_tagline'
-        %p= t '.your_items_description'
+        %h4= t '.your_items.tagline'
+        %p= t '.your_items.description'
         = form_tag users_path, :method => 'get' do
           = text_field_tag 'name', '', :type => 'search',
-            :placeholder => t('.your_items_user_search_placeholder')
-          = submit_tag t('.your_items_user_search_submit')
+            :placeholder => t('.your_items.user_search.placeholder')
+          = submit_tag t('.your_items.user_search.submit')
 
   - localized_cache :action_suffix => 'infinite_closet_module' do
     %li
       = link_to image_tag('items.png'), items_path
       %h3= link_to t('infinite_closet'), items_path
       %div
-        %h4= t '.infinite_closet_tagline'
-        %p= t '.infinite_closet_description'
+        %h4= t '.infinite_closet.tagline'
+        %p= t '.infinite_closet.description'
         = form_tag items_path, :method => 'get' do
           = text_field_tag 'q', '', :type => 'search',
-            :placeholder => t('.infinite_closet_item_search_placeholder')
-          = submit_tag t('.infinite_closet_item_search_submit')
+            :placeholder => t('.infinite_closet.item_search.placeholder')
+          = submit_tag t('.infinite_closet.item_search.submit')
     
   %li
     = link_to bulk_pets_path do
       = image_tag 'http://images.neopets.com/items/mall_ac_garland_spotlight.gif'
     %h3= link_to t('modeling_hub'), bulk_pets_path
     %div
-      %h4= t '.modeling_hub_tagline'
-      %p= t '.modeling_hub_description'
+      %h4= t '.modeling_hub.tagline'
+      %p= t '.modeling_hub.description'
       = form_tag load_pet_path do
         = origin_tag root_path
-        = pet_name_tag :placeholder => t('.modeling_hub_load_pet_placeholder')
-        = submit_tag t('.modeling_hub_load_pet_submit')
+        = pet_name_tag :placeholder => t('.modeling_hub.load_pet.placeholder')
+        = submit_tag t('.modeling_hub.load_pet.submit')
 
 - localized_cache 'outfits#new latest_contribution' do
   #latest-contribution
-    = link_to t('.latest_contribution_header'), contributions_path, :id => 'recent-contributions-link'
+    = link_to t('.latest_contribution.header'), contributions_path, :id => 'recent-contributions-link'
     = latest_contribution_description(@latest_contribution)
     %abbr#latest-contribution-created-at{:title => @latest_contribution.created_at.getutc.iso8601}
 
@@ -78,11 +78,11 @@
       %h2
       %div
       %a#blog-preview-linkback{:href => 'http://blog.openneo.net/'}
-        = t '.blog_linkback'
+        = t '.blog.link'
   
   - localized_cache 'outfits#new newest_items' do
     #newest-items
-      %h2= t '.newest_items_header'
+      %h2= t '.newest_items.header'
       %ul
         - @newest_items.each do |item|
           = link_to image_tag(item.thumbnail_url), item

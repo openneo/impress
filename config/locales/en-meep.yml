@@ -590,31 +590,43 @@ en-meep:
     
     new:
       tagline: Meeps made meepy!
-      load_pet_legend: Enter your pet's meep
-      load_pet_submit: Meep my outfit!
-      start_from_scratch_legend: Or meep from scratch
-      start_from_scratch_submit: Meep
-      your_items_tagline: Meep and meep!
-      your_items_description:
-        Meep lists of the items you own and want, and meep them with the world.
-      your_items_user_search_placeholder: meep a user…
-      your_items_user_search_submit: meep
-      infinite_closet_tagline: Meeping for something?
-      infinite_closet_description: Take a meep through our wearables meep!
-      infinite_closet_item_search_placeholder: meep an item…
-      infinite_closet_item_search_submit: meep
-      modeling_hub_tagline: Found somemeep?
-      modeling_hub_description:
-        Meep a pet's meep here and we'll meep a meep of what it's wearing.
-        Thanks so meep!
-      modeling_hub_load_pet_placeholder: meep a pet…
-      modeling_hub_load_pet_submit: meep
-      latest_contribution_header: Contribumeeps
-      latest_contribution_description_html:
-        "%{user_link} meeped us %{contributed_description}.
-        Meep, %{user_link}!"
-      blog_linkback: OpenNeo Meep
-      newest_items_header: New Meeps
+      load_pet:
+        legend: Enter your pet's meep
+        submit: Meep my outfit!
+      start_from_scratch:
+        legend: Or meep from scratch
+        submit: Meep
+      your_items:
+        tagline: Meep and meep!
+        description:
+          Meep lists of the items you own and want, and meep them with the
+          world.
+        user_search:
+          placeholder: meep a user…
+          submit: meep
+      infinite_closet:
+        tagline: Meeping for something?
+        description: Take a meep through our wearables meep!
+        item_search:
+          placeholder: meep an item…
+          submit: meep
+      modeling_hub:
+        tagline: Found somemeep?
+        description:
+          Meep a pet's meep here and we'll meep a meep of what it's wearing.
+          Thanks so meep!
+        load_pet:
+          placeholder: meep a pet…
+          submit: meep
+      latest_contribution:
+        header: Contribumeeps
+        description_html:
+          "%{user_link} meeped us %{contributed_description}.
+          Meep, %{user_link}!"
+      blog:
+        link: OpenNeo Meep
+      newest_items:
+        header: New Meeps
     
     show:
       default_outfit_name: Meeped outfit
