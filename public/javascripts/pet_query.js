@@ -14,16 +14,9 @@ $.each(query_string.substr(1).split('&'), function () {
 
 if(PetQuery.name) {
   if(PetQuery.species && PetQuery.color) {
-    var notice = $('<div></div>', {
-        'class': 'success',
-        'html': "Thanks for showing us <strong>" + PetQuery.name + "</strong>! " +
-          "Keep up the good work!"
-      }),
-      image = $('<img/>', {
-        'class': 'inline-image',
-        'src': petImage('cpn/' + PetQuery.name, 1)
-      });
-    image.prependTo(notice);
-    notice.prependTo('#container');
+    $('#pet-query-notice-template').tmpl({
+      pet_name: PetQuery.name,
+      pet_image_url: petImage('cpn/' + PetQuery.name, 1)
+    }).prependTo('#container');
   }
 }
