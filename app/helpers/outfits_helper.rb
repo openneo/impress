@@ -6,7 +6,7 @@ module OutfitsHelper
   def latest_contribution_description(contribution)
     user = contribution.user
     contributed = contribution.contributed
-    t 'outfits.new.latest_contribution_description_html',
+    t 'outfits.new.latest_contribution.description_html',
       :user_link => link_to(user.name, user_contributions_path(user)),
       :contributed_description => contributed_description(contributed, false)
   end
