@@ -627,6 +627,10 @@ en-meep:
         link: OpenNeo Meep
       newest_items:
         header: New Meeps
+      pet_query:
+        notice_html:
+          Thanks for meeping us <strong>%{pet_name}</strong>.
+          Meep up the good work!
     
     show:
       default_outfit_name: Meeped outfit

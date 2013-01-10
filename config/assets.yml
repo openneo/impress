@@ -4,7 +4,6 @@ embed_assets: on
 javascripts:
   bulk_pets_package:
     - public/javascripts/ajax_auth.js
-    - public/javascripts/pet_query.js
     - public/javascripts/pets/bulk.js
     
   edit_outfit_package:
