@@ -379,11 +379,11 @@ en:
           %{name} data into your Dress to Impress items list. Here's how it
           works.
         check_frame:
-          header_html:
-            Check the framed Neopets.com window on the left,
-            pointing to %{page_link}.
-          page_link_content:
-            page %{index} of your %{name}
+          header:
+            main_html:
+              Check the framed Neopets.com window on the left,
+              pointing to %{page_link}.
+            page_link_content: page %{index} of your %{name}
           check_login:
             summary: Confirm that you're logged in.
             details:
@@ -391,14 +391,16 @@ en:
               you're not, try enabling "third-party cookies" in your browser.
               (Most have that on by default.)
           login:
-            summary_html: If you haven't logged in, %{login_link}.
-            summary_login_link_content: do so in another window
-            details_html:
-              It's never a good idea to log in inside of a frame, unless you're
-              a web programmer pro who can check that the frame does, in fact,
-              point to Neopets.com. To be safe, %{login_link}.
-            details_login_link_content:
-              pull up another window, check the URL, and log in safely
+            summary:
+              main_html: If you haven't logged in, %{login_link}.
+              login_link_content: do so in another window
+            details:
+              main_html:
+                It's never a good idea to log in inside of a frame, unless
+                you're a web programmer pro who can check that the frame does,
+                in fact, point to Neopets.com. To be safe, %{login_link}.
+              login_link_content:
+                pull up another window, check the URL, and log in safely
           check_content:
             summary: Confirm that the page is, in fact, your %{name}.
             details:
@@ -414,12 +416,13 @@ en:
             <strong>In Firefox</strong>, right-click the frame, choose
             <strong>This Frame</strong>, then <strong>View Frame
             Source</strong>.
-          other_html:
+          other:
             In other browsers, right-click and look for something similar.
-          troubleshooting_html:
-            If you're still having trouble, try %{page_link}, right-clicking,
-            and choosing View Source.
-          troubleshooting_page_link_content: opening the page in a new window
+          troubleshooting:
+            main_html:
+              If you're still having trouble, try %{page_link}, right-clicking,
+              and choosing View Source.
+            page_link_content: opening the page in a new window
         copy_source:
           header:
             Highlight the entire source code,
