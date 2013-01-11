@@ -99,6 +99,12 @@ module ApplicationHelper
     end)
   end
   
+  def locale_options
+    I18n.available_locales.map do |available_locale|
+      [translate('locale_name', :locale => available_locale), available_locale]
+    end
+  end
+  
   def localized_cache(key={}, &block)
     localized_key = localize_fragment_key(key, locale)
     cache(localized_key, &block)
