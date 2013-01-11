@@ -19,11 +19,12 @@ class ApplicationController < ActionController::Base
     true
   end
   
-  # This locale-inferrence method is designed for debugging. Once we're ready
-  # for production, we'll probably start inferring from domain.
   def infer_locale
-    inference = params[:locale]
-    inference if inference && I18n.available_locales.include?(inference.to_sym)
+    return params[:locale] if valid_locale?(params[:locale])
+    return cookies[:locale] if valid_locale?(cookies[:locale])
+    Rails.logger.debug "Preferred languages: #{http_accept_language.user_preferred_languages}"
+    http_accept_language.language_region_compatible_from(I18n.available_locales.map(&:to_s)) ||
+      I18n.default_locale
   end
   
   def localized_fragment_exist?(key)
@@ -53,6 +54,10 @@ class ApplicationController < ActionController::Base
 
   def user_is?(user)
     user_signed_in? && user == current_user
+  end
+  
+  def valid_locale?(locale)
+    locale && I18n.available_locales.include?(locale.to_sym)
   end
 end
 
