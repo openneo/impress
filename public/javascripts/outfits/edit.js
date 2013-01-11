@@ -1086,19 +1086,12 @@ View.Search = function (wardrobe) {
     PAGINATION = {
       INNER_WINDOW: 4,
       OUTER_WINDOW: 1,
-      GAP_TEXT: '&hellip;',
-      PREV_TEXT: '&larr; Previous',
-      NEXT_TEXT: 'Next &rarr;',
-      PAGE_EL: $('<a/>', {href: '#'}),
-      CURRENT_EL: $('<span/>', {'class': 'current'}),
       EL_ID: '#preview-search-form-pagination',
-      PER_PAGE: 21
+      PER_PAGE: 21,
+      TEMPLATE: $('#pagination-template')
     }, object_width = 112, last_request;
 
   PAGINATION.EL = $(PAGINATION.EL_ID);
-  PAGINATION.GAP_EL = $('<span/>', {'class': 'gap', html: PAGINATION.GAP_TEXT})
-  PAGINATION.PREV_EL = $('<a/>', {href: '#', rel: 'prev', html: PAGINATION.PREV_TEXT});
-  PAGINATION.NEXT_EL = $('<a/>', {href: '#', rel: 'next', html: PAGINATION.NEXT_TEXT});
 
   $(PAGINATION.EL_ID + ' a').live('click', function (e) {
     e.preventDefault();
@@ -1205,33 +1198,28 @@ View.Search = function (wardrobe) {
 
     subtract_left = (left_gap[1] - left_gap[0]) > 1;
     subtract_right = (right_gap[1] - right_gap[0]) > 1;
-
-    PAGINATION.EL.children().remove();
-
-    if(current_page > 1) {
-      PAGINATION.PREV_EL.clone().data('page', current_page - 1).appendTo(PAGINATION.EL);
-    }
+    
+    var pages = [];
 
     while(i <= total_pages) {
       if(subtract_left && i >= left_gap[0] && i < left_gap[1]) {
-        PAGINATION.GAP_EL.clone().appendTo(PAGINATION.EL);
+        pages.push('gap');
         i = left_gap[1];
       } else if(subtract_right && i >= right_gap[0] && i < right_gap[1]) {
-        PAGINATION.GAP_EL.clone().appendTo(PAGINATION.EL);
+        pages.push('gap');
         i = right_gap[1];
       } else {
-        if(i == current_page) {
-          PAGINATION.CURRENT_EL.clone().text(i).appendTo(PAGINATION.EL);
-        } else {
-          PAGINATION.PAGE_EL.clone().text(i).data('page', i).appendTo(PAGINATION.EL);
-        }
+        pages.push(i);
         i++;
       }
     }
-
-    if(current_page < total_pages) {
-      PAGINATION.NEXT_EL.clone().data('page', current_page + 1).appendTo(PAGINATION.EL);
-    }
+    
+    PAGINATION.EL.empty();
+    PAGINATION.TEMPLATE.tmpl({
+      current_page: current_page,
+      total_pages: total_pages,
+      pages: pages
+    }).appendTo(PAGINATION.EL);
   });
 
   wardrobe.search.bind('error', function (error) {

@@ -121,14 +121,19 @@
       = t '.search.no_results_html', :query => content_tag(:span)
     %ul
   #no-assets-full-message= t '.sidebar.closet.no_data.description'
+  
   %script#sharing-html-image-template{:type => 'text/x-jquery-tmpl'}
     = link_to image_tag('${image_url}'), '${permalink}'
+  
   %script#sharing-html-text-template{:type => 'text/x-jquery-tmpl'}
     = link_to t('app_name'), '${permalink}'
+  
   %script#sharing-bbcode-image-template{:type => 'text/x-jquery-tmpl'}
     [URL=${permalink}][IMG]${image_url}[/IMG][/URL]
+  
   %script#sharing-bbcode-text-template{:type => 'text/x-jquery-tmpl'}
     [URL=${permalink}]#{t('app_name')}[/URL]
+  
   %script#outfit-template{:type => 'text/x-jquery-tmpl'}
     <li class="outfit-${id}{{if starred}} starred{{/if}}">
     %header
@@ -151,6 +156,7 @@
       %a.outfit-delete-confirmation-no{:href => '#'}
         = t '.sidebar.outfits.outfit.delete_confirmation.cancel'
     </li>
+    
   %script#item-template{:type => 'text/x-jquery-tmpl'}
     %li{:class => 'object object-${id}'}
       %img{:src => '${thumbnail_url}', :title => '${description}', :alt => ''}
@@ -171,6 +177,27 @@
         {{/if}}
       {{/if}}
       %span.no-assets-message= t '.sidebar.closet.no_data.summary'
+  
+  %script#pagination-template{:type => 'text/x-jquery-tmpl'}
+    {{if current_page > 1}}
+    = link_to t('will_paginate.previous_label').html_safe, '#', :rel => 'prev',
+      'data-page' => '${current_page - 1}'
+    {{/if}}
+    
+    {{each pages}}
+    {{if $value == 'gap'}}
+    %span.gap= t('will_paginate.page_gap').html_safe
+    {{else $value == current_page}}
+    %em.current ${$value}
+    {{else}}
+    = link_to '${$value}', '#', 'data-page' => '${$value}'
+    {{/if}}
+    {{/each}}
+    
+    {{if current_page < total_pages}}
+    = link_to t('will_paginate.next_label').html_safe, '#', :rel => 'next',
+      'data-page' => '${current_page + 1}'
+    {{/if}}
 
 %span#userbar-session-message
   - if user_signed_in?

@@ -1,0 +1,18 @@
+en-meep:
+  will_paginate:
+    previous_label: "&#8592; Preevious"
+    next_label: "Neext &#8594;"
+    page_gap: "&hellip;!"
+
+    page_entries_info:
+      single_page:
+        zero:  "No %{model} meeped"
+        one:   "Meeping 1 %{model}"
+        other: "Meeping all %{count} %{model}"
+      single_page_html:
+        zero:  "No %{model} meeped"
+        one:   "Meeping <b>1</b> %{model}"
+        other: "Meeping <b>all&nbsp;%{count}</b> %{model}"
+
+      multi_page: "Meeping %{model} %{from} - %{to} of %{count} in total"
+      multi_page_html: "Meeping %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> of <b>%{count}</b> in total"
