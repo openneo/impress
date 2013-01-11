@@ -609,6 +609,10 @@ en:
     
     new:
       tagline: Neopets wearables made easy!
+      preview:
+        pet_type_not_found:
+          We haven't seen a %{color_name} %{species_name}. Have you?
+        pet_not_found: Pet not found.
       load_pet:
         legend: Enter your pet's name
         submit: Plan my outfit!
