@@ -3,7 +3,7 @@ class SitemapController < ApplicationController
 
   def index
     respond_to do |format|
-      format.xml { @items = Item.sitemap }
+      format.xml { @items = Item.with_translations.sitemap }
     end
   end
 end

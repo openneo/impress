@@ -188,15 +188,17 @@ class ClosetHangersController < ApplicationController
 
   def find_closet_lists_by_owned(closet_lists)
     return {} if closet_lists == []
-    closet_lists.alphabetical.includes(:hangers => :item).
+    closet_lists.alphabetical.includes(:hangers => {:item => :translations}).
       group_by(&:hangers_owned)
   end
   
   def find_unlisted_closet_hangers_by_owned(visible_groups)
     unless visible_groups.empty?
       @user.closet_hangers.unlisted.
-        owned_before_wanted.alphabetical_by_item_name.includes(:item).
-        where(:owned => [visible_groups]).group_by(&:owned)
+        owned_before_wanted.alphabetical_by_item_name.
+        includes(:item => :translations).
+        where(:owned => [visible_groups]).
+        group_by(&:owned)
     else
       {}
     end

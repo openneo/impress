@@ -25,7 +25,11 @@ class Item < ActiveRecord::Base
   cattr_reader :per_page
   @@per_page = 30
 
-  scope :alphabetize, order('name ASC')
+  scope :alphabetize, order(arel_table[:name])
+  scope :alphabetize_by_translations, lambda {
+    it = Item::Translation.arel_table
+    order(it[:name])
+  }
 
   scope :join_swf_assets, joins(:swf_assets).group(arel_table[:id])
 
@@ -36,7 +40,8 @@ class Item < ActiveRecord::Base
   scope :sold_in_mall, where(:sold_in_mall => true)
   scope :not_sold_in_mall, where(:sold_in_mall => false)
 
-  scope :sitemap, select([:id, :name]).order(:id).limit(49999)
+  scope :sitemap, select([arel_table[:id], arel_table[:name]]).
+                  order(arel_table[:id]).limit(49999)
 
   scope :with_closet_hangers, joins(:closet_hangers)
 
@@ -155,7 +160,7 @@ class Item < ActiveRecord::Base
     Species.find(species_ids)
   end
 
-  def self.search(query, user=nil)
+  def self.search(query, user, locale)
     raise SearchError, "Please provide a search query" unless query
     query = query.strip
     raise SearchError, "Search queries should be at least 3 characters" if query.length < 3
@@ -175,7 +180,7 @@ class Item < ActiveRecord::Base
       end
     end
     limited_filters_used = []
-    query_conditions.inject(self.scoped) do |scope, condition|
+    query_conditions.inject(self.with_translations(locale)) do |scope, condition|
       if condition.filter? && LimitedSearchFilters.include?(condition.filter)
         if limited_filters_used.include?(condition.filter)
           raise SearchError, "The #{condition.filter} filter is complex; please only use one per search. Thanks!"
@@ -706,11 +711,11 @@ class Item < ActiveRecord::Base
   end
 
   search_filter :name do |name|
-    arel_table[:name].matches("%#{name}%")
+    Item::Translation.arel_table[:name].matches("%#{name}%")
   end
 
   search_filter :description do |description|
-    arel_table[:description].matches("%#{description}%")
+    Item::Translation.arel_table[:description].matches("%#{description}%")
   end
   
   def self.adjective_filters

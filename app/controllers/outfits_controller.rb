@@ -47,7 +47,8 @@ class OutfitsController < ApplicationController
     end
     
     unless localized_fragment_exist?('outfits#new newest_items')
-      @newest_items = Item.newest.select([:id, :name, :thumbnail_url]).limit(9)
+      @newest_items = Item.newest.select([:id, :name, :thumbnail_url]).
+        with_translations.limit(9)
     end
     
     unless localized_fragment_exist?('outfits#new latest_contribution')

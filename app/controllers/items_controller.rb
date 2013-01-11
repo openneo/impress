@@ -10,7 +10,11 @@ class ItemsController < ApplicationController
         else
           per_page = nil
         end
-        @items = Item.search(@query, current_user).alphabetize.paginate :page => params[:page], :per_page => per_page
+        # Note that we sort by name by hand, since we might have to use
+        # fallbacks after the fact
+        @items = Item.search(@query, current_user, I18n.default_locale).
+          alphabetize_by_translations.
+          paginate(:page => params[:page], :per_page => per_page)
         assign_closeted!
         respond_to do |format|
           format.html { render }
@@ -35,7 +39,7 @@ class ItemsController < ApplicationController
       respond_to do |format|
         format.html {
           unless localized_fragment_exist?('items#index newest_items')
-            @newest_items = Item.newest.limit(18)
+            @newest_items = Item.newest.with_translations.limit(18)
           end
         }
         format.js { render :json => {:error => '$q required'}}
@@ -96,7 +100,8 @@ class ItemsController < ApplicationController
       raise ActiveRecord::RecordNotFound, 'Pet type not found'
     end
     
-    @items = @pet_type.needed_items.alphabetize
+    @items = @pet_type.needed_items.with_translations(I18n.locale).
+      alphabetize_by_translations
     assign_closeted!
     
     respond_to do |format|
