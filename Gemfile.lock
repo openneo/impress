@@ -5,6 +5,12 @@ GIT
     eventmachine (1.0.0.beta.4)
 
 GIT
+  remote: git://github.com/iain/http_accept_language.git
+  revision: 7738e45ba154015597fca749b7d0257861c14a02
+  specs:
+    http_accept_language (2.0.0.pre)
+
+GIT
   remote: git://github.com/igrigorik/em-http-request.git
   revision: ce50f322ce08d43a4a747cf333ea576765d764c4
   specs:
@@ -254,6 +260,7 @@ DEPENDENCIES
   fog (~> 1.1.2)
   haml (~> 3.0.18)
   hoptoad_notifier
+  http_accept_language!
   jammit (~> 0.5.3)
   memcache-client (~> 1.8.5)
   mini_magick (~> 3.4)
