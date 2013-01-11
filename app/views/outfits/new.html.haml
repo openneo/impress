@@ -87,11 +87,18 @@
         - @newest_items.each do |item|
           = link_to image_tag(item.thumbnail_url), item
 
-- localized_cache :action_suffix => 'pet_query_notice' do
+- localized_cache :action_suffix => 'templates' do
   %script#pet-query-notice-template{:type => 'text/x-jquery-tmpl'}
     .success
       %img.inline-image{:src => '${pet_image_url}'}
       = t '.pet_query.notice_html', :pet_name => '${pet_name}'
+  
+  %script#preview-pet-type-not-found-template{:type => 'text/x-jquery-tmpl'}
+    = t '.preview.pet_type_not_found', :color_name => '${color_name}',
+        :species_name => '${species_name}'
+  
+  %script#preview-pet-not-found-template{:type => 'text/x-jquery-tmpl'}
+    = t '.preview.pet_not_found'
 
 - content_for :javascripts do
   = include_javascript_libraries :jquery, :jquery_tmpl

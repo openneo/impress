@@ -590,6 +590,10 @@ en-meep:
     
     new:
       tagline: Meeps made meepy!
+      preview:
+        pet_type_not_found:
+          We haven't meeped a %{color_name} %{species_name}. Meep?
+        pet_not_found: Pet not meeped.
       load_pet:
         legend: Enter your pet's meep
         submit: Meep my outfit!

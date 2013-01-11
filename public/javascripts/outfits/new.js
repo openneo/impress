@@ -19,9 +19,13 @@ var Preview = {
     preview_el.addClass('loading');
     response_el.text('Loading...');
   },
-  notFound: function (str) {
+  failed: function () {
     preview_el.addClass('hidden');
-    response_el.text(str);
+  },
+  notFound: function (key, options) {
+    Preview.failed();
+    response_el.empty();
+    $('#preview-' + key + '-template').tmpl(options).appendTo(response_el);
   },
   updateWithName: function () {
     var name = name_el.val(), job;
@@ -107,19 +111,19 @@ $(function () {
   }).error(function () {
     if(Preview.Job.current.loading) {
       Preview.Job.loading = false;
-      Preview.notFound('Pet not found.');
+      Preview.notFound('pet-not-found');
     }
   });
   
   var selectFields = $('#species, #color');
   selectFields.change(function () {
-    var type = {}, name = [];
+    var type = {}, nameComponents = {};
     selectFields.each(function () {
-      var el = $(this), selectedEl = el.children(':selected');
-      type[el.attr('id')] = selectedEl.val();
-      name.push(selectedEl.text());
+      var el = $(this), selectedEl = el.children(':selected'), key = el.attr('id');
+      type[key] = selectedEl.val();
+      nameComponents[key] = selectedEl.text();
     });
-    name = name.join(' ');
+    name = nameComponents.color + ' ' + nameComponents.species;
     Preview.displayLoading();
     $.ajax({
       url: '/species/' + type.species + '/color/' + type.color + '/pet_type.json',
@@ -134,11 +138,11 @@ $(function () {
           job.name = name;
           job.setAsCurrent();
         } else {
-          Preview.notFound("We haven't seen a " + name + ". Have you?");
+          Preview.notFound('pet-type-not-found', {
+            color_name: nameComponents.color,
+            species_name: nameComponents.species
+          });
         }
-      },
-      error: function () {
-        Preview.notFound("Error fetching preview. Try again?");
       }
     });
   });
