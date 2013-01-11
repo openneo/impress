@@ -4,6 +4,7 @@ en:
   your_items: Your Items
   infinite_closet: Infinite Closet
   modeling_hub: Modeling Hub
+  locale_name: English
   
   activerecord:
     attributes:

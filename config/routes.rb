@@ -52,6 +52,8 @@ OpenneoImpressItems::Application.routes.draw do |map|
   match '/login' => 'sessions#new', :as => :login
   match '/logout' => 'sessions#destroy', :as => :logout
   match '/users/authorize' => 'sessions#create'
+  
+  match '/locales/choose' => 'locales#choose', :as => :choose_locale
 
   resources :users, :path => 'user', :only => [:index, :update] do
     resources :contributions, :only => [:index]

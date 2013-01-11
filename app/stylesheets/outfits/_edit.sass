@@ -328,10 +328,16 @@ body.outfits-edit
       left: 0
       position: absolute
       width: 100%
-      ul, p, li
-        display: inline
-      ul
+      ul, li, p, div
+        display: inline-block
+        vertical-align: middle
+        padding: 0
+      > ul
         margin-right: 2em
+      > p
+        margin: 0
+      > ul, div, p
+        margin-top: 6px
 
   .object
     padding: $object-padding

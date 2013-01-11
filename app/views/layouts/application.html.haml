@@ -51,17 +51,25 @@
             %span= t('.userbar.login')
 
       #footer
+        = form_tag choose_locale_path, :id => 'locale-form' do
+          = hidden_field_tag 'return_to', request.fullpath
+          = select_tag 'locale', options_for_select(locale_options, locale)
+          = submit_tag 'Go'
+          
         %ul
           %li= link_to t('organization_name'), 'http://openneo.net/'
           %li= link_to t('.footer.blog'), 'http://blog.openneo.net/'
           %li= link_to t('.footer.source_code'),
                       'http://github.com/matchu/openneo-impress-rails'
           %li= link_to t('.footer.terms'), terms_path
+        
         %div
           #{t('.footer.contact')}:
           %ul
             %li= link_to t('.footer.suggestions'), feedback_url
             %li= mail_to contact_email, t('.footer.email')
+        
         %p= t '.footer.copyright', :year => Date.today.year
+      
       = yield(:javascripts)
 

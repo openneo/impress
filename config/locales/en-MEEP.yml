@@ -4,6 +4,7 @@ en-MEEP:
   your_items: Your Meeps
   infinite_closet: Infinite Meepit
   modeling_hub: Meepiting Hub
+  locale_name: English (meep!)
   
   activerecord:
     attributes:
