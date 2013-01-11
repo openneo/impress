@@ -49,6 +49,7 @@ gem "carrierwave", "~> 0.5.8"
 gem "parallel", "~> 0.5.17"
 
 gem "http_accept_language", :git => "git://github.com/iain/http_accept_language.git"
+gem "globalize3"
 
 group :development do
   gem "bullet", "~> 4.1.5"

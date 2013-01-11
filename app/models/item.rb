@@ -1,7 +1,11 @@
 class Item < ActiveRecord::Base
   include PrettyParam
+  
+  set_inheritance_column 'inheritance_type' # PHP Impress used "type" to describe category
 
   SwfAssetType = 'object'
+  
+  translates :name, :description, :rarity
 
   has_many :closet_hangers
   has_one :contribution, :as => :contributed
@@ -18,15 +22,12 @@ class Item < ActiveRecord::Base
   SPECIAL_PAINTBRUSH_COLORS_PATH = Rails.root.join('config', 'colors_with_unique_bodies.txt')
   SPECIAL_PAINTBRUSH_COLORS = File.read(SPECIAL_PAINTBRUSH_COLORS_PATH).split("\n").map { |name| Color.find_by_name(name) }
 
-  set_table_name 'objects' # Neo & PHP Impress call them objects, but the class name is a conflict (duh!)
-  set_inheritance_column 'inheritance_type' # PHP Impress used "type" to describe category
-
   cattr_reader :per_page
   @@per_page = 30
 
   scope :alphabetize, order('name ASC')
 
-  scope :join_swf_assets, joins(:swf_assets).group('objects.id')
+  scope :join_swf_assets, joins(:swf_assets).group(arel_table[:id])
 
   scope :newest, order(arel_table[:created_at].desc) if arel_table[:created_at]
 

@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121006010446) do
+ActiveRecord::Schema.define(:version => 20130111213346) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -18,6 +19,13 @@ ActiveRecord::Schema.define(:version => 20121006010446) do
     t.text   "icon",       :limit => 16777215, :null => false
     t.text   "gateway",    :limit => 16777215, :null => false
     t.string "secret",     :limit => 64,       :null => false
+  end
+
+  create_table "campaigns", :force => true do |t|
+    t.integer  "goal_cents",     :null => false
+    t.integer  "progress_cents", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "closet_hangers", :force => true do |t|
@@ -61,6 +69,14 @@ ActiveRecord::Schema.define(:version => 20121006010446) do
   add_index "contributions", ["contributed_id", "contributed_type"], :name => "index_contributions_on_contributed_id_and_contributed_type"
   add_index "contributions", ["user_id"], :name => "index_contributions_on_user_id"
 
+  create_table "donations", :force => true do |t|
+    t.integer  "amount_cents", :null => false
+    t.integer  "campaign_id",  :null => false
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "forums", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -80,16 +96,20 @@ ActiveRecord::Schema.define(:version => 20121006010446) do
   add_index "item_outfit_relationships", ["item_id"], :name => "index_item_outfit_relationships_on_item_id"
   add_index "item_outfit_relationships", ["outfit_id", "is_worn"], :name => "index_item_outfit_relationships_on_outfit_id_and_is_worn"
 
-  create_table "login_cookies", :force => true do |t|
-    t.integer "user_id", :null => false
-    t.integer "series",  :null => false
-    t.integer "token",   :null => false
+  create_table "item_translations", :force => true do |t|
+    t.integer  "item_id"
+    t.string   "locale"
+    t.string   "name"
+    t.text     "description"
+    t.string   "rarity"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
-  add_index "login_cookies", ["user_id", "series"], :name => "login_cookies_user_id_and_series"
-  add_index "login_cookies", ["user_id"], :name => "login_cookies_user_id"
+  add_index "item_translations", ["item_id"], :name => "index_item_translations_on_item_id"
+  add_index "item_translations", ["locale"], :name => "index_item_translations_on_locale"
 
-  create_table "objects", :force => true do |t|
+  create_table "items", :force => true do |t|
     t.text     "zones_restrict",                                                  :null => false
     t.text     "thumbnail_url",            :limit => 16777215,                    :null => false
     t.string   "name",                     :limit => 100,                         :null => false
@@ -108,8 +128,25 @@ ActiveRecord::Schema.define(:version => 20121006010446) do
     t.boolean  "explicitly_body_specific",                     :default => false, :null => false
   end
 
-  add_index "objects", ["last_spidered"], :name => "objects_last_spidered"
-  add_index "objects", ["name"], :name => "name"
+  add_index "items", ["last_spidered"], :name => "objects_last_spidered"
+  add_index "items", ["name"], :name => "name"
+
+  create_table "login_cookies", :force => true do |t|
+    t.integer "user_id", :null => false
+    t.integer "series",  :null => false
+    t.integer "token",   :null => false
+  end
+
+  add_index "login_cookies", ["user_id", "series"], :name => "login_cookies_user_id_and_series"
+  add_index "login_cookies", ["user_id"], :name => "login_cookies_user_id"
+
+  create_table "outfit_features", :force => true do |t|
+    t.integer  "outfit_id",            :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.date     "frontpage_start_date"
+    t.date     "frontpage_end_date"
+  end
 
   create_table "outfits", :force => true do |t|
     t.integer  "pet_state_id"
@@ -121,6 +158,7 @@ ActiveRecord::Schema.define(:version => 20121006010446) do
     t.string   "image"
     t.string   "image_layers_hash"
     t.boolean  "image_enqueued",    :default => false, :null => false
+    t.boolean  "image_dirty",       :default => false, :null => false
   end
 
   add_index "outfits", ["pet_state_id"], :name => "index_outfits_on_pet_state_id"
