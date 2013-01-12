@@ -5,6 +5,7 @@ en:
   infinite_closet: Infinite Closet
   modeling_hub: Modeling Hub
   locale_name: English
+  neopets_language_code: en
   
   activerecord:
     attributes:

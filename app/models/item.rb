@@ -265,6 +265,11 @@ class Item < ActiveRecord::Base
   def parent_swf_asset_relationships_to_update=(rels)
     @parent_swf_asset_relationships_to_update = rels
   end
+  
+  def needed_translations
+    translated_locales = Set.new(translations.map(&:locale))
+    I18n.available_locales.reject { |locale| translated_locales.include?(locale) }
+  end
 
   def self.all_by_ids_or_children(ids, swf_assets)
     swf_asset_ids = []

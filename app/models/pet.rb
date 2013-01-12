@@ -2,8 +2,8 @@ require 'rocketamf/remote_gateway'
 
 class Pet < ActiveRecord::Base
   GATEWAY_URL = 'http://www.neopets.com/amfphp/gateway.php'
-  AMF_SERVICE_NAME = 'CustomPetService'
-  PET_VIEWER_METHOD = 'getViewerData'
+  PET_VIEWER = RocketAMF::RemoteGateway.new(GATEWAY_URL).
+    service('CustomPetService').action('getViewerData')
   PET_NOT_FOUND_REMOTE_ERROR = 'PHP: Unable to retrieve records from the database.'
   WARDROBE_PATH = '/wardrobe'
 
@@ -19,8 +19,13 @@ class Pet < ActiveRecord::Base
   def load!
     require 'ostruct'
     begin
-      envelope = Pet.amf_service.request(PET_VIEWER_METHOD, name, nil).
-        fetch(:timeout => 2)
+      neopets_language_code = I18n.translate('neopets_language_code')
+      envelope = PET_VIEWER.request([name, 0]).post(
+        :timeout => 2,
+        :headers => {
+          'Cookie' => "lang=#{neopets_language_code}"
+        }
+      )
     rescue RocketAMF::RemoteGateway::AMFError => e
       if e.message == PET_NOT_FOUND_REMOTE_ERROR
         raise PetNotFound, "Pet #{name.inspect} does not exist"
@@ -64,6 +69,20 @@ class Pet < ActiveRecord::Base
     end
     contributables
   end
+  
+  def item_translation_candidates
+    {}.tap do |candidates|
+      if @items
+        @items.each do |item|
+          puts "#{item.name}: #{item.translations_needed}"
+          item.needed_translations.each do |locale|
+            candidates[locale] ||= []
+            candidates[locale] << item
+          end
+        end
+      end
+    end
+  end
 
   before_validation do
     pet_type.save!
@@ -84,19 +103,6 @@ class Pet < ActiveRecord::Base
     pet = Pet.find_or_initialize_by_name(name)
     pet.load!
     pet
-  end
-
-  private
-
-  def self.amf_service
-    @amf_service ||= gateway.service AMF_SERVICE_NAME
-  end
-
-  def self.gateway
-    unless @gateway
-      @gateway = RocketAMF::RemoteGateway.new(GATEWAY_URL)
-    end
-    @gateway
   end
 
   class PetNotFound < Exception;end

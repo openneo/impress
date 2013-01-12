@@ -5,6 +5,7 @@ en-MEEP:
   infinite_closet: Infinite Meepit
   modeling_hub: Meepiting Hub
   locale_name: English (meep!)
+  neopets_language_code: en
   
   activerecord:
     attributes:
