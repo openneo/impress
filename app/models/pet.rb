@@ -16,7 +16,13 @@ class Pet < ActiveRecord::Base
     joins(:pet_type).where(PetType.arel_table[:id].in(color_ids))
   }
 
-  def load!
+  def load!(options={})
+    options[:item_scope] ||= Item.scoped
+    options[:locale] ||= I18n.default_locale
+    
+    original_locale = I18n.locale
+    I18n.locale = options[:locale]
+    
     require 'ostruct'
     begin
       neopets_language_code = I18n.translate('neopets_language_code')
@@ -36,18 +42,27 @@ class Pet < ActiveRecord::Base
     end
     contents = OpenStruct.new(envelope.messages[0].data.body)
     pet_data = OpenStruct.new(contents.custom_pet)
-    self.pet_type = PetType.find_or_initialize_by_species_id_and_color_id(
-        pet_data.species_id.to_i,
-        pet_data.color_id.to_i
-      )
-    self.pet_type.body_id = pet_data.body_id
-    self.pet_type.origin_pet = self
-    biology = pet_data.biology_by_zone
-    biology[0] = nil # remove effects if present
-    @pet_state = self.pet_type.add_pet_state_from_biology! biology
-    @pet_state.label_by_pet(self, pet_data.owner)
-    @items = Item.collection_from_pet_type_and_registries(self.pet_type,
-      contents.object_info_registry, contents.object_asset_registry)
+    
+    # in case this is running in a thread, explicitly grab an ActiveRecord
+    # connection, to avoid connection conflicts
+    Pet.connection_pool.with_connection do
+      self.pet_type = PetType.find_or_initialize_by_species_id_and_color_id(
+          pet_data.species_id.to_i,
+          pet_data.color_id.to_i
+        )
+      self.pet_type.body_id = pet_data.body_id
+      self.pet_type.origin_pet = self
+      biology = pet_data.biology_by_zone
+      biology[0] = nil # remove effects if present
+      @pet_state = self.pet_type.add_pet_state_from_biology! biology
+      @pet_state.label_by_pet(self, pet_data.owner)
+      @items = Item.collection_from_pet_type_and_registries(self.pet_type,
+        contents.object_info_registry, contents.object_asset_registry,
+        options[:item_scope])
+    end
+    
+    I18n.locale = original_locale
+    
     true
   end
 
@@ -74,12 +89,35 @@ class Pet < ActiveRecord::Base
     {}.tap do |candidates|
       if @items
         @items.each do |item|
-          puts "#{item.name}: #{item.translations_needed}"
           item.needed_translations.each do |locale|
             candidates[locale] ||= []
             candidates[locale] << item
           end
         end
+      end
+    end
+  end
+  
+  def translate_items
+    candidates = self.item_translation_candidates
+    
+    until candidates.empty?
+      last_pet_loaded = nil
+      reloaded_pets = Parallel.map(candidates.keys, :in_threads => 8) do |locale|
+        Rails.logger.info "Reloading #{name} in #{locale}"
+        last_pet_loaded = Pet.load(name, :item_scope => Item.with_translations,
+                                         :locale => locale)
+      end
+      reloaded_pets.map(&:save!)
+      previous_candidates = candidates
+      candidates = last_pet_loaded.item_translation_candidates
+      
+      if previous_candidates == candidates
+        # This condition should never happen if Neopets responds with correct
+        # data, but, if Neopets somehow responds with incorrect data, this
+        # condition could throw us into an infinite loop if uncaught. Better
+        # safe than sorry when working with external services.
+        raise "No change when reloading #{name} for #{candidates}"
       end
     end
   end
@@ -99,9 +137,9 @@ class Pet < ActiveRecord::Base
     end
   end
 
-  def self.load(name)
+  def self.load(name, options={})
     pet = Pet.find_or_initialize_by_name(name)
-    pet.load!
+    pet.load!(options)
     pet
   end
 

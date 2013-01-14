@@ -302,7 +302,7 @@ class Item < ActiveRecord::Base
     end
   end
 
-  def self.collection_from_pet_type_and_registries(pet_type, info_registry, asset_registry)
+  def self.collection_from_pet_type_and_registries(pet_type, info_registry, asset_registry, scope=Item.scoped)
     # bear in mind that registries are arrays with many nil elements,
     # due to how the parser works
 
@@ -317,7 +317,7 @@ class Item < ActiveRecord::Base
 
     # Collect existing relationships
     existing_relationships_by_item_id_and_swf_asset_id = {}
-    existing_items = Item.find_all_by_id(item_ids, :include => :parent_swf_asset_relationships)
+    existing_items = scope.find_all_by_id(item_ids, :include => :parent_swf_asset_relationships)
     existing_items.each do |item|
       items[item.id] = item
       relationships_by_swf_asset_id = {}
