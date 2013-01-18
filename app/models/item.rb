@@ -267,8 +267,9 @@ class Item < ActiveRecord::Base
   end
   
   def needed_translations
+    translatable_locales = Set.new(I18n.locales_with_neopets_language_code)
     translated_locales = Set.new(translations.map(&:locale))
-    I18n.available_locales.reject { |locale| translated_locales.include?(locale) }
+    translatable_locales - translated_locales
   end
 
   def self.all_by_ids_or_children(ids, swf_assets)

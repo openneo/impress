@@ -103,9 +103,18 @@ module ApplicationHelper
   end
   
   def locale_options
-    I18n.available_locales.map do |available_locale|
+    current_locale_is_public = false
+    options = I18n.public_locales.map do |available_locale|
+      current_locale_is_public = true if I18n.locale == available_locale
       [translate('locale_name', :locale => available_locale), available_locale]
     end
+    
+    unless current_locale_is_public
+      name = translate('locale_name', :locale => I18n.locale) + ' (alpha)'
+      options << [name, I18n.locale]
+    end
+    
+    options
   end
   
   def localized_cache(key={}, &block)

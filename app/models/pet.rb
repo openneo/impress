@@ -25,7 +25,7 @@ class Pet < ActiveRecord::Base
     
     require 'ostruct'
     begin
-      neopets_language_code = I18n.translate('neopets_language_code')
+      neopets_language_code = I18n.neopets_language_code_for(options[:locale])
       envelope = PET_VIEWER.request([name, 0]).post(
         :timeout => 2,
         :headers => {
@@ -105,10 +105,11 @@ class Pet < ActiveRecord::Base
       last_pet_loaded = nil
       reloaded_pets = Parallel.map(candidates.keys, :in_threads => 8) do |locale|
         Rails.logger.info "Reloading #{name} in #{locale}"
-        last_pet_loaded = Pet.load(name, :item_scope => Item.with_translations,
-                                         :locale => locale)
+        reloaded_pet = Pet.load(name, :item_scope => Item.with_translations,
+                                      :locale => locale)
+        Pet.connection_pool.with_connection { reloaded_pet.save! }
+        last_pet_loaded = reloaded_pet
       end
-      reloaded_pets.map(&:save!)
       previous_candidates = candidates
       candidates = last_pet_loaded.item_translation_candidates
       

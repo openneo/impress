@@ -100,7 +100,7 @@ class ItemsController < ApplicationController
       raise ActiveRecord::RecordNotFound, 'Pet type not found'
     end
     
-    @items = @pet_type.needed_items.with_translations(I18n.locale).
+    @items = @pet_type.needed_items.with_translations.
       alphabetize_by_translations
     assign_closeted!
     

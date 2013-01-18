@@ -1,6 +1,5 @@
 pt:
   locale_name: Portuguese
-  neopets_language_code: pt
   
-  # This is a placeholder Portuguese locale, so that we can look up items.
-  # Everything else will fall back to English.
+  # This is a placeholder Portuguese locale, so that we can test things
+  # involving its presence.
