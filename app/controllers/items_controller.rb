@@ -8,12 +8,11 @@ class ItemsController < ApplicationController
           per_page = params[:per_page].to_i
           per_page = 50 if per_page && per_page > 50
         else
-          per_page = nil
+          per_page = 30
         end
         # Note that we sort by name by hand, since we might have to use
         # fallbacks after the fact
-        @items = Item.search(@query, current_user, I18n.default_locale).
-          alphabetize_by_translations.
+        @items = Item::Search::Query.from_text(@query, current_user).
           paginate(:page => params[:page], :per_page => per_page)
         assign_closeted!
         respond_to do |format|

@@ -32,6 +32,9 @@ config.each do |locale_str, locale_meta|
   end
 end
 
+LocaleMeta::USABLE_LOCALES_WITH_NEOPETS_LANGUAGE_CODE = LocaleMeta::USABLE_LOCALES &
+  LocaleMeta::LOCALES_WITH_NEOPETS_LANGUAGE_CODE
+
 module I18n
   def self.public_locales
     LocaleMeta::PUBLIC_LOCALES
@@ -43,6 +46,10 @@ module I18n
   
   def self.locales_with_neopets_language_code
     LocaleMeta::LOCALES_WITH_NEOPETS_LANGUAGE_CODE
+  end
+  
+  def self.usable_locales_with_neopets_language_code
+    LocaleMeta::USABLE_LOCALES_WITH_NEOPETS_LANGUAGE_CODE
   end
   
   def self.neopets_language_code_for(locale)

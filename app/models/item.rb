@@ -1,4 +1,5 @@
 class Item < ActiveRecord::Base
+  include Flex::Model
   include PrettyParam
   
   set_inheritance_column 'inheritance_type' # PHP Impress used "type" to describe category
@@ -44,6 +45,27 @@ class Item < ActiveRecord::Base
                   order(arel_table[:id]).limit(49999)
 
   scope :with_closet_hangers, joins(:closet_hangers)
+  
+  flex.sync self
+  
+  def flex_source
+    indexed_attributes = {
+      :is_nc => self.nc?,
+      :is_pb => self.pb?,
+      :species_support_id => self.species_support_ids,
+      :occupied_zone_id => self.occupied_zone_ids,
+      :restricted_zone_id => self.restricted_zone_ids,
+      :name => {}
+    }
+    
+    I18n.usable_locales_with_neopets_language_code.each do |locale|
+      Globalize.with_locale(locale) do
+        indexed_attributes[:name][locale] = self.name
+      end
+    end
+    
+    indexed_attributes.to_json
+  end
 
   def closeted?
     @owned || @wanted
@@ -78,6 +100,10 @@ class Item < ActiveRecord::Base
   def nc?
     NCRarities.include?(rarity_index)
   end
+  
+  def pb?
+    (self.description == PAINTBRUSH_SET_DESCRIPTION)
+  end
 
   def owned?
     @owned
@@ -95,6 +121,14 @@ class Item < ActiveRecord::Base
       end
     end
     @restricted_zones
+  end
+  
+  def restricted_zone_ids
+    restricted_zones.map(&:id)
+  end
+  
+  def occupied_zone_ids
+    occupied_zones.map(&:id)
   end
 
   def occupied_zones

@@ -1,0 +1,45 @@
+# Add here your search queries
+# see the detailed Source documentation at https://github.com/ddnexus/flex/wiki/Sources
+
+
+# ANCHORS litheral key: it will not be used as template
+# you can store here fragments of queries to reuse in the templates below
+ANCHORS:
+  - &name_locale_partial
+    "name.<<locale>>^<<boost= 1>>"
+
+_name_locales:
+  *name_locale_partial
+
+_negative_name_locales:
+  *name_locale_partial
+
+item_search:
+  - query:
+      bool:
+        must:
+          - multi_match:
+              query: <<name= ~>>
+              fields: <<_name_locales>>
+          - term:
+              is_nc: <<is_nc= ~>>
+          - term:
+              is_pb: <<is_pb= ~>>
+          - term:
+              species_support_id: <<species_support_id= ~>>
+          - term:
+              occupied_zone_id: <<occupied_zone_id= ~>>
+          - term:
+              restricted_zone_id: <<restricted_zone_id= ~>>
+        must_not:
+          - term:
+              species_support_id: <<negative_species_support_id= ~>>
+          - term:
+              occupied_zone_id: <<negative_occupied_zone_id= ~>>
+          - term:
+              restricted_zone_id: <<negative_restricted_zone_id= ~>>
+          - multi_match:
+              query: <<negative_name= ~>>
+              fields: <<_negative_name_locales>>
+    sort:
+      - name.<<locale>>.untouched
