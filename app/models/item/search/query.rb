@@ -7,7 +7,7 @@ class Item
         :species_support_id => Fields::SetField,
         :occupied_zone_id => Fields::SetField,
         :restricted_zone_id => Fields::SetField,
-        :name => Fields::TextField
+        :name => Fields::SetField
       }
       
       def initialize(filters, user)
@@ -42,23 +42,30 @@ class Item
           I18n.locales_with_neopets_language_code
         final_flex_params[:locale] = locales.first
         
-        if final_flex_params[:name] || final_flex_params[:negative_name]
+        # Extend the names/negative_names queries with the corresponding
+        # localalized field names.
+        if final_flex_params[:_names] || final_flex_params[:_negative_names]
           locale_entries = locales.map do |locale|
             boost = (locale == I18n.locale) ? 4 : 1
-            {:locale => locale, :boost => boost}
+            "name.#{locale}^#{boost}"
           end
           
-          if final_flex_params[:name]
-            final_flex_params[:_name_locales] = locale_entries
-          end
-          
-          if final_flex_params[:negative_name]
-            final_flex_params[:_negative_name_locales] = locale_entries
+          # We *could* have set _name_locales once as a partial, but Flex won't
+          # let us call partials from inside other partials. Whatever. Assign
+          # it to each name entry instead. I also feel bad doing this
+          # afterwards, since it's kinda the field's job to return proper flex
+          # params, but that's a refactor for another day.
+          [:_names, :_negative_names].each do |key|
+            if final_flex_params[key]
+              final_flex_params[key].each do |name_query|
+                name_query[:fields] = locale_entries
+              end
+            end
           end
         end
         
         result = FlexSearch.item_search(final_flex_params)
-        result.scoped_loaded_collection(:scopes => {'Item' => Item.with_translations})
+        result.loaded_collection
       end
       
       # Load the text query labels from I18n, so that when we see, say,

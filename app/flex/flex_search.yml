@@ -5,8 +5,6 @@
 # ANCHORS litheral key: it will not be used as template
 # you can store here fragments of queries to reuse in the templates below
 ANCHORS:
-  - &name_locale_partial
-    "name.<<locale>>^<<boost= 1>>"
   - &species_support_id_partial
     term:
       species_support_id: <<species_support_id>>
@@ -17,11 +15,17 @@ ANCHORS:
     terms:
       restricted_zone_id: <<restricted_zone_id>>
 
-_name_locales:
-  *name_locale_partial
+_names:
+  multi_match:
+    query: <<name>>
+    fields: <<fields>>
+    type: phrase
 
-_negative_name_locales:
-  *name_locale_partial
+_negative_names:
+  multi_match:
+    query: <<name>>
+    fields: <<fields>>
+    type: phrase
 
 _species_support_ids:
   *species_support_id_partial
@@ -45,20 +49,16 @@ item_search:
   - query:
       bool:
         must:
-          - multi_match:
-              query: <<name= ~>>
-              fields: <<_name_locales>>
           - term:
               is_nc: <<is_nc= ~>>
           - term:
               is_pb: <<is_pb= ~>>
+          - <<_names= ~>>
           - <<_species_support_ids= ~>>
           - <<_occupied_zone_ids= ~>>
           - <<_restricted_zone_ids= ~>>
         must_not:
-          - multi_match:
-              query: <<negative_name= ~>>
-              fields: <<_negative_name_locales>>
+          - <<_negative_names= ~>>
           - <<_negative_species_support_ids= ~>>
           - <<_negative_occupied_zone_ids= ~>>
           - <<_negative_restricted_zone_ids= ~>>
