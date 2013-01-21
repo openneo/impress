@@ -3,6 +3,7 @@ class PetType < ActiveRecord::Base
   IMAGE_CP_LOCATION_REGEX = %r{^/cp/(.+?)/1/1\.png$};
   IMAGE_CPN_ACCEPTABLE_NAME = /^[a-z0-9_]+$/
 
+  belongs_to :species
   has_one :contribution, :as => :contributed
   has_many :pet_states
   has_many :pets
@@ -63,20 +64,6 @@ class PetType < ActiveRecord::Base
 
   def color
     @color ||= Color.find(color_id)
-  end
-
-  def species_id=(new_species_id)
-    @species = nil
-    write_attribute('species_id', new_species_id)
-  end
-
-  def species=(new_species)
-    @species = new_species
-    write_attribute('species_id', @species.id)
-  end
-
-  def species
-    @species ||= Species.find(species_id)
   end
 
   def image_hash

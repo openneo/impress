@@ -20,7 +20,7 @@ module ItemsHelper
   end
 
   def standard_species_search_links
-    build_on_pet_types(Species.all) do |pet_type|
+    build_on_pet_types(Species.alphabetical) do |pet_type|
       image = pet_type_image(pet_type, :happy, :zoom)
       query = "species:#{pet_type.species.name}"
       link_to(image, items_path(:q => query))

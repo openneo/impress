@@ -193,6 +193,10 @@ class Item < ActiveRecord::Base
     species_ids = pet_types.map(&:species_id).uniq
     Species.find(species_ids)
   end
+  
+  def support_species?(species)
+    species_support_ids.blank? || species_support_ids.include?(species.id)
+  end
 
   def as_json(options = {})
     {

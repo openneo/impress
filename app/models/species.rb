@@ -1,11 +1,13 @@
-class Species < PetAttribute
-  fetch_objects!
+class Species < ActiveRecord::Base
+  translates :name
   
-  def self.require_by_name(name)
-    species = Species.find_by_name(name)
-    raise NotFound, "Species \"#{name.humanize}\" does not exist" unless species
-    species
+  scope :alphabetical, lambda { includes(:translations).order(Species::Translation.arel_table[:name]) }
+  
+  def as_json(options={})
+    {:id => id, :name => human_name}
   end
   
-  class NotFound < ArgumentError;end
+  def human_name
+    name.capitalize
+  end
 end

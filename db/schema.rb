@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130111213346) do
+ActiveRecord::Schema.define(:version => 20130121193957) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -216,6 +216,20 @@ ActiveRecord::Schema.define(:version => 20130111213346) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "species", :force => true do |t|
+  end
+
+  create_table "species_translations", :force => true do |t|
+    t.integer  "species_id"
+    t.string   "locale"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "species_translations", ["locale"], :name => "index_species_translations_on_locale"
+  add_index "species_translations", ["species_id"], :name => "index_species_translations_on_species_id"
 
   create_table "swf_assets", :force => true do |t|
     t.string   "type",               :limit => 7,                           :null => false
