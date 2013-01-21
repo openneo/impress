@@ -7,12 +7,39 @@
 ANCHORS:
   - &name_locale_partial
     "name.<<locale>>^<<boost= 1>>"
+  - &species_support_id_partial
+    term:
+      species_support_id: <<species_support_id>>
+  - &occupied_zone_id_partial
+    terms:
+      occupied_zone_id: <<occupied_zone_id>>
+  - &restricted_zone_id_partial
+    terms:
+      restricted_zone_id: <<restricted_zone_id>>
 
 _name_locales:
   *name_locale_partial
 
 _negative_name_locales:
   *name_locale_partial
+
+_species_support_ids:
+  *species_support_id_partial
+
+_negative_species_support_ids:
+  *species_support_id_partial
+
+_occupied_zone_ids:
+  *occupied_zone_id_partial
+
+_negative_occupied_zone_ids:
+  *occupied_zone_id_partial
+
+_restricted_zone_ids:
+  *restricted_zone_id_partial
+
+_negative_restricted_zone_ids:
+  *restricted_zone_id_partial
 
 item_search:
   - query:
@@ -25,21 +52,15 @@ item_search:
               is_nc: <<is_nc= ~>>
           - term:
               is_pb: <<is_pb= ~>>
-          - term:
-              species_support_id: <<species_support_id= ~>>
-          - term:
-              occupied_zone_id: <<occupied_zone_id= ~>>
-          - term:
-              restricted_zone_id: <<restricted_zone_id= ~>>
+          - <<_species_support_ids= ~>>
+          - <<_occupied_zone_ids= ~>>
+          - <<_restricted_zone_ids= ~>>
         must_not:
-          - term:
-              species_support_id: <<negative_species_support_id= ~>>
-          - term:
-              occupied_zone_id: <<negative_occupied_zone_id= ~>>
-          - term:
-              restricted_zone_id: <<negative_restricted_zone_id= ~>>
           - multi_match:
               query: <<negative_name= ~>>
               fields: <<_negative_name_locales>>
+          - <<_negative_species_support_ids= ~>>
+          - <<_negative_occupied_zone_ids= ~>>
+          - <<_negative_restricted_zone_ids= ~>>
     sort:
       - name.<<locale>>.untouched

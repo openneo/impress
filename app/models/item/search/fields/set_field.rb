@@ -8,35 +8,25 @@ class Item
         end
         
         def <<(filter)
-          if filter.value.respond_to?(:each)
-            filter.value.each do |value|
-              add_value(value, filter.positive?)
-            end
-          else
-            add_value(filter.value, filter.positive?)
+          if @values[!filter.positive?].include?(filter.value)
+            raise Item::Search::Contradiction,
+                  "positive #{key} and negative #{key} both contain #{filter.value}"
           end
+          
+          @values[filter.positive?] << filter.value
         end
         
         def to_flex_params
           {
-            key => nil_if_empty(@values[true]),
-            :"negative_#{key}" => nil_if_empty(@values[false])
+            :"_#{key}s" => nil_if_empty(@values[true]),
+            :"_negative_#{key}s" => nil_if_empty(@values[false])
           }
         end
         
         private
         
-        def add_value(value, is_positive)
-          if @values[!is_positive].include?(value)
-            raise Item::Search::Contradiction,
-                  "positive #{key} and negative #{key} both contain #{value}"
-          end
-          
-          @values[is_positive] << value
-        end
-        
         def nil_if_empty(set)
-          set unless set.empty?
+          set.map { |value| {key => value} } unless set.empty?
         end
       end
     end
