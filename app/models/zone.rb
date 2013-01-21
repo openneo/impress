@@ -1,14 +1,14 @@
 class Zone < StaticResource
-  AttributeNames = ['id', 'label', 'depth', 'type_id']
-  ItemZoneSets = {}
+  ATTRIBUTE_NAMES = ['id', 'label', 'depth', 'type_id']
+  ZONE_SETS = {}
   
-  attr_reader *AttributeNames
+  attr_reader *ATTRIBUTE_NAMES
   # When selecting zones that an asset occupies, we allow the zone to set
   # whether or not the zone is "sometimes" occupied. This is false by default.
   attr_writer :sometimes
 
   def initialize(attributes)
-    AttributeNames.each do |name|
+    ATTRIBUTE_NAMES.each do |name|
       instance_variable_set "@#{name}", attributes[name]
     end
   end
@@ -18,7 +18,7 @@ class Zone < StaticResource
   end
   
   def self.find_set(name)
-    ItemZoneSets[plain(name)]
+    ZONE_SETS[plain(name)]
   end
   
   def self.plain(name)
@@ -29,12 +29,10 @@ class Zone < StaticResource
   @objects = YAML.load_file(Rails.root.join('config', 'zones.yml')).map do |a|
     a['id'] = (n += 1)
     obj = new(a)
-    if obj.type_id == 2 || obj.type_id == 3
-      plain_name = plain(obj.label)
-      
-      ItemZoneSets[plain_name] ||= []
-      ItemZoneSets[plain_name] << obj
-    end
+    plain_name = plain(obj.label)
+    
+    ZONE_SETS[plain_name] ||= []
+    ZONE_SETS[plain_name] << obj
     obj
   end
   n = nil
@@ -42,10 +40,10 @@ class Zone < StaticResource
   # Add aliases to keys like "lowerforegrounditem" to "lowerforeground"
   # ...unless there's already such a key, like "backgrounditem" to "background",
   # in which case we don't, because that'd be silly.
-  ItemZoneSets.keys.each do |name|
+  ZONE_SETS.keys.each do |name|
     if name.end_with?('item')
       stripped_name = name[0..-5]
-      ItemZoneSets[stripped_name] ||= ItemZoneSets[name]
+      ZONE_SETS[stripped_name] ||= ZONE_SETS[name]
     end
   end
 end
