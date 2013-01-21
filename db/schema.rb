@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130121193957) do
+ActiveRecord::Schema.define(:version => 20130121205607) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -54,9 +54,20 @@ ActiveRecord::Schema.define(:version => 20130121193957) do
 
   add_index "closet_lists", ["user_id"], :name => "index_closet_lists_on_user_id"
 
+  create_table "color_translations", :force => true do |t|
+    t.integer  "color_id"
+    t.string   "locale"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "color_translations", ["color_id"], :name => "index_color_translations_on_color_id"
+  add_index "color_translations", ["locale"], :name => "index_color_translations_on_locale"
+
   create_table "colors", :force => true do |t|
-    t.string  "name"
-    t.boolean "basic", :default => false, :null => false
+    t.boolean "basic"
+    t.boolean "standard"
   end
 
   create_table "contributions", :force => true do |t|

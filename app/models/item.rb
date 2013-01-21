@@ -20,9 +20,6 @@ class Item < ActiveRecord::Base
   SPECIAL_COLOR_DESCRIPTION_REGEX =
     /This item is only wearable by Neopets painted ([a-zA-Z]+)\.|WARNING: This [a-zA-Z]+ can be worn by ([a-zA-Z]+) [a-zA-Z]+ ONLY!/
 
-  SPECIAL_PAINTBRUSH_COLORS_PATH = Rails.root.join('config', 'colors_with_unique_bodies.txt')
-  SPECIAL_PAINTBRUSH_COLORS = File.read(SPECIAL_PAINTBRUSH_COLORS_PATH).split("\n").map { |name| Color.find_by_name(name) }
-
   cattr_reader :per_page
   @@per_page = 30
 
@@ -59,7 +56,7 @@ class Item < ActiveRecord::Base
     }
     
     I18n.usable_locales_with_neopets_language_code.each do |locale|
-      Globalize.with_locale(locale) do
+      I18n.with_locale(locale) do
         indexed_attributes[:name][locale] = self.name
       end
     end
@@ -160,17 +157,21 @@ class Item < ActiveRecord::Base
 
   protected
   def determine_special_color
-    if description.include?(PAINTBRUSH_SET_DESCRIPTION)
-      downcased_name = name.downcase
-      SPECIAL_PAINTBRUSH_COLORS.each do |color|
-        return color if downcased_name.include?(color.name)
+    I18n.with_locale(I18n.default_locale) do
+      # Rather than go find the special description in all locales, let's just
+      # run this logic in English.
+      if description.include?(PAINTBRUSH_SET_DESCRIPTION)
+        downcased_name = name.downcase
+        Color.nonstandard.each do |color|
+          return color if downcased_name.include?(color.name)
+        end
       end
-    end
 
-    match = description.match(SPECIAL_COLOR_DESCRIPTION_REGEX)
-    if match
-      color = match[1] || match[2]
-      return Color.find_by_name(color.downcase)
+      match = description.match(SPECIAL_COLOR_DESCRIPTION_REGEX)
+      if match
+        color = match[1] || match[2]
+        return Color.find_by_name(color.downcase)
+      end
     end
   end
   public

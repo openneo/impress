@@ -42,7 +42,7 @@ class OutfitsController < ApplicationController
 
   def new
     unless localized_fragment_exist?(:action_suffix => 'start_from_scratch_form_content')
-      @colors = Color.all_ordered_by_name
+      @colors = Color.alphabetical
       @species = Species.alphabetical
     end
     
@@ -66,12 +66,12 @@ class OutfitsController < ApplicationController
   end
   
   def start
-    Globalize.with_locale(I18n.default_locale) do
-      # Start URLs are always in English, so let's make sure we search in
-      # English.
-      @species = Species.find_by_name params[:species_name]
-      @color = Color.find_by_name params[:color_name]
-    end
+    # Start URLs are always in English, so let's make sure we search in
+    # English.
+    I18n.locale = I18n.default_locale
+    
+    @species = Species.find_by_name params[:species_name]
+    @color = Color.find_by_name params[:color_name]
     
     if @species && @color
       redirect_to wardrobe_path(:species => @species.id, :color => @color.id)

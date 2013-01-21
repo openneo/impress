@@ -4,6 +4,7 @@ class PetType < ActiveRecord::Base
   IMAGE_CPN_ACCEPTABLE_NAME = /^[a-z0-9_]+$/
 
   belongs_to :species
+  belongs_to :color
   has_one :contribution, :as => :contributed
   has_many :pet_states
   has_many :pets
@@ -14,17 +15,16 @@ class PetType < ActiveRecord::Base
 
   # Returns all pet types of a single standard color. The caller shouldn't care
   # which, though, in this implemention, it's always Blue. Don't depend on that.
-  scope :single_standard_color, where(:color_id => Color::BasicIds[0])
+  scope :single_standard_color, lambda { where(:color_id => Color.standard.first) }
 
-  scope :nonstandard_colors, where(:color_id => Color.nonstandard_ids)
+  scope :nonstandard_colors, lambda { where(:color_id => Color.nonstandard) }
   
   def self.standard_pet_types_by_species_id
-    @standard_pet_types_by_species_id ||=
-      PetType.where(:color_id => Color::BasicIds).group_by(&:species_id)
+    PetType.where(:color_id => Color.basic).group_by(&:species_id)
   end
   
   def self.standard_body_ids
-    @standard_body_ids ||= [].tap do |body_ids|
+    [].tap do |body_ids|
       standard_pet_types_by_species_id.each do |species_id, pet_types|
         body_ids.concat(pet_types.map(&:body_id))
       end
@@ -52,26 +52,21 @@ class PetType < ActiveRecord::Base
     end
   end
 
-  def color_id=(new_color_id)
-    @color = nil
-    write_attribute('color_id', new_color_id)
-  end
-
-  def color=(new_color)
-    @color = new_color
-    write_attribute('color_id', @color.id)
-  end
-
-  def color
-    @color ||= Color.find(color_id)
-  end
-
   def image_hash
     self['image_hash'] || basic_image_hash
   end
 
   def basic_image_hash
-    BasicHashes[species.name][color.name]
+    I18n.with_locale(I18n.default_locale) do
+      # Probably should move the basic hashes into the database someday.
+      # Until then, access the hash using the English color/species names.
+      
+      unless BasicHashes[species.name] && BasicHashes[species.name][color.name]
+        raise "basic image hash for #{species.name}, #{color.name} not found"
+      end
+      
+      BasicHashes[species.name][color.name]
+    end
   end
 
   def human_name
