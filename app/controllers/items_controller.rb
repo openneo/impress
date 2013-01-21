@@ -1,5 +1,6 @@
 class ItemsController < ApplicationController
   before_filter :set_query
+  rescue_from Item::Search::Error, :with => :search_error
 
   def index
     if params.has_key?(:q)
@@ -19,13 +20,6 @@ class ItemsController < ApplicationController
           format.html { render }
           format.json { render :json => {:items => @items, :total_pages => @items.total_pages} }
           format.js { render :json => {:items => @items, :total_pages => @items.total_pages}, :callback => params[:callback] }
-        end
-      rescue Item::SearchError
-        @items = []
-        respond_to do |format|
-          format.html { flash.now[:alert] = $!.message }
-          format.json { render :json => {:error => $!.message} }
-          format.js { render :json => {:error => $!.message}, :callback => params[:callback] }
         end
       end
     elsif params.has_key?(:ids) && params[:ids].is_a?(Array)
@@ -113,6 +107,16 @@ class ItemsController < ApplicationController
 
   def assign_closeted!
     current_user.assign_closeted_to_items!(@items) if user_signed_in?
+  end
+  
+  def search_error(e)
+    @items = []
+    respond_to do |format|
+      format.html { flash.now[:alert] = e.message; render }
+      format.json { render :json => {:error => e.message} }
+      format.js   { render :json => {:error => e.message},
+                           :callback => params[:callback] }
+    end
   end
 
   def set_query
