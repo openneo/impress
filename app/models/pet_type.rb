@@ -19,8 +19,12 @@ class PetType < ActiveRecord::Base
 
   scope :nonstandard_colors, lambda { where(:color_id => Color.nonstandard) }
   
+  scope :includes_child_translations,
+    lambda { includes({:color => :translations, :species => :translations}) }
+  
   def self.standard_pet_types_by_species_id
-    PetType.where(:color_id => Color.basic).group_by(&:species_id)
+    PetType.where(:color_id => Color.basic).includes_child_translations.
+      group_by(&:species_id)
   end
   
   def self.standard_body_ids
@@ -33,8 +37,9 @@ class PetType < ActiveRecord::Base
 
   def self.random_basic_per_species(species_ids)
     random_pet_types = []
+    standards = self.standard_pet_types_by_species_id
     species_ids.each do |species_id|
-      pet_types = standard_pet_types_by_species_id[species_id]
+      pet_types = standards[species_id]
       random_pet_types << pet_types[rand(pet_types.size)] if pet_types
     end
     random_pet_types

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130121205607) do
+ActiveRecord::Schema.define(:version => 20130121221226) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -286,11 +286,21 @@ ActiveRecord::Schema.define(:version => 20130121205607) do
     t.integer  "wanted_closet_hangers_visibility",               :default => 1,     :null => false
   end
 
+  create_table "zone_translations", :force => true do |t|
+    t.integer  "zone_id"
+    t.string   "locale"
+    t.string   "label"
+    t.string   "plain_label"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "zone_translations", ["locale"], :name => "index_zone_translations_on_locale"
+  add_index "zone_translations", ["zone_id"], :name => "index_zone_translations_on_zone_id"
+
   create_table "zones", :force => true do |t|
-    t.integer "depth",   :limit => 1,  :null => false
-    t.integer "type_id", :limit => 1,  :null => false
-    t.string  "type",    :limit => 40, :null => false
-    t.string  "label",   :limit => 40, :null => false
+    t.integer "depth"
+    t.integer "type_id"
   end
 
 end

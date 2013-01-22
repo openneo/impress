@@ -90,8 +90,8 @@ class Item
           end
           species.id
         },
-        :zone => lambda { |name|
-          zone_set = Zone.find_set(name)
+        :zone => lambda { |label|
+          zone_set = Zone.with_plain_label(label)
           unless zone_set
             Item::Search.error 'not_found.zone', :zone_name => name
           end

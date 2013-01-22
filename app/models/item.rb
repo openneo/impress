@@ -110,25 +110,27 @@ class Item < ActiveRecord::Base
     @wanted
   end
 
-  def restricted_zones
-    unless @restricted_zones
-      @restricted_zones = []
-      zones_restrict.split(//).each_with_index do |switch, id|
-        @restricted_zones << Zone.find(id.to_i + 1) if switch == '1'
-      end
-    end
-    @restricted_zones
+  def restricted_zones(options={})
+    options[:scope] ||= Zone.scoped
+    options[:scope].find(restricted_zone_ids)
   end
   
   def restricted_zone_ids
-    restricted_zones.map(&:id)
+    unless @restricted_zone_ids
+      @restricted_zone_ids = []
+      zones_restrict.split(//).each_with_index do |switch, id|
+        @restricted_zone_ids << (id.to_i + 1) if switch == '1'
+      end
+    end
+    @restricted_zone_ids
   end
   
   def occupied_zone_ids
     occupied_zones.map(&:id)
   end
 
-  def occupied_zones
+  def occupied_zones(options={})
+    options[:scope] ||= Zone.scoped
     all_body_ids = []
     zone_body_ids = {}
     selected_assets = swf_assets.select('body_id, zone_id').each do |swf_asset|
@@ -137,12 +139,11 @@ class Item < ActiveRecord::Base
       body_ids << swf_asset.body_id unless body_ids.include?(swf_asset.body_id)
       all_body_ids << swf_asset.body_id unless all_body_ids.include?(swf_asset.body_id)
     end
-    zones = []
+    zones = options[:scope].find(zone_body_ids.keys)
+    zones_by_id = zones.inject({}) { |h, z| h[z.id] = z; h }
     total_body_ids = all_body_ids.size
     zone_body_ids.each do |zone_id, body_ids|
-      zone = Zone.find(zone_id)
-      zone.sometimes = true if body_ids.size < total_body_ids
-      zones << zone
+      zones_by_id[zone_id].sometimes = true if body_ids.size < total_body_ids
     end
     zones
   end

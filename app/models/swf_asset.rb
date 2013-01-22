@@ -23,6 +23,10 @@ class SwfAsset < ActiveRecord::Base
 
   include SwfConverter
   converts_swfs :size => IMAGE_SIZES[:large], :output_sizes => IMAGE_SIZES.values
+  
+  belongs_to :zone
+  
+  scope :includes_depth, lambda { includes(:zone) }
 
   def local_swf_path
     LOCAL_ASSET_DIR.join(local_path_within_outfit_swfs)
@@ -198,10 +202,6 @@ class SwfAsset < ActiveRecord::Base
 
   def body_specific?
     self.zone.type_id < 3 || (@item && @item.body_specific?)
-  end
-
-  def zone
-    Zone.find(zone_id)
   end
 
   def origin_pet_type=(pet_type)

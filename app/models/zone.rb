@@ -1,49 +1,32 @@
-class Zone < StaticResource
-  ATTRIBUTE_NAMES = ['id', 'label', 'depth', 'type_id']
-  ZONE_SETS = {}
+class Zone < ActiveRecord::Base
+  translates :label, :plain_label
   
-  attr_reader *ATTRIBUTE_NAMES
   # When selecting zones that an asset occupies, we allow the zone to set
   # whether or not the zone is "sometimes" occupied. This is false by default.
   attr_writer :sometimes
-
-  def initialize(attributes)
-    ATTRIBUTE_NAMES.each do |name|
-      instance_variable_set "@#{name}", attributes[name]
-    end
-  end
+  
+  scope :alphabetical, lambda {
+    includes_translations.order(Zone::Translation.arel_table[:label])
+  }
+  scope :includes_translations, lambda { includes(:translations) }
+  scope :with_plain_label, lambda { |label|
+    t = Zone::Translation.arel_table
+    includes(:translations).where(t[:plain_label].eq(Zone.plainify_label(label)))
+  }
   
   def uncertain_label
     @sometimes ? "#{label} sometimes" : label
   end
   
-  def self.find_set(name)
-    ZONE_SETS[plain(name)]
+  def self.all_plain_labels
+    Zone.select([:id]).includes(:translations).all.map(&:plain_label).uniq.sort
   end
   
-  def self.plain(name)
-    name.delete('\- /').downcase
-  end
-  
-  n = 0
-  @objects = YAML.load_file(Rails.root.join('config', 'zones.yml')).map do |a|
-    a['id'] = (n += 1)
-    obj = new(a)
-    plain_name = plain(obj.label)
-    
-    ZONE_SETS[plain_name] ||= []
-    ZONE_SETS[plain_name] << obj
-    obj
-  end
-  n = nil
-  
-  # Add aliases to keys like "lowerforegrounditem" to "lowerforeground"
-  # ...unless there's already such a key, like "backgrounditem" to "background",
-  # in which case we don't, because that'd be silly.
-  ZONE_SETS.keys.each do |name|
-    if name.end_with?('item')
-      stripped_name = name[0..-5]
-      ZONE_SETS[stripped_name] ||= ZONE_SETS[name]
+  def self.plainify_label(label)
+    plain_label = label.delete('\- /').downcase
+    if plain_label.end_with?('item')
+      plain_label = plain_label[0..-5]
     end
+    plain_label
   end
 end
