@@ -23,7 +23,7 @@ class ItemsController < ApplicationController
         end
       end
     elsif params.has_key?(:ids) && params[:ids].is_a?(Array)
-      @items = Item.find(params[:ids])
+      @items = Item.includes(:translations).find(params[:ids])
       assign_closeted!
       respond_to do |format|
         format.json { render :json => @items }

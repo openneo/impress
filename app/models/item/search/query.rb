@@ -65,7 +65,9 @@ class Item
         end
         
         result = FlexSearch.item_search(final_flex_params)
-        result.loaded_collection
+        result.scoped_loaded_collection(
+          :scopes => {'Item' => Item.includes(:translations)}
+        )
       end
       
       # Load the text query labels from I18n, so that when we see, say,
