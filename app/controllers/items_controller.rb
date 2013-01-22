@@ -32,7 +32,7 @@ class ItemsController < ApplicationController
       respond_to do |format|
         format.html {
           unless localized_fragment_exist?('items#index newest_items')
-            @newest_items = Item.newest.with_translations.limit(18)
+            @newest_items = Item.newest.includes(:translations).limit(18)
           end
         }
         format.js { render :json => {:error => '$q required'}}
@@ -102,7 +102,7 @@ class ItemsController < ApplicationController
       raise ActiveRecord::RecordNotFound, 'Pet type not found'
     end
     
-    @items = @pet_type.needed_items.with_translations.
+    @items = @pet_type.needed_items.includes(:translations).
       alphabetize_by_translations
     assign_closeted!
     

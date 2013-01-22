@@ -105,7 +105,7 @@ class Pet < ActiveRecord::Base
       last_pet_loaded = nil
       reloaded_pets = Parallel.map(candidates.keys, :in_threads => 8) do |locale|
         Rails.logger.info "Reloading #{name} in #{locale}"
-        reloaded_pet = Pet.load(name, :item_scope => Item.with_translations,
+        reloaded_pet = Pet.load(name, :item_scope => Item.includes(:translations),
                                       :locale => locale)
         Pet.connection_pool.with_connection { reloaded_pet.save! }
         last_pet_loaded = reloaded_pet
