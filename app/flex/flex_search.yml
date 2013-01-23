@@ -5,6 +5,11 @@
 # ANCHORS litheral key: it will not be used as template
 # you can store here fragments of queries to reuse in the templates below
 ANCHORS:
+  - &name_partial
+    multi_match:
+      query: <<name>>
+      fields: <<fields>>
+      type: phrase
   - &species_support_id_partial
     term:
       species_support_id: <<species_support_id>>
@@ -14,18 +19,22 @@ ANCHORS:
   - &restricted_zone_id_partial
     terms:
       restricted_zone_id: <<restricted_zone_id>>
+  - &user_closet_hangers_ownership_partial
+    has_child:
+      type: closet_hanger
+      query:
+        bool:
+          must:
+            - term:
+                user_id: <<user_id>>
+            - term:
+                owned: <<user_closet_hanger_ownership>>
 
 _names:
-  multi_match:
-    query: <<name>>
-    fields: <<fields>>
-    type: phrase
+  *name_partial
 
 _negative_names:
-  multi_match:
-    query: <<name>>
-    fields: <<fields>>
-    type: phrase
+  *name_partial
 
 _species_support_ids:
   *species_support_id_partial
@@ -45,6 +54,12 @@ _restricted_zone_ids:
 _negative_restricted_zone_ids:
   *restricted_zone_id_partial
 
+_user_closet_hanger_ownerships:
+  *user_closet_hangers_ownership_partial
+
+_negative_user_closet_hanger_ownerships:
+  *user_closet_hangers_ownership_partial
+
 item_search:
   - query:
       bool:
@@ -57,10 +72,12 @@ item_search:
           - <<_species_support_ids= ~>>
           - <<_occupied_zone_ids= ~>>
           - <<_restricted_zone_ids= ~>>
+          - <<_user_closet_hanger_ownerships= ~>>
         must_not:
           - <<_negative_names= ~>>
           - <<_negative_species_support_ids= ~>>
           - <<_negative_occupied_zone_ids= ~>>
           - <<_negative_restricted_zone_ids= ~>>
+          - <<_negative_user_closet_hanger_ownerships= ~>>
     sort:
       - name.<<locale>>.untouched

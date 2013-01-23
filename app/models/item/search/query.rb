@@ -7,11 +7,13 @@ class Item
         :species_support_id => Fields::SetField,
         :occupied_zone_id => Fields::SetField,
         :restricted_zone_id => Fields::SetField,
-        :name => Fields::SetField
+        :name => Fields::SetField,
+        :user_closet_hanger_ownership => Fields::SetField
       }
       
       def initialize(filters, user)
         @filters = filters
+        @user = user
       end
       
       def fields
@@ -35,7 +37,8 @@ class Item
         
         final_flex_params = {
           :page => (options[:page] || 1),
-          :size => (options[:per_page] || 30)
+          :size => (options[:per_page] || 30),
+          :type => 'item'
         }.merge(flex_params)
         
         locales = I18n.fallbacks[I18n.locale] &
@@ -64,6 +67,19 @@ class Item
           end
         end
         
+        # Okay, yeah, looks like this really does deserve a refactor, like
+        # _names and _negative_names do. (Or Flex could just make all variables
+        # accessible from partials... hint, hint)
+        [:_user_closet_hanger_ownerships, :_negative_user_closet_hanger_ownerships].each do |key|
+          if final_flex_params[key]
+            Item::Search.error 'not_logged_in' unless @user
+            
+            final_flex_params[key].each do |entry|
+              entry[:user_id] = @user.id
+            end
+          end
+        end
+        
         result = FlexSearch.item_search(final_flex_params)
         result.scoped_loaded_collection(
           :scopes => {'Item' => Item.includes(:translations)}
@@ -73,14 +89,22 @@ class Item
       # Load the text query labels from I18n, so that when we see, say,
       # the filter "species:acara", we know it means species_support_id.
       TEXT_KEYS_BY_LABEL = {}
+      OWNERSHIP_KEYWORDS = {}
       I18n.available_locales.each do |locale|
         TEXT_KEYS_BY_LABEL[locale] = {}
+        OWNERSHIP_KEYWORDS[locale] = {}
         FIELD_CLASSES.keys.each do |key|
           # A locale can specify multiple labels for a key by separating by
           # commas: "occupies,zone,type"
           labels = I18n.translate("items.search.labels.#{key}",
                                   :locale => locale).split(',')
           labels.each { |label| TEXT_KEYS_BY_LABEL[locale][label] = key }
+          
+          {:owns => true, :wants => false}.each do |key, value|
+            translated_key = I18n.translate("items.search.labels.user_#{key}",
+                                            :locale => locale)
+            OWNERSHIP_KEYWORDS[locale][translated_key] = value
+          end
         end
       end
       
@@ -98,27 +122,40 @@ class Item
             Item::Search.error 'not_found.zone', :zone_name => name
           end
           zone_set.map(&:id)
+        },
+        :ownership => lambda { |keyword|
+          OWNERSHIP_KEYWORDS[I18n.locale][keyword].tap do |value|
+            if value.nil?
+              Item::Search.error 'not_found.ownership', :keyword => keyword
+            end
+          end
         }
       }
       
       TEXT_QUERY_RESOURCE_TYPES_BY_KEY = {
         :species_support_id => :species,
         :occupied_zone_id => :zone,
-        :restricted_zone_id => :zone
+        :restricted_zone_id => :zone,
+        :user_closet_hanger_ownership => :ownership
       }
       
       TEXT_FILTER_EXPR = /([+-]?)(?:([a-z]+):)?(?:"([^"]+)"|(\S+))/
       def self.from_text(text, user=nil)
         filters = []
+        
+        is_keyword = I18n.translate('items.search.flag_keywords.is')
         text.scan(TEXT_FILTER_EXPR) do |sign, label, quoted_value, unquoted_value|
           label ||= 'name'
           raw_value = quoted_value || unquoted_value
           is_positive = (sign != '-')
           
-          if label == 'is'
+          if label == is_keyword
             # is-filters are weird. "-is:nc" is transposed to something more
             # like "-nc:<nil>", then it's translated into a negative "is_nc"
-            # flag.
+            # flag. Fun fact: "nc:foobar" and "-nc:foobar" also work. A bonus,
+            # I guess. There's probably a good way to refactor this to avoid
+            # the unintended bonus syntax, but this is a darn good cheap
+            # technique for the time being.
             label = raw_value
             raw_value = nil
           end

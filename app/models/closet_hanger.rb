@@ -1,4 +1,6 @@
 class ClosetHanger < ActiveRecord::Base
+  include Flex::Model
+  
   belongs_to :item
   belongs_to :list, :class_name => 'ClosetList'
   belongs_to :user
@@ -29,6 +31,17 @@ class ClosetHanger < ActiveRecord::Base
   end
 
   before_validation :merge_quantities, :set_owned_by_list
+  
+  flex.parent :item, 'item' => 'closet_hanger'
+  flex.sync self
+  
+  def flex_source
+    {
+      :user_id => user_id,
+      :item_id => item_id,
+      :owned => owned?
+    }.to_json
+  end
 
   def verb(subject=:someone)
     self.class.verb(subject, owned?)

@@ -3,7 +3,7 @@
 Flex::Configuration.configure do |config|
 
   # you MUST add your indexed model names here
-  config.flex_models = %w[ Item ]
+  config.flex_models = %w[ Item ClosetHanger ]
 
   # Add the your result extenders here
   config.result_extenders |= [ FlexSearchExtender ]
