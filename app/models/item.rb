@@ -146,11 +146,12 @@ class Item < ActiveRecord::Base
   end
 
   def supported_species
-    @supported_species ||= species_support_ids.blank? ? Species.all : species_support_ids.sort.map { |id| Species.find(id) }
-  end
-  
-  def support_species?(species)
-    species_support_ids.blank? || species_support_ids.include?(species.id)
+    body_ids = swf_assets.select([:body_id]).map(&:body_id)
+    return Species.all if body_ids.include?(0)
+    
+    pet_types = PetType.where(:body_id => body_ids).select([:species_id])
+    species_ids = pet_types.map(&:species_id).uniq
+    Species.find(species_ids)
   end
 
   def self.search(query, user=nil)
@@ -229,6 +230,12 @@ class Item < ActiveRecord::Base
         rel.swf_asset.save!
       end
     end
+  end
+  
+  def body_specific?
+    # If there are species support IDs (it's not empty), the item is
+    # body-specific. If it's empty, it fits everyone the same.
+    !species_support_ids.empty?
   end
 
   def origin_registry_info=(info)

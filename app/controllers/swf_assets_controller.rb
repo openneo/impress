@@ -15,13 +15,10 @@ class SwfAssetsController < ApplicationController
       end
     elsif params[:pet_type_id] && params[:item_ids]
       pet_type = PetType.find(params[:pet_type_id], :select => [:body_id, :species_id])
-      items = Item.find(params[:item_ids], :select => [:id, :species_support_ids])
-      compatible_items = items.select { |i| i.support_species?(pet_type.species) }
-      compatible_item_ids = compatible_items.map(&:id)
       
       @swf_assets = SwfAsset.object_assets.
         fitting_body_id(pet_type.body_id).
-        for_item_ids(compatible_item_ids).
+        for_item_ids(params[:item_ids]).
         with_parent_ids
       json = @swf_assets.map { |a| a.as_json(:parent_id => a.parent_id.to_i, :for => 'wardrobe') }
     elsif params[:pet_state_id]
