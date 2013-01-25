@@ -336,7 +336,8 @@ en:
             Species "%{species_name}" does not exist. Is it spelled correctly?
           zone: Zone "%{zone_name}" does not exist. Is it spelled correctly?
           ownership:
-            I don't know what user:%{keyword} means. Is it spelled correctly?
+            I don't know what user:%{keyword} means. Did you mean user:owns or
+            user:wants?
         not_logged_in:
           The "user" filters are only available if you're logged in.
       flag_keywords:
