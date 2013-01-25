@@ -43,12 +43,19 @@ gem 'neopets', :git => 'git://github.com/matchu/neopets.git'
 
 gem "mini_magick", "~> 3.4"
 
-gem "fog", "~> 1.1.2"
+gem "fog", "~> 1.8.0"
 gem "carrierwave", "~> 0.5.8"
 
 gem "parallel", "~> 0.5.17"
 
 gem "http_accept_language", :git => "git://github.com/iain/http_accept_language.git"
+
+gem "globalize3"
+
+# My flex branch fixes a minor pagination bug. Once it's merged into the
+# original gem, we can switch back.
+gem "flex", :require => "flex/rails", :git => "git@github.com:matchu/flex.git"
+gem "patron", "~> 0.4.18"
 
 group :development do
   gem "bullet", "~> 4.1.5"

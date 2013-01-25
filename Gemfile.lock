@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/eventmachine/eventmachine.git
-  revision: 69151c3ebb3e4ecf2bb9b6e2fab2022dc34f8541
+  revision: d7c8a14dc494193a775add4b16c1e303cab5b285
   specs:
-    eventmachine (1.0.0.beta.4)
+    eventmachine (1.0.0)
 
 GIT
   remote: git://github.com/iain/http_accept_language.git
@@ -12,9 +12,9 @@ GIT
 
 GIT
   remote: git://github.com/igrigorik/em-http-request.git
-  revision: ce50f322ce08d43a4a747cf333ea576765d764c4
+  revision: 322f2273fa7ea07c1eeb92755bf67f1f05058e54
   specs:
-    em-http-request (1.0.1)
+    em-http-request (1.0.3)
       addressable (>= 2.2.3)
       cookiejar
       em-socksify
@@ -30,21 +30,21 @@ GIT
 
 GIT
   remote: git://github.com/igrigorik/em-synchrony.git
-  revision: c7209a58f9eb92e1dc81fb141297f9f257c2fdcb
+  revision: fe592a4b9b5345bca329477cb8f2f8d186b6fc7f
   specs:
-    em-synchrony (1.0.0)
+    em-synchrony (1.0.2)
       eventmachine (>= 1.0.0.beta.1)
 
 GIT
   remote: git://github.com/matchu/neopets.git
-  revision: fe694681a302243d2937e811355473f358035403
+  revision: d33aaf63d4617d9236ef0d99452b3bdc577cbc8e
   specs:
-    neopets (0.0.2)
+    neopets (0.1.0)
       nokogiri (~> 1.5.2)
 
 GIT
   remote: git://github.com/oldmoe/mysqlplus.git
-  revision: 3dbaa7c00ff0bb75ad9538cdef176c72de35d231
+  revision: f07936d2eb9b0893994ed99fe82267b5e7770d06
   specs:
     mysqlplus (0.1.1)
 
@@ -53,6 +53,15 @@ GIT
   revision: ed82db7659f624d6c3ca244e4127dad270a484c7
   specs:
     RocketAMF (1.0.0)
+
+GIT
+  remote: git@github.com:matchu/flex.git
+  revision: d62f508f795ecdbb383f406865daa72368b43ba5
+  specs:
+    flex (0.4.1)
+      multi_json (~> 1.3.4)
+      progressbar (~> 0.11.0)
+      prompter (~> 0.1.5)
 
 GEM
   remote: http://rubygems.org/
@@ -88,17 +97,17 @@ GEM
       activemodel (= 3.0.19)
       activesupport (= 3.0.19)
     activesupport (3.0.19)
-    addressable (2.2.6)
+    addressable (2.3.2)
     arel (2.0.10)
     bcrypt-ruby (2.1.4)
     builder (2.1.2)
-    bullet (4.1.5)
+    bullet (4.1.6)
       uniform_notifier (~> 1.0.0)
     carrierwave (0.5.8)
       activesupport (~> 3.0)
     character-encodings (0.4.1)
     chronic (0.6.7)
-    closure-compiler (1.1.4)
+    closure-compiler (1.1.8)
     compass (0.10.6)
       haml (>= 3.0.4)
     cookiejar (0.3.0)
@@ -106,27 +115,32 @@ GEM
       bcrypt-ruby (~> 2.1.2)
       warden (~> 1.0.2)
     diff-lcs (1.1.3)
-    em-socksify (0.1.0)
-      eventmachine
+    dye (0.1.4)
+    em-socksify (0.2.1)
+      eventmachine (>= 1.0.0.beta.4)
     erubis (2.6.6)
       abstract (>= 1.0.0)
-    excon (0.9.6)
-    factory_girl (2.3.2)
-      activesupport
-    factory_girl_rails (1.4.0)
-      factory_girl (~> 2.3.0)
+    excon (0.16.10)
+    factory_girl (2.6.4)
+      activesupport (>= 2.3.9)
+    factory_girl_rails (1.7.0)
+      factory_girl (~> 2.6.0)
       railties (>= 3.0.0)
-    fog (1.1.2)
+    fog (1.8.0)
       builder
-      excon (~> 0.9.0)
+      excon (~> 0.14)
       formatador (~> 0.2.0)
       mime-types
-      multi_json (~> 1.0.3)
+      multi_json (~> 1.0)
       net-scp (~> 1.0.4)
       net-ssh (>= 2.1.3)
       nokogiri (~> 1.5.0)
       ruby-hmac
-    formatador (0.2.1)
+    formatador (0.2.4)
+    globalize3 (0.3.0)
+      activemodel (>= 3.0.0)
+      activerecord (>= 3.0.0)
+      paper_trail (~> 2)
     haml (3.0.25)
     hoptoad_notifier (2.4.11)
       activesupport
@@ -146,20 +160,28 @@ GEM
     mime-types (1.19)
     mini_magick (3.4)
       subexec (~> 0.2.1)
-    msgpack (0.4.6)
-    multi_json (1.0.4)
-    mysql2 (0.2.6)
+    msgpack (0.4.7)
+    multi_json (1.3.7)
+    mysql2 (0.2.18)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
-    net-ssh (2.3.0)
-    newrelic_rpm (3.5.3.25)
-    nokogiri (1.5.3)
+    net-ssh (2.6.3)
+    newrelic_rpm (3.5.5.38)
+    nokogiri (1.5.6)
     open4 (1.3.0)
     openneo-auth-signatory (0.1.0)
       ruby-hmac
-    parallel (0.5.17)
+    paper_trail (2.7.0)
+      activerecord (~> 3.0)
+      railties (~> 3.0)
+    parallel (0.5.21)
+    patron (0.4.18)
     polyglot (0.3.3)
-    rack (1.2.6)
+    progressbar (0.11.0)
+    prompter (0.1.5)
+      dye (>= 0.1.1)
+      yard (>= 0.6.3)
+    rack (1.2.7)
     rack-fiber_pool (0.9.2)
     rack-mount (0.6.14)
       rack (>= 1.0.0)
@@ -183,9 +205,9 @@ GEM
     rdiscount (1.6.8)
     rdoc (3.12)
       json (~> 1.4)
-    redis (2.2.2)
-    redis-namespace (1.1.0)
-      redis (< 3.0.0)
+    redis (3.0.2)
+    redis-namespace (1.2.1)
+      redis (~> 3.0.0)
     resque (1.15.0)
       json (~> 1.4.6)
       redis-namespace (>= 0.10.0)
@@ -214,14 +236,14 @@ GEM
     rspec-rails (2.0.1)
       rspec (~> 2.0.0)
     ruby-hmac (0.4.0)
-    rufus-scheduler (2.0.16)
+    rufus-scheduler (2.0.17)
       tzinfo (>= 0.3.23)
     sanitize (2.0.3)
       nokogiri (>= 1.4.4, < 1.6)
     sinatra (1.2.8)
       rack (~> 1.1)
       tilt (>= 1.2.2, < 2.0)
-    subexec (0.2.1)
+    subexec (0.2.2)
     swf_converter (0.0.3)
     thor (0.14.6)
     tilt (1.3.3)
@@ -230,14 +252,15 @@ GEM
       polyglot (>= 0.3.1)
     tzinfo (0.3.35)
     uniform_notifier (1.0.2)
-    vegas (0.1.8)
+    vegas (0.1.11)
       rack (>= 1.0.0)
     warden (1.0.6)
       rack (>= 1.0)
     whenever (0.7.3)
       activesupport (>= 2.3.4)
       chronic (~> 0.6.3)
-    will_paginate (3.0.2)
+    will_paginate (3.0.4)
+    yard (0.8.3)
     yui-compressor (0.9.6)
       POpen4 (>= 0.1.4)
 
@@ -257,7 +280,9 @@ DEPENDENCIES
   em-synchrony!
   eventmachine!
   factory_girl_rails (~> 1.0)
-  fog (~> 1.1.2)
+  flex!
+  fog (~> 1.8.0)
+  globalize3
   haml (~> 3.0.18)
   hoptoad_notifier
   http_accept_language!
@@ -272,6 +297,7 @@ DEPENDENCIES
   nokogiri (~> 1.5.2)
   openneo-auth-signatory (~> 0.1.0)
   parallel (~> 0.5.17)
+  patron (~> 0.4.18)
   rack-fiber_pool
   rails (= 3.0.19)
   rdiscount (~> 1.6.5)

@@ -84,7 +84,7 @@ class Outfit < ActiveRecord::Base
   # ordered from bottom to top. Careful: this method is memoized, so if the
   # image layers change after its first call we'll get bad results.
   def image_layers
-    @image_layers ||= visible_assets_with_images.sort { |a, b| a.zone.depth <=> b.zone.depth }
+    @image_layers ||= visible_assets_with_images.sort { |a, b| a.depth <=> b.depth }
   end
   
   # Creates and writes the thumbnail images for this outfit iff the new image
@@ -177,9 +177,10 @@ class Outfit < ActiveRecord::Base
   end
   
   def visible_assets
-    biology_assets = pet_state.swf_assets
+    biology_assets = pet_state.swf_assets.includes(:zone)
     object_assets = SwfAsset.object_assets.
-      fitting_body_id(pet_state.pet_type.body_id).for_item_ids(worn_item_ids)
+      fitting_body_id(pet_state.pet_type.body_id).for_item_ids(worn_item_ids).
+      includes(:zone)
     
     # Now for fun with bitmasks! Rather than building a bunch of integer arrays
     # here, we instead go low-level and use bit-level operations. Build the

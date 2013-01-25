@@ -325,6 +325,30 @@ en:
       contributors:
         header: Brought to you by
         footer: Thanks!
+    
+    search:
+      errors:
+        not_found:
+          label: Filter "%{label}" does not exist. Is it spelled correctly?
+          species:
+            Species "%{species_name}" does not exist. Is it spelled correctly?
+          zone: Zone "%{zone_name}" does not exist. Is it spelled correctly?
+          ownership:
+            I don't know what user:%{keyword} means. Is it spelled correctly?
+        not_logged_in:
+          The "user" filters are only available if you're logged in.
+      flag_keywords:
+        is: is
+      labels:
+        name: name
+        is_nc: nc
+        is_pb: pb
+        species_support_id: species
+        occupied_zone_id: occupies,zone,type
+        restricted_zone_id: restricts
+        user_closet_hanger_ownership: user
+        user_owns: owns
+        user_wants: wants
   
   neopets_pages:
     create:

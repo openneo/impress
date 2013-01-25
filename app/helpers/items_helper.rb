@@ -20,7 +20,7 @@ module ItemsHelper
   end
 
   def standard_species_search_links
-    build_on_pet_types(Species.all) do |pet_type|
+    build_on_pet_types(Species.alphabetical) do |pet_type|
       image = pet_type_image(pet_type, :happy, :zoom)
       query = "species:#{pet_type.species.name}"
       link_to(image, items_path(:q => query))
@@ -73,7 +73,7 @@ module ItemsHelper
   end
 
   def list_zones(zones, method=:label)
-    zones.sort { |x,y| x.label <=> y.label }.map(&method).join(', ')
+    zones.map(&method).join(', ')
   end
   
   def nc_icon
@@ -125,7 +125,8 @@ module ItemsHelper
   def build_on_pet_types(species, special_color=nil, &block)
     species_ids = species.map(&:id)
     pet_types = special_color ?
-      PetType.where(:color_id => special_color.id, :species_id => species_ids).order(:species_id) :
+      PetType.where(:color_id => special_color.id, :species_id => species_ids).
+        order(:species_id).includes_child_translations :
       PetType.random_basic_per_species(species.map(&:id))
     pet_types.map(&block).join.html_safe
   end

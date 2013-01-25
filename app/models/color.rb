@@ -1,15 +1,16 @@
-class Color < PetAttribute
-  fetch_objects!
+class Color < ActiveRecord::Base
+  translates :name
   
-  Basic = %w(blue green red yellow).map { |name| find_by_name(name) }
-  BasicIds = Basic.map(&:id)
+  scope :alphabetical, lambda { includes(:translations).order(Color::Translation.arel_table[:name]) }
+  scope :basic, where(:basic => true)
+  scope :standard, where(:standard => true)
+  scope :nonstandard, where(:standard => false)
   
-  def self.basic_ids
-    BasicIds
+  def as_json(options={})
+    {:id => id, :name => human_name}
   end
   
-  def self.nonstandard_ids
-    @nonstandard_ids ||= File.read(Rails.root.join('config', 'nonstandard_colors.txt')).
-      chomp.split("\n").map { |name| Color.find_by_name(name).id }
+  def human_name
+    name.split(' ').map { |word| word.capitalize }.join(' ')
   end
 end

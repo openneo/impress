@@ -5,18 +5,21 @@ module RocketAMF
     class Request
       ERROR_CODE = 'AMFPHP_RUNTIME_ERROR'
       
-      def initialize(service, method, *params)
-        @service = service
-        @method = method
+      def initialize(action, params)
+        @action = action
         @params = params
       end
       
-      def fetch(options={})
-        uri = @service.gateway.uri
+      def post(options={})
+        uri = @action.service.gateway.uri
         data = envelope.serialize
 
         req = Net::HTTP::Post.new(uri.path)
         req.body = data
+        headers = options[:headers] || {}
+        headers.each do |key, value|
+          req[key] = value
+        end
         
         res = nil
         
@@ -68,8 +71,8 @@ module RocketAMF
       
       def remoting_message
         message = Values::RemotingMessage.new
-        message.source = @service.name
-        message.operation = @method
+        message.source = @action.service.name
+        message.operation = @action.name
         message.body = @params
         message
       end

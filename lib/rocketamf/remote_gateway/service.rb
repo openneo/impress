@@ -1,3 +1,5 @@
+require File.join(File.dirname(__FILE__), 'action')
+
 module RocketAMF
   class RemoteGateway
     class Service
@@ -8,8 +10,8 @@ module RocketAMF
         @name = name
       end
       
-      def request(method, *params)
-        Request.new(self, method, *params)
+      def action(name)
+        Action.new(self, name)
       end
     end
   end

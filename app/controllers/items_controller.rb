@@ -1,5 +1,6 @@
 class ItemsController < ApplicationController
   before_filter :set_query
+  rescue_from Item::Search::Error, :with => :search_error
 
   def index
     if params.has_key?(:q)
@@ -8,25 +9,21 @@ class ItemsController < ApplicationController
           per_page = params[:per_page].to_i
           per_page = 50 if per_page && per_page > 50
         else
-          per_page = nil
+          per_page = 30
         end
-        @items = Item.search(@query, current_user).alphabetize.paginate :page => params[:page], :per_page => per_page
+        # Note that we sort by name by hand, since we might have to use
+        # fallbacks after the fact
+        @items = Item::Search::Query.from_text(@query, current_user).
+          paginate(:page => params[:page], :per_page => per_page)
         assign_closeted!
         respond_to do |format|
           format.html { render }
           format.json { render :json => {:items => @items, :total_pages => @items.total_pages} }
           format.js { render :json => {:items => @items, :total_pages => @items.total_pages}, :callback => params[:callback] }
         end
-      rescue Item::SearchError
-        @items = []
-        respond_to do |format|
-          format.html { flash.now[:alert] = $!.message }
-          format.json { render :json => {:error => $!.message} }
-          format.js { render :json => {:error => $!.message}, :callback => params[:callback] }
-        end
       end
     elsif params.has_key?(:ids) && params[:ids].is_a?(Array)
-      @items = Item.find(params[:ids])
+      @items = Item.includes(:translations).find(params[:ids])
       assign_closeted!
       respond_to do |format|
         format.json { render :json => @items }
@@ -35,7 +32,7 @@ class ItemsController < ApplicationController
       respond_to do |format|
         format.html {
           unless localized_fragment_exist?('items#index newest_items')
-            @newest_items = Item.newest.limit(18)
+            @newest_items = Item.newest.includes(:translations).limit(18)
           end
         }
         format.js { render :json => {:error => '$q required'}}
@@ -48,6 +45,15 @@ class ItemsController < ApplicationController
 
     respond_to do |format|
       format.html do
+        unless localized_fragment_exist?("items/#{@item.id} info")
+          @occupied_zones = @item.occupied_zones(
+            :scope => Zone.includes_translations.alphabetical
+          )
+          @restricted_zones = @item.restricted_zones(
+            :scope => Zone.includes_translations.alphabetical
+          )
+        end
+        
         unless localized_fragment_exist?("items/#{@item.id} contributors")
           @contributors_with_counts = @item.contributors_with_counts
         end
@@ -96,7 +102,8 @@ class ItemsController < ApplicationController
       raise ActiveRecord::RecordNotFound, 'Pet type not found'
     end
     
-    @items = @pet_type.needed_items.alphabetize
+    @items = @pet_type.needed_items.includes(:translations).
+      alphabetize_by_translations
     assign_closeted!
     
     respond_to do |format|
@@ -109,6 +116,16 @@ class ItemsController < ApplicationController
 
   def assign_closeted!
     current_user.assign_closeted_to_items!(@items) if user_signed_in?
+  end
+  
+  def search_error(e)
+    @items = []
+    respond_to do |format|
+      format.html { flash.now[:alert] = e.message; render }
+      format.json { render :json => {:error => e.message} }
+      format.js   { render :json => {:error => e.message},
+                           :callback => params[:callback] }
+    end
   end
 
   def set_query

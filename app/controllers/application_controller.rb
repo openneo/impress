@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
   end
   
   def valid_locale?(locale)
-    locale && I18n.available_locales.include?(locale.to_sym)
+    locale && I18n.usable_locales.include?(locale.to_sym)
   end
 end
 

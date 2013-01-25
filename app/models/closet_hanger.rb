@@ -1,4 +1,6 @@
 class ClosetHanger < ActiveRecord::Base
+  include Flex::Model
+  
   belongs_to :item
   belongs_to :list, :class_name => 'ClosetList'
   belongs_to :user
@@ -29,6 +31,17 @@ class ClosetHanger < ActiveRecord::Base
   end
 
   before_validation :merge_quantities, :set_owned_by_list
+  
+  flex.parent :item, 'item' => 'closet_hanger'
+  flex.sync self
+  
+  def flex_source
+    {
+      :user_id => user_id,
+      :item_id => item_id,
+      :owned => owned?
+    }.to_json
+  end
 
   def verb(subject=:someone)
     self.class.verb(subject, owned?)
@@ -56,23 +69,28 @@ class ClosetHanger < ActiveRecord::Base
     end
     
     hanger = self.where(conditions).first
-    unless hanger
-      hanger = self.new
-      hanger.user_id = conditions[:user_id]
-      hanger.item_id = conditions[:item_id]
-      # One of the following will be nil, and that's okay. If owned is nil,
-      # we'll cover for it before validation, as always.
-      hanger.owned   = conditions[:owned]
-      hanger.list_id = conditions[:list_id]
-    end
     
-    unless quantity == 0
-      Rails.logger.debug("Logging to #{hanger.id} quantity #{quantity}")
+    if quantity > 0
+      # If quantity is non-zero, create/update the corresponding hanger.
+      
+      unless hanger
+        hanger = self.new
+        hanger.user_id = conditions[:user_id]
+        hanger.item_id = conditions[:item_id]
+        # One of the following will be nil, and that's okay. If owned is nil,
+        # we'll cover for it before validation, as always.
+        hanger.owned   = conditions[:owned]
+        hanger.list_id = conditions[:list_id]
+      end
+      
       hanger.quantity = quantity
       hanger.save!
-    else
-      hanger.destroy if hanger
+    elsif hanger
+      # If quantity is zero and there's a hanger, destroy it.
+      hanger.destroy
     end
+    
+    # If quantity is zero and there's no hanger, good. Do nothing.
   end
 
   protected

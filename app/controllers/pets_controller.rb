@@ -10,13 +10,16 @@ class PetsController < ApplicationController
       redirect_to roulette_path
     else
       raise Pet::PetNotFound unless params[:name]
-      @pet = Pet.load(params[:name])
+      @pet = Pet.load(params[:name], :item_scope => Item.includes(:translations))
       if user_signed_in?
         points = current_user.contribute! @pet
       else
         @pet.save
         points = true
       end
+      
+      @pet.translate_items
+      
       respond_to do |format|
         format.html do
           path = destination + @pet.wardrobe_query

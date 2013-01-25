@@ -1,0 +1,47 @@
+en:
+  visibility: public
+  neopets_language_code: en
+
+en-MEEP:
+  visibility: public
+  compatible_with: en
+
+pt:
+  visibility: private
+  neopets_language_code: pt
+
+es:
+  visibility: none
+  neopets_language_code: es
+
+nl:
+  visibility: none
+  neopets_language_code: nl
+
+de:
+  visibility: none
+  neopets_language_code: de
+
+fr:
+  visibility: none
+  neopets_language_code: fr
+
+it:
+  visibility: none
+  neopets_language_code: it
+
+zh-CN:
+  visibility: none
+  neopets_language_code: ch
+
+zh-TW:
+  visibility: none
+  neopets_language_code: zh
+
+ja:
+  visibility: none
+  neopets_language_code: ja
+
+ko:
+  visibility: none
+  neopets_language_code: ko

@@ -1,7 +1,12 @@
 class Item < ActiveRecord::Base
+  include Flex::Model
   include PrettyParam
+  
+  set_inheritance_column 'inheritance_type' # PHP Impress used "type" to describe category
 
   SwfAssetType = 'object'
+  
+  translates :name, :description, :rarity
 
   has_many :closet_hangers
   has_one :contribution, :as => :contributed
@@ -15,18 +20,16 @@ class Item < ActiveRecord::Base
   SPECIAL_COLOR_DESCRIPTION_REGEX =
     /This item is only wearable by Neopets painted ([a-zA-Z]+)\.|WARNING: This [a-zA-Z]+ can be worn by ([a-zA-Z]+) [a-zA-Z]+ ONLY!/
 
-  SPECIAL_PAINTBRUSH_COLORS_PATH = Rails.root.join('config', 'colors_with_unique_bodies.txt')
-  SPECIAL_PAINTBRUSH_COLORS = File.read(SPECIAL_PAINTBRUSH_COLORS_PATH).split("\n").map { |name| Color.find_by_name(name) }
-
-  set_table_name 'objects' # Neo & PHP Impress call them objects, but the class name is a conflict (duh!)
-  set_inheritance_column 'inheritance_type' # PHP Impress used "type" to describe category
-
   cattr_reader :per_page
   @@per_page = 30
 
-  scope :alphabetize, order('name ASC')
+  scope :alphabetize, order(arel_table[:name])
+  scope :alphabetize_by_translations, lambda {
+    it = Item::Translation.arel_table
+    order(it[:name])
+  }
 
-  scope :join_swf_assets, joins(:swf_assets).group('objects.id')
+  scope :join_swf_assets, joins(:swf_assets).group(arel_table[:id])
 
   scope :newest, order(arel_table[:created_at].desc) if arel_table[:created_at]
 
@@ -35,9 +38,31 @@ class Item < ActiveRecord::Base
   scope :sold_in_mall, where(:sold_in_mall => true)
   scope :not_sold_in_mall, where(:sold_in_mall => false)
 
-  scope :sitemap, select([:id, :name]).order(:id).limit(49999)
+  scope :sitemap, select([arel_table[:id], arel_table[:name]]).
+                  order(arel_table[:id]).limit(49999)
 
   scope :with_closet_hangers, joins(:closet_hangers)
+  
+  flex.sync self
+  
+  def flex_source
+    indexed_attributes = {
+      :is_nc => self.nc?,
+      :is_pb => self.pb?,
+      :species_support_id => self.species_support_ids,
+      :occupied_zone_id => self.occupied_zone_ids,
+      :restricted_zone_id => self.restricted_zone_ids,
+      :name => {}
+    }
+    
+    I18n.usable_locales_with_neopets_language_code.each do |locale|
+      I18n.with_locale(locale) do
+        indexed_attributes[:name][locale] = self.name
+      end
+    end
+    
+    indexed_attributes.to_json
+  end
 
   def closeted?
     @owned || @wanted
@@ -72,6 +97,10 @@ class Item < ActiveRecord::Base
   def nc?
     NCRarities.include?(rarity_index)
   end
+  
+  def pb?
+    (self.description == PAINTBRUSH_SET_DESCRIPTION)
+  end
 
   def owned?
     @owned
@@ -81,17 +110,27 @@ class Item < ActiveRecord::Base
     @wanted
   end
 
-  def restricted_zones
-    unless @restricted_zones
-      @restricted_zones = []
+  def restricted_zones(options={})
+    options[:scope] ||= Zone.scoped
+    options[:scope].find(restricted_zone_ids)
+  end
+  
+  def restricted_zone_ids
+    unless @restricted_zone_ids
+      @restricted_zone_ids = []
       zones_restrict.split(//).each_with_index do |switch, id|
-        @restricted_zones << Zone.find(id.to_i + 1) if switch == '1'
+        @restricted_zone_ids << (id.to_i + 1) if switch == '1'
       end
     end
-    @restricted_zones
+    @restricted_zone_ids
+  end
+  
+  def occupied_zone_ids
+    occupied_zones.map(&:id)
   end
 
-  def occupied_zones
+  def occupied_zones(options={})
+    options[:scope] ||= Zone.scoped
     all_body_ids = []
     zone_body_ids = {}
     selected_assets = swf_assets.select('body_id, zone_id').each do |swf_asset|
@@ -100,12 +139,11 @@ class Item < ActiveRecord::Base
       body_ids << swf_asset.body_id unless body_ids.include?(swf_asset.body_id)
       all_body_ids << swf_asset.body_id unless all_body_ids.include?(swf_asset.body_id)
     end
-    zones = []
+    zones = options[:scope].find(zone_body_ids.keys)
+    zones_by_id = zones.inject({}) { |h, z| h[z.id] = z; h }
     total_body_ids = all_body_ids.size
     zone_body_ids.each do |zone_id, body_ids|
-      zone = Zone.find(zone_id)
-      zone.sometimes = true if body_ids.size < total_body_ids
-      zones << zone
+      zones_by_id[zone_id].sometimes = true if body_ids.size < total_body_ids
     end
     zones
   end
@@ -120,17 +158,21 @@ class Item < ActiveRecord::Base
 
   protected
   def determine_special_color
-    if description.include?(PAINTBRUSH_SET_DESCRIPTION)
-      downcased_name = name.downcase
-      SPECIAL_PAINTBRUSH_COLORS.each do |color|
-        return color if downcased_name.include?(color.name)
+    I18n.with_locale(I18n.default_locale) do
+      # Rather than go find the special description in all locales, let's just
+      # run this logic in English.
+      if description.include?(PAINTBRUSH_SET_DESCRIPTION)
+        downcased_name = name.downcase
+        Color.nonstandard.each do |color|
+          return color if downcased_name.include?(color.name)
+        end
       end
-    end
 
-    match = description.match(SPECIAL_COLOR_DESCRIPTION_REGEX)
-    if match
-      color = match[1] || match[2]
-      return Color.find_by_name(color.downcase)
+      match = description.match(SPECIAL_COLOR_DESCRIPTION_REGEX)
+      if match
+        color = match[1] || match[2]
+        return Color.find_by_name(color.downcase)
+      end
     end
   end
   public
@@ -146,43 +188,16 @@ class Item < ActiveRecord::Base
   end
 
   def supported_species
-    @supported_species ||= species_support_ids.blank? ? Species.all : species_support_ids.sort.map { |id| Species.find(id) }
+    body_ids = swf_assets.select([:body_id]).map(&:body_id)
+    return Species.all if body_ids.include?(0)
+    
+    pet_types = PetType.where(:body_id => body_ids).select([:species_id])
+    species_ids = pet_types.map(&:species_id).uniq
+    Species.find(species_ids)
   end
   
   def support_species?(species)
     species_support_ids.blank? || species_support_ids.include?(species.id)
-  end
-
-  def self.search(query, user=nil)
-    raise SearchError, "Please provide a search query" unless query
-    query = query.strip
-    raise SearchError, "Search queries should be at least 3 characters" if query.length < 3
-    query_conditions = [Condition.new]
-    in_phrase = false
-    query.each_char do |c|
-      if c == ' ' && !in_phrase
-        query_conditions << Condition.new
-      elsif c == '"'
-        in_phrase = !in_phrase
-      elsif c == ':' && !in_phrase
-        query_conditions.last.to_filter!
-      elsif c == '-' && !in_phrase && query_conditions.last.empty?
-        query_conditions.last.negate!
-      else
-        query_conditions.last << c
-      end
-    end
-    limited_filters_used = []
-    query_conditions.inject(self.scoped) do |scope, condition|
-      if condition.filter? && LimitedSearchFilters.include?(condition.filter)
-        if limited_filters_used.include?(condition.filter)
-          raise SearchError, "The #{condition.filter} filter is complex; please only use one per search. Thanks!"
-        else
-          limited_filters_used << condition.filter
-        end
-      end
-      condition.narrow(scope, user)
-    end
   end
 
   def as_json(options = {})
@@ -230,6 +245,12 @@ class Item < ActiveRecord::Base
       end
     end
   end
+  
+  def body_specific?
+    # If there are species support IDs (it's not empty), the item is
+    # body-specific. If it's empty, it fits everyone the same.
+    !species_support_ids.empty?
+  end
 
   def origin_registry_info=(info)
     # bear in mind that numbers from registries are floats
@@ -251,6 +272,12 @@ class Item < ActiveRecord::Base
 
   def parent_swf_asset_relationships_to_update=(rels)
     @parent_swf_asset_relationships_to_update = rels
+  end
+  
+  def needed_translations
+    translatable_locales = Set.new(I18n.locales_with_neopets_language_code)
+    translated_locales = Set.new(translations.map(&:locale))
+    translatable_locales - translated_locales
   end
 
   def self.all_by_ids_or_children(ids, swf_assets)
@@ -284,7 +311,7 @@ class Item < ActiveRecord::Base
     end
   end
 
-  def self.collection_from_pet_type_and_registries(pet_type, info_registry, asset_registry)
+  def self.collection_from_pet_type_and_registries(pet_type, info_registry, asset_registry, scope=Item.scoped)
     # bear in mind that registries are arrays with many nil elements,
     # due to how the parser works
 
@@ -299,7 +326,7 @@ class Item < ActiveRecord::Base
 
     # Collect existing relationships
     existing_relationships_by_item_id_and_swf_asset_id = {}
-    existing_items = Item.find_all_by_id(item_ids, :include => :parent_swf_asset_relationships)
+    existing_items = scope.find_all_by_id(item_ids, :include => :parent_swf_asset_relationships)
     existing_items.each do |item|
       items[item.id] = item
       relationships_by_swf_asset_id = {}
@@ -656,214 +683,4 @@ class Item < ActiveRecord::Base
     class SpiderHTTPError < SpiderError;end
     class SpiderJSONError < SpiderError;end
   end
-
-  private
-
-  SearchFilterScopes = []
-  LimitedSearchFilters = []
-
-  def self.search_filter(name, options={}, &block)
-    assume_complement = options.delete(:assume_complement) || true
-    name = name.to_s
-    SearchFilterScopes << name
-    LimitedSearchFilters << name if options[:limit]
-
-    (class << self; self; end).instance_eval do
-      if options[:full]
-        define_method "search_filter_#{name}", &options[:full]
-      else
-        if assume_complement
-          define_method "search_filter_not_#{name}", &Item.search_filter_block(options, false, &block)
-        end
-        define_method "search_filter_#{name}", &Item.search_filter_block(options, true, &block)
-      end
-    end
-  end
-
-  def self.single_search_filter(name, options={}, &block)
-    options[:assume_complement] = false
-    search_filter name, options, &block
-  end
-
-  def self.search_filter_block(options, positive, &block)
-    Proc.new { |str, user, scope|
-      condition = block.arity == 1 ? block.call(str) : block.call(str, user)
-      unless positive
-        condition = condition.to_sql if condition.respond_to?(:to_sql)
-        condition = "!(#{condition})"
-      end
-      scope = scope.send(options[:scope]) if options[:scope]
-      scope.where(condition)
-    }
-  end
-
-  search_filter :name do |name|
-    arel_table[:name].matches("%#{name}%")
-  end
-
-  search_filter :description do |description|
-    arel_table[:description].matches("%#{description}%")
-  end
-  
-  def self.adjective_filters
-    @adjective_filters ||= {
-      'nc' => arel_table[:rarity_index].in(NCRarities),
-      'pb' => arel_table[:description].eq(PAINTBRUSH_SET_DESCRIPTION)
-    }
-  end
-
-  search_filter :is do |adjective|
-    filter = adjective_filters[adjective]
-    unless filter
-      raise SearchError,
-        "We don't know how an item can be \"#{adjective}\". " +
-        "Did you mean is:nc or is:pb?"
-    end
-    filter
-  end
-
-  USER_ADJECTIVES = {
-    'own' => true,
-    'owns' => true,
-    'owned' => true,
-    'want' => false,
-    'wants' => false,
-    'wanted' => false,
-    'all' => nil,
-    'items' => nil
-  }
-  def self.parse_user_adjective(adjective, user)
-    unless USER_ADJECTIVES.has_key?(adjective)
-      raise SearchError, "We don't understand user:#{adjective}. " +
-        "Find items you own with user:owns, items you want with user:wants, or " +
-        "both with user:all"
-    end
-
-    unless user
-      raise SearchError, "It looks like you're not logged in, so you don't own any items."
-    end
-
-    USER_ADJECTIVES[adjective]
-  end
-
-  search_filter :user do |adjective, user|
-    # Though joins may seem more efficient here for the positive case, we need
-    # to be able to handle cases like "user:owns user:wants", which breaks on
-    # the JOIN approach. Just have to look up the IDs in advance.
-
-    owned_value = parse_user_adjective(adjective, user)
-    hangers = ClosetHanger.arel_table
-    items = user.closeted_items
-    items = items.where(ClosetHanger.arel_table[:owned].eq(owned_value)) unless owned_value.nil?
-    item_ids = items.map(&:id)
-    # Though it's best to do arel_table[:id].in(item_ids), it breaks in this
-    # version of Arel, and other conditions will overwrite this one. Since IDs
-    # are guaranteed to be integers, let's just build our own string condition
-    # and be done with it.
-
-    if item_ids.empty?
-      raise SearchError, "You don't #{ClosetHanger.verb :you, owned_value} " +
-        "any items yet. Head to Your Items to add some!"
-    end
-
-    arel_table[:id].in(item_ids)
-  end
-
-  search_filter :only do |species_name|
-    begin
-      id = Species.require_by_name(species_name).id
-    rescue Species::NotFound => e
-      raise SearchError, e.message
-    end
-    arel_table[:species_support_ids].eq(id.to_s)
-  end
-
-  search_filter :species do |species_name|
-    begin
-      id = Species.require_by_name(species_name).id
-    rescue Species::NotFound => e
-      raise SearchError, e.message
-    end
-    ids = arel_table[:species_support_ids]
-    ids.eq('').or(ids.matches_any([
-      id,
-      "#{id},%",
-      "%,#{id},%",
-      "%,#{id}"
-    ]))
-  end
-
-  single_search_filter :type, {:limit => true, :scope => :join_swf_assets} do |zone_set_name|
-    zone_set = Zone.find_set(zone_set_name)
-    raise SearchError, "Type \"#{zone_set_name}\" does not exist" unless zone_set
-    SwfAsset.arel_table[:zone_id].in(zone_set.map(&:id))
-  end
-
-  single_search_filter :not_type, :full => lambda { |zone_set_name, user, scope|
-    zone_set = Zone::ItemZoneSets[zone_set_name]
-    raise SearchError, "Type \"#{zone_set_name}\" does not exist" unless zone_set
-    psa = ParentSwfAssetRelationship.arel_table.alias
-    sa = SwfAsset.arel_table.alias
-    # Join to SWF assets, including the zone condition in the join so that
-    # SWFs that don't match end up being NULL rows. Then we take the max SWF
-    # asset ID, which is NULL if and only if there are no rows that matched
-    # the zone requirement. If that max was NULL, return the object.
-    item_ids = select(arel_table[:id]).joins(
-        "LEFT JOIN #{ParentSwfAssetRelationship.table_name} #{psa.name} ON " +
-        psa[:parent_type].eq(self.name).
-        and(psa[:parent_id].eq(arel_table[:id])).
-        to_sql
-      ).
-      joins(
-        "LEFT JOIN #{SwfAsset.table_name} #{sa.name} ON " +
-        sa[:type].eq(SwfAssetType).
-        and(sa[:id].eq(psa[:swf_asset_id])).
-        and(sa[:zone_id].in(zone_set.map(&:id))).
-        to_sql
-      ).
-      group("#{table_name}.id").
-      having("MAX(#{sa.name}.id) IS NULL"). # SwfAsset.arel_table[:id].maximum has no #eq
-      map(&:id)
-    scope.where(arel_table[:id].in(item_ids))
-  }
-
-  class Condition < String
-    attr_accessor :filter
-
-    def initialize
-      @positive = true
-    end
-
-    def filter?
-      !@filter.nil?
-    end
-
-    def to_filter!
-      @filter = self.clone
-      self.replace ''
-    end
-
-    def negate!
-      @positive = !@positive
-    end
-
-    def narrow(scope, user)
-      if SearchFilterScopes.include?(filter)
-        polarized_filter = @positive ? filter : "not_#{filter}"
-        Item.send("search_filter_#{polarized_filter}", self, user, scope)
-      else
-        raise SearchError, "Filter #{filter} does not exist"
-      end
-    end
-
-    def filter
-      @filter || 'name'
-    end
-
-    def inspect
-      @filter ? "#{@filter}:#{super}" : super
-    end
-  end
-
-  class SearchError < ArgumentError;end
 end

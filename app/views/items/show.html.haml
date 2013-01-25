@@ -53,13 +53,13 @@
   #item-zones
     %p
       %strong #{t '.zones.occupied_header'}:
-      = list_zones @item.occupied_zones, :uncertain_label
+      = list_zones @occupied_zones, :uncertain_label
     %p
       %strong #{t '.zones.restricted_header'}:
-      - if @item.restricted_zones.empty?
+      - if @restricted_zones.empty?
         = t '.zones.none'
       - else
-        = list_zones @item.restricted_zones
+        = list_zones @restricted_zones
 
 #trade-hangers
   - [true, false].each do |owned|

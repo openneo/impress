@@ -23,6 +23,10 @@ class SwfAsset < ActiveRecord::Base
 
   include SwfConverter
   converts_swfs :size => IMAGE_SIZES[:large], :output_sizes => IMAGE_SIZES.values
+  
+  belongs_to :zone
+  
+  scope :includes_depth, lambda { includes(:zone) }
 
   def local_swf_path
     LOCAL_ASSET_DIR.join(local_path_within_outfit_swfs)
@@ -197,15 +201,7 @@ class SwfAsset < ActiveRecord::Base
   end
 
   def body_specific?
-    # If we already have assigned this a non-zero body id, or if the asset is
-    # in a body-specific zone, or if the item is explicitly labeled as
-    # body-specific (like Encased In Ice, which is body-specific but whose
-    # assets occupy Background Item), then this asset is body-specific.
-    (body_id? && body_id > 0) || self.zone.type_id < 3 || (@item && @item.explicitly_body_specific?)
-  end
-
-  def zone
-    Zone.find(zone_id)
+    self.zone.type_id < 3 || (@item && @item.body_specific?)
   end
 
   def origin_pet_type=(pet_type)
