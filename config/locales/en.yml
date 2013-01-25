@@ -265,8 +265,10 @@ en:
           query: species:shoyru
           description: returns any item a Shoyru can wear
         type:
-          query: type:hat
-          description: returns any item that fills a "hat" zone
+          query: occupies:hat -restricts:headdrippings
+          description:
+            returns any item that occupies a "hat" zone and does not restrict
+            a "head drippings" zone
       newest_items:
         header: Newest items
       species_search:
@@ -602,7 +604,7 @@ en:
               returns any item a %{default_value} can wear
           type:
             filter:
-              key: type
+              key: occupies
               default_value: background
             query_html: "%{filter_key}:%{filter_value}"
             description_html:
