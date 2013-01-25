@@ -43,10 +43,9 @@ module ApplicationHelper
   end
 
   def canonical_path(resource)
-    original_locale = I18n.locale
-    I18n.locale = I18n.default_locale
-    content_for :meta, tag(:link, :rel => 'canonical', :href => url_for(resource))
-    I18n.locale = original_locale
+    I18n.with_locale(I18n.default_locale) do
+      content_for :meta, tag(:link, :rel => 'canonical', :href => url_for(resource))
+    end
   end
 
   def contact_email

@@ -20,49 +20,46 @@ class Pet < ActiveRecord::Base
     options[:item_scope] ||= Item.scoped
     options[:locale] ||= I18n.default_locale
     
-    original_locale = I18n.locale
-    I18n.locale = options[:locale]
-    
-    require 'ostruct'
-    begin
-      neopets_language_code = I18n.neopets_language_code_for(options[:locale])
-      envelope = PET_VIEWER.request([name, 0]).post(
-        :timeout => 2,
-        :headers => {
-          'Cookie' => "lang=#{neopets_language_code}"
-        }
-      )
-    rescue RocketAMF::RemoteGateway::AMFError => e
-      if e.message == PET_NOT_FOUND_REMOTE_ERROR
-        raise PetNotFound, "Pet #{name.inspect} does not exist"
-      end
-      raise DownloadError, e.message
-    rescue RocketAMF::RemoteGateway::ConnectionError => e
-      raise DownloadError, e.message
-    end
-    contents = OpenStruct.new(envelope.messages[0].data.body)
-    pet_data = OpenStruct.new(contents.custom_pet)
-    
-    # in case this is running in a thread, explicitly grab an ActiveRecord
-    # connection, to avoid connection conflicts
-    Pet.connection_pool.with_connection do
-      self.pet_type = PetType.find_or_initialize_by_species_id_and_color_id(
-          pet_data.species_id.to_i,
-          pet_data.color_id.to_i
+    I18n.with_locale(options[:locale]) do
+      require 'ostruct'
+      begin
+        neopets_language_code = I18n.neopets_language_code_for(options[:locale])
+        envelope = PET_VIEWER.request([name, 0]).post(
+          :timeout => 2,
+          :headers => {
+            'Cookie' => "lang=#{neopets_language_code}"
+          }
         )
-      self.pet_type.body_id = pet_data.body_id
-      self.pet_type.origin_pet = self
-      biology = pet_data.biology_by_zone
-      biology[0] = nil # remove effects if present
-      @pet_state = self.pet_type.add_pet_state_from_biology! biology
-      @pet_state.label_by_pet(self, pet_data.owner)
-      @items = Item.collection_from_pet_type_and_registries(self.pet_type,
-        contents.object_info_registry, contents.object_asset_registry,
-        options[:item_scope])
+      rescue RocketAMF::RemoteGateway::AMFError => e
+        if e.message == PET_NOT_FOUND_REMOTE_ERROR
+          raise PetNotFound, "Pet #{name.inspect} does not exist"
+        end
+        raise DownloadError, e.message
+      rescue RocketAMF::RemoteGateway::ConnectionError => e
+        raise DownloadError, e.message
+      end
+      contents = OpenStruct.new(envelope.messages[0].data.body)
+      pet_data = OpenStruct.new(contents.custom_pet)
+      
+      # in case this is running in a thread, explicitly grab an ActiveRecord
+      # connection, to avoid connection conflicts
+      Pet.connection_pool.with_connection do
+        self.pet_type = PetType.find_or_initialize_by_species_id_and_color_id(
+            pet_data.species_id.to_i,
+            pet_data.color_id.to_i
+          )
+        self.pet_type.body_id = pet_data.body_id
+        self.pet_type.origin_pet = self
+        biology = pet_data.biology_by_zone
+        biology[0] = nil # remove effects if present
+        @pet_state = self.pet_type.add_pet_state_from_biology! biology
+        @pet_state.label_by_pet(self, pet_data.owner)
+        @items = Item.collection_from_pet_type_and_registries(self.pet_type,
+          contents.object_info_registry, contents.object_asset_registry,
+          options[:item_scope])
+      end
     end
-    
-    I18n.locale = original_locale
-    
+
     true
   end
 
