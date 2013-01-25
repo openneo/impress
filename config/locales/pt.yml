@@ -70,7 +70,7 @@ pt:
       title_for:
         you: Seus Itens
         another_user: "Itens do(a) %{user_name}"
-      toggle_help: Precisa de Ajuda ?
+      toggle_help: Precisa de Ajuda?
       item_search_placeholder: Encontrar Itens para adicionar
       item_search_submit: Procurar
       send_neomail: Neomail %{neopets_username}
@@ -147,7 +147,7 @@ pt:
       hangers_owned:
         label: Essa lista é para…
       visibility:
-        label: Quem pode ver essa lista ?
+        label: Quem pode ver essa lista?
       description:
         hint: 'Por que esses itens estão nessa lista? Quais são seus termos para troca? Ou você pode deixar isso em branco '
         markup_hint_html: We _<em>support</em>_ **<strong>Markdown</strong>** and some HTML.
@@ -180,7 +180,7 @@ pt:
       title_with_query: Procurando no Infinite Closet por "%{query}"
       no_results_html: Não foi possível encontrar item aplicavel que correspondam %{query_html}. Desculpe!
       modeling_request:
-        main_html: Nós perdemos algum item ? Para adicionar um item ao nosso banco de dados, basta %{modeling_link}, e nós vamos atualizar nosso banco de dados instantaneamente. Obrigado
+        main_html: Nós esquecemos algum item? Para adicionar um item ao nosso banco de dados, basta %{modeling_link}, e nós vamos atualizar nosso banco de dados instantaneamente. Obrigado
         modeling_link_content: mostre-nos qual pet está vestindo
       search_help_header: Acho o que você está procurando
       examples:
@@ -207,7 +207,7 @@ pt:
       newest_items:
         header: Novos itens
       species_search:
-        header: Não consegue decidir, pesquise por espécies
+        header: Não consegue decidir? Pesquise por espécies
     item:
       nc:
         abbr: NC
@@ -262,7 +262,7 @@ pt:
           label: Filtro "%{label}" não existe. Está escrito corretamente?
           species: Espécies "%{species_name}" não existem. Está escrito corretamente?
           zone: Zona "%{zone_name}" não existe. Está escrito corretamente?
-          ownership: Eu não sei o que  "usuário:%{palavra-chave}" significa. Você quis dizer "usuário:possui" ou "usuário:quer" ?
+          ownership: Eu não sei o que  "usuário:%{palavra-chave}" significa. Você quis dizer "usuário:possui" ou "usuário:quer"?
         not_logged_in: Os filtros "usuário" só estão disponíveis se você estiver logado.
       flag_keywords:
         is: é
@@ -362,7 +362,7 @@ pt:
       success: Roupa "%{outfit_name}" excluída com sucesso.
     edit:
       pet_type:
-        not_found: Nós nunca vimos essa combinação antes. Você tem ? Envie o nome do seu pet se você tiver!
+        not_found: Nós nunca vimos essa combinação antes. Você tem? Envie o nome do seu pet se você tiver!
         form:
           submit: Vai
       pet_state_form:
@@ -389,7 +389,7 @@ pt:
           image:
             name: Imagem
             faq: FAQ - Modo de Imagem
-            report_broken: Imagem quebrada ?
+            report_broken: Imagem quebrada?
       sidebar:
         nav:
           closet: Armário
@@ -406,7 +406,7 @@ pt:
             description: Nós nunca vimos esse item nesse tipo de corpo antes. Você tem? Então mostre para nós na nossa página principal se você tiver
         outfits:
           not_signed_in:
-            header: Pronto para se tornar um designer profissional ?
+            header: Pronto para se tornar um designer profissional?
             pitch_markdown: |
               Sabemos o quão difícil pode ser manter o controle de suas idéias,
               especialmente se você acabar tendo um monte delas.
@@ -421,7 +421,7 @@ pt:
             rename: renomear
             delete: excluir
             delete_confirmation:
-              header: Excluir ?
+              header: Excluir?
               delete: "sim"
               cancel: "não"
         sharing:
@@ -480,7 +480,7 @@ pt:
     new:
       tagline: Neopets personalizados feitos facilmente!
       preview:
-        pet_type_not_found: Nós nunca vimos um %{color_name} %{species_name}. Você viu ?
+        pet_type_not_found: Nós nunca vimos um %{color_name} %{species_name}. Você viu?
         pet_not_found: Pet não encontrado.
       load_pet:
         legend: Digite o nome do seu pet
@@ -495,13 +495,13 @@ pt:
           placeholder: encontrar um usuário
           submit: procurar
       infinite_closet:
-        tagline: Procurando por alguma coisa ?
+        tagline: Procurando por alguma coisa?
         description: Dê uma olhada pelo nosso banco de dados de roupas!
         item_search:
           placeholder: ache um item…
           submit: procurar
       modeling_hub:
-        tagline: Encontrou alguma coisa ?
+        tagline: Encontrou alguma coisa?
         description: Digite o nome do pet aqui e nós vamos copiar o que ele está vestindo. Muito Obrigado.
         load_pet:
           placeholder: modele um pet…
@@ -523,7 +523,7 @@ pt:
   pets:
     bulk:
       needed_items:
-        header: Procurando maneiras de ajudar ?
+        header: Procurando maneiras de ajudar?
         explanation: Digite o nome do seu pet e nós diremos quais itens você pode modelar. Obrigado pela ajuda
         submit: Enviar
         pet_header: Itens que %{pet_name} pode modelar
