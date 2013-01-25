@@ -23,10 +23,6 @@ class Zone < ActiveRecord::Base
   end
   
   def self.plainify_label(label)
-    plain_label = label.delete('\- /').downcase
-    if plain_label.end_with?('item')
-      plain_label = plain_label[0..-5]
-    end
-    plain_label
+    label.delete('\- /').downcase
   end
 end
