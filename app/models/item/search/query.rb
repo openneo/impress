@@ -118,8 +118,8 @@ class Item
         },
         :zone => lambda { |label|
           zone_set = Zone.with_plain_label(label)
-          unless zone_set
-            Item::Search.error 'not_found.zone', :zone_name => name
+          if zone_set.empty?
+            Item::Search.error 'not_found.zone', :zone_name => label
           end
           zone_set.map(&:id)
         },
