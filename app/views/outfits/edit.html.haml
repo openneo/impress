@@ -173,6 +173,15 @@
         {{/if}}
       {{/if}}
       %span.no-assets-message= t '.sidebar.closet.no_data.summary'
+      %ul
+        %li.wear-item
+          = link_to t('.item.controls.worn_items.add'), '#'
+        %li.unwear-item
+          = link_to t('.item.controls.worn_items.remove'), '#'
+        %li.closet-item
+          = link_to t('.item.controls.closet.add'), '#'
+        %li.uncloset-item
+          = link_to t('.item.controls.closet.remove'), '#'
   
   %script#pagination-template{:type => 'text/x-jquery-tmpl'}
     {{if current_page > 1}}

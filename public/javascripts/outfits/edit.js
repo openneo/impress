@@ -37,10 +37,7 @@ Partial.ItemSet = function ItemSet(wardrobe, selector) {
         item = items[i];
         in_set = $.inArray(item, specific_items) != -1;
         li = $('li.object-' + item.id).toggleClass(type, in_set).
-          data('item', item).data(type, in_set).children('ul').
-          children('li.control-set-for-' + type).remove().end()
-          [type == 'worn' ? 'prepend' : 'append']
-          (Partial.ItemSet.CONTROL_SETS[type][in_set].clone());
+          data('item', item).data(type, in_set);
       }
     }
   }
@@ -102,26 +99,22 @@ Partial.ItemSet = function ItemSet(wardrobe, selector) {
 Partial.ItemSet.CONTROL_SETS = {};
 
 Partial.ItemSet.setWardrobe = function (wardrobe) {
-  var type, verb_set, toggle, live_class, full_class, toggle_fn = {};
-  for(var i = 0; i < 2; i++) {
-    type = i == 0 ? 'worn' : 'closeted';
-    verb_set = i == 0 ? ['Unwear', 'Wear'] : ['Uncloset', 'Closet'];
-    Partial.ItemSet.CONTROL_SETS[type] = {};
-    for(var j = 0; j < 2; j++) {
-      toggle = j == 0;
-      full_class = 'control-set control-set-for-' + type;
-      live_class = 'control-set-' + (toggle ? '' : 'not-') + type;
-      full_class += ' ' + live_class;
-      Partial.ItemSet.CONTROL_SETS[type][toggle] = $('<a/>', {
-        href: '#',
-        text: verb_set[toggle ? 0 : 1]
-      }).wrap('<li/>').parent().attr('class', full_class);
-
+  var type, toggle, toggle_fn = {}, toggle_classes = {worn: {}, closeted: {}};
+  
+  toggle_classes.worn['false'] = 'wear-item';
+  toggle_classes.worn['true'] = 'unwear-item';
+  toggle_classes.closeted['false'] = 'closet-item';
+  toggle_classes.closeted['true'] = 'uncloset-item';
+  
+  for(type in toggle_classes) {
+    for(toggleKey in toggle_classes[type]) {
+      var toggle = (toggleKey == 'true');
       (function (type, toggle) {
-        $('li.' + live_class + ' a').live('click', function (e) {
-          var el = $(this), item = el.closest('.object').data('item');
-          toggle_fn[type][!toggle](item);
+        $('li.' + toggle_classes[type][toggle] + ' a').live('click', function (e) {
           e.preventDefault();
+          var item = $(this).closest('.object').data('item');
+          log(this, item, type, toggle, !toggle);
+          toggle_fn[type][!toggle](item);
         });
       })(type, toggle);
     }

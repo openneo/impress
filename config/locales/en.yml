@@ -493,6 +493,14 @@ en:
       success: Outfit "%{outfit_name}" successfully deleted.
     
     edit:
+      item:
+        controls:
+          worn_items:
+            add: Wear
+            remove: Unwear
+          closet:
+            add: Closet
+            remove: Uncloset
       pet_type:
         not_found:
           We haven't seen that combination before. Have you?

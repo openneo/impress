@@ -352,6 +352,18 @@ body.outfits-edit
         margin-bottom: .25em
         a
           +context-button
+    .unwear-item, .uncloset-item
+      display: none
+    &.worn
+      .wear-item
+        display: none
+      .unwear-item
+        display: block
+    &.closeted
+      .closet-item
+        display: none
+      .uncloset-item
+        display: block
     &:hover
       ul, .object-info
         display: block
