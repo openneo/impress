@@ -1296,6 +1296,13 @@ userbar_sessions_link.hover(function () {
   userbar_message_el.stop().fadeOut('fast');
 });
 
+var localeForm = $('#locale-form');
+localeForm.submit(function (e) {
+  var fullPath = document.location.pathname + document.location.search +
+                 document.location.hash;
+  localeForm.find('input[name=return_to]').val(fullPath);
+});
+
 $.ajaxSetup({
   error: function (xhr) {
     $.jGrowl("There was an error loading that last resource. Oops. Please try again!");
