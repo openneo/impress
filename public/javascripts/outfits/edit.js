@@ -1260,9 +1260,13 @@ View.Search = function (wardrobe) {
 
   function prepBuildHelper(type, getSet) {
     return function (objs) {
-      var select = $('<select/>',
-        {'class': 'search-helper', 'data-search-filter': type}),
-        span = $('span.search-helper[data-search-filter=' + type + ']');
+      var span = $('span.search-helper[data-search-filter-key=' + type + ']');
+      var filterName = span.attr('data-search-filter-name');
+      var select = $('<select/>', {
+        'class': 'search-helper',
+        'data-search-filter': filterName
+      });
+      var defaultValue = span.get(0).innerText;
       objs = getSet(objs);
       for(var i = 0, l = objs.length; i < l; i++) {
         $('<option/>', {text: objs[i].name}).appendTo(select);
@@ -1270,12 +1274,19 @@ View.Search = function (wardrobe) {
       span.replaceWith(function () {
         return select.clone().fadeIn('fast');
       });
+      
+      // have to set selected after it's already in the DOM; not sure why :/
+      $('select.search-helper[data-search-filter=' + filterName + '] option').each(function () {
+        if(this.innerText == defaultValue) {
+          this.selected = "selected";
+        }
+      });
     }
   }
 
   function getSpecies(x) { return x.species }
 
-  wardrobe.item_zone_sets.bind('update', prepBuildHelper('type', function (x) {
+  wardrobe.item_zone_sets.bind('update', prepBuildHelper('occupies', function (x) {
     return x;
   }));
 

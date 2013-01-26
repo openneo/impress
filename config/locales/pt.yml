@@ -202,7 +202,7 @@ pt:
           query: espécies:shoyru
           description: mostra qualquer item que um Shoyru pode vestir
         type:
-          query: ocupa:chapéu -restringe:cabelo
+          query: ocupa:chapéus -restringe:cabelo
           description: 'mostra qualquer item que ocupa a zona do "chapéu", mas não se restringe a zona do "cabelo" '
       newest_items:
         header: Novos itens
@@ -462,7 +462,7 @@ pt:
           type:
             filter:
               key: ocupa
-              default_value: fundo
+              default_value: fundosdeimagem
             query_html: "%{filter_key}:%{filter_value}"
             description_html: 'mostra como resultado qualquer item que ocupe a zona de %{default_value} '
       userbar:

@@ -109,12 +109,8 @@
       %div
         %dt= t '.search.examples.flags.query'
         %dd= t '.search.examples.flags.description'
-      %div
-        %dt= search_query_with_helper '.search.examples.species'
-        %dd= search_query_description '.search.examples.species'
-      %div
-        %dt= search_query_with_helper '.search.examples.type'
-        %dd= search_query_description '.search.examples.type'
+      %div= search_query 'species', 'species'
+      %div= search_query 'type', 'occupies'
     #preview-search-form-loading= t '.search.loading'
     #preview-search-form-error.possible-error
     #preview-search-form-no-results
