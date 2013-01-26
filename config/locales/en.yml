@@ -691,6 +691,12 @@ en:
           Thanks for showing us <strong>%{pet_name}</strong>.
           Keep up the good work!
     
+    outfit:
+      edit: edit
+      delete: delete
+      delete_confirmation:
+        Are you sure you want to delete the outfit %{outfit_name}?
+    
     show:
       default_outfit_name: Shared outfit
       edit: Edit

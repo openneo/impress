@@ -645,6 +645,12 @@ en-MEEP:
           Thanks for meeping us <strong>%{pet_name}</strong>.
           Meep up the good work!
     
+    outfit:
+      edit: eedit
+      delete: demeep
+      delete_confirmation:
+        Are you sure you want to demeep the outfit %{outfit_name}?
+    
     show:
       default_outfit_name: Meeped outfit
       edit: Meep
