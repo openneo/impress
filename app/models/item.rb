@@ -99,7 +99,7 @@ class Item < ActiveRecord::Base
   end
   
   def pb?
-    (self.description == PAINTBRUSH_SET_DESCRIPTION)
+    I18n.with_locale(:en) { self.description == PAINTBRUSH_SET_DESCRIPTION }
   end
 
   def owned?
