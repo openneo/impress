@@ -1,3 +1,6 @@
+# encoding=utf-8
+# ^ to put the regex in utf-8 mode
+
 class Item
   module Search
     class Query
@@ -89,21 +92,34 @@ class Item
       # Load the text query labels from I18n, so that when we see, say,
       # the filter "species:acara", we know it means species_support_id.
       TEXT_KEYS_BY_LABEL = {}
+      IS_KEYWORDS = {}
       OWNERSHIP_KEYWORDS = {}
       I18n.available_locales.each do |locale|
         TEXT_KEYS_BY_LABEL[locale] = {}
+        IS_KEYWORDS[locale] = Set.new
         OWNERSHIP_KEYWORDS[locale] = {}
-        FIELD_CLASSES.keys.each do |key|
-          # A locale can specify multiple labels for a key by separating by
-          # commas: "occupies,zone,type"
-          labels = I18n.translate("items.search.labels.#{key}",
-                                  :locale => locale).split(',')
-          labels.each { |label| TEXT_KEYS_BY_LABEL[locale][label] = key }
-          
-          {:owns => true, :wants => false}.each do |key, value|
-            translated_key = I18n.translate("items.search.labels.user_#{key}",
-                                            :locale => locale)
-            OWNERSHIP_KEYWORDS[locale][translated_key] = value
+        
+        I18n.fallbacks[locale].each do |fallback|
+          FIELD_CLASSES.keys.each do |key|
+            # A locale can specify multiple labels for a key by separating by
+            # commas: "occupies,zone,type"
+            labels = I18n.translate("items.search.labels.#{key}",
+                                    :locale => fallback).split(',')
+            
+            labels.each do |label|
+              plain_label = label.parameterize # 'é' => 'e'
+              TEXT_KEYS_BY_LABEL[locale][plain_label] = key
+            end
+            
+            is_keyword = I18n.translate('items.search.flag_keywords.is',
+                                        :locale => fallback)
+            IS_KEYWORDS[locale] << is_keyword.parameterize
+            
+            {:owns => true, :wants => false}.each do |key, value|
+              translated_key = I18n.translate("items.search.labels.user_#{key}",
+                                              :locale => fallback)
+              OWNERSHIP_KEYWORDS[locale][translated_key] = value
+            end
           end
         end
       end
@@ -139,28 +155,38 @@ class Item
         :user_closet_hanger_ownership => :ownership
       }
       
-      TEXT_FILTER_EXPR = /([+-]?)(?:([a-z]+):)?(?:"([^"]+)"|(\S+))/
+      TEXT_FILTER_EXPR = /([+-]?)(?:(\p{Word}+):)?(?:"([^"]+)"|(\S+))/
       def self.from_text(text, user=nil)
         filters = []
         
-        is_keyword = I18n.translate('items.search.flag_keywords.is')
         text.scan(TEXT_FILTER_EXPR) do |sign, label, quoted_value, unquoted_value|
-          label ||= 'name'
           raw_value = quoted_value || unquoted_value
           is_positive = (sign != '-')
           
-          if label == is_keyword
-            # is-filters are weird. "-is:nc" is transposed to something more
-            # like "-nc:<nil>", then it's translated into a negative "is_nc"
-            # flag. Fun fact: "nc:foobar" and "-nc:foobar" also work. A bonus,
-            # I guess. There's probably a good way to refactor this to avoid
-            # the unintended bonus syntax, but this is a darn good cheap
-            # technique for the time being.
-            label = raw_value
-            raw_value = nil
+          Rails.logger.debug(label.inspect)
+          Rails.logger.debug(TEXT_KEYS_BY_LABEL[I18n.locale].inspect)
+          Rails.logger.debug(IS_KEYWORDS[I18n.locale].inspect)
+          
+          if label
+            plain_label = label.parameterize
+            
+            if IS_KEYWORDS[I18n.locale].include?(plain_label)
+              # is-filters are weird. "-is:nc" is transposed to something more
+              # like "-nc:<nil>", then it's translated into a negative "is_nc"
+              # flag. Fun fact: "nc:foobar" and "-nc:foobar" also work. A bonus,
+              # I guess. There's probably a good way to refactor this to avoid
+              # the unintended bonus syntax, but this is a darn good cheap
+              # technique for the time being.
+              label = raw_value
+              plain_label = raw_value.parameterize
+              raw_value = nil
+            end
+            
+            key = TEXT_KEYS_BY_LABEL[I18n.locale][plain_label]
+          else
+            key = :name
           end
           
-          key = TEXT_KEYS_BY_LABEL[I18n.locale][label]
           if key.nil?
             message = I18n.translate('items.search.errors.not_found.label',
                                      :label => label)
