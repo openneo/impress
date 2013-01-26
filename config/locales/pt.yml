@@ -262,7 +262,7 @@ pt:
           label: Filtro "%{label}" não existe. Está escrito corretamente?
           species: Espécies "%{species_name}" não existem. Está escrito corretamente?
           zone: Zona "%{zone_name}" não existe. Está escrito corretamente?
-          ownership: Eu não sei o que  "usuário:%{palavra-chave}" significa. Você quis dizer "usuário:possui" ou "usuário:quer"?
+          ownership: Eu não sei o que  "usuário:%{keyword}" significa. Você quis dizer "usuário:possui" ou "usuário:quer"?
         not_logged_in: Os filtros "usuário" só estão disponíveis se você estiver logado.
       flag_keywords:
         is: é
