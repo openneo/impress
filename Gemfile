@@ -57,6 +57,8 @@ gem "globalize3"
 gem "flex", :require => "flex/rails", :git => "git@github.com:matchu/flex.git"
 gem "patron", "~> 0.4.18"
 
+gem "rest-client", "~> 1.6.7"
+
 group :development do
   gem "bullet", "~> 4.1.5"
 end
