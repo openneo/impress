@@ -54,7 +54,7 @@ gem "globalize3"
 
 # My flex branch fixes a minor pagination bug. Once it's merged into the
 # original gem, we can switch back.
-gem "flex", :require => "flex/rails", :git => "git@github.com:matchu/flex.git"
+gem "flex", :require => "flex/rails", :git => "git://github.com/matchu/flex.git"
 gem "patron", "~> 0.4.18"
 
 gem "rest-client", "~> 1.6.7"

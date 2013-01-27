@@ -36,6 +36,15 @@ GIT
       eventmachine (>= 1.0.0.beta.1)
 
 GIT
+  remote: git://github.com/matchu/flex.git
+  revision: d62f508f795ecdbb383f406865daa72368b43ba5
+  specs:
+    flex (0.4.1)
+      multi_json (~> 1.3.4)
+      progressbar (~> 0.11.0)
+      prompter (~> 0.1.5)
+
+GIT
   remote: git://github.com/matchu/neopets.git
   revision: d33aaf63d4617d9236ef0d99452b3bdc577cbc8e
   specs:
@@ -53,15 +62,6 @@ GIT
   revision: ed82db7659f624d6c3ca244e4127dad270a484c7
   specs:
     RocketAMF (1.0.0)
-
-GIT
-  remote: git@github.com:matchu/flex.git
-  revision: d62f508f795ecdbb383f406865daa72368b43ba5
-  specs:
-    flex (0.4.1)
-      multi_json (~> 1.3.4)
-      progressbar (~> 0.11.0)
-      prompter (~> 0.1.5)
 
 GEM
   remote: http://rubygems.org/
