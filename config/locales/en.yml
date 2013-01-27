@@ -330,6 +330,9 @@ en:
     
     search:
       errors:
+        user_filters_disabled:
+          We've temporarily disabled user-filters because they're especially
+          tough on the server. They'll be back soon. Thanks for understanding.
         not_found:
           label: Filter "%{label}" does not exist. Is it spelled correctly?
           species:
