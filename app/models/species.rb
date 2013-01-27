@@ -1,7 +1,7 @@
 class Species < ActiveRecord::Base
   translates :name
   
-  scope :alphabetical, lambda { includes(:translations).order(Species::Translation.arel_table[:name]) }
+  scope :alphabetical, lambda { with_translations(I18n.locale).order(Species::Translation.arel_table[:name]) }
   
   def as_json(options={})
     {:id => id, :name => human_name}

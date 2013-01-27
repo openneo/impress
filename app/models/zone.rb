@@ -6,7 +6,7 @@ class Zone < ActiveRecord::Base
   attr_writer :sometimes
   
   scope :alphabetical, lambda {
-    includes_translations.order(Zone::Translation.arel_table[:label])
+    with_translations(I18n.locale).order(Zone::Translation.arel_table[:label])
   }
   scope :includes_translations, lambda { includes(:translations) }
   scope :with_plain_label, lambda { |label|

@@ -1,7 +1,7 @@
 class Color < ActiveRecord::Base
   translates :name
   
-  scope :alphabetical, lambda { includes(:translations).order(Color::Translation.arel_table[:name]) }
+  scope :alphabetical, lambda { with_translations(I18n.locale).order(Color::Translation.arel_table[:name]) }
   scope :basic, where(:basic => true)
   scope :standard, where(:standard => true)
   scope :nonstandard, where(:standard => false)
