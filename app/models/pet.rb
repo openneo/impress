@@ -47,7 +47,7 @@ class Pet < ActiveRecord::Base
     begin
       neopets_language_code = I18n.compatible_neopets_language_code_for(I18n.locale)
       envelope = PET_VIEWER.request([name, 0]).post(
-        :timeout => 2,
+        :timeout => 4,
         :headers => {
           'Cookie' => "lang=#{neopets_language_code}"
         }
