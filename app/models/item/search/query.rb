@@ -193,9 +193,9 @@ class Item
             raise Item::Search::Error, message
           end
           
-          if key == :user_closet_hanger_ownership
-            Item::Search.error 'user_filters_disabled'
-          end
+          #if key == :user_closet_hanger_ownership
+          #  Item::Search.error 'user_filters_disabled'
+          #end
           
           if TEXT_QUERY_RESOURCE_TYPES_BY_KEY.has_key?(key)
             resource_type = TEXT_QUERY_RESOURCE_TYPES_BY_KEY[key]
