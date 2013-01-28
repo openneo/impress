@@ -46,7 +46,7 @@ GIT
 
 GIT
   remote: git://github.com/matchu/globalize3.git
-  revision: c7cfc359f9fc8c283e45b3847ec9b9aaedff1d54
+  revision: e23277864270131bbee29033f8a3abfb74ffe1f8
   specs:
     globalize3 (0.3.0)
       activemodel (>= 3.0.0)

@@ -1,4 +1,5 @@
 require 'rocketamf/remote_gateway'
+require 'ostruct'
 
 class Pet < ActiveRecord::Base
   GATEWAY_URL = 'http://www.neopets.com/amfphp/gateway.php'
@@ -21,46 +22,45 @@ class Pet < ActiveRecord::Base
     options[:locale] ||= I18n.default_locale
     
     I18n.with_locale(options[:locale]) do
-      require 'ostruct'
-      begin
-        neopets_language_code = I18n.compatible_neopets_language_code_for(options[:locale])
-        envelope = PET_VIEWER.request([name, 0]).post(
-          :timeout => 2,
-          :headers => {
-            'Cookie' => "lang=#{neopets_language_code}"
-          }
-        )
-      rescue RocketAMF::RemoteGateway::AMFError => e
-        if e.message == PET_NOT_FOUND_REMOTE_ERROR
-          raise PetNotFound, "Pet #{name.inspect} does not exist"
-        end
-        raise DownloadError, e.message
-      rescue RocketAMF::RemoteGateway::ConnectionError => e
-        raise DownloadError, e.message
-      end
-      contents = OpenStruct.new(envelope.messages[0].data.body)
-      pet_data = OpenStruct.new(contents.custom_pet)
+      viewer_data = fetch_viewer_data
+      pet_data = OpenStruct.new(viewer_data.custom_pet)
       
-      # in case this is running in a thread, explicitly grab an ActiveRecord
-      # connection, to avoid connection conflicts
-      Pet.connection_pool.with_connection do
-        self.pet_type = PetType.find_or_initialize_by_species_id_and_color_id(
-            pet_data.species_id.to_i,
-            pet_data.color_id.to_i
-          )
-        self.pet_type.body_id = pet_data.body_id
-        self.pet_type.origin_pet = self
-        biology = pet_data.biology_by_zone
-        biology[0] = nil # remove effects if present
-        @pet_state = self.pet_type.add_pet_state_from_biology! biology
-        @pet_state.label_by_pet(self, pet_data.owner)
-        @items = Item.collection_from_pet_type_and_registries(self.pet_type,
-          contents.object_info_registry, contents.object_asset_registry,
-          options[:item_scope])
-      end
+      self.pet_type = PetType.find_or_initialize_by_species_id_and_color_id(
+          pet_data.species_id.to_i,
+          pet_data.color_id.to_i
+        )
+      self.pet_type.body_id = pet_data.body_id
+      self.pet_type.origin_pet = self
+      biology = pet_data.biology_by_zone
+      biology[0] = nil # remove effects if present
+      @pet_state = self.pet_type.add_pet_state_from_biology! biology
+      @pet_state.label_by_pet(self, pet_data.owner)
+      @items = Item.collection_from_pet_type_and_registries(self.pet_type,
+        viewer_data.object_info_registry, viewer_data.object_asset_registry,
+        options[:item_scope])
     end
 
     true
+  end
+  
+  def fetch_viewer_data
+    begin
+      neopets_language_code = I18n.compatible_neopets_language_code_for(I18n.locale)
+      envelope = PET_VIEWER.request([name, 0]).post(
+        :timeout => 2,
+        :headers => {
+          'Cookie' => "lang=#{neopets_language_code}"
+        }
+      )
+    rescue RocketAMF::RemoteGateway::AMFError => e
+      if e.message == PET_NOT_FOUND_REMOTE_ERROR
+        raise PetNotFound, "Pet #{name.inspect} does not exist"
+      end
+      raise DownloadError, e.message
+    rescue RocketAMF::RemoteGateway::ConnectionError => e
+      raise DownloadError, e.message
+    end
+    OpenStruct.new(envelope.messages[0].data.body)
   end
 
   def wardrobe_query
@@ -99,16 +99,45 @@ class Pet < ActiveRecord::Base
     candidates = self.item_translation_candidates
     
     until candidates.empty?
-      last_pet_loaded = nil
-      reloaded_pets = Parallel.map(candidates.keys, :in_threads => 8) do |locale|
-        Rails.logger.info "Reloading #{name} in #{locale}"
-        reloaded_pet = Pet.load(name, :item_scope => Item.includes(:translations),
-                                      :locale => locale)
-        last_pet_loaded = reloaded_pet
+      # Organize known items by ID
+      items_by_id = {}
+      @items.each { |i| items_by_id[i.id] = i }
+      
+      # Fetch registry data in parallel
+      registries = Parallel.map(candidates.keys, :in_threads => 8) do |locale|
+        viewer_data = I18n.with_locale(locale) { fetch_viewer_data }
+        [locale, viewer_data.object_info_registry]
       end
-      reloaded_pets.each(&:save!)
+      
+      # Look up any newly applied items on this pet, just in case
+      new_item_ids = []
+      registries.each do |locale, registry|
+        registry.each do |item_id, item_info|
+          item_id = item_id.to_i
+          new_item_ids << item_id unless items_by_id.has_key?(item_id)
+        end
+      end
+      Item.includes(:translations).find(new_item_ids).each do |item|
+        items_by_id[item.id] = item
+      end
+      
+      # Apply translations, and figure out what items are currently being worn
+      current_items = []
+      registries.each do |locale, registry|
+        I18n.with_locale(locale) do
+          registry.each do |item_id, item_info|
+            item = items_by_id[item_id.to_i]
+            item.origin_registry_info = item_info
+            current_items << item
+          end
+        end
+      end
+      
+      @items = current_items
+      Item.transaction { @items.each { |i| i.save! if i.changed? } }
+      
       previous_candidates = candidates
-      candidates = last_pet_loaded.item_translation_candidates
+      candidates = item_translation_candidates
       
       if previous_candidates == candidates
         # This condition should never happen if Neopets responds with correct
