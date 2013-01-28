@@ -122,7 +122,7 @@ class Pet < ActiveRecord::Base
       end
       
       # Apply translations, and figure out what items are currently being worn
-      current_items = []
+      current_items = Set.new
       registries.each do |locale, registry|
         I18n.with_locale(locale) do
           registry.each do |item_id, item_info|
