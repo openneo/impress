@@ -104,9 +104,9 @@ class Pet < ActiveRecord::Base
         Rails.logger.info "Reloading #{name} in #{locale}"
         reloaded_pet = Pet.load(name, :item_scope => Item.includes(:translations),
                                       :locale => locale)
-        Pet.connection_pool.with_connection { reloaded_pet.save! }
         last_pet_loaded = reloaded_pet
       end
+      reloaded_pets.each(&:save!)
       previous_candidates = candidates
       candidates = last_pet_loaded.item_translation_candidates
       
