@@ -54,17 +54,17 @@ pt:
     create:
       success:
         owned:
-          in_list: Sucesso! Você tem %{count}
-          unlisted: Sucesso! Você tem %{count} do %{item_name}
+          in_list: Sucesso! Você possui %{count} %{item_name} na lista %{list_name} .
+          unlisted: Sucesso! Você possui %{count} %{item_name}
         wanted:
           in_list: Sucesso! Você procura %{count} do %{item_name} na lista %{list_name}
           unlisted: Sucesso! Você procura %{count} do %{item_name}
       invalid:
-        owned: "Nós não podemos salvar quantos %{item_name} você tem: %{errors}"
+        owned: "Nós não podemos salvar quantos %{item_name} você possui %{errors}"
         wanted: "Nós não podemos salvar quantos %{item_name} você procura: %{errors}"
     destroy:
       success:
-        owned: Sucesso! Você não tem o %{item_name}
+        owned: Sucesso! Você não possui o %{item_name}
         wanted: Sucesso! Você não procura o %{item_name}.
     index:
       title_for:
@@ -127,7 +127,7 @@ pt:
           items: Esses itens serão listados publicamente para trocas
           list: Os itens dessa lista serão publicamente listados para trocas
     update_quantities:
-      success: Salvo com sucesso quantos %{item_name} você tem e procura.
+      success: Salvo com sucesso quantos %{item_name} você possui e procura.
       invalid: "Nós não podemos salvar essas quantidades: %{errors}"
   closet_lists:
     closet_list:
@@ -157,8 +157,8 @@ pt:
         you: Itens que você possui
         another_user: Itens que %{user_name} possui
       wanted_by:
-        you: Itens que você quer
-        another_user: Itens que %{user_name} quer
+        you: Itens que você deseja
+        another_user: Itens que %{user_name} deseja
     new:
       title: Criar uma lista de itens
     unlisted_name: Não está em uma lista
@@ -219,7 +219,7 @@ pt:
         abbr: Procura
         description: Você procura esse item
     show:
-      rarity: Reridade
+      rarity: Raridade
       resources:
         jn_items: JN Itens
         shop_wizard: Mágico Pecincheiro
@@ -237,9 +237,9 @@ pt:
       trading_closet_hangers:
         header:
           owned:
-            zero: Não tem ninguém que queria trocar esse item
+            zero: Ninguém quer trocar esse item
             one: "1 usuário quer trocar esse item:"
-            other: "%{count} usuários tem, e querem trocar esse item:"
+            other: "%{count} usuários possuem, e querem trocar esse item:"
           wanted:
             zero: "Nós não conhecemos ninguém que procure esse item."
             one: "1 usuário procura esse item:"
@@ -361,6 +361,11 @@ pt:
     destroy:
       success: Roupa "%{outfit_name}" excluída com sucesso.
     edit:
+      item:
+        controls:
+          worn_items:
+            add: Aplicar
+            remove: Retirar
       pet_type:
         not_found: Nós nunca vimos essa combinação antes. Você tem? Envie o nome do seu pet se você tiver!
         form:
@@ -393,7 +398,7 @@ pt:
       sidebar:
         nav:
           closet: Armário
-          sharing: Compartilhando
+          sharing: Compartilhar
           outfits: Roupas
         notifications:
           outfits:
@@ -435,7 +440,7 @@ pt:
               medium: Médio
               small: Pequeno
           formats:
-            plain: Planejar
+            plain: Simples
             html: HTML
             bbcode: BBCode
       search:
@@ -515,6 +520,10 @@ pt:
         header: Novos Itens
       pet_query:
         notice_html: Obrigado por nos mostrar <strong>%{pet_name}</strong>. Continue com o bom trabalho!
+    outfit:
+      edit: Editar
+      delete: Excluir
+      delete_confirmation: Você tem certeza que quer excluir a roupa %{outfit_name}?
     show:
       default_outfit_name: Roupas Compartilhadas
       edit: Editar
