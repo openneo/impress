@@ -23,7 +23,7 @@ class Pet < ActiveRecord::Base
     I18n.with_locale(options[:locale]) do
       require 'ostruct'
       begin
-        neopets_language_code = I18n.neopets_language_code_for(options[:locale])
+        neopets_language_code = I18n.compatible_neopets_language_code_for(options[:locale])
         envelope = PET_VIEWER.request([name, 0]).post(
           :timeout => 2,
           :headers => {

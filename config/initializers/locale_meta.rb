@@ -52,7 +52,8 @@ module I18n
     LocaleMeta::USABLE_LOCALES_WITH_NEOPETS_LANGUAGE_CODE
   end
   
-  def self.neopets_language_code_for(locale)
-    LocaleMeta::NEOPETS_LANGUAGE_CODES_BY_LOCALE[locale]
+  def self.compatible_neopets_language_code_for(locale)
+    LocaleMeta::NEOPETS_LANGUAGE_CODES_BY_LOCALE[locale] ||
+      LocaleMeta::NEOPETS_LANGUAGE_CODES_BY_LOCALE[LocaleMeta::COMPATIBLE_LOCALES[locale]]
   end
 end

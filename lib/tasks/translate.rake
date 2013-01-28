@@ -48,7 +48,7 @@ namespace :translate do
   
   def with_given_locale
     I18n.with_locale(ENV['LOCALE']) do
-      language_code = I18n.neopets_language_code_for(I18n.locale)
+      language_code = I18n.compatible_neopets_language_code_for(I18n.locale)
       unless language_code
         raise "Locale #{I18n.locale.inspect} has no neopets language code"
       end
