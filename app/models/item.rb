@@ -23,7 +23,6 @@ class Item < ActiveRecord::Base
   cattr_reader :per_page
   @@per_page = 30
 
-  scope :alphabetize, order(arel_table[:name])
   scope :alphabetize_by_translations, lambda {
     it = Item::Translation.arel_table
     order(it[:name])
@@ -38,8 +37,7 @@ class Item < ActiveRecord::Base
   scope :sold_in_mall, where(:sold_in_mall => true)
   scope :not_sold_in_mall, where(:sold_in_mall => false)
 
-  scope :sitemap, select([arel_table[:id], arel_table[:name]]).
-                  order(arel_table[:id]).limit(49999)
+  scope :sitemap, order([:id]).limit(49999)
 
   scope :with_closet_hangers, joins(:closet_hangers)
   
@@ -433,7 +431,7 @@ class Item < ActiveRecord::Base
       all_item_ids = items.keys
       # Find which of these already exist but aren't marked as sold_in_mall so
       # we can update them as being sold
-      Item.not_sold_in_mall.where(:id => items.keys).select([:id, :name]).each do |item|
+      Item.not_sold_in_mall.where(:id => items.keys).select([:id]).each do |item|
         items.delete(item.id)
         item.sold_in_mall = true
         item.save
@@ -460,7 +458,7 @@ class Item < ActiveRecord::Base
     end
 
     def spider_mall_assets!(limit)
-      items = self.select([arel_table[:id], arel_table[:name]]).sold_in_mall.spidered_longest_ago.limit(limit).all
+      items = self.select([arel_table[:id]]).sold_in_mall.spidered_longest_ago.limit(limit).all
       puts "- #{items.size} items need asset spidering"
       AssetStrategy.build_strategies
       items.each do |item|

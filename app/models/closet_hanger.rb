@@ -13,7 +13,11 @@ class ClosetHanger < ActiveRecord::Base
 
   validate :list_belongs_to_user
 
-  scope :alphabetical_by_item_name, joins(:item).order(Item.arel_table[:name])
+  scope :alphabetical_by_item_name, lambda {
+    joins(:item => :translations).
+      where(Item::Translation.arel_table[:locale].eq(I18n.locale)).
+      order(Item.arel_table[:name])
+  }
   scope :newest, order(arel_table[:created_at].desc)
   scope :owned_before_wanted, order(arel_table[:owned].desc)
   scope :unlisted, where(:list_id => nil)
