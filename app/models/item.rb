@@ -47,7 +47,7 @@ class Item < ActiveRecord::Base
     indexed_attributes = {
       :is_nc => self.nc?,
       :is_pb => self.pb?,
-      :species_support_id => self.species_support_ids,
+      :species_support_id => self.supported_species_ids,
       :occupied_zone_id => self.occupied_zone_ids,
       :restricted_zone_id => self.restricted_zone_ids,
       :name => {}
@@ -196,6 +196,10 @@ class Item < ActiveRecord::Base
     # If there are multiple known supported species, it probably supports them
     # all. (I've never heard of only a handful of species being supported :P)
     species_ids.size > 1 ? Species.all : Species.find(species_ids)
+  end
+  
+  def supported_species_ids
+    supported_species.map(&:id)
   end
   
   def support_species?(species)
