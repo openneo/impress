@@ -18,7 +18,7 @@ class PetsController < ApplicationController
         points = true
       end
       
-      @pet.translate_items
+      #@pet.translate_items
       
       respond_to do |format|
         format.html do
