@@ -342,7 +342,8 @@ class Item < ActiveRecord::Base
     asset_registry.each do |asset_id, asset_data|
       swf_asset_ids << asset_id.to_i if asset_data
     end
-    existing_swf_assets = SwfAsset.object_assets.find_all_by_remote_id swf_asset_ids
+    existing_swf_assets = SwfAsset.object_assets.includes(:zone).
+      find_all_by_remote_id swf_asset_ids
     existing_swf_assets_by_remote_id = {}
     existing_swf_assets.each do |swf_asset|
       existing_swf_assets_by_remote_id[swf_asset.remote_id] = swf_asset
