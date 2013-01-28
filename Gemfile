@@ -50,7 +50,7 @@ gem "parallel", "~> 0.5.17"
 
 gem "http_accept_language", :git => "git://github.com/iain/http_accept_language.git"
 
-gem "globalize3"
+gem "globalize3", :git => "git://github.com/matchu/globalize3.git"
 
 # My flex branch fixes a minor pagination bug. Once it's merged into the
 # original gem, we can switch back.

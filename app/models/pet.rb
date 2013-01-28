@@ -129,7 +129,7 @@ class Pet < ActiveRecord::Base
     
     if @items
       @items.each do |item|
-        item.save!
+        item.save! if item.changed?
         item.handle_assets!
       end
     end

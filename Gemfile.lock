@@ -45,6 +45,15 @@ GIT
       prompter (~> 0.1.5)
 
 GIT
+  remote: git://github.com/matchu/globalize3.git
+  revision: c7cfc359f9fc8c283e45b3847ec9b9aaedff1d54
+  specs:
+    globalize3 (0.3.0)
+      activemodel (>= 3.0.0)
+      activerecord (>= 3.0.0)
+      paper_trail (~> 2)
+
+GIT
   remote: git://github.com/matchu/neopets.git
   revision: d33aaf63d4617d9236ef0d99452b3bdc577cbc8e
   specs:
@@ -137,10 +146,6 @@ GEM
       nokogiri (~> 1.5.0)
       ruby-hmac
     formatador (0.2.4)
-    globalize3 (0.3.0)
-      activemodel (>= 3.0.0)
-      activerecord (>= 3.0.0)
-      paper_trail (~> 2)
     haml (3.0.25)
     hoptoad_notifier (2.4.11)
       activesupport
@@ -284,7 +289,7 @@ DEPENDENCIES
   factory_girl_rails (~> 1.0)
   flex!
   fog (~> 1.8.0)
-  globalize3
+  globalize3!
   haml (~> 3.0.18)
   hoptoad_notifier
   http_accept_language!

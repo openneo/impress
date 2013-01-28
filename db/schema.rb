@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130121221226) do
+ActiveRecord::Schema.define(:version => 20130128065543) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -21,7 +21,25 @@ ActiveRecord::Schema.define(:version => 20130121221226) do
     t.string "secret",     :limit => 64,       :null => false
   end
 
+  create_table "campaign_translations", :force => true do |t|
+    t.integer  "campaign_id"
+    t.string   "locale"
+    t.string   "progress_bar_message"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "campaign_translations", ["campaign_id"], :name => "index_campaign_translations_on_campaign_id"
+  add_index "campaign_translations", ["locale"], :name => "index_campaign_translations_on_locale"
+
   create_table "campaigns", :force => true do |t|
+    t.integer  "goal_cents"
+    t.integer  "progress_cents"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "campaigns_old", :force => true do |t|
     t.integer  "goal_cents",     :null => false
     t.integer  "progress_cents", :null => false
     t.datetime "created_at"
@@ -81,6 +99,18 @@ ActiveRecord::Schema.define(:version => 20130121221226) do
   add_index "contributions", ["user_id"], :name => "index_contributions_on_user_id"
 
   create_table "donations", :force => true do |t|
+    t.integer  "amount_cents"
+    t.boolean  "processed"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "transaction_id"
+    t.string   "access_token"
+    t.integer  "campaign_id"
+    t.integer  "outfit_features_count", :default => 0, :null => false
+    t.string   "donor_name"
+  end
+
+  create_table "donations_old", :force => true do |t|
     t.integer  "amount_cents", :null => false
     t.integer  "campaign_id",  :null => false
     t.integer  "user_id"
@@ -123,11 +153,8 @@ ActiveRecord::Schema.define(:version => 20130121221226) do
   create_table "items", :force => true do |t|
     t.text     "zones_restrict",                                                  :null => false
     t.text     "thumbnail_url",            :limit => 16777215,                    :null => false
-    t.string   "name",                     :limit => 100,                         :null => false
-    t.text     "description",              :limit => 16777215,                    :null => false
     t.string   "category",                 :limit => 50
     t.string   "type",                     :limit => 50
-    t.string   "rarity",                   :limit => 25
     t.integer  "rarity_index",             :limit => 2
     t.integer  "price",                    :limit => 3,                           :null => false
     t.integer  "weight_lbs",               :limit => 2
@@ -140,7 +167,6 @@ ActiveRecord::Schema.define(:version => 20130121221226) do
   end
 
   add_index "items", ["last_spidered"], :name => "objects_last_spidered"
-  add_index "items", ["name"], :name => "name"
 
   create_table "login_cookies", :force => true do |t|
     t.integer "user_id", :null => false
@@ -152,6 +178,14 @@ ActiveRecord::Schema.define(:version => 20130121221226) do
   add_index "login_cookies", ["user_id"], :name => "login_cookies_user_id"
 
   create_table "outfit_features", :force => true do |t|
+    t.integer  "donation_id"
+    t.integer  "outfit_id"
+    t.boolean  "approved"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "outfit_features_old", :force => true do |t|
     t.integer  "outfit_id",            :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
