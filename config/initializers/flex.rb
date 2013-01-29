@@ -15,7 +15,7 @@ Flex::Configuration.configure do |config|
   #                      :anything => 'anything
 
   # The custom url of your ElasticSearch server
-  # config.base_uri = 'http://localhost:9200'
+  config.base_uri = 'http://impress.openneo.net:9200' if Rails.env.production?
 
   # Set it to true to log the debug infos (true by default in development mode)
   # config.debug = false
