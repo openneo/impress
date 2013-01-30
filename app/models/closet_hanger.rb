@@ -36,8 +36,10 @@ class ClosetHanger < ActiveRecord::Base
 
   before_validation :merge_quantities, :set_owned_by_list
   
-  flex.parent :item, 'item' => 'closet_hanger'
-  flex.sync self
+  if Flex::Configuration.hangers_enabled
+    flex.parent :item, 'item' => 'closet_hanger'
+    flex.sync self
+  end
   
   def flex_source
     {

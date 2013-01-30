@@ -193,7 +193,8 @@ class Item
             raise Item::Search::Error, message
           end
           
-          if key == :user_closet_hanger_ownership
+          if (!Flex::Configuration.hangers_enabled &&
+              key == :user_closet_hanger_ownership)
             Item::Search.error 'user_filters_disabled'
           end
           
