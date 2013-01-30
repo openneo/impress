@@ -11,6 +11,28 @@ ANCHORS:
   settings:
     number_of_shards: 5
     number_of_replicas: 1
+    
+    analysis:
+      analyzer:
+        item_name_index:
+          type: custom
+          tokenizer: item_name
+          filter:
+            - lowercase
+            - asciifolding
+        
+        item_name_search:
+          type: custom
+          tokenizer: keyword
+          filter:
+            - lowercase
+            - asciifolding
+      
+      tokenizer:
+        item_name:
+          type: ngram
+          min_gram: 3
+          max_gram: 16
 
   # add your custom mappings here
   mappings:
@@ -30,6 +52,8 @@ ANCHORS:
                 <%= locale %>:
                   type: string
                   index: analyzed
+                  index_analyzer: item_name_index
+                  search_analyzer: item_name_search
                 untouched:
                   type: string
                   index: not_analyzed
