@@ -44,7 +44,7 @@ pt:
       title: Reportar imagem quebrada
       explanation_html: Obrigado por nos ajudar a encontrar imagens quebradas! Às vezes, os conversores não fazem as coisas muito bem e, às vezes, isso pode ser corrigido apenas tentando a conversão novamente. Se a reconversão não resolver o problema, considere enviar-nos um relatório de bug em %{contact_link}. Obrigado!
       call_to_action: 'Algumas dessas imagens parecem quebradas? Nós vamos coloca-la na nossa linha de reconversão. '
-      submit: Reportar como quebrado
+      submit: Reportar imagem
       converted_at_html: Convertido %{converted_at_ago} atrás
       reported_at_html: Reportado %{reported_at_ago} atrás
   closet_hangers:
@@ -72,7 +72,7 @@ pt:
         another_user: "Itens do(a) %{user_name}"
       toggle_help: Precisa de Ajuda?
       item_search_placeholder: Encontrar Itens para adicionar
-      item_search_submit: Procurar
+      item_search_submit: Vai!
       send_neomail: Neomail %{neopets_username}
       neopets_username:
         add: Adicionar seu Nome de Usuário do Neopets
@@ -197,7 +197,7 @@ pt:
           description: mostra qualquer resultado de um item que tenha a palavra Azul e que seja do Centro NC
         pb:
           query: coleira -é:pb
-          description: mostra como resultado qualquer item que tenha a palavra "collar"(colar) e que não seja exclusivo de uma cor específica.
+          description: mostra como resultado qualquer item que tenha a palavra "coleira" e que não seja exclusivo de uma cor específica.
         species:
           query: espécies:shoyru
           description: mostra qualquer item que um Shoyru pode vestir
@@ -228,7 +228,7 @@ pt:
         auction_genie: Leilões
       closet_hangers:
         header_html: Acompanhar isso em %{user_items_link}
-        quantity_label: Quanto?
+        quantity_label: Unidades
         submit: Salvar para "Seus Itens"
       zones:
         occupied_header: Ocupações
@@ -251,7 +251,7 @@ pt:
         customize_more: Personalize mais
         requirements_not_met: Javascript e Flash são requeridos para pré-visualizar
         not_found:
-          main_html: Nós nunca vimos o %{item_name} no %{color_name} %{species_name} antes. Você viu? Se sim, por favor %{modeling_link} e nós vamos atualizar nosso banco de dados automaticamente. Obrigado!
+          main_html: Nós nunca vimos o %{item_name} no %{species_name} %{color_name} antes. Você viu? Se sim, por favor %{modeling_link} e nós vamos atualizar nosso banco de dados automaticamente. Obrigado!
           modeling_link_content: modele para nós
       contributors:
         header: Trazido a você por
@@ -366,6 +366,9 @@ pt:
           worn_items:
             add: Aplicar
             remove: Retirar
+          closet:
+            add: + Armário
+            remove: '− Armário'
       pet_type:
         not_found: Nós nunca vimos essa combinação antes. Você tem? Envie o nome do seu pet se você tiver!
         form:
@@ -456,8 +459,8 @@ pt:
             query: kreludor "copa de altador" -fundo
             description: mostra como resultado qualquer item com a palavra "kreludor" e a frase "Copa de Altador", mas não a palavra "fundo"
           flags:
-            query: coleira -é:nc é:pb
-            description: mostra como resultado qualquer item que tenha a palavra "coleira" e que não seja exclusivo de uma cor específica.
+            query: coleira -é:nc -é:pb
+            description: mostra como resultado qualquer item que tenha a palavra "coleira" e que não seja de NC, nem exclusivo de uma cor específica.
           species:
             filter:
               key: espécies
@@ -467,7 +470,7 @@ pt:
           type:
             filter:
               key: ocupa
-              default_value: fundosdeimagem
+              default_value: chapeus
             query_html: "%{filter_key}:%{filter_value}"
             description_html: 'mostra como resultado qualquer item que ocupe a zona de %{default_value} '
       userbar:
@@ -485,7 +488,7 @@ pt:
     new:
       tagline: Neopets personalizados feitos facilmente!
       preview:
-        pet_type_not_found: Nós nunca vimos um %{color_name} %{species_name}. Você viu?
+        pet_type_not_found: Nós nunca vimos um %{species_name} %{color_name} . Você viu?
         pet_not_found: Pet não encontrado.
       load_pet:
         legend: Digite o nome do seu pet
@@ -497,13 +500,13 @@ pt:
         tagline: Acompanhe e troque!
         description: Faça listas de itens que você tem e que procura, e compartilhe com o mundo.
         user_search:
-          placeholder: encontrar um usuário
+          placeholder: procurar um usuário
           submit: procurar
       infinite_closet:
         tagline: Procurando por alguma coisa?
         description: Dê uma olhada pelo nosso banco de dados de roupas!
         item_search:
-          placeholder: ache um item…
+          placeholder: procurar um item…
           submit: procurar
       modeling_hub:
         tagline: Encontrou alguma coisa?
