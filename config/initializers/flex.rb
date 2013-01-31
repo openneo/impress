@@ -3,7 +3,9 @@
 Flex::Configuration.configure do |config|
 
   # you MUST add your indexed model names here
-  config.flex_models = %w[ Item ClosetHanger ]
+  config.flex_models = %w[ Item ]
+  config.hangers_enabled = !Rails.env.production?
+  config.flex_models << 'ClosetHanger' if config.hangers_enabled
 
   # Add the your result extenders here
   config.result_extenders |= [ FlexSearchExtender ]
@@ -15,9 +17,7 @@ Flex::Configuration.configure do |config|
   #                      :anything => 'anything
 
   # The custom url of your ElasticSearch server
-  config.base_uri = 'http://impress.openneo.net:9200' if Rails.env.production?
-  
-  config.hangers_enabled = !Rails.env.production?
+  # config.base_uri = 'http://localhost:9200'
 
   # Set it to true to log the debug infos (true by default in development mode)
   # config.debug = false
