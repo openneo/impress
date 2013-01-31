@@ -59,6 +59,8 @@ gem "patron", "~> 0.4.18"
 
 gem "rest-client", "~> 1.6.7"
 
+gem "rails-i18n"
+
 group :development do
   gem "bullet", "~> 4.1.5"
 end
