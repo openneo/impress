@@ -35,6 +35,10 @@ class PetState < ActiveRecord::Base
     group("pet_states.id").
     order("(mood_id = 1) DESC, COUNT(effect_assets.remote_id) ASC, COUNT(parents_swf_assets.swf_asset_id) DESC, female ASC, SUM(parents_swf_assets.swf_asset_id) ASC")
 
+  def as_json(options={})
+    serializable_hash :only => [:id], :methods => [:gender_mood_description]
+  end
+
   def reassign_children_to!(main_pet_state)
     self.contributions.each do |contribution|
       contribution.contributed = main_pet_state
@@ -117,7 +121,9 @@ class PetState < ActiveRecord::Base
   end
   
   def gender_mood_description
-    if labeled?
+    if unconverted?
+      I18n.translate('pet_states.description.unconverted')
+    elsif labeled?
       I18n.translate('pet_states.description.main', :gender => gender_name,
                      :mood => mood_name)
     else

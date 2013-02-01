@@ -370,7 +370,7 @@ View.Hash = function (wardrobe) {
 
   singleOutfitResponse('updatePetState', function (pet_state) {
     var pet_type = wardrobe.outfits.getPetType();
-    if(pet_state.id != data.state && pet_type && (data.state || pet_state.id != pet_type.pet_state_ids[0])) {
+    if(pet_state.id != data.state && pet_type && (data.state || pet_state.id != pet_type.pet_states[0].id)) {
       changeQuery({state: pet_state.id});
     }
   });
@@ -929,37 +929,33 @@ View.Outfits = function (wardrobe) {
 View.PetStateForm = function (wardrobe) {
   var INPUT_NAME = 'pet_state_id', form_query = '#pet-state-form',
     form = $(form_query),
-    ul = form.children('ul'),
-    button_query = form_query + ' button';
-  $(button_query).live('click', function (e) {
-    e.preventDefault();
-    wardrobe.outfits.setPetStateById(+$(this).data('value'));
+    select = form.children('select');
+  
+  select.change(function (e) {
+    var id = parseInt(select.children(':selected').val(), 10);
+    wardrobe.outfits.setPetStateById(id);
   });
 
   function updatePetState(pet_state) {
     if(pet_state) {
-      ul.children('li.selected').removeClass('selected');
-      $(button_query + '[data-value=' + pet_state.id + ']').parent().addClass('selected');
+      select.val(pet_state.id);
     }
   }
 
   wardrobe.outfits.bind('petTypeLoaded', function (pet_type) {
-    var ids = pet_type.pet_state_ids, i, id, li, button, label;
-    ul.children().remove();
-    if(ids.length == 1) {
+    var pet_states = pet_type.pet_states, i, id, option;
+    select.children().remove();
+    if(pet_states.length == 1) {
       form.addClass('hidden');
     } else {
       form.removeClass('hidden');
-      for(var i = 0; i < ids.length; i++) {
+      for(var i = 0; i < pet_states.length; i++) {
         id = 'pet-state-button-' + i;
-        li = $('<li/>');
-        button = $('<button/>', {
-          id: id,
-          text: i + 1,
-          "data-value": ids[i]
+        option = $('<option/>', {
+          value: pet_states[i].id,
+          text: pet_states[i].gender_mood_description
         });
-        button.appendTo(li);
-        li.appendTo(ul);
+        option.appendTo(select);
       }
       updatePetState(wardrobe.outfits.getPetState());
     }

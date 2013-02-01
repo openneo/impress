@@ -441,7 +441,7 @@ function Wardrobe() {
 
     this.setPetStateById = function (id, petStateOnLoad) {
       if(!id && this.pet_type) {
-        id = this.pet_type.pet_state_ids[0];
+        id = this.pet_type.pet_states[0].id;
       }
       if(id) {
         this.pet_state = PetState.find(id);
@@ -670,6 +670,7 @@ function Wardrobe() {
     var pet_state = this, loaded = false;
 
     this.id = id;
+    this.gender_mood_description = '';
     this.assets = [];
 
     this.loadAssets = function (success) {
@@ -685,6 +686,10 @@ function Wardrobe() {
         });
       }
     }
+    
+    this.update = function (data) {
+      this.gender_mood_description = data.gender_mood_description;
+    }
 
     PetState.cache[id] = this;
   }
@@ -694,6 +699,12 @@ function Wardrobe() {
     if(!pet_state) {
       pet_state = new PetState(id);
     }
+    return pet_state;
+  }
+  
+  PetState.buildOrUpdate = function (data) {
+    var pet_state = PetState.find(data.id);
+    pet_state.update(data);
     return pet_state;
   }
 
@@ -713,13 +724,13 @@ function Wardrobe() {
           'for': 'wardrobe'
         }, function (data) {
           if(data) {
-            for(var key in data) {
-              if(data.hasOwnProperty(key)) {
-                pet_type[key] = data[key];
-              }
-            }
-            for(var i = 0; i < pet_type.pet_state_ids.length; i++) {
-              pet_type.pet_states.push(PetState.find(pet_type.pet_state_ids[i]));
+            pet_type.id = data.id;
+            pet_type.body_id = data.body_id;
+            
+            var pet_state;
+            for(var i = 0; i < data.pet_states.length; i++) {
+              pet_state = PetState.buildOrUpdate(data.pet_states[i]);
+              pet_type.pet_states.push(pet_state);
             }
             PetType.cache_by_color_and_species.deepSet(
               pet_type.color_id,

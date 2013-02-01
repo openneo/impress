@@ -511,7 +511,7 @@ en:
         form:
           submit: Go
       pet_state_form:
-        header: "Gender/Emotions:"
+        header: "Appearance:"
       outfit:
         permalink:
           name: Permalink
@@ -716,6 +716,7 @@ en:
         happy: Happy
         sad: Sad
         sick: Sick
+      unconverted: Unconverted
       unlabeled: Unlabeled
   
   pets:

@@ -480,7 +480,7 @@ en-MEEP:
         form:
           submit: Meep
       pet_state_form:
-        header: "Gender/Emeepshuns:"
+        header: "Meepearance:"
       outfit:
         permalink:
           name: Permameep
@@ -656,6 +656,19 @@ en-MEEP:
       edit: Meep
       clone: Meep a copy
       creation_summary_html: Meeped by %{user_link}, %{created_at_ago} ago
+  
+  pet_states:
+    description:
+      main: "%{gender} %{mood}"
+      gender:
+        female: Feepmale
+        male: Meep
+      mood:
+        happy: ":)"
+        sad: ":("
+        sick: "X("
+      unconverted: Unconveeped
+      unlabeled: Unleeped
   
   pets:
     bulk:

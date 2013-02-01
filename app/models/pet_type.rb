@@ -50,7 +50,7 @@ class PetType < ActiveRecord::Base
       {
         :id => id,
         :body_id => body_id,
-        :pet_state_ids => pet_state_ids
+        :pet_states => pet_states.emotion_order.as_json
       }
     else
       {:image_hash => image_hash}
@@ -104,10 +104,6 @@ class PetType < ActiveRecord::Base
   def add_pet_state_from_biology!(biology)
     pet_state = PetState.from_pet_type_and_biology_info(self, biology)
     pet_state
-  end
-  
-  def pet_state_ids
-    pet_states.select('pet_states.id').emotion_order.map(&:id)
   end
 
   before_save do
