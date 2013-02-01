@@ -55,9 +55,9 @@ GIT
 
 GIT
   remote: git://github.com/matchu/neopets.git
-  revision: d33aaf63d4617d9236ef0d99452b3bdc577cbc8e
+  revision: 5d13a720b616ba57fbbd54541f3e5daf02b3fedc
   specs:
-    neopets (0.1.0)
+    neopets (0.2.0)
       nokogiri (~> 1.5.2)
 
 GIT
@@ -301,7 +301,7 @@ DEPENDENCIES
   msgpack (~> 0.4.3)
   mysql2 (< 0.3)
   mysqlplus!
-  neopets!
+  neopets (~> 0.2.0)!
   newrelic_rpm
   nokogiri (~> 1.5.2)
   openneo-auth-signatory (~> 0.1.0)

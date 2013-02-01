@@ -706,6 +706,18 @@ en:
       clone: Edit a copy
       creation_summary_html: Created by %{user_link}, %{created_at_ago} ago
   
+  pet_states:
+    description:
+      main: "%{mood} %{gender}"
+      gender:
+        female: Female
+        male: Male
+      mood:
+        happy: Happy
+        sad: Sad
+        sick: Sick
+      unlabeled: Unlabeled
+  
   pets:
     bulk:
       needed_items:

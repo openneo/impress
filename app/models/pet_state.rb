@@ -103,6 +103,27 @@ class PetState < ActiveRecord::Base
   def mood
     Neopets::Pet::Mood.find(self.mood_id)
   end
+  
+  def gender_name
+    if female?
+      I18n.translate("pet_states.description.gender.female")
+    else
+      I18n.translate("pet_states.description.gender.male")
+    end
+  end
+  
+  def mood_name
+    I18n.translate("pet_states.description.mood.#{mood.name}")
+  end
+  
+  def gender_mood_description
+    if labeled?
+      I18n.translate('pet_states.description.main', :gender => gender_name,
+                     :mood => mood_name)
+    else
+      I18n.translate('pet_states.description.unlabeled')
+    end
+  end
 
   def self.from_pet_type_and_biology_info(pet_type, info)
     swf_asset_ids = []
