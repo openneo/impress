@@ -160,9 +160,9 @@ class Item < ActiveRecord::Base
       # Rather than go find the special description in all locales, let's just
       # run this logic in English.
       if description.include?(PAINTBRUSH_SET_DESCRIPTION)
-        downcased_name = name.downcase
+        name_words = name.downcase.split
         Color.nonstandard.each do |color|
-          return color if downcased_name.include?(color.name)
+          return color if name_words.include?(color.name)
         end
       end
 
