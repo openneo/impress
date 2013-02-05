@@ -7,7 +7,7 @@ en-MEEP:
   compatible_with: en
 
 pt:
-  visibility: private
+  visibility: public
   neopets_language_code: pt
 
 es:
