@@ -368,7 +368,7 @@ pt:
             remove: Retirar
           closet:
             add: + Armário
-            remove: '− Armário'
+            remove: − Armário
       pet_type:
         not_found: Nós nunca vimos essa combinação antes. Você tem? Envie o nome do seu pet se você tiver!
         form:
