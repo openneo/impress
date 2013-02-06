@@ -169,11 +169,42 @@ $(function () {
       body += '&hellip;';
     }*/
     el.find('h2').text(header).wrapInner($('<a/>', {href: url}));
-    el.find('div').html(body);
+    var contentEl = el.find('div');
+    contentEl.html(body);
     $('<a/>', {'id': 'blog-preview-comments', href: url + '#disqus_thread'}).appendTo(el);
     if(image) {
       el.find('img').attr('src', image).parent().attr('href', url);
     }
+    
+    // Localize
+    var localizedBodies = {};
+    contentEl.find('.locale').each(function () {
+      var localizedBody = $(this);
+      var locale = localizedBody.attr('class').match(/locale-(\S+)/)[1];
+      localizedBodies[locale] = localizedBody;
+    });
+    
+    var fallbacks = $('#locale option:selected').attr('data-fallbacks').split(',');
+    var bestLocale = null;
+    for(var i = 0; i < fallbacks.length; i++) {
+      if(localizedBodies.hasOwnProperty(fallbacks[i])) {
+        bestLocale = fallbacks[i];
+        break;
+      }
+    }
+    
+    if(bestLocale) {
+      // I feel bad doing all this in JS rather than CSS, but sometimes you
+      // gotta do what you gotta do if you wanna support any number of locales.
+      for(var locale in localizedBodies) {
+        localizedBodies[locale].hide();
+      }
+      
+      localizedBodies[bestLocale].show();
+      
+      contentEl.find('.no-locale').hide();
+    }
+    
     el.fadeIn('medium');
     addDisqusCount();
   });
