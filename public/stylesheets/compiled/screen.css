@@ -1760,14 +1760,14 @@ body.items-index #species-search-links img {
   width: 80px;
 }
 
-/* line 2, ../../../app/stylesheets/items/_show.sass */
+/* line 11, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-header {
   border-bottom: 1px solid #006600;
   display: block;
   margin-bottom: 1em;
   padding: 1em 0;
 }
-/* line 8, ../../../app/stylesheets/items/_show.sass */
+/* line 17, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-header div, body.items-show #item-header img {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -1779,27 +1779,27 @@ body.items-show #item-header div, body.items-show #item-header img {
 body.items-show #item-header div, body.items-show #item-header img {
   *display: inline;
 }
-/* line 11, ../../../app/stylesheets/items/_show.sass */
+/* line 20, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-header div {
   text-align: left;
 }
-/* line 14, ../../../app/stylesheets/items/_show.sass */
+/* line 23, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-header a {
   font-size: 75%;
   margin-left: 1em;
 }
-/* line 18, ../../../app/stylesheets/items/_show.sass */
+/* line 27, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-thumbnail {
   border: 1px solid #006600;
   height: 80px;
   margin-right: 0.5em;
   width: 80px;
 }
-/* line 24, ../../../app/stylesheets/items/_show.sass */
+/* line 33, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-name {
   margin-bottom: 0;
 }
-/* line 27, ../../../app/stylesheets/items/_show.sass */
+/* line 36, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview {
   overflow: hidden;
   display: inline-block;
@@ -1808,20 +1808,20 @@ body.items-show #item-preview {
 body.items-show #item-preview {
   display: block;
 }
-/* line 30, ../../../app/stylesheets/items/_show.sass */
+/* line 39, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview div {
   float: left;
 }
-/* line 33, ../../../app/stylesheets/items/_show.sass */
+/* line 42, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-species {
   width: 400px;
 }
-/* line 36, ../../../app/stylesheets/items/_show.sass */
+/* line 45, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-species a, body.items-show #item-preview-species img {
   height: 50px;
   width: 50px;
 }
-/* line 40, ../../../app/stylesheets/items/_show.sass */
+/* line 49, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-species a {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -1833,76 +1833,79 @@ body.items-show #item-preview-species a {
 body.items-show #item-preview-species a {
   *display: inline;
 }
-/* line 42, ../../../app/stylesheets/items/_show.sass */
+/* line 51, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-species a.current {
   background: #eeffee;
   outline: 1px solid #006600;
 }
-/* line 45, ../../../app/stylesheets/items/_show.sass */
-body.items-show #item-preview-species a.deactivated {
+/* line 55, ../../../app/stylesheets/items/_show.sass */
+body.items-show #item-preview-species a.deactivated img {
+  filter: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#grayscale");
+  filter: gray;
+  -webkit-filter: grayscale(100%);
   -moz-opacity: 0.5;
   -webkit-opacity: 0.5;
   -o-opacity: 0.5;
   -khtml-opacity: 0.5;
-  background: #fbe3e4;
 }
-/* line 50, ../../../app/stylesheets/items/_show.sass */
+/* line 58, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-species a.deactivated.current {
+  background: transparent;
   outline-color: #fbc2c4;
 }
-/* line 53, ../../../app/stylesheets/items/_show.sass */
+/* line 62, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-error {
   display: none;
   padding: 20px 10px 0;
   width: 380px;
 }
-/* line 58, ../../../app/stylesheets/items/_show.sass */
+/* line 67, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-swf {
   height: 300px;
   overflow: hidden;
   width: 300px;
 }
-/* line 63, ../../../app/stylesheets/items/_show.sass */
+/* line 72, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-zones {
   font-family: "Droid Serif", Georgia, "Times New Roman", Times, serif;
   font-size: 85%;
   margin-bottom: 1em;
 }
-/* line 69, ../../../app/stylesheets/items/_show.sass */
+/* line 78, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-zones p {
   display: inline;
 }
-/* line 72, ../../../app/stylesheets/items/_show.sass */
+/* line 81, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-zones p:first-child {
   margin-right: 1em;
 }
-/* line 75, ../../../app/stylesheets/items/_show.sass */
+/* line 84, ../../../app/stylesheets/items/_show.sass */
 body.items-show #trade-hangers {
   font-size: 85%;
   margin-bottom: 3em;
   text-align: left;
 }
-/* line 80, ../../../app/stylesheets/items/_show.sass */
+/* line 89, ../../../app/stylesheets/items/_show.sass */
 body.items-show #trade-hangers p {
   position: relative;
 }
-/* line 83, ../../../app/stylesheets/items/_show.sass */
+/* line 92, ../../../app/stylesheets/items/_show.sass */
 body.items-show #trade-hangers p:first-child {
   margin-bottom: 0.5em;
 }
-/* line 87, ../../../app/stylesheets/items/_show.sass */
+/* line 96, ../../../app/stylesheets/items/_show.sass */
 body.items-show #trade-hangers p.overflows .toggle {
   display: block;
 }
-/* line 92, ../../../app/stylesheets/items/_show.sass */
+/* line 101, ../../../app/stylesheets/items/_show.sass */
 body.items-show #trade-hangers p.showing-more .toggle .less {
   display: block;
 }
-/* line 95, ../../../app/stylesheets/items/_show.sass */
+/* line 104, ../../../app/stylesheets/items/_show.sass */
 body.items-show #trade-hangers p.showing-more .toggle .more {
   display: none;
 }
-/* line 98, ../../../app/stylesheets/items/_show.sass */
+/* line 107, ../../../app/stylesheets/items/_show.sass */
 body.items-show #trade-hangers .toggle {
   background: white;
   bottom: 0;
@@ -1913,15 +1916,15 @@ body.items-show #trade-hangers .toggle {
   position: absolute;
   right: 0;
 }
-/* line 108, ../../../app/stylesheets/items/_show.sass */
+/* line 117, ../../../app/stylesheets/items/_show.sass */
 body.items-show #trade-hangers .toggle:hover {
   text-decoration: underline;
 }
-/* line 111, ../../../app/stylesheets/items/_show.sass */
+/* line 120, ../../../app/stylesheets/items/_show.sass */
 body.items-show #trade-hangers .toggle .less {
   display: none;
 }
-/* line 114, ../../../app/stylesheets/items/_show.sass */
+/* line 123, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-contributors {
   border-color: #aaddaa;
   border-style: solid;
@@ -1934,17 +1937,17 @@ body.items-show #item-contributors {
   margin-bottom: 0;
   margin-top: 2em;
 }
-/* line 121, ../../../app/stylesheets/items/_show.sass */
+/* line 130, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-contributors header {
   display: inline;
   font-weight: bold;
   margin-right: 0.25em;
 }
-/* line 126, ../../../app/stylesheets/items/_show.sass */
+/* line 135, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-contributors footer {
   display: inline;
 }
-/* line 129, ../../../app/stylesheets/items/_show.sass */
+/* line 138, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-contributors ul {
   list-style-type: none;
 }
@@ -1962,15 +1965,15 @@ body.items-show #item-contributors ul li:after {
 body.items-show #item-contributors ul li:last-child:after, body.items-show #item-contributors ul li.last:after {
   content: "";
 }
-/* line 132, ../../../app/stylesheets/items/_show.sass */
+/* line 141, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-contributors ul li:last-child::after {
   content: ".";
 }
-/* line 135, ../../../app/stylesheets/items/_show.sass */
+/* line 144, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-header {
   clear: both;
 }
-/* line 138, ../../../app/stylesheets/items/_show.sass */
+/* line 147, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-header h3, body.items-show #item-preview-header a {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -1982,17 +1985,17 @@ body.items-show #item-preview-header h3, body.items-show #item-preview-header a 
 body.items-show #item-preview-header h3, body.items-show #item-preview-header a {
   *display: inline;
 }
-/* line 140, ../../../app/stylesheets/items/_show.sass */
+/* line 149, ../../../app/stylesheets/items/_show.sass */
 body.items-show #item-preview-header a {
   font-size: 85%;
   margin: -1.5em 0 0 1em;
 }
-/* line 144, ../../../app/stylesheets/items/_show.sass */
+/* line 153, ../../../app/stylesheets/items/_show.sass */
 body.items-show .nc-icon {
   height: 16px;
   width: 16px;
 }
-/* line 148, ../../../app/stylesheets/items/_show.sass */
+/* line 157, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers {
   border: 1px solid #006600;
   float: right;
@@ -2004,13 +2007,13 @@ body.items-show #closet-hangers {
   position: relative;
   z-index: 2;
 }
-/* line 161, ../../../app/stylesheets/items/_show.sass */
+/* line 170, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers h3 {
   font-size: 150%;
   font-weight: bold;
   margin-bottom: 0.25em;
 }
-/* line 166, ../../../app/stylesheets/items/_show.sass */
+/* line 175, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers #closet-hangers-ownership-groups {
   overflow: hidden;
   display: inline-block;
@@ -2020,41 +2023,41 @@ body.items-show #closet-hangers #closet-hangers-ownership-groups {
 body.items-show #closet-hangers #closet-hangers-ownership-groups {
   display: block;
 }
-/* line 170, ../../../app/stylesheets/items/_show.sass */
+/* line 179, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers #closet-hangers-ownership-groups div {
   float: left;
   margin: 0 5%;
   text-align: left;
   width: 40%;
 }
-/* line 176, ../../../app/stylesheets/items/_show.sass */
+/* line 185, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers #closet-hangers-ownership-groups div li {
   list-style: none;
   word-wrap: break-word;
 }
-/* line 180, ../../../app/stylesheets/items/_show.sass */
+/* line 189, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers #closet-hangers-ownership-groups div li label.unlisted {
   font-style: italic;
 }
-/* line 183, ../../../app/stylesheets/items/_show.sass */
+/* line 192, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers form {
   padding: 0.5em 0;
 }
-/* line 186, ../../../app/stylesheets/items/_show.sass */
+/* line 195, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers select {
   width: 9em;
 }
-/* line 189, ../../../app/stylesheets/items/_show.sass */
+/* line 198, ../../../app/stylesheets/items/_show.sass */
 body.items-show #closet-hangers input[type=number] {
   margin-right: 0.5em;
   width: 3em;
 }
-/* line 195, ../../../app/stylesheets/items/_show.sass */
+/* line 204, ../../../app/stylesheets/items/_show.sass */
 body.items-show.js #trade-hangers p {
   max-height: 3em;
   overflow: hidden;
 }
-/* line 199, ../../../app/stylesheets/items/_show.sass */
+/* line 208, ../../../app/stylesheets/items/_show.sass */
 body.items-show.js #trade-hangers p.showing-more {
   max-height: none;
 }

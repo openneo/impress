@@ -1,3 +1,12 @@
+=grayscale
+  // http://www.karlhorky.com/2012/06/cross-browser-image-grayscale-with-css.html
+  filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale")
+  filter: gray
+  
+  // Cheap hack: https://github.com/chriseppstein/compass/issues/811
+  $percent: 100%
+  -webkit-filter: unquote('grayscale(#{$percent})')
+
 body.items-show
   #item-header
     border-bottom: 1px solid $module-border-color
@@ -43,11 +52,11 @@ body.items-show
         background: $module-bg-color
         outline: 1px solid $module-border-color
       &.deactivated
-        +opacity(0.5)
-        background: $error_bg_color
-        //background: #fff;
-        //background: rgba(255, 255, 255, .5);
+        img
+          +grayscale
+          +opacity(0.5)
         &.current
+          background: transparent
           outline-color: $error_border_color
           
   #item-preview-error
