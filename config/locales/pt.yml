@@ -71,7 +71,7 @@ pt:
         you: Seus Itens
         another_user: "Itens do(a) %{user_name}"
       toggle_help: Precisa de Ajuda?
-      item_search_placeholder: Encontrar Itens para adicionar
+      item_search_placeholder: Procurar Itens para adicionar
       item_search_submit: Vai!
       send_neomail: Neomail %{neopets_username}
       neopets_username:
@@ -258,6 +258,7 @@ pt:
         footer: Obrigado!
     search:
       errors:
+        user_filters_disabled: Nós desativamos temporariamente os filtros de usuários, pois eles dão muito trabalho ao servidor. Eles estarão de volta em breve. Obrigado pela compreensão.
         not_found:
           label: Filtro "%{label}" não existe. Está escrito corretamente?
           species: Espécies "%{species_name}" não existem. Está escrito corretamente?
@@ -500,14 +501,14 @@ pt:
         tagline: Acompanhe e troque!
         description: Faça listas de itens que você tem e que procura, e compartilhe com o mundo.
         user_search:
-          placeholder: procurar um usuário
-          submit: procurar
+          placeholder: Encontrar um usuário
+          submit: Vai!
       infinite_closet:
         tagline: Procurando por alguma coisa?
         description: Dê uma olhada pelo nosso banco de dados de roupas!
         item_search:
-          placeholder: procurar um item…
-          submit: procurar
+          placeholder: Procurar um item…
+          submit: Vai!
       modeling_hub:
         tagline: Encontrou alguma coisa?
         description: Digite o nome do pet aqui e nós vamos copiar o que ele está vestindo. Muito Obrigado.
@@ -532,6 +533,18 @@ pt:
       edit: Editar
       clone: Editar uma cópia
       creation_summary_html: Criado por %{user_link}, %{created_at_ago} atrás
+  pet_states:
+    description:
+      main: "%{mood} %{gender}"
+      gender:
+        female: Fêmea
+        male: Macho
+      mood:
+        happy: Feliz
+        sad: Triste
+        sick: Doente
+      unconverted: Não Convertido
+      unlabeled: Não utilizado
   pets:
     bulk:
       needed_items:
