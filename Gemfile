@@ -3,6 +3,9 @@ source 'http://rubygems.org'
 gem 'rails', '3.0.20'
 #gem 'sqlite3-ruby', '~> 1.3.1', :require => 'sqlite3'
 
+# https://groups.google.com/d/topic/rubyonrails-security/4_YvCpLzL58/discussion
+gem 'json', '~> 1.7.7'
+
 gem 'compass', '~> 0.10.1'
 gem 'haml', '~> 3.0.18'
 gem 'rdiscount', '~> 1.6.5'

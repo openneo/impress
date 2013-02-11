@@ -155,7 +155,7 @@ GEM
     jammit (0.5.4)
       closure-compiler (>= 0.1.0)
       yui-compressor (>= 0.9.1)
-    json (1.7.6)
+    json (1.7.7)
     mail (2.2.19)
       activesupport (>= 2.3.6)
       i18n (>= 0.4.0)
@@ -296,6 +296,7 @@ DEPENDENCIES
   hoptoad_notifier
   http_accept_language!
   jammit (~> 0.5.3)
+  json (~> 1.7.7)
   memcache-client (~> 1.8.5)
   mini_magick (~> 3.4)
   msgpack (~> 0.4.3)
