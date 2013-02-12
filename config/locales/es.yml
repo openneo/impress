@@ -1,0 +1,582 @@
+es:
+  app_name: Dress to Impress
+  organization_name: OpenNeo
+  your_items: Tus objetos
+  infinite_closet: Ropero Infinito
+  modeling_hub: Pasarela de moda
+  locale_name: Español
+  activerecord:
+    attributes:
+      closet_list:
+        name: Nombre
+        description: Descripción
+      user:
+        neopets_username: Nombre de usuario en Neopets
+  layouts:
+    application:
+      title_tagline: Previsualiza Neopets personalizados, y ropa Apta Para Usar
+      userbar:
+        greeting: ¡Hey, %{user_name}!
+        contributions_summary:
+          main_html: Tienes %{contributions_link}.
+          contributions_link_content: "%{user_points} puntos"
+        items: Objetos
+        outfits: Atuendos
+        settings: Ajustes
+        logout: Desconectarse
+        login: Conectarse
+      footer:
+        blog: Blog
+        source_code: Source Code
+        terms: Términos de uso
+        contact: Contacto
+        suggestions: Sugerencias
+        email: Preguntas, comentarios, errores
+        copyright: Imágenes © 2000–%{year} Neopets, Inc. Todos los derechos reservados. Usadas con permiso.
+    items:
+      title_tagline: Base de datos de Neopets personalizados y ropa Apta Para Usar
+      search: Buscar
+  broken_image_reports:
+    create:
+      success: ¡Muchas gracias! Esta imagen será transformada pronto. Si ves la misma imagen tras la transformación, por favor notifícanos con un reporte de error.
+      already_reported: Está imagen ya está siendo transformada. Pronto se pondrá bien, no te preocupes.
+    new:
+      title: Reportar el error de una imagen
+      explanation_html: ¡Gracias por ayudarnos a encontrar errores en las imágenes! Algunas veces las transformaciones no funcionan correctamente y otras muchas el error se puede arreglar transformando la imagen de nuevo. Si vuelves a transformar la imagen y no se arregla, por favor envíanos un reporte de error a %{contact_link}. ¡Muchas gracias!
+      call_to_action: ¿Cuál de estas imágenes tiene algún tipo de error?
+      submit: Reportar como dañada
+      converted_at_html: Transformada hace %{converted_at_ago}
+      reported_at_html: Reportada hace %{reported_at_ago}
+  closet_hangers:
+    closet_hanger:
+      submit: Guardar
+      delete: Eliminar
+    create:
+      success:
+        owned:
+          in_list: ¡Hecho! Tienes %{count} %{item_name} en la lista %{list_name}.
+          unlisted: ¡Hecho! Tienes %{count} %{item_name}.
+        wanted:
+          in_list: ¡Hecho! Tú quieres %{count} %{item_name} en la lista %{list_name}.
+          unlisted: ¡Hecho! Tú quieres %{count} %{item_name}.
+      invalid:
+        owned: "No podemos guardar la cantidad de %{item_name} que tienes: %{errors}"
+        wanted: "No podemos guardar la cantidad de %{item_name} que quieres: %{errors}"
+    destroy:
+      success:
+        owned: ¡Hecho! Ya no tienes el objeto %{item_name}.
+        wanted: ¡Hecho! Ya no quieres el objeto %{item_name}.
+    index:
+      title_for:
+        you: Tus Objetos
+        another_user: "Objetos de %{user_name}"
+      toggle_help: ¿Necesitas ayuda?
+      item_search_placeholder: Encuentra objetos para añadir
+      item_search_submit: Buscar
+      send_neomail: Neomail %{neopets_username}
+      neopets_username:
+        add: Añade tu nombre de usuario en Neopets
+        edit: Editar "Neomail %{neopets_username}"
+        submit: Guardar
+        cancel: Cancelar
+      public_url_label: "URL pública:"
+      import_from:
+        closet: Importar desde el ropero
+        safety_deposit: Importar desde la Caja de Seguridad
+        neopets_user: Importar desde pets
+      export_to:
+        petpage: Exportar para petpage
+      toggle_group:
+        show: mostrar
+        hide: ocultar
+      add_list: Añadir nueva lista
+      unlisted:
+        submit: Guardar
+        header: (Sin añadir a una lista)
+        empty: No hay objetos aquí.
+      autocomplete:
+        add_item_html: Añadir <strong>%{item_name}</strong>
+        add_to_list_html: Añadir a <strong>%{list_name}</strong>
+        add_to_group_html: Añadir a <strong>%{group_name}</strong>, no listado
+        already_in_collection_html: 'Ya tienes este objeto en <strong>%{collection_name}</strong> '
+    petpage:
+      title: Exportar para petpage
+      your_items_link: Volver a Tus Objetos
+      submit: Exportar las listas marcadas a tu petpage
+      description: "Nosotros cogeremos tus listas públicas y crearemos una buena y simple plantilla HTML para tu petpage en Neopets. Por defecto tiene un estilo tipo tabla, pero no tiene porqué serlo. \nEl HTML es flexible así que, si tú prefieres editarlo ¡Tienes via libre!"
+      instructions:
+        main_html: Copia el código HTML de la caja de abajo, seguidamente pégalo en la %{edit_petpage_link}. ¡Una vez hecho podrás ir a los Neoforos a presumir de ello! ¡Pásalo bien!
+        edit_petpage_link_content: página de tu pet
+    petpage_content:
+      unlisted_header: (Sin añadir a una lista)
+      footer: He creado esta lista en Dress to Impress. ¡Tú también puedes!
+    visibility:
+      private:
+        name: Privado
+        description:
+          items: Sólo tú puedes ver estos objetos
+          list: Sólo tú puedes ver estas listas
+      public:
+        name: Público
+        description:
+          items: Cualquier persona que mira Tus Objetos puede ver estos objetos
+          list: Cualquier persona que mira Tus Objetos puede ver esta lista
+      trading:
+        name: Cambiando
+        description:
+          items: La gente podrá ver que intercambias estos objetos
+          list: La gente podrá ver que intercambias los objetos de esta lista
+    update_quantities:
+      success: Se ha guardado con éxito la cantidad de %{item_name} que tienes y quieres.
+      invalid: "No hemos podido guardar esa cantidad: %{errors}"
+  closet_lists:
+    closet_list:
+      submit: Guardar
+      edit: Editar
+      delete: Eliminar
+      delete_confirmation:
+        owned: ¿Estás seguro/a que quieres eliminar la lista "%{list_name}"? Recuerda que si eliminas la lista seguirás teniendo estos objetos.
+        wanted: ¿Estás seguro/a que quieres eliminar la lista "%{list_name}"? Recuerda que si eliminas la lista seguirás queriendo estos objetos.
+      empty: Esta lista está vacía.
+    edit:
+      title: Editando la lista "%{list_name}"
+    form:
+      your_items_link: Volver a Tus Objetos
+      name:
+        hint: Por ejemplo "mis objetos para intercambiar" o "mi lista de deseos de NC"
+      hangers_owned:
+        label: Esta es una lista para...
+      visibility:
+        label: ¿Quién puede ver esta lista?
+      description:
+        hint: ¿Por qué tienes estos objetos en tú lista? ¿Por qué los intercambias? También puedes dejarlo en blanco si lo deseas
+        markup_hint_html: Nosotros  _<em>apoyamos</em>_ a **<strong>Markdown</strong>** y algo de HTML.
+      submit: Guardar lista
+    groups:
+      owned_by:
+        you: Objetos que tienes
+        another_user: Objetos que tiene %{user_name}
+      wanted_by:
+        you: Objetos que quieres
+        another_user: Objetos que quiere %{user_name}
+    new:
+      title: Crear una lista de objetos
+    unlisted_name: No está en la lista
+  contributions:
+    contributed_description:
+      item_suffix: por primera vez
+      swf_asset_suffix: en un tipo de cuerpo nuevo
+      pet_type_suffix: por primera vez
+      pet_state_prefix: una nueva pose
+    contribution:
+      description_html: "%{user_link} nos ha enseñado %{contributed_description}"
+      created_at_html: "hace %{created_at_ago}"
+    index:
+      title: Contribuciones Recientes
+      user_summary: "%{user_name} ahora mismo tiene %{user_points} puntos"
+      no_contributions: No hay ninguna contribución aquí.
+  items:
+    index:
+      title_with_query: Buscando "%{query}" en el Ropero Infinito
+      no_results_html: No hemos podido encontrar ningún tipo de ropa Apta Para Usar llamada %{query_html}. ¡Lo sentimos!
+      modeling_request:
+        main_html: ¿Nos falta algo en la base de datos? Para añadir un objeto en nuestra base de datos sólo %{modeling_link}, y nosotros actualizaremos la base de datos al instante. ¡Gracias!
+        modeling_link_content: muéstranos a un pet que está vistiendo ese objeto
+      search_help_header: Encuentra lo que estás buscando
+      examples:
+        basic:
+          query: kreludor "copa altador" -fondo
+          description: encuentra cualquier objeto con la palabra "kreludor" y la frase "copa altador" en él, pero no la palabra "fondo"
+        user_items:
+          query: sombrero usuario:tiene
+          description:
+            main_html: encuentra %{user_items_link} con la palabra "gorro"
+            user_items_link_content: objetos que tienes
+        nc:
+          query: azul es:nc
+          description: encuentra objetos del Centro de NC que contengan la palabra "azul"
+        pb:
+          query: collar -es:pb
+          description: encuentra objetos con la palabra "collar" que sean conseguidos mediante un pincel
+        species:
+          query: especie:shoyru
+          description: encuentra cualquier objeto que un Shoyru pueda utilizar
+        type:
+          query: ocupa:sombrero -restringe:lentes
+          description: encuentra cualquier objeto que ocupe la zona "sombrero" y no restrinja la zona "lentes"
+      newest_items:
+        header: Objetos nuevos
+      species_search:
+        header: ¿No puedes decidirte? Busca por especies
+    item:
+      nc:
+        abbr: NC
+        description: Estos son objetos del Centro de NC
+      owned:
+        abbr: Lo tienes
+        description: Tienes este objeto
+      wanted:
+        abbr: Buscado
+        description: Quieres este objeto
+    show:
+      rarity: Rareza
+      resources:
+        jn_items: Objetos de JN
+        shop_wizard: Asistente de Tiendas
+        super_shop_wizard: Super Asistente de Tiendas
+        trading_post: Quiosco del trueque
+        auction_genie: Subastas
+      closet_hangers:
+        header_html: Enlistar este objeto en %{user_items_link}
+        quantity_label: ¿Cuántos?
+        submit: Guardar en Tus Objetos
+      zones:
+        occupied_header: Ocupa
+        restricted_header: Restringe
+        none: Nada
+      trading_closet_hangers:
+        header:
+          owned:
+            zero: No conocemos a nadie que tenga este objeto para intercambiar.
+            one: "1 usuario tiene este objeto para intercambiar:"
+            other: "%{count} usuarios tienen este objeto para intercambiar:"
+          wanted:
+            zero: "No conocemos a nadie que busque este objeto."
+            one: "1 usuario busca este objeto:"
+            other: "%{count} usuarios buscan este objeto:"
+        show_more: más
+        show_less: menos
+      preview:
+        header: Previsualizar
+        customize_more: Personalizar más
+        requirements_not_met: Javascript y Flash son requeridos para previsualizar.
+        not_found:
+          main_html: Nunca hemos visto un %{item_name} en un %{species_name} %{color_name}. ¿Lo has visto tú? Si es así, por favor, %{modeling_link} y nosotros actualizaremos la base de datos al instante. ¡Gracias!
+          modeling_link_content: pósalo para nosotros
+      contributors:
+        header: Aportado por
+        footer: ¡Gracias!
+    search:
+      errors:
+        user_filters_disabled: Hemos desactivado los filtros de usuario porque hacen que el servidor vaya lento. Los activaremos pronto. Gracias por tu comprensión.
+        not_found:
+          label: 'El filtro: "%{label}" no existe. ¿Lo has escrito correctamente?'
+          species: La especie "%{species_name}" no existe. ¿La has escrito correctamente?
+          zone: La zona "%{zone_name}" no existe. ¿La has escrito correctamente?
+          ownership: No sé lo que significa usuario:%{keyword}. Quizás quisiste decir usuario:tiene o usuario:quiere.
+        not_logged_in: El filtro de "usuario" está sólo disponible si estás conectado.
+      flag_keywords:
+        is: es
+      labels:
+        name: nombre
+        is_nc: nc
+        is_pb: pb
+        species_support_id: especies
+        occupied_zone_id: ocupa,zona,tipo
+        restricted_zone_id: restringe
+        user_closet_hanger_ownership: usuario
+        user_owns: tiene
+        user_wants: quiere
+  neopets_pages:
+    create:
+      success: ¡Página %{index} guardada!
+      created_and_updated_hangers:
+        text: "%{created_msg} y %{updated_msg}."
+        created_msg:
+          one: Hemos añadido 1 objeto
+          other: Hemos añadido %{count} objetos
+        updated_msg:
+          one: actualizada la cantidad para 1 más
+          other: actualizada la cantidad para %{count} más
+      created_hangers:
+        one: Hemos añadido 1 nuevo objeto para la lista de objetos que tú tienes.
+        other: Hemos añadido %{count} nuevos objetos para la lista de objetos que tú tienes.
+      updated_hangers:
+        one: Hemos actualziado la cantidad para 1 de tus objetos.
+        other: Hemos actualizado la cantidad para %{count} de tus objetos.
+      no_changes: Estos datos ya habían sido guardados en tu cuenta, así que no hemos realizado ningún cambio.
+      no_data: No hemos encontrado ningún tipo de ropa Apta Para Usar, así que no hemos realizado ningún cambio.
+      unknown_items:
+        one: "Hemos encontrado este objeto que no hemos reconocido: %{item_names}. Por favor pon el nombre de este pet en la Pasarela de Moda y nuestra base de datos se actualizará al instante. ¡Gracias!"
+        other: "Hemos encontrado %{count} objetos que no hemos reconocido: %{item_names}. Por favor pon el nombre de este pet en la Pasarela de Moda y nuestra base de datos se actualizará al instante. ¡Gracias!"
+      next_page: Ahora la página debería contener %{next_index}. Pega este código también.
+      done: Esta fue la última página de tu Neopets %{name}.
+      parse_error: Hemos tenido un error leyendo el código. ¿Es un documento HTML válido? Intenta pegar un código clicando en Ver código de fuente de la página.
+    names:
+      closet: ropero
+      safety_deposit: caja de seguridad
+    new:
+      title: Importar de %{name}, Página %{index}
+      your_items_link: Volver a Tus Objetos
+      frame_header: Página %{index} de tu %{name}
+      source_header: Pega el código de fuente abajo
+      submit: Importar objetos
+      help:
+        welcome: ¡Bienvenido %{name} importador!
+        intro: Vamos a hacer de la forma más fácil posible el poder importar los datos de tu %{name} de Neopets.com hacia tu lista de objetos en Dress to Impress. Así es cómo funciona.
+        check_frame:
+          header:
+            main_html: Mira arriba a la izquierda la ventanita que muestra la página de Neopets.com, apuntando en %{page_link}.
+            page_link_content: página %{index} de tu %{name}
+          check_login:
+            summary: Confirma que te has conectado.
+            details: Si estás conectado a Neopets, pero en el pequeño recuadro de arriba no te ves conectado, intenta activar "recibir cookies de terceros" en tu navegador. (La mayoría tienen esta opción por defecto)
+          login:
+            summary:
+              main_html: Si no te has conectado, %{login_link}.
+              login_link_content: hazlo en otra ventana
+            details:
+              main_html: Es muy mala idea el intentar conectarse en ventanas de este tipo a no ser que tú seas un programador web profesional y sepas perfectamente lo que hace esta ventana, si no lo eres, hazlo desde Neopets.com. Para estar seguro, %{login_link}.
+              login_link_content: hazlo en otra ventana, comprueba que la URL es correcta y conéctate sin miedo.
+          check_content:
+            summary: Confirma que la página es tu %{name}.
+            details: No te fies de páginas web que piden que copies el código de fuente de otra página. Comprueba lo que tiene tú página y verifica que no contenga información privada.
+        view_source:
+          header: Ver el código de fuente
+          chrome_html: <strong>En Google Chrome</strong>, botón derecho a la ventanita y clica en <strong>Ver código de fuente</strong>.
+          firefox_html: <strong>En Mozilla Firefox</strong>, botón derecho a la ventanita y clica en <strong>Ver código de fuente</strong>.
+          other: En otros navegadores pulsa botón derecho en la página y busca por algo similar a los anteriores.
+          troubleshooting:
+            main_html: Si sigues teniendo problemas intenta %{page_link}, botón derecho y escoge Ver código de fuente.
+            page_link_content: abriendo la página en una nueva ventana
+        copy_source:
+          header: Selecciona todo el código de fuente y cópialo y pégalo en el interior de la caja a la derecha.
+          shortcuts: "Algunos atajos para hacerlo: Ctrl+A para seleccionar todo el texto, Ctrl+C para copiarlo, Ctrl+V para pegarlo."
+        submit:
+          header: ¡Envíalo!
+          description: Analizaremos el código que nos has enviado y cogeremos sólo la cantidad de objetos y objetos que hay en tu %{name} y podrás añadirlo a tus listas de Dress to Impress. Te prometo que es absolutamente seguro, pero, si no te fias, busca a un amigo programador y que revise el código para estar seguro
+  neopets_users:
+    create:
+      success:
+        zero: Bien. Hemos cargado los pets de %{user_name}, pero ya tenías estos objetos guardados en tu cuenta.
+        one: ¡Hecho! Hemos cargado los pets de %{user_name} y hemos añadido 1 objeto.
+        other: ¡Hecho! Hemos cargado los pets de %{user_name} y hemos añadido %{count} objetos.
+      not_found: No hemos podido encontrar a %{user_name}. ¿Lo has escrito bien?
+    new:
+      title: Importar de pets
+      your_items_link: Volver a Tus Objetos
+      explanation: Escribe tu nombre de usuario en Neopets, y nosotros importaremos toda la ropa Apta Para Usar de tus pets. ¡Es fácil!
+      username_label: Nombre en Neopets
+      submit: Importar todos los pets
+  outfits:
+    destroy:
+      success: El atuendo %{outfit_name}" se ha eliminado correctamente.
+    edit:
+      item:
+        controls:
+          worn_items:
+            add: Vestir
+            remove: Desvestir
+          closet:
+            add: + Ropero
+            remove: − Ropero
+      pet_type:
+        not_found: No hemos visto esta combinación antes. ¿La has visto tú? ¡Envía el nombre del pet si lo has hecho!
+        form:
+          submit: Ir
+      pet_state_form:
+        header: "Apariencia:"
+      outfit:
+        permalink:
+          name: Permalink
+          description: Permalink para el atuendo actual
+        save: Guardar atuendo
+        sign_in_to_save: Identifícate para guardar
+        save_copy: Guardar como...
+        save_current_outfit:
+          main_html: Guardar "%{outfit_name}"
+          default_outfit_name: atuendo actual
+        form:
+          name_placeholder: Nombre del atuendo
+          submit: Guardar
+          cancel: Cancelar
+      preview:
+        requirements: Flash y Javascript (¡pero no Java!) están requeridos para poder previsualizar atuendos.
+        mode:
+          flash:
+            name: Flash
+          image:
+            name: Imagen
+            faq: Modo de imagen FAQ
+            report_broken: ¿Imagen dañada?
+      sidebar:
+        nav:
+          closet: Ropero
+          sharing: Compartir
+          outfits: Atuendos
+        notifications:
+          outfits:
+            not_found: Atuendo no encontrado
+            save:
+              success: Atuendo guardado con éxito
+        closet:
+          no_data:
+            summary: No hay datos todavía
+            description: No hemos visto este objeto con este tipo de pet. ¿Lo has visto tú?  ¡Posa con ese pet en la página de inicio si lo has visto!
+        outfits:
+          not_signed_in:
+            header: ¿Preparado para ser un/a diseñador/a profesional?
+            pitch_markdown: |
+              Nosotros sabemos lo difícil que es tener ordenadas tus ideas,
+              especialmente si tú tienes millones de ellas.
+              **Pero Dress to Impress te lo pone fácil.**
+
+              Una vez has diseñado un atuendo, tú puedes **vestirlo, guardarlo
+              y verlo una vez y otra** incluso actualizar tu diseño o
+              finalmente hacer tu sueño realidad.
+
+              **Miles de usuarios han guardado cientos de miles de
+              diseños. ¿Serás tú el/la próximo/a?**
+            sign_in: Identifícate para guardar este diseño
+          outfit:
+            rename: renombrar
+            delete: eliminar
+            delete_confirmation:
+              header: ¿Eliminar?
+              delete: "sí"
+              cancel: "no"
+        sharing:
+          thumbnail:
+            saving: Guardando...
+            generating: Generando...
+          links:
+            permalink: Página de atuendos
+            images:
+              large: Grande
+              medium: Mediano
+              small: Pequeño
+          formats:
+            plain: Plano
+            html: HTML
+            bbcode: BBCode
+      search:
+        header: Añadir un objeto
+        form:
+          query_placeholder: Buscar objetos...
+          submit: Buscar
+          clear: limpiar
+        loading: Cargando...
+        no_results_html: No hay resultados para "%{query}"
+        examples:
+          basic:
+            query: kreludor "copa altador" -fondo
+            description: encontrará los objetos con la palabra "kreludor" y la frase "copa altador" en ellos, pero no la palabra "fondo"
+          flags:
+            query: collar -es:nc -es:pb
+            description: encontrará los objetos con la palabra "collar" en ellos, pero no si son del Centro de NC y tampoco si son objetos de pets pintados con pincel.
+          species:
+            filter:
+              key: especies
+              default_value: Acara
+            query_html: "%{filter_key}:%{filter_value}"
+            description_html: encontrará los objetos que un %{default_value} podrá usar
+          type:
+            filter:
+              key: zona que ocupa
+              default_value: fondo
+            query_html: "%{filter_key}:%{filter_value}"
+            description_html: 'encontrará los objetos que sólo ocupan/visten la siguiente zona: %{default_value}'
+      userbar:
+        session_message:
+          signed_in: Debes de estar desconectado, hazlo y regresa a este atuendo.
+          not_signed_in: Debes de estar conectado, hazlo y regresa a este atuendo.
+    index:
+      title: Tus Atuendos
+      intro:
+        saving: Estos son los atuendos que has guardado en Dress to Impress. Cuando diseñes un atuendo que te guste, clica en Guardar Atuendo arriba en la esquina derecha y aparecerá en esta lista.
+        linking: Los links para cada atuendo son totalmente públicos así que siéntete libre de compartirlos con todo el mundo.
+      no_outfits:
+        main_html: No has guardado ningún atuendo. %{start_link}, escribe el nombre del pet o elige un color y una combinación, crea el atuendo de tus sueños y clica en "Guardar Atuendo" arriba en la esquina derecha. Será genial, te lo prometo.
+        start_link_content: Empieza en la página de inicio
+    new:
+      tagline: ¡Vestir a tus Neopets nunca fue más fácil!
+      preview:
+        pet_type_not_found: No hemos encontrado aun a un %{species_name} %{color_name}. ¿Lo has hecho tú?
+        pet_not_found: Pet no encontrado.
+      load_pet:
+        legend: Escribe el nombre de tu pet
+        submit: ¡Diseñar mi atuendo!
+      start_from_scratch:
+        legend: O empieza a partir de una plantilla
+        submit: Ir
+      your_items:
+        tagline: ¡Añade e intercambia!
+        description: Crea listas de los objetos que tú tienes y quieres y compártelas con el mundo.
+        user_search:
+          placeholder: buscar a un usuario...
+          submit: buscar
+      infinite_closet:
+        tagline: ¿Buscas algo?
+        description: ¡Encuéntralo en nuestra base de datos de ropa Apta Para Usar!
+        item_search:
+          placeholder: buscar un objeto...
+          submit: buscar
+      modeling_hub:
+        tagline: ¿Has encontrado algo?
+        description: Si un objeto no está en nuestra base de datos y conoces a alguien que lo lleve, escribe el nombre del pet en la pasarela de moda para añadir el objeto. ¡Muchas gracias!
+        load_pet:
+          placeholder: desfilar con un pet...
+          submit: enviar
+      latest_contribution:
+        header: Contribuciones
+        description_html: "%{user_link} nos ha mostrado %{contributed_description}. ¡Muchas gracias, %{user_link}!"
+      blog:
+        link: Blog de OpenNeo
+      newest_items:
+        header: Nuevos Objetos
+      pet_query:
+        notice_html: Gracias por mostrarnos a <strong>%{pet_name}</strong>. ¡Haces un trabajo excelente!
+    outfit:
+      edit: editar
+      delete: eliminar
+      delete_confirmation: ¿Estás seguro/a de que quieres eliminar el atuendo %{outfit_name}?
+    show:
+      default_outfit_name: Atuendos compartidos
+      edit: Editar
+      clone: Hacer una copia
+      creation_summary_html: Creado por %{user_link} hace %{created_at_ago}
+  pet_states:
+    description:
+      main: "%{mood} %{gender}"
+      gender:
+        female: Femenino
+        male: Masculino
+      mood:
+        happy: Feliz
+        sad: Triste
+        sick: Enfermo
+      unconverted: Unconverted
+      unlabeled: Unlabeled
+  pets:
+    bulk:
+      needed_items:
+        header: ¿Quieres contribuir en la página?
+        explanation: Escribe el nombre de tu pet abajo y te diremos qué objetos puede posar tu pet para la pasarela. ¡Muchas gracias por tu ayuda!
+        submit: Enviar
+        pet_header: Objetos que tu pet %{pet_name} puede posar
+        reload: Actualizar
+        item_owned: Tú tienes este objeto
+      bulk_pets:
+        header: Hacer que desfilen pets en masa
+        explanation: ¿Tienes muchos pets para que desfilen en nuestra pasarela de moda? Sólo escribe sus nombres en la caja de abajo o pega una lista con todos los nombres, un nombre por línea. ¡Muchas gracias por tu ayuda!
+        submit: Cargar pet
+        add: Añadir
+        clear: Limpiar
+        waiting: Esperando…
+        loading: Cargando…
+        submission_success: "%{points} puntos"
+    load:
+      not_found: No hemos podido encontrar a un pet con ese nombre. ¿Lo has escrito correctamente?
+      asset_download_error: Hemos encontrado el pet que intentas vestir, pero no hemos podido descargar las imágenes flash que lo asocian. Posiblemente Neopets está caído. ¡Por favor inténtalo de nuevo más tarde!
+      pet_download_error: No hemos podido conectar con Neopets para ver tu pet. Posiblemente el servidor de Neopets se ha caído. ¡Por favor inténtalo de nuevo más tarde!
+  users:
+    index:
+      not_found: No tenemos a ningún usuario llamado %{name}. ¿Lo has escrito correctamente?
+    top_contributors:
+      title: Top de Contribuidores
+      rank: Puesto
+      user: Usuario
+      points: Puntos
+    update:
+      success: Ajustes guardados correctamente.
+      invalid: "No hemos podido guardar los ajustes: %{errors}"
