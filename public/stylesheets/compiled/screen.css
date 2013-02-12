@@ -3699,11 +3699,11 @@ body.outfits-new #outfit-forms #pet-preview span:empty {
 /* line 43, ../../../app/stylesheets/outfits/_new.sass */
 body.outfits-new #outfit-forms fieldset {
   position: relative;
-  left: 1em;
+  left: 16px;
 }
 /* line 46, ../../../app/stylesheets/outfits/_new.sass */
 body.outfits-new #outfit-forms fieldset legend {
-  margin-left: -1em;
+  margin-left: -16px;
 }
 /* line 48, ../../../app/stylesheets/outfits/_new.sass */
 body.outfits-new #load-pet-to-wardrobe {
