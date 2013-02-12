@@ -215,10 +215,16 @@ en-MEEP:
   
   contributions:
     contributed_description:
-      item_suffix: for the first meep
-      swf_asset_suffix: on a new body meep
-      pet_type_suffix: for the first meep
-      pet_state_prefix: a new meep for
+      parents:
+        item:
+          present_html: the %{item_link}
+          blank: data for an item that has since been meeped
+        pet_type_html: the %{pet_type_name}
+      main:
+        item_html: "%{item_description} for the first meep"
+        swf_asset_html: "%{item_description} on a new body meep"
+        pet_type_html: "%{pet_type_description} for the first meep"
+        pet_state_html: "a new meep for %{pet_type_description}"
     
     contribution:
       description_html: "%{user_link} meeped us %{contributed_description}"

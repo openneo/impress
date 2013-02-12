@@ -1,43 +1,40 @@
 module ContributionHelper
-  def contributed_description(contributed, image = true)
+  def contributed_description(contributed, show_image = true)
     case contributed
     when Item
-      suffix = translate_contributed_description('item_suffix')
-      contributed_item(contributed, image, suffix)
+      contributed_item('item', contributed, show_image)
     when SwfAsset
-      suffix = translate_contributed_description('swf_asset_suffix')
-      contributed_item(contributed.item, image, suffix)
+      contributed_item('swf_asset', contributed.item, show_image)
     when PetType
-      suffix = translate_contributed_description('pet_type_suffix')
-      contributed_pet_type(contributed, image, :after => suffix)
+      contributed_pet_type('pet_type', contributed, show_image)
     when PetState
-      prefix = translate_contributed_description('pet_state_prefix')
-      contributed_pet_type(contributed.pet_type, image, :before => prefix)
+      contributed_pet_type('pet_state', contributed.pet_type, show_image)
     end
   end
   
-  def contributed_item(item, image, adverbial)
+  def contributed_item(main_key, item, show_image)
     if item
-      output do |html|
-        html << 'the'
-        html << link_to(item.name, item, :class => 'contributed-name')
-        html << adverbial
-        html << image_tag(item.thumbnail_url) if image
-      end
+      link = link_to(item.name, item, :class => 'contributed-name')
+      description = translate('contributions.contributed_description.parents.item.present_html',
+                              :item_link => link)
+      output = translate("contributions.contributed_description.main.#{main_key}_html",
+                         :item_description => description)
+      output << image_tag(item.thumbnail_url) if show_image
+      output
     else
-      "data for an item that has since been updated"
+      translate('contributions.contributed_description.parents.item.blank')
     end
   end
   
   PET_TYPE_IMAGE_FORMAT = 'http://pets.neopets.com/cp/%s/1/3.png'
-  def contributed_pet_type(pet_type, image, options)
-    options[:before] ||= 'the'
-    output do |html|
-      html << options[:before]
-      html << content_tag(:span, pet_type.human_name, :class => 'contributed-name')
-      html << options[:after] if options[:after]
-      html << image_tag(sprintf(PET_TYPE_IMAGE_FORMAT, pet_type.image_hash)) if image
-    end
+  def contributed_pet_type(main_key, pet_type, show_image)
+    span = content_tag(:span, pet_type.human_name, :class => 'contributed-name')
+    description = translate('contributions.contributed_description.parents.pet_type_html',
+                            :pet_type_name => span)
+    output = translate("contributions.contributed_description.main.#{main_key}_html",
+                       :pet_type_description => description)
+    output << image_tag(sprintf(PET_TYPE_IMAGE_FORMAT, pet_type.image_hash)) if show_image
+    output
   end
   
   private
@@ -46,7 +43,7 @@ module ContributionHelper
     raw([].tap(&block).join(' '))
   end
   
-  def translate_contributed_description(key)
-    translate "contributions.contributed_description.#{key}"
+  def translate_contributed_suffix(key)
+    translate "contributions.contributed_description.suffix.#{key}"
   end
 end

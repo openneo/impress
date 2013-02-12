@@ -67,7 +67,8 @@ class PetType < ActiveRecord::Base
       # Until then, access the hash using the English color/species names.
       
       unless BasicHashes[species.name] && BasicHashes[species.name][color.name]
-        raise "basic image hash for #{species.name}, #{color.name} not found"
+        # TODO: use rainbow pool? some external service?
+        return 'deadbeef'
       end
       
       BasicHashes[species.name][color.name]

@@ -164,10 +164,15 @@ pt:
     unlisted_name: Não está em uma lista
   contributions:
     contributed_description:
-      item_suffix: pela primeira vez
-      swf_asset_suffix: em um novo tipo de corpo
-      pet_type_suffix: pela primeira vez
-      pet_state_prefix: uma nova pose para
+      parents:
+        item:
+          present_html: o %{item_link}
+        pet_type_html: o %{pet_type_name}
+      main:
+        item_html: "%{item_description} pela primeira vez"
+        swf_asset_html: "%{item_description} em um novo tipo de corpo"
+        pet_type_html: "%{pet_type_description} pela primeira vez"
+        pet_state_html: "uma nova pose para %{pet_type_description}"
     contribution:
       description_html: "%{user_link} nos mostrou %{contributed_description}"
       created_at_html: "%{created_at_ago} atrás"
