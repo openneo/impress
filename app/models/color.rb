@@ -11,6 +11,10 @@ class Color < ActiveRecord::Base
   end
   
   def human_name
-    name.split(' ').map { |word| word.capitalize }.join(' ')
+    if name
+      name.split(' ').map { |word| word.capitalize }.join(' ')
+    else
+      I18n.translate('colors.default_human_name')
+    end
   end
 end

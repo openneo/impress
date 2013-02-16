@@ -66,17 +66,26 @@ class PetType < ActiveRecord::Base
       # Probably should move the basic hashes into the database someday.
       # Until then, access the hash using the English color/species names.
       
-      unless BasicHashes[species.name] && BasicHashes[species.name][color.name]
-        # TODO: use rainbow pool? some external service?
+      if species && color && BasicHashes[species.name] && BasicHashes[species.name][color.name]
+        BasicHashes[species.name][color.name]
+      else
         return 'deadbeef'
       end
-      
-      BasicHashes[species.name][color.name]
     end
   end
 
+  def possibly_new_color
+    self.color || Color.new(id: self.color_id)
+  end
+
+  def possibly_new_species
+    self.species || Species.new(id: self.species_id)
+  end
+
   def human_name
-    self.color.human_name + ' ' + self.species.human_name
+    I18n.translate('pet_types.human_name',
+                   color_human_name: possibly_new_color.human_name,
+                   species_human_name: possibly_new_species.human_name)
   end
 
   def needed_items

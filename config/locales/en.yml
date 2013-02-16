@@ -214,6 +214,9 @@ en:
     
     unlisted_name: Not in a list
   
+  colors:
+    default_human_name: (a new color)
+
   contributions:
     contributed_description:
       parents:
@@ -725,6 +728,12 @@ en:
       unconverted: Unconverted
       unlabeled: Unlabeled
   
+  pet_types:
+    human_name: "%{color_human_name} %{species_human_name}"
+
+  species:
+    default_human_name: (a new species)
+
   pets:
     bulk:
       needed_items:

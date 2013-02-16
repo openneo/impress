@@ -8,6 +8,10 @@ class Species < ActiveRecord::Base
   end
   
   def human_name
-    name.capitalize
+    if name
+      name.capitalize
+    else
+      I18n.translate('species.default_human_name')
+    end
   end
 end
