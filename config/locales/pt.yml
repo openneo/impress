@@ -167,6 +167,7 @@ pt:
       parents:
         item:
           present_html: o %{item_link}
+          blank: dados para um item que já foi atualizado
         pet_type_html: o %{pet_type_name}
       main:
         item_html: "%{item_description} pela primeira vez"
@@ -486,7 +487,7 @@ pt:
     index:
       title: Suas Roupas
       intro:
-        saving: Essas sãos as roupas que você salvou no Dress to Impress. Quando você cria uma roupa e goste dela, clique em Salvar Roupa no canto superior direito, então ele aparecerá nessa lista.
+        saving: Essas são as roupas que você salvou no Dress to Impress. Quando você cria uma roupa e goste dela, clique em Salvar Roupa no canto superior direito, então ele aparecerá nessa lista.
         linking: O link para cada roupa são totalmente públicos, então, sinta-se livre para compartilhar-lo com o mundo.
       no_outfits:
         main_html: Você não salvou nenhum link ainda. %{start_link}, digite o nome do pet ou escolha uma combinação de cores, crie a roupa de seus sonhos, e clique no botão "Salvar Roupa" no canto superior direito.
@@ -550,6 +551,8 @@ pt:
         sick: Doente
       unconverted: Não Convertido
       unlabeled: Não utilizado
+  pet_types:
+    human_name: "%{species_human_name} %{color_human_name}"
   pets:
     bulk:
       needed_items:
