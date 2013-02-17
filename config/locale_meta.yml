@@ -11,7 +11,7 @@ pt:
   neopets_language_code: pt
 
 es:
-  visibility: private
+  visibility: public
   neopets_language_code: es
 
 nl:
