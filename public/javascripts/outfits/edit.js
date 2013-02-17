@@ -68,6 +68,7 @@ Partial.ItemSet = function ItemSet(wardrobe, selector) {
       li = item_template.tmpl({
         id: item.id,
         name: item.name,
+        description: item.description,
         thumbnail_url: item.thumbnail_url,
         url: item.getURL(),
         nc: typeof item.rarity_index != 'undefined' &&
