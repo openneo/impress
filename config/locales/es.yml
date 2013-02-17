@@ -11,10 +11,10 @@ es:
         name: Nombre
         description: Descripción
       user:
-        neopets_username: Nombre de usuario en Neopets
+        neopets_username: Nombre en Neopets
   layouts:
     application:
-      title_tagline: Previsualiza Neopets personalizados, y ropa Apta Para Usar
+      title_tagline: Previsualiza neopets personalizados y ropa Apta Para Usar
       userbar:
         greeting: ¡Hey, %{user_name}!
         contributions_summary:
@@ -23,8 +23,8 @@ es:
         items: Objetos
         outfits: Atuendos
         settings: Ajustes
-        logout: Desconectarse
-        login: Conectarse
+        logout: Desconectar
+        login: Conectar
       footer:
         blog: Blog
         source_code: Source Code
@@ -57,8 +57,8 @@ es:
           in_list: ¡Hecho! Tienes %{count} %{item_name} en la lista %{list_name}.
           unlisted: ¡Hecho! Tienes %{count} %{item_name}.
         wanted:
-          in_list: ¡Hecho! Tú quieres %{count} %{item_name} en la lista %{list_name}.
-          unlisted: ¡Hecho! Tú quieres %{count} %{item_name}.
+          in_list: ¡Hecho! Quieres %{count} %{item_name} en la lista %{list_name}.
+          unlisted: ¡Hecho! Quieres %{count} %{item_name}.
       invalid:
         owned: "No podemos guardar la cantidad de %{item_name} que tienes: %{errors}"
         wanted: "No podemos guardar la cantidad de %{item_name} que quieres: %{errors}"
@@ -71,7 +71,7 @@ es:
         you: Tus Objetos
         another_user: "Objetos de %{user_name}"
       toggle_help: ¿Necesitas ayuda?
-      item_search_placeholder: Encuentra objetos para añadir
+      item_search_placeholder: Encuentra objetos
       item_search_submit: Buscar
       send_neomail: Neomail %{neopets_username}
       neopets_username:
@@ -103,7 +103,7 @@ es:
       title: Exportar para petpage
       your_items_link: Volver a Tus Objetos
       submit: Exportar las listas marcadas a tu petpage
-      description: "Nosotros cogeremos tus listas públicas y crearemos una buena y simple plantilla HTML para tu petpage en Neopets. Por defecto tiene un estilo tipo tabla, pero no tiene porqué serlo. \nEl HTML es flexible así que, si tú prefieres editarlo ¡Tienes via libre!"
+      description: "Nosotros cogeremos tus listas públicas y crearemos una buena y sencilla plantilla HTML para tu petpage en Neopets. Por defecto tiene un estilo tipo tabla, pero no tiene porqué serlo. \nEl HTML es flexible así que, si prefieres editarlo ¡Tienes vía libre!"
       instructions:
         main_html: Copia el código HTML de la caja de abajo, seguidamente pégalo en la %{edit_petpage_link}. ¡Una vez hecho podrás ir a los Neoforos a presumir de ello! ¡Pásalo bien!
         edit_petpage_link_content: página de tu pet
@@ -167,10 +167,11 @@ es:
       parents:
         item:
           present_html: el %{item_link}
+          blank: datos para un objeto que desde entonces se ha actualizado
         pet_type_html: el %{pet_type_name}
       main:
         item_html: "%{item_description} por primera vez"
-        swf_asset_html: "%{item_description} en un tipo de cuerpo nuevo"
+        swf_asset_html: "%{item_description} en un nuevo tipo de cuerpo"
         pet_type_html: "%{pet_type_description} por primera vez"
         pet_state_html: "una nueva pose para %{pet_type_description}"
     contribution:
@@ -179,7 +180,7 @@ es:
     index:
       title: Contribuciones Recientes
       user_summary: "%{user_name} ahora mismo tiene %{user_points} puntos"
-      no_contributions: No hay ninguna contribución aquí.
+      no_contributions: No hay ninguna contribución.
   items:
     index:
       title_with_query: Buscando "%{query}" en el Ropero Infinito
@@ -195,7 +196,7 @@ es:
         user_items:
           query: sombrero usuario:tiene
           description:
-            main_html: encuentra %{user_items_link} con la palabra "gorro"
+            main_html: encuentra los %{user_items_link} con la palabra "sombrero"
             user_items_link_content: objetos que tienes
         nc:
           query: azul es:nc
@@ -305,7 +306,7 @@ es:
         one: "Hemos encontrado este objeto que no hemos reconocido: %{item_names}. Por favor pon el nombre de este pet en la Pasarela de Moda y nuestra base de datos se actualizará al instante. ¡Gracias!"
         other: "Hemos encontrado %{count} objetos que no hemos reconocido: %{item_names}. Por favor pon el nombre de este pet en la Pasarela de Moda y nuestra base de datos se actualizará al instante. ¡Gracias!"
       next_page: Ahora la página debería contener %{next_index}. Pega este código también.
-      done: Esta fue la última página de tu Neopets %{name}.
+      done: Esta fue la última página de tu Neopet %{name}.
       parse_error: Hemos tenido un error leyendo el código. ¿Es un documento HTML válido? Intenta pegar un código clicando en Ver código de fuente de la página.
     names:
       closet: ropero
@@ -317,21 +318,21 @@ es:
       source_header: Pega el código de fuente abajo
       submit: Importar objetos
       help:
-        welcome: ¡Bienvenido %{name} importador!
-        intro: Vamos a hacer de la forma más fácil posible el poder importar los datos de tu %{name} de Neopets.com hacia tu lista de objetos en Dress to Impress. Así es cómo funciona.
+        welcome: ¡Bienvenido al importador de tu %{name} !
+        intro: 'Vamos a hacer de la forma más fácil posible el poder importar los datos de tu %{name} en Neopets.com hacia tu lista de objetos en Dress to Impress. Así es cómo funciona:'
         check_frame:
           header:
-            main_html: Mira arriba a la izquierda la ventanita que muestra la página de Neopets.com, apuntando en %{page_link}.
+            main_html: Mira arriba a la izquierda la ventanita que muestra la página de Neopets.com, verás que está en la %{page_link}.
             page_link_content: página %{index} de tu %{name}
           check_login:
             summary: Confirma que te has conectado.
-            details: Si estás conectado a Neopets, pero en el pequeño recuadro de arriba no te ves conectado, intenta activar "recibir cookies de terceros" en tu navegador. (La mayoría tienen esta opción por defecto)
+            details: Si estás conectado a Neopets, pero en el pequeño recuadro de arriba no te ves conectado, intenta activar "recibir cookies de terceros" en tu navegador. (La mayoría de navegadores tienen esta opción activada por defecto)
           login:
             summary:
               main_html: Si no te has conectado, %{login_link}.
               login_link_content: hazlo en otra ventana
             details:
-              main_html: Es muy mala idea el intentar conectarse en ventanas de este tipo a no ser que tú seas un programador web profesional y sepas perfectamente lo que hace esta ventana, si no lo eres, hazlo desde Neopets.com. Para estar seguro, %{login_link}.
+              main_html: Es muy mala idea el intentar conectarse en ventanas de este tipo a no ser que seas programador web profesional y sepas perfectamente lo que hace la ventana, si no lo eres, hazlo desde Neopets.com. Para estar seguro, %{login_link}.
               login_link_content: hazlo en otra ventana, comprueba que la URL es correcta y conéctate sin miedo.
           check_content:
             summary: Confirma que la página es tu %{name}.
@@ -342,18 +343,18 @@ es:
           firefox_html: <strong>En Mozilla Firefox</strong>, botón derecho a la ventanita y clica en <strong>Ver código de fuente</strong>.
           other: En otros navegadores pulsa botón derecho en la página y busca por algo similar a los anteriores.
           troubleshooting:
-            main_html: Si sigues teniendo problemas intenta %{page_link}, botón derecho y escoge Ver código de fuente.
+            main_html: Si sigues teniendo problemas intenta %{page_link}, luego pulsas botón derecho y clica en Ver código de fuente.
             page_link_content: abriendo la página en una nueva ventana
         copy_source:
           header: Selecciona todo el código de fuente y cópialo y pégalo en el interior de la caja a la derecha.
           shortcuts: "Algunos atajos para hacerlo: Ctrl+A para seleccionar todo el texto, Ctrl+C para copiarlo, Ctrl+V para pegarlo."
         submit:
           header: ¡Envíalo!
-          description: Analizaremos el código que nos has enviado y cogeremos sólo la cantidad de objetos y objetos que hay en tu %{name} y podrás añadirlo a tus listas de Dress to Impress. Te prometo que es absolutamente seguro, pero, si no te fias, busca a un amigo programador y que revise el código para estar seguro
+          description: El código será analizado y obtendrá sólo la información de la cantidad de objetos y qué objetos hay en tu %{name}. Estos objetos los podrás añadir a tus listas de Dress to Impress. Este proceso es totalmente seguro pero si no te fías contacta con algún programador para que revise el código y estar seguro.
   neopets_users:
     create:
       success:
-        zero: Bien. Hemos cargado los pets de %{user_name}, pero ya tenías estos objetos guardados en tu cuenta.
+        zero: ¡Hemos cargado los pets de %{user_name}, pero ya tenías estos objetos guardados en tu cuenta!
         one: ¡Hecho! Hemos cargado los pets de %{user_name} y hemos añadido 1 objeto.
         other: ¡Hecho! Hemos cargado los pets de %{user_name} y hemos añadido %{count} objetos.
       not_found: No hemos podido encontrar a %{user_name}. ¿Lo has escrito bien?
@@ -447,11 +448,11 @@ es:
           links:
             permalink: Página de atuendos
             images:
-              large: Grande
-              medium: Mediano
-              small: Pequeño
+              large: Tamaño Grande
+              medium: Tamaño Mediano
+              small: Tamaño Pequeño
           formats:
-            plain: Plano
+            plain: Sólo URL
             html: HTML
             bbcode: BBCode
       search:
@@ -465,22 +466,22 @@ es:
         examples:
           basic:
             query: kreludor "copa altador" -fondo
-            description: encontrará los objetos con la palabra "kreludor" y la frase "copa altador" en ellos, pero no la palabra "fondo"
+            description: encontrarás los objetos con la palabra "kreludor" y la frase "copa altador" en ellos, pero no la palabra "fondo"
           flags:
             query: collar -es:nc -es:pb
-            description: encontrará los objetos con la palabra "collar" en ellos, pero no si son del Centro de NC y tampoco si son objetos de pets pintados con pincel.
+            description: encontrarás los objetos con la palabra "collar" en ellos, pero no si son del Centro de NC y tampoco si son objetos de pets pintados con pincel.
           species:
             filter:
               key: especies
               default_value: Acara
             query_html: "%{filter_key}:%{filter_value}"
-            description_html: encontrará los objetos que un %{default_value} podrá usar
+            description_html: encontrarás los objetos que un %{default_value} podrá usar
           type:
             filter:
-              key: zona que ocupa
+              key: ocupa
               default_value: fondo
             query_html: "%{filter_key}:%{filter_value}"
-            description_html: 'encontrará los objetos que sólo ocupan/visten la siguiente zona: %{default_value}'
+            description_html: 'encontrarás los objetos que ocupen la zona: %{default_value}'
       userbar:
         session_message:
           signed_in: Debes de estar desconectado, hazlo y regresa a este atuendo.
@@ -506,7 +507,7 @@ es:
         submit: Ir
       your_items:
         tagline: ¡Añade e intercambia!
-        description: Crea listas de los objetos que tú tienes y quieres y compártelas con el mundo.
+        description: Crea listas de los objetos que tú tienes y quieres. ¡Compártelas con el mundo!
         user_search:
           placeholder: buscar a un usuario...
           submit: buscar
@@ -518,7 +519,7 @@ es:
           submit: buscar
       modeling_hub:
         tagline: ¿Has encontrado algo?
-        description: Si un objeto no está en nuestra base de datos y conoces a alguien que lo lleve, escribe el nombre del pet en la pasarela de moda para añadir el objeto. ¡Muchas gracias!
+        description: Si no encuentras un objeto y sabes de un pet que lo lleve ¡Escribe el nombre del pet aquí para añadirlo!
         load_pet:
           placeholder: desfilar con un pet...
           submit: enviar
@@ -552,18 +553,22 @@ es:
         sick: Enfermo
       unconverted: Unconverted
       unlabeled: Unlabeled
+  pet_types:
+    human_name: "%{species_human_name} %{color_human_name}"
   pets:
     bulk:
       needed_items:
         header: ¿Quieres contribuir en la página?
-        explanation: Escribe el nombre de tu pet abajo y te diremos qué objetos puede posar tu pet para la pasarela. ¡Muchas gracias por tu ayuda!
+        explanation: ¡Escribe el nombre de tu pet aquí abajo y te diremos qué objetos nos hace falta junto a esa especie de pet para actualizar la base de datos! ¡Gracias por tu ayuda!
         submit: Enviar
         pet_header: Objetos que tu pet %{pet_name} puede posar
         reload: Actualizar
         item_owned: Tú tienes este objeto
       bulk_pets:
-        header: Hacer que desfilen pets en masa
-        explanation: ¿Tienes muchos pets para que desfilen en nuestra pasarela de moda? Sólo escribe sus nombres en la caja de abajo o pega una lista con todos los nombres, un nombre por línea. ¡Muchas gracias por tu ayuda!
+        header: Hacer que desfilen varios pets a la vez
+        explanation: '¿Tienes muchos pets para que desfilen?
+
+          Escribe o pega una lista de pets, recuerda añadir un nombre por línea :P ¡Muchas gracias por tu ayuda!'
         submit: Cargar pet
         add: Añadir
         clear: Limpiar
@@ -578,7 +583,7 @@ es:
     index:
       not_found: No tenemos a ningún usuario llamado %{name}. ¿Lo has escrito correctamente?
     top_contributors:
-      title: Top de Contribuidores
+      title: Top Contribuidores
       rank: Puesto
       user: Usuario
       points: Puntos
