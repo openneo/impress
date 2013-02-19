@@ -162,11 +162,13 @@ es:
     new:
       title: Crear una lista de objetos
     unlisted_name: No está en la lista
+  colors:
+    default_human_name: (un color nuevo)
   contributions:
     contributed_description:
       parents:
         item:
-          present_html: el %{item_link}
+          present_html: un %{item_link}
           blank: datos para un objeto que desde entonces se ha actualizado
         pet_type_html: el %{pet_type_name}
       main:
@@ -519,7 +521,7 @@ es:
           submit: buscar
       modeling_hub:
         tagline: ¿Has encontrado algo?
-        description: Si no encuentras un objeto y sabes de un pet que lo lleve ¡Escribe el nombre del pet aquí para añadirlo!
+        description: Si no encuentras un objeto y sabes de un pet que lo lleve ¡Escribe su nombre aquí!
         load_pet:
           placeholder: desfilar con un pet...
           submit: enviar
@@ -555,6 +557,8 @@ es:
       unlabeled: Unlabeled
   pet_types:
     human_name: "%{species_human_name} %{color_human_name}"
+  species:
+    default_human_name: (una especie nueva)
   pets:
     bulk:
       needed_items:
