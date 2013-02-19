@@ -162,6 +162,8 @@ pt:
     new:
       title: Criar uma lista de itens
     unlisted_name: Não está em uma lista
+  colors:
+    default_human_name: (uma nova cor)
   contributions:
     contributed_description:
       parents:
@@ -553,6 +555,8 @@ pt:
       unlabeled: Não utilizado
   pet_types:
     human_name: "%{species_human_name} %{color_human_name}"
+  species:
+    default_human_name: (uma nova espécie)
   pets:
     bulk:
       needed_items:
