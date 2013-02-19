@@ -77,7 +77,7 @@
 - [true, false].each do |owned|
   - lists = lists_by_owned[owned]
   - if lists || unlisted_hangers_by_owned[owned]
-    %h2.dti-item-group-header= closet_lists_group_name '#OWNER', true
+    %h2.dti-item-group-header= closet_lists_group_name '#OWNER', owned
     %ul.dti-item-group
       - if lists
         - lists.each do |list|
