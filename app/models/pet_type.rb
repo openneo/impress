@@ -96,11 +96,7 @@ class PetType < ActiveRecord::Base
     psa = ParentSwfAssetRelationship.arel_table
     sa = SwfAsset.arel_table
 
-    # Close, but no cigar: if we just check for the presence of *one* other
-    # body-specific asset, it'll also include single-species items for other
-    # species. We should check for more than one... but I'm not sure how to
-    # do that in Arel...
-    Item.where('(' + ParentSwfAssetRelationship.select('count(*)').joins(:swf_asset).
+    Item.where('(' + ParentSwfAssetRelationship.select('count(DISTINCT body_id)').joins(:swf_asset).
                where(
                  psa[:parent_id].eq(i[:id]).and(
                  psa[:parent_type].eq('Item').and(
