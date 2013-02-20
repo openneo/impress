@@ -89,26 +89,28 @@ class PetType < ActiveRecord::Base
   end
 
   def needed_items
-    items = Item.arel_table
-    species_matchers = [
-      "#{species_id},%",
-      "%,#{species_id},%",
-      "%,#{species_id}"
-    ]
-    species_condition = nil
-    species_matchers.each do |matcher|
-      condition = items[:species_support_ids].matches(matcher)
-      if species_condition
-        species_condition = species_condition.or(condition)
-      else
-        species_condition = condition
-      end
-    end
-    unneeded_item_ids = Item.select(items[:id]).
-      joins(:parent_swf_asset_relationships => :swf_asset).
-      where(SwfAsset.arel_table[:body_id].in([0, self.body_id])).map(&:id)
-    Item.where(items[:id].not_in(unneeded_item_ids)).
-      where(species_condition)
+    # If I need this item on a pet type, that means that we've already seen it
+    # and it's body-specific. So, there's a body-specific asset for the item,
+    # but no asset that fits this pet type.
+    i = Item.arel_table
+    psa = ParentSwfAssetRelationship.arel_table
+    sa = SwfAsset.arel_table
+
+    # Close, but no cigar: if we just check for the presence of *one* other
+    # body-specific asset, it'll also include single-species items for other
+    # species. We should check for more than one... but I'm not sure how to
+    # do that in Arel...
+    Item.where('(' + ParentSwfAssetRelationship.select('count(*)').joins(:swf_asset).
+               where(
+                 psa[:parent_id].eq(i[:id]).and(
+                 psa[:parent_type].eq('Item').and(
+                 sa[:body_id].not_eq(self.body_id)))
+               ).to_sql + ') > 1').
+         where(ParentSwfAssetRelationship.joins(:swf_asset).where(
+                 psa[:parent_id].eq(i[:id]).and(
+                 psa[:parent_type].eq('Item').and(
+                 sa[:body_id].in([self.body_id, 0])))
+               ).exists.not)
   end
 
   def add_pet_state_from_biology!(biology)
