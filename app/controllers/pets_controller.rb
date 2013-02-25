@@ -56,6 +56,7 @@ class PetsController < ApplicationController
   
   def pet_download_error(e)
     Rails.logger.warn e.message
+    Rails.logger.warn e.backtrace.join("\n")
     pet_load_error :long_message => t('pets.load.pet_download_error'),
       :status => :gateway_timeout
   end

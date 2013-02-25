@@ -15,10 +15,10 @@ gem 'devise', '~> 1.1.5'
 # unstable version of RocketAMF interprets info registry as a hash instead of an array
 gem 'RocketAMF', :git => 'git://github.com/rubyamf/rocketamf.git'
 
-gem 'msgpack', '~> 0.4.3'
+gem 'msgpack', '~> 0.5.3'
 gem 'openneo-auth-signatory', '~> 0.1.0'
 
-gem 'jammit', '~> 0.5.3'
+gem 'jammit', '~> 0.6.5'
 
 gem 'hoptoad_notifier'
 

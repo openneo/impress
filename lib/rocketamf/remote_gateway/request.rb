@@ -14,7 +14,7 @@ module RocketAMF
         uri = @action.service.gateway.uri
         data = envelope.serialize
 
-        req = Net::HTTP::Post.new(uri.path)
+        req = Net::HTTP::Post.new(uri.request_uri)
         req.body = data
         headers = options[:headers] || {}
         headers.each do |key, value|
@@ -46,7 +46,7 @@ module RocketAMF
         begin
           result = RocketAMF::Envelope.new.populate_from_stream(response_body)
         rescue Exception => e
-          raise ConnectionError, e.message
+          raise ConnectionError, e.message, e.backtrace
         end
         
         first_message_data = result.messages[0].data

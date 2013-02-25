@@ -58,7 +58,7 @@ class Pet < ActiveRecord::Base
       end
       raise DownloadError, e.message
     rescue RocketAMF::RemoteGateway::ConnectionError => e
-      raise DownloadError, e.message
+      raise DownloadError, e.message, e.backtrace
     end
     OpenStruct.new(envelope.messages[0].data.body)
   end

@@ -42,6 +42,8 @@ module OpenneoImpressItems
     config.filter_parameters << :password
 
     Mime::Type.register "image/gif", :gif
+
+    ActionController::Base.config.relative_url_root = ''
   end
 end
 
