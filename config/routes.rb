@@ -1,4 +1,4 @@
-OpenneoImpressItems::Application.routes.draw do |map|
+OpenneoImpressItems::Application.routes.draw do
   get "petpages/new"
 
   get "closet_lists/new"

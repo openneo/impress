@@ -1,7 +1,8 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.20'
+gem 'rails', '= 3.1.11'
 #gem 'sqlite3-ruby', '~> 1.3.1', :require => 'sqlite3'
+gem 'mysql2', '>= 0.3.11'
 
 # https://groups.google.com/d/topic/rubyonrails-security/4_YvCpLzL58/discussion
 gem 'json', '~> 1.7.7'
@@ -86,7 +87,6 @@ group :development_async do
 end
 
 group :production do
-  gem 'mysql2', '< 0.3'
   gem 'memcache-client', '~> 1.8.5', :require => 'memcache'
 end
 
@@ -94,4 +94,3 @@ group :test do
   gem 'factory_girl_rails', '~> 1.0'
   gem 'rspec-rails', '~> 2.0.0.beta.22'
 end
-

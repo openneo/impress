@@ -201,6 +201,7 @@ class SwfAsset < ActiveRecord::Base
   end
 
   def body_specific?
+    Rails.logger.debug("my zone id is: #{zone_id}")
     self.zone.type_id < 3 || (@item && @item.body_specific?)
   end
 
@@ -209,6 +210,7 @@ class SwfAsset < ActiveRecord::Base
   end
 
   def origin_biology_data=(data)
+    Rails.logger.debug("my biology data is: #{data.inspect}")
     self.type = 'biology'
     self.zone_id = data[:zone_id].to_i
     self.url = data[:asset_url]
@@ -216,6 +218,7 @@ class SwfAsset < ActiveRecord::Base
   end
 
   def origin_object_data=(data)
+    Rails.logger.debug("my object data is: #{data.inspect}")
     self.type = 'object'
     self.zone_id = data[:zone_id].to_i
     self.url = data[:asset_url]
