@@ -16,7 +16,7 @@ class ClosetHanger < ActiveRecord::Base
   scope :alphabetical_by_item_name, lambda {
     joins(:item => :translations).
       where(Item::Translation.arel_table[:locale].eq(I18n.locale)).
-      order(Item.arel_table[:name])
+      order(Item::Translation.arel_table[:name])
   }
   scope :newest, order(arel_table[:created_at].desc)
   scope :owned_before_wanted, order(arel_table[:owned].desc)
