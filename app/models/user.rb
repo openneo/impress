@@ -17,27 +17,33 @@ class User < ActiveRecord::Base
   attr_accessible :neopets_username, :owned_closet_hangers_visibility,
     :wanted_closet_hangers_visibility
 
+  def admin?
+    name == 'matchu' # you know that's right.
+  end
+
   def contribute!(pet)
     new_contributions = []
-    new_points = 0
     pet.contributables.each do |contributable|
       if contributable.new_record?
-        contribution = Contribution.new(:contributed => contributable,
-          :user => self)
+        contribution = Contribution.new
+        contribution.contributed = contributable
+        contribution.user = self
         new_contributions << contribution
-        new_points += contribution.point_value
       end
     end
-    self.points += new_points
+    new_points = 0 # temp assignment for scoping
     Pet.transaction do
       pet.save!
       new_contributions.each do |contribution|
+        Rails.logger.debug("Saving contribution of #{contribution.contributed.inspect}: #{contribution.contributed_type.inspect}, #{contribution.contributed_id.inspect}")
         begin
           contribution.save!
         rescue ActiveRecord::RecordNotSaved => e
           raise ActiveRecord::RecordNotSaved, "#{e.message}, #{contribution.inspect}, #{contribution.valid?.inspect}, #{contribution.errors.inspect}"
         end
       end
+      new_points = new_contributions.map(&:point_value).inject(0, &:+)
+      self.points += new_points
       begin
         save!
       rescue ActiveRecord::RecordNotSaved => e

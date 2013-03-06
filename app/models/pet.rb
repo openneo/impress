@@ -23,20 +23,20 @@ class Pet < ActiveRecord::Base
     
     I18n.with_locale(options[:locale]) do
       viewer_data = fetch_viewer_data
-      pet_data = OpenStruct.new(viewer_data.custom_pet)
+      pet_data = viewer_data[:custom_pet]
       
       self.pet_type = PetType.find_or_initialize_by_species_id_and_color_id(
-          pet_data.species_id.to_i,
-          pet_data.color_id.to_i
-        )
-      self.pet_type.body_id = pet_data.body_id
+        pet_data[:species_id].to_i,
+        pet_data[:color_id].to_i
+      )
+      self.pet_type.body_id = pet_data[:body_id]
       self.pet_type.origin_pet = self
-      biology = pet_data.biology_by_zone
+      biology = pet_data[:biology_by_zone]
       biology[0] = nil # remove effects if present
       @pet_state = self.pet_type.add_pet_state_from_biology! biology
-      @pet_state.label_by_pet(self, pet_data.owner)
+      @pet_state.label_by_pet(self, pet_data[:owner])
       @items = Item.collection_from_pet_type_and_registries(self.pet_type,
-        viewer_data.object_info_registry, viewer_data.object_asset_registry,
+        viewer_data[:object_info_registry], viewer_data[:object_asset_registry],
         options[:item_scope])
     end
 
@@ -60,7 +60,7 @@ class Pet < ActiveRecord::Base
     rescue RocketAMF::RemoteGateway::ConnectionError => e
       raise DownloadError, e.message, e.backtrace
     end
-    OpenStruct.new(envelope.messages[0].data.body)
+    HashWithIndifferentAccess.new(envelope.messages[0].data.body)
   end
 
   def wardrobe_query
@@ -106,7 +106,7 @@ class Pet < ActiveRecord::Base
       # Fetch registry data in parallel
       registries = Parallel.map(candidates.keys, :in_threads => 8) do |locale|
         viewer_data = I18n.with_locale(locale) { fetch_viewer_data }
-        [locale, viewer_data.object_info_registry]
+        [locale, viewer_data[:object_info_registry]]
       end
       
       # Look up any newly applied items on this pet, just in case

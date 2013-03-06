@@ -1,16 +1,16 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.20'
+gem 'rails', '= 3.2.12'
 #gem 'sqlite3-ruby', '~> 1.3.1', :require => 'sqlite3'
+gem 'mysql2', '>= 0.3.11'
 
 # https://groups.google.com/d/topic/rubyonrails-security/4_YvCpLzL58/discussion
 gem 'json', '~> 1.7.7'
 
-gem 'compass', '~> 0.10.1'
-gem 'haml', '~> 3.0.18'
+gem 'haml', '~> 4.0.0'
 gem 'rdiscount', '~> 1.6.5'
 gem 'will_paginate', '~> 3.0.pre2'
-gem 'devise', '~> 1.1.5'
+gem 'devise', '~> 2.2.3'
 
 # unstable version of RocketAMF interprets info registry as a hash instead of an array
 gem 'RocketAMF', :git => 'git://github.com/rubyamf/rocketamf.git'
@@ -20,7 +20,7 @@ gem 'openneo-auth-signatory', '~> 0.1.0'
 
 gem 'jammit', '~> 0.6.5'
 
-gem 'hoptoad_notifier'
+gem 'airbrake', '~> 3.1.8'
 
 gem 'addressable', :require => ['addressable/template', 'addressable/uri']
 
@@ -64,8 +64,17 @@ gem "rest-client", "~> 1.6.7"
 
 gem "rails-i18n"
 
+# Needed for the new asset pipeline
+group :assets do
+  
+end
+
+gem 'sass-rails',    "~> 3.2.6"
+gem 'compass-rails', "~> 1.0.3"
+gem 'uglifier',      ">= 1.0.3"
+
 group :development do
-  gem "bullet", "~> 4.1.5"
+  #gem "bullet", "~> 4.1.5"
 end
 
 group :development_async do
@@ -86,7 +95,6 @@ group :development_async do
 end
 
 group :production do
-  gem 'mysql2', '< 0.3'
   gem 'memcache-client', '~> 1.8.5', :require => 'memcache'
 end
 
@@ -94,4 +102,3 @@ group :test do
   gem 'factory_girl_rails', '~> 1.0'
   gem 'rspec-rails', '~> 2.0.0.beta.22'
 end
-

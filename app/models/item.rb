@@ -9,7 +9,7 @@ class Item < ActiveRecord::Base
   translates :name, :description, :rarity
 
   has_many :closet_hangers
-  has_one :contribution, :as => :contributed
+  has_one :contribution, :as => :contributed, :inverse_of => :contributed
   has_many :parent_swf_asset_relationships, :as => :parent
   has_many :swf_assets, :through => :parent_swf_asset_relationships
 

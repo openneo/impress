@@ -5,8 +5,6 @@ class Contribution < ActiveRecord::Base
     'PetType' => 15,
     'PetState' => 10
   }
-  
-  attr_accessor :contributed
 
   belongs_to :contributed, :polymorphic => true
   belongs_to :user
@@ -17,7 +15,9 @@ class Contribution < ActiveRecord::Base
   @@per_page = 30
   
   def point_value
-    POINT_VALUES[contributed_type]
+    POINT_VALUES[contributed_type] ||
+      raise("unexpected contributed type #{contributed_type.inspect} for " +
+            "contributed #{contributed.inspect}")
   end
   
   CONTRIBUTED_RELATIONSHIPS = {
