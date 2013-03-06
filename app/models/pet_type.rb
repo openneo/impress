@@ -5,7 +5,7 @@ class PetType < ActiveRecord::Base
 
   belongs_to :species
   belongs_to :color
-  has_one :contribution, :as => :contributed
+  has_one :contribution, :as => :contributed, :inverse_of => :contributed
   has_many :pet_states
   has_many :pets
 

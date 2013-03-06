@@ -1,7 +1,8 @@
 class PetState < ActiveRecord::Base
   SwfAssetType = 'biology'
   
-  has_many :contributions, :as => :contributed # in case of duplicates being merged
+  has_many :contributions, :as => :contributed,
+    :inverse_of => :contributed # in case of duplicates being merged
   has_many :outfits
   has_many :parent_swf_asset_relationships, :as => :parent,
     :autosave => false

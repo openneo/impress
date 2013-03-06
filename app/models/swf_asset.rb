@@ -143,7 +143,7 @@ class SwfAsset < ActiveRecord::Base
 
   attr_accessor :item
 
-  has_one :contribution, :as => :contributed
+  has_one :contribution, :as => :contributed, :inverse_of => :contributed
   has_many :parent_swf_asset_relationships
 
   delegate :depth, :to => :zone
