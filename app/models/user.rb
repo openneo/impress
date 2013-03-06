@@ -17,6 +17,10 @@ class User < ActiveRecord::Base
   attr_accessible :neopets_username, :owned_closet_hangers_visibility,
     :wanted_closet_hangers_visibility
 
+  def admin?
+    name == 'matchu' # you know that's right.
+  end
+
   def contribute!(pet)
     new_contributions = []
     pet.contributables.each do |contributable|

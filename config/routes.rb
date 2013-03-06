@@ -1,3 +1,5 @@
+require 'resque/server'
+
 OpenneoImpressItems::Application.routes.draw do
   get "petpages/new"
 
@@ -87,5 +89,8 @@ OpenneoImpressItems::Application.routes.draw do
 
   match '/sitemap.xml' => 'sitemap#index', :as => :sitemap, :format => :xml
   match '/robots.txt' => 'sitemap#robots', :as => :robots, :format => :text
-end
 
+  authenticated :user, lambda { |u| u.admin? } do
+    mount Resque::Server, :at => '/resque'
+  end
+end

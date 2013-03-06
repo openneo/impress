@@ -74,7 +74,7 @@ gem 'compass-rails', "~> 1.0.3"
 gem 'uglifier',      ">= 1.0.3"
 
 group :development do
-  gem "bullet", "~> 4.1.5"
+  #gem "bullet", "~> 4.1.5"
 end
 
 group :development_async do
