@@ -44,6 +44,10 @@ module OpenneoImpressItems
     Mime::Type.register "image/gif", :gif
 
     ActionController::Base.config.relative_url_root = ''
+
+    config.assets.enabled = true
+    config.assets.version = '1.0'
+    config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
   end
 end
 

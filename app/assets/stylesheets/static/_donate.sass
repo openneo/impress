@@ -1,0 +1,119 @@
+@import "compass/css3/text-shadow"
+
+@import "partials/campaign-progress"
+
+body.static-donate
+  +campaign-progress
+
+  #title
+    margin-bottom: 0
+
+  h2
+    font-style: italic
+    font-weight: normal
+
+  #title, h2
+    clear: left
+    float: left
+
+  h2
+    margin-bottom: .25em
+
+  $image-mode-preview-image-width: 300px
+  $image-mode-preview-image-border-width: 1px
+  $image-mode-preview-h-padding: 20px
+  $image-mode-preview-border-width: 1px
+  $image-mode-preview-right-margin: 20px
+  $image-mode-preview-width: $image-mode-preview-image-width + 2 * ($image-mode-preview-image-border-width + $image-mode-preview-h-padding + $image-mode-preview-border-width)
+  $image-mode-preview-outer-width: $image-mode-preview-width + $image-mode-preview-right-margin
+
+  #image-mode-data
+    clear: both
+    display: block
+    float: left
+    margin-right: $image-mode-preview-right-margin
+    width: $image-mode-preview-width
+
+  #image-mode-preview
+    border: $image-mode-preview-border-width solid $module-border-color
+    display: block
+    margin: 0 0 2em 0
+    padding:
+      top: $image-mode-preview-h-padding
+      right: $image-mode-preview-h-padding
+      bottom: $image-mode-preview-h-padding / 1.5
+      left: $image-mode-preview-h-padding
+
+    img
+      border: $image-mode-preview-border-width solid $module-border-color
+      height: $image-mode-preview-image-width
+      margin-bottom: .5em
+      width: $image-mode-preview-image-width
+
+    figcaption
+      display: block
+      font-family: Calligraffitti
+      font-size: 250%
+      text-align: center
+
+  #campaign-donors
+    display: none
+    margin-right: $image-mode-preview-right-margin
+    width: $image-mode-preview-width
+
+    ol
+      font-size: 85%
+      padding-left: 2em
+
+      span
+        color: $soft-text-color
+        float: right
+
+    &.has-donors
+      display: block
+
+  $image-mode-description-width: $container-width - $image-mode-preview-outer-width
+
+  $image-mode-beta-h-padding: 15px
+  $image-mode-beta-border-width: 1px
+  $image-mode-beta-inner-width: $image-mode-description-width - 2 * ($image-mode-beta-h-padding + $image-mode-beta-border-width)
+
+  #image-mode-beta
+    +module
+    border-width: $image-mode-beta-border-width
+    display: block
+    float: left
+    margin-bottom: 1em
+    padding: ($image-mode-beta-h-padding / 1.5) $image-mode-beta-h-padding
+    text-align: center
+    width: $image-mode-beta-inner-width
+
+    header
+      display: block
+      font-weight: bold
+
+    p
+      font-family: $main-font
+      font-size: 75%
+      margin: 0
+
+    form
+      margin: .75em 0
+
+      label
+        font-size: 85%
+        font-weight: bold
+
+        &:after
+          content: ":"
+
+      input
+        width: 5em
+
+      button
+        +loud-awesome-button-color
+
+  #image-mode-description, #image-mode-comments
+    float: right
+    width: $image-mode-description-width
+

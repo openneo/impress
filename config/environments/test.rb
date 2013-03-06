@@ -28,6 +28,13 @@ OpenneoImpressItems::Application.configure do
   # config.active_record.schema_format = :sql
   
   config.active_support.deprecation = :stderr
+
+  # Raise exception on mass assignment protection for Active Record models
+  config.active_record.mass_assignment_sanitizer = :strict
+
+  # Configure static asset server for tests with Cache-Control for performance
+  config.serve_static_assets = true
+  config.static_cache_control = "public, max-age=3600"
 end
 
 RemoteImpressHost = 'impress.openneo.net'
