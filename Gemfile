@@ -18,8 +18,6 @@ gem 'RocketAMF', :git => 'git://github.com/rubyamf/rocketamf.git'
 gem 'msgpack', '~> 0.5.3'
 gem 'openneo-auth-signatory', '~> 0.1.0'
 
-gem 'jammit', '~> 0.6.5'
-
 gem 'airbrake', '~> 3.1.8'
 
 gem 'addressable', :require => ['addressable/template', 'addressable/uri']

@@ -102,5 +102,4 @@
 
 - content_for :javascripts do
   = include_javascript_libraries :jquery, :jquery_tmpl
-  = include_javascripts :new_outfit_package
-
+  = javascript_include_tag 'jquery.timeago', 'pet_query', 'outfits/new'

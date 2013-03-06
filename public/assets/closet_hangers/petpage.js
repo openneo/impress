@@ -1,0 +1,1 @@
+(function(){function e(){var e=$(this);e.closest("li").toggleClass("checked",e.is(":checked"))}$("#petpage-closet-lists input").click(e).each(e)})();

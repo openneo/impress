@@ -1,0 +1,1 @@
+$("form.button_to input[type=submit]").click(function(e){confirm(this.getAttribute("data-confirm"))||e.preventDefault()});

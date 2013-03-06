@@ -79,4 +79,4 @@
 
 - content_for :javascripts do
   = include_javascript_libraries :jquery, :jquery_tmpl
-  = include_javascripts :bulk_pets_package
+  = javascript_include_tag 'ajax_auth', 'pets/bulk'

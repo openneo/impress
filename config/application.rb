@@ -48,6 +48,7 @@ module OpenneoImpressItems
     config.assets.enabled = true
     config.assets.version = '1.0'
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
+    config.assets.precompile << '*.js'
     config.assets.initialize_on_precompile = false
   end
 end
