@@ -92,10 +92,9 @@
           :collection_name => '${collection_name}'
 
 - content_for :stylesheets do
-  = stylesheet_link_tag 'south-street/jquery-ui'
+  = stylesheet_link_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/south-street/jquery-ui.css'
 
 - content_for :javascripts do
   = include_javascript_libraries :jquery, :jquery_tmpl
   = javascript_include_tag 'ajax_auth', 'jquery.ui', 'jquery.jgrowl',
     'placeholder', 'closet_hangers/index'
-
