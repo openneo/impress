@@ -162,6 +162,7 @@ class SwfAsset < ActiveRecord::Base
 
   scope :fitting_color, lambda { |color|
     body_ids = PetType.select(:body_id).where(:color_id => color.id).map(&:body_id)
+    body_ids << 0
     where(arel_table[:body_id].in(body_ids))
   }
 
