@@ -61,8 +61,17 @@ class Item
           # it to each name entry instead. I also feel bad doing this
           # afterwards, since it's kinda the field's job to return proper flex
           # params, but that's a refactor for another day.
+          valid_name_lengths = (3..16)
           [:_names, :_negative_names].each do |key|
             if final_flex_params[key]
+              # This part is also kinda weak. Oh well. Maybe we need
+              # NGramField that inherits from SetField while also applying
+              # these restrictions? Remove all name filters that are too
+              # small or too large.
+              final_flex_params[key].select! do |name_query|
+                valid_name_lengths.include?(name_query[:name].length)
+              end
+              
               final_flex_params[key].each do |name_query|
                 name_query[:fields] = locale_entries
               end
