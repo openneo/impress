@@ -1,1 +1,0 @@
-(function(){var e=$("meta[name=csrf-param]").attr("content"),t=$("meta[name=csrf-token]").attr("content"),n={};n[e]=t,$.ajaxSetup({data:n})})();

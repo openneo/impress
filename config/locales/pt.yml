@@ -297,8 +297,8 @@ pt:
           one: Quantidade atualizada para mais uma
           other: Quantidade atualizada para %{count} mais
       created_hangers:
-        one: Nós adicionamos 1 novo item à lista de itens que você possui.
-        other: Nós adicionamos %{count} novos itens à lista de itens que você possui.
+        one: Nós adicionamos 1 novo item à lista.
+        other: Nós adicionamos %{count} novos itens à lista.
       updated_hangers:
         one: Nós atualizamos a quantidade para 1 de seus itens.
         other: Nós atualizamos a quantidade para %{count} de seus itens.

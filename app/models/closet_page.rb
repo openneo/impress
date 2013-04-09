@@ -15,7 +15,7 @@ class ClosetPage
   }
 
   attr_accessor :index
-  attr_reader :hangers, :source, :total_pages, :unknown_item_names, :user
+  attr_reader :hangers, :list_id, :source, :total_pages, :unknown_item_names, :user
 
   def initialize(user)
     raise ArgumentError, "Expected #{user.inspect} to be a User", caller unless user.is_a?(User)
@@ -48,6 +48,20 @@ class ClosetPage
       end
     end
     counts
+  end
+  
+  def list_id=(list_id)
+    @list_id = list_id
+    if list_id == 'true'
+      @closet_list = nil
+      @hangers_owned = true
+    elsif list_id == 'false'
+      @closet_list = nil
+      @hangers_owned = false
+    elsif list_id.present?
+      @closet_list = @user.closet_lists.find(list_id)
+      @hangers_owned = @closet_list.hangers_owned?
+    end
   end
 
   def source=(source)
@@ -151,10 +165,15 @@ class ClosetPage
 
     # Create closet hanger from each item, and remove them from the reference
     # lists
+    hangers_scope = @closet_list ? @closet_list.hangers :
+                                   @user.closet_hangers.unlisted.where(owned: @hangers_owned)
     @hangers = items.map do |item|
       data = items_data[:id].delete(item.id) ||
         items_data[:thumbnail_url].delete(item.thumbnail_url)
-      hanger = @user.closet_hangers.find_or_initialize_by_item_id(item.id)
+      hanger = hangers_scope.find_or_initialize_by_item_id(item.id)
+      hanger.user = @user
+      hanger.owned = @hangers_owned
+      hanger.list = @closet_list
       hanger.quantity = data[:quantity]
       hanger
     end

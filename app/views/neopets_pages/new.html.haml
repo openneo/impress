@@ -13,6 +13,7 @@
   #closet-page-source
     = f.label :source, t('.source_header')
     = f.text_area :source
+  = f.select :list_id, neopets_page_list_options(current_user)
   = f.submit t('.submit')
 
 - localized_cache :action_suffix => 'explanation' do

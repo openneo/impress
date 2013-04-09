@@ -297,8 +297,8 @@ es:
           one: actualizada la cantidad para 1 más
           other: actualizada la cantidad para %{count} más
       created_hangers:
-        one: Hemos añadido 1 nuevo objeto para la lista de objetos que tú tienes.
-        other: Hemos añadido %{count} nuevos objetos para la lista de objetos que tú tienes.
+        one: Hemos añadido 1 nuevo objeto para la lista.
+        other: Hemos añadido %{count} nuevos objetos para la lista.
       updated_hangers:
         one: Hemos actualziado la cantidad para 1 de tus objetos.
         other: Hemos actualizado la cantidad para %{count} de tus objetos.

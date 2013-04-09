@@ -8,6 +8,7 @@ class NeopetsPagesController < ApplicationController
   def create
     if @page_params && @page_params[:source]
       @neopets_page.index = @page_params[:index]
+      @neopets_page.list_id = @page_params[:list_id]
       @neopets_page.source = @page_params[:source]
 
       messages = [t('neopets_pages.create.success',
@@ -48,7 +49,8 @@ class NeopetsPagesController < ApplicationController
       else
         messages << t('neopets_pages.create.next_page',
                       :next_index => (@neopets_page.index + 1))
-        destination = {:action => :new, :index => (@neopets_page.index + 1)}
+        destination = {action: :new, index: @neopets_page.index + 1,
+                       list_id: @neopets_page.list_id}
       end
 
       flash[:success] = messages.join(' ')
@@ -73,6 +75,7 @@ class NeopetsPagesController < ApplicationController
 
     @neopets_page = type_class.new(current_user)
     @neopets_page.index = params[:index]
+    @neopets_page.list_id = params[:list_id]
     @page_params = params[type_class.model_name.singular]
   end
 

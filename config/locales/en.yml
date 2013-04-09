@@ -377,8 +377,8 @@ en:
           one: updated the quantity for 1 more
           other: updated the quantity for %{count} more
       created_hangers:
-        one: We added 1 new item to the list of items you own.
-        other: We added %{count} new items to the list of items you own.
+        one: We added 1 new item to the list.
+        other: We added %{count} new items to the list.
       updated_hangers:
         one: We updated the quantity for 1 of your items.
         other: We updated the quantity for %{count} of your items.
