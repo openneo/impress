@@ -49,7 +49,7 @@ module RocketAMF
           raise ConnectionError, e.message, e.backtrace
         end
         
-        first_message_data = result.messages[0].data
+        first_message_data = HashWithIndifferentAccess.new(result.messages[0].data)
         if first_message_data.respond_to?(:[]) && first_message_data[:code] == ERROR_CODE
           raise AMFError.new(first_message_data)
         end
