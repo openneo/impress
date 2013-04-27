@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130128065543) do
+ActiveRecord::Schema.define(:version => 20130427151327) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -145,10 +145,12 @@ ActiveRecord::Schema.define(:version => 20130128065543) do
     t.string   "rarity"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "temporary",   :default => false, :null => false
   end
 
   add_index "item_translations", ["item_id"], :name => "index_item_translations_on_item_id"
   add_index "item_translations", ["locale"], :name => "index_item_translations_on_locale"
+  add_index "item_translations", ["name"], :name => "index_item_translations_on_name"
 
   create_table "items", :force => true do |t|
     t.text     "zones_restrict",                                                  :null => false
@@ -180,7 +182,7 @@ ActiveRecord::Schema.define(:version => 20130128065543) do
   create_table "outfit_features", :force => true do |t|
     t.integer  "donation_id"
     t.integer  "outfit_id"
-    t.boolean  "approved"
+    t.boolean  "approved",    :default => false, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -232,6 +234,7 @@ ActiveRecord::Schema.define(:version => 20130128065543) do
     t.integer "mood_id"
     t.boolean "unconverted"
     t.boolean "labeled",                    :default => false, :null => false
+    t.boolean "glitched",                   :default => false, :null => false
   end
 
   add_index "pet_states", ["pet_type_id"], :name => "pet_states_pet_type_id"

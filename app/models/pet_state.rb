@@ -14,9 +14,10 @@ class PetState < ActiveRecord::Base
   
   attr_writer :parent_swf_asset_relationships_to_update
 
-  # Our ideal order is: happy, sad, sick, UC, any+effects, with male before
-  # female within those groups for consistency. We therefore order as follows,
-  # listed in order of priority:
+  # Our ideal order is: happy, sad, sick, UC, any+effects, glitched, with male
+  # before female within those groups for consistency. We therefore order as
+  # follows, listed in order of priority:
+  # * Send glitched states to the back
   # * Bring known happy states to the front (we don't want to sort by mood_id
   #   DESC first because then labeled sad will appear before unlabeled happy)
   # * Send states with effect assets to the back
@@ -34,7 +35,7 @@ class PetState < ActiveRecord::Base
   scope :emotion_order, joins(:parent_swf_asset_relationships).
     joins("LEFT JOIN swf_assets effect_assets ON effect_assets.id = parents_swf_assets.swf_asset_id AND effect_assets.zone_id = #{bio_effect_zone_id}").
     group("pet_states.id").
-    order("(mood_id = 1) DESC, COUNT(effect_assets.remote_id) ASC, COUNT(parents_swf_assets.swf_asset_id) DESC, female ASC, SUM(parents_swf_assets.swf_asset_id) ASC")
+    order("glitched ASC, (mood_id = 1) DESC, COUNT(effect_assets.remote_id) ASC, COUNT(parents_swf_assets.swf_asset_id) DESC, female ASC, SUM(parents_swf_assets.swf_asset_id) ASC")
 
   def as_json(options={})
     serializable_hash :only => [:id], :methods => [:gender_mood_description]
@@ -122,7 +123,9 @@ class PetState < ActiveRecord::Base
   end
   
   def gender_mood_description
-    if unconverted?
+    if glitched?
+      I18n.translate('pet_states.description.glitched')
+    elsif unconverted?
       I18n.translate('pet_states.description.unconverted')
     elsif labeled?
       I18n.translate('pet_states.description.main', :gender => gender_name,
