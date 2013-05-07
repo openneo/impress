@@ -1,6 +1,6 @@
 %style{:type => 'text/css'}
   :plain
-    .dti-item-group, .dti-item-list, .dti-unlisted-items {
+    .dti-item-group, .dti-item-list, .dti-unlisted-items, .dti-items {
       margin: 0;
       padding: 0;
     }
@@ -11,7 +11,7 @@
       line-height: 1.5;
       margin: 0 auto;
       text-align: center;
-      width: 560px;
+      width: 640px; /* Want more items per row? Edit this! */
     }
 
     .dti-item-group-header {
@@ -32,21 +32,13 @@
       font-size: 150%;
     }
 
-    .dti-items {
-      border-spacing: 10px;
-      display: table;
-    }
-
-    .dti-item-row {
-      display: table-row;
-    }
-
     .dti-item {
-      display: table-cell;
+      display: inline-block;
       margin: 0 10px;
       padding: 8px;
       text-align: right;
       width: 84px;
+      vertical-align: top;
     }
 
     .dti-item-thumbnail {
@@ -87,14 +79,13 @@
               - if list.description?
                 .dti-item-list-desc
                   = closet_list_description_format list
-              %div.dti-items
-                = render_batched_petpage_hangers(list.hangers.sort { |a,b| a.item.name <=> b.item.name })
+              %ul.dti-items
+                = render partial: 'petpage_hanger', collection: list.hangers.sort { |a,b| a.item.name <=> b.item.name }
       - if unlisted_hangers_by_owned[owned]
         %li.dti-unlisted-items
           - unless lists.blank?
             %h3= t '.unlisted_header'
-          %div
-            = render_batched_petpage_hangers(unlisted_hangers_by_owned[owned])
+          %ul.dti-items
+            = render partial: 'petpage_hanger', collection: unlisted_hangers_by_owned[owned]
 
 #dti-item-footer= t '.footer'
-
