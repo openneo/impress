@@ -68,7 +68,7 @@ GIT
 
 GIT
   remote: git://github.com/rubyamf/rocketamf.git
-  revision: 3f16cf841d9c36045f720b307bbffa61fb63a7ac
+  revision: 796f591d002b5cf47df436dbcbd6f2ab00e869ed
   specs:
     RocketAMF (1.0.0)
 

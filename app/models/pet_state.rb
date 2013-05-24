@@ -138,7 +138,7 @@ class PetState < ActiveRecord::Base
   def self.from_pet_type_and_biology_info(pet_type, info)
     swf_asset_ids = []
     info.each do |zone_id, asset_info|
-      if asset_info
+      if zone_id.present? && asset_info
         swf_asset_ids << asset_info[:part_id].to_i
       end
     end
@@ -166,7 +166,7 @@ class PetState < ActiveRecord::Base
     pet_state.pet_type = pet_type # save the second case from having to look it up by ID
     relationships = []
     info.each do |zone_id, asset_info|
-      if asset_info
+      if zone_id.present? && asset_info
         swf_asset_id = asset_info[:part_id].to_i
         swf_asset = existing_swf_assets_by_id[swf_asset_id]
         unless swf_asset
