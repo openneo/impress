@@ -2,14 +2,15 @@
 
 Flex::Configuration.configure do |config|
 
-  # you MUST add your indexed model names here
-  config.flex_models = %w[ Item ]
-  config.flex_models << 'ClosetHanger' if config.hangers_enabled
-  
   # If queries like "user:owns" are too much for the server to handle (not
   # enough RAM?), set to false to stop indexing closet hangers and disable
   # item queries that reference them.
   config.hangers_enabled = true
+
+  # you MUST add your indexed model names here
+  config.flex_models = %w[ Item ]
+  config.flex_models << 'ClosetHanger' if config.hangers_enabled
+  
 
   # Add the your result extenders here
   config.result_extenders |= [ FlexSearchExtender ]
