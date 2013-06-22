@@ -64,6 +64,42 @@
 
   */
 
+  var body = $(document.body).addClass("js");
+  if(!body.hasClass("current-user")) return false;
+
+  // When we get hangers HTML, add the controls. We do this in JS rather than
+  // in the HTML for caching, since otherwise the requests can take forever.
+  // If there were another way to add hangers, then we'd have to worry about
+  // that, but, right now, the only way to create a new hanger from this page
+  // is through the autocompleter, which reinitializes anyway. Geez, this thing
+  // is begging for a rewrite, but today we're here for performance.
+  $("#closet-hanger-update-tmpl").template("updateFormTmpl");
+  onHangersInit(function () {
+    // Super-lame hack to get the user ID from where it already is :/
+    var currentUserId = itemsSearchForm.data("current-user-id");
+    $("#closet-hangers div.closet-hangers-group").each(function () {
+      var groupEl = $(this);
+      var owned = groupEl.data("owned");
+      groupEl.find("div.closet-list").each(function () {
+        var listEl = $(this);
+        var listId = listEl.data("id");
+        listEl.find("div.object").each(function () {
+          var hangerEl = $(this);
+          var hangerId = hangerEl.data("id");
+          var quantityEl = hangerEl.find("div.quantity");
+          var quantity = hangerEl.data("quantity");
+          $.tmpl("updateFormTmpl", {
+            quantity: quantity,
+            list_id: listId,
+            owned: owned,
+            user_id: currentUserId,
+            closet_hanger_id: hangerId
+          }).appendTo(quantityEl);
+        });
+      });
+    });
+  });
+
   $.fn.liveDraggable = function (opts) {
     this.live("mouseover", function() {
       if (!$(this).data("init")) {
@@ -71,9 +107,6 @@
       }
     });
   };
-
-  var body = $(document.body).addClass("js");
-  if(!body.hasClass("current-user")) return false;
 
   $.fn.disableForms = function () {
     return this.data("formsDisabled", true).find("input").attr("disabled", "disabled").end();

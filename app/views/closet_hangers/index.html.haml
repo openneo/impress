@@ -73,23 +73,34 @@
                 = render_unlisted_closet_hangers(owned)
                 %span.empty-list= t '.unlisted.empty'
 
-- localized_cache :action_suffix => 'autocomplete_tmpls' do
-  %script#autocomplete-item-tmpl{:type => 'text/x-jquery-tmpl'}
-    %a
-      = t '.autocomplete.add_item_html', :item_name => '${item_name}'
+- if user_signed_in?
+  - localized_cache action_suffix: 'tmpls' do
+    %script#autocomplete-item-tmpl{type: 'text/x-jquery-tmpl'}
+      %a
+        = t '.autocomplete.add_item_html', item_name: '${item_name}'
 
-  %script#autocomplete-add-to-list-tmpl{:type => 'text/x-jquery-tmpl'}
-    %a
-      = t '.autocomplete.add_to_list_html', :list_name => '${list_name}'
+    %script#autocomplete-add-to-list-tmpl{type: 'text/x-jquery-tmpl'}
+      %a
+        = t '.autocomplete.add_to_list_html', list_name: '${list_name}'
 
-  %script#autocomplete-add-to-group-tmpl{:type => 'text/x-jquery-tmpl'}
-    %a
-      = t '.autocomplete.add_to_group_html', :group_name => '${group_name}'
+    %script#autocomplete-add-to-group-tmpl{type: 'text/x-jquery-tmpl'}
+      %a
+        = t '.autocomplete.add_to_group_html', group_name: '${group_name}'
 
-  %script#autocomplete-already-in-collection-tmpl{:type => 'text/x-jquery-tmpl'}
-    %span
-      = t '.autocomplete.already_in_collection_html',
-          :collection_name => '${collection_name}'
+    %script#autocomplete-already-in-collection-tmpl{type: 'text/x-jquery-tmpl'}
+      %span
+        = t '.autocomplete.already_in_collection_html',
+            collection_name: '${collection_name}'
+
+    %script#closet-hanger-update-tmpl{type: 'text/x-jquery-tmpl'}
+      -# Gotta do this weird subbing in the path, since the braces will be
+      -# escaped if they themselves are inserted. Probably deserves a more
+      -# legit method, especially if we ever need it again.
+      = form_tag user_closet_hanger_path(user_id: '$0', id: '$1').sub('$0', '${user_id}').sub('$1', '${closet_hanger_id}'), method: :put, authenticity_token: false, class: 'closet-hanger-update' do
+        = hidden_field_tag 'closet_hanger[list_id]', '${list_id}'
+        = hidden_field_tag 'closet_hanger[owned]', '${owned}'
+        = number_field_tag 'closet_hanger[quantity]', '${quantity}',
+                           min: 0, required: true
 
 - content_for :stylesheets do
   = stylesheet_link_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/south-street/jquery-ui.css'

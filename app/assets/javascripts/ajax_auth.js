@@ -1,9 +1,10 @@
 (function () {
-  var csrf_param = $('meta[name=csrf-param]').attr('content'),
-    csrf_token = $('meta[name=csrf-token]').attr('content'),
-    data = {};
+  var CSRFProtection = function (xhr) {
+    var token = $('meta[name="csrf-token"]').attr('content');
+    if(token) xhr.setRequestHeader('X-CSRF-Token', token);
+  };
 
-  data[csrf_param] = csrf_token;
-
-  $.ajaxSetup({data: data});
+  $.ajaxSetup({
+    beforeSend: CSRFProtection
+  });
 })();
