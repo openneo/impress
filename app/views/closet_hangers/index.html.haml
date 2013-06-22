@@ -32,6 +32,14 @@
         %span#cancel-contact-link= t('.neopets_username.cancel')
 
 - unless public_perspective?
+  %noscript
+    %p.warning
+      Managing your items is a lot easier with Javascript. With Javascript
+      disabled, you'll have to click each item you want to manage, update the
+      quantities for each list on the item page, and refresh this page
+      manually once you want to see your changes. It still works, but consider
+      enabling Javascript to make your life easier.
+
   = render :partial => 'help', :locals => {:user => @user}
   
   #closet-hangers-extras
