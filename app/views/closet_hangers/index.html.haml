@@ -92,15 +92,21 @@
         = t '.autocomplete.already_in_collection_html',
             collection_name: '${collection_name}'
 
+
+    -# Gotta do this weird subbing in the path, since the braces will be
+    -# escaped if they themselves are inserted. Probably deserves a more legit
+    -# method, especially if we ever need it again.
+    - templated_hanger_path = user_closet_hanger_path(user_id: '$0', id: '$1').sub('$0', '${user_id}').sub('$1', '${closet_hanger_id}')
     %script#closet-hanger-update-tmpl{type: 'text/x-jquery-tmpl'}
-      -# Gotta do this weird subbing in the path, since the braces will be
-      -# escaped if they themselves are inserted. Probably deserves a more
-      -# legit method, especially if we ever need it again.
-      = form_tag user_closet_hanger_path(user_id: '$0', id: '$1').sub('$0', '${user_id}').sub('$1', '${closet_hanger_id}'), method: :put, authenticity_token: false, class: 'closet-hanger-update' do
+      = form_tag templated_hanger_path, method: :put, authenticity_token: false, class: 'closet-hanger-update' do
         = hidden_field_tag 'closet_hanger[list_id]', '${list_id}'
         = hidden_field_tag 'closet_hanger[owned]', '${owned}'
         = number_field_tag 'closet_hanger[quantity]', '${quantity}',
                            min: 0, required: true
+
+    %script#closet-hanger-destroy-tmpl{type: 'text/x-jquery-tmpl'}
+      = form_tag templated_hanger_path, method: :delete, authenticity_token: false, class: 'closet-hanger-destroy' do
+        = submit_tag t('closet_hangers.closet_hanger.delete')
 
 - content_for :stylesheets do
   = stylesheet_link_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/south-street/jquery-ui.css'

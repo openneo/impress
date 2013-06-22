@@ -1,10 +1,4 @@
-- show_controls ||= false # we could do user check here, but may as well do it once
 %div{'class' => closet_hanger_partial_class(closet_hanger), 'data-item-id' => closet_hanger.item_id, 'data-quantity' => closet_hanger.quantity, 'data-id' => closet_hanger.id}
   = render :partial => 'items/item_link', :locals => {:item => closet_hanger.item}
   .quantity{:class => "quantity-#{closet_hanger.quantity}"}
     %span= closet_hanger.quantity
-  - if show_controls
-    = form_tag [current_user, closet_hanger], :method => :delete, :class => 'closet-hanger-destroy' do
-      = return_to_field_tag
-      = hidden_field_tag 'closet_hanger[owned]', closet_hanger.owned
-      = submit_tag t('.delete')

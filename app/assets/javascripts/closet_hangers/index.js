@@ -74,27 +74,36 @@
   // is through the autocompleter, which reinitializes anyway. Geez, this thing
   // is begging for a rewrite, but today we're here for performance.
   $("#closet-hanger-update-tmpl").template("updateFormTmpl");
+  $("#closet-hanger-destroy-tmpl").template("destroyFormTmpl");
   onHangersInit(function () {
     // Super-lame hack to get the user ID from where it already is :/
     var currentUserId = itemsSearchForm.data("current-user-id");
     $("#closet-hangers div.closet-hangers-group").each(function () {
       var groupEl = $(this);
       var owned = groupEl.data("owned");
+      
       groupEl.find("div.closet-list").each(function () {
         var listEl = $(this);
         var listId = listEl.data("id");
+        
         listEl.find("div.object").each(function () {
           var hangerEl = $(this);
           var hangerId = hangerEl.data("id");
           var quantityEl = hangerEl.find("div.quantity");
           var quantity = hangerEl.data("quantity");
+          
           $.tmpl("updateFormTmpl", {
+            user_id: currentUserId,
+            closet_hanger_id: hangerId,
             quantity: quantity,
             list_id: listId,
-            owned: owned,
+            owned: owned
+          }).appendTo(quantityEl);
+          
+          $.tmpl("destroyFormTmpl", {
             user_id: currentUserId,
             closet_hanger_id: hangerId
-          }).appendTo(quantityEl);
+          }).appendTo(hangerEl);
         });
       });
     });

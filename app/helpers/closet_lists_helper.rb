@@ -17,10 +17,10 @@ module ClosetListsHelper
     ]
   end
 
-  def render_sorted_hangers(list, show_controls)
-    render :partial => 'closet_hanger',
-      :collection => list.hangers.sort { |x,y| x.item.name <=> y.item.name },
-      :locals => {:show_controls => show_controls}
+  def render_sorted_hangers(list)
+    # TODO: do we still *need* the sort, now that 99% of items are translated?
+    render partial: 'closet_hanger',
+           collection: list.hangers.sort_by(&:item_name)
   end
 end
 
