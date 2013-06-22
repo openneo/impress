@@ -1,4 +1,4 @@
 %div{'class' => closet_hanger_partial_class(closet_hanger), 'data-item-id' => closet_hanger.item_id, 'data-quantity' => closet_hanger.quantity, 'data-id' => closet_hanger.id}
-  = render :partial => 'items/item_link', :locals => {:item => closet_hanger.item}
+  = render_item_link(closet_hanger.item)
   .quantity{:class => "quantity-#{closet_hanger.quantity}"}
     %span= closet_hanger.quantity
