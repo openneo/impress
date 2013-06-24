@@ -23,7 +23,15 @@ class PetType < ActiveRecord::Base
     lambda { includes({:color => :translations, :species => :translations}) }
   
   def self.standard_pet_types_by_species_id
-    PetType.where(:color_id => Color.basic).includes_child_translations.
+    # If we include Color.basic in the query, rather than getting the ID array
+    # first, it'll do this as a big fat JOIN unnecessarily. On production,
+    # there are tons of pet types and translations to send down, so tons of
+    # duplicate data is sent and must be merged together properly, both of
+    # which take serious time. So, this is a surprisingly significant
+    # performance boost - though I was surprised and impressed that Rails
+    # includes relations as subqueries. That's cool.
+    basic_color_ids = Color.basic.select([:id]).map(&:id)
+    PetType.where(color_id: basic_color_ids).includes_child_translations.
       group_by(&:species_id)
   end
   
