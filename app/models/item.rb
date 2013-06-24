@@ -18,7 +18,7 @@ class Item < ActiveRecord::Base
   NCRarities = [0, 500]
   PAINTBRUSH_SET_DESCRIPTION = 'This item is part of a deluxe paint brush set!'
   SPECIAL_COLOR_DESCRIPTION_REGEX =
-    /This item is only wearable by Neopets painted ([a-zA-Z]+)\.|WARNING: This [a-zA-Z]+ can be worn by ([a-zA-Z]+) [a-zA-Z]+ ONLY!/
+    /This item is only wearable by Neopets painted ([a-zA-Z]+)\.|WARNING: This [a-zA-Z]+ can be worn by ([a-zA-Z]+) [a-zA-Z]+ ONLY!|If your Neopet is not painted ([a-zA-Z]+), it will not be able to wear this item\./
 
   cattr_reader :per_page
   @@per_page = 30
@@ -168,7 +168,9 @@ class Item < ActiveRecord::Base
 
       match = description.match(SPECIAL_COLOR_DESCRIPTION_REGEX)
       if match
-        color = match[1] || match[2]
+        # Since there are multiple formats in the one regex, there are multiple
+        # possible color name captures. So, take the first non-nil capture.
+        color = match.captures.detect(&:present?)
         return Color.find_by_name(color.downcase)
       end
     end
