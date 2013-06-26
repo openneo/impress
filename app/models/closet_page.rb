@@ -163,29 +163,56 @@ class ClosetPage
       )
     )
 
-    # Create closet hanger from each item, and remove them from the reference
-    # lists.
+    # And now for some more single-query beauty: check for existing hangers.
     # We don't want to insert duplicate hangers of what a user owns if they
     # already have it in another list (e.g. imports to Items You Own *after*
     # curating their Up For Trade list), so we check for the hanger's presence
     # in *all* items the user owns or wants (whichever is appropriate for this
     # request).
     hangers_scope = @user.closet_hangers.where(owned: @hangers_owned)
+
+    # Group existing hangers by item ID and whether they're from the current
+    # list or another list.
+    current_list_id = @closet_list.try(:id)
+    existing_hangers_by_item_id = hangers_scope.
+      where(item_id: items.map(&:id)).
+      group_by(&:item_id)
+
+    # Careful! We're just using a single default empty list for performance,
+    # but it must not be mutated! If mutation becomes necessary, change this
+    # to a default_proc assignment.
+    existing_hangers_by_item_id.default = []
+
+    # Create closet hanger from each item, and remove them from the reference
+    # lists.
     @hangers = items.map do |item|
       data = items_data[:id].delete(item.id) ||
         items_data[:thumbnail_url].delete(item.thumbnail_url)
-      hanger = hangers_scope.find_or_initialize_by_item_id(item.id)
+
+      # If there's a hanger in the current list, we want it so we can update
+      # its quantity. If there's a hanger in another list, we want it so we
+      # know not to build a new one. Otherwise, build away!
+      existing_hangers = existing_hangers_by_item_id[item.id]
+      existing_hanger_in_current_list = existing_hangers.detect { |h|
+        h.list_id == current_list_id
+      }
+      hanger = existing_hanger_in_current_list || existing_hangers.first ||
+               hangers_scope.build
 
       # We also don't want to move existing hangers from other lists, so only
-      # set the list if the hanger is new.
-      hanger.list = @closet_list if hanger.new_record?
+      # set the list if the hanger is new. (The item assignment is only
+      # necessary for new records, so may as well put it here, too.)
+      if hanger.new_record?
+        hanger.item = item
+        hanger.list = @closet_list
+      end
 
       # Finally, we don't want to update the quantity of hangers in those other
       # lists, either, so only update quantity if it's in this list. (This will
       # be true for some existing hangers and all new hangers. This is also the
       # only value that could change for existing hangers; if nothing changes,
       # it was an existing hanger from another list.)
-      hanger.quantity = data[:quantity] if hanger.list == @closet_list
+      hanger.quantity = data[:quantity] if hanger.list_id == current_list_id
 
       hanger
     end
