@@ -35,7 +35,7 @@ class ClosetPage
   end
 
   def save_hangers!
-    counts = {:created => 0, :updated => 0}
+    counts = {created: 0, updated: 0}
     ClosetHanger.transaction do
       @hangers.each do |hanger|
         if hanger.new_record?
@@ -164,17 +164,29 @@ class ClosetPage
     )
 
     # Create closet hanger from each item, and remove them from the reference
-    # lists
-    hangers_scope = @closet_list ? @closet_list.hangers :
-                                   @user.closet_hangers.unlisted.where(owned: @hangers_owned)
+    # lists.
+    # We don't want to insert duplicate hangers of what a user owns if they
+    # already have it in another list (e.g. imports to Items You Own *after*
+    # curating their Up For Trade list), so we check for the hanger's presence
+    # in *all* items the user owns or wants (whichever is appropriate for this
+    # request).
+    hangers_scope = @user.closet_hangers.where(owned: @hangers_owned)
     @hangers = items.map do |item|
       data = items_data[:id].delete(item.id) ||
         items_data[:thumbnail_url].delete(item.thumbnail_url)
       hanger = hangers_scope.find_or_initialize_by_item_id(item.id)
-      hanger.user = @user
-      hanger.owned = @hangers_owned
-      hanger.list = @closet_list
-      hanger.quantity = data[:quantity]
+
+      # We also don't want to move existing hangers from other lists, so only
+      # set the list if the hanger is new.
+      hanger.list = @closet_list if hanger.new_record?
+
+      # Finally, we don't want to update the quantity of hangers in those other
+      # lists, either, so only update quantity if it's in this list. (This will
+      # be true for some existing hangers and all new hangers. This is also the
+      # only value that could change for existing hangers; if nothing changes,
+      # it was an existing hanger from another list.)
+      hanger.quantity = data[:quantity] if hanger.list == @closet_list
+
       hanger
     end
 
