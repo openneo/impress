@@ -208,18 +208,28 @@ class Item < ActiveRecord::Base
     species_support_ids.blank? || species_support_ids.include?(species.id)
   end
 
-  def as_json(options = {})
-    {
+  def as_json(options={})
+    json = {
       :description => description,
       :id => id,
       :name => name,
       :thumbnail_url => thumbnail_url,
       :zones_restrict => zones_restrict,
       :rarity_index => rarity_index,
-      :owned => owned?,
-      :wanted => wanted?,
       :nc => nc?
     }
+    
+    # Set owned and wanted keys, unless explicitly told not to. (For example,
+    # item proxies don't want us to bother, since they'll override.)
+    unless options.has_key?(:include_hanger_status)
+      options[:include_hanger_status] = true
+    end
+    if options[:include_hanger_status]
+      json[:owned] = owned?
+      json[:wanted] = wanted?
+    end
+    
+    json
   end
 
   before_create do

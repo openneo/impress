@@ -13,7 +13,10 @@ class Item
     end
 
     def as_json(options={})
-      cache_method(:as_json)
+      cache_method(:as_json, include_hanger_status: false).tap do |json|
+        json[:owned] = owned?
+        json[:wanted] = wanted?
+      end
     end
 
     def cached?(type, name)
@@ -39,12 +42,12 @@ class Item
 
     private
 
-    def cache_method(method_name, &block)
+    def cache_method(method_name, *args, &block)
       # Two layers of cache: a local copy, in case the method is called again,
       # and then the Rails cache, before we hit the actual method call.
       @known_outputs[method_name] ||= begin
         key = fragment_key(:method, method_name)
-        Rails.cache.fetch(key) { item.send(method_name) }
+        Rails.cache.fetch(key) { item.send(method_name, *args) }
       end
     end
 
