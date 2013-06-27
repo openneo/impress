@@ -5,7 +5,7 @@ class Item
     attr_reader :id
     attr_writer :item, :owned, :wanted
 
-    delegate :description, :name, :nc?, :thumbnail_url, to: :item
+    delegate :description, :name, :nc?, :thumbnail_url, :to_param, to: :item
 
     def initialize(id)
       @id = id
