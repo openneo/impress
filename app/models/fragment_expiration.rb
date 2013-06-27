@@ -9,6 +9,13 @@ module FragmentExpiration
       expire_fragment(localized_key)
     end
   end
+
+  def expire_key_in_all_locales(key)
+    I18n.available_locales.each do |locale|
+      localized_key = localize_fragment_key(key, locale)
+      Rails.cache.delete(localized_key)
+    end
+  end
   
   private
   
