@@ -176,6 +176,13 @@ class SwfAsset < ActiveRecord::Base
     select('swf_assets.*, parents_swf_assets.parent_id')
   }
 
+  # To manually change the body ID without triggering the usual change to 0,
+  # use this override method.
+  def override_body_id(new_body_id)
+    @body_id_overridden = true
+    self.body_id = new_body_id
+  end
+
   def local_url
     '/' + File.join(PUBLIC_ASSET_DIR, local_path_within_outfit_swfs)
   end
@@ -259,7 +266,7 @@ class SwfAsset < ActiveRecord::Base
   before_save do
     # If an asset body ID changes, that means more than one body ID has been
     # linked to it, meaning that it's probably wearable by all bodies.
-    self.body_id = 0 if !self.body_specific? || (!self.new_record? && self.body_id_changed?)
+    self.body_id = 0 if !@body_id_overridden && (!self.body_specific? || (!self.new_record? && self.body_id_changed?))
   end
 
   after_commit :on => :create do
