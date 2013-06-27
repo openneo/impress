@@ -33,8 +33,9 @@ class ItemsController < ApplicationController
         end
       end
     elsif params.has_key?(:ids) && params[:ids].is_a?(Array)
-      @items = Item.includes(:translations).find(params[:ids])
+      @items = Item.build_proxies(params[:ids])
       assign_closeted!
+      @items.prepare_method(:as_json)
       respond_to do |format|
         format.json { render json: @items }
       end
