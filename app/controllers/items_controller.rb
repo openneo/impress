@@ -13,13 +13,14 @@ class ItemsController < ApplicationController
         end
         # Note that we sort by name by hand, since we might have to use
         # fallbacks after the fact
-        # TODO: use proxies for everything!
-        output_format = params[:format] == :html ? :records : :proxies
         @items = Item::Search::Query.from_text(@query, current_user).
-          paginate(page: params[:page], per_page: per_page, as: output_format)
+          paginate(page: params[:page], per_page: per_page, as: :proxies)
         assign_closeted!
         respond_to do |format|
-          format.html { render }
+          format.html {
+            @items.prepare_partial(:item_link_partial)
+            render
+          }
           format.json {
             @items.prepare_method(:as_json)
             render json: {items: @items, total_pages: @items.total_pages}

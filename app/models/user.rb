@@ -57,11 +57,7 @@ class User < ActiveRecord::Base
     # Assigning these items to a hash by ID means that we don't have to go
     # N^2 searching the items list for items that match the given IDs or vice
     # versa, and everything stays a lovely O(n)
-    items_by_id = {}
-    items.each do |item|
-      items_by_id[item.id] ||= []
-      items_by_id[item.id] << item
-    end
+    items_by_id = items.group_by(&:id)
     closet_hangers.where(:item_id => items_by_id.keys).each do |hanger|
       items = items_by_id[hanger.item_id]
       items.each do |item|

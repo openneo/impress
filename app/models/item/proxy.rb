@@ -3,24 +3,38 @@ class Item
     include FragmentLocalization
 
     attr_reader :id
-    attr_writer :item
+    attr_writer :item, :owned, :wanted
+
+    delegate :description, :name, :nc?, :thumbnail_url, to: :item
 
     def initialize(id)
       @id = id
-      @known_method_outputs = {}
-    end
-
-    def method_cached?(method_name)
-      # TODO: is there a way to cache nil? Right now we treat is as a miss.
-      # We eagerly read the cache rather than just check if the value exists,
-      # which will usually cut down on cache requests.
-      @known_method_outputs[method_name] ||= Rails.cache.read(
-        method_fragment_key(method_name))
-      !@known_method_outputs[method_name].nil?
+      @known_outputs = {method: {}, partial: {}}
     end
 
     def as_json(options={})
       cache_method(:as_json)
+    end
+
+    def cached?(type, name)
+      # TODO: is there a way to cache nil? Right now we treat is as a miss.
+      # We eagerly read the cache rather than just check if the value exists,
+      # which will usually cut down on cache requests.
+      @known_outputs[type][name] ||= Rails.cache.read(fragment_key(type, name))
+      !@known_outputs[type][name].nil?
+    end
+
+    def owned?
+      @owned
+    end
+
+    def to_partial_path
+      # HACK: could break without warning!
+      Item._to_partial_path
+    end
+
+    def wanted?
+      @wanted
     end
 
     private
@@ -28,8 +42,8 @@ class Item
     def cache_method(method_name, &block)
       # Two layers of cache: a local copy, in case the method is called again,
       # and then the Rails cache, before we hit the actual method call.
-      @known_method_outputs[method_name] ||= begin
-        key = method_fragment_key(method_name)
+      @known_outputs[method_name] ||= begin
+        key = fragment_key(:method, method_name)
         Rails.cache.fetch(key) { item.send(method_name) }
       end
     end
@@ -38,8 +52,10 @@ class Item
       @item ||= Item.find(@id)
     end
 
-    def method_fragment_key(method_name)
-      localize_fragment_key("item/#{@id}##{method_name}", I18n.locale)
+    def fragment_key(type, name)
+      prefix = type == :partial ? 'views/' : ''
+      base = localize_fragment_key("items/#{@id}##{name}", I18n.locale)
+      prefix + base
     end
   end
 end

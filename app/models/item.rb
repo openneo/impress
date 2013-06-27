@@ -288,6 +288,12 @@ class Item < ActiveRecord::Base
     translatable_locales - translated_locales
   end
 
+  def method_cached?(method_name)
+    # No methods are cached on a full item. This is for duck typing with item
+    # proxies.
+    false
+  end
+
   def self.all_by_ids_or_children(ids, swf_assets)
     swf_asset_ids = []
     swf_assets_by_id = {}
