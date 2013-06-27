@@ -93,9 +93,14 @@ class Item
         end
         
         result = FlexSearch.item_search(final_flex_params)
-        result.scoped_loaded_collection(
-          :scopes => {'Item' => Item.includes(:translations)}
-        )
+
+        if options[:as] == :proxies
+          result.proxied_collection
+        else
+          result.scoped_loaded_collection(
+            :scopes => {'Item' => Item.includes(:translations)}
+          )
+        end
       end
       
       # Load the text query labels from I18n, so that when we see, say,

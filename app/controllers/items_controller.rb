@@ -13,20 +13,29 @@ class ItemsController < ApplicationController
         end
         # Note that we sort by name by hand, since we might have to use
         # fallbacks after the fact
+        # TODO: use proxies for everything!
+        output_format = params[:format] == :html ? :records : :proxies
         @items = Item::Search::Query.from_text(@query, current_user).
-          paginate(:page => params[:page], :per_page => per_page)
+          paginate(page: params[:page], per_page: per_page, as: output_format)
         assign_closeted!
         respond_to do |format|
           format.html { render }
-          format.json { render :json => {:items => @items, :total_pages => @items.total_pages} }
-          format.js { render :json => {:items => @items, :total_pages => @items.total_pages}, :callback => params[:callback] }
+          format.json {
+            @items.prepare_method(:as_json)
+            render json: {items: @items, total_pages: @items.total_pages}
+          }
+          format.js {
+            @items.prepare_method(:as_json)
+            render json: {items: @items, total_pages: @items.total_pages},
+                   callback: params[:callback]
+          }
         end
       end
     elsif params.has_key?(:ids) && params[:ids].is_a?(Array)
       @items = Item.includes(:translations).find(params[:ids])
       assign_closeted!
       respond_to do |format|
-        format.json { render :json => @items }
+        format.json { render json: @items }
       end
     else
       respond_to do |format|
@@ -35,7 +44,7 @@ class ItemsController < ApplicationController
             @newest_items = Item.newest.includes(:translations).limit(18)
           end
         }
-        format.js { render :json => {:error => '$q required'}}
+        format.js { render json: {error: '$q required'}}
       end
     end
   end
@@ -47,10 +56,10 @@ class ItemsController < ApplicationController
       format.html do
         unless localized_fragment_exist?("items/#{@item.id} info")
           @occupied_zones = @item.occupied_zones(
-            :scope => Zone.includes_translations.alphabetical
+            scope: Zone.includes_translations.alphabetical
           )
           @restricted_zones = @item.restricted_zones(
-            :scope => Zone.includes_translations.alphabetical
+            scope: Zone.includes_translations.alphabetical
           )
         end
         
@@ -72,7 +81,7 @@ class ItemsController < ApplicationController
           end
           
           @current_user_quantities = Hash.new(0) # default is zero
-          hangers = current_user.closet_hangers.where(:item_id => @item.id).
+          hangers = current_user.closet_hangers.where(item_id: @item.id).
             select([:owned, :list_id, :quantity])
             
           hangers.each do |hanger|
@@ -122,8 +131,8 @@ class ItemsController < ApplicationController
     @items = []
     respond_to do |format|
       format.html { flash.now[:alert] = e.message; render }
-      format.json { render :json => {:error => e.message} }
-      format.js   { render :json => {:error => e.message},
+      format.json { render :json => {error: e.message} }
+      format.js   { render :json => {error: e.message},
                            :callback => params[:callback] }
     end
   end

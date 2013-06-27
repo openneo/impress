@@ -404,6 +404,10 @@ class Item < ActiveRecord::Base
     items.values
   end
 
+  def self.build_proxies(ids)
+    Item::ProxyArray.new(ids)
+  end
+
   class << self
     MALL_HOST = 'ncmall.neopets.com'
     MALL_MAIN_PATH = '/mall/shop.phtml'

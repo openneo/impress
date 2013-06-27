@@ -7,14 +7,22 @@ module FlexSearchExtender
   def self.should_extend?(response)
     true
   end
-  
+
+  def proxied_collection
+    Item.build_proxies(collection.map(&:_id)).tap do |proxies|
+      proxies.extend Flex::Result::Collection
+      proxies.setup(self['hits']['total'], variables)
+    end
+  end
+
   def scoped_loaded_collection(options)
     options[:scopes] ||= {}
     @loaded_collection ||= begin
       records_by_class_and_id_str = {}
-      # returns a structure like {Comment=>[{"_id"=>"123", ...}, {...}], BlogPost=>[...]}
-      h = collection.group_by { |d| d.mapped_class(should_raise=true) }
-      h.each do |klass, docs|
+      grouped_collection = collection.group_by { |d|
+        d.mapped_class(should_raise=true)
+      }
+      grouped_collection.each do |klass, docs|
         record_ids = docs.map(&:_id)
         scope = options[:scopes][klass.name] || klass.scoped
         records = scope.find(record_ids)
