@@ -115,7 +115,10 @@ var DEBUG = (document.location.search.substr(0, 6) == '?debug');
   $(document.body).addClass('js');
 
   bulk_load_queue = new (function BulkLoadQueue() {
-    var pets = [], url = form.attr('action') + '.json';
+    var RECENTLY_SENT_INTERVAL_IN_SECONDS = 60;
+    var RECENTLY_SENT_MAX = 10;
+    var pets = [], url = form.attr('action') + '.json',
+      recently_sent_count = 0, loading = false;
     
     function Pet(name) {
       var el = $('#bulk-pets-submission-template').tmpl({pet_name: name}).
@@ -124,12 +127,12 @@ var DEBUG = (document.location.search.substr(0, 6) == '?debug');
       this.load = function () {
         el.removeClass('waiting').addClass('loading');
         var response_el = el.find('span.response');
+        pets.shift();
+        loading = true;
         $.ajax({
           complete: function (data) {
-            pets.shift();
-            if(pets.length) {
-              pets[0].load();
-            }
+            loading = false;
+            loadNextIfReady();
           },
           data: {name: name},
           dataType: 'json',
@@ -146,6 +149,12 @@ var DEBUG = (document.location.search.substr(0, 6) == '?debug');
           type: 'post',
           url: url
         });
+
+        recently_sent_count++;
+        setTimeout(function () {
+          recently_sent_count--;
+          loadNextIfReady();
+        }, RECENTLY_SENT_INTERVAL_IN_SECONDS * 1000);
       }
     }
     
@@ -154,7 +163,13 @@ var DEBUG = (document.location.search.substr(0, 6) == '?debug');
       if(name.length) {
         var pet = new Pet(name);
         pets.push(pet);
-        if(pets.length == 1) pet.load();
+        if(pets.length == 1) loadNextIfReady();
+      }
+    }
+
+    function loadNextIfReady() {
+      if(!loading && recently_sent_count < RECENTLY_SENT_MAX && pets.length) {
+        pets[0].load();
       }
     }
   })();

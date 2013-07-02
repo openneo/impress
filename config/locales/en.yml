@@ -750,8 +750,9 @@ en:
         header: Model pets in bulk
         explanation:
           Got a lot of pets to model? Just keep typing them into the box below,
-          or even paste in a whole list of names, one name per line. Thanks for
-          your help!
+          or even paste in a whole list of names, one name per line. We'll
+          stagger them over time to keep our servers happy. Thanks for your
+          help!
         submit: Load pet
         add: Add
         clear: Clear
