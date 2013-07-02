@@ -62,6 +62,8 @@ gem "rest-client", "~> 1.6.7"
 
 gem "rails-i18n"
 
+gem 'rack-attack', '~> 2.2.0'
+
 # Needed for the new asset pipeline
 group :assets do
   

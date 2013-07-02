@@ -50,6 +50,8 @@ module OpenneoImpressItems
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
     config.assets.precompile << '*.js'
     config.assets.initialize_on_precompile = false
+
+    config.middleware.insert_after ActionDispatch::Flash, Rack::Attack
   end
 end
 
