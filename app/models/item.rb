@@ -459,30 +459,35 @@ class Item < ActiveRecord::Base
       end
       puts "#{items.size} items found"
       all_item_ids = items.keys
-      # Find which of these already exist but aren't marked as sold_in_mall so
-      # we can update them as being sold
-      Item.not_sold_in_mall.where(:id => items.keys).select([:id]).each do |item|
-        items.delete(item.id)
-        item.sold_in_mall = true
-        item.save
-        puts "#{item.name} (#{item.id}) now in mall, updated"
-      end
-      # Find items marked as sold_in_mall so we can skip those we just found
-      # if they already are properly marked, and mark those that we didn't just
-      # find as no longer sold_in_mall
-      Item.sold_in_mall.select([:id, :name]).each do |item|
-        if all_item_ids.include?(item.id)
+      Item.transaction do
+        # Find which of these already exist but aren't marked as sold_in_mall so
+        # we can update them as being sold
+        items_added_to_mall = Item.not_sold_in_mall.includes(:translations).
+          where(:id => items.keys)
+        items_added_to_mall.each do |item|
           items.delete(item.id)
-        else
-          item.sold_in_mall = false
+          item.sold_in_mall = true
           item.save
-          puts "#{item.name} (#{item.id}) no longer in mall, removed sold_in_mall status"
+          puts "#{item.name} (#{item.id}) now in mall, updated"
         end
-      end
-      puts "#{items.size} new items"
-      items.each do |item_id, item|
-        item.save
-        puts "Saved #{item.name} (#{item_id})"
+        # Find items marked as sold_in_mall so we can skip those we just found
+        # if they already are properly marked, and mark those that we didn't just
+        # find as no longer sold_in_mall
+        items_removed_from_mall = Item.sold_in_mall.includes(:translations)
+        items_removed_from_mall.each do |item|
+          if all_item_ids.include?(item.id)
+            items.delete(item.id)
+          else
+            item.sold_in_mall = false
+            item.save
+            puts "#{item.name} (#{item.id}) no longer in mall, removed sold_in_mall status"
+          end
+        end
+        puts "#{items.size} new items"
+        items.each do |item_id, item|
+          item.save
+          puts "Saved #{item.name} (#{item_id})"
+        end
       end
       items
     end
@@ -530,6 +535,7 @@ class Item < ActiveRecord::Base
       def spider(item)
         puts "  - Using #{@name} strategy"
         exit = false
+        Rails.logger.debug(@pet_types.inspect)
         @pet_types.each do |pet_type|
           swf_assets = load_for_pet_type(item, pet_type)
           if swf_assets
@@ -561,9 +567,15 @@ class Item < ActiveRecord::Base
 
       private
 
-      def load_for_pet_type(item, pet_type, banned_pet_ids=[])
-        pet_id = pet_type.pet_id
-        pet_name = pet_type.pet_name
+      def load_for_pet_type(item, pet_type)
+        original_pet = Pet.select([:id, :name]).
+          where(pet_type_id: pet_type.id).first
+        if original_pet.nil?
+          puts "    - We have no more pets of type \##{pet_type.id}. Skipping"
+          return nil
+        end
+        pet_id = original_pet.id
+        pet_name = original_pet.name
         pet_valid = nil
         begin
           pet = Pet.load(pet_name)
@@ -577,7 +589,7 @@ class Item < ActiveRecord::Base
         rescue Pet::PetNotFound
           pet_valid = false
           puts "    - Pet #{pet_name} no longer exists; destroying and loading new pet"
-          Pet.find_by_name(pet_name).destroy
+          original_pet.destroy
         end
         if pet_valid
           swf_assets = load_for_pet_name(item, pet_type, pet_name)
@@ -588,16 +600,7 @@ class Item < ActiveRecord::Base
           end
           return swf_assets
         else
-          banned_pet_ids << pet_id
-          new_pet = pet_type.pets.select([:id, :name]).where(Pet.arel_table[:id].not_in(banned_pet_ids)).first
-          if new_pet
-            pet_type.pet_id = new_pet.id
-            pet_type.pet_name = new_pet.name
-            load_for_pet_type(item, pet_type, banned_pet_ids)
-          else
-            puts "    - We have no more pets of type \##{pet_type.id}. Skipping"
-            return nil
-          end
+          load_for_pet_type(item, pet_type)  # try again
         end
       end
 
@@ -665,9 +668,7 @@ class Item < ActiveRecord::Base
           if Strategies.empty?
             pet_type_t = PetType.arel_table
             require 'pet' # FIXME: console is whining when i don't do this
-            pet_t = Pet.arel_table
-            pet_types = PetType.select([pet_type_t[:id], pet_type_t[:body_id], "#{Pet.table_name}.id as pet_id, #{Pet.table_name}.name as pet_name"]).
-              joins(:pets).group(pet_type_t[:id])
+            pet_types = PetType.select([:id, :body_id])
             remaining_standard_pet_types = pet_types.single_standard_color.order(:species_id)
             first_standard_pet_type = [remaining_standard_pet_types.slice!(0)]
 
