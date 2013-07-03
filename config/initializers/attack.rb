@@ -1,4 +1,4 @@
-Rack::Attack.throttle('pets/ip', limit: 10, period: 1.minute) do |req|
+Rack::Attack.throttle('pets/ip', limit: 3, period: 30.seconds) do |req|
   Rails.logger.debug "Pets hit? #{req.path.inspect} #{req.ip.inspect}"
   req.ip if req.path.start_with?('/pets/load')
 end

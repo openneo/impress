@@ -115,8 +115,8 @@ var DEBUG = (document.location.search.substr(0, 6) == '?debug');
   $(document.body).addClass('js');
 
   bulk_load_queue = new (function BulkLoadQueue() {
-    var RECENTLY_SENT_INTERVAL_IN_SECONDS = 60;
-    var RECENTLY_SENT_MAX = 10;
+    var RECENTLY_SENT_INTERVAL_IN_SECONDS = 30;
+    var RECENTLY_SENT_MAX = 3;
     var pets = [], url = form.attr('action') + '.json',
       recently_sent_count = 0, loading = false;
     
