@@ -14,7 +14,7 @@ class ItemsController < ApplicationController
         # Note that we sort by name by hand, since we might have to use
         # fallbacks after the fact
         @items = Item::Search::Query.from_text(@query, current_user).
-          paginate(page: params[:page], per_page: per_page, as: :proxies)
+          paginate(page: params[:page], per_page: per_page)
         assign_closeted!
         respond_to do |format|
           format.html {

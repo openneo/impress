@@ -35,7 +35,7 @@ class Item
         rescue Item::Search::Contradiction
           # If we have a contradictory query, no need to raise a stink about
           # it, but no need to actually run a search, either.
-          return []
+          return Item.build_proxies([])
         end
         
         final_flex_params = {
@@ -94,13 +94,7 @@ class Item
         
         result = FlexSearch.item_search(final_flex_params)
 
-        if options[:as] == :proxies
-          result.proxied_collection
-        else
-          result.scoped_loaded_collection(
-            :scopes => {'Item' => Item.includes(:translations)}
-          )
-        end
+        result.proxied_collection
       end
       
       # Load the text query labels from I18n, so that when we see, say,
