@@ -7,6 +7,10 @@ class Item
 
     delegate :description, :name, :nc?, :thumbnail_url, :to_param, to: :item
 
+    def self.model_name
+      Item.model_name
+    end
+
     def initialize(id)
       @id = id
       @known_outputs = {method: {}, partial: {}}

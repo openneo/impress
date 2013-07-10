@@ -18,8 +18,12 @@ class ItemsController < ApplicationController
         assign_closeted!
         respond_to do |format|
           format.html {
-            @items.prepare_partial(:item_link_partial)
-            render
+            if @items.size == 1
+              redirect_to @items.first
+            else
+              @items.prepare_partial(:item_link_partial)
+              render
+            end
           }
           format.json {
             @items.prepare_method(:as_json)
