@@ -535,7 +535,6 @@ class Item < ActiveRecord::Base
       def spider(item)
         puts "  - Using #{@name} strategy"
         exit = false
-        Rails.logger.debug(@pet_types.inspect)
         @pet_types.each do |pet_type|
           swf_assets = load_for_pet_type(item, pet_type)
           if swf_assets
@@ -571,14 +570,14 @@ class Item < ActiveRecord::Base
         original_pet = Pet.select([:id, :name]).
           where(pet_type_id: pet_type.id).first
         if original_pet.nil?
-          puts "    - We have no more pets of type \##{pet_type.id}. Skipping"
+          puts "    - We have no more pets of type \##{pet_type.id}; skipping."
           return nil
         end
         pet_id = original_pet.id
         pet_name = original_pet.name
         pet_valid = nil
         begin
-          pet = Pet.load(pet_name)
+          pet = Pet.load(pet_name, timeout: 10)
           if pet.pet_type_id == pet_type.id
             pet_valid = true
           else
@@ -590,6 +589,9 @@ class Item < ActiveRecord::Base
           pet_valid = false
           puts "    - Pet #{pet_name} no longer exists; destroying and loading new pet"
           original_pet.destroy
+        rescue Pet::DownloadError => e
+          puts "    - Pet #{pet_name} timed out: #{e.message}; skipping."
+          return nil
         end
         if pet_valid
           swf_assets = load_for_pet_name(item, pet_type, pet_name)
@@ -616,7 +618,6 @@ class Item < ActiveRecord::Base
         if !data.empty? && data[item_id_key] && data[item_id_key]['asset_data']
           data[item_id_key]['asset_data'].map do |asset_id_str, asset_data|
             item.zones_restrict = asset_data['restrict']
-            item.save
             swf_asset = SwfAsset.find_or_initialize_by_type_and_remote_id(SwfAssetType, asset_id_str.to_i)
             swf_asset.type = SwfAssetType
             swf_asset.body_id = pet_type.body_id
@@ -659,9 +660,14 @@ class Item < ActiveRecord::Base
         def spider(item)
           puts "- Spidering for #{item.name}"
           Strategies[:start].spider(item)
-          item.last_spidered = Time.now
-          item.save
-          puts "- #{item.name} done spidering, saved last spidered timestamp"
+          if item.swf_assets.present?
+            puts "- #{item.name} done spidering, saved last spidered timestamp"
+            item.rarity_index = 500 # a decent assumption for mall items
+            item.last_spidered = Time.now
+            item.save!
+          else
+            puts "- #{item.name} found no models, so not saved"
+          end
         end
 
         def build_strategies

@@ -22,7 +22,7 @@ class Pet < ActiveRecord::Base
     options[:locale] ||= I18n.default_locale
     
     I18n.with_locale(options[:locale]) do
-      viewer_data = fetch_viewer_data
+      viewer_data = fetch_viewer_data(options[:timeout])
       pet_data = viewer_data[:custom_pet]
       
       self.pet_type = PetType.find_or_initialize_by_species_id_and_color_id(
