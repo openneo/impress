@@ -116,8 +116,9 @@ class ClosetHanger < ActiveRecord::Base
   def merge_quantities
     # Find a hanger that conflicts: for the same item, in the same user's
     # closet, same owned status, same list. It also must not be the current
-    # hanger.
-    conflicting_hanger = self.class.select([:id, :quantity]).
+    # hanger. Select enough for our logic and to update flex_source.
+    conflicting_hanger = self.class.select([:id, :quantity, :user_id, :item_id,
+                                            :owned]).
       where(:user_id => user_id, :item_id => item_id, :owned => owned,
         :list_id => list_id).where(['id != ?', self.id]).first
     
