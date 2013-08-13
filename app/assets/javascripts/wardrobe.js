@@ -342,15 +342,29 @@ function Wardrobe() {
         new_items = [], new_worn_item_ids = [];
       if(added_item) {
         // now that we've loaded, check for conflicts on the added item
+
+        // Construct the presence map of zones that this added item uses.
+        var item_zones_presence_map = {};
         item_zones = added_item.getAssetsFitting(outfit.pet_type).mapProperty('zone_id');
-        item_zones_length = item_zones.length;
+        item_zones = item_zones.concat(added_item.restricted_zones);
+        for(var i = 0; i < item_zones.length; i++) {
+          item_zones_presence_map[item_zones[i]] = true;
+        }
+
+        // Filter the existing items to those that do not use the same zones as
+        // the added item. Items that restrict or are restricted by the added
+        // item are also filtered out, despite not occupying any of the same
+        // zones. (Neopets.com shows an error message on restriction conflicts
+        // rather than unwearing, but that behavioral difference doesn't affect
+        // the set of possible outfits.)
         for(var i = 0; i < outfit.worn_items.length; i++) {
           existing_item = outfit.worn_items[i];
           existing_item_zones = existing_item.getAssetsFitting(outfit.pet_type).mapProperty('zone_id');
+          existing_item_zones = existing_item_zones.concat(existing_item.restricted_zones);
           passed = true;
           if(existing_item != added_item) {
-            for(var j = 0; j < item_zones_length; j++) {
-              if($.inArray(item_zones[j], existing_item_zones) != -1) {
+            for(var j = 0; j < existing_item_zones.length; j++) {
+              if(existing_item_zones[j] in item_zones_presence_map) {
                 passed = false;
                 break;
               }
