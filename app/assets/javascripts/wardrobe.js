@@ -343,28 +343,40 @@ function Wardrobe() {
       if(added_item) {
         // now that we've loaded, check for conflicts on the added item
 
-        // Construct the presence map of zones that this added item uses.
-        var item_zones_presence_map = {};
+        // Construct the presence maps of zones that this added item uses.
+        // TODO: Presence map idiom could be DRYed up.
+        var occupied_zones_presence_map = {};
         item_zones = added_item.getAssetsFitting(outfit.pet_type).mapProperty('zone_id');
-        item_zones = item_zones.concat(added_item.restricted_zones);
         for(var i = 0; i < item_zones.length; i++) {
-          item_zones_presence_map[item_zones[i]] = true;
+          occupied_zones_presence_map[item_zones[i]] = true;
+        }
+        var restricted_zones_presence_map = {};
+        for(var i = 0; i < added_item.restricted_zones.length; i++) {
+          restricted_zones_presence_map[added_item.restricted_zones[i]] = true;
         }
 
-        // Filter the existing items to those that do not use the same zones as
-        // the added item. Items that restrict or are restricted by the added
-        // item are also filtered out, despite not occupying any of the same
-        // zones. (Neopets.com shows an error message on restriction conflicts
-        // rather than unwearing, but that behavioral difference doesn't affect
-        // the set of possible outfits.)
+        // Filter the existing items to those that do not conflict with the
+        // added item. A conflicts with B if A occupies any of B's occupied or
+        // restricted zones, and vice-versa. If A and B both restrict the same
+        // zones, they do not necessarily conflict.
         for(var i = 0; i < outfit.worn_items.length; i++) {
           existing_item = outfit.worn_items[i];
-          existing_item_zones = existing_item.getAssetsFitting(outfit.pet_type).mapProperty('zone_id');
-          existing_item_zones = existing_item_zones.concat(existing_item.restricted_zones);
+          existing_item_occupied_zones = existing_item.getAssetsFitting(
+            outfit.pet_type).mapProperty('zone_id');
           passed = true;
           if(existing_item != added_item) {
-            for(var j = 0; j < existing_item_zones.length; j++) {
-              if(existing_item_zones[j] in item_zones_presence_map) {
+            for(var j = 0; j < existing_item_occupied_zones.length; j++) {
+              var conflicts = (
+                existing_item_occupied_zones[j] in occupied_zones_presence_map ||
+                existing_item_occupied_zones[j] in restricted_zones_presence_map
+              );
+              if(conflicts) {
+                passed = false;
+                break;
+              }
+            }
+            for(var j = 0; j < existing_item.restricted_zones.length; j++) {
+              if(existing_item.restricted_zones[j] in occupied_zones_presence_map) {
                 passed = false;
                 break;
               }
