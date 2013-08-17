@@ -9,6 +9,7 @@ class NeopetsUsersController < ApplicationController
 
   def create
     @neopets_user.username = params[:neopets_user][:username]
+    @neopets_user.list_id = params[:neopets_user][:list_id]
     @neopets_user.load!
     @neopets_user.save_hangers!
 

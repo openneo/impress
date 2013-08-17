@@ -7,5 +7,6 @@
 
   = f.label :username, t('.username_label')
   = f.text_field :username
+  = f.select :list_id, neopets_page_list_options(current_user)
   = f.submit t('.submit')
 
