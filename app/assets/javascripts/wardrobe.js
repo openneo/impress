@@ -270,6 +270,8 @@ function Wardrobe() {
     var outfit = this, previous_pet_type, worn_item_ids = [],
       closet_item_ids = [], new_record = true;
 
+    this.attribute_clones = [this];
+
     this.setWornAndUnwornItemIds = function (new_ids) {
       this.worn_and_unworn_item_ids = new_ids;
       worn_item_ids = new_ids.worn;
@@ -456,7 +458,16 @@ function Wardrobe() {
       if(ids) closet_item_ids = ids;
       if(ids && ids.length) {
         Item.loadByIds(ids, function (items) {
-          outfit.closet_items = items;
+          // HACK: If this outfit is cloned before its items load, then the
+          // clone won't know to get the items. So, forward the results to our
+          // clones. (attribute_clones is initialized with this in it, for
+          // simplicity.)
+          for(var i = 0; i < outfit.attribute_clones.length; i++) {
+            outfit.attribute_clones[i].closet_items = items;
+          }
+          // HACK: And make sure we don't further cross-contaminate.
+          outfit.attribute_clones = [outfit];
+
           updateItemsCallback(items);
         });
       } else {
@@ -573,6 +584,10 @@ function Wardrobe() {
       new_ids.worn = base_ids.worn.slice(0);
       new_ids.unworn = base_ids.unworn.slice(0);
       outfit.setWornAndUnwornItemIds(new_ids);
+
+      // HACK: Let the base outfit know that I'm a clone so I receive callbacks
+      // for requests it's already made.
+      base_outfit.attribute_clones.push(outfit);
     }
     
     function updateFromSaveResponse(data) {
