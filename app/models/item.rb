@@ -493,7 +493,7 @@ class Item < ActiveRecord::Base
     end
 
     def spider_mall_assets!(limit)
-      items = self.select([arel_table[:id]]).sold_in_mall.spidered_longest_ago.limit(limit).all
+      items = self.select([:id, :zones_restrict]).sold_in_mall.spidered_longest_ago.limit(limit).all
       puts "- #{items.size} items need asset spidering"
       AssetStrategy.build_strategies
       items.each do |item|
