@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130427151327) do
+ActiveRecord::Schema.define(:version => 20131016203607) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -291,6 +291,7 @@ ActiveRecord::Schema.define(:version => 20130427151327) do
     t.boolean  "image_requested",                        :default => false, :null => false
     t.datetime "reported_broken_at"
     t.datetime "converted_at"
+    t.boolean  "image_manual",                           :default => false, :null => false
   end
 
   add_index "swf_assets", ["body_id"], :name => "swf_assets_body_id_and_object_id"

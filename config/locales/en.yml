@@ -50,9 +50,10 @@ en:
       success:
         Thanks! This image will be reconverted soon. If it looks the same after
         conversion, please consider sending a bug report.
-      already_reported:
-        This image is already in line for reconversion. We'll get to it soon,
-        don't worry.
+      manual:
+        This image was uploaded manually, so we don't want to run the
+        automatic converters on it. If this manual version is broken, let us
+        know at webmaster@openneo.net. Thanks!
     
     new:
       title: Report broken image
@@ -67,6 +68,9 @@ en:
       submit: Report as broken
       converted_at_html: Converted %{converted_at_ago} ago
       reported_at_html: Reported %{reported_at_ago} ago
+      image_manual:
+        description: Uploaded manually.
+        contact: Send a bug report?
   
   closet_hangers:
     closet_hanger:

@@ -13,10 +13,13 @@ class BrokenImageReportsController < ApplicationController
     swf_asset = SwfAsset.where(:type => params[:swf_asset_type]).
       find_by_remote_id(params[:swf_asset_remote_id])
 
-    if swf_asset.report_broken
-      flash[:success] = t('broken_image_reports.create.success')
+    if swf_asset.image_manual?
+      flash[:warning] = t('broken_image_reports.create.manual')
     else
-      flash[:alert] = t('broken_image_reports.create.already_reported')
+      # If the asset is already reported as broken, no need to shout about it.
+      # Just don't enqueue it, thank the user, and move on.
+      swf_asset.report_broken
+      flash[:success] = t('broken_image_reports.create.success')
     end
 
     redirect_to :back
