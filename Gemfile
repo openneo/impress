@@ -96,6 +96,7 @@ end
 
 group :production do
   gem 'memcache-client', '~> 1.8.5', :require => 'memcache'
+  gem 'passenger_monit', '~> 0.1.1'
 end
 
 group :test do
