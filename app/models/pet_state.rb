@@ -135,6 +135,18 @@ class PetState < ActiveRecord::Base
     end
   end
 
+  def replace_with(other)
+    PetState.transaction do
+      count = outfits.count
+      outfits.find_each { |outfit|
+        outfit.pet_state = other
+        outfit.save!
+      }
+      destroy
+    end
+    count
+  end
+
   def self.from_pet_type_and_biology_info(pet_type, info)
     swf_asset_ids = []
     info.each do |zone_id, asset_info|
