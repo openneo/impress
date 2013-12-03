@@ -192,8 +192,8 @@ class Item < ActiveRecord::Base
     
     return Species.all if body_ids.include?(0)
     
-    pet_types = PetType.where(:body_id => body_ids).select([:species_id])
-    species_ids = pet_types.map(&:species_id).uniq
+    pet_types = PetType.where(:body_id => body_ids).select('DISTINCT species_id')
+    species_ids = pet_types.map(&:species_id)
     
     # If there are multiple known supported species, it probably supports them
     # all. (I've never heard of only a handful of species being supported :P)

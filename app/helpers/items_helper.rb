@@ -27,6 +27,11 @@ module ItemsHelper
     end
   end
 
+  def standard_species_images_key_for(item)
+    versions_count = 1 # TODO
+    "foo" # TODO
+  end
+
   def standard_species_images_for(item)
     build_on_pet_types(item.supported_species, item.special_color) do |pet_type|
       image = pet_type_image(pet_type, :happy, :face)
