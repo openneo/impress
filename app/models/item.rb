@@ -154,6 +154,10 @@ class Item < ActiveRecord::Base
     @special_color ||= determine_special_color
   end
 
+  def special_color_id
+    special_color.try(:id)
+  end
+
   protected
   def determine_special_color
     I18n.with_locale(I18n.default_locale) do
@@ -186,22 +190,18 @@ class Item < ActiveRecord::Base
     replacement = replacement.join(',') if replacement.is_a?(Array)
     write_attribute('species_support_ids', replacement)
   end
-
-  def supported_species
+  
+  def supported_species_ids
     body_ids = swf_assets.select([:body_id]).map(&:body_id)
     
-    return Species.all if body_ids.include?(0)
+    return Species.select([:id]).map(&:id) if body_ids.include?(0)
     
     pet_types = PetType.where(:body_id => body_ids).select('DISTINCT species_id')
     species_ids = pet_types.map(&:species_id)
     
     # If there are multiple known supported species, it probably supports them
     # all. (I've never heard of only a handful of species being supported :P)
-    species_ids.size > 1 ? Species.all : Species.find(species_ids)
-  end
-  
-  def supported_species_ids
-    supported_species.map(&:id)
+    species_ids.size >= 2 ? Species.select([:id]).map(&:id) : species_ids
   end
   
   def support_species?(species)

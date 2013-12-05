@@ -73,6 +73,11 @@ class ItemsController < ApplicationController
           @contributors_with_counts = @item.contributors_with_counts
         end
 
+        @supported_species_ids = @item.supported_species_ids
+        unless localized_fragment_exist?("items/show standard_species_images special_color=#{@item.special_color_id}")
+          @basic_colored_pet_types_by_species_id = PetType.special_color_or_basic(@item.special_color).includes_child_translations.group_by(&:species)
+        end
+
         @trading_closet_hangers_by_owned = {
           true => @item.closet_hangers.owned_trading.newest.includes(:user),
           false => @item.closet_hangers.wanted_trading.newest.includes(:user)

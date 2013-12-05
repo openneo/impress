@@ -2,7 +2,8 @@
 
 var PREVIEW_SWF_ID = 'item-preview-swf',
   PREVIEW_SWF = document.getElementById(PREVIEW_SWF_ID),
-  speciesList = $('#item-preview a'),
+  speciesEls,
+  petTypeEls,
   customize_more_el = $('#customize-more'),
   MainWardrobe;
 
@@ -46,7 +47,7 @@ function PetType() {
 
   this.setAsCurrent = function () {
     PetType.current = this;
-    speciesList.filter('.current').removeClass('current');
+    petTypeEls.filter('.current').removeClass('current');
     this.link.addClass('current');
     customize_more_el.attr('href',
       'http://impress.openneo.net/wardrobe?species=' + this.species_id +
@@ -213,16 +214,40 @@ Preview.embed(PREVIEW_SWF_ID);
 Item.createFromLocation().setAsCurrent();
 Item.current.name = $('#item-name').text();
 
-PetType.createFromLink(speciesList.eq(Math.floor(Math.random()*speciesList.length))).setAsCurrent();
+// Choose only supported species, and remove the unsupported.
+var supportedSpeciesIds = $('#item-preview-species').attr('data-supported-species-ids').split(',');
+var supportedSpeciesIdPresenceMap = {};
+for(var i = 0; i < supportedSpeciesIds.length; i++) {
+  supportedSpeciesIdPresenceMap[supportedSpeciesIds[i]] = true;
+}
+speciesEls = $('#item-preview-species > li').filter(function() {
+  var supported = supportedSpeciesIdPresenceMap[this.getAttribute('data-id')];
+  if(!supported) this.parentNode.removeChild(this);
+  return supported;
+});
 
-speciesList.each(function () {
+// Choose random pet type for each species.
+speciesEls.each(function() {
+  var speciesPetTypeEls = $(this).find('.pet-type');
+  var chosen = speciesPetTypeEls.eq(Math.floor(Math.random()*speciesPetTypeEls.length));
+  speciesPetTypeEls.not(chosen).remove();
+});
+
+petTypeEls = speciesEls.find('.pet-type');
+
+// Choose random starting pet type
+PetType.createFromLink(petTypeEls.eq(Math.floor(Math.random()*petTypeEls.length))).setAsCurrent();
+
+// Setup pet type click behavior
+petTypeEls.each(function () {
   var el = $(this);
   PetType.createFromLink(el);
-}).live('click', function (e) {
-  e.preventDefault();
+}).click(function (e) {
   PetType.all[$(this).data('id')].setAsCurrent();
 });
 
+// Load the other pet type data in 5 seconds, to save database effort in case
+// the user decides to bounce.
 setTimeout($.proxy(Item.current, 'loadAllStandard'), 5000);
 
 window.MainWardrobe = {View: {Outfit: {setFlashIsReady: previewSWFIsReady}}}

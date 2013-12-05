@@ -20,7 +20,7 @@ module OpenneoImpressItems
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
     # Activate observers that should always be running
-    config.active_record.observers = :contribution_observer, :item_observer, :user_sweeper
+    config.active_record.observers = :contribution_observer, :item_observer, :pet_type_observer, :user_sweeper
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.

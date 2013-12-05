@@ -78,9 +78,10 @@
                                             :class => 'button'
 
 #item-preview
-  #item-preview-species
-    -# localized_cache random_standard_species_images_key do
-    = standard_species_images_for(@item)
+  %ul#item-preview-species{'data-supported-species-ids' => @supported_species_ids.join(',')}
+    -# TODO: filter by compatibility
+    - localized_cache "items/show standard_species_images special_color=#{@item.special_color_id}" do
+      = standard_species_images_for(@basic_colored_pet_types_by_species_id)
   #item-preview-error
   #item-preview-swf= t '.preview.requirements_not_met'
 

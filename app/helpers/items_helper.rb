@@ -27,31 +27,21 @@ module ItemsHelper
     end
   end
 
-  def standard_species_images_key_for(item)
-    versions_count = 1 # TODO
-    "foo" # TODO
-  end
-
-  def standard_species_images_for(item)
-    build_on_pet_types(item.supported_species, item.special_color) do |pet_type|
-      image = pet_type_image(pet_type, :happy, :face)
-      attributes = {
-        'data-id' => pet_type.id,
-        'data-body-id' => pet_type.body_id
-      }
-      [:color, :species].each do |pet_type_attribute_name|
-        pet_type_attribute = pet_type.send(pet_type_attribute_name)
-        [:id, :name].each do |subattribute_name|
-          attributes["data-#{pet_type_attribute_name}-#{subattribute_name}"] =
-            pet_type_attribute.send(subattribute_name)
-        end
-      end
-      link_to(
-        image,
-        '#',
-        attributes
-      )
-    end
+  def standard_species_images_for(pet_types_by_species_id)
+    pet_types_by_species_id.to_a.sort_by { |s, pt| s.name }.map { |species, pet_types|
+      pet_type_images = pet_types.map { |pet_type|
+        image = pet_type_image(pet_type, :happy, :face)
+        content_tag(:li, image, 'class' => 'pet-type',
+                                'data-id' => pet_type.id,
+                                'data-body-id' => pet_type.body_id,
+                                'data-color-id' => pet_type.color.id,
+                                'data-color-name' => pet_type.color.name,
+                                'data-species-id' => pet_type.species.id,
+                                'data-species-name' => pet_type.species.name)
+      }.join.html_safe
+      content_tag(:li, content_tag(:ul, pet_type_images),
+                  'data-id' => species.id)
+    }.join.html_safe
   end
   
   def closet_list_verb(owned)

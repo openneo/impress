@@ -21,23 +21,16 @@ class PetType < ActiveRecord::Base
   
   scope :includes_child_translations,
     lambda { includes({:color => :translations, :species => :translations}) }
-  
-  def self.standard_pet_types_by_species_id
-    # If we include Color.basic in the query, rather than getting the ID array
-    # first, it'll do this as a big fat JOIN unnecessarily. On production,
-    # there are tons of pet types and translations to send down, so tons of
-    # duplicate data is sent and must be merged together properly, both of
-    # which take serious time. So, this is a surprisingly significant
-    # performance boost - though I was surprised and impressed that Rails
-    # includes relations as subqueries. That's cool.
-    basic_color_ids = Color.basic.select([:id]).map(&:id)
-    PetType.where(color_id: basic_color_ids).includes_child_translations.
-      group_by(&:species_id)
+
+  def self.special_color_or_basic(special_color)
+    color_ids = special_color ? [special_color.id] : Color.basic.select([:id]).map(&:id)
+    where(color_id: color_ids)
   end
   
   def self.standard_body_ids
     [].tap do |body_ids|
-      standard_pet_types_by_species_id.each do |species_id, pet_types|
+      # TODO: the nil hack is lame :P
+      special_color_or_basic(nil).group_by(&:species_id).each do |species_id, pet_types|
         body_ids.concat(pet_types.map(&:body_id))
       end
     end
@@ -45,7 +38,8 @@ class PetType < ActiveRecord::Base
 
   def self.random_basic_per_species(species_ids)
     random_pet_types = []
-    standards = self.standard_pet_types_by_species_id
+    # TODO: omg so lame :P
+    standards = special_color_or_basic(nil).group_by(&:species_id)
     species_ids.each do |species_id|
       pet_types = standards[species_id]
       random_pet_types << pet_types[rand(pet_types.size)] if pet_types

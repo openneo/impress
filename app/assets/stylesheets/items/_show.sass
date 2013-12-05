@@ -36,17 +36,18 @@ body.items-show
   #item-preview
     +clearfix
     
-    div
+    > div, > ul
       float: left
       
   #item-preview-species
+    display: block
     width: 400px
     
-    a, img
+    .pet-type, img
       height: 50px
       width: 50px
       
-    a
+    .pet-type
       +inline-block
       &.current
         background: $module-bg-color
@@ -58,7 +59,10 @@ body.items-show
         &.current
           background: transparent
           outline-color: $error_border_color
-          
+
+    ul, li
+      display: inline
+
   #item-preview-error
     display: none
     padding: 20px 10px 0
