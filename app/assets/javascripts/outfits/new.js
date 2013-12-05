@@ -42,9 +42,10 @@ var Preview = {
   }
 }
 
-$.get('/spotlight_pets.txt', function (data) {
-  var names = data.split('\n'), i = Math.floor(Math.random()*(names.length-1));
-  Preview.Job.fallback = new Preview.Job.Name(names[i]);
+$.getJSON('http://notables.openneo.net/api/1/days/ago/1?callback=?', function (response) {
+  var notables = response.notables;
+  var i = Math.floor(Math.random() * notables.length);
+  Preview.Job.fallback = new Preview.Job.Name(notables[i].petName);
   if(!Preview.Job.current) {
     Preview.Job.fallback.setAsCurrent();
   }
