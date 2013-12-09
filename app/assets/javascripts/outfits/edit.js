@@ -211,6 +211,7 @@ View.Hash = function (wardrobe) {
     STRING: 2,
     INTEGER_ARRAY: 3
   }, KEYS = {
+    biologies: TYPES.INTEGER_ARRAY,
     closet: TYPES.INTEGER_ARRAY,
     color: TYPES.INTEGER,
     name: TYPES.STRING,
@@ -252,6 +253,9 @@ View.Hash = function (wardrobe) {
       }
     }
 
+    if(new_data.biologies) {
+      wardrobe.outfits.setPetStateAssetsByIds(new_data.biologies);
+    }
     if(new_data.color !== data.color || new_data.species !== data.species) {
       wardrobe.outfits.setPetTypeByColorAndSpecies(new_data.color, new_data.species);
     }
@@ -372,7 +376,7 @@ View.Hash = function (wardrobe) {
   singleOutfitResponse('updatePetState', function (pet_state) {
     var pet_type = wardrobe.outfits.getPetType();
     if(pet_state.id != data.state && pet_type && (data.state || pet_state.id != pet_type.pet_states[0].id)) {
-      changeQuery({state: pet_state.id});
+      changeQuery({biologies: undefined, state: pet_state.id});
     }
   });
 
@@ -384,6 +388,7 @@ View.Hash = function (wardrobe) {
 
   wardrobe.outfits.bind('loadOutfit', function (outfit) {
     changeQuery({
+      biologies: undefined,
       closet: outfit.getClosetItemIds(),
       color: outfit.pet_type.color_id,
       objects: outfit.getWornItemIds(),

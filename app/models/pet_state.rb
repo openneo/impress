@@ -38,7 +38,11 @@ class PetState < ActiveRecord::Base
     order("glitched ASC, (mood_id = 1) DESC, COUNT(effect_assets.remote_id) ASC, COUNT(parents_swf_assets.swf_asset_id) DESC, female ASC, SUM(parents_swf_assets.swf_asset_id) ASC")
 
   def as_json(options={})
-    serializable_hash :only => [:id], :methods => [:gender_mood_description]
+    {
+      id: id,
+      gender_mood_description: gender_mood_description,
+      swf_asset_ids: swf_asset_ids_array
+    }
   end
 
   def reassign_children_to!(main_pet_state)
@@ -66,11 +70,15 @@ class PetState < ActiveRecord::Base
   end
 
   def sort_swf_asset_ids!
-    self.swf_asset_ids = swf_asset_ids.split(',').map(&:to_i).sort.join(',')
+    self.swf_asset_ids = swf_asset_ids_array.sort.join(',')
   end
 
   def swf_asset_ids
     self['swf_asset_ids']
+  end
+
+  def swf_asset_ids_array
+    swf_asset_ids.split(',').map(&:to_i)
   end
 
   def swf_asset_ids=(ids)

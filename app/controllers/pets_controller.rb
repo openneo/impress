@@ -2,6 +2,9 @@ class PetsController < ApplicationController
   rescue_from Pet::PetNotFound, :with => :pet_not_found
   rescue_from PetType::DownloadError, SwfAsset::DownloadError, :with => :asset_download_error
   rescue_from Pet::DownloadError, :with => :pet_download_error
+
+  protect_from_forgery except: :submit
+  before_filter :local_only, only: :submit
   
   cache_sweeper :user_sweeper
 
@@ -11,14 +14,7 @@ class PetsController < ApplicationController
     else
       raise Pet::PetNotFound unless params[:name]
       @pet = Pet.load(params[:name], :item_scope => Item.includes(:translations))
-      if user_signed_in?
-        points = current_user.contribute! @pet
-      else
-        @pet.save
-        points = true
-      end
-      
-      @pet.translate_items
+      points = contribute(current_user, @pet)
       
       respond_to do |format|
         format.html do
@@ -32,8 +28,26 @@ class PetsController < ApplicationController
       end
     end
   end
+
+  def submit
+    viewer_data = HashWithIndifferentAccess.new(JSON.parse(params[:viewer_data]))
+    @pet = Pet.from_viewer_data(viewer_data, :item_scope => Item.includes(:translations))
+    @user = params[:user_id].present? ? User.find(params[:user_id]) : nil
+    render json: {points: contribute(@user, @pet)}
+  end
   
   protected
+
+  def contribute(user, pet)
+    if user.present?
+      points = user.contribute! pet
+    else
+      pet.save!
+      points = true
+    end
+    pet.translate_items
+    points
+  end
   
   def destination
     case (params[:destination] || params[:origin])

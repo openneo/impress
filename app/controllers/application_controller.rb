@@ -26,6 +26,10 @@ class ApplicationController < ActionController::Base
     http_accept_language.language_region_compatible_from(I18n.public_locales.map(&:to_s)) ||
       I18n.default_locale
   end
+
+  def local_only
+    raise AccessDenied unless request.ip == '127.0.0.1'
+  end
   
   def localized_fragment_exist?(key)
     localized_key = localize_fragment_key(key, locale)

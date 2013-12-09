@@ -18,29 +18,31 @@ class Pet < ActiveRecord::Base
   }
 
   def load!(options={})
-    options[:item_scope] ||= Item.scoped
     options[:locale] ||= I18n.default_locale
-    
-    I18n.with_locale(options[:locale]) do
-      viewer_data = fetch_viewer_data(options[:timeout])
-      pet_data = viewer_data[:custom_pet]
-      
-      self.pet_type = PetType.find_or_initialize_by_species_id_and_color_id(
-        pet_data[:species_id].to_i,
-        pet_data[:color_id].to_i
-      )
-      self.pet_type.body_id = pet_data[:body_id]
-      self.pet_type.origin_pet = self
-      biology = pet_data[:biology_by_zone]
-      biology[0] = nil # remove effects if present
-      @pet_state = self.pet_type.add_pet_state_from_biology! biology
-      @pet_state.label_by_pet(self, pet_data[:owner])
-      @items = Item.collection_from_pet_type_and_registries(self.pet_type,
-        viewer_data[:object_info_registry], viewer_data[:object_asset_registry],
-        options[:item_scope])
+    I18n.with_locale(options.delete(:locale)) do
+      use_viewer_data(fetch_viewer_data(options.delete(:timeout)), options)
     end
-
     true
+  end
+
+  def use_viewer_data(viewer_data, options={})
+    options[:item_scope] ||= Item.scoped
+
+    pet_data = viewer_data[:custom_pet]
+
+    self.pet_type = PetType.find_or_initialize_by_species_id_and_color_id(
+      pet_data[:species_id].to_i,
+      pet_data[:color_id].to_i
+    )
+    self.pet_type.body_id = pet_data[:body_id]
+    self.pet_type.origin_pet = self
+    biology = pet_data[:biology_by_zone]
+    biology[0] = nil # remove effects if present
+    @pet_state = self.pet_type.add_pet_state_from_biology! biology
+    @pet_state.label_by_pet(self, pet_data[:owner])
+    @items = Item.collection_from_pet_type_and_registries(self.pet_type,
+      viewer_data[:object_info_registry], viewer_data[:object_asset_registry],
+      options[:item_scope])
   end
   
   def fetch_viewer_data(timeout=4)
@@ -167,6 +169,12 @@ class Pet < ActiveRecord::Base
   def self.load(name, options={})
     pet = Pet.find_or_initialize_by_name(name)
     pet.load!(options)
+    pet
+  end
+
+  def self.from_viewer_data(viewer_data, options={})
+    pet = Pet.find_or_initialize_by_name(viewer_data[:custom_pet][:name])
+    pet.use_viewer_data(viewer_data, options)
     pet
   end
 

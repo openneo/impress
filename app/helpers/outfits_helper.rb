@@ -49,6 +49,10 @@ module OutfitsHelper
     content_tag(:dt, search_query_with_helper(base, filter_key)) +
       content_tag(:dd, search_query_description(base, filter_key))
   end
+
+  def remote_load_pet_path
+    "http://#{Rails.configuration.neopia_host}/api/1/pet/customization"
+  end
   
   def outfit_creation_summary(outfit)
     user = outfit.user

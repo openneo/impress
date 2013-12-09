@@ -476,9 +476,26 @@ function Wardrobe() {
       }
     }
 
+    this.setPetStateAssetsByIds = function (assetIds, petStateOnLoad) {
+      this.pet_state = PetState.createFromAssetIds(assetIds);
+      this.pet_state.loadAssets(petStateOnLoad);
+    }
+
     this.setPetStateById = function (id, petStateOnLoad) {
       if(!id && this.pet_type) {
-        id = this.pet_type.pet_states[0].id;
+        if(this.pet_state) {
+          var candidate;
+          for(var i = 0; i < this.pet_type.pet_states.length; i++) {
+            candidate = this.pet_type.pet_states[i];
+            if(arraysMatch(this.pet_state.assetIds, candidate.assetIds)) {
+              id = candidate.id;
+              break;
+            }
+          }
+        }
+        if(!id) {
+          id = this.pet_type.pet_states[0].id;
+        }
       }
       if(id) {
         this.pet_state = PetState.find(id);
@@ -712,6 +729,7 @@ function Wardrobe() {
 
     this.id = id;
     this.gender_mood_description = '';
+    this.assetIds = [];
     this.assets = [];
 
     this.loadAssets = function (success) {
@@ -722,6 +740,9 @@ function Wardrobe() {
         $.getJSON('/pet_states/' + pet_state.id + '/swf_assets.json',
         function (data) {
           pet_state.assets = $.map(data, function (obj) { return new BiologyAsset(obj) });
+          pet_state.assetIds = $.map(pet_state.assets, function (asset) {
+            return asset.id;
+          });
           loaded = true;
           success(pet_state);
         });
@@ -730,9 +751,30 @@ function Wardrobe() {
     
     this.update = function (data) {
       this.gender_mood_description = data.gender_mood_description;
+      this.assetIds = data.swf_asset_ids;
     }
 
     PetState.cache[id] = this;
+  }
+
+  PetState.createFromAssetIds = function (assetIds) {
+    // Fun lame hacks to be able to create from biology asset IDs. Not even a
+    // real PetState, gasp!
+    assetIds.sort();
+    var petState = {
+      id: null,
+      gender_mood_description: '',
+      assets: [],
+      assetIds: assetIds,
+      loadAssets: function (success) {
+        $.getJSON('/swf_assets.json', {ids: {biology: assetIds}}, function (data) {
+          this.assets = $.map(data, function (obj) { return new BiologyAsset(obj) });
+          success(petState);
+        });
+      },
+      update: $.noop
+    };
+    return petState;
   }
 
   PetState.find = function (id) {
@@ -999,6 +1041,10 @@ function Wardrobe() {
         setOutfitIdentity(new Outfit);
         controller.events.trigger('setOutfit', outfit);
       }
+    }
+
+    this.setPetStateAssetsByIds = function (assetIds) {
+      outfit.setPetStateAssetsByIds(assetIds, controller.event('updatePetState'));
     }
 
     this.setPetStateById = function (pet_state_id) {

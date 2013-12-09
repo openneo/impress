@@ -272,8 +272,10 @@ class Item < ActiveRecord::Base
   end
 
   def origin_registry_info=(info)
+    Rails.logger.debug("info! #{info}")
     # bear in mind that numbers from registries are floats
-    self.species_support_ids = info[:species_support].map(&:to_i)
+    species_support_strs = info['species_support'] || []
+    self.species_support_ids = species_support_strs.map(&:to_i)
     attribute_names.each do |attribute|
       value = info[attribute.to_sym]
       if value

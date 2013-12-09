@@ -10,18 +10,18 @@
     %h1= t 'app_name'
     %h2= t '.tagline'
   
-  = form_tag load_pet_path, :id => 'load-pet-to-wardrobe' do
-    - localized_cache :action_suffix => 'main_load_pet_form_content' do
-      = origin_tag root_path
-      = destination_tag 'wardrobe'
+  = form_tag remote_load_pet_path, method: 'GET', id: 'load-pet-to-wardrobe' do
+    = hidden_field_tag 'impress_user', current_user.try(:id)
+    - localized_cache action_suffix: 'outfits#new main_load_pet_form_content' do
+      = hidden_field_tag 'redirect', "#{wardrobe_url}\#{q}"
       %fieldset
         %legend= t '.load_pet.legend'
         = pet_name_tag :id => 'main-pet-name'
         %button{:type => "submit"}
           = t '.load_pet.submit'
  
-  = form_tag wardrobe_path, :method => 'get', :id => 'start-from-scratch' do
-    - localized_cache :action_suffix => 'start_from_scratch_form_content' do
+  - localized_cache action_suffix: 'outfits#new start_from_scratch_form' do
+    = form_tag wardrobe_path, method: 'GET', id: 'start-from-scratch', authenticity_token: false do
       %fieldset
         %legend= t '.start_from_scratch.legend'
         = pet_attribute_select 'color', @colors, 8
@@ -60,8 +60,8 @@
     %div
       %h4= t '.modeling_hub.tagline'
       %p= t '.modeling_hub.description'
-      = form_tag load_pet_path do
-        = origin_tag root_path
+      = form_tag remote_load_pet_path, method: 'GET' do
+        = hidden_field_tag 'redirect', "#{root_url}\#{q}"
         = pet_name_tag :placeholder => t('.modeling_hub.load_pet.placeholder')
         = submit_tag t('.modeling_hub.load_pet.submit')
 

@@ -49,6 +49,7 @@ OpenneoImpressItems::Application.routes.draw do
   match '/users/current-user/outfits' => 'outfits#index', :as => :current_user_outfits
 
   match '/pets/load' => 'pets#load', :method => :post, :as => :load_pet
+  match '/pets/submit' => 'pets#submit', :method => :post
   match '/modeling' => 'pets#bulk', :as => :bulk_pets
 
   match '/login' => 'sessions#new', :as => :login
