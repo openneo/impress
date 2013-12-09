@@ -23,14 +23,6 @@ class Item
       end
     end
 
-    def cached?(type, name)
-      # TODO: is there a way to cache nil? Right now we treat is as a miss.
-      # We eagerly read the cache rather than just check if the value exists,
-      # which will usually cut down on cache requests.
-      @known_outputs[type][name] ||= Rails.cache.read(fragment_key(type, name))
-      !@known_outputs[type][name].nil?
-    end
-
     def owned?
       @owned
     end
@@ -42,6 +34,16 @@ class Item
 
     def wanted?
       @wanted
+    end
+
+    def fragment_key(type, name)
+      prefix = type == :partial ? 'views/' : ''
+      base = localize_fragment_key("items/#{@id}##{name}", I18n.locale)
+      prefix + base
+    end
+
+    def set_known_output(type, name, value)
+      @known_outputs[type][name] = value
     end
 
     private
@@ -57,12 +59,6 @@ class Item
 
     def item
       @item ||= Item.find(@id)
-    end
-
-    def fragment_key(type, name)
-      prefix = type == :partial ? 'views/' : ''
-      base = localize_fragment_key("items/#{@id}##{name}", I18n.locale)
-      prefix + base
     end
   end
 end

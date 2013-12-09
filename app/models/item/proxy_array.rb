@@ -27,11 +27,21 @@ class Item
     private
 
     def prepare(type, name)
-      missed_proxies_by_id = self.
-        reject { |p| p.cached?(type, name) }.
-        index_by(&:id)
       item_scope = SCOPES[type][name]
       raise "unexpected #{type} #{name.inspect}" unless item_scope
+
+      # Try to read all values from the cache in one go, setting the proxy
+      # values as we go along. Delete successfully set proxies, so that
+      # everything left in proxies_by_key in the end is known to be a miss.
+      proxies_by_key = {}
+      self.each { |p| proxies_by_key[p.fragment_key(type, name)] = p }
+      Rails.cache.read_multi(*proxies_by_key.keys).each { |k, v|
+        proxies_by_key.delete(k).set_known_output(type, name, v)
+      }
+
+      missed_proxies = proxies_by_key.values
+      missed_proxies_by_id = missed_proxies.index_by(&:id)
+
       item_scope.find(missed_proxies_by_id.keys).each do |item|
         missed_proxies_by_id[item.id].item = item
       end
