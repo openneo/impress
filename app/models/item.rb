@@ -41,7 +41,8 @@ class Item < ActiveRecord::Base
 
   scope :with_closet_hangers, joins(:closet_hangers)
   
-  flex.sync self
+  # Syncing is now handled in background tasks, created in the ItemObserver.
+  flex.sync self, callbacks: []
   
   def flex_source
     indexed_attributes = {

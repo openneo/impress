@@ -2,31 +2,15 @@ class ItemObserver < ActionController::Caching::Sweeper
   include FragmentExpiration
   
   def after_create(item)
-    Rails.logger.debug "Item #{item.id} was just created"
-    expire_newest_items
+    Resque.enqueue(Item::CreateTask, item.id)
   end
   
   def after_update(item)
-    Rails.logger.debug "Item #{item.id} was just updated"
-    expire_cache_for(item)
+    # CONSIDER: can pass item.changes.keys in to choose which caches to expire
+    Resque.enqueue(Item::UpdateTask, item.id)
   end
 
   def after_destroy(item)
-    Rails.logger.debug "Item #{item.id} was just destroyed"
-    expire_cache_for(item)
-  end
-
-  private
-  
-  def expire_cache_for(item)
-    expire_fragment_in_all_locales("items/#{item.id}#item_link_partial")
-    expire_fragment_in_all_locales("items/#{item.id} header")
-    expire_fragment_in_all_locales("items/#{item.id} info")
-    expire_key_in_all_locales("items/#{item.id}#as_json")
-  end
-  
-  def expire_newest_items
-    expire_fragment_in_all_locales('outfits#new newest_items')
-    expire_fragment_in_all_locales('items#index newest_items')
+    Resque.enqueue(Item::DestroyTask, item.id)
   end
 end
