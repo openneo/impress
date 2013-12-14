@@ -47,8 +47,25 @@ class OutfitsController < ApplicationController
     end
     
     unless localized_fragment_exist?('outfits#new newest_items')
-      @newest_items = Item.newest.select([:id, :thumbnail_url]).
-        includes(:translations).limit(9)
+      newest_items = Item.newest.select([:id, :thumbnail_url, :rarity_index]).
+        includes(:translations).limit(18)
+      @newest_modeled_items, @newest_unmodeled_items =
+        newest_items.partition(&:predicted_fully_modeled?)
+
+      @newest_unmodeled_items_predicted_missing_species_by_color = {}
+      @newest_unmodeled_items_predicted_modeled_ratio = {}
+      @newest_unmodeled_items.each do |item|
+        h = item.predicted_missing_nonstandard_body_species_by_color(
+          Color.includes(:translations).select([:id]),
+          Species.includes(:translations).select([:id]))
+        standard_species = item.predicted_missing_standard_body_species.
+                                select([:id]).includes(:translations)
+        h[:standard] = standard_species if standard_species.present?
+        @newest_unmodeled_items_predicted_missing_species_by_color[item] = h
+        @newest_unmodeled_items_predicted_modeled_ratio[item] = item.predicted_modeled_ratio
+      end
+
+      @species_count = Species.count
     end
     
     unless localized_fragment_exist?('outfits#new latest_contribution')

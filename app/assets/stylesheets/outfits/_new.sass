@@ -138,12 +138,35 @@ body.outfits-new
 
   #whats-new
     margin-bottom: 1em
+
+    h3
+      font-size: 125%
+      font-style: italic
+      margin-bottom: .5em
+
+    #newest-modeled-items
+      text-align: center
+
+      .object
+        margin: 2px
+        padding: 0
+        width: 80px
+
+        .name
+          display: none
+
+        img
+          margin: 0
+
+        .nc-icon
+          right: 0
     
-    #newest-items
+    #newest-unmodeled-items
       list-style: none
 
       li
         +clearfix
+        margin: .5em 0
 
       a.header
         background: $module-bg-color
@@ -153,7 +176,7 @@ body.outfits-new
         color: white
         display: block
         margin-left: 81px
-        padding: .5em .75em
+        padding: .5em 8px
         position: relative
         text-decoration: none
         text-shadow: $text-color 1px 1px 2px
@@ -184,6 +207,14 @@ body.outfits-new
           border-radius: 6px 0 6px 6px
           height: 80px
           width: 80px
+
+      .missing-bodies
+        font-size: 85%
+        margin-left: 82px
+        padding: .5em 8px
+        p
+          font-family: $main-font
+          margin-bottom: .5em
   
   #latest-contribution
     +subtle-banner

@@ -193,11 +193,9 @@ class Item < ActiveRecord::Base
   end
   
   def supported_species_ids
-    body_ids = swf_assets.select([:body_id]).map(&:body_id)
+    return Species.select([:id]).map(&:id) if modeled_body_ids.include?(0)
     
-    return Species.select([:id]).map(&:id) if body_ids.include?(0)
-    
-    pet_types = PetType.where(:body_id => body_ids).select('DISTINCT species_id')
+    pet_types = PetType.where(:body_id => modeled_body_ids).select('DISTINCT species_id')
     species_ids = pet_types.map(&:species_id)
     
     # If there are multiple known supported species, it probably supports them
@@ -207,6 +205,106 @@ class Item < ActiveRecord::Base
   
   def support_species?(species)
     species_support_ids.blank? || species_support_ids.include?(species.id)
+  end
+
+  def modeled_body_ids
+    @modeled_body_ids ||= swf_assets.select('DISTINCT body_id').map(&:body_id)
+  end
+
+  def modeled_color_ids
+    # Might be empty if modeled_body_ids is 0. But it's currently not called
+    # in that scenario, so, whatever.
+    @modeled_color_ids ||= PetType.select('DISTINCT color_id').
+                                   where(body_id: modeled_body_ids).
+                                   map(&:color_id)
+  end
+
+  def modeled_colors
+    @modeled_colors ||= Color.select([:id, :standard]).find(modeled_color_ids)
+  end
+
+  def modeled_standard_colors?
+    modeled_colors.any?(&:standard)
+  end
+
+  def modeled_nonstandard_colors
+    modeled_colors.reject(&:standard)
+  end
+
+  def predicted_body_ids
+    @predicted_body_ids ||= if modeled_body_ids.include?(0)
+      # Oh, look, it's already known to fit everybody! Sweet. We're done. (This
+      # isn't folded into the case below, in case this item somehow got a
+      # body-specific and non-body-specific asset. In all the cases I've seen
+      # it, that indicates a glitched item, but this method chooses to reflect
+      # behavior elsewhere in the app by saying that we can put this item on
+      # anybody. (Heh. Any body.))
+      modeled_body_ids
+    elsif modeled_body_ids.size == 1
+      # This might just be a species-specific item. Let's be conservative in
+      # our prediction, though we'll revise it if we see another body ID.
+      modeled_body_ids
+    else
+      # If an item is worn by more than one body, then it must be wearable by
+      # all bodies of the same color. (To my knowledge, anyway. I'm not aware
+      # of any exceptions.) So, let's find those bodies by first finding those
+      # colors.
+      PetType.select('DISTINCT body_id').
+              where(color_id: modeled_color_ids).
+              map(&:body_id)
+    end
+  end
+
+  def predicted_missing_body_ids
+    @predicted_missing_body_ids ||= predicted_body_ids - modeled_body_ids
+  end
+
+  def predicted_missing_standard_body_species_ids
+    PetType.select('DISTINCT species_id').
+            joins(:color).
+            where(body_id: predicted_missing_body_ids,
+                  colors: {standard: true}).
+            map(&:species_id)
+  end
+
+  def predicted_missing_standard_body_species
+    Species.where(id: predicted_missing_standard_body_species_ids)
+  end
+
+  def predicted_missing_nonstandard_body_pet_types
+    PetType.joins(:color).
+            where(body_id: predicted_missing_body_ids,
+                  colors: {standard: false})
+  end
+
+  def predicted_missing_nonstandard_body_species_by_color(colors_scope=Color.scoped, species_scope=Species.scoped)
+    pet_types = predicted_missing_nonstandard_body_pet_types
+
+    species_by_id = {}
+    species_scope.find(pet_types.map(&:species_id)).each do |species|
+      species_by_id[species.id] = species
+    end
+
+    colors_by_id = {}
+    colors_scope.find(pet_types.map(&:color_id)).each do |color|
+      colors_by_id[color.id] = color
+    end
+
+    species_by_color = {}
+    pet_types.each do |pt|
+      color = colors_by_id[pt.color_id]
+      species_by_color[color] ||= []
+      species_by_color[color] << species_by_id[pt.species_id]
+    end
+    species_by_color
+  end
+
+  def predicted_fully_modeled?
+    predicted_missing_body_ids.empty?
+  end
+
+  def predicted_modeled_ratio
+    modeled_body_ids.size.to_f / predicted_body_ids.size
   end
 
   def as_json(options={})

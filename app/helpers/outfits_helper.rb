@@ -53,6 +53,27 @@ module OutfitsHelper
   def remote_load_pet_path
     "http://#{Rails.configuration.neopia_host}/api/1/pet/customization"
   end
+
+  def render_predicted_missing_species_by_color(species_by_color)
+    # TODO: i18n
+    standard = species_by_color.delete(:standard)
+    sorted_pairs = species_by_color.to_a.map { |k, v| [k.human_name, v] }.
+                                         sort_by { |k, v| k }
+    sorted_pairs.unshift(['', standard]) if standard
+    species_by_color[:standard] = standard # undo mutation
+
+    first = true
+    contents = sorted_pairs.map { |color_human_name, species|
+      species_sentence = species.map(&:human_name).sort.to_sentence(
+        two_words_connector: ' or ', last_word_connector: ', or ')
+      content = first ? "Have you seen the #{color_human_name} #{species_sentence} wearing this item?" : "Or maybe the #{color_human_name} #{species_sentence}?"
+      first = false
+      content
+    }
+    contents.last << " If so, please model it above! Thanks!"
+    content_tags = contents.map { |c| content_tag(:p, c) }
+    content_tags.join('').html_safe
+  end
   
   def outfit_creation_summary(outfit)
     user = outfit.user
