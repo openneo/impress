@@ -136,65 +136,54 @@ body.outfits-new
     p
       min-height: 4.5em
 
-  $container-width: 800px
-  $blog-preview-outer-width: $container-width * (2 / 3)
-  $newest-items-outer-width: $container-width * (1 / 3)
-  $whats-new-height: 300px
-  $whats-new-gutter: 12px
   #whats-new
-    +clearfix
-    height: 300px
     margin-bottom: 1em
     
-    $blog-preview-border-width: 1px
-    $blog-preview-padding: 12px
-    $blog-preview-inner-width: $blog-preview-outer-width - (2 * $blog-preview-border-width) - (2 * $blog-preview-padding) - $whats-new-gutter
-    $blog-preview-inner-height: $whats-new-height - (2 * $blog-preview-border-width) - (2 * $blog-preview-padding)
-    #blog-preview
-      background: $module-bg-color
-      border: $blog-preview-border-width solid $module-border-color
-      display: none
-      float: left
-      height: $blog-preview-inner-height
-      margin-right: $whats-new-gutter
-      padding: $blog-preview-padding
-      width: $blog-preview-inner-width
-      
-      > h2
-        font-size: 150%
-      
-      > div, > a
-        font-size: 85%
-      
-      > div
-        height: 200px
-        margin-bottom: .75em
-        overflow: auto
-        position: relative
-        
-        ul, ol
-          margin-bottom: 1em
-          padding: 0 1.5em
-      
-      #blog-preview-linkback
-        float: left
-      
-      #blog-preview-comments
-        float: right
-        font-size: 85%
-        margin-left: 1em
-    
     #newest-items
-      float: right
-      text-align: center
-      width: $newest-items-outer-width
-      
+      list-style: none
+
+      li
+        +clearfix
+
+      a.header
+        background: $module-bg-color
+        border: 1px solid $module-border-color
+        border-left: 0
+        border-radius: 0 6px 6px 0
+        color: white
+        display: block
+        margin-left: 81px
+        padding: .5em .75em
+        position: relative
+        text-decoration: none
+        text-shadow: $text-color 1px 1px 2px
+
+      a.header:hover, .image-link:hover + a.header
+        text-decoration: underline
+
       h2
-        font-size: 150%
-      
-      img
-        height: 80px
-        width: 80px
+        font-family: $main-font
+        font-size: 120%
+        margin: 0
+        position: relative
+        z-index: 2
+
+      .meter
+        background: desaturate(lighten($module-border-color, 25%), 60%)
+        display: block
+        height: 100%
+        left: 0
+        position: absolute
+        top: 0
+        z-index: 1
+
+      .image-link
+        float: left
+        img
+          border: 1px solid $module-border-color
+          border-radius: 6px 0 6px 6px
+          height: 80px
+          width: 80px
   
   #latest-contribution
     +subtle-banner

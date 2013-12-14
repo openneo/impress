@@ -60,7 +60,7 @@
     %div
       %h4= t '.modeling_hub.tagline'
       %p= t '.modeling_hub.description'
-      = form_tag remote_load_pet_path, method: 'GET' do
+      = form_tag remote_load_pet_path, method: 'POST' do
         = hidden_field_tag 'redirect', "#{root_url}\#{q}"
         = pet_name_tag :placeholder => t('.modeling_hub.load_pet.placeholder')
         = submit_tag t('.modeling_hub.load_pet.submit')
@@ -73,19 +73,19 @@
 
 
 #whats-new
-  - localized_cache :action_suffix => 'blog_preview' do
-    #blog-preview
-      %h2
-      %div
-      %a#blog-preview-linkback{:href => 'http://blog.openneo.net/'}
-        = t '.blog.link'
-  
+  -# TODO: remove newest_items.header i18n key?
   - localized_cache 'outfits#new newest_items' do
-    #newest-items
-      %h2= t '.newest_items.header'
-      %ul
-        - @newest_items.each do |item|
-          = link_to image_tag(item.thumbnail_url), item
+    %ul#newest-items
+      - @newest_items.each do |item|
+        %li
+          = link_to image_tag(item.thumbnail_url), item, :class => 'image-link'
+          = link_to item, :class => 'header' do
+            - lolremove = rand(54)
+            -# TODO: i18n
+            %h2= item.name
+            -#: we need #{lolremove} more models
+            %span.meter{style: "width: #{100-lolremove/0.54}%"}
+
 
 - localized_cache :action_suffix => 'templates' do
   %script#pet-query-notice-template{:type => 'text/x-jquery-tmpl'}
