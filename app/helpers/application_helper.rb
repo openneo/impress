@@ -14,10 +14,6 @@ module ApplicationHelper
     @body_class << " #{class_name}"
   end
 
-  def auth_server_icon_url
-    "http://#{Openneo::Auth.config.auth_server}/favicon.png"
-  end
-
   def body_class
     "#{params[:controller]} #{params[:controller]}-#{params[:action]}".tap do |output|
       output << @body_class if @body_class

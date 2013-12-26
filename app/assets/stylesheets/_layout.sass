@@ -71,7 +71,7 @@ h3
 $container_width: 800px
 
 #container
-  margin: 1em auto
+  margin: .25em auto
   padding-top: $container-top-padding
   position: relative
   width: $container_width
@@ -218,7 +218,8 @@ dd
     weight: bold
   left: 0
   line-height: 1
-  padding: .25em
+  padding-left: .25em
+  padding-right: .25em
   position: absolute
   top: 0
   &:hover
@@ -226,6 +227,10 @@ dd
     text-decoration: none
   span:before
     content: "<< "
+
+#home-link, #userbar
+  padding-top: 6px
+  padding-bottom: 6px
 
 .pagination
   a, span

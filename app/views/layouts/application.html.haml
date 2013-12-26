@@ -49,7 +49,6 @@
           = link_to t('.userbar.logout'), logout_path_with_return_to
         - else
           = link_to login_path_with_return_to, :id => 'userbar-log-in' do
-            = image_tag auth_server_icon_url
             %span= t('.userbar.login')
 
       #footer
