@@ -16,6 +16,10 @@ module ClosetVisibility
     def human_name
       I18n.translate "closet_hangers.visibility.#{name}.name"
     end
+
+    def trading?
+      id >= LEVELS_BY_NAME[:trading].id
+    end
   end
 
   LEVELS = [

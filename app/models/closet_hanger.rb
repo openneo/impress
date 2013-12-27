@@ -51,6 +51,14 @@ class ClosetHanger < ActiveRecord::Base
     }.to_json
   end
 
+  def possibly_null_closet_list
+    list || user.null_closet_list(owned)
+  end
+
+  def trading?
+    possibly_null_closet_list.trading?
+  end
+
   def verb(subject=:someone)
     self.class.verb(subject, owned?)
   end

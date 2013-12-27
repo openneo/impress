@@ -1,6 +1,4 @@
 class ItemObserver < ActionController::Caching::Sweeper
-  include FragmentExpiration
-  
   def after_create(item)
     Resque.enqueue(Item::CreateTask, item.id)
   end

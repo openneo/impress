@@ -1,13 +1,8 @@
 class UserSweeper < ActionController::Caching::Sweeper
   observe User
-  
-  def before_save(user)
-    if user.points_changed?
-      points_to_beat = User.points_required_to_pass_top_contributor(User::PreviewTopContributorsCount - 1)
-      if user.points >= points_to_beat
-        expire_fragment(:controller => 'outfits', :action => 'new', :action_suffix => 'top_contributors')
-      end
-    end
-    true
+  def after_update(user)
+    # Delegate null-list sweeping to the ClosetListObserver.
+    null_lists = [true, false].map { |owned| user.null_closet_list(owned) }
+    null_lists.each { |list| ClosetListObserver.instance.after_update(list) }
   end
 end
