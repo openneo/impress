@@ -74,28 +74,28 @@
 
 #whats-new
   -# TODO: remove newest_items.header i18n key?
-  - localized_cache 'outfits#new newest_items' do
-    - if @newest_unmodeled_items.present?
-      %h3 We need your help! Can you model these items?
-      %ul#newest-unmodeled-items
-        - @newest_unmodeled_items.each do |item|
+  -# TODO: i18n all the things
+  -# TODO: cache this entire block? or just request newest items every time?
+  - if @newest_unmodeled_items.present?
+    %h3 We need your help! Can you model these items?
+    %ul#newest-unmodeled-items
+      - @newest_unmodeled_items.each do |item|
+        - localized_cache "items/#{item.id} modeling_progress updated_at=#{item.updated_at.to_i}" do
           %li
             = link_to image_tag(item.thumbnail_url), item, :class => 'image-link'
             = link_to item, :class => 'header' do
-              -# TODO: i18n
               %h2= item.name
-              -#: we need #{lolremove} more models
               %span.meter{style: "width: #{@newest_unmodeled_items_predicted_modeled_ratio[item]*100}%"}
             .missing-bodies
               = render_predicted_missing_species_by_color(@newest_unmodeled_items_predicted_missing_species_by_color[item])
-    - if @newest_modeled_items.present?
-      %h3 These items have already been modeled—thanks for your help!
-      %ul#newest-modeled-items
-        - @newest_modeled_items.each do |item|
-          %li.object
-            = link_to item, title: item.name, alt: item.name do
-              = image_tag item.thumbnail_url
-              = nc_icon_for(item)
+  - if @newest_modeled_items.present?
+    %h3 These items have already been modeled—thanks for your help!
+    %ul#newest-modeled-items
+      - @newest_modeled_items.each do |item|
+        %li.object
+          = link_to item, title: item.name, alt: item.name do
+            = image_tag item.thumbnail_url
+            = nc_icon_for(item)
 
 
 - localized_cache :action_suffix => 'templates' do

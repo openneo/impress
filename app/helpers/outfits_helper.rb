@@ -55,12 +55,14 @@ module OutfitsHelper
   end
 
   def render_predicted_missing_species_by_color(species_by_color)
+    # Transform the Color => Array<Species> map into an Array<Pair<Color's
+    # human name (empty if standard), Array<Species>>>.
     # TODO: i18n
     standard = species_by_color.delete(:standard)
     sorted_pairs = species_by_color.to_a.map { |k, v| [k.human_name, v] }.
                                          sort_by { |k, v| k }
     sorted_pairs.unshift(['', standard]) if standard
-    species_by_color[:standard] = standard # undo mutation
+    species_by_color[:standard] = standard # undo parameter mutation
 
     first = true
     contents = sorted_pairs.map { |color_human_name, species|
