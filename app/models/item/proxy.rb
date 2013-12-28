@@ -11,8 +11,13 @@ class Item
       Item.model_name
     end
 
-    def initialize(id)
-      @id = id
+    def initialize(item_or_id)
+      if item_or_id.is_a? Item
+        @item = item_or_id
+        @id = @item.id
+      else
+        @id = item_or_id.to_i
+      end
       @known_outputs = {method: {}, partial: {}}
     end
 
@@ -46,12 +51,16 @@ class Item
       @known_outputs[type][name] = value
     end
 
+    def known_partial_output(name)
+      @known_outputs[:partial][name]
+    end
+
     private
 
     def cache_method(method_name, *args, &block)
       # Two layers of cache: a local copy, in case the method is called again,
       # and then the Rails cache, before we hit the actual method call.
-      @known_outputs[method_name] ||= begin
+      @known_outputs[:method][method_name] ||= begin
         key = fragment_key(:method, method_name)
         Rails.cache.fetch(key) { item.send(method_name, *args) }
       end

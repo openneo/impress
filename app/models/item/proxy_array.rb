@@ -12,8 +12,8 @@ class Item
       }
     })
 
-    def initialize(ids)
-      self.replace(ids.map { |id| Proxy.new(id.to_i) })
+    def initialize(items_or_ids)
+      self.replace(items_or_ids.map { |item_or_id| Proxy.new(item_or_id) })
     end
 
     def prepare_method(name)

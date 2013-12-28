@@ -126,7 +126,14 @@ module ItemsHelper
     # helper, we have to do some indirection. Fake that the render is in a
     # template, then capture the resulting buffer output.
     capture do
-      localized_cache("items/#{item.id}#item_link_partial") do
+      # Try to read from the prepared proxy's known partial output, if it's
+      # even a proxy at all.
+      if item.respond_to?(:known_partial_output)
+        prepared_output = item.known_partial_output(:item_link_partial).html_safe
+      else
+        prepared_output = nil
+      end
+      prepared_output || localized_cache("items/#{item.id}#item_link_partial") do
         safe_concat render(partial: 'items/item_link', locals: {item: item})
       end
     end
