@@ -129,7 +129,7 @@ module ItemsHelper
       # Try to read from the prepared proxy's known partial output, if it's
       # even a proxy at all.
       if item.respond_to?(:known_partial_output)
-        prepared_output = item.known_partial_output(:item_link_partial).html_safe
+        prepared_output = item.known_partial_output(:item_link_partial).try(:html_safe)
       else
         prepared_output = nil
       end

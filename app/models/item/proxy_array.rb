@@ -12,8 +12,14 @@ class Item
       }
     })
 
-    def initialize(items_or_ids)
-      self.replace(items_or_ids.map { |item_or_id| Proxy.new(item_or_id) })
+    def initialize(proxies_or_items_or_ids=[])
+      self.replace(proxies_or_items_or_ids.map { |proxy_or_item_or_id|
+        if proxy_or_item_or_id.is_a?(Proxy)
+          proxy_or_item_or_id
+        else
+          Proxy.new(proxy_or_item_or_id)
+        end
+      })
     end
 
     def prepare_method(name)
@@ -34,12 +40,15 @@ class Item
       # values as we go along. Delete successfully set proxies, so that
       # everything left in proxies_by_key in the end is known to be a miss.
       proxies_by_key = {}
-      self.each { |p| proxies_by_key[p.fragment_key(type, name)] = p }
+      self.each do |p|
+        proxies_by_key[p.fragment_key(type, name)] ||= []
+        proxies_by_key[p.fragment_key(type, name)] << p
+      end
       Rails.cache.read_multi(*proxies_by_key.keys).each { |k, v|
-        proxies_by_key.delete(k).set_known_output(type, name, v)
+        proxies_by_key.delete(k).each { |p| p.set_known_output(type, name, v) }
       }
 
-      missed_proxies = proxies_by_key.values
+      missed_proxies = proxies_by_key.values.flatten
       missed_proxies_by_id = missed_proxies.index_by(&:id)
 
       item_scope.find(missed_proxies_by_id.keys).each do |item|

@@ -7,6 +7,8 @@ class ClosetHanger < ActiveRecord::Base
 
   attr_accessible :list_id, :owned, :quantity
 
+  attr_accessor :item_proxy
+
   delegate :name, to: :item, prefix: true
 
   validates :item_id, :uniqueness => {:scope => [:user_id, :owned, :list_id]}
