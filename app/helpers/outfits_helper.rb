@@ -55,9 +55,10 @@ module OutfitsHelper
   end
 
   def render_predicted_missing_species_by_color(species_by_color)
+    key_prefix = 'outfits.new.newest_items.unmodeled.content'
+
     # Transform the Color => Array<Species> map into an Array<Pair<Color's
     # human name (empty if standard), Array<Species>>>.
-    # TODO: i18n
     standard = species_by_color.delete(:standard)
     sorted_pairs = species_by_color.to_a.map { |k, v| [k.human_name, v] }.
                                          sort_by { |k, v| k }
@@ -66,13 +67,17 @@ module OutfitsHelper
 
     first = true
     contents = sorted_pairs.map { |color_human_name, species|
-      species_sentence = species.map(&:human_name).sort.to_sentence(
-        two_words_connector: ' or ', last_word_connector: ', or ')
-      content = first ? "Have you seen the #{color_human_name} #{species_sentence} wearing this item?" : "Or maybe the #{color_human_name} #{species_sentence}?"
+      species_list = species.map(&:human_name).sort.to_sentence(
+        words_connector: t("#{key_prefix}.species_list.words_connector"),
+        two_words_connector: t("#{key_prefix}.species_list.two_words_connector"),
+        last_word_connector: t("#{key_prefix}.species_list.last_word_connector"))
+      key = first ? 'first' : 'other'
+      content = t("#{key_prefix}.body.#{key}", color: color_human_name,
+                                                  species_list: species_list)
       first = false
       content
     }
-    contents.last << " If so, please model it above! Thanks!"
+    contents.last << " " + t("#{key_prefix}.call_to_action")
     content_tags = contents.map { |c| content_tag(:p, c) }
     content_tags.join('').html_safe
   end

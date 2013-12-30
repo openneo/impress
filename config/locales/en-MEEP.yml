@@ -647,6 +647,15 @@ en-MEEP:
       newest_items:
         unmodeled:
           header: We meep your help! Can you meep these items?
+          content:
+            body:
+              first: Have you meeped the %{color} %{species_list} wearing this item?
+              other: Or meepy the %{color} %{species_list}?
+            call_to_action: If so, please meep it above! Meep!
+            species_list:
+              words_connector: '! '
+              two_words_connector: ' meep '
+              last_word_connector: '! meep '
         modeled:
           header: These items have already been meeped—meep for your help!
       pet_query:

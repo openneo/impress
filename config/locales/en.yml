@@ -703,6 +703,15 @@ en:
       newest_items:
         unmodeled:
           header: We need your help! Can you model these items?
+          content:
+            body:
+              first: Have you seen the %{color} %{species_list} wearing this item?
+              other: Or maybe the %{color} %{species_list}?
+            call_to_action: If so, please model it above! Thanks!
+            species_list:
+              words_connector: ', '
+              two_words_connector: ' or '
+              last_word_connector: ', or '
         modeled:
           header: These items have already been modeled—thanks for your help!
       pet_query:
