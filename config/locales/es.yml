@@ -530,8 +530,6 @@ es:
         description_html: "%{user_link} nos ha mostrado %{contributed_description}. ¡Muchas gracias, %{user_link}!"
       blog:
         link: Blog de OpenNeo
-      newest_items:
-        header: Nuevos Objetos
       pet_query:
         notice_html: Gracias por mostrarnos a <strong>%{pet_name}</strong>. ¡Haces un trabajo excelente!
     outfit:

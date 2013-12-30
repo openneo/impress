@@ -700,8 +700,6 @@ en:
           Thanks, %{user_link}!"
       blog:
         link: OpenNeo Blog
-      newest_items:
-        header: New Items
       pet_query:
         notice_html:
           Thanks for showing us <strong>%{pet_name}</strong>.

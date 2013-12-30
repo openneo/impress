@@ -644,8 +644,6 @@ en-MEEP:
           Meep, %{user_link}!"
       blog:
         link: OpenNeo Meep
-      newest_items:
-        header: New Meeps
       pet_query:
         notice_html:
           Thanks for meeping us <strong>%{pet_name}</strong>.
