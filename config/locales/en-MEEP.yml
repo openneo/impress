@@ -644,6 +644,11 @@ en-MEEP:
           Meep, %{user_link}!"
       blog:
         link: OpenNeo Meep
+      newest_items:
+        unmodeled:
+          header: We meep your help! Can you meep these items?
+        modeled:
+          header: These items have already been meeped—meep for your help!
       pet_query:
         notice_html:
           Thanks for meeping us <strong>%{pet_name}</strong>.

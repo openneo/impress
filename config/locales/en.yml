@@ -700,6 +700,11 @@ en:
           Thanks, %{user_link}!"
       blog:
         link: OpenNeo Blog
+      newest_items:
+        unmodeled:
+          header: We need your help! Can you model these items?
+        modeled:
+          header: These items have already been modeled—thanks for your help!
       pet_query:
         notice_html:
           Thanks for showing us <strong>%{pet_name}</strong>.

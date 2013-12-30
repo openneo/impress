@@ -76,7 +76,7 @@
   -# TODO: i18n all the things
   -# TODO: cache this entire block? or just request newest items every time?
   - if @newest_unmodeled_items.present?
-    %h3 We need your help! Can you model these items?
+    %h3= t '.newest_items.unmodeled.header'
     %ul#newest-unmodeled-items
       - @newest_unmodeled_items.each do |item|
         - localized_cache "items/#{item.id} modeling_progress updated_at=#{item.updated_at.to_i}" do
@@ -88,7 +88,7 @@
             .missing-bodies
               = render_predicted_missing_species_by_color(@newest_unmodeled_items_predicted_missing_species_by_color[item])
   - if @newest_modeled_items.present?
-    %h3 These items have already been modeled—thanks for your help!
+    %h3= t '.newest_items.modeled.header'
     %ul#newest-modeled-items
       - @newest_modeled_items.each do |item|
         %li.object
