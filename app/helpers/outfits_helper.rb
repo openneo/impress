@@ -57,8 +57,8 @@ module OutfitsHelper
   def render_predicted_missing_species_by_color(species_by_color)
     key_prefix = 'outfits.new.newest_items.unmodeled.content'
 
-    # Transform the Color => Array<Species> map into an Array<Pair<Color's
-    # human name (empty if standard), Array<Species>>>.
+    # Transform the Color => (Species => Int) map into an Array<Pair<Color's
+    # human name (empty if standard), (Species => Int)>>.
     standard = species_by_color.delete(:standard)
     sorted_pairs = species_by_color.to_a.map { |k, v| [k.human_name, v] }.
                                          sort_by { |k, v| k }
@@ -66,14 +66,18 @@ module OutfitsHelper
     species_by_color[:standard] = standard # undo parameter mutation
 
     first = true
-    contents = sorted_pairs.map { |color_human_name, species|
-      species_list = species.map(&:human_name).sort.to_sentence(
+    contents = sorted_pairs.map { |color_human_name, body_ids_by_species|
+      species_list = body_ids_by_species.keys.sort_by(&:human_name).map { |species|
+        body_id = body_ids_by_species[species]
+        content_tag(:span, species.human_name, 'data-body-id' => body_id)
+      }.to_sentence(
         words_connector: t("#{key_prefix}.species_list.words_connector"),
         two_words_connector: t("#{key_prefix}.species_list.two_words_connector"),
-        last_word_connector: t("#{key_prefix}.species_list.last_word_connector"))
+        last_word_connector: t("#{key_prefix}.species_list.last_word_connector")
+      )
       key = first ? 'first' : 'other'
       content = t("#{key_prefix}.body.#{key}", color: color_human_name,
-                                                  species_list: species_list)
+                                               species_list: species_list).html_safe
       first = false
       content
     }

@@ -259,16 +259,20 @@ class Item < ActiveRecord::Base
     @predicted_missing_body_ids ||= predicted_body_ids - modeled_body_ids
   end
 
-  def predicted_missing_standard_body_species_ids
-    PetType.select('DISTINCT species_id').
-            joins(:color).
-            where(body_id: predicted_missing_body_ids,
-                  colors: {standard: true}).
-            map(&:species_id)
+  def predicted_missing_standard_body_ids_by_species_id
+    @predicted_missing_standard_body_ids_by_species_id ||=
+      PetType.select('DISTINCT body_id, species_id').
+              joins(:color).
+              where(body_id: predicted_missing_body_ids,
+                    colors: {standard: true}).
+              inject({}) { |h, pt| h[pt.species_id] = pt.body_id; h }
   end
 
-  def predicted_missing_standard_body_species
-    Species.where(id: predicted_missing_standard_body_species_ids)
+  def predicted_missing_standard_body_ids_by_species(species_scope=Species.scoped)
+    species = species_scope.where(id: predicted_missing_standard_body_ids_by_species_id.keys)
+    species_by_id = species.inject({}) { |h, s| h[s.id] = s; h }
+    predicted_missing_standard_body_ids_by_species_id.inject({}) { |h, (sid, bid)|
+      h[species_by_id[sid]] = bid; h }
   end
 
   def predicted_missing_nonstandard_body_pet_types
@@ -277,7 +281,7 @@ class Item < ActiveRecord::Base
                   colors: {standard: false})
   end
 
-  def predicted_missing_nonstandard_body_species_by_color(colors_scope=Color.scoped, species_scope=Species.scoped)
+  def predicted_missing_nonstandard_body_ids_by_species_by_color(colors_scope=Color.scoped, species_scope=Species.scoped)
     pet_types = predicted_missing_nonstandard_body_pet_types
 
     species_by_id = {}
@@ -290,13 +294,13 @@ class Item < ActiveRecord::Base
       colors_by_id[color.id] = color
     end
 
-    species_by_color = {}
+    body_ids_by_species_by_color = {}
     pet_types.each do |pt|
       color = colors_by_id[pt.color_id]
-      species_by_color[color] ||= []
-      species_by_color[color] << species_by_id[pt.species_id]
+      body_ids_by_species_by_color[color] ||= {}
+      body_ids_by_species_by_color[color][species_by_id[pt.species_id]] = pt.body_id
     end
-    species_by_color
+    body_ids_by_species_by_color
   end
 
   def predicted_fully_modeled?
