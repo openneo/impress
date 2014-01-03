@@ -164,7 +164,7 @@ body.outfits-new
     #newest-unmodeled-items
       list-style: none
 
-      li
+      > li
         +clearfix
         margin: .5em 0
 
@@ -208,13 +208,44 @@ body.outfits-new
           height: 80px
           width: 80px
 
+      .missing-bodies, .models
+        margin-left: 82px
+        padding-left: 8px
+        padding-right: 8px
+
       .missing-bodies
         font-size: 85%
-        margin-left: 82px
-        padding: .5em 8px
+        padding-bottom: .5em
+        padding-top: .5em
         p
           font-family: $main-font
           margin-bottom: .5em
+
+      .models
+        font-size: 85%
+
+        li
+          display: inline-block
+          margin-bottom: 2px
+          margin-right: 2px
+
+        button
+          +reset-awesome-button
+          +border-radius(4px)
+          +box-shadow(0 1px 3px rgba(0, 0, 0, .5))
+          background: $module-bg-color
+          border: 1px solid $module-border-color
+          padding-right: 8px
+
+          &:active
+            position: relative
+            top: 1px
+
+        img
+          height: 40px
+          margin-right: 8px
+          vertical-align: middle
+          width: 40px
   
   #latest-contribution
     +subtle-banner

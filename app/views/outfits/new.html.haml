@@ -87,6 +87,7 @@
               %span.meter{style: "width: #{@newest_unmodeled_items_predicted_modeled_ratio[item]*100}%"}
             .missing-bodies
               = render_predicted_missing_species_by_color(@newest_unmodeled_items_predicted_missing_species_by_color[item])
+            .models
   - if @newest_modeled_items.present?
     %h3= t '.newest_items.modeled.header'
     %ul#newest-modeled-items
@@ -110,6 +111,9 @@
   %script#preview-pet-not-found-template{:type => 'text/x-jquery-tmpl'}
     = t '.preview.pet_not_found'
 
+- content_for :meta do
+  %meta{name: 'neopia-host', content: neopia_host}
+
 - content_for :javascripts do
-  = include_javascript_libraries :jquery, :jquery_tmpl
-  = javascript_include_tag 'jquery.timeago', 'pet_query', 'outfits/new'
+  = include_javascript_libraries :jquery20, :jquery_tmpl
+  = javascript_include_tag 'react', 'jquery.timeago', 'pet_query', 'outfits/new', 'modeling'

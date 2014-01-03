@@ -50,8 +50,12 @@ module OutfitsHelper
       content_tag(:dd, search_query_description(base, filter_key))
   end
 
+  def neopia_host
+    Rails.configuration.neopia_host
+  end
+
   def remote_load_pet_path
-    "http://#{Rails.configuration.neopia_host}/api/1/pet/customization"
+    "http://#{neopia_host}/api/1/pet/customization"
   end
 
   def render_predicted_missing_species_by_color(species_by_color)

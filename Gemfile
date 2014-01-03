@@ -64,6 +64,8 @@ gem "rails-i18n"
 
 gem 'rack-attack', '~> 2.2.0'
 
+gem 'react-rails', '~> 0.8.0.0'
+
 # Needed for the new asset pipeline
 group :assets do
   

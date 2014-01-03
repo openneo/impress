@@ -30,6 +30,8 @@ OpenneoImpressItems::Application.configure do
    
   # Expands the lines which load the assets
   config.assets.debug = true
+
+  config.react.variant = :development
 end
 
 LocalImpressHost = 'betanewimpress.openneo.net'
