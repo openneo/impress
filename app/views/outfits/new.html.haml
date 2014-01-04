@@ -80,7 +80,7 @@
     %ul#newest-unmodeled-items
       - @newest_unmodeled_items.each do |item|
         - localized_cache "items/#{item.id} modeling_progress updated_at=#{item.updated_at.to_i}" do
-          %li
+          %li{'data-item-id' => item.id}
             = link_to image_tag(item.thumbnail_url), item, :class => 'image-link'
             = link_to item, :class => 'header' do
               %h2= item.name

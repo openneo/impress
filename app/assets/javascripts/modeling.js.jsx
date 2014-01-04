@@ -16,7 +16,7 @@
   while (method = methods.pop()) con[method] = con[method] || dummy;
 })(window.console = window.console || {});
 
-(function() {
+(function($) {
   var Neopia = {
     User: {
       get: function(id) {
@@ -49,17 +49,34 @@
   };
 
   var Modeling = {
-    _modelForItemComponents: [],
     _customizationsByPetId: {},
+    _customizations: [],
+    _items: [],
     _addCustomization: function(customization) {
       this._customizationsByPetId[customization.name] = customization;
+      this._customizations = this._buildCustomizations();
       this._update();
     },
-    _getCustomizations: function() {
+    _buildCustomizations: function() {
       var modelCustomizationsByPetId = this._customizationsByPetId;
       return Object.keys(modelCustomizationsByPetId).map(function(petId) {
         return modelCustomizationsByPetId[petId];
       });
+    },
+    _createItems: function($) {
+      this._items = $('#newest-unmodeled-items li').map(function() {
+        var el = $(this);
+        return {
+          component: React.renderComponent(<ModelForItem />,
+                                           el.find('.models').get(0)),
+          el: el,
+          id: el.attr('data-item-id'),
+          missingBodyIdsPresenceMap: el.find('span[data-body-id]').toArray().reduce(function(map, node) {
+            map[$(node).attr('data-body-id')] = true;
+            return map;
+          }, {})
+        };
+      }).toArray();
     },
     _loadPetCustomization: function(neopiaPetId) {
       return Neopia.Customization.get(neopiaPetId)
@@ -77,20 +94,20 @@
       return neopiaUserIds.map(this._loadUserCustomizations.bind(this));
     },
     _update: function() {
-      var state = {
-        customizations: this._getCustomizations()
-      };
-      this._modelForItemComponents.forEach(function(c) {
-        c.setState(state);
+      var customizations = this._customizations;
+      this._items.forEach(function(item) {
+        var filteredCustomizations = customizations.filter(function(c) {
+          return item.missingBodyIdsPresenceMap[c.body_id];
+        });
+        item.component.setState({customizations: filteredCustomizations});
       });
     },
-    init: function() {
+    init: function($) {
       Neopia.init();
-      this._modelForItemComponents = $('#newest-unmodeled-items li').map(function() {
-        return React.renderComponent(<ModelForItem />,
-                                     $(this).find('.models').get(0));
-      }).toArray();
-      var users = ["borovan", "donna"];
+      this._createItems($);
+      // TODO: use user prefs, silly!
+      var search = document.location.search;
+      var users = search.indexOf('=') >= 0 ? search.split('=')[1].split(',') : '';
       this._loadManyUsersCustomizations(users);
     }
   };
@@ -119,12 +136,14 @@
     render: function() {
       var petName = this.props.customization.name;
       var imageSrc = "http://pets.neopets.com/cpn/" + petName + "/1/1.png";
-      return <li><button>
+      // TODO: i18n
+      var title = "submit " + petName + " as a model";
+      return <li><button title={title}>
         <img src={imageSrc} />
         <span>{petName}</span>
       </button></li>;
     }
   });
 
-  Modeling.init();
-})();
+  Modeling.init($);
+})(jQuery);
