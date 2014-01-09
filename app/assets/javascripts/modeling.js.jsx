@@ -67,8 +67,9 @@
     _createItems: function($) {
       this._items = $('#newest-unmodeled-items li').map(function() {
         var el = $(this);
+        var name = el.find('h2').text();
         return {
-          component: React.renderComponent(<ModelForItem />,
+          component: React.renderComponent(<ModelForItem itemName={name} />,
                                            el.find('.models').get(0)),
           el: el,
           id: el.attr('data-item-id'),
@@ -81,7 +82,10 @@
     },
     _loadPetCustomization: function(neopiaPetId) {
       return Neopia.Customization.get(neopiaPetId)
-        .done(this._addCustomization.bind(this));
+        .done(this._addCustomization.bind(this))
+        .fail(function() {
+          console.error("couldn't load pet %s", neopiaPetId);
+        });
     },
     _loadManyPetsCustomizations: function(neopiaPetIds) {
       return neopiaPetIds.map(this._loadPetCustomization.bind(this));
@@ -89,7 +93,9 @@
     _loadUserCustomizations: function(neopiaUserId) {
       return Neopia.User.get(neopiaUserId).then(function(neopiaUser) {
         return neopiaUser.links.pets;
-      }).then(this._loadManyPetsCustomizations.bind(this));
+      }).then(this._loadManyPetsCustomizations.bind(this)).fail(function() {
+        console.error("couldn't load user %s's customizations", neopiaUserId);
+      });
     },
     _loadManyUsersCustomizations: function(neopiaUserIds) {
       return neopiaUserIds.map(this._loadUserCustomizations.bind(this));
@@ -118,8 +124,10 @@
       return {customizations: []};
     },
     render: function() {
+      var itemName = this.props.itemName;
       function createModelPet(customization) {
         return <ModelPet customization={customization}
+                         itemName={itemName}
                          key={customization.name} />;
       }
       var sortedCustomizations = this.state.customizations.sort(function(a, b) {
@@ -136,9 +144,11 @@
   var ModelPet = React.createClass({
     render: function() {
       var petName = this.props.customization.name;
+      var itemName = this.props.itemName;
       var imageSrc = "http://pets.neopets.com/cpn/" + petName + "/1/1.png";
       // TODO: i18n
-      var title = "submit " + petName + " as a model";
+      var title = "Submit " + petName + " as a model, especially if they're " +
+                  "wearing the " + itemName + "!";
       return <li><button title={title}>
         <img src={imageSrc} />
         <span>{petName}</span>
