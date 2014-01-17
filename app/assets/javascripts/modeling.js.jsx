@@ -21,20 +21,25 @@
   var Neopia = {
     User: {
       get: function(id) {
-        return Neopia.getJSON("/users/" + id).then(function(response) {
+        return $.getJSON(Neopia.API_URL + "/users/" + id).then(function(response) {
           return response.users[0];
         });
       }
     },
     Customization: {
-      get: function(petId) {
-        return Neopia.getJSON("/pets/" + petId + "/customization").then(function(response) {
-          return response.custom_pet;
+      request: function(petId, type) {
+        return $.ajax({
+          dataType: "json",
+          type: type,
+          url: Neopia.API_URL + "/pets/" + petId + "/customization"
         });
+      },
+      get: function(petId) {
+        return this.request(petId, "GET");
+      },
+      post: function(petId) {
+        return this.request(petId, "POST");
       }
-    },
-    getJSON: function(path) {
-      return $.getJSON(Neopia.API_URL + path);
     },
     init: function() {
       var hostEl = $('meta[name=neopia-host]');
@@ -52,11 +57,33 @@
   var Modeling = {
     _customizationsByPetId: {},
     _customizations: [],
+    _itemsById: {},
     _items: [],
     _addCustomization: function(customization) {
-      this._customizationsByPetId[customization.name] = customization;
+      // Set all equipped, interesting items' statuses as success and cross
+      // them off the list.
+      var itemsById = this._itemsById;
+      var equippedByZone = customization.custom_pet.equipped_by_zone;
+      var closetItems = customization.closet_items;
+      Object.keys(equippedByZone).forEach(function(zoneId) {
+        var equippedClosetId = equippedByZone[zoneId].closet_obj_id;
+        var equippedObjectId = closetItems[equippedClosetId].obj_info_id;
+        if (itemsById.hasOwnProperty(equippedObjectId)) {
+          // TODO: i18n title
+          customization.statusByItemId[equippedObjectId] = "success";
+          itemsById[equippedObjectId].el.find("span[data-body-id=" +
+            customization.custom_pet.body_id + "]").addClass("modeled")
+            .attr("title", "You just finished modeling this—thanks so much!");
+        }
+      });
+      this._customizationsByPetId[customization.custom_pet.name] = customization;
       this._customizations = this._buildCustomizations();
       this._update();
+    },
+    _addNewCustomization: function(customization) {
+      customization.loadingForItemId = null;
+      customization.statusByItemId = {};
+      this._addCustomization(customization);
     },
     _buildCustomizations: function() {
       var modelCustomizationsByPetId = this._customizationsByPetId;
@@ -65,24 +92,27 @@
       });
     },
     _createItems: function($) {
+      var itemsById = this._itemsById;
       this._items = $('#newest-unmodeled-items li').map(function() {
         var el = $(this);
-        var name = el.find('h2').text();
-        return {
-          component: React.renderComponent(<ModelForItem itemName={name} />,
-                                           el.find('.models').get(0)),
+        var item = {
           el: el,
           id: el.attr('data-item-id'),
+          name: el.find('h2').text(),
           missingBodyIdsPresenceMap: el.find('span[data-body-id]').toArray().reduce(function(map, node) {
             map[$(node).attr('data-body-id')] = true;
             return map;
           }, {})
         };
+        item.component = React.renderComponent(<ModelForItem item={item} />,
+                                               el.find('.models').get(0));
+        itemsById[item.id] = item;
+        return item;
       }).toArray();
     },
     _loadPetCustomization: function(neopiaPetId) {
       return Neopia.Customization.get(neopiaPetId)
-        .done(this._addCustomization.bind(this))
+        .done(this._addNewCustomization.bind(this))
         .fail(function() {
           console.error("couldn't load pet %s", neopiaPetId);
         });
@@ -100,11 +130,23 @@
     _loadManyUsersCustomizations: function(neopiaUserIds) {
       return neopiaUserIds.map(this._loadUserCustomizations.bind(this));
     },
+    _startLoading: function(neopiaPetId, itemId) {
+      var customization = this._customizationsByPetId[neopiaPetId];
+      customization.loadingForItemId = itemId;
+      customization.statusByItemId[itemId] = "loading";
+      this._update();
+    },
+    _stopLoading: function(neopiaPetId, itemId, status) {
+      var customization = this._customizationsByPetId[neopiaPetId];
+      customization.loadingForItemId = null;
+      customization.statusByItemId[itemId] = status;
+      this._update();
+    },
     _update: function() {
       var customizations = this._customizations;
       this._items.forEach(function(item) {
         var filteredCustomizations = customizations.filter(function(c) {
-          return item.missingBodyIdsPresenceMap[c.body_id];
+          return item.missingBodyIdsPresenceMap[c.custom_pet.body_id];
         });
         item.component.setState({customizations: filteredCustomizations});
       });
@@ -116,6 +158,29 @@
       var search = document.location.search;
       var users = search.indexOf('=') >= 0 ? search.split('=')[1].split(',') : '';
       this._loadManyUsersCustomizations(users);
+    },
+    model: function(neopiaPetId, itemId) {
+      var oldCustomization = this._customizationsByPetId[neopiaPetId];
+      var itemsById = this._itemsById;
+      this._startLoading(neopiaPetId, itemId);
+      return Neopia.Customization.post(neopiaPetId)
+        .done(function(newCustomization) {
+          // Add this field as null for consistency.
+          newCustomization.loadingForItemId = null;
+
+          // Copy previous statuses.
+          newCustomization.statusByItemId = oldCustomization.statusByItemId;
+
+          // Set the attempted item's status as unworn (to possibly be
+          // overridden by the upcoming loop in _addCustomization).
+          newCustomization.statusByItemId[itemId] = "unworn";
+
+          // Now, finally, let's overwrite the old customization with the new.
+          Modeling._addCustomization(newCustomization);
+        })
+        .fail(function() {
+          Modeling._stopLoading(neopiaPetId, itemId, "error");
+        });
     }
   };
 
@@ -124,15 +189,15 @@
       return {customizations: []};
     },
     render: function() {
-      var itemName = this.props.itemName;
+      var item = this.props.item;
       function createModelPet(customization) {
         return <ModelPet customization={customization}
-                         itemName={itemName}
-                         key={customization.name} />;
+                         item={item}
+                         key={customization.custom_pet.name} />;
       }
       var sortedCustomizations = this.state.customizations.sort(function(a, b) {
-        var aName = a.name.toLowerCase();
-        var bName = b.name.toLowerCase();
+        var aName = a.custom_pet.name.toLowerCase();
+        var bName = b.custom_pet.name.toLowerCase();
         if (aName < bName) return -1;
         if (aName > bName) return 1;
         return 0;
@@ -143,16 +208,38 @@
 
   var ModelPet = React.createClass({
     render: function() {
-      var petName = this.props.customization.name;
-      var itemName = this.props.itemName;
+      var petName = this.props.customization.custom_pet.name;
+      var status = this.props.customization.statusByItemId[this.props.item.id];
+      var loadingForItemId = this.props.customization.loadingForItemId;
+      var disabled = (status === "loading"
+                   || status === "success");
+      if (loadingForItemId !== null && loadingForItemId !== this.props.item.id) {
+        disabled = true;
+      }
+      var itemName = this.props.item.name;
       var imageSrc = "http://pets.neopets.com/cpn/" + petName + "/1/1.png";
       // TODO: i18n
       var title = "Submit " + petName + " as a model, especially if they're " +
                   "wearing the " + itemName + "!";
-      return <li><button title={title}>
+      if (status === "success") {
+        var statusMessage = "Thanks! <3";
+      } else if (status === "unworn") {
+        var statusMessage = "Not wearing this item.";
+      } else if (status === "error") {
+        var statusMessage = "Couldn't load. Try again?";
+      } else {
+        var statusMessage ="";
+      }
+      return <li data-status={status}><button onClick={this.handleClick} title={title} disabled={disabled}>
         <img src={imageSrc} />
-        <span>{petName}</span>
+        <div>
+          <span className="pet-name">{petName}</span>
+          <span className="message">{statusMessage}</span>
+        </div>
       </button></li>;
+    },
+    handleClick: function(e) {
+      Modeling.model(this.props.customization.custom_pet.name, this.props.item.id);
     }
   });
 
