@@ -54,11 +54,40 @@
     }
   };
 
+  var ImpressUser = (function() {
+    var userSignedIn = ($('meta[name=user-signed-in]').attr('content') === 'true');
+    if (userSignedIn) {
+      return {
+        // TODO
+      };
+    } else {
+      return {
+        _key: "guestNeopetsUsernames",
+        _setNeopetsUsernames: function(usernames) {
+          localStorage.setItem(this._key, JSON.stringify(usernames));
+        },
+        addNeopetsUsername: function(username) {
+          this._setNeopetsUsernames(this.getNeopetsUsernames().concat([username]));
+        },
+        removeNeopetsUsername: function(username) {
+          this._setNeopetsUsernames(this.getNeopetsUsernames().filter(function(u) {
+            return u !== username;
+          }));
+        },
+        getNeopetsUsernames: function() {
+          return JSON.parse(localStorage.getItem(this._key)) || [];
+        }
+      };
+    }
+  })();
+
   var Modeling = {
     _customizationsByPetId: {},
     _customizations: [],
     _itemsById: {},
     _items: [],
+    _usersComponent: {setState: function() {}},
+    _neopetsUsernamesPresenceMap: {},
     _addCustomization: function(customization) {
       // Set all equipped, interesting items' statuses as success and cross
       // them off the list.
@@ -78,7 +107,7 @@
       });
       this._customizationsByPetId[customization.custom_pet.name] = customization;
       this._customizations = this._buildCustomizations();
-      this._update();
+      this._updateCustomizations();
     },
     _addNewCustomization: function(customization) {
       customization.loadingForItemId = null;
@@ -127,37 +156,42 @@
         console.error("couldn't load user %s's customizations", neopiaUserId);
       });
     },
-    _loadManyUsersCustomizations: function(neopiaUserIds) {
-      return neopiaUserIds.map(this._loadUserCustomizations.bind(this));
-    },
     _startLoading: function(neopiaPetId, itemId) {
       var customization = this._customizationsByPetId[neopiaPetId];
       customization.loadingForItemId = itemId;
       customization.statusByItemId[itemId] = "loading";
-      this._update();
+      this._updateCustomizations();
     },
     _stopLoading: function(neopiaPetId, itemId, status) {
       var customization = this._customizationsByPetId[neopiaPetId];
       customization.loadingForItemId = null;
       customization.statusByItemId[itemId] = status;
-      this._update();
+      this._updateCustomizations();
     },
-    _update: function() {
-      var customizations = this._customizations;
+    _updateCustomizations: function() {
+      var neopetsUsernamesPresenceMap = this._neopetsUsernamesPresenceMap;
+      var liveCustomizations = this._customizations.filter(function(c) {
+        return neopetsUsernamesPresenceMap[c.custom_pet.owner];
+      });
       this._items.forEach(function(item) {
-        var filteredCustomizations = customizations.filter(function(c) {
+        var filteredCustomizations = liveCustomizations.filter(function(c) {
           return item.missingBodyIdsPresenceMap[c.custom_pet.body_id];
         });
         item.component.setState({customizations: filteredCustomizations});
       });
     },
+    _updateUsernames: function() {
+      var usernames = Object.keys(this._neopetsUsernamesPresenceMap);
+      this._usersComponent.setState({usernames: usernames});
+    },
     init: function($) {
       Neopia.init();
       this._createItems($);
-      // TODO: use user prefs, silly!
-      var search = document.location.search;
-      var users = search.indexOf('=') >= 0 ? search.split('=')[1].split(',') : '';
-      this._loadManyUsersCustomizations(users);
+      var usersEl = $('#modeling-neopets-users');
+      this._usersComponent = React.renderComponent(<NeopetsUsernamesForm />,
+                                                   usersEl.get(0));
+      var usernames = ImpressUser.getNeopetsUsernames();
+      usernames.forEach(this.addUsername.bind(this));
     },
     model: function(neopiaPetId, itemId) {
       var oldCustomization = this._customizationsByPetId[neopiaPetId];
@@ -181,6 +215,22 @@
         .fail(function() {
           Modeling._stopLoading(neopiaPetId, itemId, "error");
         });
+    },
+    addUsername: function(username) {
+      if (typeof this._neopetsUsernamesPresenceMap[username] === 'undefined') {
+        this._neopetsUsernamesPresenceMap[username] = true;
+        ImpressUser.addNeopetsUsername(username);
+        this._loadUserCustomizations(username);
+        this._updateUsernames();
+      }
+    },
+    removeUsername: function(username) {
+      if (this._neopetsUsernamesPresenceMap[username]) {
+        delete this._neopetsUsernamesPresenceMap[username];
+        ImpressUser.removeNeopetsUsername(username);
+        this._updateCustomizations();
+        this._updateUsernames();
+      }
     }
   };
 
@@ -195,7 +245,7 @@
                          item={item}
                          key={customization.custom_pet.name} />;
       }
-      var sortedCustomizations = this.state.customizations.sort(function(a, b) {
+      var sortedCustomizations = this.state.customizations.slice(0).sort(function(a, b) {
         var aName = a.custom_pet.name.toLowerCase();
         var bName = b.custom_pet.name.toLowerCase();
         if (aName < bName) return -1;
@@ -240,6 +290,44 @@
     },
     handleClick: function(e) {
       Modeling.model(this.props.customization.custom_pet.name, this.props.item.id);
+    }
+  });
+
+  var NeopetsUsernamesForm = React.createClass({
+    getInitialState: function() {
+      return {usernames: [], newUsername: ""};
+    },
+    render: function() {
+      function buildUsernameItem(username) {
+        return <NeopetsUsernameItem username={username} key={username} />;
+      }
+      return <div>
+        <ul>{this.state.usernames.slice(0).sort().map(buildUsernameItem)}</ul>
+          <form onSubmit={this.handleSubmit}>
+            <input type="text" placeholder="neopets username"
+                   onChange={this.handleChange}
+                   value={this.state.newUsername} />
+            <button type="submit">add</button></form></div>;
+    },
+    handleChange: function(e) {
+      this.setState({newUsername: e.target.value});
+    },
+    handleSubmit: function(e) {
+      e.preventDefault();
+      this.state.newUsername = $.trim(this.state.newUsername);
+      if (this.state.newUsername.length) {
+        Modeling.addUsername(this.state.newUsername);
+        this.setState({newUsername: ""});
+      }
+    }
+  });
+
+  var NeopetsUsernameItem = React.createClass({
+    render: function() {
+      return <li>{this.props.username} <button onClick={this.handleClick}>×</button></li>
+    },
+    handleClick: function(e) {
+      Modeling.removeUsername(this.props.username);
     }
   });
 

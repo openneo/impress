@@ -144,24 +144,29 @@ body.outfits-new
       font-style: italic
       margin-bottom: .5em
 
-    #newest-modeled-items
-      text-align: center
+    #modeling-neopets-users
+      float: right
+      font-size: 85%
+      margin-top: -5px
+      max-width: 55%
+      text-align: right
 
-      .object
-        margin: 2px
-        padding: 0
-        width: 80px
+      ul, li, form
+        display: inline-block
 
-        .name
-          display: none
+      li
+        +border-radius(6px)
+        border: 1px solid $soft-border-color
+        line-height: 1
+        margin: 0 4px
+        padding: 2px 4px 2px 8px
 
-        img
-          margin: 0
+        button
+          +reset-awesome-button
+          margin-left: 6px
 
-        .nc-icon
-          right: 0
-    
     #newest-unmodeled-items
+      clear: both
       list-style: none
 
       > li
@@ -264,7 +269,24 @@ body.outfits-new
         .message
           font-style: italic
           font-size: 85%
-  
+
+    #newest-modeled-items
+      text-align: center
+
+      .object
+        margin: 2px
+        padding: 0
+        width: 80px
+
+        .name
+          display: none
+
+        img
+          margin: 0
+
+        .nc-icon
+          right: 0
+
   #latest-contribution
     +subtle-banner
     

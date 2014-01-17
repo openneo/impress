@@ -89,6 +89,10 @@ class User < ActiveRecord::Base
     owned ? ClosetList::NullOwned.new(self) : ClosetList::NullWanted.new(self)
   end
 
+  def neopets_usernames
+    [neopets_username]
+  end
+
   def self.find_or_create_from_remote_auth_data(user_data)
     user = find_or_initialize_by_remote_id_and_auth_server_id(
       user_data['id'],

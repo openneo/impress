@@ -75,6 +75,8 @@ class OutfitsController < ApplicationController
       @latest_contribution = Contribution.recent.first
       Contribution.preload_contributeds_and_parents([@latest_contribution])
     end
+
+    @neopets_usernames = user_signed_in? ? current_user.neopets_usernames : []
   end
 
   def show

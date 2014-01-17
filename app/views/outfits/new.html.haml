@@ -76,6 +76,7 @@
   -# TODO: i18n all the things
   -# TODO: cache this entire block? or just request newest items every time?
   - if @newest_unmodeled_items.present?
+    #modeling-neopets-users{'data-usernames' => @neopets_usernames.to_json}
     %h3= t '.newest_items.unmodeled.header'
     %ul#newest-unmodeled-items
       - @newest_unmodeled_items.each do |item|
