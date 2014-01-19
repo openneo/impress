@@ -16,20 +16,14 @@
 - content_for :before_flashes do
   #closet-hangers-contact
     - if public_perspective?
-      - if @user.neopets_username?
-        = link_to t('.send_neomail', :neopets_username => @user.neopets_username),
-                  send_neomail_url(@user)
+      - if @user.contact_neopets_username?
+        = link_to t('.send_neomail', neopets_username: @user.contact_neopets_username),
+                  send_neomail_url(@user.contact_neopets_username)
     - else
-      %span#edit-contact-link-to-replace-form.edit-contact-link{:class => @user.neopets_username? ? 'has-value' : nil}
-        %span#contact-link-no-value= t '.neopets_username.add'
-        %span#contact-link-has-value
-          = t '.neopets_username.edit',
-              :neopets_username => @user.neopets_username
       = form_for @user do |f|
-        = f.label :neopets_username
-        = f.text_field :neopets_username
+        = f.label :contact_neopets_connection_id
+        = f.collection_select :contact_neopets_connection_id, @user.neopets_connections, :id, :neopets_username, {include_blank: true}, 'data-new-text' => t('.neopets_username.new'), 'data-new-prompt' => t('.neopets_username.prompt')
         = f.submit t('.neopets_username.submit')
-        %span#cancel-contact-link= t('.neopets_username.cancel')
 
 - unless public_perspective?
   %noscript

@@ -12,8 +12,8 @@ module ClosetHangersHelper
     end
   end
 
-  def send_neomail_url(user)
-    "http://www.neopets.com/neomessages.phtml?type=send&recipient=#{CGI.escape @user.neopets_username}"
+  def send_neomail_url(neopets_username)
+    "http://www.neopets.com/neomessages.phtml?type=send&recipient=#{CGI.escape neopets_username}"
   end
 
   def hangers_group_visibility_field_name(owned)

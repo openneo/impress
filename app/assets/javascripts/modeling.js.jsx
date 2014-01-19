@@ -73,7 +73,7 @@
         },
         removeNeopetsUsername: function(username) {
           return $.ajax({
-            url: '/user/' + currentUserId + '/neopets-connections/' + username,
+            url: '/user/' + currentUserId + '/neopets-connections/' + encodeURIComponent(username),
             type: 'POST',
             data: {_method: 'DELETE'}
           });

@@ -10,8 +10,6 @@ pt:
       closet_list:
         name: Nome
         description: Descrição
-      user:
-        neopets_username: Nome de Usuário Neopets
   layouts:
     application:
       title_tagline: Pré-visualização de artigos aplicáveis
@@ -75,10 +73,7 @@ pt:
       item_search_submit: Vai!
       send_neomail: Neomail %{neopets_username}
       neopets_username:
-        add: Adicionar seu Nome de Usuário do Neopets
-        edit: Editar "Neomail %{neopets_username}"
         submit: Salvar
-        cancel: Cancelar
       public_url_label: "URL Pública"
       import_from:
         closet: Importar do Armário

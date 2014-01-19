@@ -11,12 +11,14 @@ class User < ActiveRecord::Base
   has_many :neopets_connections
   has_many :outfits
 
+  belongs_to :contact_neopets_connection, class_name: 'NeopetsConnection'
+
   scope :top_contributors, order('points DESC').where('points > 0')
 
   devise :rememberable
 
-  attr_accessible :neopets_username, :owned_closet_hangers_visibility,
-    :wanted_closet_hangers_visibility
+  attr_accessible :owned_closet_hangers_visibility,
+    :wanted_closet_hangers_visibility, :contact_neopets_connection_id
 
   def admin?
     name == 'matchu' # you know that's right.
@@ -92,6 +94,14 @@ class User < ActiveRecord::Base
 
   def neopets_usernames
     neopets_connections.map(&:neopets_username)
+  end
+
+  def contact_neopets_username?
+    contact_neopets_connection.present?
+  end
+
+  def contact_neopets_username
+    contact_neopets_connection.neopets_username
   end
 
   def self.find_or_create_from_remote_auth_data(user_data)

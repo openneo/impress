@@ -13,7 +13,7 @@ en-MEEP:
         description: Descreeption
       
       user:
-        neopets_username: Neopets usermeep
+        contact_neopets_connection_id: Meep Neomail to
   
   layouts:
     application:

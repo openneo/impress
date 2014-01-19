@@ -30,21 +30,18 @@ body.closet_hangers-index
     margin-left: 2em
     min-height: image-height("neomail.png")
 
-    a, > span
+    a
       +hover-link
+      color: inherit
+
+    a, > form
       background:
         image: image-url("neomail.png")
         position: left center
         repeat: no-repeat
-      color: inherit
-      float: left
-      height: 100%
       padding-left: image-width("neomail.png") + 4px
 
-    > span
-      background-image: image-url("neomail_edit.png")
-
-    input[type=text]
+    select
       width: 10em
 
     label
@@ -53,34 +50,6 @@ body.closet_hangers-index
 
       &:after
         content: ":"
-
-  #edit-contact-link-to-replace-form, #cancel-contact-link
-    display: none
-
-  .edit-contact-link, #cancel-contact-link
-    cursor: pointer
-    text-decoration: underline
-
-    &:hover
-      text-decoration: none
-
-  #edit-contact-link-to-replace-form
-    #contact-link-has-value
-      display: none
-
-    #contact-link-no-value
-      display: inline
-
-    &.has-value
-      #contact-link-has-value
-        display: inline
-
-      #contact-link-no-value
-        display: none
-
-  #cancel-contact-link
-    margin-left: 1em
-
   #toggle-help, #toggle-compare
     +awesome-button
     cursor: pointer
@@ -361,18 +330,8 @@ body.closet_hangers-index
               content: "…"
 
       #closet-hangers-contact
-        form
+        input[type=submit]
           display: none
-
-        .edit-contact-link, #cancel-contact-link
-          display: inline
-
-        &.editing
-          form
-            display: block
-
-          .edit-contact-link
-            display: none
 
       .closet-hangers-group
         header

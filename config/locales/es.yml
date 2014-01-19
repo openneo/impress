@@ -10,8 +10,6 @@ es:
       closet_list:
         name: Nombre
         description: Descripción
-      user:
-        neopets_username: Nombre en Neopets
   layouts:
     application:
       title_tagline: Previsualiza neopets personalizados y ropa Apta Para Usar
@@ -75,10 +73,7 @@ es:
       item_search_submit: Buscar
       send_neomail: Neomail %{neopets_username}
       neopets_username:
-        add: Añade tu nombre de usuario en Neopets
-        edit: Editar "Neomail %{neopets_username}"
         submit: Guardar
-        cancel: Cancelar
       public_url_label: "URL pública:"
       import_from:
         closet: Importar desde el ropero

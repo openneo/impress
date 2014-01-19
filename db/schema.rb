@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140117171729) do
+ActiveRecord::Schema.define(:version => 20140119040646) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -328,6 +328,7 @@ ActiveRecord::Schema.define(:version => 20140117171729) do
     t.text     "closet_description",                                                :null => false
     t.integer  "owned_closet_hangers_visibility",                :default => 1,     :null => false
     t.integer  "wanted_closet_hangers_visibility",               :default => 1,     :null => false
+    t.integer  "contact_neopets_connection_id"
   end
 
   create_table "zone_translations", :force => true do |t|

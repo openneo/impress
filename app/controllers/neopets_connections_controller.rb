@@ -3,9 +3,9 @@ class NeopetsConnectionsController < ApplicationController
     connection = authorized_user.neopets_connections.build
     connection.neopets_username = params[:neopets_connection][:neopets_username]
     if connection.save
-      render text: 'success'
+      render json: connection
     else
-      render text: 'failure'
+      render json: {error: 'failure'}, status: :internal_server_error
     end
   end
 
@@ -13,12 +13,12 @@ class NeopetsConnectionsController < ApplicationController
     connection = authorized_user.neopets_connections.find_by_neopets_username(params[:id])
     if connection
       if connection.destroy
-        render text: 'success'
+        render json: connection
       else
-        render text: 'failure'
+        render json: {error: 'failure'}, status: :internal_server_error
       end
     else
-      render text: 'not found'
+      render json: {error: 'not found'}, status: :not_found
     end
   end
 

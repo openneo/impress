@@ -13,7 +13,7 @@ en:
         description: Description
       
       user:
-        neopets_username: Neopets username
+        contact_neopets_connection_id: Send Neomail to
   
   layouts:
     application:
@@ -105,10 +105,9 @@ en:
       item_search_submit: Search
       send_neomail: Neomail %{neopets_username}
       neopets_username:
-        add: Add your Neopets username
-        edit: Edit "Neomail %{neopets_username}"
+        new: 'Add username…'
+        prompt: 'What Neopets username should we add?'
         submit: Save
-        cancel: Cancel
       public_url_label: "Public URL:"
       import_from:
         closet: Import from closet

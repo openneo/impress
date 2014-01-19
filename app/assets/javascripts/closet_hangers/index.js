@@ -455,24 +455,15 @@
   */
 
   var contactEl = $('#closet-hangers-contact');
-  var editContactLink = $('.edit-contact-link');
   var contactForm = contactEl.children('form');
-  var cancelContactLink = $('#cancel-contact-link');
-  var contactFormUsername = contactForm.children('input[type=text]');
-  var editContactLinkUsername = $('#contact-link-has-value span');
+  var contactField = contactForm.children('select');
 
-  function closeContactForm() {
-    contactEl.removeClass('editing');
-  }
+  var contactAddOption = $('<option/>',
+    {text: contactField.attr('data-new-text'), value: -1});
+  contactAddOption.appendTo(contactField);
+  var currentUserId = $('meta[name=current-user-id').attr('content');
 
-  editContactLink.click(function () {
-    contactEl.addClass('editing');
-    contactFormUsername.focus();
-  });
-
-  cancelContactLink.click(closeContactForm);
-
-  contactForm.submit(function (e) {
+  function submitContactForm() {
     var data = contactForm.serialize();
     contactForm.disableForms();
     $.ajax({
@@ -483,21 +474,33 @@
       complete: function () {
         contactForm.enableForms();
       },
-      success: function () {
-        var newName = contactFormUsername.val();
-        if(newName.length > 0) {
-          editContactLink.addClass('has-value');
-          editContactLinkUsername.text(newName);
-        } else {
-          editContactLink.removeClass('has-value');
-        }
-        closeContactForm();
-      },
       error: function (xhr) {
         handleSaveError(xhr, 'saving Neopets username');
       }
     });
-    e.preventDefault();
+  }
+
+  contactField.change(function(e) {
+    if (contactField.val() < 0) {
+      var newUsername = $.trim(prompt(contactField.attr('data-new-prompt'), ''));
+      if (newUsername) {
+        $.ajax({
+          url: '/user/' + currentUserId + '/neopets-connections',
+          type: 'POST',
+          data: {neopets_connection: {neopets_username: newUsername}},
+          dataType: 'json',
+          success: function(connection) {
+            var newOption = $('<option/>', {text: newUsername,
+              value: connection.id})
+            newOption.insertBefore(contactAddOption);
+            contactField.val(connection.id);
+            submitContactForm();
+          }
+        });
+      }
+    } else {
+      submitContactForm();
+    }
   });
 
   /*
