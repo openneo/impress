@@ -19,6 +19,8 @@
     = open_graph_tags
     = csrf_meta_tag
     = signed_in_meta_tag
+    - if user_signed_in?
+      = current_user_id_meta_tag
   %body{:class => body_class}
     = javascript_include_tag "analytics"
     #container

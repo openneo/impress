@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
   has_many :closet_lists
   has_many :closeted_items, :through => :closet_hangers, :source => :item
   has_many :contributions
+  has_many :neopets_connections
   has_many :outfits
 
   scope :top_contributors, order('points DESC').where('points > 0')
@@ -90,7 +91,7 @@ class User < ActiveRecord::Base
   end
 
   def neopets_usernames
-    [neopets_username]
+    neopets_connections.map(&:neopets_username)
   end
 
   def self.find_or_create_from_remote_auth_data(user_data)

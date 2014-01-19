@@ -21,7 +21,11 @@
   var Neopia = {
     User: {
       get: function(id) {
-        return $.getJSON(Neopia.API_URL + "/users/" + id).then(function(response) {
+        return $.ajax({
+          dataType: "json",
+          url: Neopia.API_URL + "/users/" + id,
+          useCSRFProtection: false
+        }).then(function(response) {
           return response.users[0];
         });
       }
@@ -31,7 +35,8 @@
         return $.ajax({
           dataType: "json",
           type: type,
-          url: Neopia.API_URL + "/pets/" + petId + "/customization"
+          url: Neopia.API_URL + "/pets/" + petId + "/customization",
+          useCSRFProtection: false
         });
       },
       get: function(petId) {
@@ -57,8 +62,25 @@
   var ImpressUser = (function() {
     var userSignedIn = ($('meta[name=user-signed-in]').attr('content') === 'true');
     if (userSignedIn) {
+      var currentUserId = $('meta[name=current-user-id').attr('content');
       return {
-        // TODO
+        addNeopetsUsername: function(username) {
+          return $.ajax({
+            url: '/user/' + currentUserId + '/neopets-connections',
+            type: 'POST',
+            data: {neopets_connection: {neopets_username: username}}
+          });
+        },
+        removeNeopetsUsername: function(username) {
+          return $.ajax({
+            url: '/user/' + currentUserId + '/neopets-connections/' + username,
+            type: 'POST',
+            data: {_method: 'DELETE'}
+          });
+        },
+        getNeopetsUsernames: function() {
+          return JSON.parse($('#modeling-neopets-users').attr('data-usernames'));
+        }
       };
     } else {
       return {
@@ -191,7 +213,8 @@
       this._usersComponent = React.renderComponent(<NeopetsUsernamesForm />,
                                                    usersEl.get(0));
       var usernames = ImpressUser.getNeopetsUsernames();
-      usernames.forEach(this.addUsername.bind(this));
+      usernames.forEach(this._registerUsername.bind(this));
+      this._updateUsernames();
     },
     model: function(neopiaPetId, itemId) {
       var oldCustomization = this._customizationsByPetId[neopiaPetId];
@@ -216,18 +239,21 @@
           Modeling._stopLoading(neopiaPetId, itemId, "error");
         });
     },
+    _registerUsername: function(username) {
+      this._neopetsUsernamesPresenceMap[username] = true;
+      this._loadUserCustomizations(username);
+      this._updateUsernames();
+    },
     addUsername: function(username) {
       if (typeof this._neopetsUsernamesPresenceMap[username] === 'undefined') {
-        this._neopetsUsernamesPresenceMap[username] = true;
         ImpressUser.addNeopetsUsername(username);
-        this._loadUserCustomizations(username);
-        this._updateUsernames();
+        this._registerUsername(username);
       }
     },
     removeUsername: function(username) {
       if (this._neopetsUsernamesPresenceMap[username]) {
-        delete this._neopetsUsernamesPresenceMap[username];
         ImpressUser.removeNeopetsUsername(username);
+        delete this._neopetsUsernamesPresenceMap[username];
         this._updateCustomizations();
         this._updateUsernames();
       }

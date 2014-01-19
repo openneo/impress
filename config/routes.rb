@@ -74,6 +74,9 @@ OpenneoImpressItems::Application.routes.draw do
         end
       end
     end
+
+    resources :neopets_connections, path: 'neopets-connections',
+      only: [:create, :destroy]
   end
 
   match 'users/current-user/closet' => 'closet_hangers#index', :as => :your_items

@@ -170,6 +170,10 @@ module ApplicationHelper
   def signed_in_meta_tag
     %(<meta name="user-signed-in" content="#{user_signed_in?}">).html_safe
   end
+
+  def current_user_id_meta_tag
+    %(<meta name="current-user-id" content="#{current_user.id}">).html_safe
+  end
   
   def labeled_time_ago_in_words(time)
     content_tag :abbr, time_ago_in_words(time), :title => time
