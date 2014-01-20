@@ -71,33 +71,30 @@
     = latest_contribution_description(@latest_contribution)
     %abbr#latest-contribution-created-at{:title => @latest_contribution.created_at.getutc.iso8601}
 
-
--#
-  #whats-new
-    -# TODO: i18n all the things
-    -# TODO: cache this entire block? or just request newest items every time?
-    - if @newest_unmodeled_items.present?
-      #modeling-neopets-users{'data-usernames' => @neopets_usernames.to_json}
-      %h3= t '.newest_items.unmodeled.header'
-      %ul#newest-unmodeled-items
-        - @newest_unmodeled_items.each do |item|
-          - localized_cache "items/#{item.id} modeling_progress updated_at=#{item.updated_at.to_i}" do
-            %li{'data-item-id' => item.id}
-              = link_to image_tag(item.thumbnail_url), item, :class => 'image-link'
-              = link_to item, :class => 'header' do
-                %h2= item.name
-                %span.meter{style: "width: #{@newest_unmodeled_items_predicted_modeled_ratio[item]*100}%"}
-              .missing-bodies
-                = render_predicted_missing_species_by_color(@newest_unmodeled_items_predicted_missing_species_by_color[item])
-              .models
-    - if @newest_modeled_items.present?
-      %h3= t '.newest_items.modeled.header'
-      %ul#newest-modeled-items
-        - @newest_modeled_items.each do |item|
-          %li.object
-            = link_to item, title: item.name, alt: item.name do
-              = image_tag item.thumbnail_url
-              = nc_icon_for(item)
+#whats-new
+  -# TODO: cache this entire block? or just request newest items every time?
+  - if @newest_unmodeled_items.present?
+    #modeling-neopets-users{'data-usernames' => @neopets_usernames.to_json}
+    %h3= t '.newest_items.unmodeled.header'
+    %ul#newest-unmodeled-items
+      - @newest_unmodeled_items.each do |item|
+        - localized_cache "items/#{item.id} modeling_progress updated_at=#{item.updated_at.to_i}" do
+          %li{'data-item-id' => item.id}
+            = link_to image_tag(item.thumbnail_url), item, :class => 'image-link'
+            = link_to item, :class => 'header' do
+              %h2= item.name
+              %span.meter{style: "width: #{@newest_unmodeled_items_predicted_modeled_ratio[item]*100}%"}
+            .missing-bodies
+              = render_predicted_missing_species_by_color(@newest_unmodeled_items_predicted_missing_species_by_color[item])
+            .models
+  - if @newest_modeled_items.present?
+    %h3= t '.newest_items.modeled.header'
+    %ul#newest-modeled-items
+      - @newest_modeled_items.each do |item|
+        %li.object
+          = link_to item, title: item.name, alt: item.name do
+            = image_tag item.thumbnail_url
+            = nc_icon_for(item)
 
 
 - localized_cache :action_suffix => 'templates' do

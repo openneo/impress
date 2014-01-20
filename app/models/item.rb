@@ -219,16 +219,12 @@ class Item < ActiveRecord::Base
                                    map(&:color_id)
   end
 
-  def modeled_colors
-    @modeled_colors ||= Color.select([:id, :standard]).find(modeled_color_ids)
-  end
-
-  def modeled_standard_colors?
-    modeled_colors.any?(&:standard)
-  end
-
-  def modeled_nonstandard_colors
-    modeled_colors.reject(&:standard)
+  def basic_body_ids
+    @basic_body_ids ||= begin
+      basic_color_ids ||= Color.select([:id]).basic.map(&:id)
+      PetType.select('DISTINCT body_id').
+        where(color_id: basic_color_ids).map(&:body_id)
+    end
   end
 
   def predicted_body_ids
@@ -249,9 +245,22 @@ class Item < ActiveRecord::Base
       # all bodies of the same color. (To my knowledge, anyway. I'm not aware
       # of any exceptions.) So, let's find those bodies by first finding those
       # colors.
-      PetType.select('DISTINCT body_id').
-              where(color_id: modeled_color_ids).
-              map(&:body_id)
+      basic_modeled_body_ids, nonbasic_modeled_body_ids = modeled_body_ids.
+        partition { |bi| basic_body_ids.include?(bi) }
+
+      output = []
+      if basic_modeled_body_ids.present?
+        output += basic_body_ids
+      end
+      if nonbasic_modeled_body_ids.present?
+        nonbasic_modeled_color_ids = PetType.select('DISTINCT color_id').
+          where(body_id: nonbasic_modeled_body_ids).
+          map(&:color_id)
+        output += PetType.select('DISTINCT body_id').
+          where(color_id: nonbasic_modeled_color_ids).
+          map(&:body_id)
+      end
+      output
     end
   end
 
@@ -277,7 +286,7 @@ class Item < ActiveRecord::Base
 
   def predicted_missing_nonstandard_body_pet_types
     PetType.joins(:color).
-            where(body_id: predicted_missing_body_ids,
+            where(body_id: predicted_missing_body_ids - basic_body_ids,
                   colors: {standard: false})
   end
 
