@@ -4,7 +4,7 @@ class NeopetsUsersController < ApplicationController
   rescue_from NeopetsUser::NotFound, :with => :not_found
 
   def new
-    @neopets_user.username = current_user.neopets_username
+    @neopets_user.username = current_user.contact_neopets_username
   end
 
   def create
