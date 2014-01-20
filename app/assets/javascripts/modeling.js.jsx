@@ -32,11 +32,16 @@
     },
     Customization: {
       request: function(petId, type) {
+        var data = {};
+        if (ImpressUser.id) {
+          data.impress_user = ImpressUser.id;
+        }
         return $.ajax({
           dataType: "json",
           type: type,
           url: Neopia.API_URL + "/pets/" + petId + "/customization",
-          useCSRFProtection: false
+          useCSRFProtection: false,
+          data: data
         });
       },
       get: function(petId) {
@@ -80,7 +85,8 @@
         },
         getNeopetsUsernames: function() {
           return JSON.parse($('#modeling-neopets-users').attr('data-usernames'));
-        }
+        },
+        id: currentUserId
       };
     } else {
       return {
@@ -98,7 +104,8 @@
         },
         getNeopetsUsernames: function() {
           return JSON.parse(localStorage.getItem(this._key)) || [];
-        }
+        },
+        id: null
       };
     }
   })();
