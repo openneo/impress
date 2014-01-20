@@ -61,6 +61,7 @@
       %h4= t '.modeling_hub.tagline'
       %p= t '.modeling_hub.description'
       = form_tag remote_load_pet_path, method: 'POST' do
+        = hidden_field_tag 'impress_user', current_user.try(:id)
         = hidden_field_tag 'redirect', "#{root_url}\#{q}"
         = pet_name_tag :placeholder => t('.modeling_hub.load_pet.placeholder')
         = submit_tag t('.modeling_hub.load_pet.submit')
