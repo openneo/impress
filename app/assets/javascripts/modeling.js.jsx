@@ -292,7 +292,8 @@
         disabled = true;
       }
       var itemName = this.props.item.name;
-      var imageSrc = "http://pets.neopets.com/cpn/" + petName + "/1/1.png";
+      var imageSrc = "http://pets.neopets.com/cpn/" + petName + "/1/1.png?" +
+        this.appearanceQuery();
       var title = I18n.pet.title
         .replace(/%{pet}/g, petName)
         .replace(/%{item}/g, itemName);
@@ -307,6 +308,24 @@
     },
     handleClick: function(e) {
       Modeling.model(this.props.customization.custom_pet.name, this.props.item.id);
+    },
+    appearanceQuery: function() {
+      // By appending this string to the image URL, we update it when and only
+      // when the pet's appearance has changed.
+      var assetIdByZone = {};
+      var biologyByZone = this.props.customization.custom_pet.biology_by_zone;
+      var biologyPartIds = Object.keys(biologyByZone).forEach(function(zone) {
+        assetIdByZone[zone] = biologyByZone[zone].part_id;
+      });
+      var equippedByZone = this.props.customization.custom_pet.equipped_by_zone;
+      var equippedAssetIds = Object.keys(equippedByZone).forEach(function(zone) {
+        assetIdByZone[zone] = equippedByZone[zone].asset_id;
+      });
+      // Sort the zones, so the string (which should match exactly when the
+      // appearance matches) isn't dependent on iteration order.
+      return Object.keys(assetIdByZone).sort().map(function(zone) {
+        return "zone[" + zone + "]=" + assetIdByZone[zone];
+      }).join("&");
     }
   });
 
