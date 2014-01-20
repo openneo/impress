@@ -658,6 +658,16 @@ en-MEEP:
               last_word_connector: '! meep '
         modeled:
           header: These items have already been meeped—meep for your help!
+          body_title: You just finished meeping this—meep so much!
+          neopets_usernames_form:
+            label: meepits username
+            submit: meep
+          pet:
+            status:
+              success: Meep! <3
+              unworn: Not meeping this item.
+              error: Couldn't load. Meep again?
+            title: Meep %{pet} as a model, especially if they're meeping the %{item}!
       pet_query:
         notice_html:
           Thanks for meeping us <strong>%{pet_name}</strong>.

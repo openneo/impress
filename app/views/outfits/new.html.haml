@@ -117,4 +117,5 @@
 
 - content_for :javascripts do
   = include_javascript_libraries :jquery20, :jquery_tmpl
+  = modeling_i18n_tag
   = javascript_include_tag 'ajax_auth', 'react', 'jquery.timeago', 'pet_query', 'outfits/new', 'modeling'

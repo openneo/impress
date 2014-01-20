@@ -1,6 +1,6 @@
 /** @jsx React.DOM */
 
-(function($) {
+(function($, I18n) {
   // Console-polyfill. MIT license.
   // https://github.com/paulmillr/console-polyfill
   // Make it safe to do console.log() always.
@@ -120,11 +120,10 @@
         var equippedClosetId = equippedByZone[zoneId].closet_obj_id;
         var equippedObjectId = closetItems[equippedClosetId].obj_info_id;
         if (itemsById.hasOwnProperty(equippedObjectId)) {
-          // TODO: i18n title
           customization.statusByItemId[equippedObjectId] = "success";
           itemsById[equippedObjectId].el.find("span[data-body-id=" +
             customization.custom_pet.body_id + "]").addClass("modeled")
-            .attr("title", "You just finished modeling this—thanks so much!");
+            .attr("title", I18n.modeledBodyTitle);
         }
       });
       this._customizationsByPetId[customization.custom_pet.name] = customization;
@@ -294,18 +293,10 @@
       }
       var itemName = this.props.item.name;
       var imageSrc = "http://pets.neopets.com/cpn/" + petName + "/1/1.png";
-      // TODO: i18n
-      var title = "Submit " + petName + " as a model, especially if they're " +
-                  "wearing the " + itemName + "!";
-      if (status === "success") {
-        var statusMessage = "Thanks! <3";
-      } else if (status === "unworn") {
-        var statusMessage = "Not wearing this item.";
-      } else if (status === "error") {
-        var statusMessage = "Couldn't load. Try again?";
-      } else {
-        var statusMessage ="";
-      }
+      var title = I18n.pet.title
+        .replace(/%{pet}/g, petName)
+        .replace(/%{item}/g, itemName);
+      var statusMessage = I18n.pet.status[status] || "";
       return <li data-status={status}><button onClick={this.handleClick} title={title} disabled={disabled}>
         <img src={imageSrc} />
         <div>
@@ -330,10 +321,10 @@
       return <div>
         <ul>{this.state.usernames.slice(0).sort().map(buildUsernameItem)}</ul>
           <form onSubmit={this.handleSubmit}>
-            <input type="text" placeholder="neopets username"
+            <input type="text" placeholder={I18n.neopetsUsernamesForm.label}
                    onChange={this.handleChange}
                    value={this.state.newUsername} />
-            <button type="submit">add</button></form></div>;
+            <button type="submit">{I18n.neopetsUsernamesForm.submit}</button></form></div>;
     },
     handleChange: function(e) {
       this.setState({newUsername: e.target.value});
@@ -358,4 +349,4 @@
   });
 
   Modeling.init($);
-})(jQuery);
+})(jQuery, ModelingI18n);

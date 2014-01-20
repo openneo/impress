@@ -114,5 +114,16 @@ module OutfitsHelper
     options = {:spellcheck => false, :id => nil}.merge(options)
     text_field_tag 'name', nil, options
   end
+
+  def modeling_i18n_tag
+    localized_cache('modeling_i18n') do
+      modeling_i18n = {
+        modeledBodyTitle: t('.newest_items.modeled.body_title'),
+        pet: t('.newest_items.modeled.pet'),
+        neopetsUsernamesForm: t('.newest_items.modeled.neopets_usernames_form')
+      }
+      haml_concat javascript_tag("var ModelingI18n = #{modeling_i18n.to_json};")
+    end
+  end
 end
 

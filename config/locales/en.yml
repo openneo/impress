@@ -713,6 +713,16 @@ en:
               last_word_connector: ', or '
         modeled:
           header: These items have already been modeled—thanks for your help!
+          body_title: You just finished modeling this—thanks so much!
+          neopets_usernames_form:
+            label: neopets username
+            submit: add
+          pet:
+            status:
+              success: Thanks! <3
+              unworn: Not wearing this item.
+              error: Couldn't load. Try again?
+            title: Submit %{pet} as a model, especially if they're wearing the %{item}!
       pet_query:
         notice_html:
           Thanks for showing us <strong>%{pet_name}</strong>.
