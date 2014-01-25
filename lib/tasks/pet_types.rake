@@ -24,7 +24,7 @@ namespace :pet_types do
         pet_type.body_id = args[:body_id]
         # This isn't really a valid image hash, but we can teach PetType to
         # use this override when reporting its image URLs.
-        pet_type.image_hash = "asset:#{swf_asset.id}"
+        pet_type.image_hash = "a:#{swf_asset.id}"
         pet_type.save!
         puts "Pet type #{pet_type.inspect} created"
 
