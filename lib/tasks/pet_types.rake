@@ -3,7 +3,7 @@ namespace :pet_types do
     desc 'Create a prank pet type with one state and one asset'
     task :create, [:color_id, :species_id, :body_id, :asset_remote_id, :asset_url, :female, :mood_id, :unconverted, :zones_restrict] => :environment do |t, args|
       args.with_defaults(female: false, mood_id: 1, unconverted: false,
-        zone_id: 46, # static, used by UC pets
+        zone_id: 15, # body zone; a pretty good compromise for most items
         zones_restrict: '0000000000000000000000000000000000000000000000000000')
       PetType.transaction do
         swf_asset = SwfAsset.new
