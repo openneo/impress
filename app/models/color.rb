@@ -5,6 +5,8 @@ class Color < ActiveRecord::Base
   scope :basic, where(:basic => true)
   scope :standard, where(:standard => true)
   scope :nonstandard, where(:standard => false)
+
+  validates :name, presence: true
   
   def as_json(options={})
     {:id => id, :name => human_name}
