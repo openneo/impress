@@ -26,13 +26,15 @@ class ClosetHangersController < ApplicationController
     visible_groups = @user.closet_hangers_groups_visible_to(@perspective_user)
     @unlisted_closet_hangers_by_owned = find_unlisted_closet_hangers_by_owned(visible_groups)
 
-    items = Item::ProxyArray.new
+    item_proxies = Item::ProxyArray.new
+    items = []
 
     @closet_lists_by_owned.each do |owned, lists|
       lists.each do |list|
         list.hangers.each do |hanger|
           hanger.item_proxy = Item::Proxy.new(hanger.item)
-          items << hanger.item_proxy
+          item_proxies << hanger.item_proxy
+          items << hanger.item
         end
       end
     end
@@ -40,11 +42,12 @@ class ClosetHangersController < ApplicationController
     @unlisted_closet_hangers_by_owned.each do |owned, hangers|
       hangers.each do |hanger|
         hanger.item_proxy = Item::Proxy.new(hanger.item)
-        items << hanger.item_proxy
+        item_proxies << hanger.item_proxy
+        items << hanger.item
       end
     end
 
-    items.prepare_partial(:item_link_partial)
+    item_proxies.prepare_partial(:item_link_partial)
 
     if @public_perspective && user_signed_in?
       current_user.assign_closeted_to_items!(items)
