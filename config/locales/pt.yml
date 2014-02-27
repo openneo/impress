@@ -269,15 +269,15 @@ pt:
           ownership: Eu não sei o que  "usuário:%{keyword}" significa. Você quis dizer "usuário:possui" ou "usuário:quer"?
         not_logged_in: Os filtros "usuário" só estão disponíveis se você estiver logado.
       flag_keywords:
-        is: é
+        is: e
       labels:
         name: nome
         is_nc: nc
         is_pb: pb
-        species_support_id: espécies
+        species_support_id: especies
         occupied_zone_id: ocupa,zona,tipo
         restricted_zone_id: restringe
-        user_closet_hanger_ownership: usuário
+        user_closet_hanger_ownership: usuario
         user_owns: possui
         user_wants: quer
   neopets_pages:
