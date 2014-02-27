@@ -170,7 +170,8 @@ class Item
           Zone.find(id).plain_label
         },
         ownership: lambda { |owned|
-          I18n.translate("items.search.labels.user_#{owned}")
+          owned_key = owned ? 'owns' : 'wants'
+          I18n.translate("items.search.labels.user_#{owned_key}")
         }
       }
 
@@ -243,8 +244,13 @@ class Item
           if filter_params.has_key?(:key)
             key = filter_params[:key].to_sym
             if FIELD_KEYS.include?(key)
+              value = filter_params[:value]
+              # Ugh, this bit feels so hacky :P
+              if key == :user_closet_hanger_ownership
+                value = (value == 'true')
+              end
               is_positive = filter_params[:is_positive] == 'true'
-              Filter.new(key, filter_params[:value], is_positive)
+              Filter.new(key, value, is_positive)
             end
           end
         }.compact
