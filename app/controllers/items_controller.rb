@@ -3,7 +3,7 @@ class ItemsController < ApplicationController
   rescue_from Item::Search::Error, :with => :search_error
 
   def index
-    if params.has_key?(:q)
+    if @query
       begin
         if params[:per_page]
           per_page = params[:per_page].to_i
@@ -13,8 +13,7 @@ class ItemsController < ApplicationController
         end
         # Note that we sort by name by hand, since we might have to use
         # fallbacks after the fact
-        @items = Item::Search::Query.from_text(@query, current_user).
-          paginate(page: params[:page], per_page: per_page)
+        @items = @query.paginate(page: params[:page], per_page: per_page)
         assign_closeted!
         respond_to do |format|
           format.html {
@@ -27,11 +26,13 @@ class ItemsController < ApplicationController
           }
           format.json {
             @items.prepare_method(:as_json)
-            render json: {items: @items, total_pages: @items.total_pages}
+            render json: {items: @items, total_pages: @items.total_pages,
+                          query: @query.to_s}
           }
           format.js {
             @items.prepare_method(:as_json)
-            render json: {items: @items, total_pages: @items.total_pages},
+            render json: {items: @items, total_pages: @items.total_pages,
+                          query: @query.to_s},
                    callback: params[:callback]
           }
         end
@@ -149,7 +150,11 @@ class ItemsController < ApplicationController
   end
 
   def set_query
-    @query = params[:q]
+    q = params[:q]
+    if q.is_a?(String)
+      @query = Item::Search::Query.from_text(q, current_user)
+    elsif q.is_a?(Hash)
+      @query = Item::Search::Query.from_params(q, current_user)
+    end
   end
 end
-

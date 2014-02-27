@@ -13,6 +13,7 @@ class Item
         :name => Fields::SetField,
         :user_closet_hanger_ownership => Fields::SetField
       }
+      FIELD_KEYS = FIELD_CLASSES.keys
       
       def initialize(filters, user)
         @filters = filters
@@ -108,7 +109,7 @@ class Item
         OWNERSHIP_KEYWORDS[locale] = {}
         
         I18n.fallbacks[locale].each do |fallback|
-          FIELD_CLASSES.keys.each do |key|
+          FIELD_KEYS.each do |key|
             # A locale can specify multiple labels for a key by separating by
             # commas: "occupies,zone,type"
             labels = I18n.translate("items.search.labels.#{key}",
@@ -130,6 +131,10 @@ class Item
             end
           end
         end
+      end
+
+      def to_s
+        @filters.map(&:to_s).join(' ')
       end
       
       TEXT_QUERY_RESOURCE_FINDERS = {
@@ -217,6 +222,19 @@ class Item
           filters << Filter.new(key, value, is_positive)
         end
         
+        self.new(filters, user)
+      end
+
+      def self.from_params(params, user=nil)
+        filters = params.values.map { |filter_params|
+          if filter_params.has_key?(:key)
+            key = filter_params[:key].to_sym
+            if FIELD_KEYS.include?(key)
+              Filter.new(key, filter_params[:value], filter_params[:is_positive] == 'true')
+            end
+          end
+        }.compact
+
         self.new(filters, user)
       end
       
