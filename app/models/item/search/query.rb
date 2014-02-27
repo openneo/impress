@@ -15,9 +15,10 @@ class Item
       }
       FIELD_KEYS = FIELD_CLASSES.keys
       
-      def initialize(filters, user)
+      def initialize(filters, user, text=nil)
         @filters = filters
         @user = user
+        @text = text
       end
       
       def fields
@@ -134,7 +135,7 @@ class Item
       end
 
       def to_s
-        @filters.map(&:to_s).join(' ')
+        @text || @filters.map(&:to_s).join(' ')
       end
       
       TEXT_QUERY_RESOURCE_FINDERS = {
@@ -160,7 +161,19 @@ class Item
           end
         }
       }
-      
+
+      REVERSE_RESOURCE_FINDERS = {
+        species: lambda { |id|
+          Species.find(id).name
+        },
+        zone: lambda { |id|
+          Zone.find(id).plain_label
+        },
+        ownership: lambda { |owned|
+          I18n.translate("items.search.labels.user_#{owned}")
+        }
+      }
+
       TEXT_QUERY_RESOURCE_TYPES_BY_KEY = {
         :species_support_id => :species,
         :occupied_zone_id => :zone,
@@ -222,7 +235,7 @@ class Item
           filters << Filter.new(key, value, is_positive)
         end
         
-        self.new(filters, user)
+        self.new(filters, user, text)
       end
 
       def self.from_params(params, user=nil)
@@ -230,7 +243,8 @@ class Item
           if filter_params.has_key?(:key)
             key = filter_params[:key].to_sym
             if FIELD_KEYS.include?(key)
-              Filter.new(key, filter_params[:value], filter_params[:is_positive] == 'true')
+              is_positive = filter_params[:is_positive] == 'true'
+              Filter.new(key, filter_params[:value], is_positive)
             end
           end
         }.compact

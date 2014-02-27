@@ -152,7 +152,14 @@ class ItemsController < ApplicationController
   def set_query
     q = params[:q]
     if q.is_a?(String)
-      @query = Item::Search::Query.from_text(q, current_user)
+      begin
+        @query = Item::Search::Query.from_text(q, current_user)
+      rescue
+        # Set the query string for error handling messages, but let the error
+        # bubble up.
+        @query = params[:q]
+        raise
+      end
     elsif q.is_a?(Hash)
       @query = Item::Search::Query.from_params(q, current_user)
     end

@@ -15,18 +15,36 @@ class Item
 
       def to_s
         sign = positive? ? '' : '-'
-        key_str = key.to_s
+        key_str = @key.to_s
         if key_str.start_with?('is_')
-          rest_of_key = key_str[3..-1]
-          "#{sign}is:#{rest_of_key}"
+          is_label = I18n.translate("items.search.flag_keywords.is")
+          "#{sign}#{is_label}:#{label}"
         else
-          quoted_value = value.include?(' ') ? value.inspect : value
-          if key == :name
+          if Query::TEXT_QUERY_RESOURCE_TYPES_BY_KEY.include?(@key)
+            resource_type = Query::TEXT_QUERY_RESOURCE_TYPES_BY_KEY[@key]
+            reverse_finder = Query::REVERSE_RESOURCE_FINDERS[resource_type]
+            resource_value = reverse_finder.call(@value)
+          else
+            resource_value = @value
+          end
+          if resource_value.include?(' ')
+            quoted_value = resource_value.inspect
+          else
+            quoted_value = resource_value
+          end
+          if @key == :name
             "#{sign}#{quoted_value}"
           else
-            "#{sign}#{key}:#{quoted_value}"
+            
+            "#{sign}#{label}:#{quoted_value}"
           end
         end
+      end
+
+      private
+
+      def label
+        I18n.translate("items.search.labels.#{@key}").split(',').first
       end
     end
   end

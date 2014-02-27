@@ -1,7 +1,7 @@
 - if @items
-  - title t('.title_with_query', :query => @query)
+  - title t('.title_with_query', :query => @query.to_s)
   - if @items.empty?
-    %p= t '.no_results_html', :query_html => content_tag(:strong, @query)
+    %p= t '.no_results_html', :query_html => content_tag(:strong, @query.to_s)
     %p= twl '.modeling_request', :modeling_link_url => root_path
   - else
     = will_paginate @items
