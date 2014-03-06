@@ -375,7 +375,7 @@ View.Hash = function (wardrobe) {
 
   singleOutfitResponse('updatePetState', function (pet_state) {
     var pet_type = wardrobe.outfits.getPetType();
-    if(pet_state.id != data.state && pet_type && (data.state || pet_state.id != pet_type.pet_states[0].id)) {
+    if(pet_state.id != data.state && pet_type) {
       changeQuery({biology: undefined, state: pet_state.id});
     }
   });
