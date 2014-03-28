@@ -16,7 +16,8 @@
   #outfit-user
     = outfit_creation_summary(@outfit)
 
-= prank_color_message(@outfit.color)
+- if @outfit.color.prank?
+  = prank_color_message(@outfit.color.unfunny_human_name)
 
 #preview-wrapper
   #preview-swf

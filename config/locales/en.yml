@@ -228,7 +228,7 @@ en:
         thing. C'mon, would I lie to you? On today of all days?
       unfunny_html: This pet is painted %{color}, a fake color added to the
         site for April Fools 2014. Anyone who claims to have a <em>real</em>
-        Nebula pet is a big fat liar.
+        %{color} pet is a big fat liar.
 
   contributions:
     contributed_description:
