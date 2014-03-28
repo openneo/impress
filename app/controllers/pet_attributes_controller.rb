@@ -1,7 +1,7 @@
 class PetAttributesController < ApplicationController
   def index
     render :json => {
-      :color => Color.alphabetical,
+      :color => Color.funny.alphabetical,
       :species => Species.alphabetical
     }
   end
