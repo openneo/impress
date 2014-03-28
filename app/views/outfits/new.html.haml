@@ -20,7 +20,7 @@
         %button{:type => "submit"}
           = t '.load_pet.submit'
  
-  - localized_cache action_suffix: 'outfits#new start_from_scratch_form' do
+  - localized_cache "outfits#new start_from_scratch_form pranks_funny=#{Color.pranks_funny?}" do
     = form_tag wardrobe_path, method: 'GET', id: 'start-from-scratch', authenticity_token: false do
       %fieldset
         %legend= t '.start_from_scratch.legend'

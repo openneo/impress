@@ -41,8 +41,8 @@ class OutfitsController < ApplicationController
   end
 
   def new
-    unless localized_fragment_exist?(:action_suffix => 'start_from_scratch_form_content')
-      @colors = Color.alphabetical
+    unless localized_fragment_exist?("outfits#new start_from_scratch_form pranks_funny=#{Color.pranks_funny?}")
+      @colors = Color.funny.alphabetical
       @species = Species.alphabetical
     end
     

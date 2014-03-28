@@ -219,6 +219,7 @@ en:
   
   colors:
     default_human_name: (a new color)
+    prank_suffix: (fake)
 
   contributions:
     contributed_description:
