@@ -9,6 +9,8 @@ class Outfit < ActiveRecord::Base
   validates :name, :presence => {:if => :user_id}, :uniqueness => {:scope => :user_id, :if => :user_id}
   validates :pet_state, :presence => true
 
+  delegate :color, to: :pet_state
+
   attr_accessible :name, :pet_state_id, :starred, :worn_and_unworn_item_ids
 
   scope :wardrobe_order, order('starred DESC', :name)

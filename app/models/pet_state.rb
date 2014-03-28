@@ -10,6 +10,8 @@ class PetState < ActiveRecord::Base
 
   belongs_to :pet_type
 
+  delegate :color, to: :pet_type
+
   alias_method :swf_asset_ids_from_association, :swf_asset_ids
   
   attr_writer :parent_swf_asset_relationships_to_update

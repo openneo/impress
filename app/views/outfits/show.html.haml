@@ -15,6 +15,14 @@
 - if @outfit.user_id
   #outfit-user
     = outfit_creation_summary(@outfit)
+
+- if @outfit.color.prank?
+  %p.warning#prank-color-message
+    - if Color.pranks_funny?
+      = t 'colors.prank_message.funny_html', color: @outfit.color.unfunny_human_name
+    - else
+      = t 'colors.prank_message.unfunny_html', color: @outfit.color.unfunny_human_name
+
 #preview-wrapper
   #preview-swf
 #outfit-items= render @outfit.worn_items
