@@ -57,7 +57,13 @@ Preview.Job = function (key, base) {
   job.loading = false;
   
   function getImageSrc() {
-    return petImage(base + '/' + key, quality);
+    if (key.substr(0, 3) === 'a:-') {
+      // lol lazy code for prank image :P
+      return "http://swfimages.impress.openneo.net" +
+        "/biology/000/000/0-2/" + key.substr(2) + "/300x300.png";
+    } else {
+      return petImage(base + '/' + key, quality);
+    }
   }
   
   function load() {
