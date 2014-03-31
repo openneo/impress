@@ -1289,6 +1289,38 @@ View.Search = function (wardrobe) {
   //wardrobe.pet_attributes.bind('update', prepBuildHelper('only', getSpecies));
 }
 
+View.PrankColorMessage = function(wardrobe) {
+  var el = $('#prank-color-message');
+  var nameEls = el.find('.prank-color-message-name');
+  var colorsById = null;
+  var petType = null;
+
+  function updateMessage() {
+    if (colorsById !== null && petType !== null) {
+      var color = colorsById[petType.color_id];
+      if (color.prank) {
+        nameEls.text(color.unfunny_name);
+        el.show();
+      } else {
+        el.hide();
+      }
+    }
+  }
+
+  wardrobe.pet_attributes.bind('update', function(attributes) {
+    colorsById = {};
+    attributes.color.forEach(function(color) {
+      colorsById[color.id] = color;
+    });
+    updateMessage();
+  });
+
+  wardrobe.outfits.bind('updatePetType', function(newPetType) {
+    petType = newPetType;
+    updateMessage();
+  });
+}
+
 var userbar_sessions_link = $('#userbar a:last');
 var userbar_message_el = $('#userbar-session-message').prependTo('#userbar');
 

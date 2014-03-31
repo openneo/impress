@@ -10,7 +10,7 @@ class Color < ActiveRecord::Base
   validates :name, presence: true
   
   def as_json(options={})
-    {:id => id, :name => human_name}
+    {id: id, name: human_name, unfunny_name: unfunny_human_name, prank: prank?}
   end
 
   def human_name
