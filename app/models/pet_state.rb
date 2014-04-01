@@ -43,7 +43,9 @@ class PetState < ActiveRecord::Base
     {
       id: id,
       gender_mood_description: gender_mood_description,
-      swf_asset_ids: swf_asset_ids_array
+      swf_asset_ids: swf_asset_ids_array,
+      artist_name: artist_name,
+      artist_url: artist_url
     }
   end
 
@@ -155,6 +157,18 @@ class PetState < ActiveRecord::Base
       destroy
     end
     count
+  end
+
+  def artist_name
+    artist_neopets_username || I18n.translate("pet_states.default_artist_name")
+  end
+
+  def artist_url
+    if artist_neopets_username
+      "http://www.neopets.com/userlookup.phtml?user=#{artist_neopets_username}"
+    else
+      nil
+    end
   end
 
   def self.from_pet_type_and_biology_info(pet_type, info)

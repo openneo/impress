@@ -226,9 +226,9 @@ en:
         your hard-earned Neopoints on a %{color} Paint Brush and fall for
         %{color} pet trade scams, because %{color} is <em>totally</em> a real
         thing. C'mon, would I lie to you? On today of all days?
-      unfunny_html: This pet is painted %{color}, a fake color added to the
-        site for April Fools 2014. Anyone who claims to have a <em>real</em>
-        %{color} pet is a big fat liar.
+      unfunny_html: This pet is painted %{color}, a fake color drawn by
+        %{artist} for April Fools 2014. Anyone who claims to have a
+        <em>real</em> %{color} pet is a big fat liar.
 
   contributions:
     contributed_description:
@@ -763,6 +763,7 @@ en:
       glitched: Glitched
       unconverted: Unconverted
       unlabeled: Unlabeled
+    default_artist_name: the OpenNeo team
   
   pet_types:
     human_name: "%{color_human_name} %{species_human_name}"

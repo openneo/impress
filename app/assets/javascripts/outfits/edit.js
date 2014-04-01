@@ -1292,14 +1292,22 @@ View.Search = function (wardrobe) {
 View.PrankColorMessage = function(wardrobe) {
   var el = $('#prank-color-message');
   var nameEls = el.find('.prank-color-message-name');
+  var artistEls = el.find('.prank-color-message-artist');
   var colorsById = null;
   var petType = null;
+  var petState = null;
 
   function updateMessage() {
-    if (colorsById !== null && petType !== null) {
+    if (colorsById !== null && petType !== null && petState !== null) {
       var color = colorsById[petType.color_id];
       if (color.prank) {
         nameEls.text(color.unfunny_name);
+        artistEls.text(petState.artistName);
+        if (petState.artistUrl === null) {
+          artistEls.removeAttr('href');
+        } else {
+          artistEls.attr('href', petState.artistUrl);
+        }
         el.show();
       } else {
         el.hide();
@@ -1317,6 +1325,11 @@ View.PrankColorMessage = function(wardrobe) {
 
   wardrobe.outfits.bind('updatePetType', function(newPetType) {
     petType = newPetType;
+    updateMessage();
+  });
+
+  wardrobe.outfits.bind('updatePetState', function(newPetState) {
+    petState = newPetState;
     updateMessage();
   });
 }

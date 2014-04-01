@@ -731,6 +731,8 @@ function Wardrobe() {
     this.gender_mood_description = '';
     this.assetIds = [];
     this.assets = [];
+    this.artistName = "";
+    this.artistUrl = null;
 
     this.loadAssets = function (success) {
       var params;
@@ -752,6 +754,8 @@ function Wardrobe() {
     this.update = function (data) {
       this.gender_mood_description = data.gender_mood_description;
       this.assetIds = data.swf_asset_ids;
+      this.artistName = data.artist_name;
+      this.artistUrl = data.artist_url;
     }
 
     PetState.cache[id] = this;

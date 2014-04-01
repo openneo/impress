@@ -126,10 +126,16 @@ module OutfitsHelper
     end
   end
 
-  def prank_color_message(color_unfunny_human_name)
+  def prank_color_message(unfunny_human_name, artist_name, artist_url)
     content_key_base = Color.pranks_funny? ? 'funny' : 'unfunny'
+    if artist_url
+      artist = link_to(artist_name, artist_url,
+        :class => 'prank-color-message-artist')
+    else
+      artist = artist_name
+    end
     content = t("colors.prank_message.#{content_key_base}_html",
-      color: color_unfunny_human_name)
+      color: unfunny_human_name, artist: artist)
     content_tag('p', content, id: 'prank-color-message', :class => 'warning')
   end
 end

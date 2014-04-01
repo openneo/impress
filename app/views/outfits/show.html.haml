@@ -17,7 +17,8 @@
     = outfit_creation_summary(@outfit)
 
 - if @outfit.color.prank?
-  = prank_color_message(@outfit.color.unfunny_human_name)
+  = prank_color_message(@outfit.color.unfunny_human_name,
+    @outfit.pet_state.artist_name, @outfit.pet_state.artist_url)
 
 #preview-wrapper
   #preview-swf

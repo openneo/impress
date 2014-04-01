@@ -48,7 +48,7 @@
         #save-success= t '.sidebar.notifications.outfits.save.success'
         #save-error
         #preview-closet.sidebar-view
-          = prank_color_message('<span class="prank-color-message-name"></span>'.html_safe)
+          = prank_color_message('<span class="prank-color-message-name"></span>'.html_safe, '$artist-name', '$artist-url')
           %ul
         #preview-outfits.sidebar-view
           %ul#preview-outfits-list
