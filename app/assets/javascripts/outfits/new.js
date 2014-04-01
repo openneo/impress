@@ -8,7 +8,7 @@ var preview_el = $('#pet-preview'),
   name_el = $('#main-pet-name');
 
 preview_el.click(function () {
-  name_el.val(Preview.Job.current.name).closest('form').submit();
+  Preview.Job.current.visit();
 });
 
 var Preview = {
@@ -87,10 +87,19 @@ Preview.Job = function (key, base) {
 Preview.Job.Name = function (name) {
   this.name = name;
   Preview.Job.apply(this, [name, 'cpn']);
+
+  this.visit = function() {
+    name_el.val(this.name).closest('form').submit();
+  }
 }
 
 Preview.Job.Hash = function (hash) {
   Preview.Job.apply(this, [hash, 'cp']);
+
+  this.visit = function() {
+    window.location = "/wardrobe?color=" + $('#color').val() + "&species=" +
+      $('#species').val();
+  }
 }
 
 
