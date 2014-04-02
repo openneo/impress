@@ -49,6 +49,12 @@
         #save-error
         #preview-closet.sidebar-view
           = prank_color_message('<span class="prank-color-message-name"></span>'.html_safe, '$artist-name', '$artist-url')
+          %form.item-search
+            %label
+              -# TODO: i18n
+              %span Add an item
+              %input{type: 'text', name: 'query'}
+              %button{type: 'submit'} Search
           %ul
         #preview-outfits.sidebar-view
           %ul#preview-outfits-list
@@ -93,10 +99,10 @@
             %li{'data-format' => 'bbcode'}
               =t '.sidebar.sharing.formats.bbcode'
   #preview-search
-    %form#preview-search-basic
+    %form#preview-search-basic.item-search
       %header
         %h2= t '.search.header'
-        %input{:name => "query", :placeholder => t('.search.form.query_placeholder'), :type => "search"}/
+        %input{:name => "query", :type => "search"}/
         %input{:type => "submit", :value => t('.search.form.submit')}/
         -# TODO: i18n
         %a#preview-search-advanced-link{href: 'javascript:void(0)'} Advanced Search

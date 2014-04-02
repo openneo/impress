@@ -1071,8 +1071,8 @@ View.ReportBrokenImage = function (wardrobe) {
 }
 
 View.Search = function (wardrobe) {
-  var form_selector = '#preview-search-basic', form = $(form_selector),
-    item_set = new Partial.ItemSet(wardrobe, form_selector + ' ul'),
+  var form = $('form.item-search'),
+    item_set = new Partial.ItemSet(wardrobe, '#preview-search-basic ul'),
     input_el = form.find('input[name=query]'),
     clear_el = $('#preview-search-form-clear'),
     error_el = $('#preview-search-form-error'),
@@ -1080,7 +1080,6 @@ View.Search = function (wardrobe) {
     loading_el = $('#preview-search-form-loading'),
     no_results_el = $('#preview-search-form-no-results'),
     no_results_span = no_results_el.children('span'),
-    your_items_links = $('.preview-search-form-your-items'),
     wrapper = $('#preview-search'),
     PAGINATION = {
       INNER_WINDOW: 4,
@@ -1088,7 +1087,8 @@ View.Search = function (wardrobe) {
       EL_ID: '#preview-search-form-pagination',
       PER_PAGE: 21,
       TEMPLATE: $('#pagination-template')
-    }, object_width = 112, last_request;
+    }, object_width = 112, last_request,
+    current_query = "";
 
   PAGINATION.EL = $(PAGINATION.EL_ID);
 
@@ -1102,7 +1102,7 @@ View.Search = function (wardrobe) {
   wardrobe.search.setPerPage(PAGINATION.PER_PAGE);
 
   function updatePerPage() {
-    var new_per_page = Math.floor(form.width() / object_width),
+    var new_per_page = Math.floor(wrapper.width() / object_width),
       offset, new_page;
     if(!$(document.body).hasClass('fullscreen')) new_per_page *= 4;
     if(new_per_page != PAGINATION.PER_PAGE) {
@@ -1117,11 +1117,11 @@ View.Search = function (wardrobe) {
   updatePerPage();
 
   function loadOffset(offset) {
-    wardrobe.search.setItemsByQuery(input_el.val(), {offset: offset});
+    wardrobe.search.setItemsByQuery(current_query, {offset: offset});
   }
 
   function loadPage(page) {
-    wardrobe.search.setItemsByQuery(input_el.val(), {page: page});
+    wardrobe.search.setItemsByQuery(current_query, {page: page});
   }
 
   function stopLoading() {
@@ -1130,18 +1130,13 @@ View.Search = function (wardrobe) {
 
   form.submit(function (e) {
     e.preventDefault();
+    current_query = $(this).find('input[name=query]').val();
     loadPage(1);
   });
 
   clear_el.click(function (e) {
     e.preventDefault();
     input_el.val('');
-    form.submit();
-  });
-
-  your_items_links.click(function (e) {
-    e.preventDefault();
-    input_el.val('user:' + this.getAttribute('data-search-value'));
     form.submit();
   });
 
@@ -1169,8 +1164,9 @@ View.Search = function (wardrobe) {
     error_el.hide('fast');
     help_el.hide();
     no_results_el.hide();
-    input_el.val(request.query || '');
-    no_results_span.text(request.query);
+    current_query = request.query || '';
+    input_el.val(current_query);
+    no_results_span.text(current_query);
     clear_el.toggle(!!request.query);
   });
 
