@@ -1108,6 +1108,9 @@ View.Search = function (wardrobe) {
         loadOffset(last_request.offset);
       }
     }
+
+    // If the footer goes onto two lines, nudge search up.
+    form.css('bottom', $('#footer').height());
   }
   $(window).resize(updatePerPage).load(updatePerPage);
   updatePerPage();
@@ -1221,72 +1224,6 @@ View.Search = function (wardrobe) {
     stopLoading();
     error_el.text(error).show('normal');
   });
-
-  help_el.find('dt').each(function () {
-    var el = $(this);
-    if(!el.children().length) {
-      el.wrapInner($('<a/>', {href: '#'}));
-    }
-  }).children('span:not(.search-helper)').each(function () {
-    var el = $(this);
-    el.replaceWith($('<a/>', {href: '#', text: el.text()}));
-  });
-
-  help_el.find('dt a').live('click', function (e) {
-    var el = $(this), siblings = el.parent().contents(), query;
-    e.preventDefault();
-    if(siblings.length > 1) {
-      query = siblings.map(function () {
-        var el = $(this);
-        return el[el.is('select') ? 'val' : 'text']();
-      }).get().join('');
-      query = $.trim(query);
-    } else {
-      query = el.text();
-    }
-    input_el.val(query);
-    form.submit();
-  });
-
-  $('select.search-helper').live('change', function () {
-    var el = $(this), filter = el.attr('data-search-filter');
-    $('select.search-helper[data-search-filter=' + filter + ']').val(el.val());
-  });
-
-  function prepBuildHelper(type, getSet) {
-    return function (objs) {
-      var span = $('span.search-helper[data-search-filter-key=' + type + ']');
-      var filterName = span.attr('data-search-filter-name');
-      var select = $('<select/>', {
-        'class': 'search-helper',
-        'data-search-filter': filterName
-      });
-      var defaultValue = span.get(0).innerText;
-      objs = getSet(objs);
-      for(var i = 0, l = objs.length; i < l; i++) {
-        $('<option/>', {text: objs[i].name}).appendTo(select);
-      }
-      span.replaceWith(function () {
-        return select.clone().fadeIn('fast');
-      });
-      
-      // have to set selected after it's already in the DOM; not sure why :/
-      $('select.search-helper[data-search-filter=' + filterName + '] option').each(function () {
-        if(this.innerText == defaultValue) {
-          this.selected = "selected";
-        }
-      });
-    }
-  }
-
-  function getSpecies(x) { return x.species }
-
-  wardrobe.item_zone_sets.bind('update', prepBuildHelper('occupies', function (x) {
-    return x;
-  }));
-
-  wardrobe.pet_attributes.bind('update', prepBuildHelper('species', getSpecies));
-  //wardrobe.pet_attributes.bind('update', prepBuildHelper('only', getSpecies));
 }
 
 View.PrankColorMessage = function(wardrobe) {
