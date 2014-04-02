@@ -1156,6 +1156,7 @@ View.Search = function (wardrobe) {
       help_el.show();
     }
     wrapper.toggleClass('has-results', items.length > 0);
+    wrapper.removeClass('advanced');
     fit();
   });
 
