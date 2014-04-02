@@ -140,7 +140,7 @@ View.Closet = function (wardrobe) {
 
 View.Fullscreen = function (wardrobe) {
   var full = $(document.body).hasClass('fullscreen'), win = $(window),
-    preview_el = $('#preview'), search_el = $('#preview-search-form'),
+    preview_el = $('#preview'), search_el = $('#preview-search'),
     preview_swf = $('#preview-swf'), sidebar_el = $('#preview-sidebar'),
     sidebar_content_el = $('#preview-sidebar-content'),
     sidebar_navbar_el = $('#preview-sidebar-navbar'), footer = $('#footer'),
@@ -1071,7 +1071,7 @@ View.ReportBrokenImage = function (wardrobe) {
 }
 
 View.Search = function (wardrobe) {
-  var form_selector = '#preview-search-form', form = $(form_selector),
+  var form_selector = '#preview-search-basic', form = $(form_selector),
     item_set = new Partial.ItemSet(wardrobe, form_selector + ' ul'),
     input_el = form.find('input[name=query]'),
     clear_el = $('#preview-search-form-clear'),
@@ -1081,6 +1081,7 @@ View.Search = function (wardrobe) {
     no_results_el = $('#preview-search-form-no-results'),
     no_results_span = no_results_el.children('span'),
     your_items_links = $('.preview-search-form-your-items'),
+    wrapper = $('#preview-search'),
     PAGINATION = {
       INNER_WINDOW: 4,
       OUTER_WINDOW: 1,
@@ -1223,6 +1224,12 @@ View.Search = function (wardrobe) {
   wardrobe.search.bind('error', function (error) {
     stopLoading();
     error_el.text(error).show('normal');
+  });
+
+  $('#preview-search-advanced-link, #preview-search-basic-link').click(function() {
+    var fit = $('#preview').data('fit') || $.noop;
+    wrapper.toggleClass('advanced');
+    fit();
   });
 }
 

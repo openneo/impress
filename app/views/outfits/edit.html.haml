@@ -92,18 +92,26 @@
               = t '.sidebar.sharing.formats.html'
             %li{'data-format' => 'bbcode'}
               =t '.sidebar.sharing.formats.bbcode'
-  %form#preview-search-form
-    %header
-      %h2= t '.search.header'
-      %input{:name => "query", :placeholder => t('.search.form.query_placeholder'), :type => "search"}/
-      %input{:type => "submit", :value => t('.search.form.submit')}/
-      %a.preview-search-form-your-items{:href => '#', 'data-search-value' => 'owns'}
-        = closet_lists_group_name :you, true
-      %a.preview-search-form-your-items{:href => '#', 'data-search-value' => 'wants'}
-        = closet_lists_group_name :you, false
-      #preview-search-form-pagination
-      %a#preview-search-form-clear{:href => "#"}= t '.search.form.clear'
-    #preview-search-form-help
+  #preview-search
+    %form#preview-search-basic
+      %header
+        %h2= t '.search.header'
+        %input{:name => "query", :placeholder => t('.search.form.query_placeholder'), :type => "search"}/
+        %input{:type => "submit", :value => t('.search.form.submit')}/
+        -# TODO: i18n
+        %a#preview-search-advanced-link{href: 'javascript:void(0)'} Advanced Search
+        #preview-search-form-pagination
+        %a#preview-search-form-clear{:href => "#"}= t '.search.form.clear'
+      #preview-search-form-loading= t '.search.loading'
+      #preview-search-form-error.possible-error
+      #preview-search-form-no-results
+        = t '.search.no_results_html', :query => content_tag(:span)
+      %ul
+    %form#preview-search-advanced
+      %header
+        %h2 Advanced Search
+        %button{type: 'submit'} Search, advancedly!
+        %a#preview-search-basic-link{href: 'javascript:void(0)'} Never mind.
       -# TODO: remove search.examples
       -# TODO: i18n
       -# TODO: hook up labels
@@ -151,11 +159,7 @@
           %li.checkbox.must-log-in
             %input{type: 'checkbox', id: 'advanced-search-wants', disabled: true}
             %label{for: 'advanced-search-wants'} Only include items I want
-    #preview-search-form-loading= t '.search.loading'
-    #preview-search-form-error.possible-error
-    #preview-search-form-no-results
-      = t '.search.no_results_html', :query => content_tag(:span)
-    %ul
+
   #no-assets-full-message= t '.sidebar.closet.no_data.description'
   
   %script#sharing-html-image-template{:type => 'text/x-jquery-tmpl'}

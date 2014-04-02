@@ -239,7 +239,7 @@ body.outfits-edit
     position: absolute
     top: -9999px
     width: 30em
-  #preview-search-form
+  #preview-search
     clear: both
     text-align: left
     h2
@@ -249,6 +249,47 @@ body.outfits-edit
       +inline-block
       &[type=submit]
         margin-right: 2em
+    &.advanced
+      #preview-search-basic
+        display: none
+      #preview-search-advanced
+        display: block
+  #preview-search-advanced
+    display: none
+    margin-left: 2em
+
+    button
+      margin-right: 2em
+
+    #preview-search-basic-link
+      font-size: 85%
+
+    div
+      +inline-block
+      font-size: 87.5%
+      vertical-align: top
+      width: 32%
+
+      li.text, li.select
+        label
+          +inline-block
+
+      li.checkbox
+        list-style: none
+        margin-left: -24px
+
+      &:nth-of-type(1)
+        li.text, li.select
+          label
+            width: 12em
+
+      &:nth-of-type(2)
+        li.text, li.select
+          label
+            width: 5em
+  #preview-search-advanced-link
+    font-size: 85%
+    margin-right: 1em
   .preview-search-form-your-items
     display: none
     font-size: 85%
@@ -271,9 +312,6 @@ body.outfits-edit
     margin-left: 2em
   #preview-search-form-no-results
     display: none
-  #preview-search-form-help
-    font-size: 87.5%
-    margin-left: 2em
   .search-helper
     font-family: inherit
   .possible-error
@@ -302,36 +340,13 @@ body.outfits-edit
       &.viewing-saving-outfit
         height: auto
         max-height: 100%
-    #preview-search-form
+    #preview-search
       bottom: 1.5em
       left: 0
       overflow: auto
       padding: .5em 1em
       position: absolute
       width: 100%
-    #preview-search-form-help
-      div
-        +inline-block
-        vertical-align: top
-        width: 33%
-
-        li.text, li.select
-          label
-            +inline-block
-
-        li.checkbox
-          list-style: none
-          margin-left: -24px
-
-        &:nth-of-type(1)
-          li.text, li.select
-            label
-              width: 12em
-
-        &:nth-of-type(2)
-          li.text, li.select
-            label
-              width: 5em
     #footer
       bottom: 0
       left: 0
@@ -773,7 +788,7 @@ body.outfits-edit
     font: inherit
     line-height: 1
 
-  #pet-type-form, #pet-state-form, #preview-swf, #preview-search-form
+  #pet-type-form, #pet-state-form, #preview-swf, #preview-search
     position: relative
 
   .control-overlay
@@ -839,7 +854,7 @@ body.outfits-edit
   &.user-not-signed-in
     #save-outfit-not-signed-in
       display: inline-block
-    #preview-search-form-help
+    #preview-search-advanced
       .must-log-in
         color: #aca
 
