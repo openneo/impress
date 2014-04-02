@@ -187,7 +187,10 @@ View.Fullscreen = function (wardrobe) {
       preview_swf.css(size.next);
 
       preview_el.height(available.height);
-      
+
+      // If the footer goes onto two lines, nudge search up.
+      search_el.css('bottom', $('#footer').height());
+
       // Now that preview is fit, we fit the sidebar's content element, which
       // also has to deal with the constraint of its navbar's height.
       var sidebar_content_height = available.height -
@@ -1108,9 +1111,6 @@ View.Search = function (wardrobe) {
         loadOffset(last_request.offset);
       }
     }
-
-    // If the footer goes onto two lines, nudge search up.
-    form.css('bottom', $('#footer').height());
   }
   $(window).resize(updatePerPage).load(updatePerPage);
   updatePerPage();
