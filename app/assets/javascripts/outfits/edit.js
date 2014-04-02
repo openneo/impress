@@ -1131,6 +1131,7 @@ View.Search = function (wardrobe) {
   form.submit(function (e) {
     e.preventDefault();
     current_query = $(this).find('input[name=query]').val();
+    wrapper.removeClass('advanced');
     loadPage(1);
   });
 
@@ -1156,7 +1157,6 @@ View.Search = function (wardrobe) {
       help_el.show();
     }
     wrapper.toggleClass('has-results', items.length > 0);
-    wrapper.removeClass('advanced');
     fit();
   });
 
