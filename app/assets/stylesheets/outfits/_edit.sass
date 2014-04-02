@@ -312,7 +312,26 @@ body.outfits-edit
     #preview-search-form-help
       div
         +inline-block
-        width: 48%
+        vertical-align: top
+        width: 33%
+
+        li.text, li.select
+          label
+            +inline-block
+
+        li.checkbox
+          list-style: none
+          margin-left: -24px
+
+        &:nth-of-type(1)
+          li.text, li.select
+            label
+              width: 12em
+
+        &:nth-of-type(2)
+          li.text, li.select
+            label
+              width: 5em
     #footer
       bottom: 0
       left: 0
@@ -820,6 +839,9 @@ body.outfits-edit
   &.user-not-signed-in
     #save-outfit-not-signed-in
       display: inline-block
+    #preview-search-form-help
+      .must-log-in
+        color: #aca
 
   #save-outfit-wrapper.shared-outfit
     #shared-outfit-permalink, #shared-outfit-url

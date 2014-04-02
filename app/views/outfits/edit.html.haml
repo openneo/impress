@@ -107,13 +107,50 @@
       -# TODO: remove search.examples
       -# TODO: i18n
       -# TODO: hook up labels
-      %ul
-        %li
-          %label Item name must contain
-          %input{type: 'text', name: 'name_require'}
-        %li
-          %label Item name must not contain
-          %input{type: 'text', name: 'name_exclude'}
+      %div
+        %ul
+          %li.text
+            %label{for: 'advanced-search-name-require'} Name contains
+            %input{type: 'text', id: 'advanced-search-name-require'}
+          %li.text
+            %label{for: 'advanced-search-name-exclude'} Name doesn't contain
+            %input{type: 'text', id: 'advanced-search-name-exclude'}
+          %li.select
+            %label{for: 'advanced-search-nc'} Only include
+            %select{id: 'advanced-search-nc'}
+              %option{value: ''} NC and NP items
+              %option{value: 'nc'} Neocash items
+              %option{value: 'np'} Neopoint items
+      %div
+        %ul
+          %li.checkbox
+            %input{type: 'checkbox', id: 'advanced-search-species'}
+            %label{for: 'advanced-search-species'}
+              Fits the
+              -# TODO: update to current species
+              %span Acara
+          %li.select
+            %label{for: 'advanced-search-occupies'} Occupies
+            -# TODO: populate
+            %select{id: 'advanced-search-occupies'}
+              %option any zone
+          %li.select
+            %label{for: 'advanced-search-restricts'} Restricts
+            -# TODO: populate
+            %select{id: 'advanced-search-restricts'}
+              %option any or no zones
+      %div
+        %ul
+          -# TODO: hide link if logged in
+          -# TODO: enable if logged in
+          -# TODO: update return_to
+          = link_to 'Log in to use these filters.', login_path_with_return_to
+          %li.checkbox.must-log-in
+            %input{type: 'checkbox', id: 'advanced-search-owns', disabled: true}
+            %label{for: 'advanced-search-owns'} Only include items I own
+          %li.checkbox.must-log-in
+            %input{type: 'checkbox', id: 'advanced-search-wants', disabled: true}
+            %label{for: 'advanced-search-wants'} Only include items I want
     #preview-search-form-loading= t '.search.loading'
     #preview-search-form-error.possible-error
     #preview-search-form-no-results
