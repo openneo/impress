@@ -123,20 +123,14 @@
           %li.text
             %label{for: 'advanced-search-name-exclude'} Name doesn't contain
             %input{type: 'text', id: 'advanced-search-name-exclude'}
+      %div
+        %ul
           %li.select
             %label{for: 'advanced-search-nc'} Only include
             %select{id: 'advanced-search-nc'}
               %option{value: ''} NC and NP items
               %option{value: 'nc'} Neocash items
               %option{value: 'np'} Neopoint items
-      %div
-        %ul
-          %li.checkbox
-            %input{type: 'checkbox', id: 'advanced-search-species'}
-            %label{for: 'advanced-search-species'}
-              Fits the
-              -# TODO: update to current species
-              %span Acara
           %li.select
             %label{for: 'advanced-search-occupies'} Occupies
             -# TODO: populate
@@ -149,16 +143,23 @@
               %option any or no zones
       %div
         %ul
+          %li.checkbox
+            %input{type: 'checkbox', id: 'advanced-search-species'}
+            %label{for: 'advanced-search-species'}
+              Fits the
+              -# TODO: update to current species
+              %span Acara
+              (the current species)
           -# TODO: hide link if logged in
           -# TODO: enable if logged in
-          -# TODO: update return_to
-          = link_to 'Log in to use these filters.', login_path_with_return_to
           %li.checkbox.must-log-in
             %input{type: 'checkbox', id: 'advanced-search-owns', disabled: true}
-            %label{for: 'advanced-search-owns'} Only include items I own
+            %label{for: 'advanced-search-owns'} Only include items you own
           %li.checkbox.must-log-in
             %input{type: 'checkbox', id: 'advanced-search-wants', disabled: true}
-            %label{for: 'advanced-search-wants'} Only include items I want
+            %label{for: 'advanced-search-wants'} Only include items you want
+          -# TODO: update return_to
+          = link_to 'Log in to use these filters.', login_path_with_return_to
 
   #no-assets-full-message= t '.sidebar.closet.no_data.description'
   
