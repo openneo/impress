@@ -30,7 +30,7 @@ class Color < ActiveRecord::Base
   end
 
   def self.pranks_funny?
-    today = Date.today
-    today.month == 4 && today.day == 1
+    now = Time.now.in_time_zone('Pacific Time (US & Canada)')
+    now.month == 4 && now.day == 1
   end
 end
