@@ -254,7 +254,7 @@ body.outfits-edit
         display: block
   #preview-search-basic > ul
     clear: both
-  #preview-search-basic > ul, #preview-search-advanced > div
+  #preview-search-basic > ul, #preview-search-advanced-main
     /* don't bounce the header around kthx */
     min-height: 180px
   #preview-search-advanced
@@ -269,10 +269,14 @@ body.outfits-edit
     #preview-search-basic-link
       font-size: 85%
 
-    div
+    #preview-search-advanced-main
+      padding-left: 2em
+
+    #preview-search-advanced-main > div
       +inline-block
       box-sizing: border-box
       font-size: 87.5%
+      padding-left: 24px
       padding-top: .5em
       vertical-align: top
       width: 32%
@@ -290,9 +294,6 @@ body.outfits-edit
       li.checkbox
         list-style: none
         margin-left: -24px
-
-    div:first-of-type
-      margin-left: 2em
 
   #preview-search-advanced-link
     font-size: 85%
