@@ -253,11 +253,17 @@ body.outfits-edit
         display: none
       #preview-search-advanced
         display: block
-  #preview-search-basic > ul
+    &.has-results
+      #tips
+        display: none
+  #preview-search-basic-main
     clear: both
-  #preview-search-basic > ul, #preview-search-advanced-main
+  #preview-search-basic-main, #preview-search-advanced-main
     /* don't bounce the header around kthx */
     min-height: 180px
+  #tips
+    li
+      display: none
   #preview-search-advanced
     display: none
 

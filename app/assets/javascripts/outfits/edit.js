@@ -1077,7 +1077,7 @@ View.ReportBrokenImage = function (wardrobe) {
 
 View.Search = function (wardrobe) {
   var form = $('form.item-search'),
-    item_set = new Partial.ItemSet(wardrobe, '#preview-search-basic ul'),
+    item_set = new Partial.ItemSet(wardrobe, '#preview-search-results'),
     input_el = form.find('input[name=query]'),
     clear_el = $('#preview-search-form-clear'),
     error_el = $('#preview-search-form-error'),
@@ -1358,6 +1358,13 @@ View.PrankColorMessage = function(wardrobe) {
     petState = newPetState;
     updateMessage();
   });
+}
+
+View.Tips = function() {
+  var wrapper = $('#tips');
+  var children = wrapper.children();
+  var index = Math.floor(Math.random() * children.length);
+  children.eq(index).show();
 }
 
 var userbar_sessions_link = $('#userbar a:last');

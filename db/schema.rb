@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140331034031) do
+ActiveRecord::Schema.define(:version => 20140403034558) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -331,6 +331,23 @@ ActiveRecord::Schema.define(:version => 20140331034031) do
     t.integer  "owned_closet_hangers_visibility",                :default => 1,     :null => false
     t.integer  "wanted_closet_hangers_visibility",               :default => 1,     :null => false
     t.integer  "contact_neopets_connection_id"
+  end
+
+  create_table "wardrobe_tip_translations", :force => true do |t|
+    t.integer  "wardrobe_tip_id"
+    t.string   "locale"
+    t.text     "body"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  add_index "wardrobe_tip_translations", ["locale"], :name => "index_wardrobe_tip_translations_on_locale"
+  add_index "wardrobe_tip_translations", ["wardrobe_tip_id"], :name => "index_wardrobe_tip_translations_on_wardrobe_tip_id"
+
+  create_table "wardrobe_tips", :force => true do |t|
+    t.integer  "index",      :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "zone_translations", :force => true do |t|

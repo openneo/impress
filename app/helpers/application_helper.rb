@@ -182,9 +182,13 @@ module ApplicationHelper
   def title(value)
     content_for :title, value
   end
+
+  def md(text)
+    RDiscount.new(text).to_html.html_safe
+  end
   
   def translate_markdown(key, options={})
-    RDiscount.new(translate("#{key}_markdown", options)).to_html.html_safe
+    md translate("#{key}_markdown", options)
   end
   
   alias_method :tmd, :translate_markdown
