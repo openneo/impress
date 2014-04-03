@@ -1144,7 +1144,8 @@ View.Search = function (wardrobe) {
       nc: $('#advanced-search-nc').val(),
       occupies: $('#advanced-search-occupies').val(),
       restricts: $('#advanced-search-restricts').val(),
-      species: $('#advanced-search-species').val(),
+      species: $('#advanced-search-species').is(":checked") ?
+        wardrobe.outfits.getPetType().species_id : null,
       owns: $('#advanced-search-owns').val(),
       wants: $('#advanced-search-wants').val()
     };

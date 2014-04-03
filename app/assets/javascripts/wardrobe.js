@@ -1330,6 +1330,9 @@ function Wardrobe() {
       if (query.restricts)
         filters.push({key: "restricted_zone_set_name", value: query.restricts,
                       is_positive: true});
+      if (query.species)
+        filters.push({key: "species_support_id", value: query.species,
+          is_positive: true});
       return filters;
     }
 
