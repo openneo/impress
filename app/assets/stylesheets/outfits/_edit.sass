@@ -262,8 +262,19 @@ body.outfits-edit
     /* don't bounce the header around kthx */
     min-height: 180px
   #tips
+    padding-top: 1em
+
     li
+      +module
+      background-image: image-url("tip.png")
+      background-position: top left
+      background-repeat: no-repeat
       display: none
+      list-style: none
+      margin: 0 auto
+      padding-left: image-width("tip.png") + 12px
+      width: 400px
+
   #preview-search-advanced
     display: none
 

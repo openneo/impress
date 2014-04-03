@@ -1362,9 +1362,9 @@ View.PrankColorMessage = function(wardrobe) {
 
 View.Tips = function() {
   var wrapper = $('#tips');
-  var children = wrapper.children();
-  var index = Math.floor(Math.random() * children.length);
-  children.eq(index).show();
+  var tips = wrapper.find('li');
+  var index = Math.floor(Math.random() * tips.length);
+  tips.eq(index).show();
 }
 
 var userbar_sessions_link = $('#userbar a:last');

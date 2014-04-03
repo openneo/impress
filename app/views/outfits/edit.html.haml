@@ -107,11 +107,12 @@
         #preview-search-form-no-results
           = t '.search.no_results_html', :query => content_tag(:span)
         %ul#preview-search-results
-        %ul#tips
-          - WardrobeTip.by_index.each do |tip|
-            %li
-              %h3 Did you know?
-              %div= md tip.body
+        #tips
+          %ul
+            - WardrobeTip.by_index.each do |tip|
+              %li
+                %h3 Did you know?
+                %div= md tip.body
     %form#preview-search-advanced
       %header
         %h2= t '.search.advanced.header'
