@@ -636,8 +636,8 @@ en:
             label: Restricts
             any: any or no zones
           species_html: Fits the %{species} (the current species)
-          owns: Only include items you own.
-          wants: Only include items you want.
+          owns: Only include items you own
+          wants: Only include items you want
           login: Log in to use these filters.
       userbar:
         session_message:
