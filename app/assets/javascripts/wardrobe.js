@@ -251,19 +251,6 @@ function Wardrobe() {
 
   Item.cache = {};
 
-  var ItemZoneSet = {};
-
-  ItemZoneSet.loadAll = function (success) {
-    $.getJSON('/item_zone_sets.json', function (data) {
-      Object.keys(data).forEach(function(key) {
-        ItemZoneSet.all.push({plainLabel: key, label: data[key]});
-      });
-      success(ItemZoneSet.all);
-    });
-  }
-
-  ItemZoneSet.all = [];
-
   function Outfit(data) {
     var outfit = this, previous_pet_type, worn_item_ids = [],
       closet_item_ids = [], new_record = true;
@@ -1300,15 +1287,13 @@ function Wardrobe() {
     }
   }
 
-  Controller.all.ItemZoneSets = function ItemZoneSetsController() {
-    var item_zone_sets = this;
-
-    function onLoad(sets) {
-      item_zone_sets.events.trigger('update', sets);
-    }
+  Controller.all.Zones = function ZonesController() {
+    var zones = this;
 
     this.load = function () {
-      ItemZoneSet.loadAll(onLoad);
+      $.getJSON('/zones.json', function(data) {
+        zones.events.trigger('update', data);
+      });
     }
   }
 

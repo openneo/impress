@@ -14,17 +14,9 @@ class Zone < ActiveRecord::Base
     includes(:translations).where(t[:plain_label].eq(Zone.plainify_label(label)))
   }
   scope :for_items, lambda { where(arel_table[:type_id].gt(1)) }
-  
+
   def uncertain_label
     @sometimes ? "#{label} sometimes" : label
-  end
-  
-  def self.sets
-    {}.tap do |sets|
-      select([:id]).includes(:translations).each do |zone|
-        sets[zone.plain_label] = zone.label
-      end
-    end
   end
   
   def self.plainify_label(label)

@@ -11,8 +11,6 @@ OpenneoImpressItems::Application.routes.draw do
 
   devise_for :users
 
-  match '/item_zone_sets.json' => 'ItemZoneSets#index'
-
   # DEPRECATED
   match '/bodies/:body_id/swf_assets.json' => 'swf_assets#index', :as => :body_swf_assets
   
@@ -35,6 +33,7 @@ OpenneoImpressItems::Application.routes.draw do
   resources :outfits, :only => [:show, :create, :update, :destroy]
   resources :pet_attributes, :only => [:index]
   resources :swf_assets, :only => [:index, :show]
+  resources :zones, only: [:index]
 
   scope 'import' do
     resources :closet_pages, :only => [:new, :create],

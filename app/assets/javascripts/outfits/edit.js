@@ -1096,7 +1096,7 @@ View.Search = function (wardrobe) {
     loadPage($(this).data('page'));
   });
 
-  this.initialize = $.proxy(wardrobe.item_zone_sets, 'load');
+  this.initialize = $.proxy(wardrobe.zones, 'load');
 
   wardrobe.search.setPerPage(PAGINATION.PER_PAGE);
 
@@ -1247,17 +1247,38 @@ View.Search = function (wardrobe) {
     fit();
   });
 
-  wardrobe.item_zone_sets.bind('update', function (item_zone_sets) {
-    var selects = $('#advanced-search-occupies, #advanced-search-restricts');
-    var sorted_item_zone_sets = item_zone_sets.slice(0);
-    item_zone_sets.sort(function(a, b) {
-      if (a.label < b.label) return -1;
-      else if (a.label > b.label) return 1;
-      else return 0;
+  wardrobe.zones.bind('update', function (zones) {
+    var occupies = $('#advanced-search-occupies');
+    var restricts = $('#advanced-search-restricts');
+
+    // Get sorted unique zone sets by their labels
+    var labelMap = {};
+    zones.forEach(function(zone) {
+      labelMap[zone.plain_label] = {label: zone.label, typeId: zone.type_id};
     });
-    item_zone_sets.forEach(function(set) {
+
+    var sets = {items: [], biology: []};
+    Object.keys(labelMap).forEach(function(plainLabel) {
+      var relevantSets = labelMap[plainLabel].typeId > 1 ?
+        sets.items : sets.biology;
+      relevantSets.push({plainLabel: plainLabel,
+        label: labelMap[plainLabel].label});
+    });
+    Object.keys(sets).forEach(function(key) {
+      sets[key].sort(function(a, b) {
+        if (a.label < b.label) return -1;
+        else if (a.label > b.label) return 1;
+        else return 0;
+      });
+    });
+
+    sets.items.forEach(function(set) {
       $('<option/>', {value: set.plainLabel, text: set.label}).
-        appendTo(selects);
+        appendTo(occupies);
+    });
+    sets.biology.forEach(function(set) {
+      $('<option/>', {value: set.plainLabel, text: set.label}).
+        appendTo(restricts);
     });
   });
 }
