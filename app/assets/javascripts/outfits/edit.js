@@ -1286,6 +1286,26 @@ View.Search = function (wardrobe) {
   if ($('meta[name=user-signed-in]').attr('content') === 'true') {
     wrapper.find('li.must-log-in input').removeAttr('disabled');
   }
+
+  var speciesNamesById = null;
+
+  function updateCurrentSpeciesName() {
+    if (speciesNamesById !== null) {
+      var speciesId = wardrobe.outfits.getPetType().species_id;
+      var speciesName = speciesNamesById[speciesId];
+      $('label[for=advanced-search-species] span').text(speciesName);
+    }
+  }
+
+  wardrobe.pet_attributes.bind('update', function(petAttributes) {
+    speciesNamesById = {};
+    petAttributes.species.forEach(function(species) {
+      speciesNamesById[species.id] = species.name;
+    });
+    updateCurrentSpeciesName();
+  });
+
+  wardrobe.outfits.bind('updatePetType', updateCurrentSpeciesName);
 }
 
 View.PrankColorMessage = function(wardrobe) {
