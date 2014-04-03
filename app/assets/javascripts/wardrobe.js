@@ -1330,8 +1330,11 @@ function Wardrobe() {
     this.request = {};
 
     function itemsOnLoad(items, total_pages, page, query) {
+      if(query !== search.request.query) {
+        search.request.query = query;
+        search.events.trigger('updateRequest', search.request);
+      }
       search.events.trigger('updateItems', items);
-      search.events.trigger('updateQuery', query);
       search.events.trigger('updatePagination', page, total_pages);
     }
 

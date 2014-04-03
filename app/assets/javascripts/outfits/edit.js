@@ -408,10 +408,12 @@ View.Hash = function (wardrobe) {
 
   wardrobe.search.bind('updateRequest', function (request) {
     if(request.offset != data.search_offset || request.query != data.search) {
-      changeQuery({
-        search_offset: request.offset,
-        search: request.query
-      });
+      if (typeof request.query === "string") {
+        changeQuery({
+          search_offset: request.offset,
+          search: request.query
+        });
+      }
     }
   });
 }
@@ -1179,21 +1181,15 @@ View.Search = function (wardrobe) {
     fit();
   });
 
-  function updateQuery(query) {
-    current_query = query || '';
-    var human_query = typeof query === 'string' ? query : '';
-    input_el.val(human_query);
-    no_results_span.text(human_query);
-  }
-
-  wardrobe.search.bind('updateQuery', updateQuery);
-
   wardrobe.search.bind('updateRequest', function (request) {
     last_request = request;
     error_el.hide('fast');
     help_el.hide();
     no_results_el.hide();
-    updateQuery(request.query);
+    current_query = request.query || '';
+    var human_query = typeof current_query === 'string' ? current_query : '';
+    input_el.val(human_query);
+    no_results_span.text(human_query);
     clear_el.toggle(!!request.query);
   });
 
