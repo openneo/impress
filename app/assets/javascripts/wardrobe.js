@@ -216,23 +216,11 @@ function Wardrobe() {
 
   Item.PER_PAGE = 21;
 
-  function queryToFilters(query) {
-    if (typeof query === "string") return query;
-    var filters = [];
-    if (query.name.require)
-      filters.push({key: "name", value: query.name.require, is_positive: true});
-    if (query.name.exclude)
-      filters.push({key: "name", value: query.name.exclude, is_positive: false});
-    if (query.nc)
-      filters.push({key: "is_nc", is_positive: (query.nc === "nc")});
-    return filters;
-  }
-
   Item.loadByQuery = function (query, offset, success, error) {
     var page = Math.round(offset / Item.PER_PAGE) + 1;
     $.ajax({
       url: '/items.json',
-      data: {q: queryToFilters(query), per_page: Item.PER_PAGE, page: page},
+      data: {q: query, per_page: Item.PER_PAGE, page: page},
       dataType: 'json',
       success: function (data) {
         var items = [], item, item_data;
@@ -1342,6 +1330,24 @@ function Wardrobe() {
       search.events.trigger('error', error);
     }
 
+    function queryToFilters(query) {
+      if (typeof query === "string") return query;
+      var filters = [];
+      if (query.name.require)
+        filters.push({key: "name", value: query.name.require, is_positive: true});
+      if (query.name.exclude)
+        filters.push({key: "name", value: query.name.exclude, is_positive: false});
+      if (query.nc)
+        filters.push({key: "is_nc", is_positive: (query.nc === "nc")});
+      if (query.occupies)
+        filters.push({key: "occupied_zone_set_name", value: query.occupies,
+                      is_positive: true});
+      if (query.restricts)
+        filters.push({key: "restricted_zone_set_name", value: query.restricts,
+                      is_positive: true});
+      return filters;
+    }
+
     this.setItemsByQuery = function (query, where) {
       var offset = (typeof where.offset != 'undefined') ? where.offset : (Item.PER_PAGE * (where.page - 1));
       search.request = {
@@ -1349,12 +1355,15 @@ function Wardrobe() {
         offset: offset
       };
       search.events.trigger('updateRequest', search.request);
-      if(query) {
-        Item.loadByQuery(query, offset, itemsOnLoad, itemsOnError);
-        search.events.trigger('startRequest');
-      } else {
-        search.events.trigger('updateItems', []);
-        search.events.trigger('updatePagination', 0, 0);
+      if (typeof query !== "undefined") {
+        var newQuery = queryToFilters(query);
+        if(newQuery.length > 0) { // works for strings *or* filters lists!
+          Item.loadByQuery(newQuery, offset, itemsOnLoad, itemsOnError);
+          search.events.trigger('startRequest');
+        } else {
+          search.events.trigger('updateItems', []);
+          search.events.trigger('updatePagination', 0, 0);
+        }
       }
     }
 

@@ -166,8 +166,8 @@ class Item
         species: lambda { |id|
           Species.find(id).name
         },
-        zone: lambda { |id|
-          Zone.find(id).plain_label
+        zone: lambda { |ids|
+          Zone.find(ids.first).plain_label
         },
         ownership: lambda { |owned|
           owned_key = owned ? 'owns' : 'wants'

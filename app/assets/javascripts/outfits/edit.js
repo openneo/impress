@@ -1166,7 +1166,7 @@ View.Search = function (wardrobe) {
     var fit = $('#preview').data('fit') || $.noop;
     stopLoading();
     item_set.setItems(items);
-    if(wardrobe.search.request.query) {
+    if(wardrobe.search.request.query.length > 0) {
       if(!items.length) {
         no_results_el.show();
       }
@@ -1186,7 +1186,7 @@ View.Search = function (wardrobe) {
     var human_query = typeof current_query === 'string' ? current_query : '';
     input_el.val(human_query);
     no_results_span.text(human_query);
-    clear_el.toggle(!!request.query);
+    clear_el.toggle(!!request.query && request.query.length > 0);
   });
 
   wardrobe.search.bind('updatePagination', function (current_page, total_pages) {
