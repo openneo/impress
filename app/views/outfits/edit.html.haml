@@ -98,8 +98,7 @@
         %h2= t '.search.header'
         %input{:name => "query", :type => "search"}/
         %input{:type => "submit", :value => t('.search.form.submit')}/
-        -# TODO: i18n
-        %a#preview-search-advanced-link{href: 'javascript:void(0)'} Advanced Search
+        %a#preview-search-advanced-link{href: 'javascript:void(0)'}= t '.search.advanced.header'
         %a#preview-search-form-clear{:href => "#"}= t '.search.form.clear'
         #preview-search-form-pagination
       #preview-search-form-loading= t '.search.loading'
@@ -109,50 +108,48 @@
       %ul
     %form#preview-search-advanced
       %header
-        %h2 Advanced Search
-        %button{type: 'submit'} Search, advancedly!
-        %a#preview-search-basic-link{href: 'javascript:void(0)'} Never mind.
-      -# TODO: i18n
+        %h2= t '.search.advanced.header'
+        %button{type: 'submit'}= t '.search.advanced.submit'
+        %a#preview-search-basic-link{href: 'javascript:void(0)'}= t '.search.advanced.back'
       %div#preview-search-advanced-main
         %div
           %ul
             %li.text
-              %label{for: 'advanced-search-name-require'} Name contains
+              %label{for: 'advanced-search-name-require'}= t '.search.advanced.name.require'
               %input{type: 'text', id: 'advanced-search-name-require'}
             %li.text
-              %label{for: 'advanced-search-name-exclude'} Name doesn't contain
+              %label{for: 'advanced-search-name-exclude'}= t '.search.advanced.name.exclude'
               %input{type: 'text', id: 'advanced-search-name-exclude'}
         %div
           %ul
             %li.select
-              %label{for: 'advanced-search-nc'} Only include
+              %label{for: 'advanced-search-nc'}= t '.search.advanced.nc.label'
               %select{id: 'advanced-search-nc'}
-                %option{value: ''} NC and NP items
-                %option{value: 'nc'} Neocash items
-                %option{value: 'np'} Neopoint items
+                %option{value: ''}= t '.search.advanced.nc.any'
+                %option{value: 'nc'}= t '.search.advanced.nc.nc'
+                %option{value: 'np'}= t '.search.advanced.nc.np'
             %li.select
-              %label{for: 'advanced-search-occupies'} Occupies
+              %label{for: 'advanced-search-occupies'}= t '.search.advanced.occupies.label'
               %select{id: 'advanced-search-occupies'}
-                %option{value: ''} any zone
+                %option{value: ''}= t '.search.advanced.occupies.any'
             %li.select
-              %label{for: 'advanced-search-restricts'} Restricts
+              %label{for: 'advanced-search-restricts'}= t '.search.advanced.restricts.label'
               %select{id: 'advanced-search-restricts'}
-                %option{value: ''} any or no zones
+                %option{value: ''}= t '.search.advanced.restricts.any'
         %div
           %ul
             %li.checkbox
               %input{type: 'checkbox', id: 'advanced-search-species'}
               %label{for: 'advanced-search-species'}
-                Fits the
-                %span
-                (the current species)
+                = t '.search.advanced.species_html',
+                    species: content_tag('span', '')
             %li.checkbox.must-log-in
               %input{type: 'checkbox', id: 'advanced-search-owns', disabled: true}
-              %label{for: 'advanced-search-owns'} Only include items you own
+              %label{for: 'advanced-search-owns'}= t '.search.advanced.owns'
             %li.checkbox.must-log-in
               %input{type: 'checkbox', id: 'advanced-search-wants', disabled: true}
-              %label{for: 'advanced-search-wants'} Only include items you want
-            = link_to 'Log in to use these filters.', login_path_with_return_to,
+              %label{for: 'advanced-search-wants'}= t '.search.advanced.wants'
+            = link_to t('.search.advanced.login'), login_path_with_return_to,
               id: 'advanced-search-log-in-link'
 
   #no-assets-full-message= t '.sidebar.closet.no_data.description'

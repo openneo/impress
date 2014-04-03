@@ -617,6 +617,28 @@ en:
           clear: clear
         loading: Loading…
         no_results_html: No results for "%{query}"
+        advanced:
+          header: Advanced Search
+          submit: Search, advancedly!
+          back: Never mind.
+          name:
+            require: Name contains
+            exclude: Name doesn't contain
+          nc:
+            label: Only include
+            any: NC and NP items
+            nc: Neocash items
+            np: Neopoint items
+          occupies:
+            label: Occupies
+            any: any zone
+          restricts:
+            label: Restricts
+            any: any or no zones
+          species_html: Fits the %{species} (the current species)
+          owns: Only include items you own.
+          wants: Only include items you want.
+          login: Log in to use these filters.
       userbar:
         session_message:
           signed_in:

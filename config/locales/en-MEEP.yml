@@ -571,6 +571,28 @@ en-MEEP:
           clear: unmeep
         loading: Meeping…
         no_results_html: No meepits for "%{query}"
+        advanced:
+          header: Advanced Meep
+          submit: Meep, advancedly!
+          back: Never meep.
+          name:
+            require: Name meeps
+            exclude: Name doesn't meep
+          nc:
+            label: Only meep
+            any: NC and NP meepits
+            nc: Neocash meepits
+            np: Neopoint meepits
+          occupies:
+            label: Occumeeps
+            any: any zeepit
+          restricts:
+            label: Restreects
+            any: any or no zeepits
+          species_html: Meeps the %{species} (the current meepit)
+          owns: Only include meepits you own.
+          wants: Only include meepits you want.
+          login: Meep in to use these filters.
       userbar:
         session_message:
           signed_in:
