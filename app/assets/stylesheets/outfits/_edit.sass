@@ -216,14 +216,6 @@ body.outfits-edit
         padding-bottom: 1.25em
         .no-assets-message
           display: block
-    .item-search
-      font-size: 85%
-      margin-bottom: 1em
-      text-align: center
-
-      span
-        font-weight: bold
-        margin-right: 1em
   .no-assets-message
     background: $error-bg-color - #080808
     bottom: 0
@@ -262,8 +254,9 @@ body.outfits-edit
         display: block
   #preview-search-basic > ul
     clear: both
-    .object
-      min-height: 150px
+  #preview-search-basic > ul, #preview-search-advanced > div
+    /* don't bounce the header around kthx */
+    min-height: 180px
   #preview-search-advanced
     display: none
 
@@ -281,8 +274,6 @@ body.outfits-edit
       box-sizing: border-box
       font-size: 87.5%
       padding-top: .5em
-      /* search results height, to prevent header bouncing */
-      min-height: 178px
       vertical-align: top
       width: 32%
 
@@ -300,7 +291,7 @@ body.outfits-edit
         list-style: none
         margin-left: -24px
 
-    div:first-child
+    div:first-of-type
       margin-left: 2em
 
   #preview-search-advanced-link
@@ -361,12 +352,8 @@ body.outfits-edit
       bottom: 1.5em
       left: 0
       overflow: auto
-      padding: 1em 0
       position: absolute
       width: 100%
-
-      &.has-results, &.advanced
-        padding-bottom: 0
     #footer
       bottom: 0
       left: 0

@@ -49,12 +49,6 @@
         #save-error
         #preview-closet.sidebar-view
           = prank_color_message('<span class="prank-color-message-name"></span>'.html_safe, '$artist-name', '$artist-url')
-          %form.item-search
-            %label
-              -# TODO: i18n
-              %span Add an item
-              %input{type: 'text', name: 'query'}
-              %button{type: 'submit'} Search
           %ul
         #preview-outfits.sidebar-view
           %ul#preview-outfits-list
