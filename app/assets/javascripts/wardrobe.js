@@ -223,6 +223,8 @@ function Wardrobe() {
       filters.push({key: "name", value: query.name.require, is_positive: true});
     if (query.name.exclude)
       filters.push({key: "name", value: query.name.exclude, is_positive: false});
+    if (query.nc)
+      filters.push({key: "is_nc", is_positive: (query.nc === "nc")});
     return filters;
   }
 
