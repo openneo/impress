@@ -1249,7 +1249,6 @@ View.Search = function (wardrobe) {
 
   wardrobe.item_zone_sets.bind('update', function (item_zone_sets) {
     var selects = $('#advanced-search-occupies, #advanced-search-restricts');
-    console.log("yo", selects, item_zone_sets);
     var sorted_item_zone_sets = item_zone_sets.slice(0);
     item_zone_sets.sort(function(a, b) {
       if (a.label < b.label) return -1;
