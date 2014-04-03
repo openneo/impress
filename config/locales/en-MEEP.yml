@@ -247,6 +247,31 @@ en-MEEP:
           %{modeling_link}, and we'll meep our database instantly. Meep!
         modeling_link_content: meep us a pet who is meeping it
       search_help_header: Find what you're meeping for
+      examples:
+        basic:
+          query: kreludor "altador cup" -background
+          description:
+            returns any item with the meep "kreludor" and the meep "altador
+            cup" in it, but not the meep "background"
+        user_items:
+          query: hat user:owns
+          description:
+            main_html: returns %{user_items_link} with the meep "hat"
+            user_items_link_content: items that you meep
+        nc:
+          query: blue is:nc
+          description: returns any NC Meep item with the meep "blue" in it
+        pb: 
+          query: collar -is:pb
+          description:
+            returns any item with the meep "collar" in it that isn't from a
+            paint brush
+        species:
+          query: species:shoyru
+          description: returns any item a Shoyru can meep
+        type:
+          query: type:hat
+          description: returns any item that fills a "hat" meep
       newest_items:
         header: New Meeps
       species_search:
@@ -546,31 +571,6 @@ en-MEEP:
           clear: unmeep
         loading: Meeping…
         no_results_html: No meepits for "%{query}"
-        examples:
-          basic:
-            query: kreludor "altador cup" -background
-            description:
-              meeps any item with the word "kreludor" and the phrase "altador
-              cup" in it, but not the word "background"
-          flags:
-            query: collar -is:nc -is:pb
-            description:
-              meeps any item with the word "collar" in it, but is not from
-              the NC mall, and is not from a deluxe paint brush set
-          species:
-            filter:
-              key: species
-              default_value: Acara
-            query_html: "%{filter_key}:%{filter_value}"
-            description_html:
-              meeps any item a %{default_value} can wear
-          type:
-            filter:
-              key: type
-              default_value: background
-            query_html: "%{filter_key}:%{filter_value}"
-            description_html:
-              meeps any item that occupies a %{default_value} zone
       userbar:
         session_message:
           signed_in:

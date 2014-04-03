@@ -186,6 +186,27 @@ es:
         main_html: ¿Nos falta algo en la base de datos? Para añadir un objeto en nuestra base de datos sólo %{modeling_link}, y nosotros actualizaremos la base de datos al instante. ¡Gracias!
         modeling_link_content: muéstranos a un pet que está vistiendo ese objeto
       search_help_header: Encuentra lo que estás buscando
+      examples:
+        basic:
+          query: kreludor "copa altador" -fondo
+          description: encuentra cualquier objeto con la palabra "kreludor" y la frase "copa altador" en él, pero no la palabra "fondo"
+        user_items:
+          query: sombrero usuario:tiene
+          description:
+            main_html: encuentra los %{user_items_link} con la palabra "sombrero"
+            user_items_link_content: objetos que tienes
+        nc:
+          query: azul es:nc
+          description: encuentra objetos del Centro de NC que contengan la palabra "azul"
+        pb:
+          query: collar -es:pb
+          description: encuentra objetos con la palabra "collar" que sean conseguidos mediante un pincel
+        species:
+          query: especie:shoyru
+          description: encuentra cualquier objeto que un Shoyru pueda utilizar
+        type:
+          query: ocupa:sombrero -restringe:lentes
+          description: encuentra cualquier objeto que ocupe la zona "sombrero" y no restrinja la zona "lentes"
       newest_items:
         header: Objetos nuevos
       species_search:
@@ -439,25 +460,6 @@ es:
           clear: limpiar
         loading: Cargando...
         no_results_html: No hay resultados para "%{query}"
-        examples:
-          basic:
-            query: kreludor "copa altador" -fondo
-            description: encontrarás los objetos con la palabra "kreludor" y la frase "copa altador" en ellos, pero no la palabra "fondo"
-          flags:
-            query: collar -es:nc -es:pb
-            description: encontrarás los objetos con la palabra "collar" en ellos, pero no si son del Centro de NC y tampoco si son objetos de pets pintados con pincel.
-          species:
-            filter:
-              key: especies
-              default_value: Acara
-            query_html: "%{filter_key}:%{filter_value}"
-            description_html: encontrarás los objetos que un %{default_value} podrá usar
-          type:
-            filter:
-              key: ocupa
-              default_value: fondo
-            query_html: "%{filter_key}:%{filter_value}"
-            description_html: 'encontrarás los objetos que ocupen la zona: %{default_value}'
       userbar:
         session_message:
           signed_in: Debes de estar desconectado, hazlo y regresa a este atuendo.
