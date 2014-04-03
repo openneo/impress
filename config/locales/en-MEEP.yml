@@ -247,31 +247,6 @@ en-MEEP:
           %{modeling_link}, and we'll meep our database instantly. Meep!
         modeling_link_content: meep us a pet who is meeping it
       search_help_header: Find what you're meeping for
-      examples:
-        basic:
-          query: kreludor "altador cup" -background
-          description:
-            returns any item with the meep "kreludor" and the meep "altador
-            cup" in it, but not the meep "background"
-        user_items:
-          query: hat user:owns
-          description:
-            main_html: returns %{user_items_link} with the meep "hat"
-            user_items_link_content: items that you meep
-        nc:
-          query: blue is:nc
-          description: returns any NC Meep item with the meep "blue" in it
-        pb: 
-          query: collar -is:pb
-          description:
-            returns any item with the meep "collar" in it that isn't from a
-            paint brush
-        species:
-          query: species:shoyru
-          description: returns any item a Shoyru can meep
-        type:
-          query: type:hat
-          description: returns any item that fills a "hat" meep
       newest_items:
         header: New Meeps
       species_search:

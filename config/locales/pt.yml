@@ -186,27 +186,6 @@ pt:
         main_html: Nós esquecemos algum item? Para adicionar um item ao nosso banco de dados, basta %{modeling_link}, e nós vamos atualizar nosso banco de dados instantaneamente. Obrigado
         modeling_link_content: mostre-nos qual pet está vestindo
       search_help_header: Acho o que você está procurando
-      examples:
-        basic:
-          query: kreludor "copa de altador" -fundo
-          description: mostra como resultado qualquer item com a palavra "kreludor" e a frase "Copa de Altador", mas não a palavra "fundo"
-        user_items:
-          query: chapéu usuário:possui
-          description:
-            main_html: mostra como resultado %{user_items_link} com a palavra "hat" (chapéu)
-            user_items_link_content: itens que você possui
-        nc:
-          query: azul é:nc
-          description: mostra qualquer resultado de um item que tenha a palavra Azul e que seja do Centro NC
-        pb:
-          query: coleira -é:pb
-          description: mostra como resultado qualquer item que tenha a palavra "coleira" e que não seja exclusivo de uma cor específica.
-        species:
-          query: espécies:shoyru
-          description: mostra qualquer item que um Shoyru pode vestir
-        type:
-          query: ocupa:chapéus -restringe:cabelo
-          description: 'mostra qualquer item que ocupa a zona do "chapéu", mas não se restringe a zona do "cabelo" '
       newest_items:
         header: Novos itens
       species_search:
