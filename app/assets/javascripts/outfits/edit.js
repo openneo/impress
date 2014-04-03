@@ -314,6 +314,7 @@ View.Hash = function (wardrobe) {
     previous_query = new_query;
     document.location.hash = '#' + new_query;
     updateLinksWithReturnTo();
+    updateLocaleForm();
   }
 
   function updateLinksWithReturnTo() {
@@ -325,6 +326,12 @@ View.Hash = function (wardrobe) {
       );
       this.href = this.href.replace(/return_to=[^&]+/, new_return_to);
     });
+  }
+
+  function updateLocaleForm() {
+    var fullPath = document.location.pathname + document.location.search +
+                   document.location.hash;
+    $('#locale-form').find('input[name=return_to]').val(fullPath);
   }
 
   this.initialize = function () {
@@ -1360,13 +1367,6 @@ userbar_sessions_link.hover(function () {
   userbar_message_el.stop().fadeTo('normal', .5);
 }, function () {
   userbar_message_el.stop().fadeOut('fast');
-});
-
-var localeForm = $('#locale-form');
-localeForm.submit(function (e) {
-  var fullPath = document.location.pathname + document.location.search +
-                 document.location.hash;
-  localeForm.find('input[name=return_to]').val(fullPath);
 });
 
 $.ajaxSetup({

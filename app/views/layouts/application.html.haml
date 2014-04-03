@@ -57,7 +57,7 @@
         = form_tag choose_locale_path, :id => 'locale-form' do
           = hidden_field_tag 'return_to', request.fullpath
           = select_tag 'locale', options_for_select(locale_options, locale)
-          = submit_tag 'Go'
+          %noscript= submit_tag 'Go'
           
         %ul
           %li= link_to t('organization_name'), 'http://openneo.net/'
@@ -74,5 +74,6 @@
         
         %p= t '.footer.copyright', :year => Date.today.year
       
+      = javascript_include_tag 'application'
       = yield(:javascripts)
 
