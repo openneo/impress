@@ -1362,9 +1362,29 @@ View.PrankColorMessage = function(wardrobe) {
 
 View.Tips = function() {
   var wrapper = $('#tips');
+
   var tips = wrapper.find('li');
   var index = Math.floor(Math.random() * tips.length);
   tips.eq(index).show();
+
+  for (var i = 0; i < tips.length; i++) {
+    var prev = i == 0 ? tips.eq(tips.length - 1) : tips.eq(i - 1);
+    var curr = tips.eq(i);
+    var next = i < tips.length - 1 ? tips.eq(i + 1) : tips.eq(0);
+    (function(prev, curr, next) {
+      curr.find('a.prev').click(function(e) {
+        e.preventDefault();
+        curr.hide();
+        prev.show();
+      });
+
+      curr.find('a.next').click(function(e) {
+        e.preventDefault();
+        curr.hide();
+        next.show();
+      });
+    })(prev, curr, next);
+  }
 }
 
 var userbar_sessions_link = $('#userbar a:last');

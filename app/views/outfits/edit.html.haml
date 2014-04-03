@@ -109,10 +109,15 @@
         %ul#preview-search-results
         #tips
           %ul
-            - WardrobeTip.by_index.each do |tip|
+            - tips = WardrobeTip.by_index.all
+            - tips.each_with_index do |tip, index|
               %li
                 %h3 Did you know?
                 %div= md tip.body
+                %footer
+                  %a.prev{href: 'javascript:void(0)'} &larr; Prev
+                  %span Tip #{index + 1} of #{tips.size}
+                  %a.next{href: 'javascript:void(0)'} Next &rarr;
     %form#preview-search-advanced
       %header
         %h2= t '.search.advanced.header'
