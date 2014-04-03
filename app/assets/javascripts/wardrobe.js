@@ -1333,6 +1333,12 @@ function Wardrobe() {
       if (query.species)
         filters.push({key: "species_support_id", value: query.species,
           is_positive: true});
+      if (query.owns)
+        filters.push({key: "user_closet_hanger_ownership", value: true,
+          is_positive: true});
+      if (query.wants)
+        filters.push({key: "user_closet_hanger_ownership", value: false,
+          is_positive: true});
       return filters;
     }
 

@@ -1144,10 +1144,10 @@ View.Search = function (wardrobe) {
       nc: $('#advanced-search-nc').val(),
       occupies: $('#advanced-search-occupies').val(),
       restricts: $('#advanced-search-restricts').val(),
-      species: $('#advanced-search-species').is(":checked") ?
+      species: $('#advanced-search-species').is(':checked') ?
         wardrobe.outfits.getPetType().species_id : null,
-      owns: $('#advanced-search-owns').val(),
-      wants: $('#advanced-search-wants').val()
+      owns: $('#advanced-search-owns').is(':checked'),
+      wants: $('#advanced-search-wants').is(':checked')
     };
     wrapper.removeClass('advanced');
     loadPage(1);
@@ -1282,6 +1282,10 @@ View.Search = function (wardrobe) {
         appendTo(restricts);
     });
   });
+
+  if ($('meta[name=user-signed-in]').attr('content') === 'true') {
+    wrapper.find('li.must-log-in input').removeAttr('disabled');
+  }
 }
 
 View.PrankColorMessage = function(wardrobe) {

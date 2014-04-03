@@ -160,7 +160,8 @@
               %input{type: 'checkbox', id: 'advanced-search-wants', disabled: true}
               %label{for: 'advanced-search-wants'} Only include items you want
             -# TODO: update return_to
-            = link_to 'Log in to use these filters.', login_path_with_return_to
+            = link_to 'Log in to use these filters.', login_path_with_return_to,
+              id: 'advanced-search-log-in-link'
 
   #no-assets-full-message= t '.sidebar.closet.no_data.description'
   
