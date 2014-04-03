@@ -243,8 +243,18 @@ class Item
         filters = params.values.map { |filter_params|
           if filter_params.has_key?(:key)
             key = filter_params[:key].to_sym
+            value = filter_params[:value]
+
+            # Ew, the hackiest of hacks!
+            if key == :occupied_zone_set_name
+              key = :occupied_zone_id
+              value = TEXT_QUERY_RESOURCE_FINDERS[:zone].call(value)
+            elsif key == :restricted_zone_set_name
+              key = :restricted_zone_id
+              value = TEXT_QUERY_RESOURCE_FINDERS[:zone].call(value)
+            end
+
             if FIELD_KEYS.include?(key)
-              value = filter_params[:value]
               # Ugh, this bit feels so hacky :P
               if key == :user_closet_hanger_ownership
                 value = (value == 'true')

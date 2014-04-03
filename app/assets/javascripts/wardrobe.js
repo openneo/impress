@@ -263,15 +263,13 @@ function Wardrobe() {
 
   Item.cache = {};
 
-  function ItemZoneSet(name) {
-    this.name = name;
-  }
+  var ItemZoneSet = {};
 
   ItemZoneSet.loadAll = function (success) {
     $.getJSON('/item_zone_sets.json', function (data) {
-      for(var i = 0, l = data.length; i < l; i++) {
-        ItemZoneSet.all.push(new ItemZoneSet(data[i]));
-      }
+      Object.keys(data).forEach(function(key) {
+        ItemZoneSet.all.push({plainLabel: key, label: data[key]});
+      });
       success(ItemZoneSet.all);
     });
   }

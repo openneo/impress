@@ -201,10 +201,6 @@ View.Fullscreen = function (wardrobe) {
   $('#preview').data('fit', fit);
 
   win.resize(fit).load(fit);
-  // run fit after search updates select fields
-  function fitSoon() { setTimeout(fit, 0) }
-  wardrobe.item_zone_sets.bind('update', fitSoon);
-  wardrobe.pet_attributes.bind('update', fitSoon);
   fit();
 }
 
@@ -1249,6 +1245,21 @@ View.Search = function (wardrobe) {
     var fit = $('#preview').data('fit') || $.noop;
     wrapper.toggleClass('advanced');
     fit();
+  });
+
+  wardrobe.item_zone_sets.bind('update', function (item_zone_sets) {
+    var selects = $('#advanced-search-occupies, #advanced-search-restricts');
+    console.log("yo", selects, item_zone_sets);
+    var sorted_item_zone_sets = item_zone_sets.slice(0);
+    item_zone_sets.sort(function(a, b) {
+      if (a.label < b.label) return -1;
+      else if (a.label > b.label) return 1;
+      else return 0;
+    });
+    item_zone_sets.forEach(function(set) {
+      $('<option/>', {value: set.plainLabel, text: set.label}).
+        appendTo(selects);
+    });
   });
 }
 

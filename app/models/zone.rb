@@ -19,8 +19,12 @@ class Zone < ActiveRecord::Base
     @sometimes ? "#{label} sometimes" : label
   end
   
-  def self.all_plain_labels
-    select([:id]).includes(:translations).all.map(&:plain_label).uniq.sort
+  def self.sets
+    {}.tap do |sets|
+      select([:id]).includes(:translations).each do |zone|
+        sets[zone.plain_label] = zone.label
+      end
+    end
   end
   
   def self.plainify_label(label)
