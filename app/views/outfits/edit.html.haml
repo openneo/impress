@@ -114,7 +114,6 @@
         %a#preview-search-basic-link{href: 'javascript:void(0)'} Never mind.
       -# TODO: remove search.examples
       -# TODO: i18n
-      -# TODO: hook up labels
       %div#preview-search-advanced-main
         %div
           %ul
@@ -134,12 +133,10 @@
                 %option{value: 'np'} Neopoint items
             %li.select
               %label{for: 'advanced-search-occupies'} Occupies
-              -# TODO: populate
               %select{id: 'advanced-search-occupies'}
                 %option{value: ''} any zone
             %li.select
               %label{for: 'advanced-search-restricts'} Restricts
-              -# TODO: populate
               %select{id: 'advanced-search-restricts'}
                 %option{value: ''} any or no zones
         %div
@@ -151,8 +148,6 @@
                 -# TODO: update to current species
                 %span Acara
                 (the current species)
-            -# TODO: hide link if logged in
-            -# TODO: enable if logged in
             %li.checkbox.must-log-in
               %input{type: 'checkbox', id: 'advanced-search-owns', disabled: true}
               %label{for: 'advanced-search-owns'} Only include items you own
