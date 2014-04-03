@@ -1088,7 +1088,8 @@ View.Search = function (wardrobe) {
       PER_PAGE: 21,
       TEMPLATE: $('#pagination-template')
     }, object_width = 112, last_request,
-    current_query = "";
+    current_query = "",
+    advanced_form = $('#preview-search-advanced');
 
   PAGINATION.EL = $(PAGINATION.EL_ID);
 
@@ -1135,6 +1136,24 @@ View.Search = function (wardrobe) {
     loadPage(1);
   });
 
+  advanced_form.submit(function(e) {
+    e.preventDefault();
+    current_query = {
+      name: {
+        require: $('#advanced-search-name-require').val(),
+        exclude: $('#advanced-search-name-exclude').val()
+      },
+      nc: $('#advanced-search-nc').val(),
+      occupies: $('#advanced-search-occupies').val(),
+      restricts: $('#advanced-search-restricts').val(),
+      species: $('#advanced-search-species').val(),
+      owns: $('#advanced-search-owns').val(),
+      wants: $('#advanced-search-wants').val()
+    };
+    wrapper.removeClass('advanced');
+    loadPage(1);
+  });
+
   clear_el.click(function (e) {
     e.preventDefault();
     input_el.val('');
@@ -1160,14 +1179,21 @@ View.Search = function (wardrobe) {
     fit();
   });
 
+  function updateQuery(query) {
+    current_query = query || '';
+    var human_query = typeof query === 'string' ? query : '';
+    input_el.val(human_query);
+    no_results_span.text(human_query);
+  }
+
+  wardrobe.search.bind('updateQuery', updateQuery);
+
   wardrobe.search.bind('updateRequest', function (request) {
     last_request = request;
     error_el.hide('fast');
     help_el.hide();
     no_results_el.hide();
-    current_query = request.query || '';
-    input_el.val(current_query);
-    no_results_span.text(current_query);
+    updateQuery(request.query);
     clear_el.toggle(!!request.query);
   });
 

@@ -216,11 +216,21 @@ function Wardrobe() {
 
   Item.PER_PAGE = 21;
 
+  function queryToFilters(query) {
+    if (typeof query === "string") return query;
+    var filters = [];
+    if (query.name.require)
+      filters.push({key: "name", value: query.name.require, is_positive: true});
+    if (query.name.exclude)
+      filters.push({key: "name", value: query.name.exclude, is_positive: false});
+    return filters;
+  }
+
   Item.loadByQuery = function (query, offset, success, error) {
     var page = Math.round(offset / Item.PER_PAGE) + 1;
     $.ajax({
       url: '/items.json',
-      data: {q: query, per_page: Item.PER_PAGE, page: page},
+      data: {q: queryToFilters(query), per_page: Item.PER_PAGE, page: page},
       dataType: 'json',
       success: function (data) {
         var items = [], item, item_data;
@@ -231,7 +241,7 @@ function Wardrobe() {
             item.update(item_data);
             items.push(item);
           }
-          success(items, data.total_pages, page);
+          success(items, data.total_pages, page, data.query);
         } else if(data.error) {
           error(data.error);
         }
@@ -1319,8 +1329,9 @@ function Wardrobe() {
 
     this.request = {};
 
-    function itemsOnLoad(items, total_pages, page) {
+    function itemsOnLoad(items, total_pages, page, query) {
       search.events.trigger('updateItems', items);
+      search.events.trigger('updateQuery', query);
       search.events.trigger('updatePagination', page, total_pages);
     }
 
