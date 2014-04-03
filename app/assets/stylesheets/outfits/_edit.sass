@@ -261,23 +261,28 @@ body.outfits-edit
       #preview-search-advanced
         display: block
   #preview-search-basic > ul
+    clear: both
     .object
       min-height: 150px
   #preview-search-advanced
     display: none
-    margin-left: 2em
+
+    h2
+      margin-right: 2em
 
     button
-      margin-right: 2em
+      margin-right: 4em
 
     #preview-search-basic-link
       font-size: 85%
 
     div
       +inline-block
+      box-sizing: border-box
       font-size: 87.5%
-      margin-top: .5em
-      margin-bottom: 1.5em
+      padding-top: .5em
+      /* search results height, to prevent header bouncing */
+      min-height: 178px
       vertical-align: top
       width: 32%
 
@@ -295,6 +300,9 @@ body.outfits-edit
         list-style: none
         margin-left: -24px
 
+    div:first-child
+      margin-left: 2em
+
   #preview-search-advanced-link
     font-size: 85%
     margin-right: 1em
@@ -304,14 +312,15 @@ body.outfits-edit
     margin-right: 1em
   #preview-search-form-pagination
     +inline-block
+    float: right
+    margin-top: .5em
     a, span
       margin: 0 .25em
     .current
       font-weight: bold
   #preview-search-form-clear
     display: none
-    font-size: 87.5%
-    margin-left: 2em
+    font-size: 85%
   #preview-search-form-loading
     display: none
     font:
@@ -352,11 +361,11 @@ body.outfits-edit
       bottom: 1.5em
       left: 0
       overflow: auto
-      padding: 1em 2em
+      padding: 1em 0
       position: absolute
       width: 100%
 
-      &.has-results
+      &.has-results, &.advanced
         padding-bottom: 0
     #footer
       bottom: 0
