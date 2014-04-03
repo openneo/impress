@@ -262,26 +262,30 @@ body.outfits-edit
     /* don't bounce the header around kthx */
     min-height: 180px
   #tips
-    padding-top: 1em
+    padding-top: .5em
 
     li
-      +module
-      background-image: image-url("tip.png")
-      background-position: top left
-      background-repeat: no-repeat
+      box-sizing: border-box
       display: none
+      height: 150px
       list-style: none
       margin: 0 auto
-      padding-left: image-width("tip.png") + 12px
-      width: 400px
+      padding: 1em
+      position: relative
+      width: 600px
 
       footer
+        bottom: 1em
         color: $soft-text-color
         font-size: 85%
-        text-align: right
+        position: absolute
+        right: 1em
 
         a, span
           margin-left: .5em
+
+      p
+        font-size: 85%
 
   #preview-search-advanced
     display: none
