@@ -163,7 +163,8 @@ View.Fullscreen = function (wardrobe) {
     if(full) {
       preview_swf = $('#preview-swf'); // swf replaced
       var available = {
-        height:  search_el.offset().top - preview_el.offset().top,
+        height:  search_el.offset().top -
+          parseInt(search_el.css('marginTop'), 10) - preview_el.offset().top,
         width: preview_el.innerWidth() - sidebar_el.outerWidth() - 12 // 12px margin
       }, dim = {}, margin = {}, size = {
         old: {height: preview_swf.height(), width: preview_swf.width()},
@@ -189,7 +190,7 @@ View.Fullscreen = function (wardrobe) {
       preview_el.height(available.height);
 
       // If the footer goes onto two lines, nudge search up.
-      search_el.css('bottom', $('#footer').height());
+      search_el.css('bottom', footer.outerHeight(true));
 
       // Now that preview is fit, we fit the sidebar's content element, which
       // also has to deal with the constraint of its navbar's height.

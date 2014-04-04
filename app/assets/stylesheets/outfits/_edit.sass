@@ -238,8 +238,13 @@ body.outfits-edit
     top: -9999px
     width: 30em
   #preview-search
+    +border-radius(8px)
+    border: 1px solid $soft-border-color
+    box-sizing: border-box
     clear: both
-    padding-top: .5em
+    margin-bottom: .5em
+    margin-top: 1em
+    padding: .25em 1em .25em
     text-align: left
     h2
       +inline-block
@@ -253,35 +258,11 @@ body.outfits-edit
         display: none
       #preview-search-advanced
         display: block
-    &.has-results
-      #tips
-        display: none
   #preview-search-basic-main
     clear: both
-  #preview-search-basic-main, #preview-search-advanced-main
+  #preview-search.has-results #preview-search-basic-main, #preview-search-advanced-main
     /* don't bounce the header around kthx */
     min-height: 180px
-  #tips
-    padding-top: .5em
-
-    li
-      box-sizing: border-box
-      display: none
-      list-style: none
-      margin: 0 auto
-      padding: 1em
-      position: relative
-      width: 600px
-
-      footer
-        color: $soft-text-color
-        font-size: 85%
-        position: absolute
-        right: 1em
-        top: 1.5em
-
-        a, span
-          margin-left: .5em
 
   #preview-search-advanced
     display: none

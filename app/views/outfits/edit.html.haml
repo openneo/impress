@@ -96,7 +96,7 @@
     %form#preview-search-basic.item-search
       %header
         %h2= t '.search.header'
-        %input{:name => "query", :type => "search"}/
+        %input{:name => "query", :type => "search", autofocus: true}/
         %input{:type => "submit", :value => t('.search.form.submit')}/
         %a#preview-search-advanced-link{href: 'javascript:void(0)'}= t '.search.advanced.header'
         %a#preview-search-form-clear{:href => "#"}= t '.search.form.clear'
@@ -107,17 +107,6 @@
         #preview-search-form-no-results
           = t '.search.no_results_html', :query => content_tag(:span)
         %ul#preview-search-results
-        #tips
-          %ul
-            - tips = WardrobeTip.by_index.all
-            - tips.each_with_index do |tip, index|
-              %li
-                %h3 Did you know?
-                %div= md tip.body
-                %footer
-                  %a.prev{href: 'javascript:void(0)'} &larr; Prev
-                  %span Tip #{index + 1} of #{tips.size}
-                  %a.next{href: 'javascript:void(0)'} Next &rarr;
     %form#preview-search-advanced
       %header
         %h2= t '.search.advanced.header'
