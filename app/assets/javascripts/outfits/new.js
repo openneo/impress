@@ -224,6 +224,18 @@ $(function () {
     el.fadeIn('medium');
     addDisqusCount();
   });
+
+  var neopiaError = document.location.search.match(/neopia%5Berror%5D=([^&]+)/);
+  if (neopiaError !== null) {
+    var message = decodeURI(neopiaError[1]).replace(/\+/g, ' ');
+    if (message === "pet not found") {
+      $('#pet-not-found').show();
+    } else {
+      var el = $('#neopia-error');
+      var text = el.text().replace('%{message}', message);
+      el.text(text).show();
+    }
+  }
 });
 
 function addDisqusCount() { 

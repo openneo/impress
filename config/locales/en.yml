@@ -801,6 +801,7 @@ en:
       pet_download_error:
         We couldn't connect to Neopets to look up the pet. Maybe they're down.
         Please try again later!
+      neopia_error: "We couldn't load that pet: \"%{message}\". Try again later?"
   
   users:
     index:
