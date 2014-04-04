@@ -551,6 +551,7 @@ en:
       preview:
         requirements:
           Flash and Javascript (but not Java!) are required to preview outfits.
+        big_picture: Big Picture
         mode:
           flash:
             name: Flash

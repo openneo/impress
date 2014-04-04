@@ -144,7 +144,7 @@ View.Fullscreen = function (wardrobe) {
     preview_swf = $('#preview-swf'), sidebar_el = $('#preview-sidebar'),
     sidebar_content_el = $('#preview-sidebar-content'),
     sidebar_navbar_el = $('#preview-sidebar-navbar'), footer = $('#footer'),
-    jwindow = $(window), overrideFull = false;
+    container = $('#container'), jwindow = $(window), overrideFull = false;
 
   function fit() {
     if(!overrideFull) {
@@ -162,10 +162,13 @@ View.Fullscreen = function (wardrobe) {
 
     if(full) {
       preview_swf = $('#preview-swf'); // swf replaced
+      var searchTop = footer.offset().top;
+      if (search_el.is(':visible')) searchTop -= search_el.outerHeight(true);
+      var sidebarWidth = sidebar_el.is(':visible') ?
+        sidebar_el.outerWidth(true) : 0;
       var available = {
-        height:  search_el.offset().top -
-          parseInt(search_el.css('marginTop'), 10) - preview_el.offset().top,
-        width: preview_el.innerWidth() - sidebar_el.outerWidth() - 12 // 12px margin
+        height: searchTop - preview_el.offset().top,
+        width: preview_el.innerWidth() - sidebarWidth
       }, dim = {}, margin = {}, size = {
         old: {height: preview_swf.height(), width: preview_swf.width()},
         next: {}
@@ -203,6 +206,12 @@ View.Fullscreen = function (wardrobe) {
 
   win.resize(fit).load(fit);
   fit();
+
+  $('#toggle-big-picture').click(function(e) {
+    e.preventDefault();
+    $(document.body).toggleClass('big-picture');
+    fit();
+  });
 }
 
 View.Hash = function (wardrobe) {

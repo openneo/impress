@@ -168,7 +168,7 @@ body.outfits-edit
     button
       font-size: 75%
       width: 100%
-  #preview-mode-note, #report-broken-image
+  #toggle-big-picture, #preview-mode-note, #report-broken-image
     display: block
     font-size: 75%
     margin-top: .5em
@@ -337,6 +337,9 @@ body.outfits-edit
   .possible-error
     @extend .error
     display: none
+  &.big-picture
+    #preview-toolbar, #preview-sidebar, #preview-search
+      display: none
   &.fullscreen
     $fullscreen-search-border: 1px 1px 0
     height: 100%
