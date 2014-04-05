@@ -30,8 +30,14 @@ ANCHORS:
             - term:
                 owned: <<user_closet_hanger_ownership>>
   - &body_id_partial
-    term:
-      body_id: <<body_id>>
+    constant_score:
+      filter:
+        or:
+          query:
+            - term:
+                body_id: <<body_id>>
+            - term:
+                body_id: 0
 
 _names:
   *name_partial
