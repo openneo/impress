@@ -1330,15 +1330,15 @@ function Wardrobe() {
       if (query.restricts)
         filters.push({key: "restricted_zone_set_name", value: query.restricts,
                       is_positive: true});
-      if (query.species)
-        filters.push({key: "species_support_id", value: query.species,
-          is_positive: true});
+      if (query.fits)
+        filters.push({key: "fits_pet_type", value: query.fits,
+                      is_positive: true});
       if (query.owns)
         filters.push({key: "user_closet_hanger_ownership", value: true,
-          is_positive: true});
+                      is_positive: true});
       if (query.wants)
         filters.push({key: "user_closet_hanger_ownership", value: false,
-          is_positive: true});
+                      is_positive: true});
       return filters;
     }
 

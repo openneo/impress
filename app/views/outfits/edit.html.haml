@@ -146,10 +146,12 @@
         %div
           %ul
             %li.checkbox
-              %input{type: 'checkbox', id: 'advanced-search-species'}
-              %label{for: 'advanced-search-species'}
-                = t '.search.advanced.species_html',
-                    species: content_tag('span', '')
+              %input{type: 'checkbox', id: 'advanced-search-autofilter',
+                checked: true}
+              %label{for: 'advanced-search-autofilter'}
+                = t '.search.autofilter_html',
+                    species: content_tag('span', '', {:class => 'species'}),
+                    color: content_tag('span', '', {:class => 'color'})
             %li.checkbox.must-log-in
               %input{type: 'checkbox', id: 'advanced-search-owns', disabled: true}
               %label{for: 'advanced-search-owns'}= t '.search.advanced.owns'

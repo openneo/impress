@@ -365,6 +365,7 @@ en:
             user:wants?
           pet_type: We have no record of the %{name1} %{name2}.
             It is spelled correctly?
+          pet_type_id: We have no record of pet type %{id}. Weird.
         not_logged_in:
           The "user" filters are only available if you're logged in.
       flag_keywords:
@@ -379,7 +380,7 @@ en:
         user_closet_hanger_ownership: user
         user_owns: owns
         user_wants: wants
-        body_id: fits
+        fits_pet_type: fits
   
   neopets_pages:
     create:

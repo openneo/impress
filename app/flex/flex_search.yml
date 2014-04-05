@@ -69,10 +69,10 @@ _user_closet_hanger_ownerships:
 _negative_user_closet_hanger_ownerships:
   *user_closet_hangers_ownership_partial
 
-_body_ids:
+_fits_pet_types:
   *body_id_partial
 
-_negative_body_ids:
+_negative_fits_pet_types:
   *body_id_partial
 
 item_search:
@@ -88,13 +88,13 @@ item_search:
           - <<_occupied_zone_ids= ~>>
           - <<_restricted_zone_ids= ~>>
           - <<_user_closet_hanger_ownerships= ~>>
-          - <<_body_ids= ~>>
+          - <<_fits_pet_types= ~>>
         must_not:
           - <<_negative_names= ~>>
           - <<_negative_species_support_ids= ~>>
           - <<_negative_occupied_zone_ids= ~>>
           - <<_negative_restricted_zone_ids= ~>>
           - <<_negative_user_closet_hanger_ownerships= ~>>
-          - <<_negative_body_ids= ~>>
+          - <<_negative_fits_pet_types= ~>>
     sort:
       - name.<<locale>>.untouched

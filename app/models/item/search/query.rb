@@ -12,7 +12,7 @@ class Item
         :restricted_zone_id => Fields::SetField,
         :name => Fields::SetField,
         :user_closet_hanger_ownership => Fields::SetField,
-        :body_id => Fields::SetField
+        :fits_pet_type => Fields::SetField
       }
       FIELD_KEYS = FIELD_CLASSES.keys
       
@@ -95,11 +95,11 @@ class Item
           end
         end
 
-        [:_body_ids, :_negative_body_ids].each do |key|
+        [:_fits_pet_types, :_negative_fits_pet_types].each do |key|
           if final_flex_params[key]
             final_flex_params[key].each do |entry|
               # These are pet types at first. Yikes, dem hax.
-              entry[:body_id] = entry[:body_id].body_id
+              entry[:body_id] = entry[:fits_pet_type].body_id
             end
           end
         end
@@ -206,7 +206,7 @@ class Item
         :occupied_zone_id => :zone,
         :restricted_zone_id => :zone,
         :user_closet_hanger_ownership => :ownership,
-        :body_id => :pet_type
+        :fits_pet_type => :pet_type
       }
       
       TEXT_FILTER_EXPR = /([+-]?)(?:(\p{Word}+):)?(?:"([^"]+)"|(\S+))/
@@ -285,6 +285,13 @@ class Item
               # Ugh, this bit feels so hacky :P
               if key == :user_closet_hanger_ownership
                 value = (value == 'true')
+              end
+              if key == :fits_pet_type
+                begin
+                  value = PetType.find(value)
+                rescue ActiveRecord::RecordNotFound
+                  Item::Search.error 'not_found.pet_type_id', id: value
+                end
               end
               is_positive = filter_params[:is_positive] == 'true'
               Filter.new(key, value, is_positive)
