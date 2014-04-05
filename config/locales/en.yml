@@ -615,9 +615,9 @@ en:
         header: Add an item
         form:
           submit: Search
-          clear: clear
         loading: Loading…
         no_results_html: No results for "%{query}"
+        autofilter_html: Fits the %{color} %{species}
         advanced:
           header: Advanced Search
           submit: Search, advancedly!

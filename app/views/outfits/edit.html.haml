@@ -101,7 +101,11 @@
         %input{:name => "query", :type => "search", autofocus: true}/
         %input{:type => "submit", :value => t('.search.form.submit')}/
         %a#preview-search-advanced-link{href: 'javascript:void(0)'}= t '.search.advanced.header'
-        %a#preview-search-form-clear{:href => "#"}= t '.search.form.clear'
+        %label{for: 'preview-search-autofilter'}
+          %input#preview-search-autofilter{type: 'checkbox', checked: true}
+          = t('.search.autofilter_html',
+            color: content_tag('span', '', :class => 'color'),
+            species: content_tag('span', '', :class => 'species'))
         #preview-search-form-pagination
       #preview-search-basic-main
         #preview-search-form-loading= t '.search.loading'

@@ -1089,7 +1089,6 @@ View.Search = function (wardrobe) {
   var form = $('form.item-search'),
     item_set = new Partial.ItemSet(wardrobe, '#preview-search-results'),
     input_el = form.find('input[name=query]'),
-    clear_el = $('#preview-search-form-clear'),
     error_el = $('#preview-search-form-error'),
     help_el = $('#preview-search-form-help'),
     loading_el = $('#preview-search-form-loading'),
@@ -1170,12 +1169,6 @@ View.Search = function (wardrobe) {
     loadPage(1);
   });
 
-  clear_el.click(function (e) {
-    e.preventDefault();
-    input_el.val('');
-    form.submit();
-  });
-
   wardrobe.search.bind('startRequest', function () {
     loading_el.delay(1000).show('slow');
   });
@@ -1204,7 +1197,6 @@ View.Search = function (wardrobe) {
     var human_query = typeof current_query === 'string' ? current_query : '';
     input_el.val(human_query);
     no_results_span.text(human_query);
-    clear_el.toggle(!!request.query && request.query.length > 0);
   });
 
   wardrobe.search.bind('updatePagination', function (current_page, total_pages) {
@@ -1304,25 +1296,32 @@ View.Search = function (wardrobe) {
     wrapper.find('li.must-log-in input').removeAttr('disabled');
   }
 
-  var speciesNamesById = null;
+  var namesById = null;
 
-  function updateCurrentSpeciesName() {
-    if (speciesNamesById !== null) {
-      var speciesId = wardrobe.outfits.getPetType().species_id;
-      var speciesName = speciesNamesById[speciesId];
+  function updatePetAttributes() {
+    if (namesById !== null) {
+      var petType = wardrobe.outfits.getPetType();
+      var speciesName = namesById.species[petType.species_id];
       $('label[for=advanced-search-species] span').text(speciesName);
+      $('label[for=preview-search-autofilter] .species').text(speciesName);
+
+      var colorName = namesById.color[petType.color_id];
+      $('label[for=preview-search-autofilter] .color').text(colorName);
     }
   }
 
   wardrobe.pet_attributes.bind('update', function(petAttributes) {
-    speciesNamesById = {};
-    petAttributes.species.forEach(function(species) {
-      speciesNamesById[species.id] = species.name;
+    namesById = {};
+    ["species", "color"].forEach(function(key) {
+      namesById[key] = {};
+      petAttributes[key].forEach(function(attr) {
+        namesById[key][attr.id] = attr.name;
+      });
     });
-    updateCurrentSpeciesName();
+    updatePetAttributes();
   });
 
-  wardrobe.outfits.bind('updatePetType', updateCurrentSpeciesName);
+  wardrobe.outfits.bind('updatePetType', updatePetAttributes);
 }
 
 View.PrankColorMessage = function(wardrobe) {

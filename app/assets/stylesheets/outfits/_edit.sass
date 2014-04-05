@@ -306,7 +306,8 @@ body.outfits-edit
         li:first-child
           margin-bottom: .75em
 
-  #preview-search-advanced-link
+  #preview-search-advanced-link, label[for=preview-search-autofilter]
+    +inline-block
     font-size: 85%
     margin-right: 1em
   .preview-search-form-your-items
@@ -321,9 +322,6 @@ body.outfits-edit
       margin: 0 .25em
     .current
       font-weight: bold
-  #preview-search-form-clear
-    display: none
-    font-size: 85%
   #preview-search-form-loading
     display: none
     font:
