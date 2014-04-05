@@ -1145,7 +1145,7 @@ View.Search = function (wardrobe) {
 
   form.submit(function (e) {
     e.preventDefault();
-    current_query = $(this).find('input[name=query]').val();
+    current_query = addAutofilter($(this).find('input[name=query]').val());
     wrapper.removeClass('advanced');
     loadPage(1);
   });
@@ -1195,6 +1195,21 @@ View.Search = function (wardrobe) {
     no_results_el.hide();
     current_query = request.query || '';
     var human_query = typeof current_query === 'string' ? current_query : '';
+    var autofilterClause = buildAutofilterClause();
+    var autofilterPresent = false;
+    human_query = human_query.split(/\s+/).filter(function(clause) {
+      if (clause.toLowerCase() === autofilterClause) {
+        autofilterPresent = true;
+        return false;
+      } else {
+        return true;
+      }
+    }).join(' ');
+    if (autofilterPresent) {
+      $('#preview-search-autofilter').attr('checked', 'checked');
+    } else {
+      $('#preview-search-autofilter').removeAttr('checked');
+    }
     input_el.val(human_query);
     no_results_span.text(human_query);
   });
@@ -1296,26 +1311,41 @@ View.Search = function (wardrobe) {
     wrapper.find('li.must-log-in input').removeAttr('disabled');
   }
 
-  var namesById = null;
+  var attrs = null;
+
+  function buildAutofilterClause() {
+    if (attrs === null) return '';
+    var petType = wardrobe.outfits.getPetType();
+    var speciesName = attrs.species[petType.species_id].name.toLowerCase();
+    var colorName = attrs.color[petType.color_id].unfunny_name.toLowerCase();
+    return 'fits:' + speciesName + '-' + colorName;
+  }
+
+  function addAutofilter(query) {
+    if ($('#preview-search-autofilter').is(':checked')) {
+      query += ' ' + buildAutofilterClause();
+    }
+    return query;
+  }
 
   function updatePetAttributes() {
-    if (namesById !== null) {
+    if (attrs !== null) {
       var petType = wardrobe.outfits.getPetType();
-      var speciesName = namesById.species[petType.species_id];
+      var speciesName = attrs.species[petType.species_id].name;
       $('label[for=advanced-search-species] span').text(speciesName);
       $('label[for=preview-search-autofilter] .species').text(speciesName);
 
-      var colorName = namesById.color[petType.color_id];
+      var colorName = attrs.color[petType.color_id].name;
       $('label[for=preview-search-autofilter] .color').text(colorName);
     }
   }
 
   wardrobe.pet_attributes.bind('update', function(petAttributes) {
-    namesById = {};
+    attrs = {};
     ["species", "color"].forEach(function(key) {
-      namesById[key] = {};
+      attrs[key] = {};
       petAttributes[key].forEach(function(attr) {
-        namesById[key][attr.id] = attr.name;
+        attrs[key][attr.id] = attr;
       });
     });
     updatePetAttributes();
