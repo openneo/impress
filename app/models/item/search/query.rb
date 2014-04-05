@@ -11,7 +11,8 @@ class Item
         :occupied_zone_id => Fields::SetField,
         :restricted_zone_id => Fields::SetField,
         :name => Fields::SetField,
-        :user_closet_hanger_ownership => Fields::SetField
+        :user_closet_hanger_ownership => Fields::SetField,
+        :body_id => Fields::SetField
       }
       FIELD_KEYS = FIELD_CLASSES.keys
       
@@ -93,6 +94,15 @@ class Item
             end
           end
         end
+
+        [:_body_ids, :_negative_body_ids].each do |key|
+          if final_flex_params[key]
+            final_flex_params[key].each do |entry|
+              # These are pet types at first. Yikes, dem hax.
+              entry[:body_id] = entry[:body_id].body_id
+            end
+          end
+        end
         
         result = FlexSearch.item_search(final_flex_params)
 
@@ -159,6 +169,19 @@ class Item
               Item::Search.error 'not_found.ownership', :keyword => keyword
             end
           end
+        },
+        :pet_type => lambda { |keyword|
+          name1, name2 = keyword.split('-')
+          [[name1, name2], [name2, name1]].each do |species_name, color_name|
+            species = Species.find_by_name(species_name)
+            next if species.nil?
+            color = Color.find_by_name(color_name)
+            next if color.nil?
+            pet_type = PetType.find_by_species_id_and_color_id(species, color)
+            return pet_type if pet_type.present?
+          end
+          Item::Search.error 'not_found.pet_type',
+            name1: name1.humanize, name2: name2.humanize
         }
       }
 
@@ -172,6 +195,9 @@ class Item
         ownership: lambda { |owned|
           owned_key = owned ? 'owns' : 'wants'
           I18n.translate("items.search.labels.user_#{owned_key}")
+        },
+        pet_type: lambda { |pet_type|
+          "#{pet_type.color.name}-#{pet_type.species.name}"
         }
       }
 
@@ -179,7 +205,8 @@ class Item
         :species_support_id => :species,
         :occupied_zone_id => :zone,
         :restricted_zone_id => :zone,
-        :user_closet_hanger_ownership => :ownership
+        :user_closet_hanger_ownership => :ownership,
+        :body_id => :pet_type
       }
       
       TEXT_FILTER_EXPR = /([+-]?)(?:(\p{Word}+):)?(?:"([^"]+)"|(\S+))/

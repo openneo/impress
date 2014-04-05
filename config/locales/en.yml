@@ -363,6 +363,8 @@ en:
           ownership:
             I don't know what user:%{keyword} means. Did you mean user:owns or
             user:wants?
+          pet_type: We have no record of the %{name1} %{name2}.
+            It is spelled correctly?
         not_logged_in:
           The "user" filters are only available if you're logged in.
       flag_keywords:
@@ -377,6 +379,7 @@ en:
         user_closet_hanger_ownership: user
         user_owns: owns
         user_wants: wants
+        body_id: fits
   
   neopets_pages:
     create:

@@ -51,6 +51,7 @@ class Item < ActiveRecord::Base
       :species_support_id => self.supported_species_ids,
       :occupied_zone_id => self.occupied_zone_ids,
       :restricted_zone_id => self.restricted_zone_ids,
+      :body_id => self.modeled_body_ids,
       :name => {}
     }
     
