@@ -1194,24 +1194,7 @@ View.Search = function (wardrobe) {
     help_el.hide();
     no_results_el.hide();
     current_query = request.query || '';
-    var human_query = typeof current_query === 'string' ? current_query : '';
-    var autofilterClause = buildAutofilterClause();
-    var autofilterPresent = false;
-    human_query = human_query.split(/\s+/).filter(function(clause) {
-      if (clause.toLowerCase() === autofilterClause) {
-        autofilterPresent = true;
-        return false;
-      } else {
-        return true;
-      }
-    }).join(' ');
-    if (autofilterPresent) {
-      $('#preview-search-autofilter').attr('checked', 'checked');
-    } else {
-      $('#preview-search-autofilter').removeAttr('checked');
-    }
-    input_el.val(human_query);
-    no_results_span.text(human_query);
+    updateQuery();
   });
 
   wardrobe.search.bind('updatePagination', function (current_page, total_pages) {
@@ -1328,6 +1311,27 @@ View.Search = function (wardrobe) {
     return query;
   }
 
+  function updateQuery() {
+    var human_query = typeof current_query === 'string' ? current_query : '';
+    var autofilterClause = buildAutofilterClause();
+    var autofilterPresent = false;
+    human_query = human_query.split(/\s+/).filter(function(clause) {
+      if (clause.toLowerCase() === autofilterClause) {
+        autofilterPresent = true;
+        return false;
+      } else {
+        return true;
+      }
+    }).join(' ');
+    if (autofilterPresent) {
+      $('#preview-search-autofilter').attr('checked', 'checked');
+    } else {
+      $('#preview-search-autofilter').removeAttr('checked');
+    }
+    input_el.val(human_query);
+    no_results_span.text(human_query);
+  }
+
   var autofilterLabels = $('label[for=preview-search-autofilter],' +
     'label[for=advanced-search-autofilter]');
   var autofilterSpeciesFields = autofilterLabels.find('.species');
@@ -1341,6 +1345,8 @@ View.Search = function (wardrobe) {
 
       var colorName = attrs.color[petType.color_id].name;
       autofilterColorFields.text(colorName);
+
+      updateQuery();
     }
   }
 
