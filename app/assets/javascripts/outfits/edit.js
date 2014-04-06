@@ -1325,7 +1325,7 @@ View.Search = function (wardrobe) {
     }).join(' ');
     if (autofilterPresent) {
       $('#preview-search-autofilter').attr('checked', 'checked');
-    } else {
+    } else if (current_query.length > 0) {
       $('#preview-search-autofilter').removeAttr('checked');
     }
     input_el.val(human_query);
