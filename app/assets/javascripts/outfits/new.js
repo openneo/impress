@@ -236,6 +236,13 @@ $(function () {
       el.text(text).show();
     }
   }
+
+  $('#load-pet-to-wardrobe').submit(function(e) {
+    if (name_el.val() === "" && Preview.Job.current) {
+      e.preventDefault();
+      Preview.Job.current.visit();
+    }
+  });
 });
 
 function addDisqusCount() { 
