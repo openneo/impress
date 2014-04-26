@@ -101,7 +101,7 @@ class User < ActiveRecord::Base
   end
 
   def contact_neopets_username
-    contact_neopets_connection.neopets_username
+    contact_neopets_connection.try(:neopets_username)
   end
 
   def self.find_or_create_from_remote_auth_data(user_data)
