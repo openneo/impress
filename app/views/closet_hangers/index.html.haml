@@ -18,7 +18,12 @@
     - if public_perspective?
       - if @user.contact_neopets_username?
         = link_to t('.send_neomail', neopets_username: @user.contact_neopets_username),
-                  send_neomail_url(@user.contact_neopets_username)
+                  send_neomail_url(@user.contact_neopets_username),
+                  :class => 'neomail'
+        = link_to t('.lookup',
+                    neopets_username: @user.contact_neopets_username),
+                  neopets_lookup_url(@user.contact_neopets_username),
+                  :class => 'lookup'
     - else
       = form_for @user do |f|
         = f.label :contact_neopets_connection_id

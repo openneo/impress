@@ -16,6 +16,10 @@ module ClosetHangersHelper
     "http://www.neopets.com/neomessages.phtml?type=send&recipient=#{CGI.escape neopets_username}"
   end
 
+  def neopets_lookup_url(neopets_username)
+    "http://www.neopets.com/userlookup.phtml?user=#{CGI.escape neopets_username}"
+  end
+
   def hangers_group_visibility_field_name(owned)
     owned ? :owned_closet_hangers_visibility : :wanted_closet_hangers_visibility
   end

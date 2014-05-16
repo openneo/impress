@@ -104,6 +104,7 @@ en:
       item_search_placeholder: Find items to add
       item_search_submit: Search
       send_neomail: Neomail %{neopets_username}
+      lookup: "%{neopets_username}'s lookup"
       neopets_username:
         new: 'Add username…'
         prompt: 'What Neopets username should we add?'

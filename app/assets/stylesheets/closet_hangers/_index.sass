@@ -33,13 +33,19 @@ body.closet_hangers-index
     a
       +hover-link
       color: inherit
+      margin-right: .5em
 
     a, > form
       background:
-        image: image-url("neomail.png")
         position: left center
         repeat: no-repeat
       padding-left: image-width("neomail.png") + 4px
+
+    a.neomail, > form
+      background-image: image-url("neomail.png")
+
+    a.lookup
+      background-image: image-url("lookup.png")
 
     select
       width: 10em
