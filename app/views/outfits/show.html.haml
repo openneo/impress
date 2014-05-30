@@ -22,6 +22,7 @@
 
 #preview-wrapper
   #preview-swf
+    %img{src: @outfit.image.url}
 #outfit-items= render @outfit.worn_items
 - content_for :javascripts do
   :javascript
