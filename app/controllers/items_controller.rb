@@ -17,7 +17,7 @@ class ItemsController < ApplicationController
         assign_closeted!
         respond_to do |format|
           format.html {
-            if @items.size == 1
+            if @items.total_count == 1
               redirect_to @items.first
             else
               @items.prepare_partial(:item_link_partial)
