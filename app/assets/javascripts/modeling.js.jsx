@@ -67,7 +67,7 @@
   var ImpressUser = (function() {
     var userSignedIn = ($('meta[name=user-signed-in]').attr('content') === 'true');
     if (userSignedIn) {
-      var currentUserId = $('meta[name=current-user-id').attr('content');
+      var currentUserId = $('meta[name=current-user-id]').attr('content');
       return {
         addNeopetsUsername: function(username) {
           return $.ajax({
