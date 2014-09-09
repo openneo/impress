@@ -2,118 +2,77 @@
 
 @import "partials/campaign-progress"
 
+/* TODO: redundant with outfits/index; why is it not in the partial? */
+$outfit-inner-height: 150px
+$outfit-inner-width: 150px
+$outfit-banner-h-padding: 4px
+$outfit-banner-v-padding: 2px
+$outfit-banner-inner-width: $outfit-inner-width - (2 * $outfit-banner-h-padding)
+
 body.static-donate
   +campaign-progress
 
   #title
-    margin-bottom: 0
+    margin-bottom: .25em
 
-  h2
-    font-style: italic
-    font-weight: normal
-
-  #title, h2
+  #title
     clear: left
     float: left
 
-  h2
-    margin-bottom: .25em
-
-  $image-mode-preview-image-width: 300px
-  $image-mode-preview-image-border-width: 1px
-  $image-mode-preview-h-padding: 20px
-  $image-mode-preview-border-width: 1px
-  $image-mode-preview-right-margin: 20px
-  $image-mode-preview-width: $image-mode-preview-image-width + 2 * ($image-mode-preview-image-border-width + $image-mode-preview-h-padding + $image-mode-preview-border-width)
-  $image-mode-preview-outer-width: $image-mode-preview-width + $image-mode-preview-right-margin
-
-  #image-mode-data
-    clear: both
-    display: block
-    float: left
-    margin-right: $image-mode-preview-right-margin
-    width: $image-mode-preview-width
-
-  #image-mode-preview
-    border: $image-mode-preview-border-width solid $module-border-color
-    display: block
-    margin: 0 0 2em 0
-    padding:
-      top: $image-mode-preview-h-padding
-      right: $image-mode-preview-h-padding
-      bottom: $image-mode-preview-h-padding / 1.5
-      left: $image-mode-preview-h-padding
-
-    img
-      border: $image-mode-preview-border-width solid $module-border-color
-      height: $image-mode-preview-image-width
-      margin-bottom: .5em
-      width: $image-mode-preview-image-width
-
-    figcaption
-      display: block
-      font-family: Calligraffitti
-      font-size: 250%
-      text-align: center
-
-  #campaign-donors
-    display: none
-    margin-right: $image-mode-preview-right-margin
-    width: $image-mode-preview-width
-
-    ol
-      font-size: 85%
-      padding-left: 2em
-
-      span
-        color: $soft-text-color
-        float: right
-
-    &.has-donors
-      display: block
-
-  $image-mode-description-width: $container-width - $image-mode-preview-outer-width
-
-  $image-mode-beta-h-padding: 15px
-  $image-mode-beta-border-width: 1px
-  $image-mode-beta-inner-width: $image-mode-description-width - 2 * ($image-mode-beta-h-padding + $image-mode-beta-border-width)
-
-  #image-mode-beta
+  #donation-form
     +module
-    border-width: $image-mode-beta-border-width
-    display: block
-    float: left
-    margin-bottom: 1em
-    padding: ($image-mode-beta-h-padding / 1.5) $image-mode-beta-h-padding
-    text-align: center
-    width: $image-mode-beta-inner-width
 
-    header
-      display: block
+    background:
+      image: url(http://images.neopets.com/new_shopkeepers/t_993.gif)
+      position: ($container-width - 150px - 8px) -8px
+      repeat: no-repeat
+    margin-bottom: 1.5em
+    padding-bottom: 24px
+    padding-left: 24px
+    padding-top: 24px
+
+    header, div
+      +inline-block
+
+      p
+        font-family: $main-font
+        margin: 0
+
+    div
+      font-size: 115%
+      margin-left: 20px
+
+    #donation-form-title
+      font-size: 125%
       font-weight: bold
+      margin-bottom: .25em
 
     p
-      font-family: $main-font
-      font-size: 75%
-      margin: 0
+      font-size: 85%
+      margin-bottom: 0
+      margin-top: .5em
 
-    form
-      margin: .75em 0
+    input[type=text]
+      width: 3em
 
-      label
-        font-size: 85%
-        font-weight: bold
+    button
+      +loud-awesome-button-color
 
-        &:after
-          content: ":"
+  #outfits
+    +outfits-list
 
-      input
-        width: 5em
+    > li
+      +outfit
 
-      button
-        +loud-awesome-button-color
+      height: $outfit-inner-height
+      margin: 2px
+      width: $outfit-inner-width
 
-  #image-mode-description, #image-mode-comments
-    float: right
-    width: $image-mode-description-width
+      header, footer
+        padding: $outfit-banner-v-padding $outfit-banner-h-padding
+        text-align: center
+        width: $outfit-banner-inner-width
 
+  #fine-print
+    font-size: 85%
+    margin-top: 2em

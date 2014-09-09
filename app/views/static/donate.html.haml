@@ -1,76 +1,106 @@
 - title "Support Dress to Impress"
-%h2 Thank you so much for all your help. We made it!
 
 = campaign_progress(:always => true) do
   We've received
-  = surround '$', ',' do
+  = precede '$' do
     %span.campaign-raised
-  exceeding our goal for the upgrade. Thanks so much!
+  toward our hosting costs this year. Thanks so much!
 
-%section#image-mode-data
-  %figure#image-mode-preview
-    = image_tag 'image_mode_preview.png'
-    %figcaption
-      Image Mode &hearts;
-  #campaign-donors
-    %h3 Thank you!
-    %ol
-
-#image-mode-description
-  :markdown
-    **Hooray!** We made our fundraising goal, and now have enough funds to run
-    on the upgraded server for the next year. We completed our server upgrade
-    around 9PM NST on August 4.
-
-    **Image Mode is now out of beta, and is open to the public.** Just head to
-    the home page and start dressing up a pet like normal, then hit the
-    **Image** button in the top left corner. Congrats! You're in!
-
-    Thanks again for all your help. Dress to Impress runs on you, from our data
-    to our funds. You make this site the great resource that it is, and I'm
-    consistently impressed by this community's generosity. Thanks for all you
-    do!
-
-#image-mode-beta
+= pledgie_form_tag id: 'donation-form' do
   %header
-    Support Dress to Impress!
-  = pledgie_form_tag do
-    = pledgie_amount_label_tag 'Amount'
-    = pledgie_amount_field_tag
+    %p#donation-form-title
+      Thanks for supporting Dress to Impress!
+    %p#donation-form-subtitle
+      All donations go directly to our hosting costs. Thanks for your help!
+  %div
+    = precede '$' do
+      = pledgie_amount_field_tag('10.00')
     %button{:type => 'submit'} Donate now!
 
-  %p
-    A
-    = link_to 'Linode 768 VPS', 'http://www.linode.com/'
-    costs about $360 a year.
+#description
+  :markdown
+    **Dress to Impress is cool!** We have loads of fancy features: we're
+    constantly adding models to our database, we help folks make NC trades, and
+    you can easily save your outfits and share them across the interwebs.
+    It's pretty sweet.
 
-  %p
-    All donations go directly to hosting costs. Thanks so much for your help!
+    **But cool features cost money.** We're running on a cool
+    [4GB Linode server][linode] for $40/mo, and y'all's fancy outfit thumbnails
+    live on [Amazon Web Services][aws] for about $25/mo (it varies by usage),
+    so that leaves us at about $65/mo. Add in $10 for the domain name and our
+    Amazon costs being on the rise, and that rounds to an annual
+    budget of $800.
 
+    **So, we're here to ask for help.** If you have some spare change to send
+    our way, we'll gladly accept
+    <img src="http://images.neopets.com/neoboards/smilies/grin.gif" />
+    Thanks for helping Dress to Impress stay online and running smoothly!
 
-#image-mode-comments
-  #disqus_thread
-  - if Rails.env.development?
-    :javascript
-      var disqus_developer = 1;
-  :javascript
-    var disqus_shortname = 'dresstoimpress';
+    **And, as a thank-you gift, we'll feature your outfits here!** Eeyup, for
+    every $5 you send our way, we'll post one of your beautiful outfits right
+    here, and feature it on the homepage, too! Personally, I'm looking forward
+    to seeing all your lovely creations, and wishing I could make things
+    even [half as pretty][matts_bat]
+    <img src="http://images.neopets.com/neoboards/smilies/tongue.gif" />
+    (See the fine print at the bottom of the page for details.)
 
-    // The following are highly recommended additional parameters. Remove the slashes in front to use.
-    var disqus_identifier = 'dresstoimpress_donate';
+    **Thanks again for all your help.** Dress to Impress runs on you, from our
+    data to our servers. You make this site the great resource that it is, and
+    I'm consistently impressed by this community's generosity. Thanks for 
+    all you do!
 
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    [linode]: https://www.linode.com/pricing
+    [aws]: http://aws.amazon.com/
+    [matts_bat]: http://www.neopets.com/petlookup.phtml?pet=matts_bat
 
-        var s = document.createElement('script'); s.async = true;
-        s.type = 'text/javascript';
-        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-    }());
-  %a.dsq-brlink{:href => "http://disqus.com"}
-    blog comments powered by
-    %span.logo-disqus Disqus
+%h2 Thanks to our lovely donors!
 
+%ul#outfits
+  = Outfit.includes(:user).find_each do |outfit| # TODO: donors only
+    = outfit_li_for(outfit) do
+      - if outfit.image?
+        = link_to image_tag(outfit.image.small.url), outfit
+
+      %header
+        - if outfit.user
+          Thanks, #{outfit.user.name}!
+        - else
+          Thanks, anonymous!
+
+#fine-print
+  %h2 Some notes on featured outfits
+  :markdown
+    When you make a donation, we'll divide the amount by $5, and, rounding
+    down, that's how many of your outifts we'll feature. Cool, eh?
+
+    This is our way of publicly thanking our donors.
+    (Thanks again, by the way!)
+    We love them very much and want to bring attention to their awesomeness.
+    However, there are a few important bits of legal whatnot to keep in mind.
+    (Mostly, it's the list of things that we expect to do but in no legally
+    binding way promise to do. Just in case
+    <img src="http://images.neopets.com/neoboards/smilies/tongue.gif" />)
+
+    Featuring your outfit is a thank-you gift that we like to give our donors;
+    it is *not* a purchased service. We offer no guarantee that we'll post your
+    outfit on any page for any particular amount of time, or even at all.
+    (That said, we expect to publicly list our donors' outfits somewhere on the
+    site for as long as it lives, and in rotation on the homepage until some
+    other site event or feature needs the space.)
+
+    We reserve the right to refuse to post any outfit for any reason, and we
+    reserve the right to remove any previously posted outfit for any reason.
+    (That said, so long as your outfit is appropriate for Neopians of all ages,
+    we don't expect any trouble.)
+
+    If you change your mind about donating, no worries: we'll refund any
+    donation within 30 days of the moment you donated.
+    (Please don't be that person who repeatedly donates and refunds.
+    We'll stop posting your outfits
+    <img src="http://images.neopets.com/neoboards/smilies/tongue.gif" />)
+
+    **TL;DR: We love to help and acknowledge our good-faith donors,
+    but reserve the right not to do those things,
+    in order to better handle bad-faith donors and unexpected circumstances.**
+    Huh. That was way simpler.
+    Maybe I should've just written that in the first place.

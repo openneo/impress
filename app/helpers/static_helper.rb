@@ -3,8 +3,8 @@ module StaticHelper
     label_tag 'pledge[amount]', content
   end
 
-  def pledgie_amount_field_tag
-    text_field_tag 'pledge[amount]', '0.00', :id => 'pledge_amount'
+  def pledgie_amount_field_tag(amount)
+    text_field_tag 'pledge[amount]', amount, :id => 'pledge_amount'
   end
 
   def pledgie_confirm_url
