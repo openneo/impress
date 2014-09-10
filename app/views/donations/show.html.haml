@@ -1,0 +1,20 @@
+- title "Thanks for donating!"
+
+= image_tag thank_you_greeting_url, id: 'thank-you'
+
+%p
+  %strong Thanks so much!
+  Your support keeps Dress to Impress online and running smoothly,
+  and we really, truly couldn't do this without you.
+  Do you feel the love? Because we do <3
+
+%p
+  %strong But enough about us. Let's talk about you!
+  When we brag about you on our donors list, what should we say?
+  (If you'd rather take care of this later, no worries!
+  Check your email for a copy of this URL.)
+
+= form_for @donation do |f|
+  = f.label :donor_name, "What's your name?"
+  = f.text_field :donor_name, placeholder: 'Anonymous'
+  = f.submit

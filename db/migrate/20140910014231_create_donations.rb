@@ -5,6 +5,7 @@ class CreateDonations < ActiveRecord::Migration
       t.string :charge_id, null: false
       t.integer :user_id
       t.string :donor_name
+      t.string :secret
 
       t.timestamps
     end

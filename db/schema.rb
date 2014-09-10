@@ -104,6 +104,7 @@ ActiveRecord::Schema.define(:version => 20140910014231) do
     t.string   "charge_id",  :null => false
     t.integer  "user_id"
     t.string   "donor_name"
+    t.string   "secret"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
