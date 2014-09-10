@@ -1,11 +1,12 @@
 (function() {
   var donationForm = document.getElementById('donation-form');
-  var amountField = donationForm.amount;
+  var amountField = donationForm.querySelector(
+    '[name=donation\\[amount\\]]');
   var tokenField = donationForm.querySelector(
     '[name=donation\\[stripe_token\\]]');
 
   var checkout = StripeCheckout.configure({
-    key: 'pk_test_wEvgn4baD9W5ld5C9JCS9Ahf', // TODO
+    key: donationForm.getAttribute('data-checkout-publishable-key'),
     image: donationForm.getAttribute('data-checkout-image'),
     token: function(token) {
       tokenField.value = token.id;

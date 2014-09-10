@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140403034558) do
+ActiveRecord::Schema.define(:version => 20140910014231) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -100,15 +100,12 @@ ActiveRecord::Schema.define(:version => 20140403034558) do
   add_index "contributions", ["user_id"], :name => "index_contributions_on_user_id"
 
   create_table "donations", :force => true do |t|
-    t.integer  "amount_cents"
-    t.boolean  "processed"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "transaction_id"
-    t.string   "access_token"
-    t.integer  "campaign_id"
-    t.integer  "outfit_features_count", :default => 0, :null => false
+    t.integer  "amount",     :null => false
+    t.string   "charge_id",  :null => false
+    t.integer  "user_id"
     t.string   "donor_name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "donations_old", :force => true do |t|

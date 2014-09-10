@@ -1,11 +1,13 @@
 source 'http://rubygems.org'
 
+gem 'dotenv-rails', :groups => [:development, :test]
+
 gem 'rails', '= 3.2.18'
 #gem 'sqlite3-ruby', '~> 1.3.1', :require => 'sqlite3'
 gem 'mysql2', '>= 0.3.11'
 
 # https://groups.google.com/d/topic/rubyonrails-security/4_YvCpLzL58/discussion
-gem 'json', '~> 1.7.7'
+gem 'json', '~> 1.8.1'
 
 gem 'haml', '~> 4.0.0'
 gem 'rdiscount', '~> 1.6.5'
@@ -65,6 +67,8 @@ gem "rails-i18n"
 gem 'rack-attack', '~> 2.2.0'
 
 gem 'react-rails', '~> 0.8.0.0'
+
+gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 
 # Needed for the new asset pipeline
 group :assets do

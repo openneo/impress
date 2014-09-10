@@ -72,6 +72,15 @@ GIT
   specs:
     RocketAMF (1.0.0)
 
+GIT
+  remote: https://github.com/stripe/stripe-ruby
+  revision: 2c6f4caa99916c33d3f9af57f66422ff5ea913cf
+  specs:
+    stripe (1.15.0)
+      json (~> 1.8.1)
+      mime-types (>= 1.25, < 3.0)
+      rest-client (~> 1.4)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -129,6 +138,11 @@ GEM
       railties (~> 3.1)
       warden (~> 1.2.1)
     diff-lcs (1.2.1)
+    dotenv (0.11.1)
+      dotenv-deployment (~> 0.0.2)
+    dotenv-deployment (0.0.2)
+    dotenv-rails (0.11.1)
+      dotenv (= 0.11.1)
     dye (0.1.4)
     em-socksify (0.2.1)
       eventmachine (>= 1.0.0.beta.4)
@@ -159,7 +173,7 @@ GEM
     http_parser.rb (0.5.3)
     i18n (0.6.9)
     journey (1.0.4)
-    json (1.7.7)
+    json (1.8.1)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -310,6 +324,7 @@ DEPENDENCIES
   character-encodings (~> 0.4.1)
   compass-rails (~> 1.0.3)
   devise (~> 2.2.3)
+  dotenv-rails
   em-http-request!
   em-mysqlplus!
   em-synchrony!
@@ -320,7 +335,7 @@ DEPENDENCIES
   globalize3!
   haml (~> 4.0.0)
   http_accept_language!
-  json (~> 1.7.7)
+  json (~> 1.8.1)
   memcache-client (~> 1.8.5)
   mini_magick (~> 3.4)
   msgpack (~> 0.5.3)
@@ -347,6 +362,7 @@ DEPENDENCIES
   rspec-rails (~> 2.0.0.beta.22)
   sanitize (~> 2.0.3)
   sass-rails (~> 3.2.6)
+  stripe!
   swf_converter (~> 0.0.3)
   uglifier (>= 1.0.3)
   whenever (~> 0.7.3)

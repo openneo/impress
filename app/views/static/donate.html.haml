@@ -7,7 +7,8 @@
   toward our hosting costs this year. Thanks so much!
 
 = form_tag donations_path, method: 'POST', id: 'donation-form',
-    'data-checkout-image' => image_path('default-preview.png') do
+    'data-checkout-image' => image_path('default-preview.png'),
+    'data-checkout-publishable-key' => Rails.configuration.stripe[:publishable_key] do
   = hidden_field_tag 'donation[stripe_token]'
   %header
     %p#donation-form-title
@@ -16,7 +17,7 @@
       All donations go directly to our hosting costs. Thanks for your help!
   %div
     = precede '$' do
-      = text_field_tag 'amount', '10.00'
+      = text_field_tag 'donation[amount]', '10.00'
     %button{:type => 'submit'} Donate now!
 
 #description

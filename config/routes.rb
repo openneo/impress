@@ -78,6 +78,8 @@ OpenneoImpressItems::Application.routes.draw do
       only: [:create, :destroy]
   end
 
+  resources :donations, only: [:create]
+
   match 'users/current-user/closet' => 'closet_hangers#index', :as => :your_items
 
   match 'users/top-contributors' => 'users#top_contributors', :as => :top_contributors
