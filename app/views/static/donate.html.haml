@@ -6,7 +6,8 @@
     %span.campaign-raised
   toward our hosting costs this year. Thanks so much!
 
-= pledgie_form_tag id: 'donation-form' do
+= form_tag 'TODO', id: 'donation-form' do
+  = hidden_field_tag 'stripe_token'
   %header
     %p#donation-form-title
       Thanks for supporting Dress to Impress!
@@ -14,7 +15,7 @@
       All donations go directly to our hosting costs. Thanks for your help!
   %div
     = precede '$' do
-      = pledgie_amount_field_tag('10.00')
+      = text_field_tag 'amount', '10.00'
     %button{:type => 'submit'} Donate now!
 
 #description
@@ -104,3 +105,7 @@
     in order to better handle bad-faith donors and unexpected circumstances.**
     Huh. That was way simpler.
     Maybe I should've just written that in the first place.
+
+- content_for :javascripts do
+  = javascript_include_tag 'https://checkout.stripe.com/checkout.js',
+      'static/donate.js'
