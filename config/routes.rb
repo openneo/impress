@@ -78,7 +78,11 @@ OpenneoImpressItems::Application.routes.draw do
       only: [:create, :destroy]
   end
 
-  resources :donations, only: [:create, :show, :update]
+  resources :donations, only: [:create, :show, :update] do
+    collection do
+      resources :donation_features, path: 'features', only: [:index]
+    end
+  end
 
   match 'users/current-user/closet' => 'closet_hangers#index', :as => :your_items
 

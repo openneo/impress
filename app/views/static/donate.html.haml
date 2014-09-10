@@ -7,7 +7,7 @@
   toward our hosting costs this year. Thanks so much!
 
 = form_tag donations_path, method: 'POST', id: 'donation-form',
-    'data-checkout-image' => image_path('default-preview.png'),
+    'data-checkout-image' => image_path('default_preview.png'),
     'data-checkout-publishable-key' => Rails.configuration.stripe[:publishable_key] do
   = hidden_field_tag 'donation[stripe_token]'
   = hidden_field_tag 'donation[donor_email]'
@@ -63,16 +63,15 @@
 %h2 Thanks to our lovely donors!
 
 %ul#outfits
-  = Outfit.includes(:user).find_each do |outfit| # TODO: donors only
-    = outfit_li_for(outfit) do
-      - if outfit.image?
-        = link_to image_tag(outfit.image.small.url), outfit
-
-      %header
-        - if outfit.user
-          Thanks, #{outfit.user.name}!
+  - @donations.each do |donation|
+    - donation.features.each do |feature|
+      %li
+        - if feature.outfit_id? && feature.outfit.image?
+          = link_to image_tag(feature.outfit.image.small.url), feature.outfit
         - else
-          Thanks, anonymous!
+          = image_tag 'default_preview.png'
+
+        %header Thanks, #{donation.donor_name.presence || 'Anonymous'}!
 
 #fine-print
   %h2 Some notes on featured outfits
@@ -97,14 +96,19 @@
 
     We reserve the right to refuse to post any outfit for any reason, and we
     reserve the right to remove any previously posted outfit for any reason.
-    (That said, so long as your outfit is appropriate for Neopians of all ages,
-    we don't expect any trouble.)
+    Same goes for the name attached to your donation.
+    (That said, we intend to allow most any name and outfit that are
+    appropriate for Neopians of all ages.)
 
     If you change your mind about donating, no worries: we'll refund any
-    donation within 30 days of the moment you donated.
-    (Please don't be that person who repeatedly donates and refunds.
-    We'll stop posting your outfits
-    <img src="http://images.neopets.com/neoboards/smilies/tongue.gif" />)
+    good-faith donation within 60 days of the day you donated.
+    (For example, changing your mind and requesting a refund *is* acting in
+    good faith, and we'd love to help you out.
+    Posting an obscene outfit then requesting a refund once we take it down is
+    *not* acting in good faith, and we don't want to encourage that behavior
+    <img src="http://images.neopets.com/neoboards/smilies/tongue.gif" />
+    We determine "good faith" at our sole discretion—not limited to those
+    examples—but we're generally pretty understanding.)
 
     **TL;DR: We love to help and acknowledge our good-faith donors,
     but reserve the right not to do those things,

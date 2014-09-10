@@ -7,6 +7,8 @@ var preview_el = $('#pet-preview'),
   response_el = preview_el.find('span'),
   name_el = $('#main-pet-name');
 
+var defaultPreviewUrl = img_el.attr('src');
+
 preview_el.click(function () {
   Preview.Job.current.visit();
 });
@@ -42,14 +44,32 @@ var Preview = {
   }
 }
 
-$.getJSON('http://notables.openneo.net/api/1/days/ago/1?callback=?', function (response) {
-  var notables = response.notables;
-  var i = Math.floor(Math.random() * notables.length);
-  Preview.Job.fallback = new Preview.Job.Name(notables[i].petName);
-  if(!Preview.Job.current) {
-    Preview.Job.fallback.setAsCurrent();
-  }
-});
+function loadNotable() {
+  $.getJSON('http://notables.openneo.net/api/1/days/ago/1?callback=?', function (response) {
+    var notables = response.notables;
+    var i = Math.floor(Math.random() * notables.length);
+    Preview.Job.fallback = new Preview.Job.Name(notables[i].petName);
+    if(!Preview.Job.current) {
+      Preview.Job.fallback.setAsCurrent();
+    }
+  });
+}
+
+function loadFeature() {
+  $.getJSON('/donations/features', function(features) {
+    if (features.length > 0) {
+      var feature = features[Math.floor(Math.random() * features.length)];
+      Preview.Job.fallback = new Preview.Job.Feature(feature);
+      if (!Preview.Job.current) {
+        Preview.Job.fallback.setAsCurrent();
+      }
+    } else {
+      loadNotable();
+    }
+  });
+}
+
+loadFeature();
 
 Preview.Job = function (key, base) {
   var job = this,
@@ -61,8 +81,12 @@ Preview.Job = function (key, base) {
       // lol lazy code for prank image :P
       return "http://swfimages.impress.openneo.net" +
         "/biology/000/000/0-2/" + key.substr(2) + "/300x300.png";
-    } else {
+    } else if (base === 'cp' || base === 'cpn') {
       return petImage(base + '/' + key, quality);
+    } else if (base === 'url') {
+      return key;
+    } else {
+      throw new Error("unrecognized image base " + base);
     }
   }
   
@@ -82,6 +106,10 @@ Preview.Job = function (key, base) {
     Preview.Job.current = job;
     load();
   }
+
+  this.notFound = function() {
+    Preview.notFound('pet-not-found');
+  }
 }
 
 Preview.Job.Name = function (name) {
@@ -99,6 +127,25 @@ Preview.Job.Hash = function (hash) {
   this.visit = function() {
     window.location = "/wardrobe?color=" + $('#color').val() + "&species=" +
       $('#species').val();
+  }
+}
+
+Preview.Job.Feature = function(feature) {
+  Preview.Job.apply(this, [feature.outfit_image_url, 'url']);
+  this.name = "Thanks for donating, " + feature.donor_name + "!"; // TODO: i18n
+
+  this.visit = function() {
+    window.location = '/donate';
+  }
+
+  this.notFound = function() {
+    // The outfit thumbnail hasn't generated or is missing or something.
+    // Let's fall back to a boring image for now.
+    var boring = new Preview.Job.Feature({
+      donor_name: feature.donor_name,
+      outfit_image_url: defaultPreviewUrl
+    });
+    boring.setAsCurrent();
   }
 }
 
@@ -127,7 +174,7 @@ $(function () {
   }).error(function () {
     if(Preview.Job.current.loading) {
       Preview.Job.loading = false;
-      Preview.notFound('pet-not-found');
+      Preview.Job.current.notFound();
     }
   });
   
