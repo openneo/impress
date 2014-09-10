@@ -6,8 +6,9 @@
     %span.campaign-raised
   toward our hosting costs this year. Thanks so much!
 
-= form_tag 'TODO', id: 'donation-form' do
-  = hidden_field_tag 'stripe_token'
+= form_tag donations_path, method: 'POST', id: 'donation-form',
+    'data-checkout-image' => image_path('default-preview.png') do
+  = hidden_field_tag 'donation[stripe_token]'
   %header
     %p#donation-form-title
       Thanks for supporting Dress to Impress!
