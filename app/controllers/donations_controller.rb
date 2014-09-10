@@ -6,15 +6,32 @@ class DonationsController < ApplicationController
 
   def show
     @donation = Donation.from_param(params[:id])
+    @features = @donation.features
+    @outfits = current_user.outfits.wardrobe_order if user_signed_in?
   end
 
   def update
     @donation = Donation.from_param(params[:id])
     @donation.update_attributes params[:donation]
-    @donation.save!
 
-    flash[:success] = 'Donation details saved! ' +
-      'Also, have we thanked you yet today? Thank you!'
-    redirect_to @donation
+    feature_params = params[:feature] || {}
+    @features = @donation.features.find(feature_params.keys)
+    @features.each do |feature|
+      feature.outfit_url = feature_params[feature.id.to_s][:outfit_url]
+    end
+
+    begin
+      Donation.transaction do
+        @donation.save!
+        @features.each(&:save!)
+      end
+    rescue ActiveRecord::RecordInvalid
+      flash[:error] = "Couldn't save donation details. Do those outfits exist?"
+      redirect_to @donation
+    else
+      flash[:success] = 'Donation details saved! ' +
+        'Also, have we thanked you yet today? Thank you!'
+      redirect_to @donation
+    end
   end
 end

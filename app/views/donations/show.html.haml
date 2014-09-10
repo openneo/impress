@@ -1,9 +1,13 @@
 - title "Thanks for donating!"
 
-= image_tag thank_you_greeting_url, id: 'thank-you'
+= image_tag thank_you_greeting_url, id: 'thank-you',
+  alt: '"Thank You" Neogreeting'
 
 %p
   %strong Thanks so much!
+  That's another
+  = number_to_currency(@donation.amount.to_f / 100)
+  toward this year's bills—thanks!
   Your support keeps Dress to Impress online and running smoothly,
   and we really, truly couldn't do this without you.
   Do you feel the love? Because we do <3
@@ -14,7 +18,28 @@
   (If you'd rather take care of this later, no worries!
   Check your email for a copy of this URL.)
 
-= form_for @donation do |f|
-  = f.label :donor_name, "What's your name?"
-  = f.text_field :donor_name, placeholder: 'Anonymous'
-  = f.submit
+= form_for @donation, html: {id: 'edit-donation'} do |f|
+  %ul
+    %li.name
+      = f.label :donor_name, "Your name on the donors page"
+      = f.text_field :donor_name, placeholder: 'Anonymous'
+
+    - @features.each do |feature|
+      %li.feature
+        = label_tag "feature[#{feature.id}][outfit_url]", "Featured outfit URL"
+        = text_field_tag "feature[#{feature.id}][outfit_url]",
+          feature_outfit_url(feature.outfit_id),
+          placeholder: outfit_url(12345678)
+        - if user_signed_in?
+          %span.choose-outfit
+            = surround '(', ')' do
+              or choose
+              = select_tag "feature[#{feature.id}][user_outfits]",
+                options_for_select(@outfits.map { |o| [o.name, outfit_url(o)] },
+                  feature_outfit_url(feature.outfit_id)),
+                include_blank: true
+  = f.submit 'Save donation details'
+
+- content_for :javascripts do
+  = include_javascript_libraries :jquery
+  = javascript_include_tag 'donations/show.js'

@@ -1,7 +1,10 @@
 class Donation < ActiveRecord::Base
+  FEATURE_COST = 500  # in cents = $5.00
+
   attr_accessible :donor_name
 
   belongs_to :user
+  has_many :features, class_name: 'DonationFeature'
 
   def to_param
     "#{id}-#{secret}"
@@ -27,7 +30,17 @@ class Donation < ActiveRecord::Base
     donation.user_id = user.try(:id)
     donation.donor_name = user.try(:name)
     donation.secret = new_secret
-    donation.save!
+
+    num_features = amount / FEATURE_COST
+    features = []
+    num_features.times do
+      features << donation.features.new
+    end
+
+    Donation.transaction do
+      donation.save!
+      features.each(&:save!)
+    end
 
     donation
   end
