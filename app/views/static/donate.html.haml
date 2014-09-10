@@ -10,10 +10,14 @@
     'data-checkout-image' => image_path('default-preview.png'),
     'data-checkout-publishable-key' => Rails.configuration.stripe[:publishable_key] do
   = hidden_field_tag 'donation[stripe_token]'
+  = hidden_field_tag 'donation[donor_email]'
   %header
     %p#donation-form-title
       Thanks for supporting Dress to Impress!
     %p#donation-form-subtitle
+      Securely powered by #{link_to 'Stripe', 'https://stripe.com/'}.
+      We never, ever see your payment info.
+      %br
       All donations go directly to our hosting costs. Thanks for your help!
   %div
     = precede '$' do

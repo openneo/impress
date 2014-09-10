@@ -29,6 +29,7 @@ class Donation < ActiveRecord::Base
     donation.charge_id = charge.id
     donation.user_id = user.try(:id)
     donation.donor_name = user.try(:name)
+    donation.donor_email = params[:donor_email]
     donation.secret = new_secret
 
     num_features = amount / FEATURE_COST
@@ -41,6 +42,8 @@ class Donation < ActiveRecord::Base
       donation.save!
       features.each(&:save!)
     end
+
+    DonationMailer.thank_you_email(donation, customer.email).deliver
 
     donation
   end

@@ -1,0 +1,38 @@
+<p>
+  Hello, hello! I'm Matchu, loving father of Dress to Impress.
+  I started building the site on a whim one day, and never expected it to
+  really catch on—but here you are, proving that someone else out there loves
+  Dress to Impress as much as I do &lt;3 Thank you so much!
+</p>
+
+<p>
+  Before I forget, let's get to receipt business.
+  You donated
+  <strong><%= number_to_currency @donation.amount / 100.0 %></strong>
+  (thanks again, by the way!),
+  and you can update the name and outfits on that donation whenever you like at
+  <%= link_to donation_url(@donation), donation_url(@donation) %>.
+</p>
+
+<p>
+  Anyway. I hope you enjoy our little thank-you gift (you <em>do</em> have some
+  beautiful outfits for me to show off, right?), and that Dress to Impress
+  continues to bring you joy :)
+</p>
+
+<p>
+  Oh! And, if you ever have anything to say to me, <em>please</em> let me know
+  at <%= mail_to 'matchu@openneo.net' %>. I'm looking forward to any and all
+  questions, comments, concerns, insults, treasure maps, love letters, or memes
+  you send my way :D
+</p>
+
+<p>
+  Thanks again for your help! DTI &lt;3s you.<br />
+  —Matchu
+</p>
+
+<p>
+  P.S. Seriously. Reply to this email and tell me something.
+  It'll make my day :D
+</p>

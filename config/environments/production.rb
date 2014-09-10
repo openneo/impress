@@ -61,6 +61,21 @@ OpenneoImpressItems::Application.configure do
   # config.force_ssl = true
 
   config.react.variant = :production
+
+  config.action_mailer.default_url_options = {host: "impress.openneo.net"}
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+     :address        => "mail.openneo.net",
+     :port           => 587,
+     :domain         => "openneo.net",
+     :authentication => :login,
+     :user_name      => "matchu@openneo.net",
+     :password       => ENV.fetch("MATCHU_EMAIL_PASSWORD"),
+     :enable_starttls_auto => false
+  }
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_deliveries = true
 end
 
 LocalImpressHost = 'newimpress.openneo.net'

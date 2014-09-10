@@ -2,6 +2,8 @@
   var donationForm = document.getElementById('donation-form');
   var amountField = donationForm.querySelector(
     '[name=donation\\[amount\\]]');
+  var emailField = donationForm.querySelector(
+    '[name=donation\\[donor_email\\]]');
   var tokenField = donationForm.querySelector(
     '[name=donation\\[stripe_token\\]]');
 
@@ -10,6 +12,7 @@
     image: donationForm.getAttribute('data-checkout-image'),
     token: function(token) {
       tokenField.value = token.id;
+      emailField.value = token.email;
       donationForm.submit();
     }
   });

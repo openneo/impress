@@ -70,6 +70,8 @@ gem 'react-rails', '~> 0.8.0.0'
 
 gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 
+gem "letter_opener", :group => :development
+
 # Needed for the new asset pipeline
 group :assets do
   
