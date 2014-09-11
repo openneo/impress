@@ -1,10 +1,10 @@
 - title "Support Dress to Impress"
 
-= campaign_progress(:always => true) do
-  We've received
-  = precede '$' do
-    %span.campaign-raised
-  toward our hosting costs this year. Thanks so much!
+= campaign_progress(@campaign) do
+  We've received #{number_to_currency(@campaign.progress / 100.0)}
+  toward our hosting costs this year.
+  - if @campaign.progress > 0
+    Thanks so much!
 
 = form_tag donations_path, method: 'POST', id: 'donation-form',
     'data-checkout-image' => image_path('default_preview.png'),

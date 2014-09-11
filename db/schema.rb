@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140910181819) do
+ActiveRecord::Schema.define(:version => 20140910204043) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -33,10 +33,11 @@ ActiveRecord::Schema.define(:version => 20140910181819) do
   add_index "campaign_translations", ["locale"], :name => "index_campaign_translations_on_locale"
 
   create_table "campaigns", :force => true do |t|
-    t.integer  "goal_cents"
-    t.integer  "progress_cents"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer  "progress",   :null => false
+    t.integer  "goal",       :null => false
+    t.boolean  "active",     :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "campaigns_old", :force => true do |t|
@@ -115,6 +116,7 @@ ActiveRecord::Schema.define(:version => 20140910181819) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.string   "donor_email"
+    t.integer  "campaign_id", :null => false
   end
 
   create_table "donations_old", :force => true do |t|

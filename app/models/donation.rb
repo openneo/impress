@@ -3,6 +3,7 @@ class Donation < ActiveRecord::Base
 
   attr_accessible :donor_name
 
+  belongs_to :campaign
   belongs_to :user
   has_many :features, class_name: 'DonationFeature'
 
@@ -10,8 +11,10 @@ class Donation < ActiveRecord::Base
     "#{id}-#{secret}"
   end
 
-  def self.create_from_charge(user, params)
+  def self.create_from_charge(campaign, user, params)
     amount = (BigDecimal.new(params[:amount]) * 100).floor
+
+    campaign.progress += amount
 
     customer = Stripe::Customer.create(
       card: params[:stripe_token]
@@ -24,10 +27,10 @@ class Donation < ActiveRecord::Base
       :currency    => 'usd'
     )
 
-    donation = Donation.new
+    donation = campaign.donations.build
     donation.amount = amount
     donation.charge_id = charge.id
-    donation.user_id = user.try(:id)
+    donation.user = user
     donation.donor_name = user.try(:name)
     donation.donor_email = params[:donor_email]
     donation.secret = new_secret
@@ -39,6 +42,7 @@ class Donation < ActiveRecord::Base
     end
 
     Donation.transaction do
+      campaign.save!
       donation.save!
       features.each(&:save!)
     end

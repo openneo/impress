@@ -20,21 +20,19 @@ module ApplicationHelper
     end
   end
 
-  CAMPAIGN_ACTIVE = false
-  def campaign_progress(options={}, &block)
-    if CAMPAIGN_ACTIVE || options[:always]
-      include_campaign_progress_requirements
-
+  def campaign_progress(campaign, &block)
+    if campaign
       if block_given?
         content = capture(&block)
       else
-        content = link_to('We made it! Image Mode has been released.', donate_path) +
-          link_to('Read more', donate_path, :class => 'button')
+        content = link_to('Help Dress to Impress stay online!', donate_path) +
+          link_to('Learn more', donate_path, :class => 'button')
       end
 
-      html = content_tag(:div, nil, :class => 'campaign-progress') +
-        content_tag(:div, content, :class => 'campaign-progress-label')
-      content_tag(:div, html, :class => 'campaign-progress-wrapper')
+      meter = content_tag(:div, nil, :class => 'campaign-progress',
+        style: "width: #{campaign.progress_percent}%;")
+      label = content_tag(:div, content, :class => 'campaign-progress-label')
+      content_tag(:div, meter + label, :class => 'campaign-progress-wrapper')
     end
   end
 
@@ -57,21 +55,6 @@ module ApplicationHelper
       key, value = pair
       html + content_tag('p', value, :class => "flash #{key}")
     end)
-  end
-
-  def include_campaign_progress_requirements
-    unless @included_campaign_progress_requirements
-      content_for(:javascripts,
-        include_javascript_libraries(:jquery) +
-          javascript_include_tag('pledgie')
-      )
-
-      content_for(:meta,
-        tag(:meta, :name => 'pledgie-campaign-id', :content => PLEDGIE_CAMPAIGN_ID)
-      )
-
-      @included_campaign_progress_requirements = true
-    end
   end
 
   def hide_home_link

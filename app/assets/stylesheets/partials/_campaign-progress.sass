@@ -1,14 +1,13 @@
 =campaign-progress
   .campaign-progress-wrapper
     +border-radius(8px)
-    background: #aaa
-    background-image: linear-gradient(color-stops(#ccc, #aaa))
+    background: desaturate(lighten($module-border-color, 30%), 85%)
+    background-image: linear-gradient(color-stops(desaturate(lighten($module-border-color, 50%), 85%), desaturate(lighten($module-border-color, 30%), 85%)))
 
     border: 4px solid $module-border-color
     clear: both
     margin-bottom: 1.5em
     position: relative
-    visibility: hidden
 
     .button
       +loud-awesome-button-color
