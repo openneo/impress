@@ -25,8 +25,9 @@ module ApplicationHelper
       if block_given?
         content = capture(&block)
       else
-        content = link_to('Help Dress to Impress stay online!', donate_path) +
-          link_to('Learn more', donate_path, :class => 'button')
+        content = link_to(
+          content_tag(:span, 'Help Dress to Impress stay online!') +
+          content_tag(:span, 'Learn more', :class => 'button'), donate_path)
       end
 
       meter = content_tag(:div, nil, :class => 'campaign-progress',

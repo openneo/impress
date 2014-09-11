@@ -10,13 +10,11 @@
     position: relative
 
     .button
+      +awesome-button
       +loud-awesome-button-color
       font-size: 75%
       margin-left: 1em
       padding: .25em .75em
-
-      &:after
-        content: none
 
   .campaign-progress
     background: $module-border-color
@@ -28,6 +26,7 @@
 
   .campaign-progress-label
     +text-shadow(#777, -1px, -1px, 0)
+    color: white
     font-size: 150%
     left: 0
     position: absolute
@@ -35,8 +34,14 @@
     text-align: center
     width: 100%
 
-    &, a
-      color: white
+    a
+      color: inherit
+      display: block
+      text-decoration: none
+
+    .button
+      position: relative
+      top: -2px /* lame hack to align well with text; sigh */
 
   &.campaign-loaded
     .campaign-progress-wrapper
