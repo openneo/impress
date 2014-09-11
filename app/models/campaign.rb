@@ -4,7 +4,7 @@ class Campaign < ActiveRecord::Base
   has_many :donations
 
   def progress_percent
-    (progress.to_f / goal) * 100
+    [(progress.to_f / goal) * 100, 100].min
   end
 
   def self.current
