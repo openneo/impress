@@ -1,7 +1,6 @@
 source 'http://rubygems.org'
 
 gem 'dotenv-rails', :groups => [:development, :test]
-gem 'dotenv-deployment'
 
 gem 'rails', '= 3.2.18'
 #gem 'sqlite3-ruby', '~> 1.3.1', :require => 'sqlite3'
