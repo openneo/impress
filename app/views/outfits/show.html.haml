@@ -1,5 +1,5 @@
 - title(@outfit.name || t('.default_outfit_name'))
-- content_for :before_title, campaign_progress
+- content_for :before_title, campaign_progress(@campaign)
 
 - open_graph :type => 'openneo-impress:outfit', :title => yield(:title),
   :url => outfit_url(@outfit)
