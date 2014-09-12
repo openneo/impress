@@ -328,6 +328,7 @@ DEPENDENCIES
   character-encodings (~> 0.4.1)
   compass-rails (~> 1.0.3)
   devise (~> 2.2.3)
+  dotenv-deployment
   dotenv-rails
   em-http-request!
   em-mysqlplus!
