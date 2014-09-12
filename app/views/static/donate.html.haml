@@ -1,9 +1,9 @@
 - title "Support Dress to Impress"
 
-= campaign_progress(@campaign) do
-  We've received #{number_to_currency(@campaign.progress / 100.0)}
-  toward our hosting costs this year.
-  - if @campaign.progress > 0
+- if @campaign.progress > 0
+  = campaign_progress(@campaign) do
+    We've received #{number_to_currency(@campaign.progress / 100.0)}
+    toward our hosting costs this year.
     Thanks so much!
 
 = form_tag donations_path, method: 'POST', id: 'donation-form',
@@ -61,18 +61,18 @@
     [aws]: http://aws.amazon.com/
     [matts_bat]: http://www.neopets.com/petlookup.phtml?pet=matts_bat
 
-%h2 Thanks to our lovely donors!
+- if @donations.present?
+  %h2 Thanks to our lovely donors!
+  %ul#outfits
+    - @donations.each do |donation|
+      - donation.features.each do |feature|
+        %li
+          - if feature.outfit_id? && feature.outfit.image?
+            = link_to image_tag(feature.outfit.image.small.url), feature.outfit
+          - else
+            = image_tag 'default_preview.png'
 
-%ul#outfits
-  - @donations.each do |donation|
-    - donation.features.each do |feature|
-      %li
-        - if feature.outfit_id? && feature.outfit.image?
-          = link_to image_tag(feature.outfit.image.small.url), feature.outfit
-        - else
-          = image_tag 'default_preview.png'
-
-        %header Thanks, #{donation.donor_name.presence || 'Anonymous'}!
+          %header Thanks, #{donation.donor_name.presence || 'Anonymous'}!
 
 #fine-print
   %h2 Some notes on featured outfits
