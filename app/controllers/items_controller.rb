@@ -17,6 +17,7 @@ class ItemsController < ApplicationController
         assign_closeted!
         respond_to do |format|
           format.html {
+            @campaign = Campaign.current rescue nil
             if @items.total_count == 1
               redirect_to @items.first
             else
@@ -47,6 +48,7 @@ class ItemsController < ApplicationController
     else
       respond_to do |format|
         format.html {
+          @campaign = Campaign.current rescue nil
           unless localized_fragment_exist?('items#index newest_items')
             @newest_items = Item.newest.includes(:translations).limit(18)
           end
