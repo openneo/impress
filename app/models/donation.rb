@@ -47,7 +47,7 @@ class Donation < ActiveRecord::Base
       features.each(&:save!)
     end
 
-    DonationMailer.thank_you_email(donation, customer.email).deliver
+    DonationMailer.thank_you_email(donation, donation.donor_email).deliver
 
     donation
   end
