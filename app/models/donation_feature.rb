@@ -2,7 +2,7 @@ class DonationFeature < ActiveRecord::Base
   belongs_to :donation
   belongs_to :outfit
 
-  validates :outfit, presence: true, if: :outfit_id?
+  validates :outfit, presence: true, if: :outfit_id_present?
 
   delegate :donor_name, to: :donation
 
@@ -12,5 +12,9 @@ class DonationFeature < ActiveRecord::Base
 
   def outfit_url=(outfit_url)
     self.outfit_id = outfit_url.split('/').last rescue nil
+  end
+
+  def outfit_id_present?
+    outfit_id.present?
   end
 end

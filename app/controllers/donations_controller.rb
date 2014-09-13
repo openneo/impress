@@ -28,7 +28,7 @@ class DonationsController < ApplicationController
         @features.each(&:save!)
       end
     rescue ActiveRecord::RecordInvalid
-      flash[:error] = "Couldn't save donation details. Do those outfits exist?"
+      flash[:alert] = "Couldn't save donation details. Do those outfits exist?"
       redirect_to @donation
     else
       flash[:success] = 'Donation details saved! ' +
