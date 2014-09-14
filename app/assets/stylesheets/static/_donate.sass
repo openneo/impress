@@ -57,6 +57,7 @@ body.static-donate
 
   #outfits
     +outfits-list
+    text-align: center
 
     > li
       +outfit
@@ -68,12 +69,29 @@ body.static-donate
       header, footer
         font-size: 85%
         padding: $outfit-banner-v-padding $outfit-banner-h-padding
-        text-align: center
         width: $outfit-banner-inner-width
 
       img
         height: $outfit-inner-height
         width: $outfit-inner-width
+
+      &.banner
+        background-image: url(http://images.neopets.com/themes/004_bir_a2e60/footer_bg.png)
+        background-position: 0 -60px
+        border: 2px solid #006
+        color: white
+        height: 100px
+        line-height: 100px
+        margin: 4px 0
+        text-shadow: #335 2px 2px 1px
+        width: $container-width - 4px
+
+        span
+          +inline-block
+          font-size: 32px
+          font-weight: bold
+          line-height: 1.5
+          vertical-align: middle
 
   #fine-print
     font-size: 85%

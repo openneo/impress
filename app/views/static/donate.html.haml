@@ -65,14 +65,20 @@
   %h2 Thanks to our lovely donors!
   %ul#outfits
     - @donations.each do |donation|
+      - if large_donation?(donation.amount)
+        %li.banner
+          %span
+            Thanks, #{donation.donor_name}, for donating
+            #{number_to_currency(donation.amount / 100.0)}!
       - donation.features.each do |feature|
-        %li
-          - if feature.outfit_id? && feature.outfit.image?
-            = link_to image_tag(feature.outfit.image.small.url), feature.outfit
-          - else
-            = image_tag 'default_preview.png'
+        - if outfit_image?(feature.outfit) || !large_donation?(donation.amount)
+          %li
+            - if outfit_image?(feature.outfit)
+              = link_to image_tag(feature.outfit.image.small.url), feature.outfit
+            - else
+              = image_tag 'default_preview.png'
 
-          %header Thanks, #{donation.donor_name.presence || 'Anonymous'}!
+            %header Thanks, #{donation.donor_name.presence || 'Anonymous'}!
 
 #fine-print
   %h2 Some notes on featured outfits
