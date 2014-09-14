@@ -37,7 +37,7 @@
     live on [Amazon Web Services][aws] for about $25/mo (it varies by usage),
     so that leaves us at about $65/mo. Add in $10 for the domain name and $10
     room to grow (our Amazon usage, and therefore costs, are on the rise), and
-    that comes to an annual budget of $800.
+    that comes to an annual budget of $800 USD.
 
     **So, we're here to ask for help.** If you have some spare change to send
     our way, we'll gladly accept
@@ -81,9 +81,23 @@
             %header Thanks, #{donation.donor_name.presence || 'Anonymous'}!
 
 #fine-print
+  %h2 Other ways to donate
+  :markdown
+    We were considering PayPal for accepting donations, but ended up choosing
+    Stripe as our primary donation method because it's easy to integrate and
+    because it's well-trusted in the developer community—and because we've
+    heard too many horror stories of small organizations having their PayPal
+    accounts locked down when they suddenly start receiving a bunch of
+    transactions. Scary stuff.
+
+    But, even though PayPal isn't integrated into the site, we'll still gladly
+    accept individual donations through PayPal if you'd prefer.
+    #{mail_to 'webmaster@openneo.net', "Drop us an email and we'll figure it
+    out."} Thanks!
+
   %h2 Some notes on featured outfits
   :markdown
-    When you make a donation, we'll divide the amount by $5, and, rounding
+    When you make a donation, we'll divide the amount by $5 USD, and, rounding
     down, that's how many of your outifts we'll feature. Cool, eh?
 
     This is our way of publicly thanking our donors.
