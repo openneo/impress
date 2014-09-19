@@ -13,32 +13,24 @@
     %h1= t 'app_name'
     %h2= t '.tagline'
 
-  - localized_cache "outfits#new start_from_scratch_form pranks_funny=#{Color.pranks_funny?}" do
-    = form_tag wardrobe_path, method: 'GET', id: 'start-from-scratch', authenticity_token: false do
-      %fieldset
-        -#%legend= t '.start_from_scratch.legend'
-        %legend Choose your pet's appearance
-        = pet_attribute_select 'color', @colors, 8
-        = pet_attribute_select 'species', @species
-        %button{:type => "submit"}
-          -#= t('.start_from_scratch.submit')
-          Plan outfit!
-
   = form_tag remote_load_pet_path, method: 'GET', id: 'load-pet-to-wardrobe' do
     = hidden_field_tag 'impress_user', current_user.try(:id)
     - localized_cache action_suffix: 'outfits#new main_load_pet_form_content' do
       = hidden_field_tag 'redirect', "#{wardrobe_url}\#{q}"
       %fieldset
-        -#%legend= t '.load_pet.legend'
-        %legend
-          Or enter your pet's name (but, well,
-          = link_to 'downtime', 'https://www.facebook.com/notes/neopets/transition-update/757915977580469'
-          = succeed ')' do
-            %img{src: 'http://images.neopets.com/neoboards/smilies/tongue.gif'}
+        %legend= t '.load_pet.legend'
         = pet_name_tag :id => 'main-pet-name'
         %button{:type => "submit"}
-          -#= t '.load_pet.submit'
-          Go
+          = t '.load_pet.submit'
+
+  - localized_cache "outfits#new start_from_scratch_form pranks_funny=#{Color.pranks_funny?}" do
+    = form_tag wardrobe_path, method: 'GET', id: 'start-from-scratch', authenticity_token: false do
+      %fieldset
+        %legend= t '.start_from_scratch.legend'
+        = pet_attribute_select 'color', @colors, 8
+        = pet_attribute_select 'species', @species
+        %button{:type => "submit"}
+          = t('.start_from_scratch.submit')
 
 %ul#sections
   - localized_cache :action_suffix => 'your_items_module' do
