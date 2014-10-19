@@ -461,7 +461,7 @@
   var contactAddOption = $('<option/>',
     {text: contactField.attr('data-new-text'), value: -1});
   contactAddOption.appendTo(contactField);
-  var currentUserId = $('meta[name=current-user-id').attr('content');
+  var currentUserId = $('meta[name=current-user-id]').attr('content');
 
   function submitContactForm() {
     var data = contactForm.serialize();
