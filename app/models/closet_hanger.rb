@@ -42,9 +42,19 @@ class ClosetHanger < ActiveRecord::Base
   
   if Flex::Configuration.hangers_enabled
     flex.parent :item, 'item' => 'closet_hanger'
-    flex.sync self
+    flex.sync self, callbacks: [:save] # we handle destroy more carefully
   end
-  
+
+  after_destroy do
+    begin
+      flex.remove
+    rescue Flex::HttpError
+      # This usually means that the record was already dropped from
+      # the search engine. Weird, but okay; if the search engine is
+      # erroneously in the correct state, let it be.
+    end
+  end
+
   def flex_source
     {
       :user_id => user_id,
