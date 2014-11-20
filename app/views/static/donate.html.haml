@@ -81,7 +81,7 @@
   %h2 Thanks to our lovely donors!
   %ul#outfits
     - @donations.each do |donation|
-      - if large_donation?(donation.amount)
+      -# if large_donation?(donation.amount)
         %li.banner
           %span
             Thanks, #{donation.donor_name}, for donating
