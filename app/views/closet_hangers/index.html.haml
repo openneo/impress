@@ -75,6 +75,8 @@
                   = closet_visibility_descriptions
               - if has_lists?(owned)
                 %h4= t '.unlisted.header'
+            - if !@public_perspective
+              = render partial: 'closet_lists/trading_neomail_warning', locals: {list: @user.null_closet_list(owned), user: @user}
             .closet-list-content
               .closet-list-hangers
                 = render_unlisted_closet_hangers(owned)

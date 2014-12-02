@@ -11,6 +11,9 @@
           = submit_tag t('.delete'), :confirm => closet_list_delete_confirmation(closet_list)
     %h4= closet_list.name
 
+  - if show_controls
+    = render partial: 'closet_lists/trading_neomail_warning', locals: {list: closet_list, user: @user}
+
   .closet-list-content
     - if closet_list.description?
       = closet_list_description_format closet_list

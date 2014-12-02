@@ -185,6 +185,12 @@ en:
           Are you sure you want to delete "%{list_name}"? Even if you do, we'll
           remember that you want these items.
       empty: This list is empty.
+      trading_neomail_warning_html:
+        You've marked this list as Trading, so folks will discover it via Dress
+        to Impress, but they might not know how to contact you. If you'd like
+        to hear from those people, <strong>set a Neomail address at the top of
+        the page</strong>.
+        (If not, maybe you want a Public list instead of Trading.)
       
     edit:
       title: Editing list "%{list_name}"
