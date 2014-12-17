@@ -179,6 +179,12 @@ class Item < ActiveRecord::Base
         color = match.captures.detect(&:present?)
         return Color.find_by_name(color.downcase)
       end
+
+      # HACK: omg I hate this. why can't the Baby Raindorf Hoodie Robe just
+      # contain the standard pattern? >_>
+      if description.include? 'This soft robe is sure to keep your little one warm and toasty.'
+        return Color.find_by_name('baby')
+      end
     end
   end
   public
