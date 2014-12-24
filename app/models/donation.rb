@@ -16,16 +16,24 @@ class Donation < ActiveRecord::Base
 
     campaign.progress += amount
 
-    customer = Stripe::Customer.create(
-      card: params[:stripe_token]
-    )
+    charge_params = {
+      amount: amount,
+      description: 'Donation (thank you!)',
+      currency: 'usd'
+    }
 
-    charge = Stripe::Charge.create(
-      :customer    => customer.id,
-      :amount      => amount,
-      :description => 'Donation (thank you!)',
-      :currency    => 'usd'
-    )
+    if params[:stripe_token_type] == 'card'
+      customer = Stripe::Customer.create(
+        card: params[:stripe_token]
+      )
+      charge_params[:customer] = customer.id
+    elsif params[:stripe_token_type] == 'bitcoin_receiver'
+      charge_params[:card] = params[:stripe_token]
+    else
+      raise ArgumentError, "unexpected stripe token type #{params[:stripe_token_type]}"
+    end
+
+    charge = Stripe::Charge.create(charge_params)
 
     donation = campaign.donations.build
     donation.amount = amount

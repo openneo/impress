@@ -10,6 +10,7 @@
     'data-checkout-image' => image_path('default_preview.png'),
     'data-checkout-publishable-key' => Rails.configuration.stripe[:publishable_key] do
   = hidden_field_tag 'donation[stripe_token]'
+  = hidden_field_tag 'donation[stripe_token_type]'
   = hidden_field_tag 'donation[donor_email]'
   %header
     %p#donation-form-title

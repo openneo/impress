@@ -1,27 +1,28 @@
 (function() {
   var donationForm = document.getElementById('donation-form');
-  var amountField = donationForm.querySelector(
-    '[name=donation\\[amount\\]]');
-  var emailField = donationForm.querySelector(
-    '[name=donation\\[donor_email\\]]');
-  var tokenField = donationForm.querySelector(
-    '[name=donation\\[stripe_token\\]]');
+
+  function field(name) {
+    return donationForm.querySelector(
+      'input[name=donation\\[' + name + '\\]]');
+  }
 
   var checkout = StripeCheckout.configure({
     key: donationForm.getAttribute('data-checkout-publishable-key'),
     image: donationForm.getAttribute('data-checkout-image'),
     token: function(token) {
-      tokenField.value = token.id;
-      emailField.value = token.email;
+      field('stripe_token').value = token.id;
+      field('stripe_token_type').value = token.type;
+      field('donor_email').value = token.email;
       donationForm.submit();
-    }
+    },
+    bitcoin: true
   });
 
   donationForm.addEventListener('submit', function(e) {
-    if (!tokenField.value) {
+    if (!field('stripe_token').value) {
       e.preventDefault();
 
-      var amount = Math.floor(parseFloat(amountField.value) * 100);
+      var amount = Math.floor(parseFloat(field('amount').value) * 100);
 
       if (!isNaN(amount)) {
         checkout.open({
