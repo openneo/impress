@@ -7,7 +7,7 @@ class DonationFeature < ActiveRecord::Base
   delegate :donor_name, to: :donation
 
   def as_json(options={})
-    {donor_name: donor_name, outfit_image_url: outfit.image.medium.url}
+    {donor_name: donor_name, outfit_image_url: outfit_image_url}
   end
 
   def outfit_url=(outfit_url)
@@ -16,5 +16,9 @@ class DonationFeature < ActiveRecord::Base
 
   def outfit_id_present?
     outfit_id.present?
+  end
+
+  def outfit_image_url
+    outfit && outfit.image ? outfit.image.medium.url : nil
   end
 end
