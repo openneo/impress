@@ -20,6 +20,12 @@ module ApplicationHelper
     end
   end
 
+  def advertise_campaign_progress(campaign, &block)
+    if campaign && campaign.advertised?
+      campaign_progress(campaign, &block)
+    end
+  end
+
   def campaign_progress(campaign, &block)
     if campaign
       if block_given?
