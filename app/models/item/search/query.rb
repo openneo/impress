@@ -171,7 +171,7 @@ class Item
           end
         },
         :pet_type => lambda { |keyword|
-          name1, name2 = keyword.split('-')
+          name1, dash, name2 = keyword.rpartition('-')
           [[name1, name2], [name2, name1]].each do |species_name, color_name|
             species = Species.find_by_name(species_name)
             next if species.nil?
