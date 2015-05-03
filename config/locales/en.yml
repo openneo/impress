@@ -623,6 +623,7 @@ en:
             plain: Plain
             html: HTML
             bbcode: BBCode
+          download: Download
       search:
         header: Add an item
         form:

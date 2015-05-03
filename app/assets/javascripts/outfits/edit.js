@@ -849,11 +849,24 @@ View.Outfits = function (wardrobe) {
     function formatUrl(key, url) {
       sharing_url_els[key].val(url);
     }
+
+    function formatDownload(key, outfit) {
+      var el = $('#preview-sharing-download-' + key + '-image');
+
+      var url = urls[key + '_image'];
+      var outfit_name = outfit.name === null ? ('Outfit ' + outfit.id) : outfit.name;
+      var format_name = key.charAt(0).toUpperCase() + key.substr(1);
+
+      el.attr('href', url);
+      el.attr('download', 'Dress to Impress - ' + outfit_name + ' - ' + format_name + '.png');
+    }
     
     wardrobe.image_subscriptions.bind('imageEnqueued', function (outfit) {
       if(outfit.id == current_shared_outfit.id) {
         log("Sharing thumbnail enqueued for outfit", outfit);
         WRAPPER.removeClass('thumbnail-loaded');
+
+        $('#preview-sharing-urls a').removeAttr('href').removeAttr('download');
       }
     });
     
@@ -864,6 +877,11 @@ View.Outfits = function (wardrobe) {
         thumbnail_el.attr('src', src);
         WRAPPER.addClass('thumbnail-loaded');
         WRAPPER.addClass('thumbnail-available');
+
+        formatDownload('large', outfit);
+        formatDownload('medium', outfit);
+        formatDownload('small', outfit);
+
         unsubscribeFromImage(outfit);
       }
     });
@@ -878,6 +896,12 @@ View.Outfits = function (wardrobe) {
       log("Sharing sees the setOutfit signal, and will set", outfit);
       sharing.setOutfit(outfit);
     });
+
+    this.initialize = function() {
+      if ('download' in document.createElement('a')) {
+        $('#preview-sharing-urls').addClass('support-download');
+      }
+    }
   }
 
   /* Saving */
@@ -948,6 +972,8 @@ View.Outfits = function (wardrobe) {
   wardrobe.outfits.bind('outfitNotFound', function () {
     outfit_not_found_el.notify();
   });
+
+  this.initialize = sharing.initialize();
 }
 
 View.PetStateForm = function (wardrobe) {

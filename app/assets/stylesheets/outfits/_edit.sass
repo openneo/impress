@@ -634,12 +634,23 @@ body.outfits-edit
         width: 100%
         
         label
-          display: block
+          display: inline-block
           font-weight: bold
         
         input
           display: block
           width: 100%
+
+        a
+          display: none
+          float: right
+          font-size: 75%
+          margin-top: .25em
+          text-decoration: none
+
+      &.support-download
+        li a
+          display: block
     
     #preview-sharing-url-formats
       +sidebar-view-child

@@ -565,6 +565,7 @@ en-MEEP:
             plain: Pleen
             html: HTMeepL
             bbcode: BBMeep
+          download: Downmeep
       search:
         header: Meep an item
         form:

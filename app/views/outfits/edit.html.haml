@@ -77,14 +77,17 @@
             %li
               %label{:for => 'preview-sharing-large-image-url'}
                 = t '.sidebar.sharing.links.images.large'
+              %a#preview-sharing-download-large-image{download: true}= t '.sidebar.sharing.download'
               %input#preview-sharing-large-image-url.outfit-url{:type => 'text'}
             %li
               %label{:for => 'preview-sharing-medium-image-url'}
                 = t '.sidebar.sharing.links.images.medium'
+              %a#preview-sharing-download-medium-image{download: true}= t '.sidebar.sharing.download'
               %input#preview-sharing-medium-image-url.outfit-url{:type => 'text'}
             %li
               %label{:for => 'preview-sharing-small-image-url'}
                 = t '.sidebar.sharing.links.images.small'
+              %a#preview-sharing-download-small-image{download: true}= t '.sidebar.sharing.download'
               %input#preview-sharing-small-image-url.outfit-url{:type => 'text'}
           %ul#preview-sharing-url-formats
             %li.active{'data-format' => 'plain'}
