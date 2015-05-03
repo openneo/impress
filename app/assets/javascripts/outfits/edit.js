@@ -497,7 +497,7 @@ View.Outfits = function (wardrobe) {
   }
 
   $('#preview-sidebar-navbar-closet').click(showCloset);
-  $('#preview-sidebar-navbar-sharing').click(function () {
+  $('#preview-sidebar-navbar-sharing, #preview-mode-download').click(function () {
     sharing.startLoading();
     wardrobe.outfits.share();
     showSharing();

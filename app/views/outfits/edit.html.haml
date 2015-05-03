@@ -36,7 +36,8 @@
           %li#preview-mode-image= t '.preview.mode.image.name'
         = link_to t('.preview.big_picture'), 'javascript:void(0)',
           id: 'toggle-big-picture'
-        = link_to t('.preview.mode.image.report_broken'), '#',
+        = link_to t('.preview.download'), 'javascript:void(0)', id: 'preview-mode-download'
+        = link_to t('.preview.mode.image.report_broken'), 'javascript:void(0)',
           :id => 'report-broken-image', :target => '_blank', 'data-base-url' => new_broken_image_report_path
     #preview-sidebar
       %nav#preview-sidebar-navbar

@@ -504,6 +504,8 @@ en-MEEP:
       preview:
         requirements:
           Flash and Javascript (but not Java!) are required to meep outfeets.
+        big_picture: Big Meepit
+        download: Downmeep
         mode:
           flash:
             name: Fleesh
