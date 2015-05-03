@@ -1090,20 +1090,22 @@ View.PreviewAdapterForm = function (wardrobe) {
   }
 }
 
-View.ReportBrokenImage = function (wardrobe) {
-  var link = $('#report-broken-image');
-  var baseURL = link.attr('data-base-url');
+View.AssetLinks = function (wardrobe) {
+  var links = $('#swf-links, #report-broken-image');
 
   function updateLink() {
-    var assets = wardrobe.outfits.getVisibleAssets();
-    var url = baseURL + "?";
+    links.each(function() {
+      var link = $(this);
+      var assets = wardrobe.outfits.getVisibleAssets();
+      var url = link.attr('data-base-url') + "?";
 
-    for(var i = 0; i < assets.length; i++) {
-      if(i > 0) url += "&";
-      url += "asset_ids[" + assets[i].type + "][]=" + assets[i].id;
-    }
+      for(var i = 0; i < assets.length; i++) {
+        if(i > 0) url += "&";
+        url += "asset_ids[" + assets[i].type + "][]=" + assets[i].id;
+      }
 
-    link.attr('href', url);
+      link.attr('href', url);
+    });
   }
 
   wardrobe.outfits.bind('updateWornItems', updateLink);

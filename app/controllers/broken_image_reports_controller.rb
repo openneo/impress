@@ -1,12 +1,6 @@
 class BrokenImageReportsController < ApplicationController
   def new
-    ids = params[:asset_ids]
-    assets = SwfAsset.arel_table
-    @swf_assets = SwfAsset.where(:has_image => true).where((
-        assets[:remote_id].in(ids[:biology]).and(assets[:type].eq('biology'))
-      ).or(
-        assets[:remote_id].in(ids[:object]).and(assets[:type].eq('object'))
-      ))
+    @swf_assets = SwfAsset.from_wardrobe_link_params(params[:asset_ids]).where(:has_image => true)
   end
 
   def create

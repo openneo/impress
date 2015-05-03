@@ -32,7 +32,11 @@ OpenneoImpressItems::Application.routes.draw do
   end
   resources :outfits, :only => [:show, :create, :update, :destroy]
   resources :pet_attributes, :only => [:index]
-  resources :swf_assets, :only => [:index, :show]
+  resources :swf_assets, :only => [:index, :show] do
+    collection do
+      get :links
+    end
+  end
   resources :zones, only: [:index]
 
   scope 'import' do

@@ -237,6 +237,14 @@ class SwfAsset < ActiveRecord::Base
     self.url = "#{NEOPETS_ASSET_SERVER}/#{data['url']}"
   end
 
+  def self.from_wardrobe_link_params(ids)
+    where((
+      arel_table[:remote_id].in(ids[:biology]).and(arel_table[:type].eq('biology'))
+    ).or(
+      arel_table[:remote_id].in(ids[:object]).and(arel_table[:type].eq('object'))
+    ))
+  end
+
   before_create do
     uri = URI.parse url
     begin

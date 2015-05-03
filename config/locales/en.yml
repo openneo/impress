@@ -564,6 +564,7 @@ en:
           Flash and Javascript (but not Java!) are required to preview outfits.
         big_picture: Big Picture
         download: Download
+        swf_links: SWF Links
         mode:
           flash:
             name: Flash
@@ -816,6 +817,10 @@ en:
         Please try again later!
       neopia_error: "We couldn't load that pet: \"%{message}\". Try again later?"
   
+  swf_assets:
+    links:
+      title: Links to SWFs
+
   users:
     index:
       not_found: We don't have a user named %{name}. Is it spelled correctly?
