@@ -1,8 +1,13 @@
+require 'rocketamf/remote_gateway'
 require 'open-uri'
 
 class NeopetsUser
   include ActiveModel::Conversion
   extend ActiveModel::Naming
+
+  GATEWAY_URL = 'http://www.neopets.com/amfphp/gateway.php'
+  GET_PETS_METHOD = RocketAMF::RemoteGateway.new(GATEWAY_URL).
+    service('MobileService').action('getPets')
 
   attr_accessor :username
   attr_reader :hangers, :list_id
@@ -27,15 +32,24 @@ class NeopetsUser
   end
 
   def load!
-    user = Neopets::User.new(@username)
-    
+    neopets_language_code = I18n.compatible_neopets_language_code_for(I18n.locale)
     begin
-      pets = user.pets
-    rescue Neopets::User::Error => e
+      envelope = GET_PETS_METHOD.request([@username]).post(
+        :timeout => 4,
+        :headers => {
+          'Cookie' => "lang=#{neopets_language_code}"
+        }
+      )
+    rescue RocketAMF::RemoteGateway::AMFError => e
       raise NotFound, e.message
+    rescue RocketAMF::RemoteGateway::ConnectionError => e
+      raise NotFound, e.message, e.backtrace
     end
 
-    pets = pets.map { |pet| Pet.find_or_initialize_by_name(pet.name) }
+
+    pets_data = envelope.messages[0].data.body
+    raise NotFound if pets_data == false
+    pets = pets_data.map { |pet| Pet.find_or_initialize_by_name(pet['name']) }
     items = pets.each(&:load!).map(&:items).flatten
     item_ids = items.map(&:id)
     item_quantities = {}
