@@ -13,7 +13,11 @@ class PetsController < ApplicationController
       redirect_to roulette_path
     else
       raise Pet::PetNotFound unless params[:name]
-      @pet = Pet.load(params[:name], :item_scope => Item.includes(:translations))
+      @pet = Pet.load(
+        params[:name],
+        :item_scope => Item.includes(:translations),
+        :timeout => 1
+      )
       points = contribute(current_user, @pet)
       
       respond_to do |format|
