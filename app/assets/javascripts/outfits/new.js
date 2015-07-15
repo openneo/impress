@@ -4,8 +4,7 @@ var disqus_shortname = 'dresstoimpress';
 
 var preview_el = $('#pet-preview'),
   img_el = preview_el.find('img'),
-  response_el = preview_el.find('span'),
-  name_el = $('#main-pet-name');
+  response_el = preview_el.find('span');
 
 var defaultPreviewUrl = img_el.attr('src');
 
@@ -29,7 +28,7 @@ var Preview = {
     response_el.empty();
     $('#preview-' + key + '-template').tmpl(options).appendTo(response_el);
   },
-  updateWithName: function () {
+  updateWithName: function (name_el) {
     var name = name_el.val(), job;
     if(name) {
       currentName = name;
@@ -117,7 +116,7 @@ Preview.Job.Name = function (name) {
   Preview.Job.apply(this, [name, 'cpn']);
 
   this.visit = function() {
-    name_el.val(this.name).closest('form').submit();
+    $('.main-pet-name').val(this.name).closest('form').submit();
   }
 }
 
@@ -153,15 +152,19 @@ Preview.Job.Feature = function(feature) {
 $(function () {
   var previewWithNameTimeout;
   
+  var name_el = $('.main-pet-name');
   name_el.val(PetQuery.name);
-  Preview.updateWithName();
+  Preview.updateWithName(name_el);
   
   name_el.keyup(function () {
     if(previewWithNameTimeout) {
       clearTimeout(previewWithNameTimeout);
       Preview.Job.current.loading = false;
     }
-    previewWithNameTimeout = setTimeout(Preview.updateWithName, 250);
+    var name_el = $(this);
+    previewWithNameTimeout = setTimeout(function() {
+      Preview.updateWithName(name_el);
+    }, 250);
   });
   
   img_el.load(function () {
@@ -284,11 +287,21 @@ $(function () {
     }
   }
 
-  $('#load-pet-to-wardrobe').submit(function(e) {
-    if (name_el.val() === "" && Preview.Job.current) {
+  $('.load-pet-to-wardrobe').submit(function(e) {
+    if ($(this).find('.main-pet-name').val() === "" && Preview.Job.current) {
       e.preventDefault();
       Preview.Job.current.visit();
     }
+  });
+
+  function setNeopiaStatus(isOnline) {
+    $('#outfit-forms').attr('data-neopia-status', isOnline ? 'online' : 'offline');
+  }
+
+  Neopia.Status.get().then(function(r) {
+    setNeopiaStatus(!!r.status);
+  }).fail(function() {
+    setNeopiaStatus(false);
   });
 });
 

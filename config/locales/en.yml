@@ -685,6 +685,17 @@ en:
         pet_type_not_found:
           We haven't seen a %{color_name} %{species_name}. Have you?
         pet_not_found: Pet not found.
+      submit:
+        primary: Plan my outfit!
+        secondary: Go
+      neopia_online:
+        load_pet: Enter your pet's name
+        start_from_scratch: Or start from scratch
+      neopia_offline:
+        start_from_scratch: Choose a pet to get started
+        load_pet:
+          main_html: Or try your pet's name %{link}
+          link_content: (but it looks like Neopets.com is ignoring us)
       load_pet:
         legend: Enter your pet's name
         submit: Plan my outfit!

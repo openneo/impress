@@ -474,12 +474,12 @@ pt:
       preview:
         pet_type_not_found: Nós nunca vimos um %{species_name} %{color_name} . Você viu?
         pet_not_found: Pet não encontrado.
-      load_pet:
-        legend: Digite o nome do seu pet
-        submit: Planeje minha roupa!
-      start_from_scratch:
-        legend: Ou comece do zero
-        submit: Vai
+      submit:
+        primary: Planeje minha roupa!
+        secondary: Vai
+      neopia_online:
+        load_pet: Digite o nome do seu pet
+        start_from_scratch: Ou comece do zero
       your_items:
         tagline: Acompanhe e troque!
         description: Faça listas de itens que você tem e que procura, e compartilhe com o mundo.

@@ -13,24 +13,45 @@
     %h1= t 'app_name'
     %h2= t '.tagline'
 
-  = form_tag remote_load_pet_path, method: 'GET', id: 'load-pet-to-wardrobe' do
-    = hidden_field_tag 'impress_user', current_user.try(:id)
-    - localized_cache action_suffix: 'outfits#new main_load_pet_form_content' do
-      = hidden_field_tag 'redirect', "#{wardrobe_url}\#{q}"
-      %fieldset
-        %legend= t '.load_pet.legend'
-        = pet_name_tag :id => 'main-pet-name'
-        %button{:type => "submit"}
-          = t '.load_pet.submit'
+  %div{'data-require-neopia-status' => 'online'}
+    = form_tag remote_load_pet_path, method: 'GET', class: 'primary load-pet-to-wardrobe' do
+      = hidden_field_tag 'impress_user', current_user.try(:id)
+      - localized_cache action_suffix: 'outfits#new neopia_online main_load_pet_form_content' do
+        = hidden_field_tag 'redirect', "#{wardrobe_url}\#{q}"
+        %fieldset
+          %legend= t '.neopia_online.load_pet'
+          = pet_name_tag class: 'main-pet-name'
+          %button{:type => "submit"}
+            = t '.submit.primary'
 
-  - localized_cache "outfits#new start_from_scratch_form pranks_funny=#{Color.pranks_funny?}" do
-    = form_tag wardrobe_path, method: 'GET', id: 'start-from-scratch', authenticity_token: false do
-      %fieldset
-        %legend= t '.start_from_scratch.legend'
-        = pet_attribute_select 'color', @colors, 8
-        = pet_attribute_select 'species', @species
-        %button{:type => "submit"}
-          = t('.start_from_scratch.submit')
+    - localized_cache "outfits#new neopia_online start_from_scratch_form pranks_funny=#{Color.pranks_funny?}" do
+      = form_tag wardrobe_path, method: 'GET', class: 'secondary start-from-scratch', authenticity_token: false do
+        %fieldset
+          %legend= t '.neopia_online.start_from_scratch'
+          = pet_attribute_select 'color', @colors, 8
+          = pet_attribute_select 'species', @species
+          %button{:type => "submit"}
+            = t('.submit.secondary')
+
+  %div{'data-require-neopia-status' => 'offline'}
+    - localized_cache "outfits#new neopia_offline start_from_scratch_form pranks_funny=#{Color.pranks_funny?}" do
+      = form_tag wardrobe_path, method: 'GET', class: 'primary start-from-scratch', authenticity_token: false do
+        %fieldset
+          %legend= t '.neopia_offline.start_from_scratch'
+          = pet_attribute_select 'color', @colors, 8
+          = pet_attribute_select 'species', @species
+          %button{:type => "submit"}
+            = t('.submit.primary')
+
+    = form_tag remote_load_pet_path, method: 'GET', class: 'secondary load-pet-to-wardrobe' do
+      = hidden_field_tag 'impress_user', current_user.try(:id)
+      - localized_cache action_suffix: 'outfits#new neopia_offline main_load_pet_form_content' do
+        = hidden_field_tag 'redirect', "#{wardrobe_url}\#{q}"
+        %fieldset
+          %legend= t '.neopia_offline.load_pet.main_html', link: link_to(t('.neopia_offline.load_pet.link_content'), 'http://blog.openneo.net/')
+          = pet_name_tag class: 'main-pet-name'
+          %button{:type => "submit"}
+            = t '.submit.secondary'
 
 %ul#sections
   - localized_cache :action_suffix => 'your_items_module' do
@@ -122,4 +143,4 @@
 - content_for :javascripts do
   = include_javascript_libraries :jquery20, :jquery_tmpl
   = modeling_i18n_tag
-  = javascript_include_tag 'ajax_auth', 'react', 'jquery.timeago', 'pet_query', 'outfits/new', 'modeling'
+  = javascript_include_tag 'ajax_auth', 'react', 'jquery.timeago', 'pet_query', 'modeling', 'outfits/new'

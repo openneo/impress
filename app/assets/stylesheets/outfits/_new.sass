@@ -47,18 +47,29 @@ body.outfits-new
       left: 16px
       legend
         margin-left: -16px
-  #load-pet-to-wardrobe
-    font-size: 175%
-    margin:
-      bottom: 1em
-      top: 1.5em
-    input
-      font-size: 67%
-      padding: .5em
-      width: 10em
-    button
-      +loud-awesome-button
-      font-size: 67%
+    .primary
+      margin:
+        bottom: 2em
+        top: 3em
+      input
+        font-size: 115%
+        padding: .5em
+        width: 10em
+      button
+        +loud-awesome-button
+      legend
+        font-size: 175%
+      select
+        font-size: 120%
+    [data-require-neopia-status=offline]
+      display: none
+    &[data-neopia-status=offline]
+      [data-require-neopia-status=online]
+        display: none
+      [data-require-neopia-status=offline]
+        display: block
+    [data-require-neopia-status=offline] .load-pet-to-wardrobe legend a
+      font-size: 85%
   #description, #top-contributors
     float: left
   #description

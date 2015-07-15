@@ -41,7 +41,7 @@ class OutfitsController < ApplicationController
   end
 
   def new
-    unless localized_fragment_exist?("outfits#new start_from_scratch_form pranks_funny=#{Color.pranks_funny?}")
+    unless localized_fragment_exist?("outfits#new neopia_online start_from_scratch_form pranks_funny=#{Color.pranks_funny?}") && localized_fragment_exist?("outfits#new neopia_offline start_from_scratch_form pranks_funny=#{Color.pranks_funny?}")
       @colors = Color.funny.alphabetical
       @species = Species.alphabetical
     end

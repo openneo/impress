@@ -476,12 +476,12 @@ es:
       preview:
         pet_type_not_found: No hemos encontrado aun a un %{species_name} %{color_name}. ¿Lo has hecho tú?
         pet_not_found: Pet no encontrado.
-      load_pet:
-        legend: Escribe el nombre de tu pet
-        submit: ¡Diseñar mi atuendo!
-      start_from_scratch:
-        legend: O empieza a partir de una plantilla
-        submit: Ir
+      submit:
+        primary: ¡Diseñar mi atuendo!
+        secondary: Ir
+      neopia_online:
+        load_pet: Escribe el nombre de tu pet
+        start_from_scratch: O empieza a partir de una plantilla
       your_items:
         tagline: ¡Añade e intercambia!
         description: Crea listas de los objetos que tú tienes y quieres. ¡Compártelas con el mundo!
