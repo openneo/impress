@@ -73,7 +73,7 @@ class OutfitsController < ApplicationController
     
     unless localized_fragment_exist?('outfits#new latest_contribution')
       @latest_contribution = Contribution.recent.first
-      Contribution.preload_contributeds_and_parents([@latest_contribution])
+      Contribution.preload_contributeds_and_parents([@latest_contribution].compact)
     end
 
     @neopets_usernames = user_signed_in? ? current_user.neopets_usernames : []
