@@ -57,3 +57,5 @@ module I18n
       LocaleMeta::NEOPETS_LANGUAGE_CODES_BY_LOCALE[LocaleMeta::COMPATIBLE_LOCALES[locale]]
   end
 end
+
+Rails.configuration.i18n.available_locales = I18n.usable_locales
