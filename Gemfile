@@ -83,7 +83,8 @@ gem 'compass-rails', "~> 1.0.3"
 gem 'uglifier',      ">= 1.0.3"
 
 group :development do
-  #gem "bullet", "~> 4.1.5"
+  gem 'capistrano', '~> 2.15.5'
+  gem 'rvm-capistrano', '~> 1.5.6'
 end
 
 group :development_async do
