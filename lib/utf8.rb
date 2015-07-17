@@ -4,7 +4,7 @@ if String.method_defined?(:force_encoding)
 
   class String
     def +@
-      force_encoding('utf-8')
+      dup.force_encoding('utf-8')
     end
   end
 else
