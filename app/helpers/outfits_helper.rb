@@ -106,8 +106,8 @@ module OutfitsHelper
   end
 
   def pet_attribute_select(name, collection, value=nil)
-    select_tag name,
-      options_from_collection_for_select(collection, :id, :human_name, value)
+    options = options_from_collection_for_select(collection, :id, :human_name, value)
+    select_tag name, options, id: nil, class: name
   end
 
   def pet_name_tag(options={})

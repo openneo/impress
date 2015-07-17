@@ -120,12 +120,12 @@ Preview.Job.Name = function (name) {
   }
 }
 
-Preview.Job.Hash = function (hash) {
+Preview.Job.Hash = function (hash, form) {
   Preview.Job.apply(this, [hash, 'cp']);
 
   this.visit = function() {
-    window.location = "/wardrobe?color=" + $('#color').val() + "&species=" +
-      $('#species').val();
+    window.location = "/wardrobe?color=" + form.find('.color').val() + "&species=" +
+      form.find('.species').val();
   }
 }
 
@@ -181,11 +181,11 @@ $(function () {
     }
   });
   
-  var selectFields = $('#species, #color');
-  selectFields.change(function () {
+  $('.species, .color').change(function () {
     var type = {}, nameComponents = {};
-    selectFields.each(function () {
-      var el = $(this), selectedEl = el.children(':selected'), key = el.attr('id');
+    var form = $(this).closest('form');
+    form.find('select').each(function () {
+      var el = $(this), selectedEl = el.children(':selected'), key = el.attr('name');
       type[key] = selectedEl.val();
       nameComponents[key] = selectedEl.text();
     });
@@ -200,7 +200,7 @@ $(function () {
       success: function (data) {
         var job;
         if(data) {
-          job = new Preview.Job.Hash(data.image_hash);
+          job = new Preview.Job.Hash(data.image_hash, form);
           job.name = name;
           job.setAsCurrent();
         } else {
