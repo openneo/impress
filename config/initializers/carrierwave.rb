@@ -4,15 +4,11 @@
 
 CarrierWave.configure do |config|
   if Rails.env.production?
-    s3_config = YAML.load_file Rails.root.join('config', 'aws_s3.yml')
-    access_key_id = s3_config['access_key_id']
-    secret_access_key = s3_config['secret_access_key']
-    
     config.storage = :fog
     config.fog_credentials = {
       :provider               => 'AWS',
-      :aws_access_key_id      => access_key_id,
-      :aws_secret_access_key  => secret_access_key
+      :aws_access_key_id      => ENV.fetch('AWS_ACCESS_KEY_ID'),
+      :aws_secret_access_key  => ENV.fetch('AWS_SECRET_ACCESS_KEY')
     }
   else
     config.storage = :file
