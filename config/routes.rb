@@ -103,7 +103,15 @@ OpenneoImpressItems::Application.routes.draw do
   match '/sitemap.xml' => 'sitemap#index', :as => :sitemap, :format => :xml
   match '/robots.txt' => 'sitemap#robots', :as => :robots, :format => :text
 
-  authenticated :user, lambda { |u| u.admin? } do
+  def mount_resque
     mount Resque::Server, :at => '/resque'
+  end
+
+  if Rails.env.development?
+    mount_resque
+  else
+    authenticated :user, lambda { |u| u.admin? } do
+      mount_resque
+    end
   end
 end
