@@ -1,3 +1,5 @@
+require 'ipaddr'
+
 class ApplicationController < ActionController::Base
   include FragmentLocalization
   
@@ -27,8 +29,9 @@ class ApplicationController < ActionController::Base
       I18n.default_locale
   end
 
+  PRIVATE_IP_BLOCK = IPAddr.new('192.168.0.0/16')
   def local_only
-    raise AccessDenied unless request.ip == '127.0.0.1'
+    raise AccessDenied unless request.ip == '127.0.0.1' || PRIVATE_IP_BLOCK.include?(request.ip)
   end
   
   def localized_fragment_exist?(key)
