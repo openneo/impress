@@ -4,10 +4,23 @@ class ClosetHangersController < ApplicationController
   before_filter :find_user, :only => [:index, :petpage, :update_quantities]
 
   def destroy
-    @closet_hanger = current_user.closet_hangers.find params[:id]
-    @closet_hanger.destroy
-    @item = @closet_hanger.item
-    closet_hanger_destroyed
+    if params[:list_id]
+      @closet_list = current_user.find_closet_list_by_id_or_null_owned params[:list_id]
+      @closet_list.hangers.destroy_all
+      respond_to do |format|
+        format.html {
+          flash[:success] = t("closet_hangers.destroy_all.success")
+          redirect_back!(user_closet_hangers_path(current_user))
+        }
+
+        format.json { render :json => true }
+      end
+    else
+      @closet_hanger = current_user.closet_hangers.find params[:id]
+      @closet_hanger.destroy
+      @item = @closet_hanger.item
+      closet_hanger_destroyed
+    end
   end
 
   def index

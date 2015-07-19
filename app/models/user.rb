@@ -89,7 +89,26 @@ class User < ActiveRecord::Base
   end
 
   def null_closet_list(owned)
-    owned ? ClosetList::NullOwned.new(self) : ClosetList::NullWanted.new(self)
+    owned ? null_owned_list : null_wanted_list
+  end
+
+  def null_owned_list
+    ClosetList::NullOwned.new(self)
+  end
+
+  def null_wanted_list
+    ClosetList::NullWanted.new(self)
+  end
+
+  def find_closet_list_by_id_or_null_owned(id_or_owned)
+    id_or_owned_str = id_or_owned.to_s
+    if id_or_owned_str == 'true'
+      null_owned_list
+    elsif id_or_owned_str == 'false'
+      null_wanted_list
+    else
+      self.closet_lists.find id_or_owned
+    end
   end
 
   def neopets_usernames

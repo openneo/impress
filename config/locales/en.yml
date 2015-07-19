@@ -95,6 +95,9 @@ en:
       success:
         owned: Success! You do not own the %{item_name}.
         wanted: Success! You do not want the %{item_name}.
+
+    destroy_all:
+      success: Success! Removed all items from the list.
     
     index:
       title_for:
@@ -124,6 +127,9 @@ en:
         submit: Save
         header: (Not in a list)
         empty: There aren't any items here.
+      remove_all:
+        confirm: 'Remove all items from this list?'
+        submit: Remove all
       autocomplete:
         add_item_html: Add <strong>%{item_name}</strong>
         add_to_list_html: Add to <strong>%{list_name}</strong>
@@ -179,11 +185,14 @@ en:
       delete: Delete
       delete_confirmation:
         owned:
-          Are you sure you want to delete "%{list_name}"? Even if you do, we'll
-          remember that you own these items.
+          Are you sure you want to delete "%{list_name}"?
+          If you do, we'll move these items into Items You Own, not in a list.
         wanted:
-          Are you sure you want to delete "%{list_name}"? Even if you do, we'll
-          remember that you want these items.
+          Are you sure you want to delete "%{list_name}"?
+          If you do, we'll move these items into Items You Want, not in a list.
+      remove_all:
+        confirm: 'Remove all items from this list?'
+        submit: Remove all
       empty: This list is empty.
       trading_neomail_warning_html:
         You've marked this list as Trading, so folks will discover it via Dress
