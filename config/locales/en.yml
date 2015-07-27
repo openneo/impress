@@ -398,7 +398,7 @@ en:
         user_wants: wants
         fits_pet_type: fits
   
-  neopets_pages:
+  neopets_page_import_tasks:
     create:
       success: Page %{index} saved!
       created_and_updated_hangers:

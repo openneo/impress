@@ -1,30 +1,30 @@
-- title t('.title', :name => @neopets_page.name, :index => @neopets_page.index)
+- title t('.title', :name => @import_task.page.name, :index => @import_task.page.expected_index)
 - content_for :before_flashes do
   = link_to t('.your_items_link'), user_closet_hangers_path(current_user), :id => 'back-to-items'
 
-= form_for @neopets_page, :html => {:id => 'closet-page-form'} do |f|
-  = f.hidden_field :index
+= form_for @import_task, :html => {:id => 'closet-page-form'} do |f|
   #closet-page-frame-wrapper
     %span
       %strong
-        = t '.frame_header', :name => @neopets_page.name,
-            :index => @neopets_page.index
-    %iframe#closet-page-frame{:src => @neopets_page.url}
+        = t '.frame_header', :name => @import_task.page.name,
+            :index => @import_task.page.expected_index
+    %iframe#closet-page-frame{:src => @import_task.page.url}
   #closet-page-source
-    = f.label :source, t('.source_header')
-    = f.text_area :source
+    = fields_for @import_task.page do |p|
+      = p.label :source, t('.source_header')
+      = p.text_area :source
   = f.select :list_id, neopets_page_list_options(current_user)
   = f.submit t('.submit')
 
 - localized_cache :action_suffix => 'explanation' do
   %p
-    = t '.help.welcome', :name => @neopets_page.name
-    = t '.help.intro', :name => @neopets_page.name
+    = t '.help.welcome', :name => @import_task.page.name
+    = t '.help.intro', :name => @import_task.page.name
   
   %ol
     %li
-      = twl '.help.check_frame.header', :page_link_url => @neopets_page.url,
-            :name => @neopets_page.name, :index => @neopets_page.index
+      = twl '.help.check_frame.header', :page_link_url => @import_task.page.url,
+            :name => @import_task.page.name, :index => @import_task.page.expected_index
       %ul
         %li
           %strong= t '.help.check_frame.check_login.summary'
@@ -38,7 +38,7 @@
         %li
           %strong
             = t '.help.check_frame.check_content.summary',
-                :name => @neopets_page.name
+                :name => @import_task.page.name
           = t '.help.check_frame.check_content.details'
     
     %li
@@ -52,7 +52,7 @@
           = t '.help.view_source.other'
         %li
           = twl '.help.view_source.troubleshooting',
-              :page_link_url => @neopets_page.url
+              :page_link_url => @import_task.page.url
     
     %li
       = t '.help.copy_source.header'
@@ -64,4 +64,4 @@
       = t '.help.submit.header'
       %ul
         %li
-          = t '.help.submit.description', :name => @neopets_page.name
+          = t '.help.submit.description', :name => @import_task.page.name

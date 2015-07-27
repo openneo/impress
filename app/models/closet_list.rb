@@ -28,6 +28,10 @@ class ClosetList < ActiveRecord::Base
     end
   end
 
+  def try_non_null(method_name)
+    send(method_name)
+  end
+
   module VisibilityMethods
     delegate :trading?, to: :visibility_level
 
@@ -55,6 +59,14 @@ class ClosetList < ActiveRecord::Base
 
     def hangers
       user.closet_hangers.unlisted.where(owned: hangers_owned)
+    end
+
+    def hangers_owned?
+      hangers_owned
+    end
+
+    def try_non_null(method_name)
+      nil
     end
   end
 

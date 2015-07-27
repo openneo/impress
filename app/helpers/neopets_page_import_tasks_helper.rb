@@ -1,4 +1,4 @@
-module NeopetsPagesHelper
+module NeopetsPageImportTasksHelper
   def neopets_page_list_options(user)
     lists = user.closet_lists.group_by(&:hangers_owned?)
     options = []

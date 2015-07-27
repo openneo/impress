@@ -40,11 +40,8 @@ OpenneoImpressItems::Application.routes.draw do
   resources :zones, only: [:index]
 
   scope 'import' do
-    resources :closet_pages, :only => [:new, :create],
-      :controller => 'neopets_pages', :path => 'closet/pages', :type => 'closet'
-
-    resources :safety_deposit_pages, :only => [:new, :create],
-      :controller => 'neopets_pages', :path => 'sdb/pages', :type => 'sdb'
+    resources :neopets_page_import_tasks, only: [:new, :create],
+      path: ':page_type/pages/:expected_index'
 
     resources :neopets_users, :only => [:new, :create], :path => 'neopets-users'
   end
