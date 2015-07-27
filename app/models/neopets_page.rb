@@ -81,8 +81,10 @@ class NeopetsPage
 
 
   class Parser
-    def initialize(selectors)
-      @selectors = selectors
+    def initialize(params)
+      @selectors = params.fetch(:selectors)
+      @parse_id = params.fetch(:parse_id, lambda { |id| id })
+      @parse_index = params.fetch(:parse_index, lambda { |index| index })
     end
 
 
@@ -106,13 +108,12 @@ class NeopetsPage
 
 
     def find_id(row)
-      element(:item_remove, row)['name']
+      @parse_id.call(element(:item_remove, row)['name'])
     end
 
 
     def find_index(page_selector)
-      Rails.logger.debug("index: #{element(:selected, page_selector)}")
-      element(:selected, page_selector)['value'].to_i
+      @parse_index.call(element(:selected, page_selector)['value'].to_i)
     end
 
 
@@ -159,19 +160,24 @@ class NeopetsPage
 
 
   class Type
-    attr_reader :name, :parser
+    attr_reader :parser
     delegate :parse, to: :parser
 
 
-    def initialize(name, url_template, parser)
-      @name = name
-      @url_template = url_template
-      @parser = parser
+    def initialize(params)
+      @get_name = params.fetch(:get_name)
+      @get_url = params.fetch(:get_url)
+      @parser = params.fetch(:parser)
+    end
+
+
+    def name
+      @get_name.call
     end
 
 
     def url(index)
-      @url_template % index
+      @get_url.call(index)
     end
   end
 
@@ -179,16 +185,40 @@ class NeopetsPage
 
   TYPES = {
     'closet' => Type.new(
-      I18n.translate('neopets_page_import_tasks.names.closet'),
-      'http://www.neopets.com/closet.phtml?per_page=50&page=%u',
-      Parser.new(
-        items:          "form[action=\"process_closet.phtml\"] tr[bgcolor!=silver][bgcolor!=\"#E4E4E4\"]",
-        item_thumbnail: "img",
-        item_name:      "td:nth-child(2)",
-        item_quantity:  "td:nth-child(5)",
-        item_remove:    "input",
-        page_select:    "select[name=page]",
-        selected:       "option[selected]"
+      get_name: lambda { I18n.translate('neopets_page_import_tasks.names.closet') },
+      get_url: lambda { |index| "http://www.neopets.com/closet.phtml?per_page=50&page=#{index}" },
+      parser: Parser.new(
+        selectors: {
+          items:          "form[action=\"process_closet.phtml\"] tr[bgcolor!=silver][bgcolor!=\"#E4E4E4\"]",
+          item_thumbnail: "img",
+          item_name:      "td:nth-child(2)",
+          item_quantity:  "td:nth-child(5)",
+          item_remove:    "input",
+          page_select:    "select[name=page]",
+          selected:       "option[selected]"
+        }
+      )
+    ),
+    'safety_deposit' => Type.new(
+      get_name: lambda { I18n.translate('neopets_page_import_tasks.names.safety_deposit') },
+      get_url: lambda { |index| "http://www.neopets.com/safetydeposit.phtml?offset=#{(index - 1) * 30}" },
+      parser: Parser.new(
+        selectors: {
+          items:          "#content tr[bgcolor=\"#DFEAF7\"]",
+          item_thumbnail: "img",
+          item_name:      "td:nth-child(2)",
+          item_quantity:  "td:nth-child(5)",
+          item_remove:    "input",
+          page_select:    "select[name=offset]",
+          selected:       "option[selected]"
+        },
+        parse_id: lambda { |id|
+          unless match = id.match(/\[([0-9]+)\]/)
+            raise ParseError, "Remove Item input name format was unexpected: #{id}.inspect"
+          end
+          match[1]
+        },
+        parse_index: lambda { |offset| offset / 30 + 1 }
       )
     )
   }

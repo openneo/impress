@@ -8,7 +8,7 @@ class NeopetsPageImportTasksController < ApplicationController
   rescue_from NeopetsPage::ParseError, with: :on_parse_error
 
   def create
-    neopets_page = NeopetsPage.new(params[:page_type], params[:expected_index], params[:neopets_page][:source])
+    neopets_page = NeopetsPage.new(params[:page_type], params[:expected_index].to_i, params[:neopets_page][:source])
 
     @import_task = neopets_page.build_import_task(current_user, params[:neopets_page_import_task][:list_id])
 
@@ -60,7 +60,7 @@ class NeopetsPageImportTasksController < ApplicationController
   end
 
   def new
-    neopets_page = NeopetsPage.new(params[:page_type], params[:expected_index], nil)
+    neopets_page = NeopetsPage.new(params[:page_type], params[:expected_index].to_i, nil)
     @import_task = neopets_page.build_import_task(current_user, params[:list_id])
   end
 
