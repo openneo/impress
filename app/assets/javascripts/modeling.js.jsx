@@ -1,61 +1,6 @@
 /** @jsx React.DOM */
 
-var Neopia = {
-  User: {
-    get: function(id) {
-      return $.ajax({
-        dataType: "json",
-        url: Neopia.API_URL + "/users/" + id,
-        useCSRFProtection: false
-      }).then(function(response) {
-        return response.users[0];
-      });
-    }
-  },
-  Customization: {
-    request: function(petId, type) {
-      var data = {};
-      if (ImpressUser.id) {
-        data.impress_user = ImpressUser.id;
-      }
-      return $.ajax({
-        dataType: "json",
-        type: type,
-        url: Neopia.API_URL + "/pets/" + petId + "/customization",
-        useCSRFProtection: false,
-        data: data
-      });
-    },
-    get: function(petId) {
-      return this.request(petId, "GET");
-    },
-    post: function(petId) {
-      return this.request(petId, "POST");
-    }
-  },
-  Status: {
-    get: function() {
-      return $.ajax({
-        dataType: "json",
-        url: Neopia.API_URL + "/status",
-        useCSRFProtection: false
-      });
-    }
-  },
-  init: function() {
-    var hostEl = $('meta[name=neopia-host]');
-    if (!hostEl.length) {
-      throw "missing neopia-host meta tag";
-    }
-    var host = hostEl.attr('content');
-    if (!host) {
-      throw "neopia-host meta tag exists, but is empty";
-    }
-    Neopia.API_URL = "http://" + host + "/api/1";
-  }
-};
-
-(function($, I18n) {
+var Neopia = (function($, I18n) {
   // Console-polyfill. MIT license.
   // https://github.com/paulmillr/console-polyfill
   // Make it safe to do console.log() always.
@@ -72,6 +17,61 @@ var Neopia = {
     while (method = methods.pop()) con[method] = con[method] || dummy;
     return con;
   })(window.console || {});
+
+  var Neopia = {
+    User: {
+      get: function(id) {
+        return $.ajax({
+          dataType: "json",
+          url: Neopia.API_URL + "/users/" + id,
+          useCSRFProtection: false
+        }).then(function(response) {
+          return response.users[0];
+        });
+      }
+    },
+    Customization: {
+      request: function(petId, type) {
+        var data = {};
+        if (ImpressUser.id) {
+          data.impress_user = ImpressUser.id;
+        }
+        return $.ajax({
+          dataType: "json",
+          type: type,
+          url: Neopia.API_URL + "/pets/" + petId + "/customization",
+          useCSRFProtection: false,
+          data: data
+        });
+      },
+      get: function(petId) {
+        return this.request(petId, "GET");
+      },
+      post: function(petId) {
+        return this.request(petId, "POST");
+      }
+    },
+    Status: {
+      get: function() {
+        return $.ajax({
+          dataType: "json",
+          url: Neopia.API_URL + "/status",
+          useCSRFProtection: false
+        });
+      }
+    },
+    init: function() {
+      var hostEl = $('meta[name=neopia-host]');
+      if (!hostEl.length) {
+        throw "missing neopia-host meta tag";
+      }
+      var host = hostEl.attr('content');
+      if (!host) {
+        throw "neopia-host meta tag exists, but is empty";
+      }
+      Neopia.API_URL = "http://" + host + "/api/1";
+    }
+  };
 
   var ImpressUser = (function() {
     var userSignedIn = ($('meta[name=user-signed-in]').attr('content') === 'true');
@@ -384,4 +384,6 @@ var Neopia = {
   });
 
   Modeling.init($);
+
+  return Neopia;
 })(jQuery, ModelingI18n);
