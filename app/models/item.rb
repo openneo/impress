@@ -389,12 +389,15 @@ class Item < ActiveRecord::Base
     !species_support_ids.empty?
   end
 
-  def origin_registry_info=(info)
-    Rails.logger.debug("info! #{info}")
+  def add_origin_registry_info(info, locale)
     # bear in mind that numbers from registries are floats
     species_support_strs = info['species_support'] || []
     self.species_support_ids = species_support_strs.map(&:to_i)
+
+    self.name_translations = {locale => info['name']}
+
     attribute_names.each do |attribute|
+      next if attribute == 'name'
       value = info[attribute.to_sym]
       if value
         value = value.to_i if value.is_a? Float
@@ -507,7 +510,7 @@ class Item < ActiveRecord::Base
           item.id = item_id
           items[item_id] = item
         end
-        item.origin_registry_info = info_registry[item.id.to_s]
+        item.add_origin_registry_info info_registry[item.id.to_s], I18n.default_locale
         item.current_body_id = pet_type.body_id
 
         # Build and update the SWF

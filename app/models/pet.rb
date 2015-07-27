@@ -45,9 +45,10 @@ class Pet < ActiveRecord::Base
       options[:item_scope])
   end
   
-  def fetch_viewer_data(timeout=4)
+  def fetch_viewer_data(timeout=4, locale=nil)
+    locale ||= I18n.default_locale
     begin
-      neopets_language_code = I18n.compatible_neopets_language_code_for(I18n.locale)
+      neopets_language_code = I18n.compatible_neopets_language_code_for(locale)
       envelope = PET_VIEWER.request([name, 0]).post(
         :timeout => timeout,
         :headers => {
@@ -107,7 +108,7 @@ class Pet < ActiveRecord::Base
       
       # Fetch registry data in parallel
       registries = Parallel.map(candidates.keys, :in_threads => 8) do |locale|
-        viewer_data = I18n.with_locale(locale) { fetch_viewer_data }
+        viewer_data = fetch_viewer_data(4, locale)  # TODO: ew, don't copy-paste the default timeout
         [locale, viewer_data[:object_info_registry]]
       end
       
@@ -126,12 +127,10 @@ class Pet < ActiveRecord::Base
       # Apply translations, and figure out what items are currently being worn
       current_items = Set.new
       registries.each do |locale, registry|
-        I18n.with_locale(locale) do
-          registry.each do |item_id, item_info|
-            item = items_by_id[item_id.to_i]
-            item.origin_registry_info = item_info
-            current_items << item
-          end
+        registry.each do |item_id, item_info|
+          item = items_by_id[item_id.to_i]
+          item.add_origin_registry_info(item_info, locale)
+          current_items << item
         end
       end
       
