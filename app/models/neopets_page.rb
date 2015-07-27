@@ -10,7 +10,11 @@ class NeopetsPage
 
 
   def initialize(type_key, expected_index, source)
-    @type = TYPES.fetch(type_key)
+    begin
+      @type = TYPES.fetch(type_key)
+    rescue KeyError
+      raise TypeNotFound, type_key
+    end
     @expected_index = expected_index
     @source = source
   end
@@ -354,5 +358,6 @@ class NeopetsPage
   end
 
 
-  class ParseError < RuntimeError;end
+  class ParseError < RuntimeError; end
+  class TypeNotFound < RuntimeError; end
 end

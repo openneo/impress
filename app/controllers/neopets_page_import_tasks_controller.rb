@@ -6,6 +6,7 @@ class NeopetsPageImportTasksController < ApplicationController
   before_filter :require_source, only: [:create]
 
   rescue_from NeopetsPage::ParseError, with: :on_parse_error
+  rescue_from NeopetsPage::TypeNotFound, with: :not_found
 
   def create
     neopets_page = NeopetsPage.new(params[:page_type], params[:expected_index].to_i, params[:neopets_page][:source])
