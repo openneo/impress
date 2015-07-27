@@ -17,7 +17,7 @@ class NeopetsUser
   end
 
   def list_id=(list_id)
-    # TODO: DRY up with ClosetPage
+    # TODO: use null lists instead
     @list_id = list_id
     if list_id == 'true'
       @closet_list = nil
@@ -58,7 +58,7 @@ class NeopetsUser
       item_quantities[i] += 1
     end
 
-    # TODO: DRY up with ClosetPage
+    # TODO: DRY up with NeopetsPage
     # We don't want to insert duplicate hangers of what a user owns if they
     # already have it in another list (e.g. imports to Items You Own *after*
     # curating their Up For Trade list), so we check for the hanger's presence
