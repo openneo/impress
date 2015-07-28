@@ -331,7 +331,7 @@ en-MEEP:
         header: Meeped to you by
         footer: Meep!
   
-  neopets_pages:
+  neopets_page_import_tasks:
     create:
       success: Page %{index} meeped!
       created_and_updated_hangers:

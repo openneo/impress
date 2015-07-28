@@ -279,7 +279,7 @@ pt:
         user_closet_hanger_ownership: usuario
         user_owns: possui
         user_wants: quer
-  neopets_pages:
+  neopets_page_import_tasks:
     create:
       success: Página %{index} salva!
       created_and_updated_hangers:

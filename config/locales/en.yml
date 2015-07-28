@@ -116,6 +116,7 @@ en:
       import_from:
         closet: Import from closet
         safety_deposit: Import from SDB
+        gallery: Import from gallery
         neopets_user: Import from pets
       export_to:
         petpage: Export to petpage
@@ -398,7 +399,7 @@ en:
         user_wants: wants
         fits_pet_type: fits
   
-  neopets_pages:
+  neopets_page_import_tasks:
     create:
       success: Page %{index} saved!
       created_and_updated_hangers:
@@ -438,6 +439,7 @@ en:
     names:
       closet: closet
       safety_deposit: safety deposit
+      gallery: gallery
     
     new:
       title: Import from %{name}, Page %{index}
