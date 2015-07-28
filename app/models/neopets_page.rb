@@ -89,6 +89,9 @@ class NeopetsPage
       @selectors = params.fetch(:selectors)
       @parse_id = params.fetch(:parse_id, lambda { |id| id })
       @parse_index = params.fetch(:parse_index, lambda { |index| index })
+      @has_quantity = params.fetch(:has_quantity, true)
+      @has_id = params.fetch(:has_id, true)
+      @has_pages = params.fetch(:has_pages, true)
     end
 
 
@@ -112,18 +115,22 @@ class NeopetsPage
 
 
     def find_id(row)
-      @parse_id.call(element(:item_remove, row)['name'])
+      @parse_id.call(element(:item_remove, row)['name']).try(:to_i) if @has_id
     end
 
 
     def find_index(page_selector)
-      @parse_index.call(element(:selected, page_selector)['value'].to_i)
+      if @has_pages
+        @parse_index.call(element(:selected, page_selector)['value'].to_i)
+      else
+        1
+      end
     end
 
 
     def find_items(doc)
       elements(:items, doc).map do |el|
-        ItemRef.new(find_id(el).try(:to_i), find_thumbnail_url(el), find_name(el), find_quantity(el))
+        ItemRef.new(find_id(el), find_thumbnail_url(el), find_name(el), find_quantity(el))
       end
     end
 
@@ -142,12 +149,16 @@ class NeopetsPage
 
 
     def find_page_selector(doc)
-      element(:page_select, doc)
+      element(:page_select, doc) if @has_pages
     end
 
 
     def find_quantity(row)
-      element(:item_quantity, row).text.to_i
+      if @has_quantity
+        element(:item_quantity, row).text.to_i
+      else
+        1
+      end
     end
 
 
@@ -157,7 +168,11 @@ class NeopetsPage
 
 
     def find_page_count(page_selector)
-      page_selector.css('option').size
+      if @has_pages
+        page_selector.css('option').size
+      else
+        1
+      end
     end
   end
 
@@ -223,6 +238,20 @@ class NeopetsPage
           match[1]
         },
         parse_index: lambda { |offset| offset / 30 + 1 }
+      )
+    ),
+    'gallery' => Type.new(
+      get_name: lambda { I18n.translate('neopets_page_import_tasks.names.gallery') },
+      get_url: lambda { |index| "http://www.neopets.com/gallery/index.phtml?view=all" },
+      parser: Parser.new(
+        selectors: {
+          items:          "form[name=gallery_form] td[valign=top]",
+          item_thumbnail: "img",
+          item_name:      "b"
+        },
+        has_quantity: false,
+        has_id: false,
+        has_pages: false
       )
     )
   }
