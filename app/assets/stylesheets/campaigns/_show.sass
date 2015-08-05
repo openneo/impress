@@ -1,6 +1,7 @@
 @import "compass/css3/text-shadow"
 
 @import "partials/campaign-progress"
+@import "partials/outfit"
 
 /* TODO: redundant with outfits/index; why is it not in the partial? */
 $outfit-inner-height: 150px
@@ -9,24 +10,45 @@ $outfit-banner-h-padding: 4px
 $outfit-banner-v-padding: 2px
 $outfit-banner-inner-width: $outfit-inner-width - (2 * $outfit-banner-h-padding)
 
-body.static-donate
+body.campaigns-show, body.campaigns-current
   +campaign-progress
+  color: #004
+
+  a
+    color: #004 + #222
+
+  #userbar, #footer
+    color: $text-color
+    a
+      color: $link-color
+
+  #home-link
+    color: $link-color
 
   #title
     display: none
 
   #donation-form
     +module
-
-    background:
-      image: url(http://images.neopets.com/new_shopkeepers/t_993.gif)
-      position: ($container-width - 150px - 8px) -4px
-      repeat: no-repeat
+    background: $campaign-background-color
+    border-color: $campaign-border-color
     margin-top: 1em
     margin-bottom: 1.5em
     padding-bottom: 32px
     padding-left: 24px
     padding-top: 32px
+
+    &[data-campaign-theme="hug"]
+      background:
+        image: url(image_path("campaigns/hug.gif"))
+        position: ($container-width - 150px - 8px) -4px
+        repeat: no-repeat
+
+    &[data-campaign-theme="bird"]
+      background:
+        image: url(image_path("campaigns/bird.gif"))
+        position: ($container-width - 150px - 8px) -4px
+        repeat: no-repeat
 
     header, div
       +inline-block
@@ -50,6 +72,8 @@ body.static-donate
       margin-top: .5em
 
     input[type=text]
+      border-color: #cce
+      color: #004
       width: 3em
 
     button
@@ -100,6 +124,11 @@ body.static-donate
           font-weight: bold
           line-height: 1.5
           vertical-align: middle
+
+  #last-years-donors
+    font-weight: bold
+    margin-top: 1em
+    text-align: center
 
   #fine-print
     font-size: 85%

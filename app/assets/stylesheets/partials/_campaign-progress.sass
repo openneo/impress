@@ -1,10 +1,13 @@
+$campaign-border-color: #006
+$campaign-background-color: #eef
+
 =campaign-progress
   .campaign-progress-wrapper
     +border-radius(8px)
-    background: desaturate(lighten($module-border-color, 30%), 85%)
-    background-image: linear-gradient(color-stops(desaturate(lighten($module-border-color, 50%), 85%), desaturate(lighten($module-border-color, 30%), 85%)))
+    background: desaturate(lighten($campaign-border-color, 30%), 85%)
+    background-image: linear-gradient(color-stops(desaturate(lighten($campaign-border-color, 50%), 85%), desaturate(lighten($campaign-border-color, 30%), 85%)))
 
-    border: 4px solid $module-border-color
+    border: 4px solid $campaign-border-color
     clear: both
     margin-bottom: 1em
     margin-top: .5em
@@ -18,9 +21,9 @@
       padding: .25em .75em
 
   .campaign-progress
-    background: $module-border-color
-    background-image: linear-gradient(color-stops($module-border-color + #222, $module-border-color))
-    border-right: 1px solid $module-border-color
+    background: $campaign-border-color
+    background-image: linear-gradient(color-stops($campaign-border-color + #222, $campaign-border-color))
+    border-right: 1px solid $campaign-border-color
 
   .campaign-progress-wrapper, .campaign-progress
     height: 2.5em

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150225194522) do
+ActiveRecord::Schema.define(:version => 20150802202909) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -33,12 +33,15 @@ ActiveRecord::Schema.define(:version => 20150225194522) do
   add_index "campaign_translations", ["locale"], :name => "index_campaign_translations_on_locale"
 
   create_table "campaigns", :force => true do |t|
-    t.integer  "progress",                     :null => false
-    t.integer  "goal",                         :null => false
-    t.boolean  "active",                       :null => false
-    t.datetime "created_at",                   :null => false
-    t.datetime "updated_at",                   :null => false
-    t.boolean  "advertised", :default => true, :null => false
+    t.integer  "progress",                                               :null => false
+    t.integer  "goal",                                                   :null => false
+    t.boolean  "active",                                                 :null => false
+    t.datetime "created_at",                                             :null => false
+    t.datetime "updated_at",                                             :null => false
+    t.boolean  "advertised",  :default => true,                          :null => false
+    t.text     "description",                                            :null => false
+    t.string   "name",        :default => "our hosting costs this year", :null => false
+    t.string   "theme_id",    :default => "hug",                         :null => false
   end
 
   create_table "campaigns_old", :force => true do |t|

@@ -3,12 +3,13 @@
 - if @campaign.progress > 0
   = campaign_progress(@campaign) do
     We've received #{number_to_currency(@campaign.progress / 100.0)}
-    toward our hosting costs this year.
+    toward #{@campaign.name}.
     Thanks so much!
 
 = form_tag donations_path, method: 'POST', id: 'donation-form',
     'data-checkout-image' => image_path('default_preview.png'),
-    'data-checkout-publishable-key' => Rails.configuration.stripe[:publishable_key] do
+    'data-checkout-publishable-key' => Rails.configuration.stripe[:publishable_key],
+    'data-campaign-theme' => @campaign.theme_id do
   = hidden_field_tag 'donation[stripe_token]'
   = hidden_field_tag 'donation[stripe_token_type]'
   = hidden_field_tag 'donation[donor_email]'
@@ -25,58 +26,7 @@
       = text_field_tag 'donation[amount]', '10.00'
     %button{:type => 'submit'} Donate now!
 
-#success-thanks
-  :markdown
-    **Oh, wow! We've raised enough money for our 2014 hosting costs in less
-    than a week! Thanks a ton!**
-
-    As it happens, we didn't have a fundraiser last year because I didn't have
-    the time or energy to ask for money properly—whoops. So, any further
-    donations will go toward last year's hosting costs that I paid out of
-    pocket, and will therefore help me have enough money to pay for college
-    &hearts;
-
-    And you'll still totally get featured here and on the homepage, too.
-    Thanks again for all your help! We're proud to be your Neopets fix during
-    the downtime
-    <img src="http://images.neopets.com/neoboards/smilies/grin.gif" />
-
-#description
-  :markdown
-    **Dress to Impress is cool!** We have loads of fancy features: y'all are
-    constantly adding models to our database, making NC trades, and saving your
-    outfits and sharing them across the interwebs.
-    It's pretty sweet, and we're super proud to have a community of users
-    consistently putting our resources to good use.
-
-    **But cool features cost us money—about $800 a year.** We're running on a
-    [4GB Linode server][linode] for $40/mo, and y'all's fancy outfit thumbnails
-    live on [Amazon Web Services][aws] for about $25/mo (it varies by usage),
-    so that leaves us at about $65/mo. Add in $10 for the domain name and $10
-    room to grow (our Amazon usage, and therefore costs, are on the rise), and
-    that comes to an annual budget of $800 USD.
-
-    **So, we're here to ask for help.** If you have some spare change to send
-    our way, we'll gladly accept
-    <img src="http://images.neopets.com/neoboards/smilies/grin.gif" />
-    Thanks for helping Dress to Impress stay online and running smoothly!
-
-    **And, to show our undying gratitude, we'll feature your outfits right
-    here!** Eeyup, for every $5 you send our way, we'll post one of your
-    beautiful outfits right here on the donors list, and feature it on the
-    homepage, too! Personally, I'm looking forward to seeing all your lovely
-    creations, and wishing I could make things even [half as pretty][matts_bat]
-    <img src="http://images.neopets.com/neoboards/smilies/tongue.gif" />
-    (See the fine print at the bottom of the page for details.)
-
-    **Thanks again for all your help.** Dress to Impress runs on you, from our
-    data to our servers. You make this site the great resource that it is, and
-    I'm consistently impressed by this community's generosity. Thanks for 
-    all you do!
-
-    [linode]: https://www.linode.com/pricing
-    [aws]: http://aws.amazon.com/
-    [matts_bat]: http://www.neopets.com/petlookup.phtml?pet=matts_bat
+#description= md @campaign.description
 
 - if @donations.present?
   %h2 Thanks to our lovely donors!
@@ -96,6 +46,9 @@
               = image_tag 'default_preview.png'
 
             %header Thanks, #{donation.donor_name.presence || 'Anonymous'}!
+
+- if @campaign.active?
+  %p#last-years-donors= link_to "Don't forget to check out last year's donors, too!", Campaign.first
 
 #fine-print
   %h2 Other ways to donate

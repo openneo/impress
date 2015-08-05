@@ -86,6 +86,9 @@ OpenneoImpressItems::Application.routes.draw do
     end
   end
 
+  resources :campaigns, only: [:show], path: '/donate/campaigns'
+  match '/donate' => 'campaigns#current', as: :donate
+
   match 'users/current-user/closet' => 'closet_hangers#index', :as => :your_items
 
   match 'users/top-contributors' => 'users#top_contributors', :as => :top_contributors
@@ -94,7 +97,6 @@ OpenneoImpressItems::Application.routes.draw do
   match '/wardrobe' => 'outfits#edit', :as => :wardrobe
   match '/start/:color_name/:species_name' => 'outfits#start'
 
-  match '/donate' => 'static#donate', :as => :donate
   match 'image-mode' => 'static#image_mode', :as => :image_mode
   match '/terms' => 'static#terms', :as => :terms
 
