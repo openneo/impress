@@ -54,7 +54,7 @@ module ApplicationHelper
   end
 
   def feedback_url
-    "http://openneo.uservoice.com/forums/40720-dress-to-impress"
+    "https://openneo.uservoice.com/forums/40720-dress-to-impress"
   end
 
   def flashes
@@ -73,13 +73,13 @@ module ApplicationHelper
   end
 
   JAVASCRIPT_LIBRARIES = {
-    :addthis => 'http://s7.addthis.com/js/250/addthis_widget.js#username=openneo',
-    :bitly => 'http://bit.ly/javascript-api.js?version=latest&login=openneo&apiKey=R_4d0438829b7a99860de1d3edf55d8dc8',
-    :html5 => 'http://html5shim.googlecode.com/svn/trunk/html5.js',
-    :jquery => 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js',
-    :jquery20 => 'http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js',
-    :jquery_tmpl => 'http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js',
-    :swfobject => 'http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js'
+    :addthis => '//s7.addthis.com/js/250/addthis_widget.js#username=openneo',
+    :bitly => '//bit.ly/javascript-api.js?version=latest&login=openneo&apiKey=R_4d0438829b7a99860de1d3edf55d8dc8',
+    :html5 => '//html5shim.googlecode.com/svn/trunk/html5.js',
+    :jquery => '//ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js',
+    :jquery20 => '//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js',
+    :jquery_tmpl => '//ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js',
+    :swfobject => '//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js'
   }
 
   def include_javascript_libraries(*library_names)
