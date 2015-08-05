@@ -69,7 +69,7 @@ var Neopia = (function($, I18n) {
       if (!host) {
         throw "neopia-host meta tag exists, but is empty";
       }
-      Neopia.API_URL = "http://" + host + "/api/1";
+      Neopia.API_URL = "//" + host + "/api/1";
     }
   };
 
