@@ -225,11 +225,13 @@ var Neopia = (function($, I18n) {
       Neopia.init();
       this._createItems($);
       var usersEl = $('#modeling-neopets-users');
-      this._usersComponent = React.renderComponent(<NeopetsUsernamesForm />,
-                                                   usersEl.get(0));
-      var usernames = ImpressUser.getNeopetsUsernames();
-      usernames.forEach(this._registerUsername.bind(this));
-      this._updateUsernames();
+      if (usersEl.length) {
+        this._usersComponent = React.renderComponent(<NeopetsUsernamesForm />,
+                                                     usersEl.get(0));
+        var usernames = ImpressUser.getNeopetsUsernames();
+        usernames.forEach(this._registerUsername.bind(this));
+        this._updateUsernames();
+      }
     },
     model: function(neopiaPetId, itemId) {
       var oldCustomization = this._customizationsByPetId[neopiaPetId];

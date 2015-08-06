@@ -216,17 +216,7 @@ module ApplicationHelper
   end
 
   def camo_image_url(image_url)
-    if CAMO_KEY
-      hexdigest = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'), CAMO_KEY, image_url)
-      uri = Addressable::URI.parse("#{CAMO_HOST}/#{hexdigest}")
-      uri.query_values = { 'url' => image_url, 'repo' => '', 'path' => '' }
-      uri.to_s
-    else
-      uri = Addressable::URI.parse(image_url)
-      query_values = uri.query_values || {}
-      uri.query_values = query_values.merge(NO_CAMO_CONFIG: nil)
-      uri.to_s
-    end
+    Image.from_insecure_url(image_url).secure_url
   end
 end
 

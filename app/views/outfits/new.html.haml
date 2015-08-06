@@ -80,7 +80,7 @@
     
   %li
     = link_to bulk_pets_path do
-      = image_tag 'http://images.neopets.com/items/mall_ac_garland_spotlight.gif'
+      = image_tag camo_image_url('http://images.neopets.com/items/mall_ac_garland_spotlight.gif')
     %h3= link_to t('modeling_hub'), bulk_pets_path
     %div
       %h4= t '.modeling_hub.tagline'
@@ -108,7 +108,7 @@
       - @newest_unmodeled_items.each do |item|
         - localized_cache "items/#{item.id} modeling_progress updated_at=#{item.updated_at.to_i}" do
           %li{'data-item-id' => item.id}
-            = link_to image_tag(item.thumbnail_url), item, :class => 'image-link'
+            = link_to image_tag(item.thumbnail.secure_url), item, :class => 'image-link'
             = link_to item, :class => 'header' do
               %h2= item.name
               %span.meter{style: "width: #{@newest_unmodeled_items_predicted_modeled_ratio[item]*100}%"}
@@ -121,7 +121,7 @@
       - @newest_modeled_items.each do |item|
         %li.object
           = link_to item, title: item.name, alt: item.name do
-            = image_tag item.thumbnail_url
+            = image_tag item.thumbnail.secure_url
             = nc_icon_for(item)
 
 

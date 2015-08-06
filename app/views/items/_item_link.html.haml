@@ -1,4 +1,4 @@
 = link_to item_path(item) do
-  = image_tag item.thumbnail_url, :alt => item.description, :title => item.description
+  = image_tag item.thumbnail.secure_url, :alt => item.description, :title => item.description
   %span.name= item.name
   = nc_icon_for(item)

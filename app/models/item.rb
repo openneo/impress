@@ -327,12 +327,16 @@ class Item < ActiveRecord::Base
     modeled_body_ids.size.to_f / predicted_body_ids.size
   end
 
+  def thumbnail
+    @thumbnail ||= Image.from_insecure_url(thumbnail_url)
+  end
+
   def as_json(options={})
     json = {
       :description => description,
       :id => id,
       :name => name,
-      :thumbnail_url => thumbnail_url,
+      :thumbnail_url => thumbnail.secure_url,
       :zones_restrict => zones_restrict,
       :rarity_index => rarity_index,
       :nc => nc?
