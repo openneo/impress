@@ -1,3 +1,3 @@
 ASSET_HOSTS = {
-  :swf_asset_images => 'swfimages.impress.openneo.net'
+  :swf_asset_images => 'impress-asset-images.s3.amazonaws.com'
 }
