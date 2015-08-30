@@ -26,7 +26,7 @@
       = text_field_tag 'donation[amount]', '10.00'
     %button{:type => 'submit'} Donate now!
 
-#description= md @campaign.description
+#description= emote_md @campaign.description
 
 - if @donations.present?
   %h2 Thanks to our lovely donors!
@@ -62,8 +62,8 @@
 
     But, even though PayPal isn't integrated into the site, we'll still gladly
     accept individual donations through PayPal if you'd prefer.
-    #{mail_to 'webmaster@openneo.net', "Drop us an email and we'll figure it
-    out."} Thanks!
+    #{mail_to 'webmaster@openneo.net', "Drop us an email and we'll talk
+    details."} Thanks!
 
   %h2 Some notes on featured outfits
   :markdown
@@ -76,7 +76,7 @@
     However, there are a few important bits of legal whatnot to keep in mind.
     (Mostly, it's the list of things that we expect to do but in no legally
     binding way promise to do. Just in case
-    <img src="#{camo_image_url 'http://images.neopets.com/neoboards/smilies/tongue.gif'}" />)
+    #{image_tag 'emoticons/tongue.gif'}
 
     Featuring your outfit is a thank-you gift that we like to give our donors;
     it is *not* a purchased service. We make no guarantee that we'll post your
@@ -85,28 +85,30 @@
     site for as long as the site lives, and in rotation on the homepage until
     some other site event or feature needs the space.)
 
-    We reserve the right to refuse to post any outfit for any reason, and we
-    reserve the right to remove any previously posted outfit for any reason.
-    Same goes for the name attached to your donation.
+    We reserve the right to refuse to post any content for any reason, and we
+    reserve the right to remove any previously posted content at any time for
+    any reason. If we don't like the outfit's name, the outfit's appearance,
+    or the name on your donation, or anything else, then we don't have to
+    publish it, and we won't necessarily refund you—especially if the content
+    seems malicious.
     (That said, we intend to allow most any name and outfit that are
     appropriate for Neopians of all ages.)
 
-    If you change your mind about donating, no worries: we'll refund any
-    good-faith donation within 60 days of the day you donated.
-    (For example, changing your mind and requesting a refund *is* acting in
-    good faith, and we'd love to help you out.
-    Posting an obscene outfit then requesting a refund once we take it down is
-    *not* acting in good faith, and we don't want our refund policy to
-    encourage that behavior
-    <img src="#{camo_image_url 'http://images.neopets.com/neoboards/smilies/tongue.gif'}" />
-    We determine "good faith" at our sole discretion—not limited to those
+    If you change your mind about donating, no worries: you can request a
+    refund within 60 days of donating, and, so long as you're acting in good
+    faith, we'll refund the entire donation.
+    (For example, if you realize you can't afford to donate, or legit just
+    change your mind, then we'd love to help you out :)
+    But we don't want people posting obscene outfits and expecting refunds once
+    we take them down, so we need a refund policy that lets us reject those
+    requests #{image_tag 'emoticons/tongue.gif'}
+    So, we determine "good faith" at our sole discretion—not limited to those
     examples—but we're generally pretty understanding.)
 
     **TL;DR: We love to help and acknowledge our good-faith donors,
     but reserve the right not to do those things,
     in order to better handle bad-faith donors and unexpected circumstances.**
-    Huh. That was way simpler.
-    Maybe I should've just written that in the first place.
+    That's all #{image_tag 'emoticons/smiley.gif'}
 
 - content_for :javascripts do
   = javascript_include_tag 'https://checkout.stripe.com/checkout.js',
