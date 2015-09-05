@@ -65,6 +65,8 @@ class ClosetHangersController < ApplicationController
     if @public_perspective && user_signed_in?
       current_user.assign_closeted_to_items!(items)
     end
+
+    @campaign = Campaign.current
   end
 
   def petpage

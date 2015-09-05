@@ -1,3 +1,5 @@
+- content_for :before_title, advertise_campaign_progress(@campaign)
+
 - unless public_perspective?
   - title t('.title_for.you')
   - add_body_class 'current-user'
