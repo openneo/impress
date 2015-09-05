@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150802202909) do
+ActiveRecord::Schema.define(:version => 20150905181350) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -261,11 +261,12 @@ ActiveRecord::Schema.define(:version => 20150802202909) do
   add_index "pet_states", ["pet_type_id"], :name => "pet_states_pet_type_id"
 
   create_table "pet_types", :force => true do |t|
-    t.integer  "color_id",   :limit => 1, :null => false
-    t.integer  "species_id", :limit => 1, :null => false
-    t.datetime "created_at",              :null => false
-    t.integer  "body_id",    :limit => 2, :null => false
-    t.string   "image_hash", :limit => 8
+    t.integer  "color_id",         :limit => 1, :null => false
+    t.integer  "species_id",       :limit => 1, :null => false
+    t.datetime "created_at",                    :null => false
+    t.integer  "body_id",          :limit => 2, :null => false
+    t.string   "image_hash",       :limit => 8
+    t.string   "basic_image_hash"
   end
 
   add_index "pet_types", ["species_id", "color_id"], :name => "pet_types_species_color", :unique => true

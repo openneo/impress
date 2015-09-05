@@ -1,6 +1,6 @@
 class PetType < ActiveRecord::Base
   IMAGE_CPN_FORMAT = 'http://pets.neopets.com/cpn/%s/1/1.png';
-  IMAGE_CP_LOCATION_REGEX = %r{^/cp/(.+?)/1/1\.png$};
+  IMAGE_CP_LOCATION_REGEX = %r{^/cp/(.+?)/[0-9]+/[0-9]+\.png$};
   IMAGE_CPN_ACCEPTABLE_NAME = /^[a-z0-9_]+$/
 
   belongs_to :species
@@ -47,6 +47,11 @@ class PetType < ActiveRecord::Base
     random_pet_types
   end
 
+  def self.get_hash_from_cp_path(path)
+    match = path.match(IMAGE_CP_LOCATION_REGEX)
+    match ? match[1] : nil
+  end
+
   def as_json(options={})
     if options[:for] == 'wardrobe'
       {
@@ -60,14 +65,16 @@ class PetType < ActiveRecord::Base
   end
 
   def image_hash
-    self['image_hash'] || basic_image_hash
+    # If there's a known basic image hash (no clothes), use that.
+    # Otherwise, if we have some image of a pet that we've picked up, use that.
+    # Otherwise, refer to the fallback YAML file (though, if we have our
+    # basic image hashes set correctly, the fallbacks should just be an old
+    # subset of the basic image hashes in the database.)
+    basic_image_hash || self['image_hash'] || fallback_image_hash
   end
 
-  def basic_image_hash
+  def fallback_image_hash
     I18n.with_locale(I18n.default_locale) do
-      # Probably should move the basic hashes into the database someday.
-      # Until then, access the hash using the English color/species names.
-      
       if species && color && BasicHashes[species.name] && BasicHashes[species.name][color.name]
         BasicHashes[species.name][color.name]
       else
@@ -134,10 +141,10 @@ class PetType < ActiveRecord::Base
         end
       end
       new_url = res['location']
-      match = new_url.match(IMAGE_CP_LOCATION_REGEX)
-      if match
-        self.image_hash = match[1]
-        Rails.logger.info "Successfully loaded #{cpn_uri}, saved image hash #{match[1]}"
+      new_image_hash = PetType.get_hash_from_cp_path(new_url)
+      if new_image_hash
+        self.image_hash = new_image_hash
+        Rails.logger.info "Successfully loaded #{cpn_uri}, saved image hash #{new_image_hash}"
       else
         raise DownloadError, "CPN image pointed to #{new_url}, which does not match CP image format"
       end
