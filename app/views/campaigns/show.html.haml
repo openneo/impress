@@ -26,6 +26,8 @@
       = text_field_tag 'donation[amount]', '10.00'
     %button{:type => 'submit'} Donate now!
 
+- if @campaign.complete? && @campaign.thanks?
+  #success-thanks= emote_md @campaign.thanks
 #description= emote_md @campaign.description
 
 - if @donations.present?

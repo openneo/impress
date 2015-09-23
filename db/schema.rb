@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150905181350) do
+ActiveRecord::Schema.define(:version => 20150923052017) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(:version => 20150905181350) do
     t.text     "description",                                            :null => false
     t.string   "name",        :default => "our hosting costs this year", :null => false
     t.string   "theme_id",    :default => "hug",                         :null => false
+    t.text     "thanks"
   end
 
   create_table "campaigns_old", :force => true do |t|

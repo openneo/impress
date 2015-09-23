@@ -11,6 +11,10 @@ class Campaign < ActiveRecord::Base
     goal - progress
   end
 
+  def complete?
+    progress >= goal
+  end
+
   def self.current
     self.where(active: true).first or
       raise ActiveRecord::RecordNotFound.new("no current campaign")
