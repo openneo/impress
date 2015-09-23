@@ -26,14 +26,25 @@ module ApplicationHelper
     end
   end
 
+  def cents_to_currency(cents)
+    number_to_currency(cents / 100.0)
+  end
+
   def campaign_progress(campaign, &block)
     if campaign
       if block_given?
         content = capture(&block)
       else
+        if campaign.remaining < 200_00
+          pitch = "We only need #{cents_to_currency(campaign.remaining)} more for #{campaign.name}!"
+          prompt = "Donate now"
+        else
+          pitch = "Help Dress to Impress stay online!"
+          prompt = "Learn more"
+        end
         content = link_to(
-          content_tag(:span, 'Help Dress to Impress stay online!') +
-          content_tag(:span, 'Learn more', :class => 'button'), donate_path)
+          content_tag(:span, pitch) +
+          content_tag(:span, prompt, :class => 'button'), donate_path)
       end
 
       meter = content_tag(:div, nil, :class => 'campaign-progress',

@@ -2,7 +2,7 @@
 
 - if @campaign.progress > 0
   = campaign_progress(@campaign) do
-    We've received #{number_to_currency(@campaign.progress / 100.0)}
+    We've received #{cents_to_currency(@campaign.progress)}
     toward #{@campaign.name}.
     Thanks so much!
 

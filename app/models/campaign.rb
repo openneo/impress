@@ -7,6 +7,10 @@ class Campaign < ActiveRecord::Base
     [(progress.to_f / goal) * 100, 100].min
   end
 
+  def remaining
+    goal - progress
+  end
+
   def self.current
     self.where(active: true).first or
       raise ActiveRecord::RecordNotFound.new("no current campaign")
