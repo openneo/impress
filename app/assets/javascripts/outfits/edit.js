@@ -1173,7 +1173,9 @@ View.Search = function (wardrobe) {
 
   form.submit(function (e) {
     e.preventDefault();
-    current_query = addAutofilter($(this).find('input[name=query]').val());
+    var given_query = $(this).find('input[name=query]').val();
+    if (given_query) given_query = addAutofilter(given_query);
+    current_query = given_query;
     wrapper.removeClass('advanced');
     loadPage(1);
   });
