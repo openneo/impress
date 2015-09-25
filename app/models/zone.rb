@@ -11,7 +11,9 @@ class Zone < ActiveRecord::Base
   scope :includes_translations, lambda { includes(:translations) }
   scope :with_plain_label, lambda { |label|
     t = Zone::Translation.arel_table
-    includes(:translations).where(t[:plain_label].eq(Zone.plainify_label(label)))
+    includes(:translations)
+      .where(t[:plain_label].eq(Zone.plainify_label(label)))
+      .where(t[:locale].eq(I18n.locale))
   }
   scope :for_items, lambda { where(arel_table[:type_id].gt(1)) }
 
