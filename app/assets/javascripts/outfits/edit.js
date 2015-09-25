@@ -592,12 +592,6 @@ View.Outfits = function (wardrobe) {
     submitRename.apply(input);
   });
 
-  $('input.outfit-url').live('mouseover', function () {
-    this.focus();
-  }).live('mouseout', function () {
-    this.blur();
-  });
-
   $('a.outfit-delete').live('click', function (e) {
     e.stopPropagation();
     e.preventDefault();
@@ -836,6 +830,15 @@ View.Outfits = function (wardrobe) {
       formatImageUrl('medium_image');
       formatImageUrl('large_image');
       formatTextUrl('permalink');
+      formatCopyUrl('small');
+      formatCopyUrl('medium');
+      formatCopyUrl('large');
+    }
+
+    function formatCopyUrl(key) {
+      var url = urls[key + '_image'];
+      var copy_url = $('#preview-sharing-copy-' + key + '-image-url');
+      copy_url.attr('data-clipboard-text', url);
     }
     
     function formatTextUrl(key) {
@@ -851,14 +854,14 @@ View.Outfits = function (wardrobe) {
     }
 
     function formatDownload(key, outfit) {
-      var el = $('#preview-sharing-download-' + key + '-image');
+      var download = $('#preview-sharing-download-' + key + '-image');
 
       var url = urls[key + '_image'];
       var outfit_name = outfit.name === null ? ('Outfit ' + outfit.id) : outfit.name;
       var format_name = key.charAt(0).toUpperCase() + key.substr(1);
 
-      el.attr('href', url);
-      el.attr('download', 'Dress to Impress - ' + outfit_name + ' - ' + format_name + '.png');
+      download.attr('href', url);
+      download.attr('download', 'Dress to Impress - ' + outfit_name + ' - ' + format_name + '.png');
     }
     
     wardrobe.image_subscriptions.bind('imageEnqueued', function (outfit) {
@@ -866,7 +869,7 @@ View.Outfits = function (wardrobe) {
         log("Sharing thumbnail enqueued for outfit", outfit);
         WRAPPER.removeClass('thumbnail-loaded');
 
-        $('#preview-sharing-urls a').removeAttr('href').removeAttr('download');
+        $('#preview-sharing-urls a[download]').removeAttr('href').removeAttr('download');
       }
     });
     
@@ -901,6 +904,8 @@ View.Outfits = function (wardrobe) {
       if ('download' in document.createElement('a')) {
         $('#preview-sharing-urls').addClass('support-download');
       }
+
+      var client = new ZeroClipboard($('.preview-sharing-copy-url'));
     }
   }
 

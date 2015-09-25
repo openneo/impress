@@ -80,16 +80,19 @@
               %label{:for => 'preview-sharing-large-image-url'}
                 = t '.sidebar.sharing.links.images.large'
               %a#preview-sharing-download-large-image{download: true}= t '.sidebar.sharing.download'
+              %a#preview-sharing-copy-large-image-url.preview-sharing-copy-url{href: 'javascript:void(0)'}= t '.sidebar.sharing.copy_url'
               %input#preview-sharing-large-image-url.outfit-url{:type => 'text'}
             %li
               %label{:for => 'preview-sharing-medium-image-url'}
                 = t '.sidebar.sharing.links.images.medium'
               %a#preview-sharing-download-medium-image{download: true}= t '.sidebar.sharing.download'
+              %a#preview-sharing-copy-medium-image-url.preview-sharing-copy-url{href: 'javascript:void(0)'}= t '.sidebar.sharing.copy_url'
               %input#preview-sharing-medium-image-url.outfit-url{:type => 'text'}
             %li
               %label{:for => 'preview-sharing-small-image-url'}
                 = t '.sidebar.sharing.links.images.small'
               %a#preview-sharing-download-small-image{download: true}= t '.sidebar.sharing.download'
+              %a#preview-sharing-copy-small-image-url.preview-sharing-copy-url{href: 'javascript:void(0)'}= t '.sidebar.sharing.copy_url'
               %input#preview-sharing-small-image-url.outfit-url{:type => 'text'}
           %ul#preview-sharing-url-formats
             %li.active{'data-format' => 'plain'}
@@ -263,5 +266,5 @@
 - content_for :javascripts do
   = include_javascript_libraries :jquery, :swfobject, :jquery_tmpl
   = javascript_include_tag 'ajax_auth', 'jquery.jgrowl', 'wardrobe',
-                           'outfits/edit'
+                           'ZeroClipboard.min', 'outfits/edit'
 

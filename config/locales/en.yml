@@ -636,6 +636,7 @@ en:
             html: HTML
             bbcode: BBCode
           download: Download
+          copy_url: Copy URL
       search:
         header: Add an item
         form:
