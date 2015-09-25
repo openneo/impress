@@ -26,8 +26,8 @@ module ApplicationHelper
     end
   end
 
-  def cents_to_currency(cents)
-    number_to_currency(cents / 100.0)
+  def cents_to_currency(cents, options={})
+    number_to_currency(cents / 100.0, options)
   end
 
   def campaign_progress(campaign, &block)
@@ -35,8 +35,12 @@ module ApplicationHelper
       if block_given?
         content = capture(&block)
       else
-        if campaign.remaining < 200_00
-          pitch = "We only need #{cents_to_currency(campaign.remaining)} more for #{campaign.name}!"
+        if campaign.complete?
+          pitch = "We've met this year's fundraising goal! Thanks, everybody!"
+          prompt = "Learn more"
+        elsif campaign.remaining < 200_00
+          estimate = (campaign.remaining.to_f / 5_00).ceil * 5_00
+          pitch = "We're less than #{cents_to_currency(estimate, precision: 0)} away from paying this year's hosting costs!"
           prompt = "Donate now"
         else
           pitch = "Help Dress to Impress stay online!"
