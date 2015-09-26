@@ -26,9 +26,12 @@
       = text_field_tag 'donation[amount]', '10.00'
     %button{:type => 'submit'} Donate now!
 
-- if @campaign.complete? && @campaign.thanks?
-  #success-thanks= emote_md @campaign.thanks
-#description= emote_md @campaign.description
+#campaign-text{'data-campaign-complete' => @campaign.complete?}
+  - if @campaign.complete? && @campaign.thanks?
+    #success-thanks
+      #success-thanks-main= emote_md @campaign.thanks
+      %a#success-thanks-toggle-description{href: '#'} How are donations used?
+  #description= emote_md @campaign.description
 
 - if @donations.present?
   %h2 Thanks to our lovely donors!

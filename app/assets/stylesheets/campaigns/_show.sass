@@ -79,13 +79,26 @@ body.campaigns-show, body.campaigns-current
     button
       +loud-awesome-button-color
 
+  #campaign-text[data-campaign-complete]
+    #description
+      display: none
+      &[data-show]
+        display: block
+
   #success-thanks
     border: 1px dashed $module-border-color
     margin-bottom: 1em
     padding: 1em
+    position: relative
 
     p:last-child
       margin-bottom: 0
+
+  #success-thanks-toggle-description
+    position: absolute
+    bottom: 1em
+    font-style: italic
+    right: 1em
 
   #outfits
     +outfits-list

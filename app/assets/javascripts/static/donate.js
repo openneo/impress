@@ -33,4 +33,15 @@
       }
     }
   });
+
+  var toggle = document.getElementById('success-thanks-toggle-description');
+  toggle.addEventListener('click', function() {
+    var desc = document.getElementById('description');
+    var attr = 'data-show';
+    if (desc.hasAttribute(attr)) {
+      desc.removeAttribute(attr);
+    } else {
+      desc.setAttribute(attr, true);
+    }
+  });
 })();
