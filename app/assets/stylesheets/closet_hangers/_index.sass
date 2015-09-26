@@ -90,6 +90,9 @@ body.closet_hangers-index
     clear: both
     text-align: center
 
+    .bulk-actions
+      display: none
+
     .object
       .quantity
         +opacity(.75)
@@ -366,6 +369,30 @@ body.closet_hangers-index
 
             span:after
               content: "…"
+
+        .bulk-actions
+          border-top: 1px solid $module-border-color
+          display: block
+          font-size: 85%
+          padding: .5em 1em
+
+          .bulk-actions-intro, .bulk-actions-target-desc-singular
+            display: none
+
+          &[data-target-count="0"]
+            .bulk-actions-intro
+              display: block
+              text-align: center
+
+            .bulk-actions-form
+              display: none
+
+          &[data-target-count="1"]
+            .bulk-actions-target-desc-singular
+              display: block
+
+            .bulk-actions-target-desc-plural
+              display: none
 
       #closet-hangers-contact
         input[type=submit]

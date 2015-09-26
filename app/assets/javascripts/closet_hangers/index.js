@@ -188,7 +188,10 @@
   }
 
   function objectRemoved(objectWrapper) {
-    objectWrapper.hide(250, $.proxy(objectWrapper, 'remove'));
+    objectWrapper.hide(250, function() {
+      objectWrapper.remove();
+      updateBulkActions();
+    });
   }
 
   function compareItemsByName(a, b) {
@@ -270,6 +273,8 @@
           quantityEl.storeValue();
           ownedEl.storeValue();
           listEl.storeValue();
+
+          updateBulkActions();
         },
         error: function (xhr) {
           quantityEl.revertValue();
@@ -351,7 +356,21 @@
     });
 
     checkboxes.attr('checked', !allChecked);
+
+    updateBulkActions();  // setting the checked prop doesn't fire change events
   });
+
+  function getCheckboxes() {
+    return $(hangersElQuery + " input[type=checkbox]");
+  }
+
+  getCheckboxes().live("change", updateBulkActions);
+
+  function updateBulkActions() {
+    var checkedCount = getCheckboxes().filter(':checked').length;
+    $('.bulk-actions').attr('data-target-count', checkedCount);
+    $('.bulk-actions-target-count').text(checkedCount);
+  }
 
   /*
 

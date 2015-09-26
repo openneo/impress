@@ -57,6 +57,19 @@
     = link_to t('.export_to.petpage'), petpage_user_closet_hangers_path(@user)
 
 #closet-hangers{:class => public_perspective? ? nil : 'current-user'}
+  - unless public_perspective?
+    -# TODO: i18n
+    .bulk-actions{'data-target-count' => 0}
+      .bulk-actions-intro
+        Manage items in bulk! Select an item by clicking its thumbnail.
+      %form.bulk-actions-form
+        .bulk-actions-target-desc
+          %span.bulk-actions-target-desc-singular
+            With the 1 selected item
+          %span.bulk-actions-target-desc-plural
+            With the
+            %span.bulk-actions-target-count 0
+            selected items
   - [true, false].each do |owned|
     .closet-hangers-group{'data-owned' => owned.to_s, :id => "closet-hangers-group-#{owned}"}
       %header
