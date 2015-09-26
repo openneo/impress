@@ -379,17 +379,32 @@ body.closet_hangers-index
           .bulk-actions-intro, .bulk-actions-target-desc-singular
             display: none
 
+          .bulk-actions-target-desc
+            display: inline-block
+
+          .bulk-actions-options
+            display: inline-block
+            list-style: none
+
+            > li
+              display: inline-block
+              margin-left: .75em
+
+              &:not(:first-child)::before
+                content: " or "
+                display: inline-block
+                margin-right: .75em
+
           &[data-target-count="0"]
             .bulk-actions-intro
               display: block
-              text-align: center
 
             .bulk-actions-form
               display: none
 
           &[data-target-count="1"]
             .bulk-actions-target-desc-singular
-              display: block
+              display: inline
 
             .bulk-actions-target-desc-plural
               display: none

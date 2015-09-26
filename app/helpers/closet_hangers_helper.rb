@@ -153,5 +153,16 @@ module ClosetHangersHelper
   def closet_hangers_subject(user)
     public_perspective? ? user.name : :you
   end
+
+  def destination_options
+    # eww, copy-pasted from neopets page import helpers
+    options = []
+    [true, false].each do |owned|
+      relevant_lists = @closet_lists_by_owned[owned] || []
+      options << [closet_lists_group_name(:you, owned), owned]
+      options += relevant_lists.map { |list| ["&mdash;#{h list.name}".html_safe, list.id] }
+    end
+    options
+  end
 end
 
