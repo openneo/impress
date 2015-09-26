@@ -77,9 +77,10 @@
                   = f.submit t('.unlisted.submit')
                   = closet_visibility_descriptions
                 .closet-list-controls
-                  = form_tag user_closet_hangers_path(@user), method: :delete do
+                  = form_tag user_closet_hangers_path(@user), method: :delete, class: 'remove-all' do
                     = hidden_field_tag :list_id, owned
                     = submit_tag t('.remove_all.submit'), confirm: t('.remove_all.confirm')
+                  %button.select-all= t('.select_all')
               - if has_lists?(owned)
                 %h4= t '.unlisted.header'
             - if !@public_perspective

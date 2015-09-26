@@ -131,6 +131,7 @@ en:
       remove_all:
         confirm: 'Remove all items from this list?'
         submit: Remove all
+      select_all: Select all
       autocomplete:
         add_item_html: Add <strong>%{item_name}</strong>
         add_to_list_html: Add to <strong>%{list_name}</strong>
@@ -194,6 +195,7 @@ en:
       remove_all:
         confirm: 'Remove all items from this list?'
         submit: Remove all
+      select_all: Select all
       empty: This list is empty.
       trading_neomail_warning_html:
         You've marked this list as Trading, so folks will discover it via Dress

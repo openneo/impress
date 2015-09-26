@@ -94,12 +94,20 @@
 
           // Ooh, this part is weird. We only want the name to be linked, so
           // lift everything else out.
-          var label = $('<label />');
-          var checkbox = $('<input type="checkbox" />').appendTo(label);
+          var checkboxId = 'hanger-selected-' + hangerId;
+          var label = $('<label />', {'for': checkboxId});
           var link = hangerEl.children('a');
           link.children(':not(.name)').detach().appendTo(label);
           link.detach().appendTo(label);
+          var checkbox = $('<input />', {
+            type: 'checkbox',
+            id: checkboxId
+          }).appendTo(hangerEl);
           label.appendTo(hangerEl);
+
+          // I don't usually like to _blank things, but it's too easy to click
+          // the text when you didn't mean to and lose your selection work.
+          link.attr('target', '_blank');
 
           $.tmpl("updateFormTmpl", {
             user_id: currentUserId,
@@ -329,6 +337,20 @@
         $.jGrowl("Error removing item. Try again?");
       }
     });
+  });
+
+  $(hangersElQuery + " .select-all").live("click", function(e) {
+    var checkboxes = $(this).closest(".closet-list").find(".object input[type=checkbox]");
+
+    var allChecked = true;
+    checkboxes.each(function() {
+      if (!this.checked) {
+        allChecked = false;
+        return false;
+      }
+    });
+
+    checkboxes.attr('checked', !allChecked);
   });
 
   /*

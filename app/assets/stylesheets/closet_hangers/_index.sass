@@ -119,6 +119,12 @@ body.closet_hangers-index
         &:hover
           text-decoration: underline
 
+      .object
+        margin: 0
+
+      label
+        display: block
+
       input[type=checkbox]
         display: none
         position: absolute
@@ -126,6 +132,13 @@ body.closet_hangers-index
         right: ($object-width - $object-img-size) / 2 + $object-padding
         height: 16px
         width: 16px
+
+        &:checked
+          display: block
+
+          & + label
+            background: $module-bg-color
+            outline: 1px solid $module-border-color
 
   .closet-hangers-group
     border-top: 1px solid $module-border-color
@@ -231,7 +244,7 @@ body.closet_hangers-index
       right: 1em
       top: 0
 
-      a, input[type=submit]
+      a, input[type=submit], button
         +context-button
 
       form
@@ -374,6 +387,12 @@ body.closet_hangers-index
             display: block
 
       #toggle-help
+        display: inline-block
+
+      .remove-all
+        display: none
+
+      .select-all
         display: inline-block
 
   &.js

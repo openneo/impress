@@ -9,9 +9,10 @@
         = link_to t('.edit'), edit_user_closet_list_path(closet_list.user_id, closet_list)
         = form_tag user_closet_list_path(closet_list.user_id, closet_list), :method => 'delete' do
           = submit_tag t('.delete'), :confirm => closet_list_delete_confirmation(closet_list)
-        = form_tag user_closet_hangers_path(@user), method: :delete do
+        = form_tag user_closet_hangers_path(@user), method: :delete, class: 'remove-all' do
           = hidden_field_tag :list_id, closet_list.id
           = submit_tag t('.remove_all.submit'), confirm: t('.remove_all.confirm')
+        %button.select-all= t('.select_all')
     %h4= closet_list.name
 
   - if show_controls
