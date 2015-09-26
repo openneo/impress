@@ -372,6 +372,20 @@
     $('.bulk-actions-target-count').text(checkedCount);
   }
 
+  function maintainCheckboxes(fn) {
+    var checkedIds = [];
+    getCheckboxes().filter(':checked').each(function() {
+      if (this.checked) checkedIds.push(this.id);
+    });
+
+    fn();
+
+    checkedIds.forEach(function(id) {
+      document.getElementById(id).checked = true;
+    });
+    updateBulkActions();
+  }
+
   /*
 
     Search, autocomplete
@@ -412,8 +426,10 @@
           },
           success: function (html) {
             var doc = $(html);
-            hangersEl.html( doc.find('#closet-hangers').html() );
-            hangersInit();
+            maintainCheckboxes(function() {
+              hangersEl.html( doc.find('#closet-hangers').html() );
+              hangersInit();
+            });
             doc.find('.flash').hide().insertBefore(hangersEl).show(500).delay(5000).hide(250);
             itemsSearchField.val("");
           },
