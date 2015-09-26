@@ -91,7 +91,16 @@
           var hangerId = hangerEl.data("id");
           var quantityEl = hangerEl.find("div.quantity");
           var quantity = hangerEl.data("quantity");
-          
+
+          // Ooh, this part is weird. We only want the name to be linked, so
+          // lift everything else out.
+          var label = $('<label />');
+          var checkbox = $('<input type="checkbox" />').appendTo(label);
+          var link = hangerEl.children('a');
+          link.children(':not(.name)').detach().appendTo(label);
+          link.detach().appendTo(label);
+          label.appendTo(hangerEl);
+
           $.tmpl("updateFormTmpl", {
             user_id: currentUserId,
             closet_hanger_id: hangerId,

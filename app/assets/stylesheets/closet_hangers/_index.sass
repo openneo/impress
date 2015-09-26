@@ -112,6 +112,21 @@ body.closet_hangers-index
         .quantity
           display: none
 
+      a
+        /* It's jarring to have line-height gaps in the linkiness. */
+        display: block
+
+        &:hover
+          text-decoration: underline
+
+      input[type=checkbox]
+        display: none
+        position: absolute
+        top: 0
+        right: ($object-width - $object-img-size) / 2 + $object-padding
+        height: 16px
+        width: 16px
+
   .closet-hangers-group
     border-top: 1px solid $module-border-color
     margin-bottom: 2em
@@ -314,6 +329,9 @@ body.closet_hangers-index
 
           input[type=submit]
             font-size: 85%
+
+        input[type=checkbox]
+          display: block
 
     &.js
       #closet-hangers

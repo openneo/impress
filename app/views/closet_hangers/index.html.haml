@@ -121,8 +121,7 @@
                            min: 0, required: true
 
     %script#closet-hanger-destroy-tmpl{type: 'text/x-jquery-tmpl'}
-      = form_tag templated_hanger_path, method: :delete, authenticity_token: false, class: 'closet-hanger-destroy' do
-        = submit_tag t('closet_hangers.closet_hanger.delete')
+      -# TODO: remove me?
 
 - content_for :stylesheets do
   = stylesheet_link_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/south-street/jquery-ui.css'
