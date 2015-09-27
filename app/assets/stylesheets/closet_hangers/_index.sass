@@ -88,7 +88,6 @@ body.closet_hangers-index
 
   .bulk-actions
     display: none
-    text-align: center
 
   #closet-hangers
     clear: both
@@ -372,10 +371,19 @@ body.closet_hangers-index
               content: "…"
 
       .bulk-actions
+        background: $background-color
         border-top: 1px solid $module-border-color
+        box-sizing: border-box
         display: block
         font-size: 85%
         padding: .5em 1em
+        text-align: center
+        width: $container-width
+
+        &.isStuck
+          border-bottom: 1px solid $module-border-color
+          border-top: 0
+          z-index: 11  /* beat the visibility form */
 
         .bulk-actions-intro, .bulk-actions-target-desc-singular
           display: none
