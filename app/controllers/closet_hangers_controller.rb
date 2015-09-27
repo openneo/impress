@@ -15,6 +15,11 @@ class ClosetHangersController < ApplicationController
 
         format.json { render :json => true }
       end
+    elsif params[:ids]
+      ClosetHanger.transaction do
+        current_user.closet_hangers.where(id: params[:ids]).destroy_all
+      end
+      render json: true
     else
       @closet_hanger = current_user.closet_hangers.find params[:id]
       @closet_hanger.destroy
@@ -116,19 +121,30 @@ class ClosetHangersController < ApplicationController
   end
   
   def update
-    @closet_hanger = current_user.closet_hangers.find(params[:id])
-    @closet_hanger.attributes = params[:closet_hanger]
-    @item = @closet_hanger.item
-
-    unless @closet_hanger.quantity == 0 # save the hanger, new record or not
-      if @closet_hanger.save
-        closet_hanger_saved
-      else
-        closet_hanger_invalid
+    if params[:ids]
+      ClosetHanger.transaction do
+        @closet_hangers = current_user.closet_hangers.includes(:list).find params[:ids]
+        @closet_hangers.each do |h|
+          h.possibly_null_list_id = params[:list_id]
+          h.save!
+        end
       end
-    else # delete the hanger since the user doesn't want it
-      @closet_hanger.destroy
-      closet_hanger_destroyed
+      redirect_back!(user_closet_hangers_path(current_user))
+    else
+      @closet_hanger = current_user.closet_hangers.find(params[:id])
+      @closet_hanger.attributes = params[:closet_hanger]
+      @item = @closet_hanger.item
+
+      unless @closet_hanger.quantity == 0 # save the hanger, new record or not
+        if @closet_hanger.save
+          closet_hanger_saved
+        else
+          closet_hanger_invalid
+        end
+      else # delete the hanger since the user doesn't want it
+        @closet_hanger.destroy
+        closet_hanger_destroyed
+      end
     end
   end
   

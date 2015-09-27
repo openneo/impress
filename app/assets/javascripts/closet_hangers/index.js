@@ -364,6 +364,14 @@
     return $(hangersElQuery + " input[type=checkbox]");
   }
 
+  function getCheckedIds() {
+    var checkedIds = [];
+    getCheckboxes().filter(':checked').each(function() {
+      if (this.checked) checkedIds.push(this.id);
+    });
+    return checkedIds;
+  }
+
   getCheckboxes().live("change", updateBulkActions);
 
   function updateBulkActions() {
@@ -372,11 +380,64 @@
     $('.bulk-actions-target-count').text(checkedCount);
   }
 
-  function maintainCheckboxes(fn) {
-    var checkedIds = [];
-    getCheckboxes().filter(':checked').each(function() {
-      if (this.checked) checkedIds.push(this.id);
+  $(".bulk-actions-move-all").bind("submit", function(e) {
+    // TODO: DRY
+    e.preventDefault();
+    var form = $(this);
+    var data = form.serializeArray();
+    data.push({name: "return_to", value: window.location.pathname + window.location.search});
+
+    var checkedBoxes = getCheckboxes().filter(':checked');
+    checkedBoxes.each(function() {
+      data.push({name: "ids[]", value: $(this).closest('.object').attr('data-id')});
     });
+
+    $.ajax({
+      url: form.attr("action"),
+      type: form.attr("method"),
+      data: data,
+      success: function (html) {
+        var doc = $(html);
+        maintainCheckboxes(function() {
+          hangersEl.html( doc.find('#closet-hangers').html() );
+          hangersInit();
+        });
+        doc.find('.flash').hide().insertBefore(hangersEl).show(500).delay(5000).hide(250);
+        itemsSearchField.val("");
+      },
+      error: function (xhr) {
+        handleSaveError(xhr, "moving these items");
+      }
+    });
+  });
+
+  $(".bulk-actions-remove-all").bind("submit", function(e) {
+    e.preventDefault();
+    var form = $(this);
+    var hangerIds = [];
+    var checkedBoxes = getCheckboxes().filter(':checked');
+    var hangerEls = $();
+    checkedBoxes.each(function() {
+      hangerEls = hangerEls.add($(this).closest('.object'));
+    });
+    hangerEls.each(function() {
+      hangerIds.push($(this).attr('data-id'));
+    });
+    $.ajax({
+      url: form.attr("action") + ".json?" + $.param({ids: hangerIds}),
+      type: "delete",
+      dataType: "json",
+      success: function () {
+        objectRemoved(hangerEls);
+      },
+      error: function () {
+        $.jGrowl("Error removing items. Try again?");
+      }
+    });
+  });
+
+  function maintainCheckboxes(fn) {
+    var checkedIds = getCheckedIds();
 
     fn();
 

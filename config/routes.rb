@@ -63,6 +63,7 @@ OpenneoImpressItems::Application.routes.draw do
     resources :closet_hangers, :only => [:index, :update, :destroy], :path => 'closet' do
       collection do
         get :petpage
+        put :update
         delete :destroy
       end
     end

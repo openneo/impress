@@ -86,12 +86,13 @@ body.closet_hangers-index
     input
       width: 30em
 
+  .bulk-actions
+    display: none
+    text-align: center
+
   #closet-hangers
     clear: both
     text-align: center
-
-    .bulk-actions
-      display: none
 
     .object
       .quantity
@@ -370,44 +371,47 @@ body.closet_hangers-index
             span:after
               content: "…"
 
-        .bulk-actions
-          border-top: 1px solid $module-border-color
-          display: block
-          font-size: 85%
-          padding: .5em 1em
+      .bulk-actions
+        border-top: 1px solid $module-border-color
+        display: block
+        font-size: 85%
+        padding: .5em 1em
 
-          .bulk-actions-intro, .bulk-actions-target-desc-singular
+        .bulk-actions-intro, .bulk-actions-target-desc-singular
+          display: none
+
+        .bulk-actions-target-desc
+          display: inline-block
+
+        .bulk-actions-options
+          display: inline-block
+          list-style: none
+
+          > li
+            display: inline-block
+            margin-left: .75em
+
+            form
+              display: inline-block
+
+            &:not(:first-child)::before
+              content: " or "
+              display: inline-block
+              margin-right: .75em
+
+        &[data-target-count="0"]
+          .bulk-actions-intro
+            display: block
+
+          .bulk-actions-form
             display: none
 
-          .bulk-actions-target-desc
-            display: inline-block
+        &[data-target-count="1"]
+          .bulk-actions-target-desc-singular
+            display: inline
 
-          .bulk-actions-options
-            display: inline-block
-            list-style: none
-
-            > li
-              display: inline-block
-              margin-left: .75em
-
-              &:not(:first-child)::before
-                content: " or "
-                display: inline-block
-                margin-right: .75em
-
-          &[data-target-count="0"]
-            .bulk-actions-intro
-              display: block
-
-            .bulk-actions-form
-              display: none
-
-          &[data-target-count="1"]
-            .bulk-actions-target-desc-singular
-              display: inline
-
-            .bulk-actions-target-desc-plural
-              display: none
+          .bulk-actions-target-desc-plural
+            display: none
 
       #closet-hangers-contact
         input[type=submit]

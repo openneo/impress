@@ -71,6 +71,16 @@ class ClosetHanger < ActiveRecord::Base
     possibly_null_closet_list.trading?
   end
 
+  def possibly_null_list_id=(list_id_or_owned)
+    if list_id_or_owned.to_s == 'true' || list_id_or_owned.to_s == 'false'
+      self.list_id = nil
+      self.owned = list_id_or_owned
+    else
+      self.list_id = list_id_or_owned
+      # owned is set in the set_owned_by_list hook
+    end
+  end
+
   def verb(subject=:someone)
     self.class.verb(subject, owned?)
   end
