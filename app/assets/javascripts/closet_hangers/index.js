@@ -398,10 +398,9 @@
       data: data,
       success: function (html) {
         var doc = $(html);
-        maintainCheckboxes(function() {
-          hangersEl.html( doc.find('#closet-hangers').html() );
-          hangersInit();
-        });
+        hangersEl.html( doc.find('#closet-hangers').html() );
+        hangersInit();
+        updateBulkActions();  // don't want to maintain checked; deselect em all
         doc.find('.flash').hide().insertBefore(hangersEl).show(500).delay(5000).hide(250);
         itemsSearchField.val("");
       },
@@ -434,6 +433,11 @@
         $.jGrowl("Error removing items. Try again?");
       }
     });
+  });
+
+  $(".bulk-actions-deselect-all").bind("click", function(e) {
+    getCheckboxes().filter(':checked').attr('checked', false);
+    updateBulkActions();
   });
 
   function maintainCheckboxes(fn) {

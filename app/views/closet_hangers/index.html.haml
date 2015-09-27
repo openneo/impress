@@ -77,6 +77,8 @@
         %li
           = form_tag user_closet_hangers_path(@user), method: :delete, class: 'bulk-actions-remove-all' do
             %button Remove all
+        %li
+          %button.bulk-actions-deselect-all Deselect all
 
 #closet-hangers{:class => public_perspective? ? nil : 'current-user'}
   - [true, false].each do |owned|
