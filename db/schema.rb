@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150923052017) do
+ActiveRecord::Schema.define(:version => 20150927033046) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -198,6 +198,13 @@ ActiveRecord::Schema.define(:version => 20150923052017) do
     t.string   "neopets_username"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+  end
+
+  create_table "news_posts", :force => true do |t|
+    t.text     "body"
+    t.string   "html_class", :default => "success"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
   end
 
   create_table "outfit_features", :force => true do |t|

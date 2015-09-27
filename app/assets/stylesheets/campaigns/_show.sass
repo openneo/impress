@@ -12,10 +12,10 @@ $outfit-banner-inner-width: $outfit-inner-width - (2 * $outfit-banner-h-padding)
 
 body.campaigns-show, body.campaigns-current
   +campaign-progress
-  color: #004
+  color: $campaign-text-color
 
   a
-    color: #004 + #222
+    color: $campaign-text-color + #222
 
   #userbar, #footer
     color: $text-color
@@ -73,7 +73,7 @@ body.campaigns-show, body.campaigns-current
 
     input[type=text]
       border-color: #cce
-      color: #004
+      color: $campaign-text-color
       width: 3em
 
     button

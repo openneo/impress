@@ -3,6 +3,19 @@
 body.outfits-new
   +campaign-progress
 
+  .news-post
+    p:last-child
+      margin-bottom: 0
+
+    &.campaign-supplement
+      +flash
+      background: $campaign-background-color
+      border: 1px solid $campaign-border-color
+      color: $campaign-text-color
+
+      a
+        color: $campaign-link-color
+
   #pet-not-found, #neopia-error
     display: none
 

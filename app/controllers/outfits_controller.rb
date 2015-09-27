@@ -79,6 +79,8 @@ class OutfitsController < ApplicationController
     @neopets_usernames = user_signed_in? ? current_user.neopets_usernames : []
 
     @campaign = Campaign.current rescue nil
+
+    @news_posts = NewsPost.all
   end
 
   def show
