@@ -1,6 +1,12 @@
-$campaign-border-color: #006
-$campaign-background-color: #eef
-$campaign-text-color: #004
+// 2015 campaign blue
+// $campaign-border-color: #006
+// $campaign-background-color: #eef
+// $campaign-text-color: #004
+// $campaign-link-color: $campaign-text-color + #222
+
+$campaign-border-color: hsl(33, 100%, 40%)
+$campaign-background-color: hsl(33, 100%, 97%)
+$campaign-text-color: hsl(33, 100%, 20%)
 $campaign-link-color: $campaign-text-color + #222
 
 =campaign-progress
@@ -17,7 +23,7 @@ $campaign-link-color: $campaign-text-color + #222
 
     .button
       +awesome-button
-      +loud-awesome-button-color
+      +awesome-button-color(#004)
       font-size: 75%
       margin-left: 1em
       padding: .25em .75em
@@ -31,7 +37,7 @@ $campaign-link-color: $campaign-text-color + #222
     height: 2.5em
 
   .campaign-progress-label
-    +text-shadow(#777, -1px, -1px, 0)
+    text-shadow: 1px 1px 0 #888
     color: white
     font-size: 150%
     left: 0

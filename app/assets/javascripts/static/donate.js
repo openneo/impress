@@ -22,26 +22,45 @@
     if (!field('stripe_token').value) {
       e.preventDefault();
 
-      var amount = Math.floor(parseFloat(field('amount').value) * 100);
+      var amountChoice =
+        donationForm.querySelector('input[name=amount]:checked');
+      if (amountChoice.value === "custom") {
+        amountChoice = document.getElementById('amount-custom-value');
+      }
+
+      // Start parsing at the first digit in the string, to trim leading dollar
+      // signs and what have you.
+      var amountNumberString = (amountChoice.value.match(/[0-9].+/) || [""])[0];
+      var amount = Math.floor(parseFloat(amountNumberString) * 100);
 
       if (!isNaN(amount)) {
+        field('amount').value = amountNumberString;
         checkout.open({
           name: 'Dress to Impress',
           description: 'Donation (thank you!)',
-          amount: amount
+          amount: amount,
+          panelLabel: "Donate"
         });
       }
     }
   });
 
   var toggle = document.getElementById('success-thanks-toggle-description');
-  toggle.addEventListener('click', function() {
-    var desc = document.getElementById('description');
-    var attr = 'data-show';
-    if (desc.hasAttribute(attr)) {
-      desc.removeAttribute(attr);
-    } else {
-      desc.setAttribute(attr, true);
+  if (toggle) {
+    toggle.addEventListener('click', function() {
+      var desc = document.getElementById('description');
+      var attr = 'data-show';
+      if (desc.hasAttribute(attr)) {
+        desc.removeAttribute(attr);
+      } else {
+        desc.setAttribute(attr, true);
+      }
+    });
+  }
+
+  document.getElementById('amount-custom').addEventListener('change', function(e) {
+    if (e.target.checked) {
+      document.getElementById('amount-custom-value').focus();
     }
   });
 })();

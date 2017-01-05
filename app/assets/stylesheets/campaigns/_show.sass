@@ -15,7 +15,10 @@ body.campaigns-show, body.campaigns-current
   color: $campaign-text-color
 
   a
-    color: $campaign-text-color + #222
+    color: $campaign-text-color + #222 !important
+
+  #home-link:hover
+    background-color: $campaign-background-color
 
   #userbar, #footer
     color: $text-color
@@ -32,52 +35,120 @@ body.campaigns-show, body.campaigns-current
     +module
     background: $campaign-background-color
     border-color: $campaign-border-color
+    display: flex
+    flex-direction: row
     margin-top: 1em
     margin-bottom: 1.5em
     padding-bottom: 32px
     padding-left: 24px
+    padding-right: 24px
     padding-top: 32px
+    position: relative
 
-    &[data-campaign-theme="hug"]
-      background:
-        image: url(image_path("campaigns/hug.gif"))
-        position: ($container-width - 150px - 8px) -4px
-        repeat: no-repeat
-
-    &[data-campaign-theme="bird"]
+    // We only use bird theme now. Whatever.
+    &::after
       background:
         image: url(image_path("campaigns/bird.gif"))
-        position: ($container-width - 150px - 8px) -4px
         repeat: no-repeat
+      bottom: 0
+      content: " "
+      height: 125px
+      position: absolute
+      right: 0
+      width: 150px
 
-    header, div
-      +inline-block
-
-      p
-        font-family: $main-font
-        margin: 0
-
-    div
-      font-size: 115%
-      margin-left: 20px
+    header, #donation-fields
+      flex: 1
 
     #donation-form-title
       font-size: 125%
       font-weight: bold
       margin-bottom: .25em
+      margin-top: 0
 
     p
+      font-family: $main-font
       font-size: 85%
       margin-bottom: 0
       margin-top: .5em
+
+    #donation-fields
+      margin-left: 20px
+      padding-top: 7px
+
+    #amount-header
+      font-size: 85%
+      font-weight: bold
+
+    #amount-choices
+      $amount-choices-border-color: desaturate(lighten($campaign-border-color, 30%), 30%)
+
+      display: flex
+      flex-direction: row
+      margin-bottom: 1em
+
+      li
+        border: 1px solid $amount-choices-border-color
+        border-radius: 5px
+        display: block
+        flex: 1
+        list-style: none
+        overflow: hidden
+        text-align: center
+
+        &:not(:last-of-type)
+          margin-right: .75em
+
+        input[type=radio]
+          height: 0
+          margin: 0
+          padding: 0
+          opacity: 0
+          position: absolute
+          width: 0
+
+        label
+          border: 1px solid transparent
+          box-sizing: border-box
+          display: block
+          padding: .5em .5em
+          width: 100%
+
+        input[type=radio]:checked ~ label
+          background: $amount-choices-border-color
+          font-weight: bold
+
+        input[type=radio]:focus ~ label
+          border-color: white
+          border-radius: 5px
+
+        #amount-custom-fields
+          display: none
+
+          input[type=text]
+            font-family: inherit
+            font-size: inherit
+            line-height: 1
+            padding: 0
+            text-align: center
+
+        #amount-custom:checked ~ #amount-custom-fields
+          display: block
+
+        #amount-custom:checked ~ label[for=amount-custom]
+          display: none
 
     input[type=text]
       border-color: #cce
       color: $campaign-text-color
       width: 3em
 
-    button
-      +loud-awesome-button-color
+    #donation-controls
+      text-align: center
+
+      button
+        +awesome-button-color(#004)
+        font-size: 120%
 
   #campaign-text[data-campaign-complete]
     #description
