@@ -3,7 +3,7 @@
 - if @campaign.progress > 0
   = campaign_progress(@campaign) do
     We've received #{cents_to_currency(@campaign.progress)}
-    toward #{@campaign.name}.
+    toward #{@campaign.purpose}.
     Thanks so much!
 
 = form_tag donations_path, method: 'POST', id: 'donation-form',
@@ -34,7 +34,16 @@
   #description= emote_md @campaign.description
 
 - if @donations.present?
-  %h2 Thanks to our lovely donors!
+  #outfits-header
+    %h2 Thanks to our lovely donors!
+    - if @all_campaigns.length > 1
+      %ul#all-campaigns-list
+        - @all_campaigns.each do |campaign|
+          %li
+            - if campaign == @campaign
+              %strong= campaign.name
+            - else
+              = link_to campaign.name, campaign
   %ul#outfits
     - @donations.each do |donation|
       -# if large_donation?(donation.amount)
@@ -51,9 +60,11 @@
               = image_tag 'default_preview.png'
 
             %header Thanks, #{donation.donor_name.presence || 'Anonymous'}!
-
-- if @campaign.active?
-  %p#last-years-donors= link_to "Don't forget to check out last year's donors, too!", Campaign.first
+- else
+  - current_index = @all_campaigns.index(@campaign)
+  - prev_campaign = @all_campaigns[current_index + 1]
+  - if prev_campaign
+    %p#last-years-donors= link_to "Don't forget to check out last year's donors, too!", prev_campaign
 
 #fine-print
   %h2 Other ways to donate
