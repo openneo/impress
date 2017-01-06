@@ -52,9 +52,9 @@ body.campaigns-show, body.campaigns-current
         repeat: no-repeat
       bottom: 0
       content: " "
-      height: 125px
+      height: 123px
       position: absolute
-      right: 0
+      right: 4px
       width: 150px
 
     header, #donation-fields
@@ -79,13 +79,15 @@ body.campaigns-show, body.campaigns-current
     #amount-header
       font-size: 85%
       font-weight: bold
+      line-height: 1
 
     #amount-choices
       $amount-choices-border-color: desaturate(lighten($campaign-border-color, 30%), 30%)
 
       display: flex
       flex-direction: row
-      margin-bottom: 1em
+      margin-bottom: .75em
+      margin-top: .5em
 
       li
         border: 1px solid $amount-choices-border-color
@@ -144,8 +146,6 @@ body.campaigns-show, body.campaigns-current
       width: 3em
 
     #donation-controls
-      text-align: center
-
       button
         +awesome-button-color(#004)
         font-size: 120%
