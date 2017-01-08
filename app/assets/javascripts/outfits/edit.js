@@ -1336,7 +1336,13 @@ View.Search = function (wardrobe) {
     var petType = wardrobe.outfits.getPetType();
     var speciesName = attrs.species[petType.species_id].name.toLowerCase();
     var colorName = attrs.color[petType.color_id].unfunny_name.toLowerCase();
-    return 'fits:' + colorName + '-' + speciesName;
+    var value = colorName + '-' + speciesName;
+    if (value.indexOf(' ') >= 0) {
+      // Some color names contain spaces, in which case we'll need to quote
+      // the filter clause.
+      value = '"' + value + '"';
+    }
+    return 'fits:' + value;
   }
 
   function addAutofilter(query) {
@@ -1349,22 +1355,19 @@ View.Search = function (wardrobe) {
   function updateQuery() {
     var human_query = typeof current_query === 'string' ? current_query : '';
     var autofilterClause = buildAutofilterClause();
-    var autofilterPresent = false;
-    human_query = human_query.split(/\s+/).filter(function(clause) {
-      if (clause.toLowerCase() === autofilterClause) {
-        autofilterPresent = true;
-        return false;
-      } else {
-        return true;
-      }
-    }).join(' ');
+    var queryWithoutAutofilterClause = human_query
+        .replace(autofilterClause, '') // remove autofilter clause
+        .replace(/^\s+/, '') // remove leading spaces
+        .replace(/\s+$/, '') // remove trailing spaces
+        .replace(/\s+/g, ' '); // collapse spaces
+    var autofilterPresent = human_query !== queryWithoutAutofilterClause;
     if (autofilterPresent) {
       $('#preview-search-autofilter').attr('checked', 'checked');
     } else if (current_query.length > 0) {
       $('#preview-search-autofilter').removeAttr('checked');
     }
-    input_el.val(human_query);
-    no_results_span.text(human_query);
+    input_el.val(queryWithoutAutofilterClause);
+    no_results_span.text(queryWithoutAutofilterClause);
   }
 
   var autofilterLabels = $('label[for=preview-search-autofilter],' +
