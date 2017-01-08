@@ -1,9 +1,20 @@
 class DonationsController < ApplicationController
   def create
     @campaign = Campaign.current
-    @donation = Donation.create_from_charge(
-      @campaign, current_user, params[:donation])
-    redirect_to @donation
+    begin
+      @donation = Donation.create_from_charge(
+        @campaign, current_user, params[:donation])
+    rescue Stripe::CardError => e
+      flash[:alert] = "We couldn't process your donation: #{e.message}"
+      redirect_to :donate
+    rescue => e
+      flash[:alert] =
+        "We couldn't process your donation: #{e.message} " +
+        "Please try again later!"
+      redirect_to :donate
+    else
+      redirect_to @donation
+    end
   end
 
   def show
