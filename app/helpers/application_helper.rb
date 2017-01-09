@@ -39,8 +39,12 @@ module ApplicationHelper
           pitch = "We've met this year's fundraising goal! Thanks, everybody!"
           prompt = "Learn more"
         elsif campaign.remaining < 200_00
-          estimate = (campaign.remaining.to_f / 5_00).ceil * 5_00
-          pitch = "We're less than #{cents_to_currency(estimate, precision: 0)} away from paying this year's hosting costs!"
+          estimate = (campaign.remaining.to_f / 10_00).ceil * 10_00
+          if estimate == campaign.remaining
+            pitch = "We're only #{cents_to_currency(estimate, precision: 0)} away from paying #{campaign.purpose}!"
+          else
+            pitch = "We're less than #{cents_to_currency(estimate, precision: 0)} away from paying #{campaign.purpose}!"
+          end
           prompt = "Donate now"
         else
           pitch = "Help Dress to Impress stay online!"
