@@ -1355,12 +1355,12 @@ View.Search = function (wardrobe) {
   function updateQuery() {
     var human_query = typeof current_query === 'string' ? current_query : '';
     var autofilterClause = buildAutofilterClause();
+    var autofilterPresent = human_query.indexOf(autofilterClause) >= 0;
     var queryWithoutAutofilterClause = human_query
         .replace(autofilterClause, '') // remove autofilter clause
         .replace(/^\s+/, '') // remove leading spaces
         .replace(/\s+$/, '') // remove trailing spaces
         .replace(/\s+/g, ' '); // collapse spaces
-    var autofilterPresent = human_query !== queryWithoutAutofilterClause;
     if (autofilterPresent) {
       $('#preview-search-autofilter').attr('checked', 'checked');
     } else if (current_query.length > 0) {
