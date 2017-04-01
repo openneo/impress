@@ -328,7 +328,13 @@ class Item < ActiveRecord::Base
   end
 
   def thumbnail
-    @thumbnail ||= Image.from_insecure_url(thumbnail_url)
+    if thumbnail_url.present?
+      url = thumbnail_url
+    else
+      url = ActionController::Base.helpers.asset_path(
+        "broken_item_thumbnail.gif")
+    end
+    @thumbnail ||= Image.from_insecure_url(url)
   end
 
   def as_json(options={})
