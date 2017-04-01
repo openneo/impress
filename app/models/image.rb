@@ -19,10 +19,7 @@ class Image
       uri.query_values = { url: insecure_url }
       uri.to_s
     else
-      uri = Addressable::URI.parse(insecure_url)
-      query_values = uri.query_values || {}
-      uri.query_values = query_values.merge(NO_CAMO_CONFIG: nil)
-      uri.to_s
+      insecure_url
     end
   end
 end
