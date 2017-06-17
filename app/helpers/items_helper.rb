@@ -1,5 +1,5 @@
 module ItemsHelper
-  JNItemsURLFormat = 'http://items.jellyneo.net/index.php?go=show_items&name=%s&name_type=exact'
+  JNItemsURLFormat = 'https://items.jellyneo.net/search/?name=%s&name_type=3'
   
   module PetTypeImage
     Format = 'http://pets.neopets.com/cp/%s/%i/%i.png'
