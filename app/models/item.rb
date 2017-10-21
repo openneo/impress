@@ -180,10 +180,18 @@ class Item < ActiveRecord::Base
         return Color.find_by_name(color.downcase)
       end
 
-      # HACK: omg I hate this. why can't the Baby Raindorf Hoodie Robe just
-      # contain the standard pattern? >_>
-      if description.include? 'This soft robe is sure to keep your little one warm and toasty.'
+      # HACK: this should probably be a flag on the record instead of
+      #     being hardcoded :P
+      if [71893, 76192, 76202].include?(id)
         return Color.find_by_name('baby')
+      end
+
+      if [76198].include?(id)
+        return Color.find_by_name('mutant')
+      end
+
+      if [75372].include?(id)
+        return Color.find_by_name('maraquan')
       end
     end
   end
