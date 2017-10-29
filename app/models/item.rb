@@ -404,7 +404,7 @@ class Item < ActiveRecord::Base
   def body_specific?
     # If there are species support IDs (it's not empty), the item is
     # body-specific. If it's empty, it fits everyone the same.
-    !species_support_ids.empty?
+    explicitly_body_specific? || !species_support_ids.empty?
   end
 
   def add_origin_registry_info(info, locale)
