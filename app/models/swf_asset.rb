@@ -210,7 +210,7 @@ class SwfAsset < ActiveRecord::Base
 
   def body_specific?
     Rails.logger.debug("my zone id is: #{zone_id}")
-    self.zone.type_id < 3 || (@item && @item.body_specific?)
+    self.zone.type_id < 3 || (item && item.body_specific?)
   end
 
   def origin_pet_type=(pet_type)
