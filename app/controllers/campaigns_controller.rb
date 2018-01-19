@@ -2,12 +2,14 @@ class CampaignsController < ApplicationController
   def show
     @campaign = Campaign.find(params[:id])
     redirect_to(action: :current) if @campaign.active?
+    @current_campaign = Campaign.current
     @donations = find_donations
     @all_campaigns = find_all_campaigns
   end
 
   def current
     @campaign = Campaign.current
+    @current_campaign = @campaign
     @donations = find_donations
     @all_campaigns = find_all_campaigns
     render action: :show

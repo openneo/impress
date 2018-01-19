@@ -45,10 +45,10 @@ body.campaigns-show, body.campaigns-current
     padding-top: 32px
     position: relative
 
-    // We only use bird theme now. Whatever.
+    // We ignore the theme attribute on campaigns now, and just do purple.
     &::after
       background:
-        image: url(image_path("campaigns/bird.gif"))
+        image: url(image_path("campaigns/purple.png"))
         repeat: no-repeat
       bottom: 0
       content: " "
@@ -117,7 +117,7 @@ body.campaigns-show, body.campaigns-current
           width: 100%
 
         input[type=radio]:checked ~ label
-          background: $amount-choices-border-color
+          background: lighten($amount-choices-border-color, 15%)
           font-weight: bold
 
         input[type=radio]:focus ~ label

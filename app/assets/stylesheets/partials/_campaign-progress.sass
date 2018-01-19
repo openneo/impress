@@ -4,16 +4,16 @@
 // $campaign-text-color: #004
 // $campaign-link-color: $campaign-text-color + #222
 
-$campaign-border-color: hsl(33, 100%, 40%)
-$campaign-background-color: hsl(33, 100%, 97%)
-$campaign-text-color: hsl(33, 100%, 20%)
+$campaign-border-color: hsl(310, 60%, 40%)
+$campaign-background-color: hsl(310, 60%, 97%)
+$campaign-text-color: hsl(310, 60%, 20%)
 $campaign-link-color: $campaign-text-color + #222
 
 =campaign-progress
   .campaign-progress-wrapper
     +border-radius(8px)
-    background: desaturate(lighten($campaign-border-color, 30%), 85%)
-    background-image: linear-gradient(color-stops(desaturate(lighten($campaign-border-color, 50%), 85%), desaturate(lighten($campaign-border-color, 30%), 85%)))
+    background: desaturate(lighten($campaign-border-color, 30%), 30%)
+    background-image: linear-gradient(color-stops(desaturate(lighten($campaign-border-color, 50%), 30%), desaturate(lighten($campaign-border-color, 30%), 30%)))
 
     border: 4px solid $campaign-border-color
     clear: both
@@ -37,7 +37,7 @@ $campaign-link-color: $campaign-text-color + #222
     height: 2.5em
 
   .campaign-progress-label
-    text-shadow: 1px 1px 0 #888
+    text-shadow: 1px 1px 0 $campaign-border-color
     color: white
     font-size: 150%
     left: 0

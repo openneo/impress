@@ -1,31 +1,30 @@
 - title "Support Dress to Impress"
 
-- if @campaign.progress > 0
-  = campaign_progress(@campaign) do
-    We've received #{cents_to_currency(@campaign.progress)}
-    toward #{@campaign.purpose}.
+- if @current_campaign.progress > 0
+  = campaign_progress(@current_campaign) do
+    We've received #{cents_to_currency(@current_campaign.progress)}
+    toward #{@current_campaign.purpose}.
     Thanks so much!
 
 = form_tag donations_path, method: 'POST', id: 'donation-form',
     'data-checkout-image' => image_path('default_preview.png'),
     'data-checkout-publishable-key' => Rails.configuration.stripe[:publishable_key],
-    'data-campaign-theme' => @campaign.theme_id do
+    'data-campaign-theme' => @current_campaign.theme_id do
   = hidden_field_tag 'donation[stripe_token]'
   = hidden_field_tag 'donation[stripe_token_type]'
   = hidden_field_tag 'donation[donor_email]'
   = hidden_field_tag 'donation[amount]'
   %header
-    -# I'm hardcoding the messaging this year, because I'm abandoning the UI
-    -# of giant paragraphs, and I don't feel like figuring out how this new
-    -# design generalizes just yet :P Whatever.
     %p#donation-form-title
       Thanks for supporting Dress to Impress!
     %p
       From modeling to servers, Dress to Impress is a community effort.
-      This year, we need to raise $840 to cover our 2016 hosting costs.
+      This year, we need to raise
+      #{cents_to_currency(@current_campaign.goal, precision: 0)}
+      to cover our #{@current_campaign.name} hosting costs.
     %p
       As a thank-you gift, for every $5 you give, we'll feature one of your
-      outfits here and on the homepage. Last year's outfits were pretty great—will this year's be even better? :o
+      outfits here and on the homepage. Show off your latest designs!
     %p
       All donations are securely powered by
       #{link_to 'Stripe', 'https://stripe.com/'}, and go directly toward our
@@ -52,13 +51,6 @@
           %input#amount-custom-value{type: 'text'}
     #donation-controls
       %button{type: 'submit'} Donate now!
-
-#campaign-text{'data-campaign-complete' => @campaign.complete?}
-  - if @campaign.complete? && @campaign.thanks?
-    #success-thanks
-      #success-thanks-main= emote_md @campaign.thanks
-      %a#success-thanks-toggle-description{href: '#'} How are donations used?
-  #description= emote_md @campaign.description
 
 - if @donations.present?
   #outfits-header
@@ -94,64 +86,41 @@
     %p#last-years-donors= link_to "Don't forget to check out last year's donors, too!", prev_campaign
 
 #fine-print
-  %h2 Other ways to donate
-  :markdown
-    We were considering PayPal for accepting donations, but ended up choosing
-    Stripe as our primary donation method because it's easy to integrate and
-    because it's well-trusted in the developer community—and because we've
-    heard too many horror stories of small organizations having their PayPal
-    accounts locked down when they suddenly start receiving a bunch of
-    transactions. Scary stuff.
-
-    But, even though PayPal isn't integrated into the site, we'll still gladly
-    accept individual donations through PayPal if you'd prefer.
-    #{mail_to 'webmaster@openneo.net', "Drop us an email and we'll talk
-    details."} Thanks!
-
   %h2 Some notes on featured outfits
   :markdown
-    When you make a donation, we'll divide the amount by $5 USD, and, rounding
-    down, that's how many of your outifts we'll feature. Cool, eh?
-
-    This is our way of publicly thanking our donors.
-    (Thanks again, by the way!)
-    We love them very much and want to bring attention to their awesomeness.
-    However, there are a few important bits of legal whatnot to keep in mind.
-    (Mostly, it's the list of things that we expect to do but in no legally
-    binding way promise to do. Just in case #{image_tag 'emoticons/tongue.gif'})
-
-    Featuring your outfit is a thank-you gift that we like to give our donors;
-    it is *not* a purchased service. We make no guarantee that we'll post your
-    outfit on any page for any particular amount of time, or even at all.
-    (That said, we expect to publicly list our donors' outfits somewhere on the
-    site for as long as the site lives, and in rotation on the homepage until
-    some other site event or feature needs the space.)
-
-    We reserve the right to refuse to post any content for any reason, and we
-    reserve the right to remove any previously posted content at any time for
-    any reason. If we don't like the outfit's name, the outfit's appearance,
-    or the name on your donation, or anything else, then we don't have to
-    publish it, and we won't necessarily refund you—especially if the content
-    seems malicious.
-    (That said, we intend to allow most any name and outfit that are
-    appropriate for Neopians of all ages.)
-
-    If you change your mind about donating, no worries: you can request a
-    refund within 60 days of donating, and, so long as you're acting in good
-    faith, we'll refund the entire donation.
-    (For example, if you realize you can't afford to donate, or legit just
-    change your mind, then we'd love to help you out
-    #{image_tag 'emoticons/smiley.gif'}
-    But we don't want people posting obscene content and expecting refunds
-    once we take it down, so we need a refund policy that lets us reject
-    those requests #{image_tag 'emoticons/tongue.gif'}
-    So, we determine "good faith" at our sole discretion—not limited to those
-    examples—but we're generally pretty understanding.)
-
     **TL;DR: We love to help and acknowledge our good-faith donors,
     but reserve the right not to do those things,
     in order to better handle bad-faith donors and unexpected circumstances.**
-    That's the whole deal #{image_tag 'emoticons/smiley.gif'}
+    #{image_tag 'emoticons/smiley.gif'}
+
+    When you make a donation, we'll divide the amount by $5 USD, and, rounding
+    down, that's how many of your outifts we'll feature. This is our way of
+    publicly thanking our donors, and we love doing it! However, it is not a
+    purchased service. Your outfit is not guaranteed to appear anywhere on the
+    site, for any amount of time. (That said, our donors' outfits generally
+    appear on the site very quickly, and we plan to continue to showcase them
+    for as long as the site stays up!)
+
+    We reserve the right to refuse to post any content for any reason, and we
+    reserve the right to remove any previously posted content at any time for
+    any reason. If we we're not comfortable with the outfit's name, the
+    outfit's appearance, or the name on your donation, or anything else, then
+    we might choose not to publish it.
+    (That said, we plan to allow any name and outfit that are appropriate for
+    Neopians of all ages.)
+
+    If you change your mind about donating, no worries: you can request a
+    refund at any time #{image_tag 'emoticons/smiley.gif'} If it's within 30
+    days of when you donated, then we promise to refund your donation as soon
+    as we can. If it's been longer, we're a bit more limited in what we can do,
+    but we'll try our best to help! Additionally, if we remove your outfit
+    because we didn't feel comfortable showcasing it, then we may choose not to
+    issue a refund, regardless of when you ask. (Sorry for the extra
+    complexity, but this exception helps us discourage bad behavior.)
+
+    We also accept donations via PayPal.
+    #{mail_to 'webmaster@openneo.net', "Please email us for more information."}
+    Thank you!!
 
 - content_for :javascripts do
   = javascript_include_tag 'https://checkout.stripe.com/checkout.js',
