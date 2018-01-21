@@ -30,7 +30,7 @@
 
       // Start parsing at the first digit in the string, to trim leading dollar
       // signs and what have you.
-      var amountNumberString = (amountChoice.value.match(/[0-9].+/) || [""])[0];
+      var amountNumberString = (amountChoice.value.match(/[0-9].*/) || [""])[0];
       var amount = Math.floor(parseFloat(amountNumberString) * 100);
 
       if (!isNaN(amount)) {
