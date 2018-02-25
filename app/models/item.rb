@@ -182,7 +182,7 @@ class Item < ActiveRecord::Base
 
       # HACK: this should probably be a flag on the record instead of
       #     being hardcoded :P
-      if [71893, 76192, 76202].include?(id)
+      if [71893, 76192, 76202, 77367, 77368, 77369, 77370].include?(id)
         return Color.find_by_name('baby')
       end
 
