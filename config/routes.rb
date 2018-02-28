@@ -1,6 +1,13 @@
 require 'resque/server'
 
 OpenneoImpressItems::Application.routes.draw do
+  if Rails.env.development?
+    mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "/graphql"
+  end
+
+
+  post "/graphql", to: "graphql#execute"
+
   get "petpages/new"
 
   get "closet_lists/new"

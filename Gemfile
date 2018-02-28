@@ -1,4 +1,5 @@
 source 'http://rubygems.org'
+ruby '2.1.2'
 
 gem 'dotenv-rails'
 gem 'dotenv-deployment'
@@ -8,7 +9,7 @@ gem 'rails', '= 3.2.18'
 gem 'mysql2', '>= 0.3.11'
 
 # https://groups.google.com/d/topic/rubyonrails-security/4_YvCpLzL58/discussion
-gem 'json', '~> 1.8.1'
+gem 'json', '~> 1.8.3'
 
 gem 'haml', '~> 4.0.0'
 gem 'rdiscount', '~> 1.6.5'
@@ -73,6 +74,8 @@ gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 
 gem "letter_opener", :group => :development
 
+gem 'graphql', '~> 1.7.12'
+
 # Needed for the new asset pipeline
 group :assets do
   
@@ -87,23 +90,6 @@ group :development do
   gem 'rvm-capistrano', '~> 1.5.6', require: false
 end
 
-group :development_async do
-  # async wrappers
-  gem 'eventmachine',     :git => 'git://github.com/eventmachine/eventmachine.git'
-  gem 'rack-fiber_pool',  :require => 'rack/fiber_pool'
-  gem 'em-synchrony',     :git => 'git://github.com/igrigorik/em-synchrony.git', :require => [
-    'em-synchrony',
-    'em-synchrony/em-http'
-    ]
-
-  # async activerecord requires
-  gem 'mysqlplus',      :git => 'git://github.com/oldmoe/mysqlplus.git',        :require => 'mysqlplus'
-  gem 'em-mysqlplus',   :git => 'git://github.com/igrigorik/em-mysqlplus.git',  :require => 'em-activerecord'
-
-  # async http requires
-  gem 'em-http-request',:git => 'git://github.com/igrigorik/em-http-request.git', :require => 'em-http'
-end
-
 group :production do
   gem 'memcache-client', '~> 1.8.5', :require => 'memcache'
   gem 'passenger_monit', '~> 0.1.1'
@@ -113,3 +99,4 @@ group :test do
   gem 'factory_girl_rails', '~> 1.0'
   gem 'rspec-rails', '~> 2.0.0.beta.22'
 end
+gem "graphiql-rails", :group => :development

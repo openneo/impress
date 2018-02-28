@@ -93,7 +93,7 @@ class SwfAsset < ActiveRecord::Base
     host = ASSET_HOSTS[:swf_asset_images]
     size_key = size.join('x')
     
-    "//#{host}/#{s3_path}/#{size_key}.png?#{image_version}"
+    "https://#{host}/#{s3_path}/#{size_key}.png?#{image_version}"
   end
   
   def images
