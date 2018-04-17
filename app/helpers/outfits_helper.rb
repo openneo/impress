@@ -55,7 +55,7 @@ module OutfitsHelper
   end
 
   def remote_load_pet_path
-    "http://#{neopia_host}/api/1/pet/customization"
+    "https://#{neopia_host}/api/1/pet/customization"
   end
 
   def render_predicted_missing_species_by_color(species_by_color)
