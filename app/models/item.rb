@@ -193,6 +193,10 @@ class Item < ActiveRecord::Base
       if [75372].include?(id)
         return Color.find_by_name('maraquan')
       end
+
+      if manual_special_color_id?
+        return Color.find(manual_special_color_id)
+      end
     end
   end
   public

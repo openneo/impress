@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170105205222) do
+ActiveRecord::Schema.define(:version => 20180509210338) do
 
   create_table "auth_servers", :force => true do |t|
     t.string "short_name", :limit => 10,       :null => false
@@ -160,12 +160,11 @@ ActiveRecord::Schema.define(:version => 20170105205222) do
     t.string   "rarity"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "temporary",   :default => false, :null => false
   end
 
   add_index "item_translations", ["item_id"], :name => "index_item_translations_on_item_id"
   add_index "item_translations", ["locale"], :name => "index_item_translations_on_locale"
-  add_index "item_translations", ["name"], :name => "index_item_translations_on_name"
+  add_index "item_translations", ["name"], :name => "index_item_translations_name"
 
   create_table "items", :force => true do |t|
     t.text     "zones_restrict",                                                  :null => false
@@ -181,6 +180,7 @@ ActiveRecord::Schema.define(:version => 20170105205222) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "explicitly_body_specific",                     :default => false, :null => false
+    t.integer  "manual_special_color_id"
   end
 
   add_index "items", ["last_spidered"], :name => "objects_last_spidered"
