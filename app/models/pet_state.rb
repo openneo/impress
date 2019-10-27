@@ -109,7 +109,7 @@ class PetState < ActiveRecord::Base
       self.female = user_pet.female?
       self.mood_id = user_pet.mood.id
       self.labeled = true
-    rescue Neopets::User::Error
+    rescue
       # If there's an error loading the userlookup data (e.g. account is
       # frozen), no big deal; we just won't label the pet right now. Proceed
       # as usual.
