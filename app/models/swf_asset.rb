@@ -209,8 +209,22 @@ class SwfAsset < ActiveRecord::Base
   end
 
   def body_specific?
-    Rails.logger.debug("my zone id is: #{zone_id}")
-    self.zone.type_id < 3 || (item && item.body_specific?)
+    self.zone.type_id < 3 || item_is_body_specific?
+  end
+  
+  def item_is_body_specific?
+    # Get items that we're already bound to in the database, and
+    # also the one passed to us from the current modeling operation,
+    # if any.
+    #
+    # NOTE: I know this has perf impact... it would be better for
+    #       modeling to preload this probably? But oh well!
+    items = parent_swf_asset_relationships.includes(:parent).where(parent_type: "Item").map { |r| r.parent }
+    items << item if item
+
+    # Return whether any of them is known to be body-specific.
+    # This ensures that we always respect the explicitly_body_specific flag!
+    return items.any? { |i| i.body_specific? }
   end
 
   def origin_pet_type=(pet_type)
