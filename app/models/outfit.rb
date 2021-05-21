@@ -32,7 +32,7 @@ class Outfit < ActiveRecord::Base
     #
     # TODO: We're still saving outfit images for now, but we'll stop
     #       doing that if this transition goes well!
-    base_url = "https://impress-2020.openneo.net/outfits" +
+    base_url = "https://impress-outfit-images.openneo.net/outfits" +
       "/#{CGI.escape id.to_s}" +
       "/v/#{CGI.escape updated_at.to_i.to_s}"
     {
