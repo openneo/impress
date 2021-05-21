@@ -27,10 +27,25 @@ class Outfit < ActiveRecord::Base
   end
   
   def image_versions
-    {}.tap do |versions|
-      versions[:large] = image.url
-      image.versions.each { |name, version| versions[name] = version.url }
-    end
+    # Now, instead of using the saved outfit to S3, we're trying out the
+    # DTI 2020 API + CDN cache version.
+    #
+    # TODO: We're still saving outfit images for now, but we'll stop
+    #       doing that if this transition goes well!
+    base_url = "https://impress-2020.openneo.net/outfits" +
+      "/#{CGI.escape id.to_s}" +
+      "/v/#{CGI.escape updated_at.to_i.to_s}"
+    {
+      large: "#{base_url}/600.png",
+      medium: "#{base_url}/300.png",
+      small: "#{base_url}/150.png",
+    }
+
+    # NOTE: Below is the previous code that uses the saved outfits!
+    # {}.tap do |versions|
+    #   versions[:large] = image.url
+    #   image.versions.each { |name, version| versions[name] = version.url }
+    # end
   end
 
   def closet_item_ids
