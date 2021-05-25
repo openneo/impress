@@ -15,23 +15,48 @@ class Outfit < ActiveRecord::Base
 
   scope :wardrobe_order, order('starred DESC', :name)
   
-  mount_uploader :image, OutfitImageUploader
+  # NOTE: We no longer save images, but we've left the code here for now.
+  #       The `image` method below simulates the previous API for the rest
+  #       of the app!
+  # mount_uploader :image, OutfitImageUploader
+  # before_save :update_enqueued_image
+  # after_commit :enqueue_image!
   
-  before_save :update_enqueued_image
-  after_commit :enqueue_image!
+  class OutfitImage
+    def initialize(image_versions)
+      @image_versions = image_versions  
+    end
 
-  def as_json(more_options={})
-    serializable_hash :only => [:id, :name, :pet_state_id, :starred],
-      :methods => [:color_id, :species_id, :worn_and_unworn_item_ids,
-                   :image_versions, :image_enqueued, :image_layers_hash]
+    def url
+      @image_versions[:large]
+    end
+    
+    def large
+      Version.new(@image_versions[:large])
+    end
+    
+    def medium
+      Version.new(@image_versions[:medium])
+    end
+    
+    def small
+      Version.new(@image_versions[:small])
+    end
+    
+    Version = Struct.new(:url)
+  end
+  
+  def image?
+    true
+  end
+  
+  def image
+    OutfitImage.new(image_versions)
   end
   
   def image_versions
-    # Now, instead of using the saved outfit to S3, we're trying out the
+    # Now, instead of using the saved outfit to S3, we're using out the
     # DTI 2020 API + CDN cache version.
-    #
-    # TODO: We're still saving outfit images for now, but we'll stop
-    #       doing that if this transition goes well!
     base_url = "https://impress-outfit-images.openneo.net/outfits" +
       "/#{CGI.escape id.to_s}" +
       "/v/#{CGI.escape updated_at.to_i.to_s}"
@@ -46,6 +71,12 @@ class Outfit < ActiveRecord::Base
     #   versions[:large] = image.url
     #   image.versions.each { |name, version| versions[name] = version.url }
     # end
+  end
+  
+  def as_json(more_options={})
+    serializable_hash :only => [:id, :name, :pet_state_id, :starred],
+      :methods => [:color_id, :species_id, :worn_and_unworn_item_ids,
+                   :image_versions, :image_enqueued, :image_layers_hash]
   end
 
   def closet_item_ids
