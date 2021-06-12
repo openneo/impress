@@ -262,7 +262,9 @@ class SwfAsset < ActiveRecord::Base
   before_create do
     uri = URI.parse url
     begin
-      response = Net::HTTP.get_response(uri)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = (uri.scheme == 'https')
+      response = http.get(uri.request_uri)
     rescue Exception => e
       raise DownloadError, e.message
     end
