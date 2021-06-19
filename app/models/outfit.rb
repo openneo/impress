@@ -56,8 +56,9 @@ class Outfit < ActiveRecord::Base
   
   def image_versions
     # Now, instead of using the saved outfit to S3, we're using out the
-    # DTI 2020 API + CDN cache version.
-    base_url = "https://impress-outfit-images.openneo.net/outfits" +
+    # DTI 2020 API + CDN cache version. We use openneo-assets.net to get
+    # around a bug on Neopets petpages with openneo.net URLs.
+    base_url = "https://outfits.openneo-assets.net/outfits" +
       "/#{CGI.escape id.to_s}" +
       "/v/#{CGI.escape updated_at.to_i.to_s}"
     {
