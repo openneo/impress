@@ -50,7 +50,7 @@ gem "mini_magick", "~> 3.4"
 gem "fog", "~> 1.8.0"
 gem "carrierwave", "~> 0.8.0"
 
-gem "parallel", "~> 0.5.17"
+gem "parallel", "~> 1.13.0"
 
 gem "http_accept_language", :git => "git://github.com/iain/http_accept_language.git"
 
