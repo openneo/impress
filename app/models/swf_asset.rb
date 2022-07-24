@@ -261,9 +261,18 @@ class SwfAsset < ActiveRecord::Base
 
   before_create do
     uri = URI.parse url
+    # NOTE: Our old Ruby can't do the HTTPS the images.neopets.com server
+    #       wants. We turn it off instead! Sigh. Should be fine since we
+    #       don't anticipate like, an MITM attack against our VPS.
+    #
+    #       Also, we re-parse after setting the scheme, to change the
+    #       class to URI:HTTP. This especially matters for URIs that
+    #       were given to us as "//images.neopets.com", because they
+    #       don't have a `request_uri` method.
+    uri.scheme = 'http'
+    uri = URI.parse(uri.to_s)
     begin
       http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = (uri.scheme == 'https')
       response = http.get(uri.request_uri)
     rescue Exception => e
       raise DownloadError, e.message
