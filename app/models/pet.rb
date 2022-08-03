@@ -2,7 +2,8 @@ require 'rocketamf/remote_gateway'
 require 'ostruct'
 
 class Pet < ActiveRecord::Base
-  GATEWAY_URL = 'http://www.neopets.com/amfphp/gateway.php'
+  NEOPETS_URL_ORIGIN = ENV['NEOPETS_URL_ORIGIN'] || 'http://www.neopets.com'
+  GATEWAY_URL = NEOPETS_URL_ORIGIN + '/amfphp/gateway.php'
   PET_VIEWER = RocketAMF::RemoteGateway.new(GATEWAY_URL).
     service('CustomPetService').action('getViewerData')
   PET_NOT_FOUND_REMOTE_ERROR = 'PHP: Unable to retrieve records from the database.'

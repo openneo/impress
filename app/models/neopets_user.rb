@@ -5,7 +5,8 @@ class NeopetsUser
   include ActiveModel::Conversion
   extend ActiveModel::Naming
 
-  GATEWAY_URL = 'http://www.neopets.com/amfphp/gateway.php'
+  NEOPETS_URL_ORIGIN = ENV['NEOPETS_URL_ORIGIN'] || 'http://www.neopets.com'
+  GATEWAY_URL = NEOPETS_URL_ORIGIN + '/amfphp/gateway.php'
   GET_PETS_METHOD = RocketAMF::RemoteGateway.new(GATEWAY_URL).
     service('MobileService').action('getPets')
 
