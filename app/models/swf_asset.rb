@@ -11,7 +11,7 @@ class SwfAsset < ActiveRecord::Base
     'Cache-Control' => 'max-age=315360000',
     'Content-Type' => 'image/png'
   }
-  NEOPETS_ASSET_SERVER = 'http://images.neopets.com'
+  NEOPETS_IMAGES_URL_ORIGIN = ENV['NEOPETS_IMAGES_URL_ORIGIN'] || 'http://images.neopets.com'
 
   set_inheritance_column 'inheritance_type'
 
@@ -248,7 +248,7 @@ class SwfAsset < ActiveRecord::Base
 
   def mall_data=(data)
     self.zone_id = data['zone'].to_i
-    self.url = "#{NEOPETS_ASSET_SERVER}/#{data['url']}"
+    self.url = "#{NEOPETS_IMAGES_URL_ORIGIN}/#{data['url']}"
   end
 
   def self.from_wardrobe_link_params(ids)
@@ -260,17 +260,14 @@ class SwfAsset < ActiveRecord::Base
   end
 
   before_create do
-    uri = URI.parse url
-    # NOTE: Our old Ruby can't do the HTTPS the images.neopets.com server
-    #       wants. We turn it off instead! Sigh. Should be fine since we
-    #       don't anticipate like, an MITM attack against our VPS.
-    #
-    #       Also, we re-parse after setting the scheme, to change the
-    #       class to URI:HTTP. This especially matters for URIs that
-    #       were given to us as "//images.neopets.com", because they
-    #       don't have a `request_uri` method.
-    uri.scheme = 'http'
-    uri = URI.parse(uri.to_s)
+    # HACK: images.neopets.com no longer accepts requests over `http://`, and
+    #       our dependencies don't support the version of HTTPS they want. So,
+    #       we replace images.neopets.com with the NEOPETS_IMAGES_URL_ORIGIN
+    #       specified in the secret `.env` file. (At time of writing, that's
+    #       our proxy: `http://images.neopets-asset-proxy.openneo.net`.)
+    modified_url = url.sub(/^https?:\/\/images.neopets.com/, NEOPETS_IMAGES_URL_ORIGIN)
+
+    uri = URI.parse(modified_url)
     begin
       http = Net::HTTP.new(uri.host, uri.port)
       response = http.get(uri.request_uri)
