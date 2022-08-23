@@ -11,6 +11,9 @@ class SwfAsset < ActiveRecord::Base
     'Cache-Control' => 'max-age=315360000',
     'Content-Type' => 'image/png'
   }
+  # This is the URL origin we should use when loading from images.neopets.com.
+  # It can be overridden in .env as `NEOPETS_IMAGES_URL_ORIGIN`, to use our
+  # asset proxy instead.
   NEOPETS_IMAGES_URL_ORIGIN = ENV['NEOPETS_IMAGES_URL_ORIGIN'] || 'http://images.neopets.com'
 
   set_inheritance_column 'inheritance_type'
@@ -248,7 +251,7 @@ class SwfAsset < ActiveRecord::Base
 
   def mall_data=(data)
     self.zone_id = data['zone'].to_i
-    self.url = "#{NEOPETS_IMAGES_URL_ORIGIN}/#{data['url']}"
+    self.url = "https://images.neopets.com/#{data['url']}"
   end
 
   def self.from_wardrobe_link_params(ids)
