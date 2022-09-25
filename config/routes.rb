@@ -99,7 +99,7 @@ OpenneoImpressItems::Application.routes.draw do
   match '/start/:color_name/:species_name' => 'outfits#start'
 
   match 'image-mode' => 'static#image_mode', :as => :image_mode
-  match '/terms' => 'static#terms', :as => :terms
+  match '/terms' => redirect("https://impress-2020.openneo.net/terms"), :as => :terms
 
   match '/sitemap.xml' => 'sitemap#index', :as => :sitemap, :format => :xml
   match '/robots.txt' => 'sitemap#robots', :as => :robots, :format => :text
