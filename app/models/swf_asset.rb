@@ -199,7 +199,10 @@ class SwfAsset < ActiveRecord::Base
       :zone_id => zone_id,
       :zones_restrict => zones_restrict,
       :is_body_specific => body_specific?,
-      :has_image => has_image?,
+      # Now that we don't proactively convert images anymore, let's just always
+      # say `has_image: true` when sending data to the frontend, so it'll use the
+      # new URLs anyway!
+      :has_image => true,
       :images => images
     }
     if options[:for] == 'wardrobe'
@@ -318,4 +321,3 @@ class SwfAsset < ActiveRecord::Base
     File.join(relevant_pieces)
   end
 end
-
