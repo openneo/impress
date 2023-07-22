@@ -39,8 +39,6 @@ gem "nokogiri", "~> 1.5.2"
 
 gem 'sanitize', '~> 2.0.3'
 
-gem 'newrelic_rpm'
-
 gem 'neopets', '~> 0.2.0', :git => 'https://github.com/matchu/neopets.git'
 
 gem "mini_magick", "~> 3.4"

@@ -151,7 +151,6 @@ GEM
     net-ssh (2.9.2)
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
-    newrelic_rpm (3.12.1.298)
     nokogiri (1.5.11)
     openneo-auth-signatory (0.1.0)
       ruby-hmac
@@ -301,7 +300,6 @@ DEPENDENCIES
   msgpack (~> 0.5.3)
   mysql2 (>= 0.3.11)
   neopets (~> 0.2.0)!
-  newrelic_rpm
   nokogiri (~> 1.5.2)
   openneo-auth-signatory (~> 0.1.0)
   parallel (~> 1.13.0)
