@@ -436,11 +436,11 @@ class Item < ActiveRecord::Base
       swf_assets_by_id[id] = swf_asset
       swf_asset_ids << id
     end
-    SwfAsset.select([
+    SwfAsset.object_assets.joins(:parent_swf_asset_relationships).
+      where(SwfAsset.arel_table[:id].in(swf_asset_ids)).select([
         SwfAsset.arel_table[:id],
         ParentSwfAssetRelationship.arel_table[:parent_id]
-      ]).object_assets.joins(:parent_swf_asset_relationships).
-      where(SwfAsset.arel_table[:id].in(swf_asset_ids)).each do |row|
+      ]).each do |row|
         item_id = row.parent_id.to_i
         swf_assets_by_parent_id[item_id] ||= []
         swf_assets_by_parent_id[item_id] << swf_assets_by_id[row.id.to_i]
