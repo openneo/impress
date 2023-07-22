@@ -1,5 +1,4 @@
 class Item < ActiveRecord::Base
-  include Flex::Model
   include PrettyParam
   
   set_inheritance_column 'inheritance_type' # PHP Impress used "type" to describe category
@@ -40,29 +39,6 @@ class Item < ActiveRecord::Base
   scope :sitemap, order([:id]).limit(49999)
 
   scope :with_closet_hangers, joins(:closet_hangers)
-  
-  # Syncing is now handled in background tasks, created in the ItemObserver.
-  flex.sync self, callbacks: []
-  
-  def flex_source
-    indexed_attributes = {
-      :is_nc => self.nc?,
-      :is_pb => self.pb?,
-      :species_support_id => self.supported_species_ids,
-      :occupied_zone_id => self.occupied_zone_ids,
-      :restricted_zone_id => self.restricted_zone_ids,
-      :body_id => self.modeled_body_ids,
-      :name => {}
-    }
-    
-    I18n.usable_locales_with_neopets_language_code.each do |locale|
-      I18n.with_locale(locale) do
-        indexed_attributes[:name][locale] = self.name
-      end
-    end
-    
-    indexed_attributes.to_json
-  end
 
   def closeted?
     @owned || @wanted

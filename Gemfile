@@ -52,11 +52,6 @@ gem "http_accept_language", :git => "https://github.com/iain/http_accept_languag
 
 gem 'globalize', '~> 4.0.3'
 
-# My flex branch fixes a minor pagination bug. Once it's merged into the
-# original gem, we can switch back.
-gem "flex", :require => "flex/rails", :git => "https://github.com/matchu/flex.git"
-gem "patron", "~> 0.4.18"
-
 gem "rest-client", "~> 1.6.7"
 
 gem 'rails-i18n', '~> 4.0', '>= 4.0.9'

@@ -5,15 +5,6 @@ GIT
     http_accept_language (2.1.1)
 
 GIT
-  remote: https://github.com/matchu/flex.git
-  revision: 6d7e3fd6e2845ae978545be67b912323888d1ebb
-  specs:
-    flex (0.4.1)
-      multi_json (~> 1.3.4)
-      progressbar (~> 0.11.0)
-      prompter (~> 0.1.5)
-
-GIT
   remote: https://github.com/matchu/neopets.git
   revision: 5d13a720b616ba57fbbd54541f3e5daf02b3fedc
   specs:
@@ -98,7 +89,6 @@ GEM
     dotenv-deployment (0.0.2)
     dotenv-rails (2.0.1)
       dotenv (= 2.0.1)
-    dye (0.1.4)
     erubis (2.7.0)
     excon (0.45.4)
     execjs (2.5.2)
@@ -157,11 +147,6 @@ GEM
     orm_adapter (0.5.0)
     parallel (1.13.0)
     passenger_monit (0.1.1)
-    patron (0.4.20)
-    progressbar (0.11.0)
-    prompter (0.1.6)
-      dye (>= 0.1.1)
-      yard (>= 0.6.3)
     rack (1.5.5)
     rack-attack (2.2.1)
       rack
@@ -272,7 +257,6 @@ GEM
       activesupport (>= 2.3.4)
       chronic (~> 0.6.3)
     will_paginate (3.0.7)
-    yard (0.9.34)
 
 PLATFORMS
   ruby
@@ -289,7 +273,6 @@ DEPENDENCIES
   dotenv-deployment
   dotenv-rails
   factory_girl_rails (~> 1.0)
-  flex!
   fog (~> 1.8.0)
   globalize (~> 4.0.3)
   haml (~> 4.0.0)
@@ -304,7 +287,6 @@ DEPENDENCIES
   openneo-auth-signatory (~> 0.1.0)
   parallel (~> 1.13.0)
   passenger_monit (~> 0.1.1)
-  patron (~> 0.4.18)
   rack-attack (~> 2.2.0)
   rails (= 4.0.13)
   rails-i18n (~> 4.0, >= 4.0.9)
