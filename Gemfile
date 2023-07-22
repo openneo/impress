@@ -73,11 +73,6 @@ gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 
 gem "letter_opener", :group => :development
 
-# Needed for the new asset pipeline
-group :assets do
-  
-end
-
 gem 'sass-rails',    "~> 3.2.6"
 gem 'compass-rails', "~> 1.0.3"
 gem 'uglifier',      ">= 1.0.3"
