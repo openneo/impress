@@ -1,6 +1,4 @@
 class ClosetHanger < ActiveRecord::Base
-  include Flex::Model
-  
   belongs_to :item
   belongs_to :list, :class_name => 'ClosetList'
   belongs_to :user
@@ -39,29 +37,6 @@ class ClosetHanger < ActiveRecord::Base
   end
 
   before_validation :merge_quantities, :set_owned_by_list
-  
-  if Flex::Configuration.hangers_enabled
-    flex.parent :item, 'item' => 'closet_hanger'
-    flex.sync self, callbacks: [:save] # we handle destroy more carefully
-  end
-
-  after_destroy do
-    begin
-      flex.remove
-    rescue Flex::HttpError
-      # This usually means that the record was already dropped from
-      # the search engine. Weird, but okay; if the search engine is
-      # erroneously in the correct state, let it be.
-    end
-  end
-
-  def flex_source
-    {
-      :user_id => user_id,
-      :item_id => item_id,
-      :owned => owned?
-    }.to_json
-  end
 
   def possibly_null_closet_list
     list || user.null_closet_list(owned)
@@ -147,6 +122,7 @@ class ClosetHanger < ActiveRecord::Base
     # Find a hanger that conflicts: for the same item, in the same user's
     # closet, same owned status, same list. It also must not be the current
     # hanger. Select enough for our logic and to update flex_source.
+    # TODO: We deleted flex, does this reduce what data we need here?
     conflicting_hanger = self.class.select([:id, :quantity, :user_id, :item_id,
                                             :owned]).
       where(:user_id => user_id, :item_id => item_id, :owned => owned,
