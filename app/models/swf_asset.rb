@@ -30,7 +30,7 @@ class SwfAsset < ActiveRecord::Base
   
   belongs_to :zone
   
-  scope :includes_depth, lambda { includes(:zone) }
+  scope :includes_depth, -> { includes(:zone) }
 
   def local_swf_path
     LOCAL_ASSET_DIR.join(local_path_within_outfit_swfs)
@@ -156,27 +156,27 @@ class SwfAsset < ActiveRecord::Base
     @body_ids_fitting_standard ||= PetType.standard_body_ids + [0]
   end
 
-  scope :fitting_body_id, lambda { |body_id|
+  scope :fitting_body_id, ->(body_id) {
     where(arel_table[:body_id].in([body_id, 0]))
   }
 
-  scope :fitting_standard_body_ids, lambda {
+  scope :fitting_standard_body_ids, -> {
     where(arel_table[:body_id].in(body_ids_fitting_standard))
   }
 
-  scope :fitting_color, lambda { |color|
+  scope :fitting_color, ->(color) {
     body_ids = PetType.select(:body_id).where(:color_id => color.id).map(&:body_id)
     body_ids << 0
     where(arel_table[:body_id].in(body_ids))
   }
 
-  scope :biology_assets, where(:type => PetState::SwfAssetType)
-  scope :object_assets, where(:type => Item::SwfAssetType)
-  scope :for_item_ids, lambda { |item_ids|
+  scope :biology_assets, -> { where(:type => PetState::SwfAssetType) }
+  scope :object_assets, -> { where(:type => Item::SwfAssetType) }
+  scope :for_item_ids, ->(item_ids) {
     joins(:parent_swf_asset_relationships).
       where(ParentSwfAssetRelationship.arel_table[:parent_id].in(item_ids))
   }
-  scope :with_parent_ids, lambda {
+  scope :with_parent_ids, -> {
     select('swf_assets.*, parents_swf_assets.parent_id')
   }
 
