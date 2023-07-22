@@ -147,6 +147,8 @@ GEM
     orm_adapter (0.5.0)
     parallel (1.13.0)
     passenger_monit (0.1.1)
+    protected_attributes (1.1.4)
+      activemodel (>= 4.0.1, < 5.0)
     rack (1.5.5)
     rack-attack (2.2.1)
       rack
@@ -287,6 +289,7 @@ DEPENDENCIES
   openneo-auth-signatory (~> 0.1.0)
   parallel (~> 1.13.0)
   passenger_monit (~> 0.1.1)
+  protected_attributes (~> 1.1, >= 1.1.4)
   rack-attack (~> 2.2.0)
   rails (= 4.0.13)
   rails-i18n (~> 4.0, >= 4.0.9)
