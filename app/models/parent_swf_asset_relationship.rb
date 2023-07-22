@@ -1,5 +1,5 @@
 class ParentSwfAssetRelationship < ActiveRecord::Base
-  set_table_name 'parents_swf_assets'
+  self.table_name = 'parents_swf_assets'
   
   belongs_to :parent, :polymorphic => true
   
