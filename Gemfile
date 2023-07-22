@@ -87,23 +87,6 @@ group :development do
   gem 'rvm-capistrano', '~> 1.5.6', require: false
 end
 
-group :development_async do
-  # async wrappers
-  gem 'eventmachine',     :git => 'git://github.com/eventmachine/eventmachine.git'
-  gem 'rack-fiber_pool',  :require => 'rack/fiber_pool'
-  gem 'em-synchrony',     :git => 'git://github.com/igrigorik/em-synchrony.git', :require => [
-    'em-synchrony',
-    'em-synchrony/em-http'
-    ]
-
-  # async activerecord requires
-  gem 'mysqlplus',      :git => 'git://github.com/oldmoe/mysqlplus.git',        :require => 'mysqlplus'
-  gem 'em-mysqlplus',   :git => 'git://github.com/igrigorik/em-mysqlplus.git',  :require => 'em-activerecord'
-
-  # async http requires
-  gem 'em-http-request',:git => 'git://github.com/igrigorik/em-http-request.git', :require => 'em-http'
-end
-
 group :production do
   gem 'memcache-client', '~> 1.8.5', :require => 'memcache'
   gem 'passenger_monit', '~> 0.1.1'
