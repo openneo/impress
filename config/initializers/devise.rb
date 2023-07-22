@@ -3,7 +3,7 @@
 Devise.setup do |config|
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in DeviseMailer.
-  config.mailer_sender = "please-change-me@config-initializers-devise.com"
+  config.mailer_sender = "matchu@openneo.net"
 
   # Configure the class responsible to send e-mails.
   # config.mailer = "Devise::Mailer"
@@ -37,16 +37,16 @@ Devise.setup do |config|
   # ==> Configuration for :database_authenticatable
   # For bcrypt, this is the cost for hashing the password and defaults to 10. If
   # using other encryptors, it sets how many times you want the password re-encrypted.
-  config.stretches = 10
+  # config.stretches = 10
 
   # Define which will be the encryption algorithm. Devise also supports encryptors
   # from others authentication tools as :clearance_sha1, :authlogic_sha512 (then
   # you should set stretches above to 20 for default behavior) and :restful_authentication_sha1
   # (then you should set stretches to 10, and copy REST_AUTH_SITE_KEY to pepper)
-  config.encryptor = :bcrypt
+  # config.encryptor = :bcrypt
 
   # Setup a pepper to generate the encrypted password.
-  config.pepper = "f6a7bb49e6d2348d529bf4c64c09af1491284e90087d282713825f09b8ac0d78be1d3e5fb65b4f95115da90a8b6be60a9d4da68ae60a6174a6c238976b52b848"
+  # config.pepper = "f6a7bb49e6d2348d529bf4c64c09af1491284e90087d282713825f09b8ac0d78be1d3e5fb65b4f95115da90a8b6be60a9d4da68ae60a6174a6c238976b52b848"
 
   # ==> Configuration for :confirmable
   # The time you want to give your user to confirm his account. During this time
