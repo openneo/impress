@@ -12,16 +12,16 @@ OpenneoImpressItems::Application.routes.draw do
   devise_for :users
 
   # DEPRECATED
-  match '/bodies/:body_id/swf_assets.json' => 'swf_assets#index', :as => :body_swf_assets
+  get '/bodies/:body_id/swf_assets.json' => 'swf_assets#index', :as => :body_swf_assets
   
-  match '/items/:item_id/swf_assets.json' => 'swf_assets#index', :as => :item_swf_assets
-  match '/items/:item_id/bodies/:body_id/swf_assets.json' => 'swf_assets#index', :as => :item_swf_assets_for_body_id
-  match '/pet_types/:pet_type_id/swf_assets.json' => 'swf_assets#index', :as => :pet_type_swf_assets
-  match '/pet_types/:pet_type_id/items/swf_assets.json' => 'swf_assets#index', :as => :item_swf_assets_for_pet_type
-  match '/pet_states/:pet_state_id/swf_assets.json' => 'swf_assets#index', :as => :pet_state_swf_assets
-  match '/species/:species_id/color/:color_id/pet_type.json' => 'pet_types#show'
+  get '/items/:item_id/swf_assets.json' => 'swf_assets#index', :as => :item_swf_assets
+  get '/items/:item_id/bodies/:body_id/swf_assets.json' => 'swf_assets#index', :as => :item_swf_assets_for_body_id
+  get '/pet_types/:pet_type_id/swf_assets.json' => 'swf_assets#index', :as => :pet_type_swf_assets
+  get '/pet_types/:pet_type_id/items/swf_assets.json' => 'swf_assets#index', :as => :item_swf_assets_for_pet_type
+  get '/pet_states/:pet_state_id/swf_assets.json' => 'swf_assets#index', :as => :pet_state_swf_assets
+  get '/species/:species_id/color/:color_id/pet_type.json' => 'pet_types#show'
 
-  match '/roulette' => 'roulettes#new', :as => :roulette
+  get '/roulette' => 'roulettes#new', :as => :roulette
 
   resources :broken_image_reports, :only => [:new, :create]
   resources :contributions, :only => [:index]
@@ -46,17 +46,17 @@ OpenneoImpressItems::Application.routes.draw do
     resources :neopets_users, :only => [:new, :create], :path => 'neopets-users'
   end
 
-  match '/users/current-user/outfits' => 'outfits#index', :as => :current_user_outfits
+  get '/users/current-user/outfits' => 'outfits#index', :as => :current_user_outfits
 
-  match '/pets/load' => 'pets#load', :method => :post, :as => :load_pet
-  match '/pets/submit' => 'pets#submit', :method => :post
-  match '/modeling' => 'pets#bulk', :as => :bulk_pets
+  post '/pets/load' => 'pets#load', :as => :load_pet
+  post '/pets/submit' => 'pets#submit', :method => :post
+  get '/modeling' => 'pets#bulk', :as => :bulk_pets
 
-  match '/login' => 'sessions#new', :as => :login
-  match '/logout' => 'sessions#destroy', :as => :logout
-  match '/users/authorize' => 'sessions#create'
+  get '/login' => 'sessions#new', :as => :login
+  get '/logout' => 'sessions#destroy', :as => :logout
+  post '/users/authorize' => 'sessions#create'
   
-  match '/locales/choose' => 'locales#choose', :as => :choose_locale
+  post '/locales/choose' => 'locales#choose', :as => :choose_locale
 
   resources :users, :path => 'user', :only => [:index, :update] do
     resources :contributions, :only => [:index]
@@ -88,21 +88,21 @@ OpenneoImpressItems::Application.routes.draw do
   end
 
   resources :campaigns, only: [:show], path: '/donate/campaigns'
-  match '/donate' => 'campaigns#current', as: :donate
+  get '/donate' => 'campaigns#current', as: :donate
 
-  match 'users/current-user/closet' => 'closet_hangers#index', :as => :your_items
+  get 'users/current-user/closet' => 'closet_hangers#index', :as => :your_items
 
-  match 'users/top-contributors' => 'users#top_contributors', :as => :top_contributors
-  match 'users/top_contributors' => redirect('/users/top-contributors')
+  get 'users/top-contributors' => 'users#top_contributors', :as => :top_contributors
+  get 'users/top_contributors' => redirect('/users/top-contributors')
 
-  match '/wardrobe' => 'outfits#edit', :as => :wardrobe
-  match '/start/:color_name/:species_name' => 'outfits#start'
+  get '/wardrobe' => 'outfits#edit', :as => :wardrobe
+  get '/start/:color_name/:species_name' => 'outfits#start'
 
-  match 'image-mode' => 'static#image_mode', :as => :image_mode
-  match '/terms' => redirect("https://impress-2020.openneo.net/terms"), :as => :terms
+  get 'image-mode' => 'static#image_mode', :as => :image_mode
+  get '/terms' => redirect("https://impress-2020.openneo.net/terms"), :as => :terms
 
-  match '/sitemap.xml' => 'sitemap#index', :as => :sitemap, :format => :xml
-  match '/robots.txt' => 'sitemap#robots', :as => :robots, :format => :text
+  get '/sitemap.xml' => 'sitemap#index', :as => :sitemap, :format => :xml
+  get '/robots.txt' => 'sitemap#robots', :as => :robots, :format => :text
 
   def mount_resque
     mount Resque::Server, :at => '/resque'
