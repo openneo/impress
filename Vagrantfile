@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
   # NOTE: This will enable public access to the opened port
-  # config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.network "forwarded_port", guest: 3000, host: 3000
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine and only allow access
@@ -75,7 +75,7 @@ Vagrant.configure("2") do |config|
     apt-get install -y rbenv libssl1.0-dev
     su vagrant -c 'curl -fsSL https://gist.github.com/FiveYellowMice/c50490693d47577cfe7e6ac9fc3bf6cf.txt | rbenv install --patch 1.9.3-p551'
     apt-get remove -y libssl1.0-dev
-    apt-get install -y libmysqlclient-dev libcurl4-openssl-dev
+    apt-get install -y libmysqlclient-dev libcurl4-openssl-dev nodejs
     echo 'When you log in as vagrant, run `rbenv init` and follow the instructions!'
   SHELL
 end
