@@ -3,6 +3,9 @@ require 'uri'
 require 'utf8'
 
 class SwfAsset < ActiveRecord::Base
+  # We use the `type` column to mean something other than what Rails means!
+  self.inheritance_column = nil
+  
   PUBLIC_ASSET_DIR = File.join('swfs', 'outfit')
   LOCAL_ASSET_DIR = Rails.root.join('public', PUBLIC_ASSET_DIR)
   IMAGE_BUCKET = IMPRESS_S3.bucket('impress-asset-images')
@@ -15,8 +18,6 @@ class SwfAsset < ActiveRecord::Base
   # It can be overridden in .env as `NEOPETS_IMAGES_URL_ORIGIN`, to use our
   # asset proxy instead.
   NEOPETS_IMAGES_URL_ORIGIN = ENV['NEOPETS_IMAGES_URL_ORIGIN'] || 'http://images.neopets.com'
-
-  set_inheritance_column 'inheritance_type'
 
   IMAGE_SIZES = {
     :small => [150, 150],
