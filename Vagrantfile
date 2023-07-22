@@ -72,10 +72,8 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
     apt-get update
-    apt-get install -y rbenv libssl1.0-dev
-    su vagrant -c 'curl -fsSL https://gist.github.com/FiveYellowMice/c50490693d47577cfe7e6ac9fc3bf6cf.txt | rbenv install --patch 1.9.3-p551'
-    apt-get remove -y libssl1.0-dev
-    apt-get install -y libmysqlclient-dev libcurl4-openssl-dev nodejs
+    apt-get install -y rbenv libmysqlclient-dev libcurl4-openssl-dev nodejs
+    su vagrant -c 'rbenv install 2.2.4 && gem install bundler -v 1.17.3'
     echo 'When you log in as vagrant, run `rbenv init` and follow the instructions!'
   SHELL
 end
