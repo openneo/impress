@@ -16,7 +16,7 @@ gem 'will_paginate', '~> 3.0.pre2'
 gem 'devise', '~> 2.2.3'
 
 # unstable version of RocketAMF interprets info registry as a hash instead of an array
-gem 'RocketAMF', :git => 'git://github.com/rubyamf/rocketamf.git'
+gem 'RocketAMF', :git => 'https://github.com/rubyamf/rocketamf.git'
 
 gem 'msgpack', '~> 0.5.3'
 gem 'openneo-auth-signatory', '~> 0.1.0'
@@ -43,7 +43,7 @@ gem 'sanitize', '~> 2.0.3'
 
 gem 'newrelic_rpm'
 
-gem 'neopets', '~> 0.2.0', :git => 'git://github.com/matchu/neopets.git'
+gem 'neopets', '~> 0.2.0', :git => 'https://github.com/matchu/neopets.git'
 
 gem "mini_magick", "~> 3.4"
 
@@ -52,13 +52,13 @@ gem "carrierwave", "~> 0.8.0"
 
 gem "parallel", "~> 1.13.0"
 
-gem "http_accept_language", :git => "git://github.com/iain/http_accept_language.git"
+gem "http_accept_language", :git => "https://github.com/iain/http_accept_language.git"
 
-gem "globalize3", :git => "git://github.com/matchu/globalize3.git"
+gem "globalize3", :git => "https://github.com/matchu/globalize3.git"
 
 # My flex branch fixes a minor pagination bug. Once it's merged into the
 # original gem, we can switch back.
-gem "flex", :require => "flex/rails", :git => "git://github.com/matchu/flex.git"
+gem "flex", :require => "flex/rails", :git => "https://github.com/matchu/flex.git"
 gem "patron", "~> 0.4.18"
 
 gem "rest-client", "~> 1.6.7"
