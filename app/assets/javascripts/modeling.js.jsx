@@ -1,37 +1,37 @@
-/** @jsx React.DOM */
-
-var Neopia = (function($, I18n) {
+var Neopia = (function ($, I18n) {
   // Console-polyfill. MIT license.
   // https://github.com/paulmillr/console-polyfill
   // Make it safe to do console.log() always.
   var console = (function (con) {
-    'use strict';
+    "use strict";
     var prop, method;
     var empty = {};
-    var dummy = function() {};
-    var properties = 'memory'.split(',');
-    var methods = ('assert,count,debug,dir,dirxml,error,exception,group,' +
-       'groupCollapsed,groupEnd,info,log,markTimeline,profile,profileEnd,' +
-       'time,timeEnd,trace,warn').split(',');
-    while (prop = properties.pop()) con[prop] = con[prop] || empty;
-    while (method = methods.pop()) con[method] = con[method] || dummy;
+    var dummy = function () {};
+    var properties = "memory".split(",");
+    var methods = (
+      "assert,count,debug,dir,dirxml,error,exception,group," +
+      "groupCollapsed,groupEnd,info,log,markTimeline,profile,profileEnd," +
+      "time,timeEnd,trace,warn"
+    ).split(",");
+    while ((prop = properties.pop())) con[prop] = con[prop] || empty;
+    while ((method = methods.pop())) con[method] = con[method] || dummy;
     return con;
   })(window.console || {});
 
   var Neopia = {
     User: {
-      get: function(id) {
+      get: function (id) {
         return $.ajax({
           dataType: "json",
           url: Neopia.API_URL + "/users/" + id,
-          useCSRFProtection: false
-        }).then(function(response) {
+          useCSRFProtection: false,
+        }).then(function (response) {
           return response.users[0];
         });
-      }
+      },
     },
     Customization: {
-      request: function(petId, type) {
+      request: function (petId, type) {
         var data = {};
         if (ImpressUser.id) {
           data.impress_user = ImpressUser.id;
@@ -41,80 +41,91 @@ var Neopia = (function($, I18n) {
           type: type,
           url: Neopia.API_URL + "/pets/" + petId + "/customization",
           useCSRFProtection: false,
-          data: data
+          data: data,
         });
       },
-      get: function(petId) {
+      get: function (petId) {
         return this.request(petId, "GET");
       },
-      post: function(petId) {
+      post: function (petId) {
         return this.request(petId, "POST");
-      }
+      },
     },
     Status: {
-      get: function() {
+      get: function () {
         return $.ajax({
           dataType: "json",
           url: Neopia.API_URL + "/status",
-          useCSRFProtection: false
+          useCSRFProtection: false,
         });
-      }
+      },
     },
-    init: function() {
-      var hostEl = $('meta[name=neopia-host]');
+    init: function () {
+      var hostEl = $("meta[name=neopia-host]");
       if (!hostEl.length) {
         throw "missing neopia-host meta tag";
       }
-      var host = hostEl.attr('content');
+      var host = hostEl.attr("content");
       if (!host) {
         throw "neopia-host meta tag exists, but is empty";
       }
       Neopia.API_URL = "//" + host + "/api/1";
-    }
+    },
   };
 
-  var ImpressUser = (function() {
-    var userSignedIn = ($('meta[name=user-signed-in]').attr('content') === 'true');
+  var ImpressUser = (function () {
+    var userSignedIn =
+      $("meta[name=user-signed-in]").attr("content") === "true";
     if (userSignedIn) {
-      var currentUserId = $('meta[name=current-user-id]').attr('content');
+      var currentUserId = $("meta[name=current-user-id]").attr("content");
       return {
-        addNeopetsUsername: function(username) {
+        addNeopetsUsername: function (username) {
           return $.ajax({
-            url: '/user/' + currentUserId + '/neopets-connections',
-            type: 'POST',
-            data: {neopets_connection: {neopets_username: username}}
+            url: "/user/" + currentUserId + "/neopets-connections",
+            type: "POST",
+            data: { neopets_connection: { neopets_username: username } },
           });
         },
-        removeNeopetsUsername: function(username) {
+        removeNeopetsUsername: function (username) {
           return $.ajax({
-            url: '/user/' + currentUserId + '/neopets-connections/' + encodeURIComponent(username),
-            type: 'POST',
-            data: {_method: 'DELETE'}
+            url:
+              "/user/" +
+              currentUserId +
+              "/neopets-connections/" +
+              encodeURIComponent(username),
+            type: "POST",
+            data: { _method: "DELETE" },
           });
         },
-        getNeopetsUsernames: function() {
-          return JSON.parse($('#modeling-neopets-users').attr('data-usernames'));
+        getNeopetsUsernames: function () {
+          return JSON.parse(
+            $("#modeling-neopets-users").attr("data-usernames")
+          );
         },
-        id: currentUserId
+        id: currentUserId,
       };
     } else {
       return {
         _key: "guestNeopetsUsernames",
-        _setNeopetsUsernames: function(usernames) {
+        _setNeopetsUsernames: function (usernames) {
           localStorage.setItem(this._key, JSON.stringify(usernames));
         },
-        addNeopetsUsername: function(username) {
-          this._setNeopetsUsernames(this.getNeopetsUsernames().concat([username]));
+        addNeopetsUsername: function (username) {
+          this._setNeopetsUsernames(
+            this.getNeopetsUsernames().concat([username])
+          );
         },
-        removeNeopetsUsername: function(username) {
-          this._setNeopetsUsernames(this.getNeopetsUsernames().filter(function(u) {
-            return u !== username;
-          }));
+        removeNeopetsUsername: function (username) {
+          this._setNeopetsUsernames(
+            this.getNeopetsUsernames().filter(function (u) {
+              return u !== username;
+            })
+          );
         },
-        getNeopetsUsernames: function() {
+        getNeopetsUsernames: function () {
           return JSON.parse(localStorage.getItem(this._key)) || [];
         },
-        id: null
+        id: null,
       };
     }
   })();
@@ -124,121 +135,135 @@ var Neopia = (function($, I18n) {
     _customizations: [],
     _itemsById: {},
     _items: [],
-    _usersComponent: {setState: function() {}},
+    _usersComponent: { setState: function () {} },
     _neopetsUsernamesPresenceMap: {},
-    _addCustomization: function(customization) {
+    _addCustomization: function (customization) {
       // Set all equipped, interesting items' statuses as success and cross
       // them off the list.
       var itemsById = this._itemsById;
       var equippedByZone = customization.custom_pet.equipped_by_zone;
       var closetItems = customization.closet_items;
-      Object.keys(equippedByZone).forEach(function(zoneId) {
+      Object.keys(equippedByZone).forEach(function (zoneId) {
         var equippedClosetId = equippedByZone[zoneId].closet_obj_id;
         var equippedObjectId = closetItems[equippedClosetId].obj_info_id;
         if (itemsById.hasOwnProperty(equippedObjectId)) {
           customization.statusByItemId[equippedObjectId] = "success";
-          itemsById[equippedObjectId].el.find("span[data-body-id=" +
-            customization.custom_pet.body_id + "]").addClass("modeled")
+          itemsById[equippedObjectId].el
+            .find("span[data-body-id=" + customization.custom_pet.body_id + "]")
+            .addClass("modeled")
             .attr("title", I18n.modeledBodyTitle);
         }
       });
-      this._customizationsByPetId[customization.custom_pet.name] = customization;
+      this._customizationsByPetId[customization.custom_pet.name] =
+        customization;
       this._customizations = this._buildCustomizations();
       this._updateCustomizations();
     },
-    _addNewCustomization: function(customization) {
+    _addNewCustomization: function (customization) {
       customization.loadingForItemId = null;
       customization.statusByItemId = {};
       this._addCustomization(customization);
     },
-    _buildCustomizations: function() {
+    _buildCustomizations: function () {
       var modelCustomizationsByPetId = this._customizationsByPetId;
-      return Object.keys(modelCustomizationsByPetId).map(function(petId) {
+      return Object.keys(modelCustomizationsByPetId).map(function (petId) {
         return modelCustomizationsByPetId[petId];
       });
     },
-    _createItems: function($) {
+    _createItems: function ($) {
       var itemsById = this._itemsById;
-      this._items = $('#newest-unmodeled-items li').map(function() {
-        var el = $(this);
-        var item = {
-          el: el,
-          id: el.attr('data-item-id'),
-          name: el.find('h2').text(),
-          missingBodyIdsPresenceMap: el.find('span[data-body-id]').toArray().reduce(function(map, node) {
-            map[$(node).attr('data-body-id')] = true;
-            return map;
-          }, {})
-        };
-        item.component = React.renderComponent(<ModelForItem item={item} />,
-                                               el.find('.models').get(0));
-        itemsById[item.id] = item;
-        return item;
-      }).toArray();
+      this._items = $("#newest-unmodeled-items li")
+        .map(function () {
+          var el = $(this);
+          var item = {
+            el: el,
+            id: el.attr("data-item-id"),
+            name: el.find("h2").text(),
+            missingBodyIdsPresenceMap: el
+              .find("span[data-body-id]")
+              .toArray()
+              .reduce(function (map, node) {
+                map[$(node).attr("data-body-id")] = true;
+                return map;
+              }, {}),
+          };
+          item.component = React.renderComponent(
+            <ModelForItem item={item} />,
+            el.find(".models").get(0)
+          );
+          itemsById[item.id] = item;
+          return item;
+        })
+        .toArray();
     },
-    _loadPetCustomization: function(neopiaPetId) {
+    _loadPetCustomization: function (neopiaPetId) {
       return Neopia.Customization.get(neopiaPetId)
         .done(this._addNewCustomization.bind(this))
-        .fail(function() {
+        .fail(function () {
           console.error("couldn't load pet %s", neopiaPetId);
         });
     },
-    _loadManyPetsCustomizations: function(neopiaPetIds) {
+    _loadManyPetsCustomizations: function (neopiaPetIds) {
       return neopiaPetIds.map(this._loadPetCustomization.bind(this));
     },
-    _loadUserCustomizations: function(neopiaUserId) {
-      return Neopia.User.get(neopiaUserId).then(function(neopiaUser) {
-        return neopiaUser.links.pets;
-      }).then(this._loadManyPetsCustomizations.bind(this)).fail(function() {
-        console.error("couldn't load user %s's customizations", neopiaUserId);
-      });
+    _loadUserCustomizations: function (neopiaUserId) {
+      return Neopia.User.get(neopiaUserId)
+        .then(function (neopiaUser) {
+          return neopiaUser.links.pets;
+        })
+        .then(this._loadManyPetsCustomizations.bind(this))
+        .fail(function () {
+          console.error("couldn't load user %s's customizations", neopiaUserId);
+        });
     },
-    _startLoading: function(neopiaPetId, itemId) {
+    _startLoading: function (neopiaPetId, itemId) {
       var customization = this._customizationsByPetId[neopiaPetId];
       customization.loadingForItemId = itemId;
       customization.statusByItemId[itemId] = "loading";
       this._updateCustomizations();
     },
-    _stopLoading: function(neopiaPetId, itemId, status) {
+    _stopLoading: function (neopiaPetId, itemId, status) {
       var customization = this._customizationsByPetId[neopiaPetId];
       customization.loadingForItemId = null;
       customization.statusByItemId[itemId] = status;
       this._updateCustomizations();
     },
-    _updateCustomizations: function() {
+    _updateCustomizations: function () {
       var neopetsUsernamesPresenceMap = this._neopetsUsernamesPresenceMap;
-      var liveCustomizations = this._customizations.filter(function(c) {
+      var liveCustomizations = this._customizations.filter(function (c) {
         return neopetsUsernamesPresenceMap[c.custom_pet.owner];
       });
-      this._items.forEach(function(item) {
-        var filteredCustomizations = liveCustomizations.filter(function(c) {
+      this._items.forEach(function (item) {
+        var filteredCustomizations = liveCustomizations.filter(function (c) {
           return item.missingBodyIdsPresenceMap[c.custom_pet.body_id];
         });
-        item.component.setState({customizations: filteredCustomizations});
+        item.component.setState({ customizations: filteredCustomizations });
       });
     },
-    _updateUsernames: function() {
+    _updateUsernames: function () {
       var usernames = Object.keys(this._neopetsUsernamesPresenceMap);
-      this._usersComponent.setState({usernames: usernames});
+      this._usersComponent.setState({ usernames: usernames });
     },
-    init: function($) {
+    init: function ($) {
       Neopia.init();
       this._createItems($);
-      var usersEl = $('#modeling-neopets-users');
+      var usersEl = $("#modeling-neopets-users");
       if (usersEl.length) {
-        this._usersComponent = React.renderComponent(<NeopetsUsernamesForm />,
-                                                     usersEl.get(0));
+        this._usersComponent = React.renderComponent(
+          <NeopetsUsernamesForm />,
+          usersEl.get(0)
+        );
         var usernames = ImpressUser.getNeopetsUsernames();
         usernames.forEach(this._registerUsername.bind(this));
         this._updateUsernames();
       }
     },
-    model: function(neopiaPetId, itemId) {
+    model: function (neopiaPetId, itemId) {
       var oldCustomization = this._customizationsByPetId[neopiaPetId];
       var itemsById = this._itemsById;
       this._startLoading(neopiaPetId, itemId);
       return Neopia.Customization.post(neopiaPetId)
-        .done(function(newCustomization) {
+        .done(function (newCustomization) {
           // Add this field as null for consistency.
           newCustomization.loadingForItemId = null;
 
@@ -252,137 +277,171 @@ var Neopia = (function($, I18n) {
           // Now, finally, let's overwrite the old customization with the new.
           Modeling._addCustomization(newCustomization);
         })
-        .fail(function() {
+        .fail(function () {
           Modeling._stopLoading(neopiaPetId, itemId, "error");
         });
     },
-    _registerUsername: function(username) {
+    _registerUsername: function (username) {
       this._neopetsUsernamesPresenceMap[username] = true;
       this._loadUserCustomizations(username);
       this._updateUsernames();
     },
-    addUsername: function(username) {
-      if (typeof this._neopetsUsernamesPresenceMap[username] === 'undefined') {
+    addUsername: function (username) {
+      if (typeof this._neopetsUsernamesPresenceMap[username] === "undefined") {
         ImpressUser.addNeopetsUsername(username);
         this._registerUsername(username);
       }
     },
-    removeUsername: function(username) {
+    removeUsername: function (username) {
       if (this._neopetsUsernamesPresenceMap[username]) {
         ImpressUser.removeNeopetsUsername(username);
         delete this._neopetsUsernamesPresenceMap[username];
         this._updateCustomizations();
         this._updateUsernames();
       }
-    }
+    },
   };
 
   var ModelForItem = React.createClass({
-    getInitialState: function() {
-      return {customizations: []};
+    getInitialState: function () {
+      return { customizations: [] };
     },
-    render: function() {
+    render: function () {
       var item = this.props.item;
       function createModelPet(customization) {
-        return <ModelPet customization={customization}
-                         item={item}
-                         key={customization.custom_pet.name} />;
+        return (
+          <ModelPet
+            customization={customization}
+            item={item}
+            key={customization.custom_pet.name}
+          />
+        );
       }
-      var sortedCustomizations = this.state.customizations.slice(0).sort(function(a, b) {
-        var aName = a.custom_pet.name.toLowerCase();
-        var bName = b.custom_pet.name.toLowerCase();
-        if (aName < bName) return -1;
-        if (aName > bName) return 1;
-        return 0;
-      });
+      var sortedCustomizations = this.state.customizations
+        .slice(0)
+        .sort(function (a, b) {
+          var aName = a.custom_pet.name.toLowerCase();
+          var bName = b.custom_pet.name.toLowerCase();
+          if (aName < bName) return -1;
+          if (aName > bName) return 1;
+          return 0;
+        });
       return <ul>{sortedCustomizations.map(createModelPet)}</ul>;
-    }
+    },
   });
 
   var ModelPet = React.createClass({
-    render: function() {
+    render: function () {
       var petName = this.props.customization.custom_pet.name;
       var status = this.props.customization.statusByItemId[this.props.item.id];
       var loadingForItemId = this.props.customization.loadingForItemId;
-      var disabled = (status === "loading"
-                   || status === "success");
-      if (loadingForItemId !== null && loadingForItemId !== this.props.item.id) {
+      var disabled = status === "loading" || status === "success";
+      if (
+        loadingForItemId !== null &&
+        loadingForItemId !== this.props.item.id
+      ) {
         disabled = true;
       }
       var itemName = this.props.item.name;
-      var imageSrc = "http://pets.neopets.com/cpn/" + petName + "/1/1.png?" +
+      var imageSrc =
+        "http://pets.neopets.com/cpn/" +
+        petName +
+        "/1/1.png?" +
         this.appearanceQuery();
       var title = I18n.pet.title
         .replace(/%{pet}/g, petName)
         .replace(/%{item}/g, itemName);
       var statusMessage = I18n.pet.status[status] || "";
-      return <li data-status={status}><button onClick={this.handleClick} title={title} disabled={disabled}>
-        <img src={imageSrc} />
-        <div>
-          <span className="pet-name">{petName}</span>
-          <span className="message">{statusMessage}</span>
-        </div>
-      </button></li>;
+      return (
+        <li data-status={status}>
+          <button onClick={this.handleClick} title={title} disabled={disabled}>
+            <img src={imageSrc} />
+            <div>
+              <span className="pet-name">{petName}</span>
+              <span className="message">{statusMessage}</span>
+            </div>
+          </button>
+        </li>
+      );
     },
-    handleClick: function(e) {
-      Modeling.model(this.props.customization.custom_pet.name, this.props.item.id);
+    handleClick: function (e) {
+      Modeling.model(
+        this.props.customization.custom_pet.name,
+        this.props.item.id
+      );
     },
-    appearanceQuery: function() {
+    appearanceQuery: function () {
       // By appending this string to the image URL, we update it when and only
       // when the pet's appearance has changed.
       var assetIdByZone = {};
       var biologyByZone = this.props.customization.custom_pet.biology_by_zone;
-      var biologyPartIds = Object.keys(biologyByZone).forEach(function(zone) {
+      var biologyPartIds = Object.keys(biologyByZone).forEach(function (zone) {
         assetIdByZone[zone] = biologyByZone[zone].part_id;
       });
       var equippedByZone = this.props.customization.custom_pet.equipped_by_zone;
-      var equippedAssetIds = Object.keys(equippedByZone).forEach(function(zone) {
+      var equippedAssetIds = Object.keys(equippedByZone).forEach(function (
+        zone
+      ) {
         assetIdByZone[zone] = equippedByZone[zone].asset_id;
       });
       // Sort the zones, so the string (which should match exactly when the
       // appearance matches) isn't dependent on iteration order.
-      return Object.keys(assetIdByZone).sort().map(function(zone) {
-        return "zone[" + zone + "]=" + assetIdByZone[zone];
-      }).join("&");
-    }
+      return Object.keys(assetIdByZone)
+        .sort()
+        .map(function (zone) {
+          return "zone[" + zone + "]=" + assetIdByZone[zone];
+        })
+        .join("&");
+    },
   });
 
   var NeopetsUsernamesForm = React.createClass({
-    getInitialState: function() {
-      return {usernames: [], newUsername: ""};
+    getInitialState: function () {
+      return { usernames: [], newUsername: "" };
     },
-    render: function() {
+    render: function () {
       function buildUsernameItem(username) {
         return <NeopetsUsernameItem username={username} key={username} />;
       }
-      return <div>
-        <ul>{this.state.usernames.slice(0).sort().map(buildUsernameItem)}</ul>
+      return (
+        <div>
+          <ul>{this.state.usernames.slice(0).sort().map(buildUsernameItem)}</ul>
           <form onSubmit={this.handleSubmit}>
-            <input type="text" placeholder={I18n.neopetsUsernamesForm.label}
-                   onChange={this.handleChange}
-                   value={this.state.newUsername} />
-            <button type="submit">{I18n.neopetsUsernamesForm.submit}</button></form></div>;
+            <input
+              type="text"
+              placeholder={I18n.neopetsUsernamesForm.label}
+              onChange={this.handleChange}
+              value={this.state.newUsername}
+            />
+            <button type="submit">{I18n.neopetsUsernamesForm.submit}</button>
+          </form>
+        </div>
+      );
     },
-    handleChange: function(e) {
-      this.setState({newUsername: e.target.value});
+    handleChange: function (e) {
+      this.setState({ newUsername: e.target.value });
     },
-    handleSubmit: function(e) {
+    handleSubmit: function (e) {
       e.preventDefault();
       this.state.newUsername = $.trim(this.state.newUsername);
       if (this.state.newUsername.length) {
         Modeling.addUsername(this.state.newUsername);
-        this.setState({newUsername: ""});
+        this.setState({ newUsername: "" });
       }
-    }
+    },
   });
 
   var NeopetsUsernameItem = React.createClass({
-    render: function() {
-      return <li>{this.props.username} <button onClick={this.handleClick}>×</button></li>
+    render: function () {
+      return (
+        <li>
+          {this.props.username} <button onClick={this.handleClick}>×</button>
+        </li>
+      );
     },
-    handleClick: function(e) {
+    handleClick: function (e) {
       Modeling.removeUsername(this.props.username);
-    }
+    },
   });
 
   Modeling.init($);
