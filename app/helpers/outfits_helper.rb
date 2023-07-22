@@ -122,7 +122,7 @@ module OutfitsHelper
         pet: t('.newest_items.modeled.pet'),
         neopetsUsernamesForm: t('.newest_items.modeled.neopets_usernames_form')
       }
-      haml_concat javascript_tag("var ModelingI18n = #{modeling_i18n.to_json};")
+      javascript_tag("var ModelingI18n = #{modeling_i18n.to_json};")
     end
   end
 
