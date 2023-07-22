@@ -74,6 +74,8 @@ Vagrant.configure("2") do |config|
     apt-get update
     apt-get install -y rbenv libssl1.0-dev
     su vagrant -c 'curl -fsSL https://gist.github.com/FiveYellowMice/c50490693d47577cfe7e6ac9fc3bf6cf.txt | rbenv install --patch 1.9.3-p551'
+    apt-get remove -y libssl1.0-dev
+    apt-get install -y libmysqlclient-dev libcurl4-openssl-dev
     echo 'When you log in as vagrant, run `rbenv init` and follow the instructions!'
   SHELL
 end
