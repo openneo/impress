@@ -1,7 +1,8 @@
 class Item < ActiveRecord::Base
   include PrettyParam
   
-  set_inheritance_column 'inheritance_type' # PHP Impress used "type" to describe category
+  # We use the `type` column to mean something other than what Rails means!
+  self.inheritance_column = nil
 
   SwfAssetType = 'object'
   
