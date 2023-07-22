@@ -34,10 +34,12 @@ class PetState < ActiveRecord::Base
   # though, this strikes a good balance of bringing default to the front for
   # many pet types (the highest priority!) and otherwise doing decent sorting.
   bio_effect_zone_id = 4
-  scope :emotion_order, joins(:parent_swf_asset_relationships).
+  scope :emotion_order, -> {
+    joins(:parent_swf_asset_relationships).
     joins("LEFT JOIN swf_assets effect_assets ON effect_assets.id = parents_swf_assets.swf_asset_id AND effect_assets.zone_id = #{bio_effect_zone_id}").
     group("pet_states.id").
     order("glitched ASC, (mood_id = 1) DESC, COUNT(effect_assets.remote_id) ASC, COUNT(parents_swf_assets.swf_asset_id) DESC, female ASC, SUM(parents_swf_assets.swf_asset_id) ASC")
+  }
 
   def as_json(options={})
     {

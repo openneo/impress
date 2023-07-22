@@ -14,7 +14,7 @@ class Pet < ActiveRecord::Base
   attr_reader :items, :pet_state
   attr_accessor :contributor
 
-  scope :with_pet_type_color_ids, lambda { |color_ids|
+  scope :with_pet_type_color_ids, ->(color_ids) {
     joins(:pet_type).where(PetType.arel_table[:id].in(color_ids))
   }
 

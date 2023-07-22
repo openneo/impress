@@ -9,7 +9,7 @@ class Contribution < ActiveRecord::Base
   belongs_to :contributed, :polymorphic => true
   belongs_to :user
   
-  scope :recent, order('id DESC')
+  scope :recent, -> { order('id DESC') }
   
   cattr_reader :per_page
   @@per_page = 30

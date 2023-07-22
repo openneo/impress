@@ -1,11 +1,11 @@
 class Color < ActiveRecord::Base
   translates :name
   
-  scope :alphabetical, lambda { with_translations(I18n.locale).order(Color::Translation.arel_table[:name]) }
-  scope :basic, where(:basic => true)
-  scope :standard, where(:standard => true)
-  scope :nonstandard, where(:standard => false)
-  scope :funny, lambda { order(:prank) unless pranks_funny? }
+  scope :alphabetical, -> { with_translations(I18n.locale).order(Color::Translation.arel_table[:name]) }
+  scope :basic, -> { where(:basic => true) }
+  scope :standard, -> { where(:standard => true) }
+  scope :nonstandard, -> { where(:standard => false) }
+  scope :funny, -> { order(:prank) unless pranks_funny? }
 
   validates :name, presence: true
   

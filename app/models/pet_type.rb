@@ -15,12 +15,12 @@ class PetType < ActiveRecord::Base
 
   # Returns all pet types of a single standard color. The caller shouldn't care
   # which, though, in this implemention, it's always Blue. Don't depend on that.
-  scope :single_standard_color, lambda { where(:color_id => Color.basic.first) }
+  scope :single_standard_color, -> { where(:color_id => Color.basic.first) }
 
-  scope :nonstandard_colors, lambda { where(:color_id => Color.nonstandard) }
+  scope :nonstandard_colors, -> { where(:color_id => Color.nonstandard) }
   
   scope :includes_child_translations,
-    lambda { includes({:color => :translations, :species => :translations}) }
+    -> { includes({:color => :translations, :species => :translations}) }
 
   def self.special_color_or_basic(special_color)
     color_ids = special_color ? [special_color.id] : Color.basic.select([:id]).map(&:id)

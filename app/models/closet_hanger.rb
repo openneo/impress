@@ -15,25 +15,27 @@ class ClosetHanger < ActiveRecord::Base
 
   validate :list_belongs_to_user
 
-  scope :alphabetical_by_item_name, lambda {
+  scope :alphabetical_by_item_name, -> {
     joins(:item => :translations).
       where(Item::Translation.arel_table[:locale].eq(I18n.locale)).
       order(Item::Translation.arel_table[:name])
   }
-  scope :newest, order(arel_table[:created_at].desc)
-  scope :owned_before_wanted, order(arel_table[:owned].desc)
-  scope :unlisted, where(:list_id => nil)
+  scope :newest, -> { order(arel_table[:created_at].desc) }
+  scope :owned_before_wanted, -> { order(arel_table[:owned].desc) }
+  scope :unlisted, -> { where(:list_id => nil) }
 
   {:owned => true, :wanted => false}.each do |name, owned|
-    scope "#{name}_trading", joins(:user).includes(:list).
-      where(:owned => owned).
-      where((
-        arel_table[:list_id].eq(nil).and(
-          User.arel_table["#{name}_closet_hangers_visibility"].gteq(ClosetVisibility[:trading].id)
-        )
-        ).or(
-        ClosetList.arel_table[:visibility].gteq(ClosetVisibility[:trading].id)
-      ))
+    scope "#{name}_trading", -> {
+      joins(:user).includes(:list).
+        where(:owned => owned).
+        where((
+          arel_table[:list_id].eq(nil).and(
+            User.arel_table["#{name}_closet_hangers_visibility"].gteq(ClosetVisibility[:trading].id)
+          )
+          ).or(
+          ClosetList.arel_table[:visibility].gteq(ClosetVisibility[:trading].id)
+        ))
+      }
   end
 
   before_validation :merge_quantities, :set_owned_by_list

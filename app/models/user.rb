@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
 
   belongs_to :contact_neopets_connection, class_name: 'NeopetsConnection'
 
-  scope :top_contributors, order('points DESC').where('points > 0')
+  scope :top_contributors, -> { order('points DESC').where('points > 0') }
 
   devise :rememberable
 

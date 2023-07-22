@@ -13,7 +13,7 @@ class Outfit < ActiveRecord::Base
 
   attr_accessible :name, :pet_state_id, :starred, :worn_and_unworn_item_ids
 
-  scope :wardrobe_order, order('starred DESC', :name)
+  scope :wardrobe_order, -> { order('starred DESC', :name) }
   
   # NOTE: We no longer save images, but we've left the code here for now.
   #       The `image` method below simulates the previous API for the rest
