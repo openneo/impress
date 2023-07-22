@@ -8,7 +8,7 @@ gem 'rails', '= 4.0.13'
 #gem 'sqlite3-ruby', '~> 1.3.1', :require => 'sqlite3'
 gem 'mysql2', '>= 0.3.11'
 
-gem 'haml', '~> 4.0.0'
+gem 'haml', '~> 6.1', '>= 6.1.1'
 gem 'rdiscount', '~> 1.6.5'
 gem 'will_paginate', '~> 3.0.pre2'
 gem 'devise', '~> 3.5.10'

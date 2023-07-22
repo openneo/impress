@@ -112,7 +112,9 @@ GEM
     globalize (4.0.3)
       activemodel (>= 4.0.0, < 5)
       activerecord (>= 4.0.0, < 5)
-    haml (4.0.6)
+    haml (6.1.1)
+      temple (>= 0.8.2)
+      thor
       tilt
     highline (1.7.2)
     hike (1.2.3)
@@ -244,6 +246,7 @@ GEM
     ssrf_filter (1.0.8)
     subexec (0.2.3)
     swf_converter (0.0.3)
+    temple (0.8.2)
     thor (1.2.2)
     thread_safe (0.3.6)
     tilt (1.4.1)
@@ -277,7 +280,7 @@ DEPENDENCIES
   factory_girl_rails (~> 1.0)
   fog (~> 1.8.0)
   globalize (~> 4.0.3)
-  haml (~> 4.0.0)
+  haml (~> 6.1, >= 6.1.1)
   http_accept_language!
   letter_opener
   memcache-client (~> 1.8.5)
