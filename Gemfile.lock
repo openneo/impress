@@ -105,7 +105,7 @@ GEM
       dotenv (= 2.0.1)
     dye (0.1.4)
     erubis (2.7.0)
-    excon (0.45.4)
+    excon (0.71.0)
     execjs (2.5.2)
     factory_girl (2.6.4)
       activesupport (>= 2.3.9)
