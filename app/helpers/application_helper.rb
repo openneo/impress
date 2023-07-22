@@ -127,7 +127,9 @@ module ApplicationHelper
   
   def localized_cache(key={}, &block)
     localized_key = localize_fragment_key(key, locale)
-    cache(localized_key, &block)
+    # TODO: The digest feature is handy, but it's not compatible with how we
+    # check for fragments existence in the controller, so skip it for now.
+    cache(localized_key, skip_digest: true, &block)
   end
 
   def login_path_with_return_to
