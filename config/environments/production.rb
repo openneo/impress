@@ -1,7 +1,6 @@
 OpenneoImpressItems::Application.configure do
-  # Settings specified here will take precedence over those in config/environment.rb
+  # Settings specified here will take precedence over those in config/application.rb
 
-  # The production environment is meant for finished, "live" apps.
   # Code is not reloaded between requests
   config.cache_classes = true
 
@@ -76,6 +75,9 @@ OpenneoImpressItems::Application.configure do
   }
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_deliveries = true
+
+  # Use default logging formatter so that PID and timestamp are not suppressed.
+  config.log_formatter = ::Logger::Formatter.new
 end
 
 LocalImpressHost = 'newimpress.openneo.net'

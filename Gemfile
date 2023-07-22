@@ -1,19 +1,17 @@
 source 'http://rubygems.org'
+ruby '2.2.4'
 
 gem 'dotenv-rails'
 gem 'dotenv-deployment'
 
-gem 'rails', '= 3.2.22.5'
+gem 'rails', '= 4.0.13'
 #gem 'sqlite3-ruby', '~> 1.3.1', :require => 'sqlite3'
 gem 'mysql2', '>= 0.3.11'
-
-# https://groups.google.com/d/topic/rubyonrails-security/4_YvCpLzL58/discussion
-gem 'json', '~> 1.8.1'
 
 gem 'haml', '~> 4.0.0'
 gem 'rdiscount', '~> 1.6.5'
 gem 'will_paginate', '~> 3.0.pre2'
-gem 'devise', '~> 2.2.3'
+gem 'devise', '~> 3.5.10'
 
 # unstable version of RocketAMF interprets info registry as a hash instead of an array
 gem 'RocketAMF', :git => 'https://github.com/rubyamf/rocketamf.git'
@@ -48,13 +46,13 @@ gem 'neopets', '~> 0.2.0', :git => 'https://github.com/matchu/neopets.git'
 gem "mini_magick", "~> 3.4"
 
 gem "fog", "~> 1.8.0"
-gem "carrierwave", "~> 0.8.0"
+gem 'carrierwave', '~> 1.3', '>= 1.3.3'
 
 gem "parallel", "~> 1.13.0"
 
 gem "http_accept_language", :git => "https://github.com/iain/http_accept_language.git"
 
-gem "globalize3", :git => "https://github.com/matchu/globalize3.git"
+gem 'globalize', '~> 4.0.3'
 
 # My flex branch fixes a minor pagination bug. Once it's merged into the
 # original gem, we can switch back.
@@ -63,17 +61,19 @@ gem "patron", "~> 0.4.18"
 
 gem "rest-client", "~> 1.6.7"
 
-gem "rails-i18n"
+gem 'rails-i18n', '~> 4.0', '>= 4.0.9'
 
 gem 'rack-attack', '~> 2.2.0'
 
-gem 'react-rails', '~> 0.8.0.0'
+gem 'react-rails', '~> 2.7', '>= 2.7.1'
 
 gem "letter_opener", :group => :development
 
-gem 'sass-rails',    "~> 3.2.6"
+gem 'sass-rails',    "~> 4.0.5"
 gem 'compass-rails', "~> 1.0.3"
 gem 'uglifier',      ">= 1.0.3"
+
+gem 'rails-observers', '~> 0.1.5'
 
 group :development do
   gem 'capistrano', '~> 2.15.5', require: false
