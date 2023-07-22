@@ -69,8 +69,6 @@ gem 'rack-attack', '~> 2.2.0'
 
 gem 'react-rails', '~> 0.8.0.0'
 
-gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
-
 gem "letter_opener", :group => :development
 
 gem 'sass-rails',    "~> 3.2.6"

@@ -35,14 +35,6 @@ GIT
   specs:
     RocketAMF (1.0.0)
 
-GIT
-  remote: https://github.com/stripe/stripe-ruby
-  revision: 8c6dc1a838db0d39d9083431f6a4a8287f25d814
-  specs:
-    stripe (1.23.0)
-      json (~> 1.8.1)
-      rest-client (~> 1.4)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -335,7 +327,6 @@ DEPENDENCIES
   rvm-capistrano (~> 1.5.6)
   sanitize (~> 2.0.3)
   sass-rails (~> 3.2.6)
-  stripe!
   swf_converter (~> 0.0.3)
   uglifier (>= 1.0.3)
   whenever (~> 0.7.3)

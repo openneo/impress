@@ -6,51 +6,52 @@
     toward #{@current_campaign.purpose}.
     Thanks so much!
 
-= form_tag donations_path, method: 'POST', id: 'donation-form',
-    'data-checkout-image' => image_path('default_preview.png'),
-    'data-checkout-publishable-key' => Rails.configuration.stripe[:publishable_key],
-    'data-campaign-theme' => @current_campaign.theme_id do
-  = hidden_field_tag 'donation[stripe_token]'
-  = hidden_field_tag 'donation[stripe_token_type]'
-  = hidden_field_tag 'donation[donor_email]'
-  = hidden_field_tag 'donation[amount]'
-  %header
-    %p#donation-form-title
-      Thanks for supporting Dress to Impress!
-    %p
-      From modeling to servers, Dress to Impress is a community effort.
-      This year, we need to raise
-      #{cents_to_currency(@current_campaign.goal, precision: 0)}
-      to cover our #{@current_campaign.name} hosting costs.
-    %p
-      As a thank-you gift, for every $5 you give, we'll feature one of your
-      outfits here and on the homepage. Show off your latest designs!
-    %p
-      All donations are securely powered by
-      #{link_to 'Stripe', 'https://stripe.com/'}, and go directly toward our
-      hosting costs. Thank you for your help!
-  #donation-fields
-    #amount-header Amount
-    #amount-choices
-      %li
-        %input#amount-5{type: 'radio', name: 'amount', value: '5.00'}
-        %label{for: 'amount-5'} $5
-      %li
-        %input#amount-10{type: 'radio', name: 'amount', value: '10.00'}
-        %label{for: 'amount-10'} $10
-      %li
-        %input#amount-30{type: 'radio', name: 'amount', value: '20.00', checked: true}
-        %label{for: 'amount-30'} $20
-      %li
-        %input#amount-50{type: 'radio', name: 'amount', value: '50.00'}
-        %label{for: 'amount-50'} $50
-      %li
-        %input#amount-custom{type: 'radio', name: 'amount', value: 'custom'}
-        %label{for: 'amount-custom'} Other
-        %label#amount-custom-fields{for: 'amount-custom-value'}
-          %input#amount-custom-value{type: 'text'}
-    #donation-controls
-      %button{type: 'submit'} Donate now!
+-# TODO: Reinstall Stripe before showing the checkout form
+  = form_tag donations_path, method: 'POST', id: 'donation-form',
+      'data-checkout-image' => image_path('default_preview.png'),
+      'data-checkout-publishable-key' => Rails.configuration.stripe[:publishable_key],
+      'data-campaign-theme' => @current_campaign.theme_id do
+    = hidden_field_tag 'donation[stripe_token]'
+    = hidden_field_tag 'donation[stripe_token_type]'
+    = hidden_field_tag 'donation[donor_email]'
+    = hidden_field_tag 'donation[amount]'
+    %header
+      %p#donation-form-title
+        Thanks for supporting Dress to Impress!
+      %p
+        From modeling to servers, Dress to Impress is a community effort.
+        This year, we need to raise
+        #{cents_to_currency(@current_campaign.goal, precision: 0)}
+        to cover our #{@current_campaign.name} hosting costs.
+      %p
+        As a thank-you gift, for every $5 you give, we'll feature one of your
+        outfits here and on the homepage. Show off your latest designs!
+      %p
+        All donations are securely powered by
+        #{link_to 'Stripe', 'https://stripe.com/'}, and go directly toward our
+        hosting costs. Thank you for your help!
+    #donation-fields
+      #amount-header Amount
+      #amount-choices
+        %li
+          %input#amount-5{type: 'radio', name: 'amount', value: '5.00'}
+          %label{for: 'amount-5'} $5
+        %li
+          %input#amount-10{type: 'radio', name: 'amount', value: '10.00'}
+          %label{for: 'amount-10'} $10
+        %li
+          %input#amount-30{type: 'radio', name: 'amount', value: '20.00', checked: true}
+          %label{for: 'amount-30'} $20
+        %li
+          %input#amount-50{type: 'radio', name: 'amount', value: '50.00'}
+          %label{for: 'amount-50'} $50
+        %li
+          %input#amount-custom{type: 'radio', name: 'amount', value: 'custom'}
+          %label{for: 'amount-custom'} Other
+          %label#amount-custom-fields{for: 'amount-custom-value'}
+            %input#amount-custom-value{type: 'text'}
+      #donation-controls
+        %button{type: 'submit'} Donate now!
 
 - if @donations.present?
   #outfits-header
