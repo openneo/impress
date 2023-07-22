@@ -62,8 +62,8 @@ gem 'react-rails', '~> 2.7', '>= 2.7.1'
 
 gem "letter_opener", :group => :development
 
-gem 'sass-rails',    "~> 4.0.5"
-gem 'compass-rails', "~> 1.0.3"
+gem 'sass-rails', '~> 5.0', '>= 5.0.7'
+gem 'compass-rails', '~> 3.1'
 gem 'uglifier',      ">= 1.0.3"
 
 # Backfills for old Rails behaviors
