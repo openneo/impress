@@ -23,9 +23,11 @@ class Item < ActiveRecord::Base
   cattr_reader :per_page
   @@per_page = 30
 
-  scope :alphabetize_by_translations, -> {
+  scope :alphabetize_by_translations, ->(locale) {
+    locale = locale or I18n.locale
     it = Item::Translation.arel_table
-    order(it[:name])
+    joins(:translations).where(it[:locale].eq('en')).
+      order(it[:name])
   }
 
   scope :join_swf_assets, -> { joins(:swf_assets).group(arel_table[:id]) }
@@ -44,6 +46,17 @@ class Item < ActiveRecord::Base
   scope :sitemap, -> { order([:id]).limit(49999) }
 
   scope :with_closet_hangers, -> { joins(:closet_hangers) }
+
+  scope :is_nc, -> {
+    i = Item.arel_table
+    condition = i[:rarity_index].in(Item::NCRarities).or(i[:is_manually_nc])
+    where(condition)
+  }
+  scope :is_np, -> {
+    i = Item.arel_table
+    condition = i[:rarity_index].in(Item::NCRarities).or(i[:is_manually_nc])
+    where(condition.not)
+  }
 
   def closeted?
     @owned || @wanted
@@ -549,6 +562,12 @@ class Item < ActiveRecord::Base
 
   def self.build_proxies(ids)
     Item::ProxyArray.new(ids)
+  end
+
+  # TODO: Copied from modern Rails source, can delete once we're there!
+  def self.sanitize_sql_like(string, escape_character = "\\")
+    pattern = Regexp.union(escape_character, "%", "_")
+    string.gsub(pattern) { |x| [escape_character, x].join }
   end
 
   class << self

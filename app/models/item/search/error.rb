@@ -1,7 +1,6 @@
 class Item
   module Search
-    class Error < RuntimeError
-      
+    class Error < Exception
     end
   end
 end

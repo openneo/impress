@@ -13,15 +13,15 @@ class ItemsController < ApplicationController
         end
         # Note that we sort by name by hand, since we might have to use
         # fallbacks after the fact
-        @items = @query.paginate(page: params[:page], per_page: per_page)
+        @items = @query.results.includes(:translations).
+          paginate(page: params[:page], per_page: per_page)
         assign_closeted!
         respond_to do |format|
           format.html {
             @campaign = Campaign.current rescue nil
-            if @items.total_count == 1
+            if @items.count == 1
               redirect_to @items.first
             else
-              @items.prepare_partial(:item_link_partial)
               render
             end
           }
