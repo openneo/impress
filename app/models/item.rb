@@ -47,6 +47,14 @@ class Item < ActiveRecord::Base
 
   scope :with_closet_hangers, -> { joins(:closet_hangers) }
 
+  scope :name_includes, ->(value, locale = I18n.locale) {
+    Item.joins(:translations).where('locale = ?', locale).
+      where('name LIKE ?', '%' + Item.sanitize_sql_like(value) + '%')
+  }
+  scope :name_excludes, ->(value, locale = I18n.locale) {
+    Item.joins(:translations).where('locale = ?', locale).
+      where('name NOT LIKE ?', '%' + Item.sanitize_sql_like(value) + '%')
+  }
   scope :is_nc, -> {
     i = Item.arel_table
     condition = i[:rarity_index].in(Item::NCRarities).or(i[:is_manually_nc])

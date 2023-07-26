@@ -75,12 +75,9 @@ class Item
       end
 
       def to_query
-        base = Item.joins(:translations).where('locale = ?', @locale)
-        if @is_positive
-          base.where('name LIKE ?', '%' + Item.sanitize_sql_like(@value) + '%')
-        else
-          base.where('name NOT LIKE ?', '%' + Item.sanitize_sql_like(@value) + '%')
-        end
+        @is_positive ?
+          Item.name_includes(@value, @locale) :
+          Item.name_excludes(@value, @locale)
       end
 
       def to_s
