@@ -42,6 +42,10 @@ class Item
             filters << (is_positive ?
               Filter.occupies(value, locale) :
               Filter.not_occupies(value, locale))
+          when 'restricts'
+            filters << (is_positive ?
+              Filter.restricts(value, locale) :
+              Filter.not_restricts(value, locale))
           when 'is'
             case value
             when 'nc'
@@ -111,6 +115,14 @@ class Item
 
       def self.not_occupies(value, locale)
         self.new Item.not_occupies(value, locale), "-occupies:#{value}"
+      end
+
+      def self.restricts(value, locale)
+        self.new Item.restricts(value, locale), "restricts:#{value}"
+      end
+
+      def self.not_restricts(value, locale)
+        self.new Item.not_restricts(value, locale), "-restricts:#{value}"
       end
 
       def self.is_nc
