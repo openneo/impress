@@ -30,8 +30,6 @@ class Item < ActiveRecord::Base
       order(it[:name])
   }
 
-  scope :join_swf_assets, -> { joins(:swf_assets).group(arel_table[:id]) }
-
   scope :newest, -> {
     order(arel_table[:created_at].desc) if arel_table[:created_at]
   }
@@ -76,6 +74,22 @@ class Item < ActiveRecord::Base
     Item.joins(:translations).where(it[:locale].eq('en')).
       where('description NOT LIKE ?',
         '%' + Item.sanitize_sql_like(PAINTBRUSH_SET_DESCRIPTION) + '%')
+  }
+  scope :occupies, ->(zone_label, locale = I18n.locale) {
+    zone_ids = Zone.matching_label(zone_label, locale).map(&:id)
+    i = Item.arel_table
+    sa = SwfAsset.arel_table
+    Item.joins(:swf_assets).where(sa[:zone_id].in(zone_ids)).distinct
+  }
+  scope :not_occupies, ->(zone_label, locale = I18n.locale) {
+    # TODO: The perf on this is miserable on its own, the query plan chooses
+    # a bad index for the join on parents_swf_assets here (but not in the
+    # `occupies` scope?) and I don't know why! But it makes a better plan when
+    # combined with `name_includes` so this is probably fine in practice?
+    zone_ids = Zone.matching_label(zone_label, locale).map(&:id)
+    i = Item.arel_table
+    sa = SwfAsset.arel_table
+    Item.joins(:swf_assets).where(sa[:zone_id].not_in(zone_ids)).distinct
   }
 
   def closeted?

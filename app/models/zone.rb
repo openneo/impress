@@ -9,11 +9,11 @@ class Zone < ActiveRecord::Base
     with_translations(I18n.locale).order(Zone::Translation.arel_table[:label])
   }
   scope :includes_translations, -> { includes(:translations) }
-  scope :with_plain_label, ->(label) {
+  scope :matching_label, ->(label, locale = I18n.locale) {
     t = Zone::Translation.arel_table
-    includes(:translations)
+    joins(:translations)
+      .where(t[:locale].eq(locale))
       .where(t[:plain_label].eq(Zone.plainify_label(label)))
-      .where(t[:locale].eq(I18n.locale))
   }
   scope :for_items, -> { where(arel_table[:type_id].gt(1)) }
 

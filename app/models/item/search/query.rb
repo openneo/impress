@@ -38,6 +38,10 @@ class Item
             filters << (is_positive ?
               Filter.name_includes(value, locale) :
               Filter.name_excludes(value, locale))
+          when 'occupies'
+            filters << (is_positive ?
+              Filter.occupies(value, locale) :
+              Filter.not_occupies(value, locale))
           when 'is'
             case value
             when 'nc'
@@ -99,6 +103,14 @@ class Item
       def self.name_excludes(value, locale)
         text = '-' + (/\s/.match(value) ? '"' + value + '"' : value)
         self.new Item.name_excludes(value, locale), text
+      end
+
+      def self.occupies(value, locale)
+        self.new Item.occupies(value, locale), "occupies:#{value}"
+      end
+
+      def self.not_occupies(value, locale)
+        self.new Item.not_occupies(value, locale), "-occupies:#{value}"
       end
 
       def self.is_nc
