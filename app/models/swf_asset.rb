@@ -29,6 +29,7 @@ class SwfAsset < ActiveRecord::Base
   converts_swfs :size => IMAGE_SIZES[:large], :output_sizes => IMAGE_SIZES.values
   
   belongs_to :zone
+  has_many :parent_swf_asset_relationships
   
   scope :includes_depth, -> { includes(:zone) }
 

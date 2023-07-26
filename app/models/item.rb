@@ -82,14 +82,16 @@ class Item < ActiveRecord::Base
     joins(:swf_assets).where(sa[:zone_id].in(zone_ids)).distinct
   }
   scope :not_occupies, ->(zone_label, locale = I18n.locale) {
-    # TODO: The perf on this is miserable on its own, the query plan chooses
-    # a bad index for the join on parents_swf_assets here (but not in the
-    # `occupies` scope?) and I don't know why! But it makes a better plan when
-    # combined with `name_includes` so this is probably fine in practice?
+    # TODO: This is pretty slow! But I imagine it's uncommon so that's probably
+    # fine in practice? Querying for "has NO records matching X" is hard!
     zone_ids = Zone.matching_label(zone_label, locale).map(&:id)
     i = Item.arel_table
     sa = SwfAsset.arel_table
-    joins(:swf_assets).where(sa[:zone_id].not_in(zone_ids)).distinct
+    psa = ParentSwfAssetRelationship.arel_table
+    subquery = SwfAsset.select('COUNT(*)').joins(:parent_swf_asset_relationships).
+      where(psa[:parent_type].eq('Item')).where(psa[:parent_id].eq(i[:id])).
+      where(sa[:zone_id].in(zone_ids))
+    where("(#{subquery.to_sql}) = 0")
   }
   scope :restricts, ->(zone_label, locale = I18n.locale) {
     zone_ids = Zone.matching_label(zone_label, locale).map(&:id)
