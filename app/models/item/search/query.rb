@@ -44,6 +44,8 @@ class Item
               filters << (is_positive ? Filter.is_nc : Filter.is_not_nc)
             when 'np'
               filters << (is_positive ? Filter.is_np : Filter.is_not_np)
+            when 'pb'
+              filters << (is_positive ? Filter.is_pb : Filter.is_not_pb)
             else
               message = I18n.translate('items.search.errors.not_found.label',
                 :label => "is:#{value}")
@@ -113,6 +115,14 @@ class Item
 
       def self.is_not_np
         self.new Item.is_nc, '-is:np'
+      end
+
+      def self.is_pb
+        self.new Item.is_pb, 'is:pb'
+      end
+
+      def self.is_not_pb
+        self.new Item.is_not_pb, '-is:pb'
       end
     end
   end
