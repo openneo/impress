@@ -65,6 +65,16 @@ class Item < ActiveRecord::Base
     condition = i[:rarity_index].in(Item::NCRarities).or(i[:is_manually_nc])
     where(condition.not)
   }
+  scope :is_pb, -> {
+    Item.joins(:translations).where('locale = ?', 'en').
+      where('description LIKE ?',
+        '%' + Item.sanitize_sql_like(PAINTBRUSH_SET_DESCRIPTION) + '%')
+  }
+  scope :is_not_pb, -> {
+    Item.joins(:translations).where('locale = ?', 'en').
+      where('description NOT LIKE ?',
+        '%' + Item.sanitize_sql_like(PAINTBRUSH_SET_DESCRIPTION) + '%')
+  }
 
   def closeted?
     @owned || @wanted
