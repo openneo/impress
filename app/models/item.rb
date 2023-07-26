@@ -65,13 +65,13 @@ class Item < ActiveRecord::Base
   }
   scope :is_pb, -> {
     it = Item::Translation.arel_table
-    Item.joins(:translations).where(it[:locale].eq('en')).
+    joins(:translations).where(it[:locale].eq('en')).
       where('description LIKE ?',
         '%' + Item.sanitize_sql_like(PAINTBRUSH_SET_DESCRIPTION) + '%')
   }
   scope :is_not_pb, -> {
     it = Item::Translation.arel_table
-    Item.joins(:translations).where(it[:locale].eq('en')).
+    joins(:translations).where(it[:locale].eq('en')).
       where('description NOT LIKE ?',
         '%' + Item.sanitize_sql_like(PAINTBRUSH_SET_DESCRIPTION) + '%')
   }
@@ -79,7 +79,7 @@ class Item < ActiveRecord::Base
     zone_ids = Zone.matching_label(zone_label, locale).map(&:id)
     i = Item.arel_table
     sa = SwfAsset.arel_table
-    Item.joins(:swf_assets).where(sa[:zone_id].in(zone_ids)).distinct
+    joins(:swf_assets).where(sa[:zone_id].in(zone_ids)).distinct
   }
   scope :not_occupies, ->(zone_label, locale = I18n.locale) {
     # TODO: The perf on this is miserable on its own, the query plan chooses
@@ -89,7 +89,17 @@ class Item < ActiveRecord::Base
     zone_ids = Zone.matching_label(zone_label, locale).map(&:id)
     i = Item.arel_table
     sa = SwfAsset.arel_table
-    Item.joins(:swf_assets).where(sa[:zone_id].not_in(zone_ids)).distinct
+    joins(:swf_assets).where(sa[:zone_id].not_in(zone_ids)).distinct
+  }
+  scope :restricts, ->(zone_label, locale = I18n.locale) {
+    zone_ids = Zone.matching_label(zone_label, locale).map(&:id)
+    condition = zone_ids.map { '(SUBSTR(zones_restrict, ?, 1) = "1")' }.join(' OR ')
+    where(condition, *zone_ids)
+  }
+  scope :not_restricts, ->(zone_label, locale = I18n.locale) {
+    zone_ids = Zone.matching_label(zone_label, locale).map(&:id)
+    condition = zone_ids.map { '(SUBSTR(zones_restrict, ?, 1) = "1")' }.join(' OR ')
+    where("NOT (#{condition})", *zone_ids)
   }
 
   def closeted?
