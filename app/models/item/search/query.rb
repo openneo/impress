@@ -35,13 +35,15 @@ class Item
           
           case key
           when 'name'
-            filters << NameFilter.new(value, locale, is_positive)
+            filters << (is_positive ?
+              Filter.name_includes(value, locale) :
+              Filter.name_excludes(value, locale))
           when 'is'
             case value
             when 'nc'
-              filters << NCFilter.new(is_positive)
+              filters << (is_positive ? Filter.is_nc : Filter.is_not_nc)
             when 'np'
-              filters << NPFilter.new(is_positive)
+              filters << (is_positive ? Filter.is_np : Filter.is_not_np)
             else
               message = I18n.translate('items.search.errors.not_found.label',
                 :label => "is:#{value}")
@@ -67,56 +69,50 @@ class Item
 
     private
 
-    class NameFilter
-      def initialize(value, locale, is_positive)
-        @value = value
-        @locale = locale
-        @is_positive = is_positive
+    # A Filter is basically a wrapper for an Item scope, with extra info about
+    # how to convert it into a search query string.
+    class Filter
+      def initialize(query, text)
+        @query = query
+        @text = text
       end
 
       def to_query
-        @is_positive ?
-          Item.name_includes(@value, @locale) :
-          Item.name_excludes(@value, @locale)
+        @query
       end
 
       def to_s
-        sign = @is_positive ? '' : '-'
-        if /\s/.match(@value)
-          sign + '"' + @value + '"'
-        else
-          sign + @value
-        end
-      end
-    end
-
-    class NCFilter
-      def initialize(is_positive)
-        @is_positive = is_positive
+        @text
       end
 
-      def to_query
-        @is_positive ? Item.is_nc : Item.is_np
+      def inspect
+        "#<#{self.class.name} #{@text.inspect}>"
       end
 
-      def to_s
-        sign = @is_positive ? '' : '-'
-        sign + 'is:nc'
-      end
-    end
-
-    class NPFilter
-      def initialize(is_positive)
-        @is_positive = is_positive
+      def self.name_includes(value, locale)
+        text = /\s/.match(value) ? '"' + value + '"' : value
+        self.new Item.name_includes(value, locale), text
       end
 
-      def to_query
-        @is_positive ? Item.is_np : Item.is_nc
+      def self.name_excludes(value, locale)
+        text = '-' + (/\s/.match(value) ? '"' + value + '"' : value)
+        self.new Item.name_excludes(value, locale), text
       end
 
-      def to_s
-        sign = @is_positive ? '' : '-'
-        sign + 'is:np'
+      def self.is_nc
+        self.new Item.is_nc, 'is:nc'
+      end
+
+      def self.is_not_nc
+        self.new Item.is_np, '-is:nc'
+      end
+
+      def self.is_np
+        self.new Item.is_np, 'is:np'
+      end
+
+      def self.is_not_np
+        self.new Item.is_nc, '-is:np'
       end
     end
   end
