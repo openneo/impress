@@ -44,7 +44,7 @@ class Item
               filters << NPFilter.new(is_positive)
             else
               message = I18n.translate('items.search.errors.not_found.label',
-                :label => value)
+                :label => "is:#{value}")
               raise Item::Search::Error, message
             end
           else
