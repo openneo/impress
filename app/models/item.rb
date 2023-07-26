@@ -48,30 +48,32 @@ class Item < ActiveRecord::Base
   scope :with_closet_hangers, -> { joins(:closet_hangers) }
 
   scope :name_includes, ->(value, locale = I18n.locale) {
-    Item.joins(:translations).where('locale = ?', locale).
-      where('name LIKE ?', '%' + Item.sanitize_sql_like(value) + '%')
+    it = Item::Translation.arel_table
+    Item.joins(:translations).where(it[:locale].eq(locale)).
+      where(it[:name].matches('%' + Item.sanitize_sql_like(value) + '%'))
   }
   scope :name_excludes, ->(value, locale = I18n.locale) {
-    Item.joins(:translations).where('locale = ?', locale).
-      where('name NOT LIKE ?', '%' + Item.sanitize_sql_like(value) + '%')
+    it = Item::Translation.arel_table
+    Item.joins(:translations).where(it[:locale].eq(locale)).
+      where(it[:name].matches('%' + Item.sanitize_sql_like(value) + '%').not)
   }
   scope :is_nc, -> {
     i = Item.arel_table
-    condition = i[:rarity_index].in(Item::NCRarities).or(i[:is_manually_nc])
-    where(condition)
+    where(i[:rarity_index].in(Item::NCRarities).or(i[:is_manually_nc]))
   }
   scope :is_np, -> {
     i = Item.arel_table
-    condition = i[:rarity_index].in(Item::NCRarities).or(i[:is_manually_nc])
-    where(condition.not)
+    where(i[:rarity_index].in(Item::NCRarities).or(i[:is_manually_nc]).not)
   }
   scope :is_pb, -> {
-    Item.joins(:translations).where('locale = ?', 'en').
+    it = Item::Translation.arel_table
+    Item.joins(:translations).where(it[:locale].eq('en')).
       where('description LIKE ?',
         '%' + Item.sanitize_sql_like(PAINTBRUSH_SET_DESCRIPTION) + '%')
   }
   scope :is_not_pb, -> {
-    Item.joins(:translations).where('locale = ?', 'en').
+    it = Item::Translation.arel_table
+    Item.joins(:translations).where(it[:locale].eq('en')).
       where('description NOT LIKE ?',
         '%' + Item.sanitize_sql_like(PAINTBRUSH_SET_DESCRIPTION) + '%')
   }
