@@ -6,7 +6,11 @@ class User < ActiveRecord::Base
 
   has_many :closet_hangers
   has_many :closet_lists
-  has_many :closeted_items, :through => :closet_hangers, :source => :item
+  has_many :closeted_items, through: :closet_hangers, source: :item
+  has_many :owned_items, -> { where(ClosetHanger.arel_table[:owned].eq(true)) },
+    through: :closet_hangers, source: :item
+  has_many :wanted_items, -> { where(ClosetHanger.arel_table[:owned].eq(false)) },
+    through: :closet_hangers, source: :item
   has_many :contributions
   has_many :neopets_connections
   has_many :outfits
