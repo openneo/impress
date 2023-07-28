@@ -87,11 +87,15 @@ class Item < ActiveRecord::Base
     zone_ids = Zone.matching_label(zone_label, locale).map(&:id)
     i = Item.arel_table
     sa = SwfAsset.arel_table
-    psa = ParentSwfAssetRelationship.arel_table
-    subquery = SwfAsset.select('COUNT(*)').joins(:parent_swf_asset_relationships).
-      where(psa[:parent_type].eq('Item')).where(psa[:parent_id].eq(i[:id])).
-      where(sa[:zone_id].in(zone_ids))
-    where("(#{subquery.to_sql}) = 0")
+    # Querying for "has NO swf_assets matching these zone IDs" is trickier than
+    # the positive case! To do it, we GROUP_CONCAT the zone_ids together for
+    # each item, then use FIND_IN_SET to search the result for each zone ID,
+    # and assert that it must not find a match. (This is uhh, not exactly fast,
+    # so it helps to have other tighter conditions applied first!)
+    # TODO: I feel like this could also be solved with a LEFT JOIN, idk if that
+    # performs any better? In Rails 5+ `left_outer_joins` is built in so!
+    condition = zone_ids.map { 'FIND_IN_SET(?, GROUP_CONCAT(zone_id)) = 0' }.join(' AND ')
+    joins(:swf_assets).group(i[:id]).having(condition, *zone_ids).distinct
   }
   scope :restricts, ->(zone_label, locale = I18n.locale) {
     zone_ids = Zone.matching_label(zone_label, locale).map(&:id)
