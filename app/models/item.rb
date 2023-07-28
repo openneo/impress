@@ -48,12 +48,12 @@ class Item < ActiveRecord::Base
   scope :name_includes, ->(value, locale = I18n.locale) {
     it = Item::Translation.arel_table
     Item.joins(:translations).where(it[:locale].eq(locale)).
-      where(it[:name].matches('%' + Item.sanitize_sql_like(value) + '%'))
+      where(it[:name].matches('%' + sanitize_sql_like(value) + '%'))
   }
   scope :name_excludes, ->(value, locale = I18n.locale) {
     it = Item::Translation.arel_table
     Item.joins(:translations).where(it[:locale].eq(locale)).
-      where(it[:name].matches('%' + Item.sanitize_sql_like(value) + '%').not)
+      where(it[:name].matches('%' + sanitize_sql_like(value) + '%').not)
   }
   scope :is_nc, -> {
     i = Item.arel_table
@@ -67,23 +67,20 @@ class Item < ActiveRecord::Base
     it = Item::Translation.arel_table
     joins(:translations).where(it[:locale].eq('en')).
       where('description LIKE ?',
-        '%' + Item.sanitize_sql_like(PAINTBRUSH_SET_DESCRIPTION) + '%')
+        '%' + sanitize_sql_like(PAINTBRUSH_SET_DESCRIPTION) + '%')
   }
   scope :is_not_pb, -> {
     it = Item::Translation.arel_table
     joins(:translations).where(it[:locale].eq('en')).
       where('description NOT LIKE ?',
-        '%' + Item.sanitize_sql_like(PAINTBRUSH_SET_DESCRIPTION) + '%')
+        '%' + sanitize_sql_like(PAINTBRUSH_SET_DESCRIPTION) + '%')
   }
   scope :occupies, ->(zone_label, locale = I18n.locale) {
     zone_ids = Zone.matching_label(zone_label, locale).map(&:id)
-    i = Item.arel_table
     sa = SwfAsset.arel_table
     joins(:swf_assets).where(sa[:zone_id].in(zone_ids)).distinct
   }
   scope :not_occupies, ->(zone_label, locale = I18n.locale) {
-    # TODO: This is pretty slow! But I imagine it's uncommon so that's probably
-    # fine in practice? Querying for "has NO records matching X" is hard!
     zone_ids = Zone.matching_label(zone_label, locale).map(&:id)
     i = Item.arel_table
     sa = SwfAsset.arel_table
@@ -106,6 +103,30 @@ class Item < ActiveRecord::Base
     zone_ids = Zone.matching_label(zone_label, locale).map(&:id)
     condition = zone_ids.map { '(SUBSTR(zones_restrict, ?, 1) = "1")' }.join(' OR ')
     where("NOT (#{condition})", *zone_ids)
+  }
+  scope :fits, ->(body_id) {
+    sa = SwfAsset.arel_table
+    joins(:swf_assets).where(sa[:body_id].eq(body_id)).distinct
+  }
+  scope :not_fits, ->(body_id) {
+    i = Item.arel_table
+    sa = SwfAsset.arel_table
+    # Querying for "has NO swf_assets matching these body IDs" is trickier than
+    # the positive case! To do it, we GROUP_CONCAT the body_ids together for
+    # each item, then use FIND_IN_SET to search the result for the body ID,
+    # and assert that it must not find a match. (This is uhh, not exactly fast,
+    # so it helps to have other tighter conditions applied first!)
+    #
+    # TODO: I feel like this could also be solved with a LEFT JOIN, idk if that
+    # performs any better? In Rails 5+ `left_outer_joins` is built in so!
+    #
+    # NOTE: The `fits` and `not_fits` counts don't perfectly add up to the
+    # total number of items, 5 items aren't accounted for? I'm not going to
+    # bother looking into this, but one thing I notice is items with no assets
+    # somehow would not match either scope in this impl (but LEFT JOIN would!)
+    joins(:swf_assets).group(i[:id]).
+      having('FIND_IN_SET(?, GROUP_CONCAT(body_id)) = 0', body_id).
+      distinct
   }
 
   def closeted?

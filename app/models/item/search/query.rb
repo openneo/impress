@@ -46,6 +46,18 @@ class Item
             filters << (is_positive ?
               Filter.restricts(value, locale) :
               Filter.not_restricts(value, locale))
+          when 'fits'
+            color_name, species_name = value.split('-')
+            begin
+              pet_type = PetType.matching_name(color_name, species_name, locale).first!
+            rescue ActiveRecord::RecordNotFound
+              message = I18n.translate('items.search.errors.not_found.pet_type',
+                name1: color_name.capitalize, name2: species_name.capitalize)
+              raise Item::Search::Error, message
+            end
+            filters << (is_positive ?
+              Filter.fits(pet_type.body_id, color_name, species_name) :
+              Filter.not_fits(pet_type.body_id, color_name, species_name))
           when 'is'
             case value
             when 'nc'
@@ -82,9 +94,9 @@ class Item
     # A Filter is basically a wrapper for an Item scope, with extra info about
     # how to convert it into a search query string.
     class Filter
-      def initialize(query, text)
+      def initialize(query, text_fn)
         @query = query
-        @text = text
+        @text_fn = text_fn
       end
 
       def to_query
@@ -92,7 +104,7 @@ class Item
       end
 
       def to_s
-        @text
+        @text_fn.call
       end
 
       def inspect
@@ -125,6 +137,20 @@ class Item
         self.new Item.not_restricts(value, locale), "-restricts:#{value}"
       end
 
+      def self.fits(body_id, color_name, species_name)
+        # NOTE: Some color syntaxes are weird, like `fits:"polka dot-aisha"`!
+        value = "#{color_name.downcase}-#{species_name.downcase}"
+        value = '"' + value + '"' if value.include? ' '
+        self.new Item.fits(body_id), "fits:#{value}"
+      end
+
+      def self.not_fits(body_id, color_name, species_name)
+        # NOTE: Some color syntaxes are weird, like `fits:"polka dot-aisha"`!
+        value = "#{color_name.downcase}-#{species_name.downcase}"
+        value = '"' + value + '"' if value.include? ' '
+        self.new Item.not_fits(body_id), "-fits:#{value}"
+      end
+
       def self.is_nc
         self.new Item.is_nc, 'is:nc'
       end
@@ -147,6 +173,16 @@ class Item
 
       def self.is_not_pb
         self.new Item.is_not_pb, '-is:pb'
+      end
+
+      private
+
+      def self.build_fits_filter_text(color_name, species_name)
+        # NOTE: Colors like "Polka Dot" must be written as
+        # `fits:"polka dot-aisha"`.
+        value = "#{color_name.downcase}-#{species_name.downcase}"
+        value = '"' + value + '"' if value.include? ' '
+        "fits:#{value}"
       end
     end
   end
