@@ -21,6 +21,12 @@ class PetType < ActiveRecord::Base
   
   scope :includes_child_translations,
     -> { includes({:color => :translations, :species => :translations}) }
+  
+  scope :matching_name, ->(color_name, species_name, locale = I18n.locale) {
+    color = Color.matching_name(color_name, locale).first!
+    species = Species.matching_name(species_name, locale).first!
+    where(color_id: color.id, species_id: species.id)
+  }
 
   def self.special_color_or_basic(special_color)
     color_ids = special_color ? [special_color.id] : Color.basic.select([:id]).map(&:id)

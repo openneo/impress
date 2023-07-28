@@ -6,6 +6,11 @@ class Color < ActiveRecord::Base
   scope :standard, -> { where(:standard => true) }
   scope :nonstandard, -> { where(:standard => false) }
   scope :funny, -> { order(:prank) unless pranks_funny? }
+  scope :matching_name, ->(name, locale = I18n.locale) {
+    ct = Color::Translation.arel_table
+    joins(:translations).where(ct[:locale].eq(locale)).
+      where(ct[:name].matches(sanitize_sql_like(name)))
+  }
 
   validates :name, presence: true
   
@@ -32,5 +37,11 @@ class Color < ActiveRecord::Base
   def self.pranks_funny?
     now = Time.now.in_time_zone('Pacific Time (US & Canada)')
     now.month == 4 && now.day == 1
+  end
+
+  # TODO: Copied from modern Rails source, can delete once we're there!
+  def self.sanitize_sql_like(string, escape_character = "\\")
+    pattern = Regexp.union(escape_character, "%", "_")
+    string.gsub(pattern) { |x| [escape_character, x].join }
   end
 end
