@@ -58,6 +58,22 @@ class Item
             filters << (is_positive ?
               Filter.fits(pet_type.body_id, color_name, species_name) :
               Filter.not_fits(pet_type.body_id, color_name, species_name))
+          when 'user'
+            if user.nil?
+              message = I18n.translate('items.search.errors.not_logged_in')
+              raise Item::Search::Error, message
+            end
+            case value
+            when 'owns'
+              filters << (is_positive ?
+                Filter.user_owns(user) :
+                Filter.user_wants(user))
+            when 'wants'
+            else
+              message = I18n.translate('items.search.errors.not_found.ownership',
+                keyword: value)
+              raise Item::Search::Error, message
+            end
           when 'is'
             case value
             when 'nc'
@@ -149,6 +165,14 @@ class Item
         value = "#{color_name.downcase}-#{species_name.downcase}"
         value = '"' + value + '"' if value.include? ' '
         self.new Item.not_fits(body_id), "-fits:#{value}"
+      end
+
+      def self.user_owns(user)
+        self.new user.owned_items, 'user:owns'
+      end
+
+      def self.user_wants(user)
+        self.new user.wanted_items, 'user:wants'
       end
 
       def self.is_nc
