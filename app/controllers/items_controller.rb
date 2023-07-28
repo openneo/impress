@@ -26,12 +26,10 @@ class ItemsController < ApplicationController
             end
           }
           format.json {
-            @items.prepare_method(:as_json)
             render json: {items: @items, total_pages: @items.total_pages,
                           query: @query.to_s}
           }
           format.js {
-            @items.prepare_method(:as_json)
             render json: {items: @items, total_pages: @items.total_pages,
                           query: @query.to_s},
                    callback: params[:callback]
