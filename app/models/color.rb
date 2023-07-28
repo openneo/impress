@@ -13,6 +13,12 @@ class Color < ActiveRecord::Base
   }
 
   validates :name, presence: true
+
+  # TODO: Should we consider replacing this at call sites? This used to be
+  # built into the globalize gem but isn't anymore!
+  def self.find_by_name(name)
+    matching_name(name).first
+  end
   
   def as_json(options={})
     {id: id, name: human_name, unfunny_name: unfunny_human_name, prank: prank?}
