@@ -2,7 +2,7 @@ class OutfitsController < ApplicationController
   before_filter :find_authorized_outfit, :only => [:update, :destroy]
 
   def create
-    @outfit = Outfit.build_for_user(current_user, params[:outfit])
+    @outfit = Outfit.build_for_user(current_user, outfit_params)
     if @outfit.save
       render :json => @outfit
     else
@@ -108,7 +108,7 @@ class OutfitsController < ApplicationController
   end
 
   def update
-    if @outfit.update_attributes(params[:outfit])
+    if @outfit.update_attributes(outfit_params)
       render :json => @outfit
     else
       render_outfit_errors
@@ -116,6 +116,11 @@ class OutfitsController < ApplicationController
   end
 
   private
+
+  def outfit_params
+    params.require(:outfit).permit(
+      :name, :pet_state_id, :starred, :worn_and_unworn_item_ids)
+  end
 
   def find_authorized_outfit
     raise ActiveRecord::RecordNotFound unless user_signed_in?
