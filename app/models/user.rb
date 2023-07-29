@@ -21,9 +21,6 @@ class User < ActiveRecord::Base
 
   devise :rememberable
 
-  attr_accessible :owned_closet_hangers_visibility,
-    :wanted_closet_hangers_visibility, :contact_neopets_connection_id
-
   def admin?
     name == 'matchu' # you know that's right.
   end
