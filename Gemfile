@@ -4,7 +4,7 @@ ruby '2.2.4'
 gem 'dotenv-rails'
 gem 'dotenv-deployment'
 
-gem 'rails', '= 4.0.13'
+gem 'rails', '= 4.1.16'
 #gem 'sqlite3-ruby', '~> 1.3.1', :require => 'sqlite3'
 gem 'mysql2', '>= 0.3.11'
 
@@ -64,7 +64,7 @@ gem "letter_opener", :group => :development
 
 gem 'sass-rails', '~> 5.0', '>= 5.0.7'
 gem 'compass-rails', '~> 3.1'
-gem 'uglifier',      ">= 1.0.3"
+gem 'uglifier', '~> 4.2'
 
 # Backfills for old Rails behaviors
 # TODO: Would be nice to become canonical and not need these!
