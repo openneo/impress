@@ -7,13 +7,17 @@ class User < ActiveRecord::Base
   has_many :closet_hangers
   has_many :closet_lists
   has_many :closeted_items, through: :closet_hangers, source: :item
+  has_many :contributions
+  has_many :neopets_connections
+  has_many :outfits
+
+  # TODO: When `owned_items` and `wanted_items` are merged, they override one
+  # another instead of correctly returning an empty set. Is this a Rails bug
+  # that gets fixed down the line once we finish upgrading, or...?
   has_many :owned_items, -> { where(ClosetHanger.arel_table[:owned].eq(true)) },
     through: :closet_hangers, source: :item
   has_many :wanted_items, -> { where(ClosetHanger.arel_table[:owned].eq(false)) },
     through: :closet_hangers, source: :item
-  has_many :contributions
-  has_many :neopets_connections
-  has_many :outfits
 
   belongs_to :contact_neopets_connection, class_name: 'NeopetsConnection'
 
@@ -23,6 +27,37 @@ class User < ActiveRecord::Base
 
   def admin?
     name == 'matchu' # you know that's right.
+  end
+
+  def unowned_items
+    # Join all items against our owned closet hangers, group by item ID, then
+    # only return those with zero matching hangers.
+    #
+    # TODO: It'd be nice to replace this with a `left_outer_joins` call in
+    # Rails 5+, but these conditions really do need to be part of the join:
+    # if we do them as a `where`, they prevent unmatching items from being
+    # returned in the first place.
+    #
+    # TODO: This crashes the query when combined with `unwanted_items`.
+    ch = ClosetHanger.arel_table.alias("owned_hangers")
+    Item.
+      joins(
+        "LEFT JOIN closet_hangers owned_hangers ON owned_hangers.item_id = items.id " + 
+        "AND #{ch[:user_id].eq(self.id).to_sql} AND owned_hangers.owned = true"
+      ).
+      group("items.id").having("COUNT(owned_hangers.id) = 0")
+  end
+
+  def unwanted_items
+    # See `unowned_items` above! We just change the `true` to `false`.
+    # TODO: This crashes the query when combined with `unowned_items`.
+    ch = ClosetHanger.arel_table.alias("wanted_hangers")
+    Item.
+      joins(
+        "LEFT JOIN closet_hangers wanted_hangers ON wanted_hangers.item_id = items.id " + 
+        "AND #{ch[:user_id].eq(self.id).to_sql} AND wanted_hangers.owned = false"
+      ).
+      group("items.id").having("COUNT(wanted_hangers.id) = 0")
   end
 
   def contribute!(pet)

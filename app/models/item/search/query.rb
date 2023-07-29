@@ -66,9 +66,12 @@ class Item
             case value
             when 'owns'
               filters << (is_positive ?
-                Filter.user_owns(user) :
-                Filter.user_wants(user))
+                Filter.owned_by(user) :
+                Filter.not_owned_by(user))
             when 'wants'
+              filters << (is_positive ?
+                Filter.wanted_by(user) :
+                Filter.not_wanted_by(user))
             else
               message = I18n.translate('items.search.errors.not_found.ownership',
                 keyword: value)
@@ -167,12 +170,20 @@ class Item
         self.new Item.not_fits(body_id), "-fits:#{value}"
       end
 
-      def self.user_owns(user)
+      def self.owned_by(user)
         self.new user.owned_items, 'user:owns'
       end
 
-      def self.user_wants(user)
+      def self.not_owned_by(user)
+        self.new user.unowned_items, 'user:owns'
+      end
+
+      def self.wanted_by(user)
         self.new user.wanted_items, 'user:wants'
+      end
+
+      def self.not_wanted_by(user)
+        self.new user.unwanted_items, 'user:wants'
       end
 
       def self.is_nc
