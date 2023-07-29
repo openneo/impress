@@ -171,9 +171,9 @@ ActiveRecord::Schema.define(version: 20230729181111) do
   add_index "login_cookies", ["user_id"], name: "login_cookies_user_id", using: :btree
 
   create_table "modeling_logs", force: true do |t|
-    t.timestamp "created_at",             null: false
-    t.text      "log_json",               null: false
-    t.string    "pet_name",   limit: 128, null: false
+    t.datetime "created_at",             null: false
+    t.text     "log_json",               null: false
+    t.string   "pet_name",   limit: 128, null: false
   end
 
   create_table "neopets_connections", force: true do |t|
@@ -265,21 +265,21 @@ ActiveRecord::Schema.define(version: 20230729181111) do
   add_index "species_translations", ["species_id"], name: "index_species_translations_on_species_id", using: :btree
 
   create_table "swf_assets", force: true do |t|
-    t.string    "type",               limit: 7,                        null: false
-    t.integer   "remote_id",          limit: 3,                        null: false
-    t.text      "url",                limit: 16777215,                 null: false
-    t.integer   "zone_id",            limit: 1,                        null: false
-    t.text      "zones_restrict",                                      null: false
-    t.datetime  "created_at",                                          null: false
-    t.integer   "body_id",            limit: 2,                        null: false
-    t.boolean   "has_image",                           default: false, null: false
-    t.boolean   "image_requested",                     default: false, null: false
-    t.datetime  "reported_broken_at"
-    t.datetime  "converted_at"
-    t.boolean   "image_manual",                        default: false, null: false
-    t.text      "manifest",           limit: 16777215
-    t.timestamp "manifest_cached_at"
-    t.string    "known_glitches",     limit: 128,      default: ""
+    t.string   "type",               limit: 7,                        null: false
+    t.integer  "remote_id",          limit: 3,                        null: false
+    t.text     "url",                limit: 16777215,                 null: false
+    t.integer  "zone_id",            limit: 1,                        null: false
+    t.text     "zones_restrict",                                      null: false
+    t.datetime "created_at",                                          null: false
+    t.integer  "body_id",            limit: 2,                        null: false
+    t.boolean  "has_image",                           default: false, null: false
+    t.boolean  "image_requested",                     default: false, null: false
+    t.datetime "reported_broken_at"
+    t.datetime "converted_at"
+    t.boolean  "image_manual",                        default: false, null: false
+    t.text     "manifest",           limit: 16777215
+    t.datetime "manifest_cached_at"
+    t.string   "known_glitches",     limit: 128,      default: ""
   end
 
   add_index "swf_assets", ["body_id"], name: "swf_assets_body_id_and_object_id", using: :btree
