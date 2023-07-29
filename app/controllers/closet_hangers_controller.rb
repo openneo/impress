@@ -86,7 +86,7 @@ class ClosetHangersController < ApplicationController
       end
     else
       # Otherwise, default to public lists
-      visible_closet_lists = closet_lists.public
+      visible_closet_lists = closet_lists.publicly_visible
     end
     @closet_lists_by_owned = closet_lists.group_by(&:hangers_owned)
     @visible_closet_lists_by_owned = find_closet_lists_by_owned(visible_closet_lists)
