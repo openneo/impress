@@ -17,7 +17,7 @@ role :web, application
 role :app, application, :memcached => true
 role :db,  application, :primary => true
 
-set :bundle_without, [:development, :test, :development_async]
+set :bundle_without, [:development, :test]
 
 set :rvm_ruby_string, 'ruby-1.9.3-p484'        # Or whatever env you want it to run in.
 set :rvm_type, :system
