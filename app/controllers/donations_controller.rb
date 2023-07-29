@@ -25,7 +25,7 @@ class DonationsController < ApplicationController
 
   def update
     @donation = Donation.from_param(params[:id])
-    @donation.update_attributes params[:donation]
+    @donation.attributes = donation_params
 
     feature_params = params[:feature] || {}
     @features = @donation.features.find(feature_params.keys)
@@ -46,5 +46,11 @@ class DonationsController < ApplicationController
         'Also, have we thanked you yet today? Thank you!'
       redirect_to @donation
     end
+  end
+
+  private
+
+  def donation_params
+    params.require(:donation).permit(:donor_name)
   end
 end
