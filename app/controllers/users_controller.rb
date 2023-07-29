@@ -17,7 +17,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    success = @user.update_attributes params[:user]
+    success = @user.update_attributes user_params
     respond_to do |format|
       format.html {
         if success
@@ -40,6 +40,11 @@ class UsersController < ApplicationController
   end
 
   protected
+
+  def user_params
+    params.require(:user).permit(:owned_closet_hangers_visibility,
+      :wanted_closet_hangers_visibility, :contact_neopets_connection_id)
+  end
 
   def find_and_authorize_user!
     if current_user.id == params[:id].to_i
