@@ -1,8 +1,6 @@
 class Donation < ActiveRecord::Base
   FEATURE_COST = 500  # in cents = $5.00
 
-  attr_accessible :donor_name
-
   belongs_to :campaign
   belongs_to :user
   has_many :features, class_name: 'DonationFeature'
