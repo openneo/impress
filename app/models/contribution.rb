@@ -53,7 +53,7 @@ class Contribution < ActiveRecord::Base
     # Load contributed objects without parents, prepare them for easy access
     # for future assignment to contributions and looking up parents
     CONTRIBUTED_CHILDREN.each do |type|
-      scope = options[:scopes][type] || type.constantize.scoped
+      scope = options[:scopes][type] || type.constantize.all
       scope.find(needed_ids_by_type[type]).each do |contributed|
         contributed_by_type[type] << contributed
         contributed_by_type_and_id[type][contributed.id] = contributed
@@ -64,7 +64,7 @@ class Contribution < ActiveRecord::Base
     # contributed objects of that class. all_by_ids_or_children properly
     # assigns parents to children, as well
     CONTRIBUTED_RELATIONSHIPS.each do |child_type, type|
-      scope = options[:scopes][type] || type.constantize.scoped
+      scope = options[:scopes][type] || type.constantize.all
       ids = needed_ids_by_type[type]
       children = contributed_by_type[child_type]
       scope.all_by_ids_or_children(ids, children).each do |contributed|
