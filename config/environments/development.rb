@@ -31,6 +31,20 @@ OpenneoImpressItems::Application.configure do
   config.assets.debug = true
 
   config.react.variant = :development
+
+  # Fix file reloading in a Vagrant environment.
+  # The `ActiveSupport::EventedFileUpdateChecker` is faster, but doesn't work
+  # correctly for Vagrant's networked folders!
+  # https://stackoverflow.com/a/36616931
+  #
+  # TODO: In the future, if we don't expect the use of Vagrant or similar tech
+  # anymore, we could remove this for a minor dev perf improvement. We're on
+  # Vagrant now because it's hard to get older Ruby running on many modern
+  # systems, but later on that could change!
+  #
+  # NOTE: But I also see that this might be the default anyway in current
+  # Rails? idk when that changed... so maybe just delete this later?
+  config.file_watcher = ActiveSupport::FileUpdateChecker
 end
 
 LocalImpressHost = 'betanewimpress.openneo.net'
