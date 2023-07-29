@@ -110,7 +110,7 @@ class ClosetHangersController < ApplicationController
   end
 
   def create
-    @closet_hanger = current_user.closet_hangers.build(params[:closet_hanger])
+    @closet_hanger = current_user.closet_hangers.build(closet_hanger_params)
     @closet_hanger.item = @item
     
     if @closet_hanger.save
@@ -132,7 +132,7 @@ class ClosetHangersController < ApplicationController
       redirect_back!(user_closet_hangers_path(current_user))
     else
       @closet_hanger = current_user.closet_hangers.find(params[:id])
-      @closet_hanger.attributes = params[:closet_hanger]
+      @closet_hanger.attributes = closet_hanger_params
       @item = @closet_hanger.item
 
       unless @closet_hanger.quantity == 0 # save the hanger, new record or not
@@ -166,6 +166,10 @@ class ClosetHangersController < ApplicationController
   end
 
   private
+
+  def closet_hanger_params
+    params.require(:closet_hanger).permit(:list_id, :owned, :quantity)
+  end
   
   def closet_hanger_destroyed
     respond_to do |format|
@@ -249,8 +253,8 @@ class ClosetHangersController < ApplicationController
 
   def owned
     owned = true
-    if params[:closet_hanger]
-      owned = case params[:closet_hanger][:owned]
+    if closet_hanger_params
+      owned = case closet_hanger_params[:owned]
         when 'true', '1' then true
         when 'false', '0' then false
       end
