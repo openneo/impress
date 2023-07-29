@@ -1,6 +1,4 @@
 class Campaign < ActiveRecord::Base
-  attr_accessible :active, :goal, :progress
-
   has_many :donations
 
   def progress_percent
