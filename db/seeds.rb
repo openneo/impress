@@ -206,3 +206,6 @@ Zone.create(:id => 49, :label => "Right-hand Item", :plain_label => "righthand",
 Zone.create(:id => 50, :label => "Hat", :plain_label => "hat", :depth => 16, :type_id => 2)
 Zone.create(:id => 51, :label => "Belt", :plain_label => "belt", :depth => 27, :type_id => 2)
 Zone.create(:id => 52, :label => "Foreground", :plain_label => "foreground", :depth => 52, :type_id => 3)
+
+User.create(name: "test", auth_server_id: -1, remote_id: -1)
+Campaign.create(goal: 100_00, active: true, advertised: false, description: "")
