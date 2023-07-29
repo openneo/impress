@@ -96,12 +96,12 @@ class Item < ActiveRecord::Base
   }
   scope :restricts, ->(zone_label, locale = I18n.locale) {
     zone_ids = Zone.matching_label(zone_label, locale).map(&:id)
-    condition = zone_ids.map { '(SUBSTR(zones_restrict, ?, 1) = "1")' }.join(' OR ')
+    condition = zone_ids.map { '(SUBSTR(items.zones_restrict, ?, 1) = "1")' }.join(' OR ')
     where(condition, *zone_ids)
   }
   scope :not_restricts, ->(zone_label, locale = I18n.locale) {
     zone_ids = Zone.matching_label(zone_label, locale).map(&:id)
-    condition = zone_ids.map { '(SUBSTR(zones_restrict, ?, 1) = "1")' }.join(' OR ')
+    condition = zone_ids.map { '(SUBSTR(items.zones_restrict, ?, 1) = "1")' }.join(' OR ')
     where("NOT (#{condition})", *zone_ids)
   }
   scope :fits, ->(body_id) {
