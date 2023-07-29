@@ -14,7 +14,7 @@ class SwfAssetsController < ApplicationController
         json = @swf_assets.all.group_by(&:body_id)
       end
     elsif params[:pet_type_id] && params[:item_ids]
-      pet_type = PetType.find(params[:pet_type_id], :select => [:body_id, :species_id])
+      pet_type = PetType.find(params[:pet_type_id])
       
       @swf_assets = SwfAsset.object_assets.includes_depth.
         fitting_body_id(pet_type.body_id).
