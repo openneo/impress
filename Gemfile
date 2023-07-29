@@ -69,7 +69,6 @@ gem 'uglifier',      ">= 1.0.3"
 # Backfills for old Rails behaviors
 # TODO: Would be nice to become canonical and not need these!
 gem 'rails-observers', '~> 0.1.5'
-gem 'protected_attributes', '~> 1.1', '>= 1.1.4'
 
 group :development do
   gem 'capistrano', '~> 2.15.5', require: false
