@@ -101,7 +101,52 @@ class Item
       end
 
       def self.from_params(params, user=nil)
-        raise NotImplementedError, "TODO: Reimplemented Advanced Search"
+        filters = []
+
+        params.values.each do |filter_params|
+          key = filter_params[:key]
+          value = filter_params[:value]
+          is_positive = filter_params[:is_positive] != 'false'
+
+          case filter_params[:key]
+          when 'name'
+            filters << (is_positive ?
+              Filter.name_includes(value, locale) :
+              Filter.name_excludes(value, locale))
+          when 'is_nc'
+            filters << (is_positive ? Filter.is_nc : Filter.is_not_nc)
+          when 'occupied_zone_set_name'
+            filters << (is_positive ?
+              Filter.occupies(value, locale) :
+              Filter.not_occupies(value, locale))
+          when 'restricted_zone_set_name'
+            filters << (is_positive ?
+              Filter.restricts(value, locale) :
+              Filter.not_restricts(value, locale))
+          when 'fits_pet_type'
+            pet_type = PetType.find(value)
+            color_name = pet_type.color.name
+            species_name = pet_type.species.name
+            filters << (is_positive ?
+              Filter.fits(pet_type.body_id, color_name, species_name) :
+              Filter.not_fits(pet_type.body_id, color_name, species_name))
+          when 'user_closet_hanger_ownership'
+            case value
+            when 'true'
+              filters << (is_positive ?
+                Filter.owned_by(user) :
+                Filter.not_owned_by(user))
+            when 'false'
+              filters << (is_positive ?
+                Filter.wanted_by(user) :
+                Filter.not_wanted_by(user))
+            end
+          else
+            Rails.logger.warn "Ignoring unexpected search filter key: #{key}"
+          end
+        end
+
+        self.new(filters, user)
       end
     end
 
@@ -113,9 +158,9 @@ class Item
     # A Filter is basically a wrapper for an Item scope, with extra info about
     # how to convert it into a search query string.
     class Filter
-      def initialize(query, text_fn)
+      def initialize(query, text)
         @query = query
-        @text_fn = text_fn
+        @text = text
       end
 
       def to_query
@@ -123,7 +168,7 @@ class Item
       end
 
       def to_s
-        @text_fn.call
+        @text
       end
 
       def inspect
