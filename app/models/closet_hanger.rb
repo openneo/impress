@@ -3,8 +3,6 @@ class ClosetHanger < ActiveRecord::Base
   belongs_to :list, :class_name => 'ClosetList'
   belongs_to :user
 
-  attr_accessible :list_id, :owned, :quantity
-
   attr_accessor :item_proxy
 
   delegate :name, to: :item, prefix: true
