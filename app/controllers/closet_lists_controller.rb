@@ -3,7 +3,7 @@ class ClosetListsController < ApplicationController
   before_filter :find_closet_list, :only => [:edit, :update, :destroy]
 
   def create
-    @closet_list = current_user.closet_lists.build params[:closet_list]
+    @closet_list = current_user.closet_lists.build closet_list_params
     if @closet_list.save
       save_successful!
     else
@@ -19,11 +19,11 @@ class ClosetListsController < ApplicationController
   end
 
   def new
-    @closet_list = current_user.closet_lists.build params[:closet_list]
+    @closet_list = current_user.closet_lists.build closet_list_params
   end
 
   def update
-    if @closet_list.update_attributes(params[:closet_list])
+    if @closet_list.update_attributes(closet_list_params)
       save_successful!
     else
       save_failed!
@@ -32,6 +32,11 @@ class ClosetListsController < ApplicationController
   end
 
   protected
+
+  def closet_list_params
+    params.require(:closet_list).permit(
+      :description, :hangers_owned, :name, :visibility)
+  end
 
   def find_closet_list
     @closet_list = current_user.closet_lists.find params[:id]

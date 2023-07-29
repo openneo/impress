@@ -3,8 +3,6 @@ class ClosetList < ActiveRecord::Base
   has_many :hangers, :class_name => 'ClosetHanger', :foreign_key => 'list_id'
   # Nullification of associated records occurs in the ClosetListObserver.
 
-  attr_accessible :description, :hangers_owned, :name, :visibility
-
   validates :name, :presence => true, :uniqueness => {:scope => :user_id}
   validates :user, :presence => true
   validates :hangers_owned, :inclusion => {:in => [true, false], :message => "can't be blank"}
