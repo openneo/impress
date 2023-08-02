@@ -67,6 +67,9 @@ gem 'mail', '~> 2.7', '>= 2.7.1', '< 2.8'
 # TODO: Review our use of content_tag_for etc and uninstall this!
 gem 'record_tag_helper', '~> 1.0'
 
+# Reduces boot times through caching; required in config/boot.rb
+gem 'bootsnap', require: false
+
 # For deployment.
 group :development do
   gem 'capistrano', '~> 2.15.5', require: false
