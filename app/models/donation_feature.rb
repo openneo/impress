@@ -1,4 +1,4 @@
-class DonationFeature < ActiveRecord::Base
+class DonationFeature < ApplicationRecord
   belongs_to :donation
   belongs_to :outfit
 

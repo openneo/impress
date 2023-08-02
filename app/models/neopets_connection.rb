@@ -1,4 +1,4 @@
-class NeopetsConnection < ActiveRecord::Base
+class NeopetsConnection < ApplicationRecord
   belongs_to :user
 
   validates :neopets_username, uniqueness: {scope: :user_id}

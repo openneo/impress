@@ -7,8 +7,8 @@ class ApplicationController < ActionController::Base
 
   helper_method :can_use_image_mode?, :user_is?
   
-  before_filter :set_locale
-  before_filter :login_as_test_user if Rails.env.development?
+  before_action :set_locale
+  before_action :login_as_test_user if Rails.env.development?
 
   def authenticate_user! # too lazy to change references to login_path
     redirect_to(login_path) unless user_signed_in?

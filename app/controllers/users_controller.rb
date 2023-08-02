@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :find_and_authorize_user!, :only => [:update]
+  before_action :find_and_authorize_user!, :only => [:update]
 
   def index # search, really
     name = params[:name]

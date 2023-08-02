@@ -1,4 +1,4 @@
-class PetState < ActiveRecord::Base
+class PetState < ApplicationRecord
   SwfAssetType = 'biology'
   
   has_many :contributions, :as => :contributed,

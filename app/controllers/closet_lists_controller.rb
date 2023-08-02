@@ -1,6 +1,6 @@
 class ClosetListsController < ApplicationController
-  before_filter :authorize_user!
-  before_filter :find_closet_list, :only => [:edit, :update, :destroy]
+  before_action :authorize_user!
+  before_action :find_closet_list, :only => [:edit, :update, :destroy]
 
   def create
     @closet_list = current_user.closet_lists.build closet_list_params

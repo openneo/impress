@@ -1,4 +1,4 @@
-class Donation < ActiveRecord::Base
+class Donation < ApplicationRecord
   FEATURE_COST = 500  # in cents = $5.00
 
   belongs_to :campaign

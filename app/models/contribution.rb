@@ -1,4 +1,4 @@
-class Contribution < ActiveRecord::Base
+class Contribution < ApplicationRecord
   POINT_VALUES = {
     'Item' => 3,
     'SwfAsset' => 2,
