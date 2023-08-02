@@ -48,7 +48,6 @@ class SwfAssetsController < ApplicationController
     end
     if @swf_assets
       @swf_assets = @swf_assets.all unless @swf_assets.is_a? Array
-      @swf_assets.each(&:request_image_conversion!)
       json = @swf_assets unless json
     else
       json = nil

@@ -44,15 +44,6 @@ en-MEEP:
     items:
       title_tagline: Neopets customization meep and meepits database
       search: Meep
-  
-  broken_image_reports:
-    create:
-      success:
-        Thanks! This image will be remeeped soon. If it looks the same after
-        meeping, please consider sending a bug report.
-      already_reported:
-        This image is already in line for remeeping. We'll get to it soon,
-        don't worry.
     
     new:
       title: Meep broken image

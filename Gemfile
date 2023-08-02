@@ -25,11 +25,8 @@ gem 'addressable', :require => ['addressable/template', 'addressable/uri']
 
 gem 'whenever', '~> 0.7.3', :require => false
 
-gem 'swf_converter', '~> 0.0.3'
-
 gem 'resque', '~> 1.23.0'
 gem 'resque-scheduler', '~> 2.0.0.d'
-gem 'resque-retry', '~> 0.1.0'
 
 gem 'right_aws', '~> 2.1.0'
 
