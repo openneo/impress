@@ -1,5 +1,4 @@
 require "bundler/capistrano"
-require "dotenv/deployment/capistrano"
 require "rvm/capistrano"
 
 set :application, "newimpress.openneo.net"
