@@ -1,6 +1,6 @@
 require 'fileutils'
 require 'uri'
-require 'utf8'
+require 'encoding/character/utf-8'
 
 class SwfAsset < ActiveRecord::Base
   # We use the `type` column to mean something other than what Rails means!

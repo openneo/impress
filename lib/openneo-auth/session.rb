@@ -1,7 +1,7 @@
 require 'active_support/core_ext/hash'
 require 'msgpack'
 require 'openneo-auth-signatory'
-require 'utf8'
+require 'encoding/character/utf-8'
 
 module Openneo
   module Auth
