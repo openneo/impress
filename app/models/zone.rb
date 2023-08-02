@@ -1,4 +1,4 @@
-class Zone < ApplicationRecord
+class Zone < ActiveRecord::Base
   translates :label, :plain_label
   
   # When selecting zones that an asset occupies, we allow the zone to set
@@ -6,7 +6,8 @@ class Zone < ApplicationRecord
   attr_writer :sometimes
   
   scope :alphabetical, -> {
-    with_translations(I18n.locale).order(Zone::Translation.arel_table[:label])
+    zt = Zone::Translation.arel_table
+    with_translations(I18n.locale).order(zt[:label].asc)
   }
   scope :includes_translations, -> { includes(:translations) }
   scope :matching_label, ->(label, locale = I18n.locale) {

@@ -1,7 +1,10 @@
 class Color < ApplicationRecord
   translates :name
   
-  scope :alphabetical, -> { with_translations(I18n.locale).order(Color::Translation.arel_table[:name]) }
+  scope :alphabetical, -> {
+    ct = Color::Translation.arel_table
+    with_translations(I18n.locale).order(ct[:name].asc)
+  }
   scope :basic, -> { where(:basic => true) }
   scope :standard, -> { where(:standard => true) }
   scope :nonstandard, -> { where(:standard => false) }
