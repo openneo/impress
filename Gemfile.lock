@@ -1,10 +1,4 @@
 GIT
-  remote: https://github.com/iain/http_accept_language.git
-  revision: 74a6a244afa069154d08df0f5df373a6c7fc4fe2
-  specs:
-    http_accept_language (2.1.1)
-
-GIT
   remote: https://github.com/matchu/neopets.git
   revision: 5d13a720b616ba57fbbd54541f3e5daf02b3fedc
   specs:
@@ -107,6 +101,7 @@ GEM
       thor
       tilt
     highline (1.7.2)
+    http_accept_language (2.1.1)
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
     json (1.8.6)
@@ -230,7 +225,7 @@ DEPENDENCIES
   factory_girl_rails (~> 1.0)
   globalize (~> 4.0.3)
   haml (~> 6.1, >= 6.1.1)
-  http_accept_language!
+  http_accept_language (~> 2.1, >= 2.1.1)
   letter_opener
   memcache-client (~> 1.8.5)
   msgpack (~> 0.5.3)
