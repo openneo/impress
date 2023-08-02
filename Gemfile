@@ -25,9 +25,6 @@ gem 'addressable', :require => ['addressable/template', 'addressable/uri']
 
 gem 'whenever', '~> 0.7.3', :require => false
 
-gem 'resque', '~> 1.23.0'
-gem 'resque-scheduler', '~> 2.0.0.d'
-
 gem 'right_aws', '~> 2.1.0'
 
 gem "character-encodings", "~> 0.4.1", :platforms => :ruby_18

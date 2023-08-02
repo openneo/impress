@@ -1,5 +1,3 @@
-require 'resque/server'
-
 OpenneoImpressItems::Application.routes.draw do
   get "petpages/new"
 
@@ -102,16 +100,4 @@ OpenneoImpressItems::Application.routes.draw do
 
   get '/sitemap.xml' => 'sitemap#index', :as => :sitemap, :format => :xml
   get '/robots.txt' => 'sitemap#robots', :as => :robots, :format => :text
-
-  def mount_resque
-    mount Resque::Server, :at => '/resque'
-  end
-
-  if Rails.env.development?
-    mount_resque
-  else
-    authenticated :user, lambda { |u| u.admin? } do
-      mount_resque
-    end
-  end
 end

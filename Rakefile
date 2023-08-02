@@ -6,8 +6,6 @@ require File.expand_path('../config/application', __FILE__)
 require 'rake'
 require 'rake/testtask'
 require 'rdoc/task'
-require 'resque/tasks'
-require 'resque_scheduler/tasks'
 
 OpenneoImpressItems::Application.load_tasks
 
