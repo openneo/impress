@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20230729181111) do
+ActiveRecord::Schema.define(version: 20230802195548) do
 
   create_table "auth_servers", force: true do |t|
     t.string "short_name", limit: 10,       null: false
@@ -265,21 +265,21 @@ ActiveRecord::Schema.define(version: 20230729181111) do
   add_index "species_translations", ["species_id"], name: "index_species_translations_on_species_id", using: :btree
 
   create_table "swf_assets", force: true do |t|
-    t.string   "type",               limit: 7,                        null: false
-    t.integer  "remote_id",          limit: 3,                        null: false
-    t.text     "url",                limit: 16777215,                 null: false
-    t.integer  "zone_id",            limit: 1,                        null: false
-    t.text     "zones_restrict",                                      null: false
-    t.datetime "created_at",                                          null: false
-    t.integer  "body_id",            limit: 2,                        null: false
-    t.boolean  "has_image",                           default: false, null: false
-    t.boolean  "image_requested",                     default: false, null: false
-    t.datetime "reported_broken_at"
-    t.datetime "converted_at"
-    t.boolean  "image_manual",                        default: false, null: false
-    t.text     "manifest",           limit: 16777215
-    t.datetime "manifest_cached_at"
-    t.string   "known_glitches",     limit: 128,      default: ""
+    t.string    "type",               limit: 7,                        null: false
+    t.integer   "remote_id",          limit: 3,                        null: false
+    t.text      "url",                limit: 16777215,                 null: false
+    t.integer   "zone_id",            limit: 1,                        null: false
+    t.text      "zones_restrict",                                      null: false
+    t.datetime  "created_at",                                          null: false
+    t.integer   "body_id",            limit: 2,                        null: false
+    t.boolean   "has_image",                           default: false, null: false
+    t.boolean   "image_requested",                     default: false, null: false
+    t.datetime  "reported_broken_at"
+    t.datetime  "converted_at"
+    t.boolean   "image_manual",                        default: false, null: false
+    t.text      "manifest",           limit: 16777215
+    t.timestamp "manifest_cached_at"
+    t.string    "known_glitches",     limit: 128,      default: ""
   end
 
   add_index "swf_assets", ["body_id"], name: "swf_assets_body_id_and_object_id", using: :btree
@@ -298,23 +298,6 @@ ActiveRecord::Schema.define(version: 20230729181111) do
     t.integer  "owned_closet_hangers_visibility",             default: 1,     null: false
     t.integer  "wanted_closet_hangers_visibility",            default: 1,     null: false
     t.integer  "contact_neopets_connection_id"
-  end
-
-  create_table "wardrobe_tip_translations", force: true do |t|
-    t.integer  "wardrobe_tip_id"
-    t.string   "locale"
-    t.text     "body"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-  end
-
-  add_index "wardrobe_tip_translations", ["locale"], name: "index_wardrobe_tip_translations_on_locale", using: :btree
-  add_index "wardrobe_tip_translations", ["wardrobe_tip_id"], name: "index_wardrobe_tip_translations_on_wardrobe_tip_id", using: :btree
-
-  create_table "wardrobe_tips", force: true do |t|
-    t.integer  "index",      null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "zone_translations", force: true do |t|
