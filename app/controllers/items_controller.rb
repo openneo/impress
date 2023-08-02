@@ -65,9 +65,7 @@ class ItemsController < ApplicationController
           scope: Zone.includes_translations.alphabetical
         )
         
-        unless localized_fragment_exist?("items/#{@item.id} contributors")
-          @contributors_with_counts = @item.contributors_with_counts
-        end
+        @contributors_with_counts = @item.contributors_with_counts
 
         @supported_species_ids = @item.supported_species_ids
         unless localized_fragment_exist?("items/show standard_species_images special_color=#{@item.special_color_id}")
