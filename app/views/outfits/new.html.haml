@@ -92,12 +92,11 @@
           required: true
         = submit_tag t('.modeling_hub.load_pet.submit')
 
-- localized_cache 'outfits#new latest_contribution' do
-  - if @latest_contribution  # will be nil for a fresh copy of the site ;P
-    #latest-contribution
-      = link_to t('.latest_contribution.header'), contributions_path, :id => 'recent-contributions-link'
-      = latest_contribution_description(@latest_contribution)
-      %abbr#latest-contribution-created-at{:title => @latest_contribution.created_at.getutc.iso8601}
+- if @latest_contribution  # will be nil for a fresh copy of the site ;P
+  #latest-contribution
+    = link_to t('.latest_contribution.header'), contributions_path, :id => 'recent-contributions-link'
+    = latest_contribution_description(@latest_contribution)
+    %abbr#latest-contribution-created-at{:title => @latest_contribution.created_at.getutc.iso8601}
 
 #whats-new
   - if @newest_unmodeled_items.present?
