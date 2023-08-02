@@ -130,7 +130,6 @@ GEM
       ruby-hmac
     orm_adapter (0.5.0)
     parallel (1.13.0)
-    passenger_monit (0.1.1)
     rack (1.5.5)
     rack-attack (2.2.1)
       rack
@@ -234,7 +233,6 @@ DEPENDENCIES
   nokogiri (~> 1.5.2)
   openneo-auth-signatory (~> 0.1.0)
   parallel (~> 1.13.0)
-  passenger_monit (~> 0.1.1)
   rack-attack (~> 2.2.0)
   rails (= 4.1.16)
   rails-i18n (~> 4.0, >= 4.0.9)
