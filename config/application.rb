@@ -32,6 +32,8 @@ module OpenneoImpressItems
     config.assets.initialize_on_precompile = false
 
     config.middleware.insert_after ActionDispatch::Flash, Rack::Attack
+
+    config.active_record.raise_in_transactional_callbacks = true
   end
 end
 

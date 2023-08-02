@@ -53,6 +53,9 @@ gem "letter_opener", :group => :development
 # For parallel API calls.
 gem "parallel", "~> 1.13.0"
 
+# For debugging.
+gem 'web-console', '~> 2.2', '>= 2.2.1'
+
 # TODO: Rails requests the latest version of these dependencies, but they
 # require Ruby 2.5 or higher, so we have to request lower ones instead!
 # (loofah is slightly trickier: it requires a recent nokogiri, but recent
