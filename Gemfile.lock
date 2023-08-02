@@ -47,9 +47,6 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
     addressable (2.3.8)
-    airbrake (3.1.17)
-      builder
-      multi_json
     arel (5.0.1.20140414130214)
     babel-source (5.8.35)
     babel-transpiler (0.7.0)
@@ -234,7 +231,6 @@ PLATFORMS
 DEPENDENCIES
   RocketAMF!
   addressable
-  airbrake (~> 3.1.8)
   capistrano (~> 2.15.5)
   character-encodings (~> 0.4.1)
   compass-rails (~> 3.1)
