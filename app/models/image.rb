@@ -7,19 +7,8 @@ class Image
   end
 
   def self.from_insecure_url(insecure_url)
-    Image.new insecure_url, proxy_insecure_url(insecure_url)
-  end
-
-  private
-
-  def self.proxy_insecure_url(insecure_url)
-    if CAMO_HOST && CAMO_KEY
-      hexdigest = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'), CAMO_KEY, insecure_url)
-      uri = Addressable::URI.parse("#{CAMO_HOST}/#{hexdigest}")
-      uri.query_values = { url: insecure_url }
-      uri.to_s
-    else
-      insecure_url
-    end
+    # TODO: We used to use a "Camo" server for this, but we don't anymore.
+    # Replace this with actual logic to actually secure the URLs!
+    Image.new insecure_url, insecure_url
   end
 end

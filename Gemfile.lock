@@ -226,7 +226,6 @@ PLATFORMS
 
 DEPENDENCIES
   RocketAMF!
-  addressable
   capistrano (~> 2.15.5)
   character-encodings (~> 0.4.1)
   compass-rails (~> 3.1)

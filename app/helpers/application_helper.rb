@@ -235,9 +235,5 @@ module ApplicationHelper
       :contributions_link_url => user_contributions_path(user),
       :user_points => user.points
   end
-
-  def camo_image_url(image_url)
-    Image.from_insecure_url(image_url).secure_url
-  end
 end
 
