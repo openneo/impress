@@ -123,8 +123,6 @@ GEM
       mini_mime (>= 0.1.1)
     memcache-client (1.8.5)
     mime-types (1.25.1)
-    mini_magick (3.8.1)
-      subexec (~> 0.2.1)
     mini_mime (1.1.2)
     minitest (5.15.0)
     msgpack (0.5.12)
@@ -215,7 +213,6 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
-    subexec (0.2.3)
     temple (0.8.2)
     thor (1.2.2)
     thread_safe (0.3.6)
@@ -250,7 +247,6 @@ DEPENDENCIES
   http_accept_language!
   letter_opener
   memcache-client (~> 1.8.5)
-  mini_magick (~> 3.4)
   msgpack (~> 0.5.3)
   mysql2 (>= 0.3.11)
   neopets (~> 0.2.0)!
