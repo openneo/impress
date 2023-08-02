@@ -21,8 +21,6 @@ gem 'openneo-auth-signatory', '~> 0.1.0'
 
 gem 'addressable', :require => ['addressable/template', 'addressable/uri']
 
-gem 'whenever', '~> 0.7.3', :require => false
-
 gem 'right_aws', '~> 2.1.0'
 
 gem "character-encodings", "~> 0.4.1", :platforms => :ruby_18

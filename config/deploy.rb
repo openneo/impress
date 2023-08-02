@@ -1,7 +1,6 @@
 require "bundler/capistrano"
 require "dotenv/deployment/capistrano"
 require "rvm/capistrano"
-require "whenever/capistrano"
 
 set :application, "newimpress.openneo.net"
 set :repository, "git://github.com/matchu/openneo-impress-rails.git"
@@ -23,8 +22,6 @@ set :rvm_ruby_string, 'ruby-1.9.3-p484'        # Or whatever env you want it to 
 set :rvm_type, :system
 set :rvm_install_type, :head
 set :rvm_bin_path, "/usr/local/rvm/bin"
-
-set :whenever_command, "bundle exec whenever"
 
 namespace :deploy do
   task :start, :roles => :app do
