@@ -116,27 +116,7 @@ module ItemsHelper
   end
 
   def render_item_link(item)
-    # I've discovered that checking the cache *before* attempting to render the
-    # partial is significantly faster: moving the cache line out here instead
-    # of having it wrap the partial's content speeds up closet_hangers#index
-    # rendering time by about a factor of 2. It's uglier, but this call happens
-    # a lot, so the performance gain is definitely worth it. I'd be interested
-    # in a more legit partial caching abstraction, but, for now, this will do.
-    # Because this is a returned-string helper, but uses a buffer-output
-    # helper, we have to do some indirection. Fake that the render is in a
-    # template, then capture the resulting buffer output.
-    capture do
-      # Try to read from the prepared proxy's known partial output, if it's
-      # even a proxy at all.
-      if item.respond_to?(:known_partial_output)
-        prepared_output = item.known_partial_output(:item_link_partial).try(:html_safe)
-      else
-        prepared_output = nil
-      end
-      prepared_output || localized_cache("items/#{item.id}#item_link_partial") do
-        safe_concat render(partial: 'items/item_link', locals: {item: item})
-      end
-    end
+    render(partial: 'items/item_link', locals: {item: item})
   end
 
   private
