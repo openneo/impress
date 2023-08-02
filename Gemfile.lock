@@ -57,6 +57,8 @@ GEM
     bcrypt (3.1.19)
     binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
+    bootsnap (1.12.0)
+      msgpack (~> 1.2)
     builder (3.2.4)
     capistrano (2.15.5)
       highline
@@ -260,6 +262,7 @@ PLATFORMS
 
 DEPENDENCIES
   RocketAMF!
+  bootsnap
   capistrano (~> 2.15.5)
   compass-rails (~> 3.1)
   devise (~> 4.9, >= 4.9.2)
