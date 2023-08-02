@@ -28,10 +28,9 @@
           %dt= t '.examples.type.query'
           %dd= t '.examples.type.description'
 
-    - localized_cache 'items#index newest_items' do
-      #search-new-items
-        %h2= t '.newest_items.header'
-        = render @newest_items
+    #search-new-items
+      %h2= t '.newest_items.header'
+      = render @newest_items
 
   - localized_cache :action_suffix => 'species_search_links' do
     #species-search-links
