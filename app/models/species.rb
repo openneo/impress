@@ -1,7 +1,10 @@
 class Species < ApplicationRecord
   translates :name
   
-  scope :alphabetical, -> { with_translations(I18n.locale).order(Species::Translation.arel_table[:name]) }
+  scope :alphabetical, -> {
+    st = Species::Translation.arel_table
+    with_translations(I18n.locale).order(st[:name].asc)
+  }
 
   scope :matching_name, ->(name, locale = I18n.locale) {
     st = Species::Translation.arel_table

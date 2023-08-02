@@ -12,9 +12,9 @@ class ClosetHanger < ApplicationRecord
   validate :list_belongs_to_user
 
   scope :alphabetical_by_item_name, -> {
-    joins(:item => :translations).
-      where(Item::Translation.arel_table[:locale].eq(I18n.locale)).
-      order(Item::Translation.arel_table[:name])
+    it = Item::Translation.arel_table
+    joins(:item => :translations).where(it[:locale].eq(I18n.locale)).
+      order(it[:name].asc)
   }
   scope :newest, -> { order(arel_table[:created_at].desc) }
   scope :owned_before_wanted, -> { order(arel_table[:owned].desc) }

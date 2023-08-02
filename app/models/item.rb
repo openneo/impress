@@ -27,7 +27,7 @@ class Item < ApplicationRecord
     locale = locale or I18n.locale
     it = Item::Translation.arel_table
     joins(:translations).where(it[:locale].eq('en')).
-      order(it[:name])
+      order(it[:name].asc)
   }
 
   scope :newest, -> {
