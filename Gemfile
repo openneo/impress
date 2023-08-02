@@ -19,8 +19,6 @@ gem 'RocketAMF', :git => 'https://github.com/rubyamf/rocketamf.git'
 gem 'msgpack', '~> 0.5.3'
 gem 'openneo-auth-signatory', '~> 0.1.0'
 
-gem 'right_aws', '~> 2.1.0'
-
 gem "character-encodings", "~> 0.4.1", :platforms => :ruby_18
 
 gem "nokogiri", "~> 1.5.2"

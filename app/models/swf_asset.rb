@@ -8,12 +8,6 @@ class SwfAsset < ActiveRecord::Base
   
   PUBLIC_ASSET_DIR = File.join('swfs', 'outfit')
   LOCAL_ASSET_DIR = Rails.root.join('public', PUBLIC_ASSET_DIR)
-  IMAGE_BUCKET = IMPRESS_S3.bucket('impress-asset-images')
-  IMAGE_PERMISSION = 'public-read'
-  IMAGE_HEADERS = {
-    'Cache-Control' => 'max-age=315360000',
-    'Content-Type' => 'image/png'
-  }
   # This is the URL origin we should use when loading from images.neopets.com.
   # It can be overridden in .env as `NEOPETS_IMAGES_URL_ORIGIN`, to use our
   # asset proxy instead.
