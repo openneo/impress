@@ -1,11 +1,4 @@
 GIT
-  remote: https://github.com/matchu/neopets.git
-  revision: 5d13a720b616ba57fbbd54541f3e5daf02b3fedc
-  specs:
-    neopets (0.2.0)
-      nokogiri (~> 1.5.2)
-
-GIT
   remote: https://github.com/rubyamf/rocketamf.git
   revision: 796f591d002b5cf47df436dbcbd6f2ab00e869ed
   specs:
@@ -228,7 +221,6 @@ DEPENDENCIES
   memcache-client (~> 1.8.5)
   msgpack (~> 0.5.3)
   mysql2 (>= 0.3.11)
-  neopets (~> 0.2.0)!
   nokogiri (~> 1.5.2)
   openneo-auth-signatory (~> 0.1.0)
   parallel (~> 1.13.0)
