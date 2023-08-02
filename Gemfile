@@ -8,8 +8,7 @@ gem 'mysql2', '>= 0.3.11'
 
 # For reading the .env file, which you can use in development to more easily
 # set environment variables for secret data.
-gem 'dotenv-rails'
-gem 'dotenv-deployment'
+gem 'dotenv-rails', '~> 2.8', '>= 2.8.1'
 
 # For the asset pipeline: templates, CSS, JS, etc.
 gem 'haml', '~> 6.1', '>= 6.1.1'
