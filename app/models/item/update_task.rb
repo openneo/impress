@@ -16,7 +16,6 @@ class Item
     private
 
     def self.expire_cache_for(item)
-      expire_fragment_in_all_locales("items/#{item.id}#item_link_partial")
       expire_fragment_in_all_locales("items/#{item.id} header")
       expire_fragment_in_all_locales("items/#{item.id} info")
       expire_key_in_all_locales("items/#{item.id}#as_json")

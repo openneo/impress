@@ -6,9 +6,6 @@ class Item
     SCOPES = HashWithIndifferentAccess.new({
       method: {
         as_json: Item.includes(:translations),
-      },
-      partial: {
-        item_link_partial: Item.includes(:translations)
       }
     })
 
