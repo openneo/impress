@@ -39,7 +39,6 @@ gem 'sanitize', '~> 2.0.3'
 # For working with Neopets APIs.
 # unstable version of RocketAMF interprets info registry as a hash instead of an array
 gem 'RocketAMF', :git => 'https://github.com/rubyamf/rocketamf.git'
-gem 'neopets', '~> 0.2.0', :git => 'https://github.com/matchu/neopets.git'
 
 # For working with the OpenNeo ID service.
 gem 'msgpack', '~> 0.5.3'

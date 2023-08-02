@@ -98,30 +98,8 @@ class PetState < ActiveRecord::Base
     end
   end
   
-  def label_by_pet(pet, username)
-    # If this pet is already labeled with a gender/mood, or it's unconverted
-    # and therefore has none, skip.
-    return false if self.labeled? || self.unconverted?
-    
-    # Find this pet on the owner's userlookup, where we can get both its gender
-    # and its mood.
-    begin
-      user_pet = Neopets::User.new(username).pets.
-        find { |user_pet| user_pet.name.downcase == pet.name.strip.downcase }
-      self.female = user_pet.female?
-      self.mood_id = user_pet.mood.id
-      self.labeled = true
-    rescue
-      # If there's an error loading the userlookup data (e.g. account is
-      # frozen), no big deal; we just won't label the pet right now. Proceed
-      # as usual.
-    end
-    
-    true
-  end
-  
   def mood
-    Neopets::Pet::Mood.find(self.mood_id)
+    Mood.find(self.mood_id)
   end
   
   def gender_name
@@ -244,6 +222,32 @@ class PetState < ActiveRecord::Base
       each do |pet_state|
         pet_state.reassign_duplicates!
       end
+    end
+  end
+
+  # Copied from https://github.com/matchu/neopets/blob/5d13a720b616ba57fbbd54541f3e5daf02b3fedc/lib/neopets/pet/mood.rb
+  class Mood
+    attr_reader :id, :name
+    
+    def initialize(options)
+      @id = options[:id]
+      @name = options[:name]
+    end
+    
+    def self.find(id)
+      self.all_by_id[id.to_i]
+    end
+    
+    def self.all
+      @all ||= [
+        Mood.new(:id => 1, :name => :happy),
+        Mood.new(:id => 2, :name => :sad),
+        Mood.new(:id => 4, :name => :sick)
+      ]
+    end
+    
+    def self.all_by_id
+      @all_by_id ||= self.all.inject({}) { |h, m| h[m.id] = m; h }
     end
   end
 end
