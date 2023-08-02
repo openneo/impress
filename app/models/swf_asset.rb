@@ -42,44 +42,10 @@ class SwfAsset < ActiveRecord::Base
     swf_image_dir.join("#{size.join 'x'}.png")
   end
 
-  def after_swf_conversion(images)
-    images.each do |size, path|
-      key = s3_key(size)
-      print "Uploading #{key}..."
-      IMAGE_BUCKET.put(
-        key,
-        File.open(path),
-        {}, # meta headers
-        IMAGE_PERMISSION, # permission
-        IMAGE_HEADERS
-      )
-      puts "done."
-
-      FileUtils.rm path
-    end
-    FileUtils.rmdir swf_image_dir
-
-    self.converted_at = Time.now
-    self.has_image = true
-    self.save!
-  end
-
-  def s3_key(size)
-    URI.encode("#{s3_path}/#{size.join 'x'}.png")
-  end
-
-  def s3_path
-    "#{self['type']}/#{s3_partition_path}#{self.remote_id}"
-  end
-
-  def s3_url(size)
-    "#{IMAGE_BUCKET.public_link}/#{s3_path}/#{size.join 'x'}.png"
-  end
-
   PARTITION_COUNT = 3
   PARTITION_DIGITS = 3
   PARTITION_ID_LENGTH = PARTITION_COUNT * PARTITION_DIGITS
-  def s3_partition_path
+  def partition_path
     (remote_id / 10**PARTITION_DIGITS).to_s.rjust(PARTITION_ID_LENGTH, '0').tap do |id_str|
       PARTITION_COUNT.times do |n|
         id_str.insert(PARTITION_ID_LENGTH - (n * PARTITION_DIGITS), '/')
@@ -95,7 +61,8 @@ class SwfAsset < ActiveRecord::Base
     host = ASSET_HOSTS[:swf_asset_images]
     size_key = size.join('x')
     
-    "//#{host}/#{s3_path}/#{size_key}.png?#{image_version}"
+    image_dir = "#{self['type']}/#{partition_path}#{self.remote_id}"
+    "//#{host}/#{image_dir}/#{size_key}.png?#{image_version}"
   end
   
   def images
