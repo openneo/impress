@@ -17,11 +17,11 @@ gem 'compass-rails', '~> 3.1'
 gem 'uglifier', '~> 4.2'
 gem 'react-rails', '~> 2.7', '>= 2.7.1'
 
-# For UI libraries.
-gem 'will_paginate', '~> 4.0'
-
 # For authentication.
 gem 'devise', '~> 4.9', '>= 4.9.2'
+
+# For pagination UI.
+gem 'will_paginate', '~> 4.0'
 
 # For translation, both for the site UI and for Neopets data.
 gem 'rails-i18n', '~> 5.1', '>= 5.1.3'
