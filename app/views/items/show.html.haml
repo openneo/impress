@@ -84,14 +84,13 @@
   #item-preview-error
   #item-preview-swf= t '.preview.requirements_not_met'
 
-- localized_cache "items/#{@item.id} contributors" do
-  - unless @contributors_with_counts.empty?
-    #item-contributors
-      %header #{t '.contributors.header'}:
-      %ul
-        - @contributors_with_counts.each do |contributor, count|
-          %li= link_to(contributor.name, user_contributions_path(contributor)) + format_contribution_count(count)
-      %footer= t '.contributors.footer'
+- unless @contributors_with_counts.empty?
+  #item-contributors
+    %header #{t '.contributors.header'}:
+    %ul
+      - @contributors_with_counts.each do |contributor, count|
+        %li= link_to(contributor.name, user_contributions_path(contributor)) + format_contribution_count(count)
+    %footer= t '.contributors.footer'
 
 :javascript
   var CURRENT_ITEM_ZONES_RESTRICT = #{@item.zones_restrict.inspect},
