@@ -100,7 +100,6 @@
       %abbr#latest-contribution-created-at{:title => @latest_contribution.created_at.getutc.iso8601}
 
 #whats-new
-  -# TODO: cache this entire block? or just request newest items every time?
   - if @newest_unmodeled_items.present?
     #modeling-neopets-users{'data-usernames' => @neopets_usernames.to_json}
     %h3= t '.newest_items.unmodeled.header'
