@@ -46,30 +46,28 @@ class OutfitsController < ApplicationController
       @species = Species.alphabetical
     end
     
-    unless localized_fragment_exist?('outfits#new newest_items')
-      newest_items = Item.newest.select([:id, :updated_at, :thumbnail_url, :rarity_index]).
-        includes(:translations).limit(18)
-      @newest_modeled_items, @newest_unmodeled_items =
-        newest_items.partition(&:predicted_fully_modeled?)
+    newest_items = Item.newest.select([:id, :updated_at, :thumbnail_url, :rarity_index]).
+      includes(:translations).limit(18)
+    @newest_modeled_items, @newest_unmodeled_items =
+      newest_items.partition(&:predicted_fully_modeled?)
 
-      @newest_unmodeled_items_predicted_missing_species_by_color = {}
-      @newest_unmodeled_items_predicted_modeled_ratio = {}
-      @newest_unmodeled_items.each do |item|
-        h = item.predicted_missing_nonstandard_body_ids_by_species_by_color(
-          Color.includes(:translations).select([:id]),
-          Species.includes(:translations).select([:id]))
-        standard_body_ids_by_species = item.
-          predicted_missing_standard_body_ids_by_species(
-            Species.select([:id]).includes(:translations))
-        if standard_body_ids_by_species.present?
-          h[:standard] = standard_body_ids_by_species
-        end
-        @newest_unmodeled_items_predicted_missing_species_by_color[item] = h
-        @newest_unmodeled_items_predicted_modeled_ratio[item] = item.predicted_modeled_ratio
+    @newest_unmodeled_items_predicted_missing_species_by_color = {}
+    @newest_unmodeled_items_predicted_modeled_ratio = {}
+    @newest_unmodeled_items.each do |item|
+      h = item.predicted_missing_nonstandard_body_ids_by_species_by_color(
+        Color.includes(:translations).select([:id]),
+        Species.includes(:translations).select([:id]))
+      standard_body_ids_by_species = item.
+        predicted_missing_standard_body_ids_by_species(
+          Species.select([:id]).includes(:translations))
+      if standard_body_ids_by_species.present?
+        h[:standard] = standard_body_ids_by_species
       end
-
-      @species_count = Species.count
+      @newest_unmodeled_items_predicted_missing_species_by_color[item] = h
+      @newest_unmodeled_items_predicted_modeled_ratio[item] = item.predicted_modeled_ratio
     end
+
+    @species_count = Species.count
     
     unless localized_fragment_exist?('outfits#new latest_contribution')
       @latest_contribution = Contribution.recent.first
