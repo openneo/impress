@@ -59,17 +59,15 @@
     - else
       = list_zones @restricted_zones
 
-- localized_cache "items/#{@item.id} trade_hangers" do
-  #trade-hangers
-    - [true, false].each do |owned|
-      - localized_cache "items/#{@item.id} trade_hangers owned=#{owned}" do
-        %p
-          %strong
-            = trading_closet_hangers_header(owned, @trading_closet_hangers_by_owned[owned].size)
-          = render_trading_closet_hangers(owned)
-          %span.toggle
-            %span.more= t '.trading_closet_hangers.show_more'
-            %span.less= t '.trading_closet_hangers.show_less'
+#trade-hangers
+  - [true, false].each do |owned|
+    %p
+      %strong
+        = trading_closet_hangers_header(owned, @trading_closet_hangers_by_owned[owned].size)
+      = render_trading_closet_hangers(owned)
+      %span.toggle
+        %span.more= t '.trading_closet_hangers.show_more'
+        %span.less= t '.trading_closet_hangers.show_less'
 
 #item-preview-header
   %h3= t '.preview.header'
