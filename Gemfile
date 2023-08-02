@@ -37,9 +37,6 @@ gem 'neopets', '~> 0.2.0', :git => 'https://github.com/matchu/neopets.git'
 
 gem "mini_magick", "~> 3.4"
 
-gem "fog", "~> 1.8.0"
-gem 'carrierwave', '~> 1.3', '>= 1.3.3'
-
 gem "parallel", "~> 1.13.0"
 
 gem "http_accept_language", :git => "https://github.com/iain/http_accept_language.git"
