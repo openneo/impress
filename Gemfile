@@ -66,10 +66,6 @@ gem 'sass-rails', '~> 5.0', '>= 5.0.7'
 gem 'compass-rails', '~> 3.1'
 gem 'uglifier', '~> 4.2'
 
-# Backfills for old Rails behaviors
-# TODO: Would be nice to become canonical and not need these!
-gem 'rails-observers', '~> 0.1.5'
-
 group :development do
   gem 'capistrano', '~> 2.15.5', require: false
   gem 'rvm-capistrano', '~> 1.5.6', require: false
