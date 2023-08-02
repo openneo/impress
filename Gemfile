@@ -54,7 +54,7 @@ gem "letter_opener", :group => :development
 gem "parallel", "~> 1.13.0"
 
 # For debugging.
-gem 'web-console', '~> 2.2', '>= 2.2.1'
+gem 'web-console', '~> 3.7'
 
 # TODO: Rails requests the latest version of these dependencies, but they
 # require Ruby 2.5 or higher, so we have to request lower ones instead!
