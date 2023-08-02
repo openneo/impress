@@ -1,60 +1,73 @@
 source 'http://rubygems.org'
 ruby '2.2.4'
 
+gem 'rails', '= 4.1.16'
+
+# Our database is MySQL, in both development and production.
+gem 'mysql2', '>= 0.3.11'
+
+# For reading the .env file, which you can use in development to more easily
+# set environment variables for secret data.
 gem 'dotenv-rails'
 gem 'dotenv-deployment'
 
-gem 'rails', '= 4.1.16'
-#gem 'sqlite3-ruby', '~> 1.3.1', :require => 'sqlite3'
-gem 'mysql2', '>= 0.3.11'
-
+# For the asset pipeline: templates, CSS, JS, etc.
 gem 'haml', '~> 6.1', '>= 6.1.1'
-gem 'rdiscount', '~> 1.6.5'
-gem 'will_paginate', '~> 3.0.pre2'
-gem 'devise', '~> 3.5.10'
-
-# unstable version of RocketAMF interprets info registry as a hash instead of an array
-gem 'RocketAMF', :git => 'https://github.com/rubyamf/rocketamf.git'
-
-gem 'msgpack', '~> 0.5.3'
-gem 'openneo-auth-signatory', '~> 0.1.0'
-
-gem "nokogiri", "~> 1.5.2"
-
-gem 'sanitize', '~> 2.0.3'
-
-gem 'neopets', '~> 0.2.0', :git => 'https://github.com/matchu/neopets.git'
-
-gem "parallel", "~> 1.13.0"
-
-gem 'http_accept_language', '~> 2.1', '>= 2.1.1'
-
-gem 'globalize', '~> 4.0.3'
-
-gem "rest-client", "~> 1.6.7"
-
-gem 'rails-i18n', '~> 4.0', '>= 4.0.9'
-
-gem 'rack-attack', '~> 2.2.0'
-
-gem 'react-rails', '~> 2.7', '>= 2.7.1'
-
-gem "letter_opener", :group => :development
-
 gem 'sass-rails', '~> 5.0', '>= 5.0.7'
 gem 'compass-rails', '~> 3.1'
 gem 'uglifier', '~> 4.2'
+gem 'react-rails', '~> 2.7', '>= 2.7.1'
 
+# For UI libraries.
+gem 'will_paginate', '~> 3.0.pre2'
+
+# For authentication.
+gem 'devise', '~> 3.5.10'
+
+# For translation, both for the site UI and for Neopets data.
+gem 'rails-i18n', '~> 4.0', '>= 4.0.9'
+gem 'http_accept_language', '~> 2.1', '>= 2.1.1'
+gem 'globalize', '~> 4.0.3'
+
+# For reading and parsing HTML from Neopets.com, like importing Closet pages.
+gem "nokogiri", "~> 1.5.2"
+gem "rest-client", "~> 1.6.7"
+
+# For safely rendering users' Markdown + HTML on item list pages.
+gem 'rdiscount', '~> 1.6.5'
+gem 'sanitize', '~> 2.0.3'
+
+# For working with Neopets APIs.
+# unstable version of RocketAMF interprets info registry as a hash instead of an array
+gem 'RocketAMF', :git => 'https://github.com/rubyamf/rocketamf.git'
+gem 'neopets', '~> 0.2.0', :git => 'https://github.com/matchu/neopets.git'
+
+# For working with the OpenNeo ID service.
+gem 'msgpack', '~> 0.5.3'
+gem 'openneo-auth-signatory', '~> 0.1.0'
+
+# For preventing too many modeling attempts.
+gem 'rack-attack', '~> 2.2.0'
+
+# For testing emails in development.
+gem "letter_opener", :group => :development
+
+# For parallel API calls.
+gem "parallel", "~> 1.13.0"
+
+# For deployment.
 group :development do
   gem 'capistrano', '~> 2.15.5', require: false
   gem 'rvm-capistrano', '~> 1.5.6', require: false
 end
 
+# For production caching.
 group :production do
   gem 'memcache-client', '~> 1.8.5', :require => 'memcache'
   gem 'passenger_monit', '~> 0.1.1'
 end
 
+# For testing.
 group :test do
   gem 'factory_girl_rails', '~> 1.0'
   gem 'rspec-rails', '~> 2.0.0.beta.22'
