@@ -1,20 +1,19 @@
 - title @item.name
 - canonical_path @item
 
-- localized_cache "items/#{@item.id} header" do
-  %header#item-header
-    = image_tag @item.thumbnail.secure_url, :id => 'item-thumbnail'
-    %div
-      %h2#item-name= @item.name
-      = nc_icon_for(@item)
-      - unless @item.rarity.blank?
-        == #{t '.rarity'}: #{@item.rarity_index} (#{@item.rarity})
-      = link_to t('.resources.jn_items'), jn_items_url_for(@item)
-      - unless @item.nc?
-        = link_to t('.resources.shop_wizard'), shop_wizard_url_for(@item)
-        = link_to t('.resources.super_shop_wizard'), super_shop_wizard_url_for(@item)
-        = link_to t('.resources.trading_post'), trading_post_url_for(@item)
-        = link_to t('.resources.auction_genie'), auction_genie_url_for(@item)
+%header#item-header
+  = image_tag @item.thumbnail.secure_url, :id => 'item-thumbnail'
+  %div
+    %h2#item-name= @item.name
+    = nc_icon_for(@item)
+    - unless @item.rarity.blank?
+      == #{t '.rarity'}: #{@item.rarity_index} (#{@item.rarity})
+    = link_to t('.resources.jn_items'), jn_items_url_for(@item)
+    - unless @item.nc?
+      = link_to t('.resources.shop_wizard'), shop_wizard_url_for(@item)
+      = link_to t('.resources.super_shop_wizard'), super_shop_wizard_url_for(@item)
+      = link_to t('.resources.trading_post'), trading_post_url_for(@item)
+      = link_to t('.resources.auction_genie'), auction_genie_url_for(@item)
 
 - if user_signed_in?
   #closet-hangers
@@ -47,19 +46,18 @@
                               t('.closet_hangers.quantity_label')
       = submit_tag t('.closet_hangers.submit')
 
-- localized_cache "items/#{@item.id} info" do
-  %p= @item.description
+%p= @item.description
 
-  #item-zones
-    %p
-      %strong #{t '.zones.occupied_header'}:
-      = list_zones @occupied_zones, :uncertain_label
-    %p
-      %strong #{t '.zones.restricted_header'}:
-      - if @restricted_zones.empty?
-        = t '.zones.none'
-      - else
-        = list_zones @restricted_zones
+#item-zones
+  %p
+    %strong #{t '.zones.occupied_header'}:
+    = list_zones @occupied_zones, :uncertain_label
+  %p
+    %strong #{t '.zones.restricted_header'}:
+    - if @restricted_zones.empty?
+      = t '.zones.none'
+    - else
+      = list_zones @restricted_zones
 
 - localized_cache "items/#{@item.id} trade_hangers" do
   #trade-hangers
@@ -73,11 +71,10 @@
             %span.more= t '.trading_closet_hangers.show_more'
             %span.less= t '.trading_closet_hangers.show_less'
 
-- localized_cache 'items#show preview_header' do
-  #item-preview-header
-    %h3= t '.preview.header'
-    = link_to t('.preview.customize_more'), root_path, :id => 'customize-more',
-                                            :class => 'button'
+#item-preview-header
+  %h3= t '.preview.header'
+  = link_to t('.preview.customize_more'), root_path, :id => 'customize-more',
+                                                     :class => 'button'
 
 #item-preview
   %ul#item-preview-species{'data-supported-species-ids' => @supported_species_ids.join(',')}

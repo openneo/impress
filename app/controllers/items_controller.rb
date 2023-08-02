@@ -61,14 +61,12 @@ class ItemsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        unless localized_fragment_exist?("items/#{@item.id} info")
-          @occupied_zones = @item.occupied_zones(
-            scope: Zone.includes_translations.alphabetical
-          )
-          @restricted_zones = @item.restricted_zones(
-            scope: Zone.includes_translations.alphabetical
-          )
-        end
+        @occupied_zones = @item.occupied_zones(
+          scope: Zone.includes_translations.alphabetical
+        )
+        @restricted_zones = @item.restricted_zones(
+          scope: Zone.includes_translations.alphabetical
+        )
         
         unless localized_fragment_exist?("items/#{@item.id} contributors")
           @contributors_with_counts = @item.contributors_with_counts
