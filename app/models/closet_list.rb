@@ -1,4 +1,4 @@
-class ClosetList < ActiveRecord::Base
+class ClosetList < ApplicationRecord
   belongs_to :user
   has_many :hangers, :class_name => 'ClosetHanger', :foreign_key => 'list_id'
 

@@ -1,4 +1,4 @@
-class Species < ActiveRecord::Base
+class Species < ApplicationRecord
   translates :name
   
   scope :alphabetical, -> { with_translations(I18n.locale).order(Species::Translation.arel_table[:name]) }

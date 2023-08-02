@@ -1,7 +1,7 @@
 class ClosetHangersController < ApplicationController
-  before_filter :authorize_user!, :only => [:destroy, :create, :update, :update_quantities, :petpage]
-  before_filter :find_item, :only => [:create, :update_quantities]
-  before_filter :find_user, :only => [:index, :petpage, :update_quantities]
+  before_action :authorize_user!, :only => [:destroy, :create, :update, :update_quantities, :petpage]
+  before_action :find_item, :only => [:create, :update_quantities]
+  before_action :find_user, :only => [:index, :petpage, :update_quantities]
 
   def destroy
     if params[:list_id]

@@ -1,4 +1,4 @@
-class Zone < ActiveRecord::Base
+class Zone < ApplicationRecord
   translates :label, :plain_label
   
   # When selecting zones that an asset occupies, we allow the zone to set

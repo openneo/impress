@@ -1,4 +1,4 @@
-class Color < ActiveRecord::Base
+class Color < ApplicationRecord
   translates :name
   
   scope :alphabetical, -> { with_translations(I18n.locale).order(Color::Translation.arel_table[:name]) }

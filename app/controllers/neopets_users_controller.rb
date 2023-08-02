@@ -1,5 +1,5 @@
 class NeopetsUsersController < ApplicationController
-  before_filter :authenticate_user!, :build_neopets_user
+  before_action :authenticate_user!, :build_neopets_user
 
   rescue_from NeopetsUser::NotFound, :with => :not_found
 

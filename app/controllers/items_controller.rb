@@ -1,5 +1,5 @@
 class ItemsController < ApplicationController
-  before_filter :set_query
+  before_action :set_query
   rescue_from Item::Search::Error, :with => :search_error
 
   def index

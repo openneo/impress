@@ -1,5 +1,5 @@
 class OutfitsController < ApplicationController
-  before_filter :find_authorized_outfit, :only => [:update, :destroy]
+  before_action :find_authorized_outfit, :only => [:update, :destroy]
 
   def create
     @outfit = Outfit.build_for_user(current_user, outfit_params)

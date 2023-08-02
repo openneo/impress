@@ -1,4 +1,4 @@
-class ClosetHanger < ActiveRecord::Base
+class ClosetHanger < ApplicationRecord
   belongs_to :item
   belongs_to :list, :class_name => 'ClosetList'
   belongs_to :user

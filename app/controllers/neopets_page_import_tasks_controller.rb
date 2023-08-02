@@ -1,9 +1,9 @@
 class NeopetsPageImportTasksController < ApplicationController
   include ActionView::Helpers::TextHelper
 
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
-  before_filter :require_source, only: [:create]
+  before_action :require_source, only: [:create]
 
   rescue_from NeopetsPage::ParseError, with: :on_parse_error
   rescue_from NeopetsPage::TypeNotFound, with: :not_found

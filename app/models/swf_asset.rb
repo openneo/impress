@@ -1,7 +1,7 @@
 require 'fileutils'
 require 'uri'
 
-class SwfAsset < ActiveRecord::Base
+class SwfAsset < ApplicationRecord
   # We use the `type` column to mean something other than what Rails means!
   self.inheritance_column = nil
   

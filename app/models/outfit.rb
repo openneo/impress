@@ -1,4 +1,4 @@
-class Outfit < ActiveRecord::Base
+class Outfit < ApplicationRecord
   has_many :item_outfit_relationships, :dependent => :destroy
   has_many :worn_item_outfit_relationships, -> { where(is_worn: true) },
     :class_name => 'ItemOutfitRelationship'

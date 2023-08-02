@@ -1,10 +1,10 @@
 source 'http://rubygems.org'
 ruby '2.4.10'
 
-gem 'rails', '= 4.2.11.3'
+gem 'rails', '= 5.2.8.1'
 
 # Our database is MySQL, in both development and production.
-gem 'mysql2', '>= 0.3.11'
+gem 'mysql2', '~> 0.5.5'
 
 # For reading the .env file, which you can use in development to more easily
 # set environment variables for secret data.
@@ -18,15 +18,15 @@ gem 'uglifier', '~> 4.2'
 gem 'react-rails', '~> 2.7', '>= 2.7.1'
 
 # For UI libraries.
-gem 'will_paginate', '~> 3.0.pre2'
+gem 'will_paginate', '~> 4.0'
 
 # For authentication.
 gem 'devise', '~> 4.9', '>= 4.9.2'
 
 # For translation, both for the site UI and for Neopets data.
-gem 'rails-i18n', '~> 4.0', '>= 4.0.9'
+gem 'rails-i18n', '~> 5.1', '>= 5.1.3'
 gem 'http_accept_language', '~> 2.1', '>= 2.1.1'
-gem 'globalize', '~> 4.0.3'
+gem 'globalize', '~> 6.2', '>= 6.2.1'
 
 # For reading and parsing HTML from Neopets.com, like importing Closet pages.
 gem 'nokogiri', '~> 1.10', '>= 1.10.10'
@@ -63,6 +63,9 @@ gem 'web-console', '~> 2.2', '>= 2.2.1'
 gem 'loofah', '~> 2.20', '< 2.21'
 gem 'minitest', '~> 5.15', '< 5.16'
 gem 'mail', '~> 2.7', '>= 2.7.1', '< 2.8'
+
+# TODO: Review our use of content_tag_for etc and uninstall this!
+gem 'record_tag_helper', '~> 1.0'
 
 # For deployment.
 group :development do

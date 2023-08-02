@@ -1,4 +1,4 @@
-class Item < ActiveRecord::Base
+class Item < ApplicationRecord
   include PrettyParam
   
   # We use the `type` column to mean something other than what Rails means!
