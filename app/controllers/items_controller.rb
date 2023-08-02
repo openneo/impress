@@ -46,9 +46,7 @@ class ItemsController < ApplicationController
       respond_to do |format|
         format.html {
           @campaign = Campaign.current rescue nil
-          unless localized_fragment_exist?('items#index newest_items')
-            @newest_items = Item.newest.includes(:translations).limit(18)
-          end
+          @newest_items = Item.newest.includes(:translations).limit(18)
         }
         format.js { render json: {error: '$q required'}}
       end
