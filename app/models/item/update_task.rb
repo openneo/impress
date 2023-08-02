@@ -10,7 +10,6 @@ class Item
       Timeout::timeout(TIMEOUT_IN_SECONDS) do
         item = Item.find(id)
         expire_cache_for(item)
-        item.flex.sync
       end
     end
     

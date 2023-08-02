@@ -8,7 +8,6 @@ class Item
 
     def self.perform(id)
       Timeout::timeout(TIMEOUT_IN_SECONDS) do
-        Item.find(id).flex.sync
         # TODO: it's kinda ugly to reach across classes like this
         CreateTask.expire_newest_items
       end
