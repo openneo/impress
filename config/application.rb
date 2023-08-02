@@ -14,7 +14,7 @@ module OpenneoImpressItems
 
     # Activate observers that should always be running
     config.active_record.observers = [:closet_hanger_observer,
-      :closet_list_observer, :contribution_observer, :item_observer,
+      :closet_list_observer, :contribution_observer,
       :pet_type_observer, :user_sweeper]
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
