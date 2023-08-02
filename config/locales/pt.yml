@@ -33,17 +33,6 @@ pt:
     items:
       title_tagline: Banco de dados de roupas e artigos aplicáveis de Neopets
       search: Pesquisa
-  broken_image_reports:
-    create:
-      success: Obrigado! Esta imagem será reconvertida em breve. Se parecer o mesmo após a conversão, por favor, considere o envio de um relatório de bug.
-      already_reported: Esta imagem já na nossa lista de reconversão. Nós vamos reconverte-la  em breve, não se preocupe.
-    new:
-      title: Reportar imagem quebrada
-      explanation_html: Obrigado por nos ajudar a encontrar imagens quebradas! Às vezes, os conversores não fazem as coisas muito bem e, às vezes, isso pode ser corrigido apenas tentando a conversão novamente. Se a reconversão não resolver o problema, considere enviar-nos um relatório de bug em %{contact_link}. Obrigado!
-      call_to_action: 'Algumas dessas imagens parecem quebradas? Nós vamos coloca-la na nossa linha de reconversão. '
-      submit: Reportar imagem
-      converted_at_html: Convertido %{converted_at_ago} atrás
-      reported_at_html: Reportado %{reported_at_ago} atrás
   closet_hangers:
     closet_hanger:
       submit: Salvar
@@ -143,7 +132,7 @@ pt:
       visibility:
         label: Quem pode ver essa lista?
       description:
-        hint: 'Por que esses itens estão nessa lista? Quais são seus termos para troca? Ou você pode deixar isso em branco '
+        hint: "Por que esses itens estão nessa lista? Quais são seus termos para troca? Ou você pode deixar isso em branco "
         markup_hint_html: We _<em>support</em>_ **<strong>Markdown</strong>** and some HTML.
       submit: Salvar Lista
     groups:
@@ -355,9 +344,9 @@ pt:
         other: Sucesso! Nós carregamos o pet de %{user_name} e adicionamos %{count} itens.
       not_found: Não encontramos o usuário %{user_name}. Está escrito corretamente?
     new:
-      title: 'Importar dos pets '
+      title: "Importar dos pets "
       your_items_link: Voltar para "Seus Items"
-      explanation: 'Digite seu nome de usuário de Neopets abaixo e nós importaremos todos os aplicáveis de todos seus pets. É fácil! '
+      explanation: "Digite seu nome de usuário de Neopets abaixo e nós importaremos todos os aplicáveis de todos seus pets. É fácil! "
       username_label: Nome de Usuário de Neopets
       submit: Importar todos os Pets
   outfits:

@@ -23,7 +23,6 @@ OpenneoImpressItems::Application.routes.draw do
 
   get '/roulette' => 'roulettes#new', :as => :roulette
 
-  resources :broken_image_reports, :only => [:new, :create]
   resources :contributions, :only => [:index]
   resources :items, :only => [:index, :show] do
     collection do

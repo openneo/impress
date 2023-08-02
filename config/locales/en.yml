@@ -5,20 +5,20 @@ en:
   infinite_closet: Infinite Closet
   modeling_hub: Modeling Hub
   locale_name: English
-  
+
   activerecord:
     attributes:
       closet_list:
         name: Name
         description: Description
-      
+
       user:
         contact_neopets_connection_id: Send Neomail to
-  
+
   layouts:
     application:
       title_tagline: Preview customized Neopets' clothing and wearables
-      
+
       userbar:
         greeting: Hey, %{user_name}!
         contributions_summary:
@@ -29,7 +29,7 @@ en:
         settings: Settings
         logout: Log out
         login: Log in
-      
+
       footer:
         blog: Blog
         source_code: Source Code
@@ -37,24 +37,13 @@ en:
         contact: Contact
         suggestions: Suggestions
         email: Questions, comments, bugs
-        copyright:
-          Images © 2000–%{year} Neopets, Inc. All Rights Reserved.
+        copyright: Images © 2000–%{year} Neopets, Inc. All Rights Reserved.
           Used With Permission
-    
+
     items:
       title_tagline: Neopets customization clothing and wearables database
       search: Search
-  
-  broken_image_reports:
-    create:
-      success:
-        Thanks! This image will be reconverted soon. If it looks the same after
-        conversion, please consider sending a bug report.
-      manual:
-        This image was uploaded manually, so we don't want to run the
-        automatic converters on it. If this manual version is broken, let us
-        know at webmaster@openneo.net. Thanks!
-    
+
     new:
       title: Report broken image
       explanation_html:
@@ -62,8 +51,7 @@ en:
         don't get things quite right, and sometimes that can be fixed by just
         trying the conversion again. If reconversion doesn't seem to solve the
         issue, consider sending us a bug report at %{contact_link}. Thanks!
-      call_to_action:
-        Which of these images looked broken?
+      call_to_action: Which of these images looked broken?
         We'll put it in line for reconversion.
       submit: Report as broken
       converted_at_html: Converted %{converted_at_ago} ago
@@ -71,26 +59,24 @@ en:
       image_manual:
         description: Uploaded manually.
         contact: Send a bug report?
-  
+
   closet_hangers:
     closet_hanger:
       submit: Save
       delete: Remove
-    
+
     create:
       success:
         owned:
-          in_list:
-            Success! You own %{count} of the %{item_name} in the %{list_name} list.
+          in_list: Success! You own %{count} of the %{item_name} in the %{list_name} list.
           unlisted: Success! You own %{count} of the %{item_name}.
         wanted:
-          in_list:
-            Success! You want %{count} of the %{item_name} in the %{list_name} list.
+          in_list: Success! You want %{count} of the %{item_name} in the %{list_name} list.
           unlisted: Success! You want %{count} of the %{item_name}.
       invalid:
         owned: "We couldn't save how many %{item_name} you own: %{errors}"
         wanted: "We couldn't save how many %{item_name} you want: %{errors}"
-    
+
     destroy:
       success:
         owned: Success! You do not own the %{item_name}.
@@ -98,7 +84,7 @@ en:
 
     destroy_all:
       success: Success! Removed all items from the list.
-    
+
     index:
       title_for:
         you: Your Items
@@ -109,8 +95,8 @@ en:
       send_neomail: Neomail %{neopets_username}
       lookup: "%{neopets_username}'s lookup"
       neopets_username:
-        new: 'Add username…'
-        prompt: 'What Neopets username should we add?'
+        new: "Add username…"
+        prompt: "What Neopets username should we add?"
         submit: Save
       public_url_label: "Public URL:"
       import_from:
@@ -129,16 +115,15 @@ en:
         header: (Not in a list)
         empty: There aren't any items here.
       remove_all:
-        confirm: 'Remove all items from this list?'
+        confirm: "Remove all items from this list?"
         submit: Remove all
       select_all: Select all
       autocomplete:
         add_item_html: Add <strong>%{item_name}</strong>
         add_to_list_html: Add to <strong>%{list_name}</strong>
         add_to_group_html: Add to <strong>%{group_name}</strong>, no list
-        already_in_collection_html:
-          It's already in <strong>%{collection_name}</strong>
-    
+        already_in_collection_html: It's already in <strong>%{collection_name}</strong>
+
     petpage:
       title: Export to petpage
       your_items_link: Back to Your Items
@@ -149,16 +134,15 @@ en:
         have to be. The HTML is flexible, so, if you're the artsy type, you're
         free to mess with the styles all you want!
       instructions:
-        main_html:
-          Copy the HTML from the box below, then paste it into
+        main_html: Copy the HTML from the box below, then paste it into
           %{edit_petpage_link}. Then head to the Neoboards to show off! Have
           fun!
         edit_petpage_link_content: your pet's page
-    
+
     petpage_content:
       unlisted_header: (Not in a list)
       footer: I made this list on Dress to Impress. You can, too!
-    
+
     visibility:
       private:
         name: Private
@@ -175,25 +159,23 @@ en:
         description:
           items: These items will be publicly listed for trades
           list: Items in this list will be publicly listed for trades
-    
+
     update_quantities:
       success: Successfully saved how many of the %{item_name} you own and want.
       invalid: "We couldn't save those quantities: %{errors}"
-  
+
   closet_lists:
     closet_list:
       submit: Save
       edit: Edit
       delete: Delete
       delete_confirmation:
-        owned:
-          Are you sure you want to delete "%{list_name}"?
+        owned: Are you sure you want to delete "%{list_name}"?
           If you do, we'll move these items into Items You Own, not in a list.
-        wanted:
-          Are you sure you want to delete "%{list_name}"?
+        wanted: Are you sure you want to delete "%{list_name}"?
           If you do, we'll move these items into Items You Want, not in a list.
       remove_all:
-        confirm: 'Remove all items from this list?'
+        confirm: "Remove all items from this list?"
         submit: Remove all
       select_all: Select all
       empty: This list is empty.
@@ -203,10 +185,10 @@ en:
         to hear from those people, <strong>set a Neomail address at the top of
         the page</strong>.
         (If not, maybe you want a Public list instead of Trading.)
-      
+
     edit:
       title: Editing list "%{list_name}"
-    
+
     form:
       your_items_link: Back to Your Items
       name:
@@ -219,23 +201,22 @@ en:
         hint:
           Why are these items in the same list? What are your terms for trading?
           Or you can leave this blank.
-        markup_hint_html:
-          We _<em>support</em>_ **<strong>Markdown</strong>** and some HTML.
+        markup_hint_html: We _<em>support</em>_ **<strong>Markdown</strong>** and some HTML.
       submit: Save list
-    
+
     groups:
       owned_by:
-        you:  Items you own
+        you: Items you own
         another_user: Items %{user_name} owns
       wanted_by:
         you: Items you want
         another_user: Items %{user_name} wants
-    
+
     new:
       title: Create an items list
-    
+
     unlisted_name: Not in a list
-  
+
   colors:
     default_human_name: (a new color)
     prank_suffix: (fake)
@@ -261,16 +242,16 @@ en:
         swf_asset_html: "%{item_description} on a new body type"
         pet_type_html: "%{pet_type_description} for the first time"
         pet_state_html: "a new pose for %{pet_type_description}"
-    
+
     contribution:
       description_html: "%{user_link} showed us %{contributed_description}"
       created_at_html: "%{created_at_ago} ago"
-    
+
     index:
       title: Recent Contributions
       user_summary: "%{user_name} currently has %{user_points} points"
       no_contributions: There are no contributions here.
-  
+
   items:
     index:
       title_with_query: Searching Infinite Closet for "%{query}"
@@ -297,7 +278,7 @@ en:
         nc:
           query: blue is:nc
           description: returns any NC Mall item with the word "blue" in it
-        pb: 
+        pb:
           query: collar -is:pb
           description:
             returns any item with the word "collar" in it that isn't from a
@@ -314,7 +295,7 @@ en:
         header: Newest items
       species_search:
         header: Can't decide? Search by species
-    
+
     item:
       nc:
         abbr: NC
@@ -325,7 +306,7 @@ en:
       wanted:
         abbr: Wanted
         description: You want this item
-    
+
     show:
       rarity: Rarity
       resources:
@@ -357,18 +338,16 @@ en:
       preview:
         header: Preview
         customize_more: Customize more
-        requirements_not_met:
-          Javascript and Flash are required to preview wearables.
+        requirements_not_met: Javascript and Flash are required to preview wearables.
         not_found:
-          main_html:
-            We've never seen the %{item_name} on the %{color_name}
+          main_html: We've never seen the %{item_name} on the %{color_name}
             %{species_name} before. Have you? If so, please %{modeling_link} and
             we'll update our database instantly. Thanks!
           modeling_link_content: model it for us
       contributors:
         header: Brought to you by
         footer: Thanks!
-    
+
     search:
       errors:
         user_filters_disabled:
@@ -376,8 +355,7 @@ en:
           tough on the server. They'll be back soon. Thanks for understanding.
         not_found:
           label: Filter "%{label}" does not exist. Is it spelled correctly?
-          species:
-            Species "%{species_name}" does not exist. Is it spelled correctly?
+          species: Species "%{species_name}" does not exist. Is it spelled correctly?
           zone: Zone "%{zone_name}" does not exist. Is it spelled correctly?
           ownership:
             I don't know what user:%{keyword} means. Did you mean user:owns or
@@ -385,8 +363,7 @@ en:
           pet_type: We have no record of the %{name1} %{name2}.
             It is spelled correctly?
           pet_type_id: We have no record of pet type %{id}. Weird.
-        not_logged_in:
-          The "user" filters are only available if you're logged in.
+        not_logged_in: The "user" filters are only available if you're logged in.
       flag_keywords:
         is: is
       labels:
@@ -400,7 +377,7 @@ en:
         user_owns: owns
         user_wants: wants
         fits_pet_type: fits
-  
+
   neopets_page_import_tasks:
     create:
       success: Page %{index} saved!
@@ -418,31 +395,27 @@ en:
       updated_hangers:
         one: We updated the quantity for 1 of your items.
         other: We updated the quantity for %{count} of your items.
-      no_changes:
-        We already had this data recorded to your account, so we didn't make any changes.
+      no_changes: We already had this data recorded to your account, so we didn't make any changes.
       no_data: We didn't see any wearables, so we didn't make any changes.
       unknown_items:
-        one:
-          "We also found an item we didn't recognize: %{item_names}. Please
+        one: "We also found an item we didn't recognize: %{item_names}. Please
           model it for us and we'll update our database instantly. Thanks!"
-        other:
-          "We also found %{count} items we didn't recognize: %{item_names}.
+        other: "We also found %{count} items we didn't recognize: %{item_names}.
           Please model them for us and we'll update our database instantly.
           Thanks!"
-      next_page:
-        Now the frame should contain page %{next_index}.
+      next_page: Now the frame should contain page %{next_index}.
         Paste that source code over, too.
       done: That was the last page of your Neopets %{name}.
       parse_error:
         We had trouble reading your source code. Is it a valid HTML document?
         Make sure you pasted the computery-looking result of clicking View
         Frame Source, and not the pretty-looking page itself.
-    
+
     names:
       closet: closet
       safety_deposit: safety deposit
       gallery: gallery
-    
+
     new:
       title: Import from %{name}, Page %{index}
       your_items_link: Back to Your Items
@@ -457,8 +430,7 @@ en:
           works.
         check_frame:
           header:
-            main_html:
-              Check the framed Neopets.com window on the left,
+            main_html: Check the framed Neopets.com window on the left,
               pointing to %{page_link}.
             page_link_content: page %{index} of your %{name}
           check_login:
@@ -476,8 +448,7 @@ en:
                 It's never a good idea to log in inside of a frame, unless
                 you're a web programmer pro who can check that the frame does,
                 in fact, point to Neopets.com. To be safe, %{login_link}.
-              login_link_content:
-                pull up another window, check the URL, and log in safely
+              login_link_content: pull up another window, check the URL, and log in safely
           check_content:
             summary: Confirm that the page is, in fact, your %{name}.
             details:
@@ -493,16 +464,14 @@ en:
             <strong>In Firefox</strong>, right-click the frame, choose
             <strong>This Frame</strong>, then <strong>View Frame
             Source</strong>.
-          other:
-            In other browsers, right-click and look for something similar.
+          other: In other browsers, right-click and look for something similar.
           troubleshooting:
             main_html:
               If you're still having trouble, try %{page_link}, right-clicking,
               and choosing View Source.
             page_link_content: opening the page in a new window
         copy_source:
-          header:
-            Highlight the entire source code,
+          header: Highlight the entire source code,
             and copy-paste it into the box on the right.
           shortcuts:
             "Some nifty shortcuts: Ctrl-A to select all the text, Ctrl-C to
@@ -515,19 +484,16 @@ en:
             to Impress items list. I promise it's all safe, but, if you're
             concerned, find a programmer buddy and check out the source code to
             be sure.
-  
+
   neopets_users:
     create:
       success:
-        zero:
-          Okay. We loaded %{user_name}'s pets, but already had these items
+        zero: Okay. We loaded %{user_name}'s pets, but already had these items
           recorded to your account.
-        one:
-          Success! We loaded %{user_name}'s pets, and added 1 item.
-        other:
-          Success! We loaded %{user_name}'s pets, and added %{count} items.
+        one: Success! We loaded %{user_name}'s pets, and added 1 item.
+        other: Success! We loaded %{user_name}'s pets, and added %{count} items.
       not_found: Could not find user %{user_name}. Is it spelled correctly?
-      
+
     new:
       title: Import from pets
       your_items_link: Back to Your Items
@@ -536,11 +502,11 @@ en:
         from all your pets. It's easy!
       username_label: Neopets Username
       submit: Import all pets
-  
+
   outfits:
     destroy:
       success: Outfit "%{outfit_name}" successfully deleted.
-    
+
     edit:
       item:
         controls:
@@ -551,8 +517,7 @@ en:
             add: Closet
             remove: Uncloset
       pet_type:
-        not_found:
-          We haven't seen that combination before. Have you?
+        not_found: We haven't seen that combination before. Have you?
           Submit the pet's name if you have!
         form:
           submit: Go
@@ -573,8 +538,7 @@ en:
           submit: Save
           cancel: Cancel
       preview:
-        requirements:
-          Flash and Javascript (but not Java!) are required to preview outfits.
+        requirements: Flash and Javascript (but not Java!) are required to preview outfits.
         big_picture: Big Picture
         download: Download
         swf_links: SWF Links
@@ -608,11 +572,11 @@ en:
               We know how hard it can be to keep track of your ideas,
               especially if you end up having a lot of them.
               **But Dress to Impress makes it easy.**
-            
+
               Once you have an idea for an outfit, you can **build it, save it,
               and view it again later**, either to update your design or
               finally make your dream a reality.
-            
+
               **Thousands of users have already saved hundreds of thousands of
               outfits. Will you be next?**
             sign_in: Log in to save this outfit
@@ -670,11 +634,9 @@ en:
           login: Log in to use these filters.
       userbar:
         session_message:
-          signed_in:
-            You will be logged out, then brought back to this exact outfit.
-          not_signed_in:
-            You will be logged in, then brought back to this exact outfit.
-    
+          signed_in: You will be logged out, then brought back to this exact outfit.
+          not_signed_in: You will be logged in, then brought back to this exact outfit.
+
     index:
       title: Your Outfits
       intro:
@@ -692,12 +654,11 @@ en:
           click "Save Outfit" in the top right corner. It'll be great, I
           promise.
         start_link_content: Start at the home page
-    
+
     new:
       tagline: Neopets wearables made easy!
       preview:
-        pet_type_not_found:
-          We haven't seen a %{color_name} %{species_name}. Have you?
+        pet_type_not_found: We haven't seen a %{color_name} %{species_name}. Have you?
         pet_not_found: Pet not found.
       submit:
         primary: Plan my outfit!
@@ -718,8 +679,7 @@ en:
         submit: Go
       your_items:
         tagline: Track and trade!
-        description:
-          Make lists of the items you own and want,
+        description: Make lists of the items you own and want,
           and share them with the world.
         user_search:
           placeholder: find a user…
@@ -740,8 +700,7 @@ en:
           submit: submit
       latest_contribution:
         header: Contributions
-        description_html:
-          "%{user_link} showed us %{contributed_description}.
+        description_html: "%{user_link} showed us %{contributed_description}.
           Thanks, %{user_link}!"
       blog:
         link: OpenNeo Blog
@@ -754,9 +713,9 @@ en:
               other: Or maybe the %{color} %{species_list}?
             call_to_action: If so, please model it above! Thanks!
             species_list:
-              words_connector: ', '
-              two_words_connector: ' or '
-              last_word_connector: ', or '
+              words_connector: ", "
+              two_words_connector: " or "
+              last_word_connector: ", or "
         modeled:
           header: These items have already been modeled—thanks for your help!
           body_title: You just finished modeling this—thanks so much!
@@ -770,22 +729,20 @@ en:
               error: Couldn't load. Try again?
             title: Submit %{pet} as a model, especially if they're wearing the %{item}!
       pet_query:
-        notice_html:
-          Thanks for showing us <strong>%{pet_name}</strong>.
+        notice_html: Thanks for showing us <strong>%{pet_name}</strong>.
           Keep up the good work!
-    
+
     outfit:
       edit: edit
       delete: delete
-      delete_confirmation:
-        Are you sure you want to delete the outfit %{outfit_name}?
-    
+      delete_confirmation: Are you sure you want to delete the outfit %{outfit_name}?
+
     show:
       default_outfit_name: Shared outfit
       edit: Edit
       clone: Edit a copy
       creation_summary_html: Created by %{user_link}, %{created_at_ago} ago
-  
+
   pet_states:
     description:
       main: "%{mood} %{gender}"
@@ -800,7 +757,7 @@ en:
       unconverted: Unconverted
       unlabeled: Unlabeled
     default_artist_name: the OpenNeo team
-  
+
   pet_types:
     human_name: "%{color_human_name} %{species_human_name}"
 
@@ -831,7 +788,7 @@ en:
         waiting: Waiting…
         loading: Loading…
         submission_success: "%{points} points"
-    
+
     load:
       not_found: We couldn't find a pet by that name. Is it spelled correctly?
       asset_download_error:
@@ -840,8 +797,8 @@ en:
       pet_download_error:
         We couldn't connect to Neopets to look up the pet. Maybe they're down.
         Please try again later!
-      neopia_error: "We couldn't load that pet: \"%{message}\". Try again later?"
-  
+      neopia_error: 'We couldn''t load that pet: "%{message}". Try again later?'
+
   swf_assets:
     links:
       title: Links to SWFs
@@ -849,13 +806,13 @@ en:
   users:
     index:
       not_found: We don't have a user named %{name}. Is it spelled correctly?
-    
+
     top_contributors:
       title: Top Contributors
       rank: Rank
       user: User
       points: Points
-    
+
     update:
       success: Settings successfully saved.
       invalid: "Could not save settings: %{errors}"

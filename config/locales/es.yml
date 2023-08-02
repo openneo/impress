@@ -33,17 +33,6 @@ es:
     items:
       title_tagline: Base de datos de Neopets personalizados y ropa Apta Para Usar
       search: Buscar
-  broken_image_reports:
-    create:
-      success: ¡Muchas gracias! Esta imagen será transformada pronto. Si ves la misma imagen tras la transformación, por favor notifícanos con un reporte de error.
-      already_reported: Está imagen ya está siendo transformada. Pronto se pondrá bien, no te preocupes.
-    new:
-      title: Reportar el error de una imagen
-      explanation_html: ¡Gracias por ayudarnos a encontrar errores en las imágenes! Algunas veces las transformaciones no funcionan correctamente y otras muchas el error se puede arreglar transformando la imagen de nuevo. Si vuelves a transformar la imagen y no se arregla, por favor envíanos un reporte de error a %{contact_link}. ¡Muchas gracias!
-      call_to_action: ¿Cuál de estas imágenes tiene algún tipo de error?
-      submit: Reportar como dañada
-      converted_at_html: Transformada hace %{converted_at_ago}
-      reported_at_html: Reportada hace %{reported_at_ago}
   closet_hangers:
     closet_hanger:
       submit: Guardar
@@ -92,7 +81,7 @@ es:
         add_item_html: Añadir <strong>%{item_name}</strong>
         add_to_list_html: Añadir a <strong>%{list_name}</strong>
         add_to_group_html: Añadir a <strong>%{group_name}</strong>, no listado
-        already_in_collection_html: 'Ya tienes este objeto en <strong>%{collection_name}</strong> '
+        already_in_collection_html: "Ya tienes este objeto en <strong>%{collection_name}</strong> "
     petpage:
       title: Exportar para petpage
       your_items_link: Volver a Tus Objetos
@@ -315,7 +304,7 @@ es:
       submit: Importar objetos
       help:
         welcome: ¡Bienvenido al importador de tu %{name} !
-        intro: 'Vamos a hacer de la forma más fácil posible el poder importar los datos de tu %{name} en Neopets.com hacia tu lista de objetos en Dress to Impress. Así es cómo funciona:'
+        intro: "Vamos a hacer de la forma más fácil posible el poder importar los datos de tu %{name} en Neopets.com hacia tu lista de objetos en Dress to Impress. Así es cómo funciona:"
         check_frame:
           header:
             main_html: Mira arriba a la izquierda la ventanita que muestra la página de Neopets.com, verás que está en la %{page_link}.
@@ -543,9 +532,9 @@ es:
         item_owned: Tú tienes este objeto
       bulk_pets:
         header: Hacer que desfilen varios pets a la vez
-        explanation: '¿Tienes muchos pets para que desfilen?
+        explanation: "¿Tienes muchos pets para que desfilen?
 
-          Escribe o pega una lista de pets, recuerda añadir un nombre por línea :P ¡Muchas gracias por tu ayuda!'
+          Escribe o pega una lista de pets, recuerda añadir un nombre por línea :P ¡Muchas gracias por tu ayuda!"
         submit: Cargar pet
         add: Añadir
         clear: Limpiar

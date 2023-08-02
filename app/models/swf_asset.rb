@@ -24,9 +24,6 @@ class SwfAsset < ActiveRecord::Base
     :medium => [300, 300],
     :large => [600, 600]
   }
-
-  include SwfConverter
-  converts_swfs :size => IMAGE_SIZES[:large], :output_sizes => IMAGE_SIZES.values
   
   belongs_to :zone
   has_many :parent_swf_asset_relationships
@@ -103,47 +100,6 @@ class SwfAsset < ActiveRecord::Base
   
   def images
     IMAGE_SIZES.values.map { |size| {:size => size, :url => image_url(size)} }
-  end
-
-  def convert_swf_if_not_converted!
-    if needs_conversion?
-      convert_swf!
-      true
-    else
-      false
-    end
-  end
-
-  def request_image_conversion!
-    if image_requested?
-      false
-    else
-      Resque.enqueue(AssetImageConversionRequest, self.id)
-      self.image_requested = true
-      save!
-      true
-    end
-  end
-
-  def report_broken
-    if image_pending_repair?
-      return false
-    end
-
-    Resque.enqueue(AssetImageConversionRequest::OnBrokenImageReport, self.id)
-    self.reported_broken_at = Time.now
-    self.save
-  end
-
-  def needs_conversion?
-    !has_image? || image_pending_repair?
-  end
-
-  REPAIR_PENDING_EXPIRES = 1.hour
-  def image_pending_repair?
-    reported_broken_at &&
-      (converted_at.nil? || reported_broken_at > converted_at) &&
-      reported_broken_at > REPAIR_PENDING_EXPIRES.ago
   end
 
   attr_accessor :item
@@ -305,10 +261,6 @@ class SwfAsset < ActiveRecord::Base
     # If an asset body ID changes, that means more than one body ID has been
     # linked to it, meaning that it's probably wearable by all bodies.
     self.body_id = 0 if !@body_id_overridden && (!self.body_specific? || (!self.new_record? && self.body_id_changed?))
-  end
-
-  after_commit :on => :create do
-    Resque.enqueue(AssetImageConversionRequest::OnCreation, self.id)
   end
 
   class DownloadError < Exception;end
