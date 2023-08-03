@@ -11,9 +11,9 @@ module OutfitsHelper
       :contributed_description => contributed_description(contributed, false)
   end
 
-  def link_to_edit_outfit(content_or_outfit, outfit_or_options, options={})
+  def link_to_edit_outfit(content_or_outfit, outfit_or_options, options={}, &block)
     if block_given?
-      content = capture_haml(&Proc.new)
+      content = capture_haml(&block)
       outfit = content_or_outfit
       options = outfit_or_options
     else
@@ -100,9 +100,9 @@ module OutfitsHelper
       :created_at_ago => created_at_ago
   end
 
-  def outfit_li_for(outfit)
+  def outfit_li_for(outfit, &block)
     class_name = outfit.starred? ? 'starred' : nil
-    content_tag :li, :class => class_name, &Proc.new
+    content_tag :li, :class => class_name, &block
   end
 
   def pet_attribute_select(name, collection, value=nil)

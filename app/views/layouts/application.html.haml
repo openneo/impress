@@ -27,7 +27,7 @@
       = yield :before_title
       - if content_for?(:title) && show_title_header?
         %h1#title= yield :title
-      = render 'static/announcement.html'
+      = render 'static/announcement'
       = yield :before_flashes
       = flashes
 

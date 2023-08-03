@@ -199,7 +199,7 @@ module ApplicationHelper
   end
   
   def translate_markdown(key, options={})
-    md translate("#{key}_markdown", options)
+    md translate("#{key}_markdown", **options)
   end
   
   alias_method :tmd, :translate_markdown
@@ -220,12 +220,12 @@ module ApplicationHelper
     
     link_options = {}
     link_urls.each do |link_key, url|
-      content = translate("#{key}.#{link_key}_content", nonlink_options)
+      content = translate("#{key}.#{link_key}_content", **nonlink_options)
       link_options[link_key.to_sym] = link_to(content, url)
     end
     
     converted_options = link_options.merge(nonlink_options)
-    translate("#{key}.main_html", converted_options)
+    translate("#{key}.main_html", **converted_options)
   end
   
   alias_method :twl, :translate_with_links
