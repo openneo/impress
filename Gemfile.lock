@@ -301,6 +301,7 @@ GEM
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
+    webrick (1.8.1)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -341,10 +342,11 @@ DEPENDENCIES
   sass-rails (~> 5.0, >= 5.0.7)
   uglifier (~> 4.2)
   web-console (~> 4.2)
+  webrick (~> 1.7)
   will_paginate (~> 4.0)
 
 RUBY VERSION
-   ruby 2.6.10p210
+   ruby 3.0.6p216
 
 BUNDLED WITH
    2.4.18
