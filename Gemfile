@@ -4,7 +4,7 @@ ruby '3.0.6'
 gem 'rails', '= 7.0.6'
 
 # The HTTP server running the Rails instance.
-gem 'webrick', '~> 1.7'
+gem 'webrick', '~> 1.8', '>= 1.8.1'
 
 # Our database is MySQL, in both development and production.
 gem 'mysql2', '~> 0.5.5'
@@ -32,7 +32,7 @@ gem 'http_accept_language', '~> 2.1', '>= 2.1.1'
 gem 'globalize', '~> 6.2', '>= 6.2.1'
 
 # For reading and parsing HTML from Neopets.com, like importing Closet pages.
-gem 'nokogiri', '~> 1.13', '>= 1.13.10'
+gem 'nokogiri', '~> 1.15', '>= 1.15.3'
 gem 'rest-client', '~> 2.1'
 
 # For safely rendering users' Markdown + HTML on item list pages.
