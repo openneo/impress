@@ -29,7 +29,7 @@ gem 'http_accept_language', '~> 2.1', '>= 2.1.1'
 gem 'globalize', '~> 6.2', '>= 6.2.1'
 
 # For reading and parsing HTML from Neopets.com, like importing Closet pages.
-gem 'nokogiri', '~> 1.10', '>= 1.10.10'
+gem 'nokogiri', '~> 1.13', '>= 1.13.10'
 gem "rest-client", "~> 1.6.7"
 
 # For safely rendering users' Markdown + HTML on item list pages.
@@ -55,14 +55,6 @@ gem "parallel", "~> 1.13.0"
 
 # For debugging.
 gem 'web-console', '~> 3.7'
-
-# TODO: Rails requests the latest version of these dependencies, but they
-# require Ruby 2.5 or higher, so we have to request lower ones instead!
-# (loofah is slightly trickier: it requires a recent nokogiri, but recent
-# nokogiri requires Ruby 2.6, so, yeah.)
-gem 'loofah', '~> 2.20', '< 2.21'
-gem 'minitest', '~> 5.15', '< 5.16'
-gem 'mail', '~> 2.7', '>= 2.7.1', '< 2.8'
 
 # TODO: Review our use of content_tag_for etc and uninstall this!
 gem 'record_tag_helper', '~> 1.0'
