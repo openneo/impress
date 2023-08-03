@@ -11,5 +11,5 @@
     = text_field_tag :q, @query.to_s
     = submit_tag t('.search'), :name => nil
   = yield
-= render :file => 'layouts/application'
+= render template: 'layouts/application'
 
