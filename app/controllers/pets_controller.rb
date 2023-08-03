@@ -5,8 +5,6 @@ class PetsController < ApplicationController
 
   protect_from_forgery except: :submit
   before_action :local_only, only: :submit
-  
-  cache_sweeper :user_sweeper
 
   def load
     if params[:name] == '!'
