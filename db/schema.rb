@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20230802195548) do
+ActiveRecord::Schema[6.1].define(version: 20230802195548) do
 
   create_table "auth_servers", force: true do |t|
     t.string "short_name", limit: 10,       null: false
