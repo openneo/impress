@@ -4,7 +4,7 @@ class Outfit < ApplicationRecord
     :class_name => 'ItemOutfitRelationship'
   has_many :worn_items, :through => :worn_item_outfit_relationships, :source => :item
   belongs_to :pet_state
-  belongs_to :user
+  belongs_to :user, optional: true
 
   validates :name, :presence => {:if => :user_id}, :uniqueness => {:scope => :user_id, :if => :user_id}
   validates :pet_state, :presence => true
