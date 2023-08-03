@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 ruby '2.6.10'
 
-gem 'rails', '= 6.0.6.1'
+gem 'rails', '= 6.1.7.4'
 
 # Our database is MySQL, in both development and production.
 gem 'mysql2', '~> 0.5.5'
