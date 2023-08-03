@@ -113,7 +113,7 @@ class OutfitsController < ApplicationController
 
   def outfit_params
     params.require(:outfit).permit(
-      :name, :pet_state_id, :starred, :worn_and_unworn_item_ids)
+      :name, :pet_state_id, :starred, :worn_and_unworn_item_ids, :anonymous)
   end
 
   def find_authorized_outfit

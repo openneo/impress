@@ -38,7 +38,7 @@ class PetState < ApplicationRecord
     joins(:parent_swf_asset_relationships).
     joins("LEFT JOIN swf_assets effect_assets ON effect_assets.id = parents_swf_assets.swf_asset_id AND effect_assets.zone_id = #{bio_effect_zone_id}").
     group("pet_states.id").
-    order("glitched ASC, (mood_id = 1) DESC, COUNT(effect_assets.remote_id) ASC, COUNT(parents_swf_assets.swf_asset_id) DESC, female ASC, SUM(parents_swf_assets.swf_asset_id) ASC")
+    order(Arel.sql("glitched ASC, (mood_id = 1) DESC, COUNT(effect_assets.remote_id) ASC, COUNT(parents_swf_assets.swf_asset_id) DESC, female ASC, SUM(parents_swf_assets.swf_asset_id) ASC"))
   }
 
   def as_json(options={})
