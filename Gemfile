@@ -54,7 +54,7 @@ gem 'letter_opener', '~> 1.8', '>= 1.8.1', group: :development
 gem 'parallel', '~> 1.23'
 
 # For debugging.
-gem 'web-console', '~> 3.7', group: :development
+gem 'web-console', '~> 4.2', group: :development
 
 # TODO: Review our use of content_tag_for etc and uninstall this!
 gem 'record_tag_helper', '~> 1.0', '>= 1.0.1'
