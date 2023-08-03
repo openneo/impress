@@ -66,6 +66,9 @@ Rails.application.configure do
   # NOTE: But I also see that this might be the default anyway in current
   # Rails? idk when that changed... so maybe just delete this later?
   config.file_watcher = ActiveSupport::FileUpdateChecker
+
+  # Allow connections on Vagrant's private network.
+  config.web_console.permissions = '10.0.2.2'
 end
 
 LocalImpressHost = 'betanewimpress.openneo.net'
