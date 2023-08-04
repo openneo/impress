@@ -43,10 +43,6 @@ gem 'sanitize', '~> 6.0', '>= 6.0.2'
 # unstable version of RocketAMF interprets info registry as a hash instead of an array
 gem 'RocketAMF', :git => 'https://github.com/rubyamf/rocketamf.git'
 
-# For working with the OpenNeo ID service.
-gem 'msgpack', '~> 1.7', '>= 1.7.2'
-gem 'openneo-auth-signatory', '~> 0.1.0'
-
 # For preventing too many modeling attempts.
 gem 'rack-attack', '~> 6.7'
 

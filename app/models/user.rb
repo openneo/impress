@@ -1,7 +1,6 @@
 class User < ApplicationRecord
   include PrettyParam
 
-  DefaultAuthServerId = 1
   PreviewTopContributorsCount = 3
 
   has_many :closet_hangers
@@ -22,8 +21,6 @@ class User < ApplicationRecord
   belongs_to :contact_neopets_connection, class_name: 'NeopetsConnection'
 
   scope :top_contributors, -> { order('points DESC').where('points > 0') }
-
-  devise :rememberable
 
   def admin?
     name == 'matchu' # you know that's right.
@@ -157,18 +154,6 @@ class User < ApplicationRecord
 
   def contact_neopets_username
     contact_neopets_connection.try(:neopets_username)
-  end
-
-  def self.find_or_create_from_remote_auth_data(user_data)
-    user = find_or_initialize_by_remote_id_and_auth_server_id(
-      user_data['id'],
-      DefaultAuthServerId
-    )
-    if user.new_record?
-      user.name = user_data['name']
-      user.save
-    end
-    user
   end
 
   def self.points_required_to_pass_top_contributor(offset)

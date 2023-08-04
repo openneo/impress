@@ -5,12 +5,11 @@ class ApplicationController < ActionController::Base
   
   protect_from_forgery
 
-  helper_method :can_use_image_mode?, :user_is?
+  helper_method :current_user, :user_signed_in?
   
   before_action :set_locale
-  before_action :login_as_test_user if Rails.env.development?
 
-  def authenticate_user! # too lazy to change references to login_path
+  def authenticate_user!
     redirect_to(login_path) unless user_signed_in?
   end
 
@@ -18,8 +17,12 @@ class ApplicationController < ActionController::Base
     raise AccessDenied unless user_signed_in? && current_user.id == params[:user_id].to_i
   end
 
-  def can_use_image_mode?
-    true
+  def current_user
+    nil # TODO
+  end
+
+  def user_signed_in?
+    false # TODO
   end
   
   def infer_locale
@@ -59,18 +62,9 @@ class ApplicationController < ActionController::Base
   def set_locale
     I18n.locale = infer_locale || I18n.default_locale
   end
-
-  def user_is?(user)
-    user_signed_in? && user == current_user
-  end
   
   def valid_locale?(locale)
     locale && I18n.usable_locales.include?(locale.to_sym)
-  end
-
-  def login_as_test_user
-    test_user = User.find_by_name('test')
-    sign_in(:user, test_user, bypass: true)
   end
 end
 

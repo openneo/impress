@@ -29,7 +29,8 @@ class ClosetHangersController < ApplicationController
   end
 
   def index
-    @public_perspective = params.has_key?(:public) || !user_is?(@user)
+    is_user = user_signed_in? && current_user == @user
+    @public_perspective = params.has_key?(:public) || !is_user
     @perspective_user = current_user unless @public_perspective
     closet_lists = @user.closet_lists
     unless @perspective_user == @user
