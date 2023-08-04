@@ -1,0 +1,9 @@
+development:
+  adapter: mysql2
+  database: openneo_impress
+  username: openneo_impress
+  password: openneo_impress
+  pool: 5
+
+production:
+  url: <%= ENV['DATABASE_URL_PRIMARY'] %>
