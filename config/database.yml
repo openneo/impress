@@ -1,13 +1,29 @@
 development:
-  adapter: mysql2
-  database: openneo_impress
-  username: openneo_impress
-  password: openneo_impress
-  pool: 5
-  variables:
-    sql_mode: TRADITIONAL
+  primary:
+    adapter: mysql2
+    database: openneo_impress
+    username: openneo_impress
+    password: openneo_impress
+    pool: 5
+    variables:
+      sql_mode: TRADITIONAL
+
+  openneo_id:
+    adapter: mysql2
+    database: openneo_id
+    username: openneo_impress
+    password: openneo_impress
+    pool: 2
+    variables:
+      sql_mode: TRADITIONAL
 
 production:
-  url: <%= ENV['DATABASE_URL_PRIMARY'] %>
-  variables:
-    sql_mode: TRADITIONAL
+  primary:
+    url: <%= ENV['DATABASE_URL_PRIMARY'] %>
+    variables:
+      sql_mode: TRADITIONAL
+
+  openneo_id:
+    url: <%= ENV['DATABASE_URL_OPENNEO_ID'] %>
+    variables:
+      sql_mode: TRADITIONAL
