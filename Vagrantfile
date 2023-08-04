@@ -75,7 +75,8 @@ Vagrant.configure("2") do |config|
     apt-get install -y libmysqlclient-dev libcurl4-openssl-dev nodejs
     su vagrant -c 'git clone https://github.com/rbenv/rbenv.git ~/.rbenv'
     su vagrant -c 'git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build'
-    su vagrant -c '~/.rbenv/bin/rbenv install 3.0.6 && ~/.rbenv/shims/gem update --system'
+    su vagrant -c '~/.rbenv/bin/rbenv install 3.1.4'
+    su vagrant -c 'rbenv shell 3.1.4 && ~/.rbenv/shims/gem update --system'
     apt-get install -y mysql-server
     mysql -e "CREATE USER IF NOT EXISTS openneo_impress IDENTIFIED BY 'openneo_impress';"
     mysql -e "CREATE DATABASE IF NOT EXISTS openneo_impress;"
