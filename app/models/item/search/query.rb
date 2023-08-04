@@ -58,6 +58,19 @@ class Item
             filters << (is_positive ?
               Filter.fits(pet_type.body_id, color_name, species_name) :
               Filter.not_fits(pet_type.body_id, color_name, species_name))
+          when 'species'
+            begin
+              species = Species.matching_name(value, locale).first!
+              color = Color.matching_name('blue', 'en').first!
+              pet_type = PetType.where(color_id: color.id, species_id: species.id).first!
+            rescue ActiveRecord::RecordNotFound
+              message = I18n.translate('items.search.errors.not_found.species',
+                species_name: species_name.capitalize)
+              raise Item::Search::Error, message
+            end
+            filters << (is_positive ?
+              Filter.fits_species(pet_type.body_id, value) :
+              Filter.not_fits_species(pet_type.body_id, value))
           when 'user'
             if user.nil?
               message = I18n.translate('items.search.errors.not_logged_in')
@@ -176,43 +189,47 @@ class Item
       end
 
       def self.name_includes(value, locale)
-        text = /\s/.match(value) ? '"' + value + '"' : value
-        self.new Item.name_includes(value, locale), text
+        self.new Item.name_includes(value, locale), "#{q value}"
       end
 
       def self.name_excludes(value, locale)
-        text = '-' + (/\s/.match(value) ? '"' + value + '"' : value)
-        self.new Item.name_excludes(value, locale), text
+        self.new Item.name_excludes(value, locale), "-#{q value}"
       end
 
       def self.occupies(value, locale)
-        self.new Item.occupies(value, locale), "occupies:#{value}"
+        self.new Item.occupies(value, locale), "occupies:#{q value}"
       end
 
       def self.not_occupies(value, locale)
-        self.new Item.not_occupies(value, locale), "-occupies:#{value}"
+        self.new Item.not_occupies(value, locale), "-occupies:#{q value}"
       end
 
       def self.restricts(value, locale)
-        self.new Item.restricts(value, locale), "restricts:#{value}"
+        self.new Item.restricts(value, locale), "restricts:#{q value}"
       end
 
       def self.not_restricts(value, locale)
-        self.new Item.not_restricts(value, locale), "-restricts:#{value}"
+        self.new Item.not_restricts(value, locale), "-restricts:#{q value}"
       end
 
       def self.fits(body_id, color_name, species_name)
         # NOTE: Some color syntaxes are weird, like `fits:"polka dot-aisha"`!
         value = "#{color_name.downcase}-#{species_name.downcase}"
-        value = '"' + value + '"' if value.include? ' '
-        self.new Item.fits(body_id), "fits:#{value}"
+        self.new Item.fits(body_id), "fits:#{q value}"
       end
 
       def self.not_fits(body_id, color_name, species_name)
         # NOTE: Some color syntaxes are weird, like `fits:"polka dot-aisha"`!
         value = "#{color_name.downcase}-#{species_name.downcase}"
-        value = '"' + value + '"' if value.include? ' '
-        self.new Item.not_fits(body_id), "-fits:#{value}"
+        self.new Item.not_fits(body_id), "-fits:#{q value}"
+      end
+
+      def self.fits_species(body_id, species_name)
+        self.new Item.fits(body_id), "species:#{q species_name}"
+      end
+      
+      def self.not_fits_species(body_id, species_name)
+        self.new Item.not_fits(body_id), "-species:#{q species_name}"
       end
 
       def self.owned_by(user)
@@ -256,6 +273,11 @@ class Item
       end
 
       private
+
+      # Add quotes around the value, if needed.
+      def self.q(value)
+        /\s/.match(value) ? '"' + value + '"' : value
+      end
 
       def self.build_fits_filter_text(color_name, species_name)
         # NOTE: Colors like "Polka Dot" must be written as
