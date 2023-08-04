@@ -81,6 +81,8 @@ Vagrant.configure("2") do |config|
     mysql -e "CREATE USER IF NOT EXISTS openneo_impress IDENTIFIED BY 'openneo_impress';"
     mysql -e "CREATE DATABASE IF NOT EXISTS openneo_impress;"
     mysql -e "GRANT ALL PRIVILEGES ON openneo_impress.* TO openneo_impress;"
+    mysql -e "CREATE DATABASE IF NOT EXISTS openneo_id;"
+    mysql -e "GRANT ALL PRIVILEGES ON openneo_id.* TO openneo_impress;"
     echo 'When you log in as vagrant, run `rbenv init` and follow the instructions!'
     echo 'Then, run `bundle install`, and `rake db:schema:load && rake db:seed`!'
   SHELL
