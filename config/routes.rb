@@ -7,8 +7,6 @@ OpenneoImpressItems::Application.routes.draw do
 
   root :to => 'outfits#new'
 
-  devise_for :users
-
   # DEPRECATED
   get '/bodies/:body_id/swf_assets.json' => 'swf_assets#index', :as => :body_swf_assets
   
@@ -49,9 +47,9 @@ OpenneoImpressItems::Application.routes.draw do
   post '/pets/submit' => 'pets#submit', :method => :post
   get '/modeling' => 'pets#bulk', :as => :bulk_pets
 
-  get '/login' => 'sessions#new', :as => :login
-  get '/logout' => 'sessions#destroy', :as => :logout
-  post '/users/authorize' => 'sessions#create'
+  get '/login', to: redirect('/?TODO'), as: :login
+  get '/logout', to: redirect('/?TODO'), as: :logout
+  get '/auth-users/settings', to: redirect('/?TODO'), as: :auth_user_settings
   
   post '/locales/choose' => 'locales#choose', :as => :choose_locale
 
