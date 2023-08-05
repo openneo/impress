@@ -634,10 +634,4 @@ class Item < ApplicationRecord
   def self.build_proxies(ids)
     Item::ProxyArray.new(ids)
   end
-
-  # TODO: Copied from modern Rails source, can delete once we're there!
-  def self.sanitize_sql_like(string, escape_character = "\\")
-    pattern = Regexp.union(escape_character, "%", "_")
-    string.gsub(pattern) { |x| [escape_character, x].join }
-  end
 end
