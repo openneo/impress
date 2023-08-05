@@ -4,6 +4,10 @@ development:
   username: openneo_impress
   password: openneo_impress
   pool: 5
+  variables:
+    sql_mode: TRADITIONAL
 
 production:
   url: <%= ENV['DATABASE_URL_PRIMARY'] %>
+  variables:
+    sql_mode: TRADITIONAL
