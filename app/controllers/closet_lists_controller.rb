@@ -23,7 +23,8 @@ class ClosetListsController < ApplicationController
   end
 
   def update
-    if @closet_list.update_attributes(closet_list_params)
+    @closet_list.attributes = closet_list_params
+    if @closet_list.save
       save_successful!
     else
       save_failed!

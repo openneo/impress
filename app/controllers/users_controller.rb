@@ -17,7 +17,8 @@ class UsersController < ApplicationController
   end
 
   def update
-    success = @user.update_attributes user_params
+    @user.attributes = user_params
+    success = @user.save
     respond_to do |format|
       format.html {
         if success
