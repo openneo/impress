@@ -207,5 +207,6 @@ Zone.create(:id => 50, :label => "Hat", :plain_label => "hat", :depth => 16, :ty
 Zone.create(:id => 51, :label => "Belt", :plain_label => "belt", :depth => 27, :type_id => 2)
 Zone.create(:id => 52, :label => "Foreground", :plain_label => "foreground", :depth => 52, :type_id => 3)
 
-User.create(name: "test", auth_server_id: -1, remote_id: -1)
+# NOTE: Creating an AuthUser automatically creates a User, too.
+AuthUser.create(name: "test", password: "test123", email: "test@gmail.example")
 Campaign.create(goal: 100_00, active: true, advertised: false, description: "")
