@@ -2,7 +2,7 @@ class Donation < ApplicationRecord
   FEATURE_COST = 500  # in cents = $5.00
 
   belongs_to :campaign
-  belongs_to :user
+  belongs_to :user, optional: true
   has_many :features, class_name: 'DonationFeature'
 
   def to_param
