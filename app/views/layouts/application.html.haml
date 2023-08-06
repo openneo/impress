@@ -48,9 +48,9 @@
           = link_to t('.userbar.items'), user_closet_hangers_path(current_user), :id => 'userbar-items-link'
           = link_to t('.userbar.outfits'), current_user_outfits_path
           = link_to t('.userbar.settings'), auth_user_settings_path
-          = link_to t('.userbar.logout'), logout_path_with_return_to
+          = button_to t('.userbar.logout'), destroy_auth_user_session_path, method: :delete
         - else
-          = link_to login_path_with_return_to, :id => 'userbar-log-in' do
+          = link_to auth_user_sign_in_path_with_return_to, :id => 'userbar-log-in' do
             %span= t('.userbar.login')
 
       #footer

@@ -47,9 +47,8 @@ OpenneoImpressItems::Application.routes.draw do
   post '/pets/submit' => 'pets#submit', :method => :post
   get '/modeling' => 'pets#bulk', :as => :bulk_pets
 
-  get '/login', to: redirect('/?TODO'), as: :login
-  get '/logout', to: redirect('/?TODO'), as: :logout
-  get '/auth-users/settings', to: redirect('/?TODO'), as: :auth_user_settings
+  devise_for :auth_users
+  get '/users/current-user/settings', to: redirect('/?TODO'), as: :auth_user_settings
   
   post '/locales/choose' => 'locales#choose', :as => :choose_locale
 

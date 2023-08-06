@@ -116,6 +116,8 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    devise-encryptable (0.2.0)
+      devise (>= 2.1.0)
     diff-lcs (1.2.5)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
@@ -321,6 +323,7 @@ DEPENDENCIES
   capistrano (~> 2.15.5)
   compass-rails (~> 3.1)
   devise (~> 4.9, >= 4.9.2)
+  devise-encryptable (~> 0.2.0)
   dotenv-rails (~> 2.8, >= 2.8.1)
   factory_girl_rails (~> 4.9)
   globalize (~> 6.2, >= 6.2.1)

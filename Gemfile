@@ -22,6 +22,7 @@ gem 'react-rails', '~> 2.7', '>= 2.7.1'
 
 # For authentication.
 gem 'devise', '~> 4.9', '>= 4.9.2'
+gem 'devise-encryptable', '~> 0.2.0'
 
 # For pagination UI.
 gem 'will_paginate', '~> 4.0'
