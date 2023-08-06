@@ -19,7 +19,7 @@ class User < ApplicationRecord
   has_many :wanted_items, -> { where(ClosetHanger.arel_table[:owned].eq(false)) },
     through: :closet_hangers, source: :item
 
-  belongs_to :contact_neopets_connection, class_name: 'NeopetsConnection'
+  belongs_to :contact_neopets_connection, class_name: 'NeopetsConnection', optional: true
 
   scope :top_contributors, -> { order('points DESC').where('points > 0') }
 
