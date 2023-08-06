@@ -3,6 +3,8 @@ class User < ApplicationRecord
 
   PreviewTopContributorsCount = 3
 
+  belongs_to :auth_user, foreign_key: :remote_id, inverse_of: :user
+
   has_many :closet_hangers
   has_many :closet_lists
   has_many :closeted_items, through: :closet_hangers, source: :item
@@ -21,6 +23,13 @@ class User < ApplicationRecord
   belongs_to :contact_neopets_connection, class_name: 'NeopetsConnection', optional: true
 
   scope :top_contributors, -> { order('points DESC').where('points > 0') }
+
+  after_update :sync_name_with_auth_user, if: :saved_change_to_name?
+
+  def sync_name_with_auth_user
+    auth_user.name = name
+    auth_user.save!
+  end
 
   def admin?
     name == 'matchu' # you know that's right.
