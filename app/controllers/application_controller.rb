@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
 
   def authenticate_user!
-    redirect_to(login_path) unless user_signed_in?
+    redirect_to(new_auth_user_session_path) unless user_signed_in?
   end
 
   def authorize_user!
@@ -18,11 +18,15 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user
-    nil # TODO
+    if auth_user_signed_in?
+      User.where(remote_id: current_auth_user.id).first
+    else
+      nil
+    end
   end
 
   def user_signed_in?
-    false # TODO
+    auth_user_signed_in?
   end
   
   def infer_locale

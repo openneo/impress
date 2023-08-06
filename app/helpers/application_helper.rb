@@ -132,12 +132,8 @@ module ApplicationHelper
     cache(localized_key, skip_digest: true, &block)
   end
 
-  def login_path_with_return_to
-    login_path :return_to => request.fullpath
-  end
-
-  def logout_path_with_return_to
-    logout_path :return_to => request.fullpath
+  def auth_user_sign_in_path_with_return_to
+    new_auth_user_session_path :return_to => request.fullpath
   end
 
   def origin_tag(value)

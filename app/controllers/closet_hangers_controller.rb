@@ -223,7 +223,7 @@ class ClosetHangersController < ApplicationController
     elsif user_signed_in?
       redirect_to user_closet_hangers_path(current_user)
     else
-      redirect_to login_path(:return_to => request.fullpath)
+      redirect_to new_auth_user_session_path(:return_to => request.fullpath)
     end
   end
 

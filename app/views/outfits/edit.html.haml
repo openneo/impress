@@ -59,7 +59,7 @@
               %figcaption= t '.sidebar.outfits.not_signed_in.header'
             = tmd '.sidebar.outfits.not_signed_in.pitch'
             = link_to t('.sidebar.outfits.not_signed_in.sign_in'),
-              login_path_with_return_to, :id => 'preview-outfits-log-in'
+              auth_user_sign_in_path_with_return_to, :id => 'preview-outfits-log-in'
         #preview-sharing.sidebar-view
           #preview-sharing-thumbnail-wrapper
             #preview-sharing-thumbnail-loading
@@ -163,7 +163,7 @@
             %li.checkbox.must-log-in
               %input{type: 'checkbox', id: 'advanced-search-wants', disabled: true}
               %label{for: 'advanced-search-wants'}= t '.search.advanced.wants'
-            = link_to t('.search.advanced.login'), login_path_with_return_to,
+            = link_to t('.search.advanced.login'), auth_user_sign_in_path_with_return_to,
               id: 'advanced-search-log-in-link'
 
   #no-assets-full-message= t '.sidebar.closet.no_data.description'

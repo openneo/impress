@@ -21,7 +21,7 @@ class OutfitsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { redirect_to login_path(:return_to => request.fullpath) }
+        format.html { redirect_to new_auth_user_session_path(:return_to => request.fullpath) }
         format.json { render :json => [] }
       end
     end
