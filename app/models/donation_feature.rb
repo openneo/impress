@@ -1,6 +1,6 @@
 class DonationFeature < ApplicationRecord
   belongs_to :donation
-  belongs_to :outfit
+  belongs_to :outfit, optional: true
 
   validates :outfit, presence: true, if: :outfit_id_present?
 
