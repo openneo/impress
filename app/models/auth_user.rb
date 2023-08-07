@@ -2,9 +2,7 @@ class AuthUser < AuthRecord
   self.table_name = 'users'
 
   devise :database_authenticatable, :encryptable, :registerable, :validatable,
-    :rememberable, :trackable
-  # devise :database_authenticatable, :lockable, :registerable, :recoverable,
-  #   :trackable, :validatable
+    :rememberable, :trackable, :recoverable
 
   validates :name, presence: true, uniqueness: {case_sensitive: false},
     length: {maximum: 20}
