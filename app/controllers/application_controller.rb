@@ -10,6 +10,8 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
 
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :save_return_to_path,
+    if: ->(c) { c.controller_name == 'sessions' && c.action_name == 'new' }
 
   def authenticate_user!
     redirect_to(new_auth_user_session_path) unless user_signed_in?
@@ -78,6 +80,25 @@ class ApplicationController < ActionController::Base
     # the password, but we need to let the email field through ourselves.
     devise_parameter_sanitizer.permit(:sign_up, keys: [:email])
     devise_parameter_sanitizer.permit(:account_update, keys: [:email])
+  end
+
+  def save_return_to_path
+    if params[:return_to]
+      Rails.logger.debug "Saving return_to path: #{params[:return_to].inspect}"
+      session[:devise_return_to] = params[:return_to]
+    end
+  end
+
+  def after_sign_in_path_for(user)
+    return_to = session.delete(:devise_return_to)
+    Rails.logger.debug "Using return_to path: #{return_to.inspect}"
+    return_to || root_path
+  end
+
+  def after_sign_out_path_for(user)
+    return_to = params[:return_to]
+    Rails.logger.debug "Using return_to path: #{return_to.inspect}"
+    return_to || root_path
   end
 end
 

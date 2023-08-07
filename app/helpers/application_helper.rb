@@ -156,10 +156,6 @@ module ApplicationHelper
       end.html_safe
     end
   end
-
-  def return_to_field_tag
-    hidden_field_tag :return_to, request.fullpath
-  end
   
   def safely_to_json(obj)
     obj.to_json.gsub('/', '\/')
