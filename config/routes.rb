@@ -48,7 +48,6 @@ OpenneoImpressItems::Application.routes.draw do
   get '/modeling' => 'pets#bulk', :as => :bulk_pets
 
   devise_for :auth_users
-  get '/users/current-user/settings', to: redirect('/?TODO'), as: :auth_user_settings
   
   post '/locales/choose' => 'locales#choose', :as => :choose_locale
 
