@@ -15,14 +15,14 @@ class AuthUser < AuthRecord
   #
   # TODO: Should we sync deletions too? We don't do deletions anywhere in app
   # right now, so I'll hold off to avoid leaving dead code around.
-  after_create :create_user
-  after_update :sync_name_with_user, if: :saved_change_to_name?
+  after_create :create_user!
+  after_update :sync_name_with_user!, if: :saved_change_to_name?
 
-  def create_user
-    User.create(name: name, auth_server_id: 1, remote_id: id)
+  def create_user!
+    User.create!(name: name, auth_server_id: 1, remote_id: id)
   end
 
-  def sync_name_with_user
+  def sync_name_with_user!
     user.name = name
     user.save!
   end
