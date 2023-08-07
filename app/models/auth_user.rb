@@ -1,7 +1,7 @@
 class AuthUser < AuthRecord
   self.table_name = 'users'
 
-  devise :database_authenticatable, :encryptable
+  devise :database_authenticatable, :encryptable, :registerable, :validatable
   # devise :database_authenticatable, :lockable, :registerable, :recoverable,
   #   :trackable, :validatable
 

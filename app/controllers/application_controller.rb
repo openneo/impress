@@ -9,6 +9,8 @@ class ApplicationController < ActionController::Base
   
   before_action :set_locale
 
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
   def authenticate_user!
     redirect_to(new_auth_user_session_path) unless user_signed_in?
   end
@@ -69,6 +71,13 @@ class ApplicationController < ActionController::Base
   
   def valid_locale?(locale)
     locale && I18n.usable_locales.include?(locale.to_sym)
+  end
+
+  def configure_permitted_parameters
+    # Devise will automatically permit the authentication key (username) and
+    # the password, but we need to let the email field through ourselves.
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:email])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:email])
   end
 end
 
