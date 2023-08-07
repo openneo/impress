@@ -1,4 +1,4 @@
-class CreateDonations < ActiveRecord::Migration[3.2]
+class CreateDonations < ActiveRecord::Migration[4.2]
   def change
     create_table :donations do |t|
       t.integer :amount, null: false

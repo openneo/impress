@@ -1,4 +1,4 @@
-class CreateSpecies < ActiveRecord::Migration[3.2]
+class CreateSpecies < ActiveRecord::Migration[4.2]
   def self.up
     create_table :species
     Species.create_translation_table! :name => :string
