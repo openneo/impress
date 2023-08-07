@@ -24,9 +24,9 @@ class User < ApplicationRecord
 
   scope :top_contributors, -> { order('points DESC').where('points > 0') }
 
-  after_update :sync_name_with_auth_user, if: :saved_change_to_name?
+  after_update :sync_name_with_auth_user!, if: :saved_change_to_name?
 
-  def sync_name_with_auth_user
+  def sync_name_with_auth_user!
     auth_user.name = name
     auth_user.save!
   end
