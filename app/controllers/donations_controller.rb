@@ -42,7 +42,7 @@ class DonationsController < ApplicationController
       flash[:alert] = "Couldn't save donation details. Do those outfits exist?"
       redirect_to @donation
     else
-      flash[:success] = 'Donation details saved! ' +
+      flash[:notice] = 'Donation details saved! ' +
         'Also, have we thanked you yet today? Thank you!'
       redirect_to @donation
     end

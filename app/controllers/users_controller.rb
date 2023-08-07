@@ -22,7 +22,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html {
         if success
-          flash[:success] = t('users.update.success')
+          flash[:notice] = t('users.update.success')
           redirect_back! user_closet_hangers_path(@user)
         else
           flash[:alert] = t('users.update.invalid',

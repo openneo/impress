@@ -125,7 +125,7 @@
 
 - localized_cache :action_suffix => 'templates' do
   %script#pet-query-notice-template{:type => 'text/x-jquery-tmpl'}
-    .success
+    .notice
       %img.inline-image{:src => '${pet_image_url}'}
       = t '.pet_query.notice_html', :pet_name => '${pet_name}'
   

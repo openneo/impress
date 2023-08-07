@@ -32,7 +32,7 @@ class OutfitsController < ApplicationController
     
     respond_to do |format|
       format.html {
-        flash[:success] = t('outfits.destroy.success',
+        flash[:notice] = t('outfits.destroy.success',
                             :outfit_name => @outfit.name)
         redirect_to current_user_outfits_path
       }
