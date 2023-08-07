@@ -1,4 +1,4 @@
-class IndexClosetHangerQuery < ActiveRecord::Migration
+class IndexClosetHangerQuery < ActiveRecord::Migration[3.2]
   def self.up
     # SELECT COUNT(DISTINCT `closet_hangers`.`id`) FROM `closet_hangers` INNER
     # JOIN `users` ON `users`.`id` = `closet_hangers`.`user_id` LEFT OUTER JOIN

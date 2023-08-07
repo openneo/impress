@@ -1,4 +1,4 @@
-class TranslateItems < ActiveRecord::Migration
+class TranslateItems < ActiveRecord::Migration[3.2]
   def self.up
     rename_table :objects, :items
     Item.create_translation_table!({

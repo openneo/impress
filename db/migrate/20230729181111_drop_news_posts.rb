@@ -1,4 +1,4 @@
-class DropNewsPosts < ActiveRecord::Migration
+class DropNewsPosts < ActiveRecord::Migration[3.2]
   def change
     drop_table :news_posts do |t|
       t.text :body

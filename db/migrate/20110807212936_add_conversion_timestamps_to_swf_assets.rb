@@ -1,4 +1,4 @@
-class AddConversionTimestampsToSwfAssets < ActiveRecord::Migration
+class AddConversionTimestampsToSwfAssets < ActiveRecord::Migration[3.2]
   def self.up
     add_column :swf_assets, :reported_broken_at, :timestamp
     add_column :swf_assets, :converted_at, :timestamp

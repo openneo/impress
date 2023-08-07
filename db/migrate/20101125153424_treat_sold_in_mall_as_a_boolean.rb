@@ -1,4 +1,4 @@
-class TreatSoldInMallAsABoolean < ActiveRecord::Migration
+class TreatSoldInMallAsABoolean < ActiveRecord::Migration[3.2]
   def self.up
     change_column :objects, :sold_in_mall, :boolean, :null => false
   end

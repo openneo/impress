@@ -1,4 +1,4 @@
-class AddImageRequestedToSwfAssets < ActiveRecord::Migration
+class AddImageRequestedToSwfAssets < ActiveRecord::Migration[3.2]
   def self.up
     add_column :swf_assets, :image_requested, :boolean, :null => false, :default => false
   end

@@ -1,4 +1,4 @@
-class CreateZones < ActiveRecord::Migration
+class CreateZones < ActiveRecord::Migration[3.2]
   def self.up
     create_table :zones do |t|
       t.integer :depth
