@@ -1,4 +1,4 @@
-class RemoveTranslatedFieldsFromItems < ActiveRecord::Migration[3.2]
+class RemoveTranslatedFieldsFromItems < ActiveRecord::Migration[4.2]
   def self.up
     remove_column :items, :name
     remove_column :items, :description

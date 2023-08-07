@@ -1,4 +1,4 @@
-class CreateWardrobeTips < ActiveRecord::Migration[3.2]
+class CreateWardrobeTips < ActiveRecord::Migration[4.2]
   def up
     create_table :wardrobe_tips do |t|
       t.integer :index, null: false

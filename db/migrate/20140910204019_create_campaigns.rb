@@ -1,4 +1,4 @@
-class CreateCampaigns < ActiveRecord::Migration[3.2]
+class CreateCampaigns < ActiveRecord::Migration[4.2]
   def change
     create_table :campaigns do |t|
       t.integer :progress, null: false, default: 0

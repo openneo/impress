@@ -1,4 +1,4 @@
-class CreateColors < ActiveRecord::Migration[3.2]
+class CreateColors < ActiveRecord::Migration[4.2]
   def self.up
     create_table :colors do |t|
       t.boolean :basic

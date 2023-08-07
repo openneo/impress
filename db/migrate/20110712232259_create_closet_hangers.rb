@@ -1,4 +1,4 @@
-class CreateClosetHangers < ActiveRecord::Migration[3.2]
+class CreateClosetHangers < ActiveRecord::Migration[4.2]
   def self.up
     create_table :closet_hangers do |t|
       t.integer :item_id
