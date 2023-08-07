@@ -1,4 +1,4 @@
-class CreateItemOutfitRelationships < ActiveRecord::Migration
+class CreateItemOutfitRelationships < ActiveRecord::Migration[3.2]
   def self.up
     create_table :item_outfit_relationships do |t|
       t.integer :item_id

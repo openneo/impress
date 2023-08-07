@@ -1,4 +1,4 @@
-class IndexClosetHangerQuery2 < ActiveRecord::Migration
+class IndexClosetHangerQuery2 < ActiveRecord::Migration[3.2]
   def self.up
     # SELECT `objects`.* FROM `objects`
     # INNER JOIN `item_outfit_relationships` ON

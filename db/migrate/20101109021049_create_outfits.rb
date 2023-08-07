@@ -1,4 +1,4 @@
-class CreateOutfits < ActiveRecord::Migration
+class CreateOutfits < ActiveRecord::Migration[3.2]
   def self.up
     create_table :outfits do |t|
       t.integer :pet_state_id

@@ -1,4 +1,4 @@
-class AllowNullForSomeObjectsFields < ActiveRecord::Migration
+class AllowNullForSomeObjectsFields < ActiveRecord::Migration[3.2]
   def self.up
     change_column :objects, :category, :string, :limit => 50, :null => true
     change_column :objects, :type, :string, :limit => 50, :null => true

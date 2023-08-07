@@ -1,4 +1,4 @@
-class SetClosetHangersQuantityDefaultToZero < ActiveRecord::Migration
+class SetClosetHangersQuantityDefaultToZero < ActiveRecord::Migration[3.2]
   def self.up
   end
 

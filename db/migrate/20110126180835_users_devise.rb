@@ -1,4 +1,4 @@
-class UsersDevise < ActiveRecord::Migration
+class UsersDevise < ActiveRecord::Migration[3.2]
   def self.up
     change_table :users do |t|
       t.rememberable

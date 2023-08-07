@@ -1,4 +1,4 @@
-class AddImageToOutfits < ActiveRecord::Migration
+class AddImageToOutfits < ActiveRecord::Migration[3.2]
   def self.up
     add_column :outfits, :image, :string
   end

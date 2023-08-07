@@ -1,4 +1,4 @@
-class CreateNeopetsConnections < ActiveRecord::Migration
+class CreateNeopetsConnections < ActiveRecord::Migration[3.2]
   def change
     create_table :neopets_connections do |t|
       t.integer :user_id

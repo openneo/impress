@@ -1,4 +1,4 @@
-class AddTimestampsToItems < ActiveRecord::Migration
+class AddTimestampsToItems < ActiveRecord::Migration[3.2]
   def self.up
     add_timestamps :objects
 

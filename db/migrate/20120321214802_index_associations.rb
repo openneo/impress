@@ -1,4 +1,4 @@
-class IndexAssociations < ActiveRecord::Migration
+class IndexAssociations < ActiveRecord::Migration[3.2]
   def self.up
     add_index :closet_hangers, :item_id
     add_index :closet_hangers, :list_id
