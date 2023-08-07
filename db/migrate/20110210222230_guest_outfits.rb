@@ -1,4 +1,4 @@
-class GuestOutfits < ActiveRecord::Migration
+class GuestOutfits < ActiveRecord::Migration[3.2]
   def self.up
     change_column :outfits, :name, :string, :null => true
   end

@@ -1,4 +1,4 @@
-class AddImageLayersHashToOutfit < ActiveRecord::Migration
+class AddImageLayersHashToOutfit < ActiveRecord::Migration[3.2]
   def self.up
     add_column :outfits, :image_layers_hash, :string, :length => 8
   end

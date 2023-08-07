@@ -1,4 +1,4 @@
-class AddNameAndStarredToOutfits < ActiveRecord::Migration
+class AddNameAndStarredToOutfits < ActiveRecord::Migration[3.2]
   def self.up
     add_column :outfits, :name, :string, :null => false
     add_column :outfits, :starred, :boolean, :default => false, :null => false

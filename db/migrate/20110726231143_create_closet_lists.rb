@@ -1,4 +1,4 @@
-class CreateClosetLists < ActiveRecord::Migration
+class CreateClosetLists < ActiveRecord::Migration[3.2]
   def self.up
     create_table :closet_lists do |t|
       t.string :name
