@@ -16,6 +16,7 @@ development:
     pool: 2
     variables:
       sql_mode: TRADITIONAL
+    migrations_paths: db/openneo_id_migrate
 
 production:
   primary:
@@ -27,3 +28,4 @@ production:
     url: <%= ENV['DATABASE_URL_OPENNEO_ID'] %>
     variables:
       sql_mode: TRADITIONAL
+    migrations_paths: db/openneo_id_migrate
