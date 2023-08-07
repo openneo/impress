@@ -1,4 +1,4 @@
-class DropWardrobeTips < ActiveRecord::Migration[3.2]
+class DropWardrobeTips < ActiveRecord::Migration[4.2]
   def change
     drop_table :wardrobe_tips do |t|
       t.integer  "index",      null: false

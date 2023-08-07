@@ -1,4 +1,4 @@
-class CreateNewsPosts < ActiveRecord::Migration[3.2]
+class CreateNewsPosts < ActiveRecord::Migration[4.2]
   def change
     create_table :news_posts do |t|
       t.text :body

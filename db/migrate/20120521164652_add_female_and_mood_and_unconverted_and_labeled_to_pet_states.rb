@@ -1,4 +1,4 @@
-class AddFemaleAndMoodAndUnconvertedAndLabeledToPetStates < ActiveRecord::Migration[3.2]
+class AddFemaleAndMoodAndUnconvertedAndLabeledToPetStates < ActiveRecord::Migration[4.2]
   def self.up
     add_column :pet_states, :female, :boolean
     add_column :pet_states, :mood_id, :integer

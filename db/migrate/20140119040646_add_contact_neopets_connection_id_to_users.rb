@@ -1,4 +1,4 @@
-class AddContactNeopetsConnectionIdToUsers < ActiveRecord::Migration[3.2]
+class AddContactNeopetsConnectionIdToUsers < ActiveRecord::Migration[4.2]
   def change
     add_column :users, :contact_neopets_connection_id, :integer
 

@@ -1,4 +1,4 @@
-class RenameSwfAssetsIdToRemoteId < ActiveRecord::Migration[3.2]
+class RenameSwfAssetsIdToRemoteId < ActiveRecord::Migration[4.2]
   def self.up
     rename_column :swf_assets, :id, :remote_id
     add_column    :swf_assets, :id, :primary_key

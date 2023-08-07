@@ -1,4 +1,4 @@
-class AddPurposeToCampaigns < ActiveRecord::Migration[3.2]
+class AddPurposeToCampaigns < ActiveRecord::Migration[4.2]
   def change
     # We're using the "name" column as a short campaign purpose phrase.
     # Let's name that "purpose" instead, and create a "name" column that we can

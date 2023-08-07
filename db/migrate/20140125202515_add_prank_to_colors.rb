@@ -1,4 +1,4 @@
-class AddPrankToColors < ActiveRecord::Migration[3.2]
+class AddPrankToColors < ActiveRecord::Migration[4.2]
   def change
     add_column :colors, :prank, :boolean, default: false, null: false
   end

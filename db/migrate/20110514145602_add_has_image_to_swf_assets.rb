@@ -1,4 +1,4 @@
-class AddHasImageToSwfAssets < ActiveRecord::Migration[3.2]
+class AddHasImageToSwfAssets < ActiveRecord::Migration[4.2]
   def self.up
     add_column :swf_assets, :has_image, :boolean, :null => false, :default => false
   end
