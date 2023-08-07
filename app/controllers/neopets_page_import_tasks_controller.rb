@@ -56,7 +56,7 @@ class NeopetsPageImportTasksController < ApplicationController
         expected_index: neopets_page.index + 1, list_id: @import_task.list_id)
     end
 
-    flash[:success] = messages.join(' ')
+    flash[:notice] = messages.join(' ')
     redirect_to destination
   end
 

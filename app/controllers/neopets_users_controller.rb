@@ -13,7 +13,7 @@ class NeopetsUsersController < ApplicationController
     @neopets_user.load!
     @neopets_user.save_hangers!
 
-    flash[:success] = t('neopets_users.create.success',
+    flash[:notice] = t('neopets_users.create.success',
                         :user_name => @neopets_user.username,
                         :count => @neopets_user.hangers.size)
     redirect_to user_closet_hangers_path(current_user)

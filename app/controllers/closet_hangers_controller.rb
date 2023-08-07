@@ -9,7 +9,7 @@ class ClosetHangersController < ApplicationController
       @closet_list.hangers.destroy_all
       respond_to do |format|
         format.html {
-          flash[:success] = t("closet_hangers.destroy_all.success")
+          flash[:notice] = t("closet_hangers.destroy_all.success")
           redirect_back!(user_closet_hangers_path(current_user))
         }
 
@@ -149,7 +149,7 @@ class ClosetHangersController < ApplicationController
           ClosetHanger.set_quantity!(quantity, :user_id => @user.id,
             :item_id => @item.id, :key => key)
         end
-        flash[:success] = t('closet_hangers.update_quantities.success',
+        flash[:notice] = t('closet_hangers.update_quantities.success',
                             :item_name => @item.name)
       end
     rescue ActiveRecord::RecordInvalid => e
@@ -169,7 +169,7 @@ class ClosetHangersController < ApplicationController
     respond_to do |format|
       format.html {
         ownership_key = @closet_hanger.owned? ? 'owned' : 'wanted'
-        flash[:success] = t("closet_hangers.destroy.success.#{ownership_key}",
+        flash[:notice] = t("closet_hangers.destroy.success.#{ownership_key}",
                             :item_name => @item.name)
         redirect_back!(@item)
       }
@@ -197,12 +197,12 @@ class ClosetHangersController < ApplicationController
       format.html {
         ownership_key = @closet_hanger.owned? ? 'owned' : 'wanted'
         if @closet_hanger.list
-          flash[:success] = t("closet_hangers.create.success.#{ownership_key}.in_list",
+          flash[:notice] = t("closet_hangers.create.success.#{ownership_key}.in_list",
                               :item_name => @item.name,
                               :list_name => @closet_hanger.list.name,
                               :count => @closet_hanger.quantity)
         else
-          flash[:success] = t("closet_hangers.create.success.#{ownership_key}.unlisted",
+          flash[:notice] = t("closet_hangers.create.success.#{ownership_key}.unlisted",
                               :item_name => @item.name,
                               :count => @closet_hanger.quantity)
         end

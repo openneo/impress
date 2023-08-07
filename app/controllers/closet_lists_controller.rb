@@ -14,7 +14,7 @@ class ClosetListsController < ApplicationController
 
   def destroy
     @closet_list.destroy
-    flash[:success] = "Successfully deleted \"#{@closet_list.name}\""
+    flash[:notice] = "Successfully deleted \"#{@closet_list.name}\""
     redirect_to user_closet_hangers_path(current_user)
   end
 
@@ -48,7 +48,7 @@ class ClosetListsController < ApplicationController
   end
 
   def save_successful!
-    flash[:success] = "Successfully saved \"#{@closet_list.name}\""
+    flash[:notice] = "Successfully saved \"#{@closet_list.name}\""
     redirect_to user_closet_hangers_path(current_user)
   end
 end
