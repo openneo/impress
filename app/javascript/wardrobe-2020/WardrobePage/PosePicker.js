@@ -17,7 +17,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { loadable } from "../util";
-import Image from "next/image";
 
 import { petAppearanceFragment } from "../components/useOutfitAppearance";
 import getVisibleLayers from "../components/getVisibleLayers";
@@ -514,15 +513,7 @@ function PoseOption({
 }
 
 function EmojiImage({ src, alt, boxSize = 16 }) {
-  return (
-    <Image
-      src={src}
-      alt={alt}
-      width={boxSize}
-      height={boxSize}
-      layout="fixed"
-    />
-  );
+  return <img src={src} alt={alt} width={boxSize} height={boxSize} />;
 }
 
 function usePoses(speciesId, colorId, selectedPose) {
