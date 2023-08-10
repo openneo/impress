@@ -1,0 +1,30 @@
+{
+  "name": "app",
+  "dependencies": {
+    "@apollo/client": "^3.6.9",
+    "@auth0/auth0-react": "^1.0.0",
+    "@chakra-ui/icons": "^1.0.4",
+    "@chakra-ui/react": "^1.6.0",
+    "@emotion/react": "^11.1.4",
+    "@emotion/styled": "^11.0.0",
+    "@loadable/component": "^5.12.0",
+    "@sentry/react": "^5.30.0",
+    "easeljs": "^1.0.2",
+    "esbuild": "^0.19.0",
+    "framer-motion": "^4.1.11",
+    "graphql": "^15.5.0",
+    "graphql-tag": "^2.12.6",
+    "immer": "^9.0.6",
+    "lru-cache": "^6.0.0",
+    "next": "12.0.2",
+    "react": "^17.0.1",
+    "react-autosuggest": "^10.0.2",
+    "react-dom": "^17.0.1",
+    "react-icons": "^4.2.0",
+    "react-transition-group": "^4.3.0",
+    "tweenjs": "^1.0.2"
+  },
+  "scripts": {
+    "build": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds --public-path=/assets --loader:.js=jsx --loader:.png=file --loader:.svg=file"
+  }
+}

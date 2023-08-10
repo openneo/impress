@@ -78,3 +78,5 @@ group :test do
   gem 'factory_girl_rails', '~> 4.9'
   gem 'rspec-rails', '~> 2.0.0.beta.22'
 end
+
+gem "jsbundling-rails", "~> 1.1"
