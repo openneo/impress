@@ -1,6 +1,5 @@
 import React from "react";
 import { Box, Button, Flex, Select } from "@chakra-ui/react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 
 function PaginationToolbar({
@@ -109,11 +108,7 @@ export function useRouterPagination(totalCount, numPerPage) {
 
 function LinkOrButton({ href, ...props }) {
   if (href != null) {
-    return (
-      <Link href={href} passHref>
-        <Button as="a" {...props} />
-      </Link>
-    );
+    return <Button as="a" href={href} {...props} />;
   } else {
     return <Button {...props} />;
   }

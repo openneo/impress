@@ -20,6 +20,7 @@
     "react-autosuggest": "^10.0.2",
     "react-dom": "^17.0.1",
     "react-icons": "^4.2.0",
+    "react-router-dom": "^6.15.0",
     "react-transition-group": "^4.3.0",
     "tweenjs": "^1.0.2"
   },

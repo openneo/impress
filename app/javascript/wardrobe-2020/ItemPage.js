@@ -33,7 +33,6 @@ import {
 import { MdPause, MdPlayArrow } from "react-icons/md";
 import gql from "graphql-tag";
 import { useQuery, useMutation } from "@apollo/client";
-import Link from "next/link";
 
 import ItemPageLayout, { SubtleSkeleton } from "./ItemPageLayout";
 import {
@@ -712,31 +711,30 @@ function ItemPageTradeLinks({ itemId, isEmbedded }) {
 
 function ItemPageTradeLink({ href, count, label, colorScheme, isEmbedded }) {
   return (
-    <Link href={href} passHref>
-      <Button
-        as="a"
-        target={isEmbedded ? "_blank" : undefined}
-        size="xs"
-        variant="outline"
-        colorScheme={colorScheme}
-        borderRadius="full"
-        paddingRight="1"
-      >
-        <Box display="grid" gridTemplateAreas="single-area">
-          <Box gridArea="single-area" display="flex" justifyContent="center">
-            {count} {label} <ChevronRightIcon minHeight="1.2em" />
-          </Box>
-          <Box
-            gridArea="single-area"
-            display="flex"
-            justifyContent="center"
-            visibility="hidden"
-          >
-            888 offering <ChevronRightIcon minHeight="1.2em" />
-          </Box>
+    <Button
+      as="a"
+      href={href}
+      target={isEmbedded ? "_blank" : undefined}
+      size="xs"
+      variant="outline"
+      colorScheme={colorScheme}
+      borderRadius="full"
+      paddingRight="1"
+    >
+      <Box display="grid" gridTemplateAreas="single-area">
+        <Box gridArea="single-area" display="flex" justifyContent="center">
+          {count} {label} <ChevronRightIcon minHeight="1.2em" />
         </Box>
-      </Button>
-    </Link>
+        <Box
+          gridArea="single-area"
+          display="flex"
+          justifyContent="center"
+          visibility="hidden"
+        >
+          888 offering <ChevronRightIcon minHeight="1.2em" />
+        </Box>
+      </Box>
+    </Button>
   );
 }
 
@@ -1181,11 +1179,7 @@ function CustomizeMoreButton({ speciesId, colorId, pose, itemId, isDisabled }) {
 
 function LinkOrButton({ href, ...props }) {
   if (href != null) {
-    return (
-      <Link href={href} passHref>
-        <Button as="a" {...props} />
-      </Link>
-    );
+    return <Button as="a" href={href} {...props} />;
   } else {
     return <Button {...props} />;
   }

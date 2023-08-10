@@ -8,7 +8,6 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import { ClassNames } from "@emotion/react";
-import Link from "next/link";
 
 import { safeImageUrl, useCommonStyles } from "../util";
 import { CheckIcon, CloseIcon, StarIcon } from "@chakra-ui/icons";
@@ -27,10 +26,8 @@ function SquareItemCard({
 
   const tradeMatchOwnShadowColor = useColorModeValue("green.500", "green.200");
   const tradeMatchWantShadowColor = useColorModeValue("blue.400", "blue.200");
-  const [
-    tradeMatchOwnShadowColorValue,
-    tradeMatchWantShadowColorValue,
-  ] = useToken("colors", [tradeMatchOwnShadowColor, tradeMatchWantShadowColor]);
+  const [tradeMatchOwnShadowColorValue, tradeMatchWantShadowColorValue] =
+    useToken("colors", [tradeMatchOwnShadowColor, tradeMatchWantShadowColor]);
 
   // When this is a trade match, give it an extra colorful shadow highlight so
   // it stands out! (They'll generally be sorted to the front anyway, but this
@@ -58,41 +55,40 @@ function SquareItemCard({
           `}
           role="group"
         >
-          <Link href={`/items/${item.id}`} passHref>
-            <Box
-              as="a"
-              className={css`
-                border-radius: ${mdRadiusValue};
-                transition: all 0.2s;
-                &:hover,
-                &:focus {
-                  transform: scale(1.05);
-                }
-                &:focus {
-                  box-shadow: ${outlineShadowValue};
-                  outline: none;
-                }
-              `}
-              {...props}
-            >
-              <SquareItemCardLayout
-                name={item.name}
-                thumbnailImage={
-                  <ItemThumbnail
-                    item={item}
-                    tradeMatchingMode={tradeMatchingMode}
-                  />
-                }
-                removeButton={
-                  showRemoveButton ? (
-                    <SquareItemCardRemoveButton onClick={onRemove} />
-                  ) : null
-                }
-                boxShadow={tradeMatchShadow}
-                footer={footer}
-              />
-            </Box>
-          </Link>
+          <Box
+            as="a"
+            href={`/items/${item.id}`}
+            className={css`
+              border-radius: ${mdRadiusValue};
+              transition: all 0.2s;
+              &:hover,
+              &:focus {
+                transform: scale(1.05);
+              }
+              &:focus {
+                box-shadow: ${outlineShadowValue};
+                outline: none;
+              }
+            `}
+            {...props}
+          >
+            <SquareItemCardLayout
+              name={item.name}
+              thumbnailImage={
+                <ItemThumbnail
+                  item={item}
+                  tradeMatchingMode={tradeMatchingMode}
+                />
+              }
+              removeButton={
+                showRemoveButton ? (
+                  <SquareItemCardRemoveButton onClick={onRemove} />
+                ) : null
+              }
+              boxShadow={tradeMatchShadow}
+              footer={footer}
+            />
+          </Box>
           {showRemoveButton && (
             <div
               className={css`

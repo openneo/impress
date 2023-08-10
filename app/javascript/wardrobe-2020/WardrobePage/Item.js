@@ -10,7 +10,6 @@ import {
   useTheme,
 } from "@chakra-ui/react";
 import { EditIcon, DeleteIcon, InfoIcon } from "@chakra-ui/icons";
-import Link from "next/link";
 import { loadable } from "../util";
 
 import {
@@ -289,11 +288,7 @@ function ItemActionButton({ icon, label, to, onClick }) {
 function LinkOrButton({ href, component = Button, ...props }) {
   const ButtonComponent = component;
   if (href != null) {
-    return (
-      <Link href={href} passHref>
-        <ButtonComponent as="a" {...props} />
-      </Link>
-    );
+    return <ButtonComponent as="a" href={href} {...props} />;
   } else {
     return <ButtonComponent {...props} />;
   }

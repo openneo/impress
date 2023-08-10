@@ -17,7 +17,6 @@ import {
   StarIcon,
 } from "@chakra-ui/icons";
 import { HiSparkles } from "react-icons/hi";
-import Link from "next/link";
 
 import SquareItemCard from "./SquareItemCard";
 import { safeImageUrl, useCommonStyles } from "../util";
@@ -31,27 +30,26 @@ function ItemCard({ item, badges, variant = "list", ...props }) {
       return <SquareItemCard item={item} {...props} />;
     case "list":
       return (
-        <Link href={`/items/${item.id}`} passHref>
-          <Box
-            as="a"
-            display="block"
-            p="2"
-            boxShadow="lg"
-            borderRadius="lg"
-            background={brightBackground}
-            transition="all 0.2s"
-            className="item-card"
-            width="100%"
-            minWidth="0"
-            {...props}
-          >
-            <ItemCardContent
-              item={item}
-              badges={badges}
-              focusSelector=".item-card:hover &, .item-card:focus &"
-            />
-          </Box>
-        </Link>
+        <Box
+          as="a"
+          href={`/items/${item.id}`}
+          display="block"
+          p="2"
+          boxShadow="lg"
+          borderRadius="lg"
+          background={brightBackground}
+          transition="all 0.2s"
+          className="item-card"
+          width="100%"
+          minWidth="0"
+          {...props}
+        >
+          <ItemCardContent
+            item={item}
+            badges={badges}
+            focusSelector=".item-card:hover &, .item-card:focus &"
+          />
+        </Box>
       );
     default:
       throw new Error(`Unexpected ItemCard variant: ${variant}`);
