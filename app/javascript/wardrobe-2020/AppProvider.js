@@ -2,7 +2,7 @@ import React from "react";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import { Auth0Provider } from "@auth0/auth0-react";
-import { ChakraProvider, Box } from "@chakra-ui/react";
+import { ChakraProvider, Box, useColorModeValue } from "@chakra-ui/react";
 import { ApolloProvider } from "@apollo/client";
 import { useAuth0 } from "@auth0/auth0-react";
 import { BrowserRouter } from "react-router-dom";
@@ -141,6 +141,8 @@ function setupLogging() {
  * ScopedCSSReset applies a copy of Chakra UI's CSS reset, but only to its
  * children (or, well, any element with the chakra-css-reset class).
  *
+ * We also apply some base styles, like the default text color.
+ *
  * TODO: What about Chakra's portal elements like toast messages, which are
  * intentionally mounted elsewhere in the document?
  *
@@ -150,9 +152,13 @@ function setupLogging() {
  * the selector `:where(.chakra-css-reset) h1` is lower specificity.
  */
 function ScopedCSSReset({ children }) {
+  const baseTextColor = useColorModeValue("green.800", "green.50");
+
   return (
     <>
-      <Box className="chakra-css-reset">{children}</Box>
+      <Box className="chakra-css-reset" color={baseTextColor}>
+        {children}
+      </Box>
       <Global
         styles={`
           :where(.chakra-css-reset) {
