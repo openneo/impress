@@ -1,8 +1,15 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
+import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 import { setContext } from "@apollo/client/link/context";
 import { createPersistedQueryLink } from "apollo-link-persisted-queries";
 
 import { getAuthModeFeatureFlag } from "./components/useCurrentUser";
+
+// Use Apollo's error messages in development.
+if (process.env["NODE_ENV"] === "development") {
+  loadErrorMessages();
+  loadDevMessages();
+}
 
 // Teach Apollo to load certain fields from the cache, to avoid extra network
 // requests. This happens a lot - e.g. reusing data from item search on the
