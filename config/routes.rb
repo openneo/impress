@@ -41,7 +41,8 @@ OpenneoImpressItems::Application.routes.draw do
     resources :neopets_users, :only => [:new, :create], :path => 'neopets-users'
   end
 
-  get '/users/current-user/outfits' => 'outfits#index', :as => :current_user_outfits
+  get '/your-outfits', to: 'outfits#index', as: :current_user_outfits
+  get '/users/current-user/outfits', to: redirect('/your-outfits')
 
   post '/pets/load' => 'pets#load', :as => :load_pet
   post '/pets/submit' => 'pets#submit', :method => :post

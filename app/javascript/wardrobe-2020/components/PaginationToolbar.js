@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Button, Flex, Select } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { useSearchParams } from "react-router-dom";
 
 function PaginationToolbar({
   isLoading,
@@ -72,9 +72,9 @@ function PaginationToolbar({
 }
 
 export function useRouterPagination(totalCount, numPerPage) {
-  const { query, push: pushHistory } = useRouter();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const currentOffset = parseInt(query.offset) || 0;
+  const currentOffset = parseInt(searchParams.get("offset")) || 0;
 
   const currentPageIndex = Math.floor(currentOffset / numPerPage);
   const currentPageNumber = currentPageIndex + 1;
@@ -82,11 +82,12 @@ export function useRouterPagination(totalCount, numPerPage) {
 
   const buildPageUrl = React.useCallback(
     (newPageNumber) => {
-      const newParams = new URLSearchParams(query);
-      const newPageIndex = newPageNumber - 1;
-      const newOffset = newPageIndex * numPerPage;
-      newParams.set("offset", newOffset);
-      return "?" + newParams.toString();
+      setSearchParams((newParams) => {
+        const newPageIndex = newPageNumber - 1;
+        const newOffset = newPageIndex * numPerPage;
+        newParams.set("offset", newOffset);
+        return newParams;
+      });
     },
     [query, numPerPage]
   );

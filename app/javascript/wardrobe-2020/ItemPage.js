@@ -56,13 +56,13 @@ import useCurrentUser from "./components/useCurrentUser";
 import SpeciesFacesPicker, {
   colorIsBasic,
 } from "./ItemPage/SpeciesFacesPicker";
-import { useRouter } from "next/router";
-import Head from "next/head";
 
-function ItemPage() {
-  const { query } = useRouter();
-  return <ItemPageContent itemId={query.itemId} />;
-}
+// Removed for the wardrobe-2020 case.
+// TODO: Refactor this stuff, do we even need ItemPageContent really?
+// function ItemPage() {
+//   const { query } = useRouter();
+//   return <ItemPageContent itemId={query.itemId} />;
+// }
 
 /**
  * ItemPageContent is the content of ItemPage, but we also use it as the
@@ -102,11 +102,6 @@ export function ItemPageContent({ itemId, isEmbedded = false }) {
 
   return (
     <>
-      {!isEmbedded && item?.name && (
-        <Head>
-          <title>{item?.name} | Dress to Impress</title>
-        </Head>
-      )}
       <ItemPageLayout item={item} isEmbedded={isEmbedded}>
         <VStack spacing="8" marginTop="4">
           <ItemPageDescription

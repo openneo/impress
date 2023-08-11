@@ -4,7 +4,6 @@ import produce, { enableMapSet } from "immer";
 import { useQuery, useApolloClient } from "@apollo/client";
 
 import { itemAppearanceFragment } from "../components/useOutfitAppearance";
-import { useRouter } from "next/router";
 
 enableMapSet();
 
@@ -382,25 +381,26 @@ const EMPTY_CUSTOMIZATION_STATE = {
 };
 
 function useParseOutfitUrl() {
-  const { query } = useRouter();
+  const [searchParams] = useSearchParams();
 
   // We memoize this to make `outfitStateWithoutExtras` an even more reliable
   // stable object!
   const memoizedOutfitState = React.useMemo(
-    () => readOutfitStateFromQuery(query),
+    () => readOutfitStateFromSearchParams(searchParams),
     [query]
   );
 
   return memoizedOutfitState;
 }
 
-export function readOutfitStateFromQuery(query) {
+function readOutfitStateFromSearchParams(searchParams) {
   // For the /outfits/:id page, ignore the query string, and just wait for the
   // outfit data to load in!
-  if (query.outfitId != null) {
+  const outfitId = searchParams.get("outfitId");
+  if (outfitId != null) {
     return {
       ...EMPTY_CUSTOMIZATION_STATE,
-      id: query.outfitId,
+      id: outfitId,
     };
   }
 
@@ -408,50 +408,14 @@ export function readOutfitStateFromQuery(query) {
   // not specified.
   return {
     id: null,
-    name: getValueFromQuery(query.name),
-    speciesId: getValueFromQuery(query.species) || "1",
-    colorId: getValueFromQuery(query.color) || "8",
-    pose: getValueFromQuery(query.pose) || "HAPPY_FEM",
-    appearanceId: getValueFromQuery(query.state) || null,
-    wornItemIds: new Set(getListFromQuery(query["objects[]"])),
-    closetedItemIds: new Set(getListFromQuery(query["closet[]"])),
+    name: searchParams.get("name"),
+    speciesId: searchParams.get("species") || "1",
+    colorId: searchParams.get("color") || "8",
+    pose: searchParams.get("pose") || "HAPPY_FEM",
+    appearanceId: searchParams.get("state") || null,
+    wornItemIds: new Set(searchParams.getAll("objects[]")),
+    closetedItemIds: new Set(searchParams.getAll("closet[]")),
   };
-}
-
-/**
- * getValueFromQuery reads the given value from Next's `router.query` as a
- * single value. For example:
- *
- * ?foo=bar -> "bar" -> "bar"
- * ?foo=bar&foo=baz -> ["bar", "baz"] -> "bar"
- * ?lol=huh -> undefined -> null
- */
-function getValueFromQuery(value) {
-  if (Array.isArray(value)) {
-    return value[0];
-  } else if (value != null) {
-    return value;
-  } else {
-    return null;
-  }
-}
-
-/**
- * getListFromQuery reads the given value from Next's `router.query` as a list
- * of values. For example:
- *
- * ?foo=bar -> "bar" -> ["bar"]
- * ?foo=bar&foo=baz -> ["bar", "baz"] -> ["bar", "baz"]
- * ?lol=huh -> undefined -> []
- */
-function getListFromQuery(value) {
-  if (Array.isArray(value)) {
-    return value;
-  } else if (value != null) {
-    return [value];
-  } else {
-    return [];
-  }
 }
 
 function getOutfitStateFromOutfitData(outfit) {

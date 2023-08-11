@@ -292,7 +292,6 @@ function AppearanceLayerSupportReviewStep({
         marginTop="2"
       >
         {imageWithAlphaUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={imageWithAlphaUrl}
             width={600}
@@ -445,10 +444,8 @@ async function mergeIntoImageWithAlpha(
     imageOnWhite,
     conflictMode
   );
-  const [
-    imageWithAlphaUrl,
-    imageWithAlphaBlob,
-  ] = await writeImageDataToUrlAndBlob(imageWithAlphaData);
+  const [imageWithAlphaUrl, imageWithAlphaBlob] =
+    await writeImageDataToUrlAndBlob(imageWithAlphaData);
 
   return [imageWithAlphaUrl, imageWithAlphaBlob, numWarnings];
 }

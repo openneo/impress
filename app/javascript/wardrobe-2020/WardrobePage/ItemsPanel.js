@@ -49,7 +49,6 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 import { MdMoreVert } from "react-icons/md";
 import { buildOutfitUrl } from "./useOutfitState";
 import { gql, useMutation } from "@apollo/client";
-import { useRouter } from "next/router";
 
 /**
  * ItemsPanel shows the items in the current outfit, and lets the user toggle
@@ -455,7 +454,6 @@ function OutfitHeading({ outfitState, outfitSaving, dispatchToOutfit }) {
 function DeleteOutfitMenuItem({ outfitState }) {
   const { id, name } = outfitState;
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { push: pushHistory } = useRouter();
 
   const [sendDeleteOutfitMutation, { loading, error }] = useMutation(
     gql`
@@ -506,7 +504,7 @@ function DeleteOutfitMenuItem({ outfitState }) {
               onClick={() =>
                 sendDeleteOutfitMutation({ variables: { id } })
                   .then(() => {
-                    pushHistory(`/your-outfits`);
+                    window.location = "/your-outfits";
                   })
                   .catch((e) => {
                     /* handled in error UI */

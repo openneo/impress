@@ -1,6 +1,5 @@
 import React from "react";
 import { useToast } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 
 import { emptySearchQuery } from "./SearchToolbar";
 import ItemsAndSearchPanels from "./ItemsAndSearchPanels";
@@ -30,8 +29,9 @@ function WardrobePage() {
 
   // We manage outfit saving up here, rather than at the point of the UI where
   // "Saving" indicators appear. That way, auto-saving still happens even when
-  // the indicator isn't on the page, e.g. when searching. We also mount a
-  // <Prompt /> in this component to prevent navigating away before saving.
+  // the indicator isn't on the page, e.g. when searching.
+  // NOTE: This only applies to navigations leaving the wardrobe-2020 app, not
+  // within!
   const outfitSaving = useOutfitSaving(outfitState, dispatchToOutfit);
 
   // TODO: I haven't found a great place for this error UI yet, and this case
@@ -85,20 +85,6 @@ function WardrobePage() {
         <SupportOnly>
           <WardrobeDevHacks />
         </SupportOnly>
-
-        {/*
-         * TODO: This might unnecessarily block navigations that we don't
-         * necessarily need to, e.g., navigating back to Your Outfits while the
-         * save request is in flight. We could instead submit the save mutation
-         * immediately on client-side nav, and have each outfit save mutation
-         * install a `beforeunload` handler that ensures that you don't close
-         * the page altogether while it's in flight. But let's start simple and
-         * see how annoying it actually is in practice lol
-         */}
-        <Prompt
-          when={shouldBlockNavigation}
-          message="Are you sure you want to leave? Your changes might not be saved."
-        />
 
         <WardrobePageLayout
           previewAndControls={
@@ -161,38 +147,6 @@ function SavedOutfitMetaTags({ outfitState }) {
       />
     </>
   );
-}
-
-/**
- * Prompt blocks client-side navigation via Next.js when the `when` prop is
- * true. This is our attempt at a drop-in replacement for the Prompt component
- * offered by react-router!
- *
- * Adapted from https://github.com/vercel/next.js/issues/2694#issuecomment-778225625
- */
-function Prompt({ when, message }) {
-  const router = useRouter();
-  React.useEffect(() => {
-    const handleWindowClose = (e) => {
-      if (!when) return;
-      e.preventDefault();
-      return (e.returnValue = message);
-    };
-    const handleBrowseAway = () => {
-      if (!when) return;
-      if (window.confirm(message)) return;
-      router.events.emit("routeChangeError");
-      throw "routeChange aborted by <Prompt>.";
-    };
-    window.addEventListener("beforeunload", handleWindowClose);
-    router.events.on("routeChangeStart", handleBrowseAway);
-    return () => {
-      window.removeEventListener("beforeunload", handleWindowClose);
-      router.events.off("routeChangeStart", handleBrowseAway);
-    };
-  }, [when, message, router]);
-
-  return null;
 }
 
 export default WardrobePage;
