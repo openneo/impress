@@ -5,11 +5,16 @@ import { Box, Grid, useToast } from "@chakra-ui/react";
 import { loadImage, logAndCapture, safeImageUrl } from "../util";
 import usePreferArchive from "./usePreferArchive";
 
-// Importing EaselJS and TweenJS puts them directly into the `window` object!
+// Import EaselJS and TweenJS as strings to run in a global context!
 // The bundled scripts are built to attach themselves to `window.createjs`, and
 // `window.createjs` is where the Neopets movie libraries expects to find them!
-import "easeljs/lib/easeljs";
-import "tweenjs/lib/tweenjs";
+//
+// TODO: Is there a nicer way to do this within esbuild? Would be nice to have
+// builds of these libraries that just play better in the first place...
+import easelSource from "easeljs/lib/easeljs.min.js";
+import tweenSource from "tweenjs/lib/tweenjs.min.js";
+new Function(easelSource).call(window);
+new Function(tweenSource).call(window);
 
 function OutfitMovieLayer({
   libraryUrl,
