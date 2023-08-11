@@ -1,11 +1,11 @@
 OpenneoImpressItems::Application.routes.draw do
-  get "petpages/new"
-
-  get "closet_lists/new"
-
-  get "closet_lists/create"
-
   root :to => 'outfits#new'
+
+  # TODO: It's a bit silly that outfits/new points to outfits#edit.
+  # Should we refactor the controller/view structure here?
+  get '/outfits/new', to: 'outfits#edit', as: :wardrobe
+  get '/wardrobe' => redirect('/outfits/new')
+  get '/start/:color_name/:species_name' => 'outfits#start'
 
   # DEPRECATED
   get '/bodies/:body_id/swf_assets.json' => 'swf_assets#index', :as => :body_swf_assets
@@ -52,6 +52,10 @@ OpenneoImpressItems::Application.routes.draw do
   
   post '/locales/choose' => 'locales#choose', :as => :choose_locale
 
+  get "petpages/new"
+  get "closet_lists/new"
+  get "closet_lists/create"
+
   resources :users, :path => 'user', :only => [:index, :update] do
     resources :contributions, :only => [:index]
     resources :closet_hangers, :only => [:index, :update, :destroy], :path => 'closet' do
@@ -88,9 +92,6 @@ OpenneoImpressItems::Application.routes.draw do
 
   get 'users/top-contributors' => 'users#top_contributors', :as => :top_contributors
   get 'users/top_contributors' => redirect('/users/top-contributors')
-
-  get '/wardrobe' => 'outfits#edit', :as => :wardrobe
-  get '/start/:color_name/:species_name' => 'outfits#start'
 
   get 'image-mode' => 'static#image_mode', :as => :image_mode
   get '/terms' => redirect("https://impress-2020.openneo.net/terms"), :as => :terms
