@@ -10,6 +10,10 @@ class OutfitsController < ApplicationController
     end
   end
 
+  def edit
+    render "outfits/edit", layout: false
+  end
+
   def index
     if user_signed_in?
       @outfits = current_user.outfits.

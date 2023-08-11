@@ -1,4 +1,9 @@
-- content_for :javascripts do
-  = javascript_include_tag 'wardrobe-2020-page', defer: true
-
-#wardrobe-2020-root
+!!! 5
+%html
+  %head
+    %meta{charset: 'utf-8'}
+    %title Dress to Impress
+    %link{href: image_path('favicon.png'), rel: 'icon'}
+    = javascript_include_tag 'wardrobe-2020-page', defer: true
+  %body
+    #wardrobe-2020-root
