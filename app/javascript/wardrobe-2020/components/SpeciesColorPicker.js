@@ -31,7 +31,11 @@ function SpeciesColorPicker({
   colorTestId = null,
   onChange,
 }) {
-  const { loading: loadingMeta, error: errorMeta, data: meta } = useQuery(gql`
+  const {
+    loading: loadingMeta,
+    error: errorMeta,
+    data: meta,
+  } = useQuery(gql`
     query SpeciesColorPicker {
       allSpecies {
         id
@@ -340,11 +344,14 @@ let cachedResponseForAllValidPetPoses = null;
  * data from GraphQL serves on the first render, without a loading state.
  */
 export function useAllValidPetPoses() {
-  const networkResponse = useFetch("/api/validPetPoses", {
-    responseType: "arrayBuffer",
-    // If we already have globally-cached valids, skip the request.
-    skip: cachedResponseForAllValidPetPoses != null,
-  });
+  const networkResponse = useFetch(
+    "https://impress-2020.openneo.net/api/validPetPoses",
+    {
+      responseType: "arrayBuffer",
+      // If we already have globally-cached valids, skip the request.
+      skip: cachedResponseForAllValidPetPoses != null,
+    }
+  );
 
   // Use the globally-cached response if we have one, or await the network
   // response if not.

@@ -80,40 +80,34 @@ function WardrobePage() {
   //       that need it, where it's more useful and more performant to access
   //       via context.
   return (
-    <>
-      <OutfitStateContext.Provider value={outfitState}>
-        <SupportOnly>
-          <WardrobeDevHacks />
-        </SupportOnly>
-
-        <WardrobePageLayout
-          previewAndControls={
-            <WardrobePreviewAndControls
-              isLoading={loading}
-              outfitState={outfitState}
-              dispatchToOutfit={dispatchToOutfit}
-            />
-          }
-          itemsAndMaybeSearchPanel={
-            <ItemsAndSearchPanels
-              loading={loading}
-              searchQuery={searchQuery}
-              onChangeSearchQuery={setSearchQuery}
-              outfitState={outfitState}
-              outfitSaving={outfitSaving}
-              dispatchToOutfit={dispatchToOutfit}
-            />
-          }
-          searchFooter={
-            <SearchFooter
-              searchQuery={searchQuery}
-              onChangeSearchQuery={setSearchQuery}
-              outfitState={outfitState}
-            />
-          }
-        />
-      </OutfitStateContext.Provider>
-    </>
+    <OutfitStateContext.Provider value={outfitState}>
+      <WardrobePageLayout
+        previewAndControls={
+          <WardrobePreviewAndControls
+            isLoading={loading}
+            outfitState={outfitState}
+            dispatchToOutfit={dispatchToOutfit}
+          />
+        }
+        itemsAndMaybeSearchPanel={
+          <ItemsAndSearchPanels
+            loading={loading}
+            searchQuery={searchQuery}
+            onChangeSearchQuery={setSearchQuery}
+            outfitState={outfitState}
+            outfitSaving={outfitSaving}
+            dispatchToOutfit={dispatchToOutfit}
+          />
+        }
+        searchFooter={
+          <SearchFooter
+            searchQuery={searchQuery}
+            onChangeSearchQuery={setSearchQuery}
+            outfitState={outfitState}
+          />
+        }
+      />
+    </OutfitStateContext.Provider>
   );
 }
 

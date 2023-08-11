@@ -87,13 +87,13 @@ export function useSearchResults(
               layers {
                 zone {
                   id
-                  label @client
+                  label
                 }
               }
               restrictedZones {
                 id
-                label @client
-                isCommonlyUsedByItems @client
+                label
+                isCommonlyUsedByItems
               }
             }
           }

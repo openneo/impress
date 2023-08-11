@@ -1,3 +1,4 @@
+import AppProvider from "./AppProvider";
 import WardrobePage from "./WardrobePage";
 
-export { WardrobePage };
+export { AppProvider, WardrobePage };

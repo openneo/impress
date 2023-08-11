@@ -46,7 +46,7 @@ function PosePickerSupport({
             id
             zone {
               id
-              label @client
+              label
             }
 
             # For AppearanceLayerSupportModal
@@ -59,7 +59,7 @@ function PosePickerSupport({
           }
           restrictedZones {
             id
-            label @client
+            label
           }
 
           # For AppearanceLayerSupportModal to know the name

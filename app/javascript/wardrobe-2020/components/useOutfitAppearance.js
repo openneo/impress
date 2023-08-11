@@ -136,8 +136,8 @@ export const appearanceLayerFragment = gql`
     knownGlitches # For HTML5 & Known Glitches UI
     zone {
       id
-      depth @client
-      label @client
+      depth
+      label
     }
   }
 `;
@@ -149,7 +149,7 @@ export const appearanceLayerFragmentForSupport = gql`
     swfUrl # HACK: This is for Support tools, but other views don't need it
     zone {
       id
-      label @client # HACK: This is for Support tools, but other views don't need it
+      label # HACK: This is for Support tools, but other views don't need it
     }
   }
 `;

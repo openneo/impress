@@ -854,7 +854,7 @@ function ItemPageOutfitPreview({ itemId }) {
           name
           restrictedZones {
             id
-            label @client
+            label
           }
           compatibleBodiesAndTheirZones {
             body {
@@ -867,7 +867,7 @@ function ItemPageOutfitPreview({ itemId }) {
             }
             zones {
               id
-              label @client
+              label
             }
           }
           canonicalAppearance(

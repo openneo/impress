@@ -94,8 +94,6 @@ function getVisibleLayers(petAppearance, itemAppearances) {
   return visibleLayers;
 }
 
-// TODO: The web client could save bandwidth by applying @client to the `depth`
-//       field, because it already has zone depths cached.
 export const itemAppearanceFragmentForGetVisibleLayers = gql`
   fragment ItemAppearanceForGetVisibleLayers on ItemAppearance {
     id
@@ -113,8 +111,6 @@ export const itemAppearanceFragmentForGetVisibleLayers = gql`
   }
 `;
 
-// TODO: The web client could save bandwidth by applying @client to the `depth`
-//       field, because it already has zone depths cached.
 export const petAppearanceFragmentForGetVisibleLayers = gql`
   fragment PetAppearanceForGetVisibleLayers on PetAppearance {
     id

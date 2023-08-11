@@ -2,6 +2,7 @@ import React from "react";
 import gql from "graphql-tag";
 import produce, { enableMapSet } from "immer";
 import { useQuery, useApolloClient } from "@apollo/client";
+import { useSearchParams } from "react-router-dom";
 
 import { itemAppearanceFragment } from "../components/useOutfitAppearance";
 
@@ -156,13 +157,13 @@ function useOutfitState() {
             layers {
               zone {
                 id
-                label @client
+                label
               }
             }
             restrictedZones {
               id
-              label @client
-              isCommonlyUsedByItems @client
+              label
+              isCommonlyUsedByItems
             }
           }
         }
@@ -387,7 +388,7 @@ function useParseOutfitUrl() {
   // stable object!
   const memoizedOutfitState = React.useMemo(
     () => readOutfitStateFromSearchParams(searchParams),
-    [query]
+    [searchParams]
   );
 
   return memoizedOutfitState;
