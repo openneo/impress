@@ -1427,5 +1427,3 @@ function buildSortKeyForZoneLabelsAndTheirBodies({ zoneLabel, bodies }) {
 
   return `${representsAllBodies ? "A" : "Z"}-${inverseBodyCount}-${zoneLabel}`;
 }
-
-export default ItemPage;
