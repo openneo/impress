@@ -2,7 +2,7 @@ import React from "react";
 import gql from "graphql-tag";
 import produce, { enableMapSet } from "immer";
 import { useQuery, useApolloClient } from "@apollo/client";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { itemAppearanceFragment } from "../components/useOutfitAppearance";
 
@@ -12,6 +12,8 @@ export const OutfitStateContext = React.createContext(null);
 
 function useOutfitState() {
   const apolloClient = useApolloClient();
+  const navigate = useNavigate();
+
   const urlOutfitState = useParseOutfitUrl();
   const [localOutfitState, dispatchToOutfit] = React.useReducer(
     outfitStateReducer(apolloClient),
@@ -256,15 +258,11 @@ function useOutfitState() {
     savedOutfitState,
   };
 
-  // Keep the URL up-to-date. (We don't listen to it, though 😅)
-  // TODO: Seems like we should hook this in with the actual router... I'm
-  //       avoiding it rn, but I'm worried Next.js won't necessarily play nice
-  //       with this hack, even though react-router did. Hard to predict!
+  // Keep the URL up-to-date.
+  const path = buildOutfitPath(outfitState);
   React.useEffect(() => {
-    if (typeof history !== "undefined") {
-      history.replaceState(null, "", url);
-    }
-  }, [url]);
+    navigate(path, { replace: true });
+  }, [path]);
 
   return {
     loading: outfitLoading || itemsLoading,
@@ -616,19 +614,23 @@ function getZonesAndItems(itemsById, wornItemIds, closetedItemIds) {
   return zonesAndItems;
 }
 
-export function buildOutfitUrl(outfitState, { withoutOutfitId = false } = {}) {
+function buildOutfitPath(outfitState, { withoutOutfitId = false } = {}) {
   const { id } = outfitState;
 
+  if (id && !withoutOutfitId) {
+    return `/outfits/${id}`;
+  }
+
+  return "/outfits/new?" + buildOutfitQueryString(outfitState);
+}
+
+export function buildOutfitUrl(outfitState, options = {}) {
   const origin =
     typeof window !== "undefined"
       ? window.location.origin
       : "https://impress-2020.openneo.net";
 
-  if (id && !withoutOutfitId) {
-    return origin + `/outfits/${id}`;
-  }
-
-  return origin + "/outfits/new?" + buildOutfitQueryString(outfitState);
+  return origin + buildOutfitPath(outfitState, options);
 }
 
 function buildOutfitQueryString(outfitState) {
