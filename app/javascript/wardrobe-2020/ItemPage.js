@@ -759,7 +759,7 @@ function IconCheckbox({ icon, isChecked, ...props }) {
   );
 }
 
-function ItemPageOutfitPreview({ itemId }) {
+export function ItemPageOutfitPreview({ itemId }) {
   const idealPose = React.useMemo(
     () => (Math.random() > 0.5 ? "HAPPY_FEM" : "HAPPY_MASC"),
     []
@@ -1018,6 +1018,7 @@ function ItemPageOutfitPreview({ itemId }) {
       rowGap="4"
       columnGap="6"
       justifyContent="center"
+      width="100%"
     >
       <AspectRatio
         gridArea="preview"

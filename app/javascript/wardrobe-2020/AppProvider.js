@@ -2,31 +2,13 @@ import React from "react";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import { Auth0Provider } from "@auth0/auth0-react";
-import { CSSReset, ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { ChakraProvider, Box } from "@chakra-ui/react";
 import { ApolloProvider } from "@apollo/client";
 import { useAuth0 } from "@auth0/auth0-react";
-import { mode } from "@chakra-ui/theme-tools";
 import { BrowserRouter } from "react-router-dom";
+import { Global } from "@emotion/react";
 
 import buildApolloClient from "./apolloClient";
-
-const theme = extendTheme({
-  styles: {
-    global: (props) => ({
-      html: {
-        // HACK: Chakra sets body as the relative position element, which is
-        //       fine, except its `min-height: 100%` doesn't actually work
-        //       unless paired with height on the root element too!
-        height: "100%",
-      },
-      body: {
-        background: mode("gray.50", "gray.800")(props),
-        color: mode("green.800", "green.50")(props),
-        transition: "all 0.25s",
-      },
-    }),
-  },
-});
 
 export default function AppProvider({ children }) {
   React.useEffect(() => setupLogging(), []);
@@ -45,9 +27,8 @@ export default function AppProvider({ children }) {
         scope=""
       >
         <DTIApolloProvider>
-          <ChakraProvider theme={theme}>
-            <CSSReset />
-            {children}
+          <ChakraProvider resetCSS={false}>
+            <ScopedCSSReset>{children}</ScopedCSSReset>
           </ChakraProvider>
         </DTIApolloProvider>
       </Auth0Provider>
@@ -154,4 +135,289 @@ function setupLogging() {
     // sampling isn't actually so much! Tune down if it becomes a problem, tho.
     tracesSampleRate: 1.0,
   });
+}
+
+/**
+ * ScopedCSSReset applies a copy of Chakra UI's CSS reset, but only to its
+ * children (or, well, any element with the chakra-css-reset class).
+ *
+ * TODO: What about Chakra's portal elements like toast messages, which are
+ * intentionally mounted elsewhere in the document?
+ *
+ * NOTE: We use the `:where` CSS selector, instead of the .chakra-css-reset
+ * selector directly, to avoid specificity conflicts. e.g. the selector
+ * `.chakra-css-reset h1` is considered MORE specific than `.my-h1`, whereas
+ * the selector `:where(.chakra-css-reset) h1` is lower specificity.
+ */
+function ScopedCSSReset({ children }) {
+  return (
+    <>
+      <Box className="chakra-css-reset">{children}</Box>
+      <Global
+        styles={`
+          :where(.chakra-css-reset) {
+            *,
+            *::before,
+            *::after {
+              border-width: 0;
+              border-style: solid;
+              box-sizing: border-box;
+            }
+
+            main {
+              display: block;
+            }
+
+            hr {
+              border-top-width: 1px;
+              box-sizing: content-box;
+              height: 0;
+              overflow: visible;
+            }
+
+            pre,
+            code,
+            kbd,
+            samp {
+              font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+              font-size: 1em;
+            }
+
+            a {
+              background-color: transparent;
+              color: inherit;
+              text-decoration: inherit;
+            }
+
+            abbr[title] {
+              border-bottom: none;
+              text-decoration: underline;
+              -webkit-text-decoration: underline dotted;
+              text-decoration: underline dotted;
+            }
+
+            b,
+            strong {
+              font-weight: bold;
+            }
+
+            small {
+              font-size: 80%;
+            }
+
+            sub,
+            sup {
+              font-size: 75%;
+              line-height: 0;
+              position: relative;
+              vertical-align: baseline;
+            }
+
+            sub {
+              bottom: -0.25em;
+            }
+
+            sup {
+              top: -0.5em;
+            }
+
+            img {
+              border-style: none;
+            }
+
+            button,
+            input,
+            optgroup,
+            select,
+            textarea {
+              font-family: inherit;
+              font-size: 100%;
+              line-height: 1.15;
+              margin: 0;
+            }
+
+            button,
+            input {
+              overflow: visible;
+            }
+
+            button,
+            select {
+              text-transform: none;
+            }
+
+            button::-moz-focus-inner,
+            [type="button"]::-moz-focus-inner,
+            [type="reset"]::-moz-focus-inner,
+            [type="submit"]::-moz-focus-inner {
+              border-style: none;
+              padding: 0;
+            }
+
+            fieldset {
+              padding: 0.35em 0.75em 0.625em;
+            }
+
+            legend {
+              box-sizing: border-box;
+              color: inherit;
+              display: table;
+              max-width: 100%;
+              padding: 0;
+              white-space: normal;
+            }
+
+            progress {
+              vertical-align: baseline;
+            }
+
+            textarea {
+              overflow: auto;
+            }
+
+            [type="checkbox"],
+            [type="radio"] {
+              box-sizing: border-box;
+              padding: 0;
+            }
+
+            [type="number"]::-webkit-inner-spin-button,
+            [type="number"]::-webkit-outer-spin-button {
+              -webkit-appearance: none !important;
+            }
+
+            input[type="number"] {
+              -moz-appearance: textfield;
+            }
+
+            [type="search"] {
+              -webkit-appearance: textfield;
+              outline-offset: -2px;
+            }
+
+            [type="search"]::-webkit-search-decoration {
+              -webkit-appearance: none !important;
+            }
+
+            ::-webkit-file-upload-button {
+              -webkit-appearance: button;
+              font: inherit;
+            }
+
+            details {
+              display: block;
+            }
+
+            summary {
+              display: list-item;
+            }
+
+            template {
+              display: none;
+            }
+
+            [hidden] {
+              display: none !important;
+            }
+
+            body,
+            blockquote,
+            dl,
+            dd,
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6,
+            hr,
+            figure,
+            p,
+            pre {
+              margin: 0;
+            }
+
+            button {
+              background: transparent;
+              padding: 0;
+            }
+
+            fieldset {
+              margin: 0;
+              padding: 0;
+            }
+
+            ol,
+            ul {
+              margin: 0;
+              padding: 0;
+            }
+
+            textarea {
+              resize: vertical;
+            }
+
+            button,
+            [role="button"] {
+              cursor: pointer;
+            }
+
+            button::-moz-focus-inner {
+              border: 0 !important;
+            }
+
+            table {
+              border-collapse: collapse;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+              font-size: inherit;
+              font-weight: inherit;
+            }
+
+            button,
+            input,
+            optgroup,
+            select,
+            textarea {
+              padding: 0;
+              line-height: inherit;
+              color: inherit;
+            }
+
+            img,
+            svg,
+            video,
+            canvas,
+            audio,
+            iframe,
+            embed,
+            object {
+              display: block;
+            }
+
+            img,
+            video {
+              max-width: 100%;
+              height: auto;
+            }
+
+            [data-js-focus-visible] :focus:not([data-focus-visible-added]) {
+              outline: none;
+              box-shadow: none;
+            }
+
+            select::-ms-expand {
+              display: none;
+            }
+          }
+        `}
+      />
+    </>
+  );
 }

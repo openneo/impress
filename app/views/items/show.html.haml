@@ -69,16 +69,7 @@
         %span.more= t '.trading_closet_hangers.show_more'
         %span.less= t '.trading_closet_hangers.show_less'
 
-#item-preview-header
-  %h3= t '.preview.header'
-  = link_to t('.preview.customize_more'), root_path, :id => 'customize-more',
-                                                     :class => 'button'
-
-#item-preview
-  %ul#item-preview-species{'data-supported-species-ids' => @supported_species_ids.join(',')}
-    = standard_species_images_for(@basic_colored_pet_types_by_species_id)
-  #item-preview-error
-  #item-preview-swf= t '.preview.requirements_not_met'
+#outfit-preview-root{'data-item-id': @item.id}
 
 - unless @contributors_with_counts.empty?
   #item-contributors
@@ -88,17 +79,6 @@
         %li= link_to(contributor.name, user_contributions_path(contributor)) + format_contribution_count(count)
     %footer= t '.contributors.footer'
 
-:javascript
-  var CURRENT_ITEM_ZONES_RESTRICT = #{@item.zones_restrict.inspect},
-    IMPRESS_HOST = #{RemoteImpressHost.inspect};
-
-%script#swf-assets-not-found-template{:type => 'text/x-jquery-tmpl'}
-  = twl '.preview.not_found', :item_name => h(@item.name),
-        :species_name => '${species_name}',
-        :color_name => '${color_name}',
-        :modeling_link_url => root_path
-
 - content_for :javascripts do
-  = include_javascript_libraries :jquery, :swfobject, :jquery_tmpl
-  = javascript_include_tag 'items/show'
+  = javascript_include_tag 'item-page', defer: true
 

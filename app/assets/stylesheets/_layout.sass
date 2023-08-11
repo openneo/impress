@@ -91,6 +91,8 @@ input[type=text], input[type=password], input[type=search], input[type=number], 
 textarea
   font: inherit
 
+// TODO: This conflicts with button styles in embedded wardrobe-2020
+// components. It'd be nice to not apply it to ALL button elements.
 a.button, input[type=submit], button
   +awesome-button
   &.loud
