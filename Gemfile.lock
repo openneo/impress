@@ -200,6 +200,8 @@ GEM
     orm_adapter (0.5.0)
     parallel (1.23.0)
     public_suffix (5.0.3)
+    puma (6.3.0)
+      nio4r (~> 2.0)
     racc (1.7.1)
     rack (2.2.8)
     rack-attack (6.7.0)
@@ -309,7 +311,6 @@ GEM
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
-    webrick (1.8.1)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -337,6 +338,7 @@ DEPENDENCIES
   mysql2 (~> 0.5.5)
   nokogiri (~> 1.15, >= 1.15.3)
   parallel (~> 1.23)
+  puma (~> 6.3)
   rack-attack (~> 6.7)
   rails (= 7.0.6)
   rails-i18n (~> 7.0, >= 7.0.7)
@@ -350,7 +352,6 @@ DEPENDENCIES
   sass-rails (~> 5.0, >= 5.0.7)
   uglifier (~> 4.2)
   web-console (~> 4.2)
-  webrick (~> 1.8, >= 1.8.1)
   will_paginate (~> 4.0)
 
 RUBY VERSION

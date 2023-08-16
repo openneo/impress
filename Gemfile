@@ -4,7 +4,7 @@ ruby '3.1.4'
 gem 'rails', '= 7.0.6'
 
 # The HTTP server running the Rails instance.
-gem 'webrick', '~> 1.8', '>= 1.8.1'
+gem 'puma', '~> 6.3'
 
 # Our database is MySQL, in both development and production.
 gem 'mysql2', '~> 0.5.5'
