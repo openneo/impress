@@ -1,0 +1,302 @@
+---
+- name: Set up the environment for the impress app
+  hosts: webserver
+  become: yes
+  become_user: root
+  vars:
+    email_address: "emi@matchu.dev" # TODO: Extract this to personal config?
+    impress_hostname: beta.impress.openneo.net
+  tasks:
+    - name: Create SSH folder for logged-in user
+      become: no
+      file:
+        name: .ssh
+        mode: "700"
+        state: directory
+
+    - name: Copy authorized SSH keys to logged-in user
+      become: no
+      copy:
+        dest: ~/.ssh/authorized_keys
+        src: files/authorized-ssh-keys.txt
+        mode: "600"
+
+    - name: Disable root SSH login
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: ^#?PermitRootLogin
+        line: PermitRootLogin no
+
+    - name: Disable password-based SSH authentication
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: ^#?PasswordAuthentication
+        line: PasswordAuthentication no
+
+    - name: Enable public-key SSH authentication
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: ^#?PubkeyAuthentication
+        line: PubkeyAuthentication yes
+
+    - name: Update the apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install fail2ban firewall with default settings
+      apt:
+        name: fail2ban
+
+    - name: Configure ufw firewall to allow SSH connections on port 22
+      community.general.ufw:
+        rule: allow
+        port: "22"
+
+    - name: Configure ufw firewall to allow HTTP connections on port 80
+      community.general.ufw:
+        rule: allow
+        port: "80"
+
+    - name: Configure ufw firewall to allow HTTPS connections on port 443
+      community.general.ufw:
+        rule: allow
+        port: "443"
+
+    - name: Enable ufw firewall with all other ports closed by default
+      community.general.ufw:
+        state: enabled
+        policy: deny
+
+    - name: Install unattended-upgrades
+      apt:
+        name: unattended-upgrades
+
+    - name: Enable unattended-upgrades to auto-upgrade our system
+      copy:
+        content: |
+          APT::Periodic::Update-Package-Lists "1";
+          APT::Periodic::Unattended-Upgrade "1";
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
+
+    - name: Configure unattended-upgrades to auto-reboot our server when necessary
+      lineinfile:
+        regex: ^(//\s*)?Unattended-Upgrade::Automatic-Reboot ".*";$
+        line: Unattended-Upgrade::Automatic-Reboot "true";
+        dest: /etc/apt/apt.conf.d/50unattended-upgrades
+
+    - name: Configure unattended-upgrades to delay necessary reboots to 3am
+      lineinfile:
+        regex: ^(//\s*)?Unattended-Upgrade::Automatic-Reboot-Time ".*";$
+        line: Unattended-Upgrade::Automatic-Reboot-Time "03:00";
+        dest: /etc/apt/apt.conf.d/50unattended-upgrades
+
+    - name: Configure the system timezone to be US Pacific time
+      community.general.timezone:
+        name: America/Los_Angeles
+
+    - name: Create "impress" user
+      user:
+        name: impress
+        comment: Impress App
+        create_home: false
+
+    - name: Install ACL, to enable us to run commands as the "impress" user
+      apt:
+        name: acl
+
+    - name: Install ruby-build
+      git:
+        repo: https://github.com/rbenv/ruby-build.git
+        dest: /opt/ruby-build
+        version: 4d4678bc1ed89aa6900c0ea0da23495445dbcf50
+
+    - name: Check if Ruby 3.1.4 is already installed
+      stat:
+        path: /opt/ruby-3.1.4
+      register: ruby_dir
+
+    - name: Install Ruby 3.1.4
+      command: "/opt/ruby-build/bin/ruby-build 3.1.4 /opt/ruby-3.1.4"
+      when: not ruby_dir.stat.exists
+
+    - name: Add Ruby 3.1.4 to the global PATH, for developer convenience
+      lineinfile:
+        dest: /etc/profile
+        line: 'PATH="/opt/ruby-3.1.4/bin:$PATH" # Added by impress deploy setup script'
+
+    - name: Create the app folder
+      file:
+        path: /srv/impress
+        owner: impress
+        group: impress
+        mode: "755"
+        state: directory
+
+    - name: Create the app versions folder
+      become_user: impress
+      file:
+        path: /srv/impress/versions
+        state: directory
+
+    - name: Check for a current app version
+      stat:
+        path: /srv/impress/current
+      register: current_app_version
+
+    - name: Check whether we already have a placeholder app
+      stat:
+        path: /srv/impress/versions/initial-placeholder
+      register: existing_placeholder_app
+      when: not current_app_version.stat.exists
+
+    - name: Create a placeholder app, to run until we deploy a real version
+      become_user: impress
+      copy:
+        src: files/initial-placeholder
+        dest: /srv/impress/versions
+      when: |
+        not current_app_version.stat.exists and
+          not existing_placeholder_app.stat.exists
+
+    - name: Configure the placeholder app to run in deployment mode
+      become_user: impress
+      command:
+        chdir: /srv/impress/versions/initial-placeholder
+        cmd: /opt/ruby-3.1.4/bin/bundle config set --local deployment true
+      when: not current_app_version.stat.exists
+
+    - name: Install the placeholder app's dependencies
+      become_user: impress
+      command:
+        chdir: /srv/impress/versions/initial-placeholder
+        cmd: /opt/ruby-3.1.4/bin/bundle install
+      when: not current_app_version.stat.exists
+
+    - name: Set the placeholder app as the current version
+      become_user: impress
+      file:
+        src: /srv/impress/versions/initial-placeholder
+        dest: /srv/impress/current
+        state: link
+      when: not current_app_version.stat.exists
+
+    # NOTE: This file is uploaded with stricter permissions, to help protect
+    # the secrets inside. Most of the app is world-readable for convenience
+    # for debugging and letting nginx serve static files, but keep this safer!
+    - name: Upload the production.env file
+      become_user: impress
+      copy:
+        dest: /srv/impress/production.env
+        src: files/production.env
+        mode: "600"
+
+    - name: Create service file for impress
+      copy:
+        dest: /etc/systemd/system/impress.service
+        content: |
+          [Unit]
+          Description=Dress to Impress webapp
+
+          [Service]
+          User=impress
+          Restart=always
+          WorkingDirectory=/srv/impress/current
+          ExecStart=/opt/ruby-3.1.4/bin/bundle exec puma --port=3000
+          EnvironmentFile=/srv/impress/production.env
+
+          ; Some security directives, adapted from Akkoma's service file, they seem like sensible defaults!
+          ; Use private /tmp and /var/tmp folders inside a new file system namespace, which are discarded after the process stops.
+          PrivateTmp=true
+          ; The /home, /root, and /run/user folders can not be accessed by this service anymore. If your Akkoma user has its home folder in one of the restricted places, or use one of these folders as its working directory, you have to set this to false.
+          ProtectHome=true
+          ; Mount /usr, /boot, and /etc as read-only for processes invoked by this service.
+          ProtectSystem=full
+          ; Sets up a new /dev mount for the process and only adds API pseudo devices like /dev/null, /dev/zero or /dev/random but not physical devices.
+          PrivateDevices=true
+          ; Ensures that the service process and all its children can never gain new privileges through execve().
+          NoNewPrivileges=true
+          ; Drops the sysadmin capability from the daemon.
+          CapabilityBoundingSet=~CAP_SYS_ADMIN
+
+          [Install]
+          WantedBy=multi-user.target
+      notify:
+        - Reload systemctl
+        - Restart impress
+
+    - name: Configure impress to run now, and automatically when the system starts
+      systemd:
+        name: impress
+        state: started
+        enabled: true
+
+    - name: Install nginx
+      apt:
+        name: nginx
+
+    - name: Install core snap
+      community.general.snap:
+        name: core
+
+    - name: Install certbot as a snap
+      community.general.snap:
+        name: certbot
+        classic: yes
+
+    - name: Set up certbot
+      command: "certbot certonly --nginx -n --agree-tos --email {{ email_address }} --domains beta.impress.openneo.net"
+
+    - name: Add impress config file to nginx
+      copy:
+        content: |
+          server {
+            server_name {{ impress_hostname }};
+            listen 80;
+            if ($host = {{ impress_hostname }}) {
+              return 301 https://$host$request_uri;
+            }
+          }
+
+          server {
+            server_name {{ impress_hostname }};
+            listen 443 ssl;
+            ssl_certificate /etc/letsencrypt/live/{{ impress_hostname }}/fullchain.pem;
+            ssl_certificate_key /etc/letsencrypt/live/{{ impress_hostname }}/privkey.pem;
+            include /etc/letsencrypt/options-ssl-nginx.conf;
+            ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+            ssl_session_cache shared:SSL:10m; # https://superuser.com/q/1484466/14127
+
+            root /srv/impress/current/public;
+
+            # Try serving static files first. If not found, fall back to the app.
+            try_files $uri/index.html $uri @app;
+
+            location @app {
+              proxy_pass http://127.0.0.1:3000;
+            }
+          }
+        dest: /etc/nginx/sites-available/impress.conf
+      notify:
+        - Restart nginx
+
+    - name: Enable impress config file in nginx
+      file:
+        src: /etc/nginx/sites-available/impress.conf
+        dest: /etc/nginx/sites-enabled/impress.conf
+        state: link
+      notify:
+        - Restart nginx
+
+  handlers:
+    - name: Restart nginx
+      systemd:
+        name: nginx
+        state: restarted
+
+    - name: Reload systemctl
+      command: systemctl daemon-reload
+
+    - name: Restart impress
+      systemd:
+        name: impress
+        state: restarted

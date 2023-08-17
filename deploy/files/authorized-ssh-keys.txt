@@ -1,0 +1,16 @@
+# These are the SSH public keys that allow a user to log in and setup or deploy.
+#
+# It's dangerous to add a new key to this file! When you run
+# `yarn deploy-setup`, it will copy these keys to the deploy server, which will
+# allow the owner of these keys to log into the deploy server in the future.
+#
+# But the keys themselves aren't necessarily sensitive data, except for the name
+# at the end, which might tell a reader about who is allowed to log in and what
+# devices they own.
+#
+# When a computer tries to log in, it perform a cryptographic challenge that
+# proves it owns this key - but that requires the *private* key, whereas this is
+# the *public* key. That's why it's secure to publish these!
+
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID2/yLvpetD14BVK+Zd88ZofOxIfLRdl4FI2pdV+fmy3 Matchu's Desktop (Leviathan) WSL
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKFwWryq6slOQqkrJ7HIig7BvEQVQeH19hFwb+9VpXgz Matchu's Laptop (Ebon Hawk)

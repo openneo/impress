@@ -1,0 +1,22 @@
+Dress to Impress is deployed to a VPS server. We use this Ansible Playbook to
+automate the environment setup!
+
+We expect to be deploying to Ubuntu 20.04 LTS, initially with nothing
+installed. The user you deploy with should have sudoers access. That should be
+all it takes!
+
+First, run `yarn deploy:setup` in the app root, to run the `setup.yml`
+playbook. This will prompt you for your root password, to set up system
+dependencies. It should be safe to re-run this, including if you add a new
+dependency to the playbook, because the steps are non-destructive and Ansible
+will skip steps that are already satisfied.
+
+Then, to deploy a new version of the app, run `yarn deploy`. This will build
+the app from the code on your machine, then send the source and build output
+to the remote machine, and switch it to be the new production version. Nice!
+
+Note that the setup script references a file named `production.env`, which is
+gitignored because it contains sensitive information, like database passwords.
+You should create a `production.env` file in the local `deploy/files`
+directory, to be copied to the remote server and used as its environment
+variables.
