@@ -29,6 +29,7 @@
   "scripts": {
     "build": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds --public-path=/assets --loader:.js=jsx --loader:.png=file --loader:.svg=file --loader:.min.js=text",
     "build:production": "yarn build --minify",
-    "deploy:setup": "echo $'Setup requires you to become the root user. You\\'ll need to enter the password for your account on the remote web server below, and you must be part of the `sudo` user group.' && ansible-playbook -K -i deploy/inventory.cfg deploy/setup.yml"
+    "deploy:setup": "echo $'Setup requires you to become the root user. You\\'ll need to enter the password for your account on the remote web server below, and you must be part of the `sudo` user group.' && ansible-playbook -K -i deploy/inventory.cfg deploy/setup.yml",
+    "deploy": "ansible-playbook -i deploy/inventory.cfg deploy/deploy.yml"
   }
 }

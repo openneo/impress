@@ -100,6 +100,42 @@
         comment: Impress App
         create_home: false
 
+    - name: Create "impress-deployers" group
+      group:
+        name: impress-deployers
+
+    - name: Add the current user to the "impress-deployers" group
+      user:
+        name: "{{ lookup('env', 'USER') }}"
+        groups:
+          - impress-deployers
+        append: yes
+
+    # We use this so the deploy playbook doesn't have to prompt for a root
+    # password: this user just is trusted to act as "impress" in the future.
+    - name: Enable the "impress-deployers" group to freely act as the "impress" user
+      community.general.sudoers:
+        name: impress-deployers-as-impress
+        group: impress-deployers
+        runas: impress
+        commands: ALL
+        nopassword: yes
+
+    # Similarly, this enables us to manage the impress service in the deploy playbook
+    # and in live debugging without a password.
+    # NOTE: In the sudoers file, you need to specify the full path to the
+    # command, to avoid tricks where you use PATH to get around the intent!
+    - name: Enable the "impress-deployers" group to freely start and stop the impress service
+      community.general.sudoers:
+        name: impress-deployers-systemctl
+        group: impress-deployers
+        commands:
+          - /bin/systemctl status impress
+          - /bin/systemctl start impress
+          - /bin/systemctl stop impress
+          - /bin/systemctl restart impress
+        nopassword: yes
+
     - name: Install ACL, to enable us to run commands as the "impress" user
       apt:
         name: acl
@@ -124,6 +160,10 @@
         dest: /etc/profile
         line: 'PATH="/opt/ruby-3.1.4/bin:$PATH" # Added by impress deploy setup script'
 
+    - name: Install system dependencies for impress's Ruby gems
+      apt:
+        name: libmysqlclient-dev
+
     - name: Create the app folder
       file:
         path: /srv/impress
@@ -132,10 +172,16 @@
         mode: "755"
         state: directory
 
-    - name: Create the app versions folder
+    - name: Create the app's "versions" folder
       become_user: impress
       file:
         path: /srv/impress/versions
+        state: directory
+
+    - name: Create the app's "shared" folder
+      become_user: impress
+      file:
+        path: /srv/impress/shared
         state: directory
 
     - name: Check for a current app version
@@ -186,9 +232,12 @@
     - name: Upload the production.env file
       become_user: impress
       copy:
-        dest: /srv/impress/production.env
+        dest: /srv/impress/shared/production.env
         src: files/production.env
         mode: "600"
+      notify:
+        - Reload systemctl
+        - Restart impress
 
     - name: Create service file for impress
       copy:
@@ -202,7 +251,8 @@
           Restart=always
           WorkingDirectory=/srv/impress/current
           ExecStart=/opt/ruby-3.1.4/bin/bundle exec puma --port=3000
-          EnvironmentFile=/srv/impress/production.env
+          Environment="RAILS_ENV=production"
+          EnvironmentFile=/srv/impress/shared/production.env
 
           ; Some security directives, adapted from Akkoma's service file, they seem like sensible defaults!
           ; Use private /tmp and /var/tmp folders inside a new file system namespace, which are discarded after the process stops.

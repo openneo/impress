@@ -1,0 +1,99 @@
+---
+- name: Deploy impress from the current local version
+  hosts: webserver
+  become: yes
+  become_user: impress
+  vars:
+    local_app_root: "{{ playbook_dir  }}/.."
+    remote_project_root: "/srv/impress"
+    # deploy:setup should have added us to the "impress-deployers" group, so we
+    # should be able to become the "impress" user without a password.
+    ansible_become_password: ""
+  tasks:
+    - name: Generate a version name from the current timestamp
+      command: date '+%Y-%m-%d-%s'
+      register: new_app_version
+
+    - name: Print out the new version name
+      debug:
+        msg: "Deploying new version: {{ new_app_version.stdout }}"
+
+    - name: Save new remote folder path to a variable
+      set_fact:
+        remote_app_root: "{{ remote_project_root }}/versions/{{ new_app_version.stdout }}"
+
+    - name: Create new remote folder for the new version
+      file:
+        path: "{{ remote_app_root }}"
+        state: directory
+
+    - name: Copy local app's source files to new remote folder
+      ansible.posix.synchronize:
+        src: "{{ local_app_root }}/"
+        dest: "{{ remote_app_root }}"
+        rsync_opts:
+          - "--exclude=.git"
+          - "--filter=':- .gitignore'"
+
+    - name: Configure Bundler to run in deployment mode
+      command:
+        chdir: "{{ remote_app_root }}"
+        cmd: /opt/ruby-3.1.4/bin/bundle config set --local deployment true
+
+    # This ensures that, while attempting our current deploy, we don't
+    # accidentally delete gems out from under the currently-running version.
+    # NOTE: From reading the docs, I thiink this is the default behavior, but
+    # I can't be sure? Rather than deep-dive to find out, I'd rather just set
+    # it, to be clear about the default(?) behavior we're depending on.
+    - name: Configure Bundler to *not* clean up old gems when installing
+      command:
+        chdir: "{{ remote_app_root }}"
+        cmd: /opt/ruby-3.1.4/bin/bundle config set --local clean false
+
+    # NOTE: Bundler recommends this, and they're pretty smart about it: if the
+    # Gemfile changes, this shouldn't disrupt the currently-running version,
+    # because we won't clean up its now-unused gems yet, and if we upgrade a
+    # gem it'll install *both* versions of the gem until we clean up.
+    - name: Configure Bundler to use the bundle folder shared by all app versions
+      command:
+        chdir: "{{ remote_app_root }}"
+        cmd: "/opt/ruby-3.1.4/bin/bundle config set --local path {{ remote_project_root}}/shared/bundle"
+
+    - name: Run `bundle install` to install dependencies in remote folder
+      command:
+        chdir: "{{ remote_app_root }}"
+        cmd: /opt/ruby-3.1.4/bin/bundle install
+
+    - name: Update the `current` folder to point to the new version
+      file:
+        src: "{{ remote_app_root }}"
+        dest: /srv/impress/current
+        state: link
+
+    # NOTE: This uses the passwordless sudo rule we set up in deploy:setup.
+    # We write it as a command rather than using the built-in `systemd` Ansible
+    # module, to make sure we're invoking it exactly as we wrote in that rule.
+    # TODO: I'm not sure why it works to write `sudo` in the command instead of
+    # `become_user: root`, which complains about the missing sudo password, which
+    # we already fixed for the rest of the playbook I thought?
+    - name: Restart the app
+      become: no
+      command: sudo systemctl restart impress
+
+    - name: Clean up gems no longer used in the current app version
+      command:
+        chdir: "{{ remote_app_root }}"
+        cmd: /opt/ruby-3.1.4/bin/bundle clean
+
+    - name: Find older app versions to clean up
+      # Print out all but the 5 last-recently-updated versions.
+      command:
+        chdir: "{{ remote_project_root }}/versions"
+        cmd: bash -c 'ls -t | tail -n +6'
+      register: versions_to_clean_up
+
+    - name: Clean up older versions
+      file:
+        path: "{{ remote_project_root }}/versions/{{ item }}"
+        state: absent
+      with_items: "{{ versions_to_clean_up.stdout_lines }}"
