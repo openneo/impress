@@ -19,6 +19,7 @@ gem 'sass-rails', '~> 5.0', '>= 5.0.7'
 gem 'compass-rails', '~> 3.1'
 gem 'uglifier', '~> 4.2'
 gem 'react-rails', '~> 2.7', '>= 2.7.1'
+gem 'jsbundling-rails', '~> 1.1'
 
 # For authentication.
 gem 'devise', '~> 4.9', '>= 4.9.2'
@@ -78,5 +79,3 @@ group :test do
   gem 'factory_girl_rails', '~> 4.9'
   gem 'rspec-rails', '~> 2.0.0.beta.22'
 end
-
-gem "jsbundling-rails", "~> 1.1"
