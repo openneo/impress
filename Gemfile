@@ -69,11 +69,6 @@ group :development do
   gem 'rvm-capistrano', '~> 1.5.6', require: false
 end
 
-# For production caching.
-group :production do
-  gem 'memcache-client', '~> 1.8.5', :require => 'memcache'
-end
-
 # For testing.
 group :test do
   gem 'factory_girl_rails', '~> 4.9'

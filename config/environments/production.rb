@@ -32,7 +32,7 @@ Rails.application.configure do
   # config.logger = SyslogLogger.new
 
   # Use a different cache store in production
-  config.cache_store = :mem_cache_store, { namespace: "openneo-impress-rails" }
+  # config.cache_store = :mem_cache_store, { namespace: "openneo-impress-rails" }
 
   # Disable Rails's static asset server
   # In production, Apache or nginx will already do this
