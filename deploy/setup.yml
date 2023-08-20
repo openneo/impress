@@ -252,6 +252,7 @@
           WorkingDirectory=/srv/impress/current
           ExecStart=/opt/ruby-3.1.4/bin/bundle exec puma --port=3000
           Environment="RAILS_ENV=production"
+          Environment="EXECJS_RUNTIME=Disabled" ; to save us from installing Node
           EnvironmentFile=/srv/impress/shared/production.env
 
           ; Some security directives, adapted from Akkoma's service file, they seem like sensible defaults!
