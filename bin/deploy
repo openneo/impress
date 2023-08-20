@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Deploy a new version to production, using the Ansible playbook in `deploy/deploy.yml`.
+$(dirname $0)/deploy:precompile && \
+  $(dirname $0)/deploy:push

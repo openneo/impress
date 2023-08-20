@@ -17,7 +17,7 @@ gem 'dotenv-rails', '~> 2.8', '>= 2.8.1'
 gem 'haml', '~> 6.1', '>= 6.1.1'
 gem 'sass-rails', '~> 5.0', '>= 5.0.7'
 gem 'compass-rails', '~> 3.1'
-gem 'uglifier', '~> 4.2'
+gem 'terser', '~> 1.1', '>= 1.1.17'
 gem 'react-rails', '~> 2.7', '>= 2.7.1'
 gem 'jsbundling-rails', '~> 1.1'
 

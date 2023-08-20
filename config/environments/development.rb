@@ -58,6 +58,13 @@ Rails.application.configure do
 
   config.react.variant = :development
 
+  # Don't use the assets precompiled for production; recompile live instead.
+  # HACK: We do this by just telling it that dev assets belong in a special
+  # folder, so if you run precompile in development it'll look there instead,
+  # as recommended by the Rails guide. But I don't actually use that irl!
+  # https://guides.rubyonrails.org/v7.0.7/asset_pipeline.html#local-precompilation
+  config.assets.prefix = "/dev-assets"
+
   # Fix file reloading in a Vagrant environment.
   # The `ActiveSupport::EventedFileUpdateChecker` is faster, but doesn't work
   # correctly for Vagrant's networked folders!

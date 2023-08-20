@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+# Precompile the assets for production.
+RAILS_ENV=production $(dirname $0)/rails assets:precompile

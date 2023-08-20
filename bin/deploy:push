@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Deploy a new version to production, using the Ansible playbook in `deploy/deploy.yml`.
+# This skips the build step that normally runs when you just call `bin/deploy`.
+ansible-playbook -i deploy/inventory.cfg deploy/deploy.yml

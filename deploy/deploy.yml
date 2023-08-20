@@ -27,11 +27,14 @@
         path: "{{ remote_app_root }}"
         state: directory
 
+    # NOTE: We skip most gitignored files, except for public/assets/*, which
+    # contains the assets we precompiled for production.
     - name: Copy local app's source files to new remote folder
       ansible.posix.synchronize:
         src: "{{ local_app_root }}/"
         dest: "{{ remote_app_root }}"
         rsync_opts:
+          - "--include=/public/assets/*"
           - "--exclude=.git"
           - "--filter=':- .gitignore'"
 
