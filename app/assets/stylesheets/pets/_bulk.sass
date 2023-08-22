@@ -1,3 +1,6 @@
+@import "../partials/clean/constants"
+@import "../partials/clean/mixins"
+
 body.pets-bulk
   #needed-items-form, #bulk-pets-form
     text-align: center
@@ -68,7 +71,17 @@ body.pets-bulk
     
     textarea
       +inline-block
-      @extend input[type=text]
+
+      // NOTE: This was previously `@extend input[type=text]`,
+      // I copied it in from _layout.sass!
+      border-radius: 3px
+      background: #fff
+      border: 1px solid $input-border-color
+      color: $text-color + #444444
+      padding: .25em
+      &:focus, &:active
+        color: inherit
+
       display: inline
       font: inherit
       height: 1.5em
@@ -96,10 +109,11 @@ body.pets-bulk
         &.failed
           background: $error-bg-color
       img
-        @extend .inline-image
         float: left
         height: 50px
         width: 50px
+        margin-right: 1em
+        vertical-align: middle
 
   &.js
     .noscript
