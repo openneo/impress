@@ -28,7 +28,7 @@
   },
   "scripts": {
     "build": "yarn build:base --minify",
-    "build:base": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds --public-path=/assets --loader:.js=jsx --loader:.png=file --loader:.svg=file --loader:.min.js=text",
+    "build:base": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds --public-path=/assets --asset-names=[name]-[hash].digested --loader:.js=jsx --loader:.png=file --loader:.svg=file --loader:.min.js=text",
     "dev": "yarn build:base --watch"
   }
 }
