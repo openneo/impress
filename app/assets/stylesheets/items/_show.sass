@@ -140,7 +140,8 @@ body.items-show
       display: inline
     
     ul
-      +comma-delimited-list
+      li::after
+        content: ", "
       
       li:last-child::after
         content: "."

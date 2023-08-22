@@ -1,7 +1,3 @@
-=box-sizing($bs)
-  $bs: unquote($bs)
-  +experimental(box-sizing, $bs, -moz, -webkit, not -o, -ms, not -khtml, official)
-
 =clearfix
   overflow: hidden
   display: inline-block
@@ -36,7 +32,7 @@
 
 =awesome-button
   /* http://www.zurb.com/blog_uploads/0000/0617/buttons-03.html
-  +border-radius(5px)
+  border-radius: 5px
   +awesome-button-color(#006400)
   border: 0
   display: inline-block
@@ -56,7 +52,7 @@
     transform: translateY(1px)
 
 =reset-awesome-button
-  +border-radius(0)
+  border-radius: 0
   background: transparent
   display: inline
   padding: 0

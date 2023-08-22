@@ -22,10 +22,6 @@ $outfit-header-padding: 24px
 $outfit-content-width: $sidebar-unit-inner-width - $outfit-thumbnail-size - $outfit-thumbnail-margin - 32px
 $outfit-content-inner-width: $outfit-content-width - $outfit-header-padding
 
-=user-select($select)
-  select: unquote($select)
-  +experimental(user-select, $select, -moz, -webkit, not -o, not -ms, -khtml, official)
-
 =active-mode
   color: $text-color
   font-weight: bold
@@ -142,7 +138,7 @@ body.outfits-edit
         // #preview-download-image
           // display: inline-block
   #preview-mode-toggle
-    +border-radius(.5em)
+    border-radius: .5em
     border: 1px solid $module-border-color
     color: $soft-text-color
     font-size: 85%
@@ -228,7 +224,7 @@ body.outfits-edit
     position: absolute
     width: 100%
   #no-assets-full-message
-    +border-radius(5px)
+    border-radius: 5px
     background: $error-bg-color + #111111
     border: 1px solid $error-border-color + #111111
     color: $error-color + #111111
@@ -239,7 +235,7 @@ body.outfits-edit
     top: -9999px
     width: 30em
   #preview-search
-    +border-radius(8px)
+    border-radius: 8px
     border: 1px solid $soft-border-color
     box-sizing: border-box
     clear: both
@@ -342,7 +338,7 @@ body.outfits-edit
     $fullscreen-search-border: 1px 1px 0
     height: 100%
     #container
-      +box-sizing(border-box)
+      box-sizing: border-box
       height: 100%
       margin: 0 auto
       min-width: 800px
@@ -431,7 +427,7 @@ body.outfits-edit
       +opacity(0.5)
 
   .object-info
-    +border-radius(12px)
+    border-radius: 12px
     +opacity(0.75)
     background: #aaa
     color: #fff
@@ -659,7 +655,7 @@ body.outfits-edit
     
     #preview-sharing-url-formats
       +sidebar-view-child
-      +user-select(none)
+      user-select: none
       // remove whitespace between inline-block elements
       display: none
       font-size: 0
@@ -682,13 +678,13 @@ body.outfits-edit
           font-weight: bold
         
         &:first-child
-          +border-top-left-radius(5px)
-          +border-bottom-left-radius(5px)
+          border-top-left-radius: 5px
+          border-bottom-left-radius: 5px
           border-left-width: 1px
         
         &:last-child
-          +border-top-right-radius(5px)
-          +border-bottom-right-radius(5px)
+          border-top-right-radius: 5px
+          border-bottom-right-radius: 5px
           border-right-color: $module-border-color
     
     #preview-sharing-thumbnail-wrapper
@@ -769,7 +765,7 @@ body.outfits-edit
       +sidebar-navbar-selected
   
   #preview-sidebar-navbar
-    +border-radius($sidebar-border-radius $sidebar-border-radius 0 0)
+    border-radius: $sidebar-border-radius $sidebar-border-radius 0 0
     +clearfix
     +header-text
     background: $module-bg-color
@@ -790,7 +786,7 @@ body.outfits-edit
         border-left: 0
   
   #preview-sidebar-content
-    +border-radius(0 0 $sidebar-border-radius $sidebar-border-radius)
+    border-radius: 0 0 $sidebar-border-radius $sidebar-border-radius
     border: 1px solid $soft-border-color
     border-top: 0
     height: 300px

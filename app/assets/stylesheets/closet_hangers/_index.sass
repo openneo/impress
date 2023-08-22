@@ -32,9 +32,11 @@ body.closet_hangers-index
     min-height: image-height("neomail.png")
 
     a
-      +hover-link
       color: inherit
       margin-right: .5em
+      text-decoration: none
+      &:hover
+        text-decoration: underline
 
     a, > form
       background:
@@ -278,7 +280,7 @@ body.closet_hangers-index
       border-bottom: 0
 
     &.droppable-active
-      +border-radius(1em)
+      border-radius: 1em
       +module
       border-bottom-width: 1px
       border-style: dotted

@@ -1,6 +1,3 @@
-@import "compass/css3/border-radius"
-@import "compass/css3/inline-block"
-
 body.closet_hangers-petpage
   +secondary-nav
 
@@ -9,7 +6,7 @@ body.closet_hangers-petpage
 
   #petpage-closet-lists
     +clearfix
-    +border-radius(10px)
+    border-radius: 10px
     border: 1px solid $soft-border-color
     margin-bottom: 1.5em
     padding: .5em 1.5em
@@ -18,7 +15,7 @@ body.closet_hangers-petpage
       margin: .25em 0
     
     h4
-      +inline-block
+      display: inline-block
       vertical-align: middle
       
       &::after
@@ -30,7 +27,7 @@ body.closet_hangers-petpage
       padding: 0
     
       li
-        +inline-block
+        display: inline-block
         font-size: 85%
         margin: .25em .5em
         padding: 1px
@@ -40,7 +37,7 @@ body.closet_hangers-petpage
       
         &.checked
           background: $module-bg-color
-          +border-radius(3px)
+          border-radius: 3px
           border: 1px solid $module-border-color
           padding: 0
         
