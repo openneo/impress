@@ -7,9 +7,8 @@ PETS_THROTTLE_MESSAGE = "We've received a lot of pet names from you " +
                         "recently, so we're giving our servers a break. Try " +
                         "again in a minute or so. Thanks!"
 
-Rack::Attack.throttled_response = lambda do |env|
-  if env['rack.attack.matched'] == 'pets/ip'
-    req = ActionDispatch::Request.new(env)
+Rack::Attack.throttled_responder = lambda do |req|
+  if req.env['rack.attack.matched'] == 'pets/ip'
     if req.path.end_with?('.json')
       [503, {}, [PETS_THROTTLE_MESSAGE]]
     else
