@@ -22,7 +22,6 @@
     - if user_signed_in?
       = current_user_id_meta_tag
   %body{:class => body_class}
-    = javascript_include_tag "analytics"
     #container
       = yield :before_title
       - if content_for?(:title) && show_title_header?
