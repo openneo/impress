@@ -2,8 +2,8 @@ development:
   primary:
     adapter: mysql2
     database: openneo_impress
-    username: openneo_impress
-    password: openneo_impress
+    username: impress_dev
+    password: impress_dev
     pool: 5
     variables:
       sql_mode: TRADITIONAL
@@ -11,8 +11,8 @@ development:
   openneo_id:
     adapter: mysql2
     database: openneo_id
-    username: openneo_impress
-    password: openneo_impress
+    username: impress_dev
+    password: impress_dev
     pool: 2
     variables:
       sql_mode: TRADITIONAL
