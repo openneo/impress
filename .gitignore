@@ -3,7 +3,6 @@ db/*.sqlite3
 log/*.log
 tmp/**/*
 .env
-.vagrant
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
