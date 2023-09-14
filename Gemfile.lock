@@ -83,12 +83,6 @@ GEM
     bootsnap (1.16.0)
       msgpack (~> 1.2)
     builder (3.2.4)
-    capistrano (2.15.5)
-      highline
-      net-scp (>= 1.0.0)
-      net-sftp (>= 2.0.0)
-      net-ssh (>= 2.0.14)
-      net-ssh-gateway (>= 1.1.0)
     concurrent-ruby (1.2.2)
     connection_pool (2.2.5)
     crass (1.0.6)
@@ -126,7 +120,6 @@ GEM
       temple (>= 0.8.2)
       thor
       tilt
-    highline (1.7.2)
     http-accept (1.7.0)
     http-cookie (1.0.5)
       domain_name (~> 0.5)
@@ -164,15 +157,8 @@ GEM
       net-protocol
     net-protocol (0.2.1)
       timeout
-    net-scp (1.0.4)
-      net-ssh (>= 1.99.1)
-    net-sftp (2.1.2)
-      net-ssh (>= 2.6.5)
     net-smtp (0.3.3)
       net-protocol
-    net-ssh (2.9.2)
-    net-ssh-gateway (1.2.0)
-      net-ssh (>= 2.6.5)
     netrc (0.11.0)
     nio4r (2.5.9)
     nokogiri (1.15.3)
@@ -252,8 +238,6 @@ GEM
       rspec-expectations (~> 2.0.1)
     rspec-rails (2.0.1)
       rspec (~> 2.0.0)
-    rvm-capistrano (1.5.6)
-      capistrano (~> 2.15.4)
     sanitize (6.0.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -304,7 +288,6 @@ PLATFORMS
 DEPENDENCIES
   RocketAMF!
   bootsnap (~> 1.16)
-  capistrano (~> 2.15.5)
   devise (~> 4.9, >= 4.9.2)
   devise-encryptable (~> 0.2.0)
   dotenv-rails (~> 2.8, >= 2.8.1)
@@ -326,7 +309,6 @@ DEPENDENCIES
   record_tag_helper (~> 1.0, >= 1.0.1)
   rest-client (~> 2.1)
   rspec-rails (~> 2.0.0.beta.22)
-  rvm-capistrano (~> 1.5.6)
   sanitize (~> 6.0, >= 6.0.2)
   sass-rails (~> 6.0)
   sprockets (~> 4.2)
