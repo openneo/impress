@@ -76,9 +76,10 @@
     # NOTE: This uses the passwordless sudo rule we set up in deploy:setup.
     # We write it as a command rather than using the built-in `systemd` Ansible
     # module, to make sure we're invoking it exactly as we wrote in that rule.
-    # TODO: I'm not sure why it works to write `sudo` in the command instead of
-    # `become_user: root`, which complains about the missing sudo password, which
-    # we already fixed for the rest of the playbook I thought?
+    #
+    # NOTE: We use `sudo` instead of `become_user: root`, because we don't have
+    # permission to *become* the root user; we only have permission to run this
+    # one command as them.
     - name: Restart the app
       become: no
       command: sudo systemctl restart impress
