@@ -4,9 +4,6 @@ require 'uri'
 class SwfAsset < ApplicationRecord
   # We use the `type` column to mean something other than what Rails means!
   self.inheritance_column = nil
-  
-  PUBLIC_ASSET_DIR = File.join('swfs', 'outfit')
-  LOCAL_ASSET_DIR = Rails.root.join('public', PUBLIC_ASSET_DIR)
 
   IMAGE_SIZES = {
     :small => [150, 150],
@@ -18,10 +15,6 @@ class SwfAsset < ApplicationRecord
   has_many :parent_swf_asset_relationships
   
   scope :includes_depth, -> { includes(:zone) }
-
-  def local_swf_path
-    LOCAL_ASSET_DIR.join(local_path_within_outfit_swfs)
-  end
 
   def swf_image_dir
     @swf_image_dir ||= Rails.root.join('tmp', 'asset_images_before_upload', self.id.to_s)
@@ -100,10 +93,6 @@ class SwfAsset < ApplicationRecord
     self.body_id = new_body_id
   end
 
-  def local_url
-    '/' + File.join(PUBLIC_ASSET_DIR, local_path_within_outfit_swfs)
-  end
-
   def as_json(options={})
     json = {
       :id => remote_id,
@@ -119,11 +108,6 @@ class SwfAsset < ApplicationRecord
       :has_image => true,
       :images => images
     }
-    if options[:for] == 'wardrobe'
-      json[:local_path] = local_url
-    else
-      json[:local_url] = local_url
-    end
     json[:parent_id] = options[:parent_id] if options[:parent_id]
     json
   end
@@ -179,31 +163,6 @@ class SwfAsset < ApplicationRecord
     ))
   end
 
-  before_create do
-    uri = URI.parse(url)
-    begin
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true if uri.instance_of? URI::HTTPS
-      response = http.get(uri.request_uri)
-    rescue Exception => e
-      raise DownloadError, e.message
-    end
-    if response.is_a? Net::HTTPSuccess
-      new_local_path = File.join(LOCAL_ASSET_DIR, local_path_within_outfit_swfs)
-      new_local_dir = File.dirname new_local_path
-      FileUtils.mkdir_p new_local_dir
-      File.binwrite(new_local_path, response.body)
-    else
-      begin
-        response.error!
-      rescue Exception => e
-        raise DownloadError, "Error loading SWF at #{url}: #{e.message}"
-      else
-        raise DownloadError, "Error loading SWF at #{url}. Response: #{response.inspect}"
-      end
-    end
-  end
-
   before_save do
     # If an asset body ID changes, that means more than one body ID has been
     # linked to it, meaning that it's probably wearable by all bodies.
@@ -211,14 +170,4 @@ class SwfAsset < ApplicationRecord
   end
 
   class DownloadError < Exception;end
-
-  private
-
-  def local_path_within_outfit_swfs
-    uri = URI.parse(url)
-    pieces = uri.path.split('/')
-    relevant_pieces = pieces[4..7]
-    relevant_pieces.unshift pieces[2]
-    File.join(relevant_pieces)
-  end
 end
