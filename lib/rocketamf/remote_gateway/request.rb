@@ -80,6 +80,7 @@ module RocketAMF
       def send_request(uri, req)
         begin
           http = Net::HTTP.new(uri.host, uri.port)
+          http.use_ssl = true if uri.instance_of? URI::HTTPS
           return http.request(req)
         rescue Exception => e
           raise ConnectionError, e.message

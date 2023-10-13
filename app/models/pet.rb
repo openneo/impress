@@ -2,7 +2,7 @@ require 'rocketamf/remote_gateway'
 require 'ostruct'
 
 class Pet < ApplicationRecord
-  NEOPETS_URL_ORIGIN = ENV['NEOPETS_URL_ORIGIN'] || 'http://www.neopets.com'
+  NEOPETS_URL_ORIGIN = ENV['NEOPETS_URL_ORIGIN'] || 'https://www.neopets.com'
   GATEWAY_URL = NEOPETS_URL_ORIGIN + '/amfphp/gateway.php'
   PET_VIEWER = RocketAMF::RemoteGateway.new(GATEWAY_URL).
     service('CustomPetService').action('getViewerData')
