@@ -3,9 +3,6 @@ class PetsController < ApplicationController
   rescue_from PetType::DownloadError, SwfAsset::DownloadError, :with => :asset_download_error
   rescue_from Pet::DownloadError, :with => :pet_download_error
 
-  protect_from_forgery except: :submit
-  before_action :local_only, only: :submit
-
   def load
     if params[:name] == '!'
       redirect_to roulette_path
@@ -29,13 +26,6 @@ class PetsController < ApplicationController
         end
       end
     end
-  end
-
-  def submit
-    viewer_data = HashWithIndifferentAccess.new(JSON.parse(params[:viewer_data]))
-    @pet = Pet.from_viewer_data(viewer_data, :item_scope => Item.includes(:translations))
-    @user = params[:user_id].present? ? User.find(params[:user_id]) : nil
-    render json: {points: contribute(@user, @pet)}
   end
   
   protected

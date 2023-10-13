@@ -45,7 +45,6 @@ OpenneoImpressItems::Application.routes.draw do
   get '/users/current-user/outfits', to: redirect('/your-outfits')
 
   post '/pets/load' => 'pets#load', :as => :load_pet
-  post '/pets/submit' => 'pets#submit', :method => :post
   get '/modeling' => 'pets#bulk', :as => :bulk_pets
 
   devise_for :auth_users
