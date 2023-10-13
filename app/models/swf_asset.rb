@@ -148,6 +148,7 @@ class SwfAsset < ApplicationRecord
     self.type = 'object'
     self.zone_id = data[:zone_id].to_i
     self.url = data[:asset_url]
+    self.zones_restrict = ""
   end
 
   def mall_data=(data)

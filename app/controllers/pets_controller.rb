@@ -47,7 +47,6 @@ class PetsController < ApplicationController
       pet.save!
       points = true
     end
-    pet.translate_items
     points
   end
   
