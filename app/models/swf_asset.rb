@@ -7,10 +7,6 @@ class SwfAsset < ApplicationRecord
   
   PUBLIC_ASSET_DIR = File.join('swfs', 'outfit')
   LOCAL_ASSET_DIR = Rails.root.join('public', PUBLIC_ASSET_DIR)
-  # This is the URL origin we should use when loading from images.neopets.com.
-  # It can be overridden in .env as `NEOPETS_IMAGES_URL_ORIGIN`, to use our
-  # asset proxy instead.
-  NEOPETS_IMAGES_URL_ORIGIN = ENV['NEOPETS_IMAGES_URL_ORIGIN'] || 'http://images.neopets.com'
 
   IMAGE_SIZES = {
     :small => [150, 150],
@@ -184,16 +180,10 @@ class SwfAsset < ApplicationRecord
   end
 
   before_create do
-    # HACK: images.neopets.com no longer accepts requests over `http://`, and
-    #       our dependencies don't support the version of HTTPS they want. So,
-    #       we replace images.neopets.com with the NEOPETS_IMAGES_URL_ORIGIN
-    #       specified in the secret `.env` file. (At time of writing, that's
-    #       our proxy: `http://images.neopets-asset-proxy.openneo.net`.)
-    modified_url = url.sub(/^https?:\/\/images.neopets.com/, NEOPETS_IMAGES_URL_ORIGIN)
-
-    uri = URI.parse(modified_url)
+    uri = URI.parse(url)
     begin
       http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true if uri.instance_of? URI::HTTPS
       response = http.get(uri.request_uri)
     rescue Exception => e
       raise DownloadError, e.message
@@ -201,11 +191,8 @@ class SwfAsset < ApplicationRecord
     if response.is_a? Net::HTTPSuccess
       new_local_path = File.join(LOCAL_ASSET_DIR, local_path_within_outfit_swfs)
       new_local_dir = File.dirname new_local_path
-      content = +response.body
       FileUtils.mkdir_p new_local_dir
-      File.open(new_local_path, 'w') do |f|
-        f.print content
-      end
+      File.binwrite(new_local_path, response.body)
     else
       begin
         response.error!
