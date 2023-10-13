@@ -562,7 +562,7 @@ class Item < ApplicationRecord
     # Collect existing relationships
     existing_relationships_by_item_id_and_swf_asset_id = {}
     existing_items = scope.where(id: item_ids).
-      include(:parent_swf_asset_relationships)
+      includes(:parent_swf_asset_relationships)
     existing_items.each do |item|
       items[item.id] = item
       relationships_by_swf_asset_id = {}
