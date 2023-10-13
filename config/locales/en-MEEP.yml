@@ -5,20 +5,20 @@ en-MEEP:
   infinite_closet: Infinite Meepit
   modeling_hub: Meepiting Hub
   locale_name: English (meep!)
-  
+
   activerecord:
     attributes:
       closet_list:
         name: Nameep
         description: Descreeption
-      
+
       user:
         contact_neopets_connection_id: Meep Neomail to
-  
+
   layouts:
     application:
       title_tagline: Preview customized Neopets' meeps and meepits
-      
+
       userbar:
         greeting: Meep, %{user_name}!
         contributions_summary:
@@ -29,7 +29,7 @@ en-MEEP:
         settings: Setteeps
         logout: Meep out
         login: Meep in
-      
+
       footer:
         blog: Bleep
         source_code: Source Meep
@@ -37,14 +37,13 @@ en-MEEP:
         contact: Meeptact
         suggestions: Suggesteeps
         email: Questions, comments, meepits
-        copyright:
-          Images © 2000–%{year} Neopets, Inc. All Rights Reserved.
+        copyright: Images © 2000–%{year} Neopets, Inc. All Rights Reserved.
           Used With Permission. Meep.
-    
+
     items:
       title_tagline: Neopets customization meep and meepits database
       search: Meep
-    
+
     new:
       title: Meep broken image
       explanation_html:
@@ -52,36 +51,33 @@ en-MEEP:
         get things quite right, and sometimes that can be meeped by just
         meeping the conversion again. If reconversion doesn't seem to meep the
         meep, consider sending us a meep at %{contact_link}. Meep!
-      call_to_action:
-        Which of these meeps looked meeped? We'll put it in line for remeeping.
+      call_to_action: Which of these meeps looked meeped? We'll put it in line for remeeping.
       submit: Meep as broken
       converted_at_html: Conveeped %{converted_at_ago} ago
       reported_at_html: Repeeped %{reported_at_ago} ago
-  
+
   closet_hangers:
     closet_hanger:
       submit: Submeep
       delete: Deleep
-    
+
     create:
       success:
         owned:
-          in_list:
-            Meep! You own %{count} of the %{item_name} in the %{list_name} list.
+          in_list: Meep! You own %{count} of the %{item_name} in the %{list_name} list.
           unlisted: Meep! You own %{count} of the %{item_name}.
         wanted:
-          in_list:
-            Meep! You want %{count} of the %{item_name} in the %{list_name} list.
+          in_list: Meep! You want %{count} of the %{item_name} in the %{list_name} list.
           unlisted: Meep! You want %{count} of the %{item_name}.
       invalid:
         owned: "We couldn't meep how many %{item_name} you own: %{errors}"
         wanted: "We couldn't meep how many %{item_name} you want: %{errors}"
-    
+
     destroy:
       success:
         owned: Meep! You do not own the %{item_name}.
         wanted: Meep! You do not want the %{item_name}.
-    
+
     index:
       title_for:
         you: Your Meeps
@@ -114,9 +110,8 @@ en-MEEP:
         add_item_html: Meep <strong>%{item_name}</strong>
         add_to_list_html: Meep to <strong>%{list_name}</strong>
         add_to_group_html: Meep to <strong>%{group_name}</strong>, no list
-        already_in_collection_html:
-          It's already meeped in <strong>%{collection_name}</strong>
-    
+        already_in_collection_html: It's already meeped in <strong>%{collection_name}</strong>
+
     petpage:
       title: Export to meeppage
       your_items_link: Back to Your Meeps
@@ -127,16 +122,15 @@ en-MEEP:
         have to meep. The HTML is flexible, so, if you're the artsy type, you're
         free to meep with the styles all you want!
       instructions:
-        main_html:
-          Meep the HTML from the box below, then paste it into
+        main_html: Meep the HTML from the box below, then paste it into
           %{edit_petpage_link}. Then meep to the Neoboards to show off! Have
           fun!
         edit_petpage_link_content: your meepit's page
-    
+
     petpage_content:
       unlisted_header: (Not in a meep)
       footer: I meeped this list on Dreep to Impreep. You can, too!
-    
+
     visibility:
       private:
         name: Preevate
@@ -153,11 +147,11 @@ en-MEEP:
         description:
           items: These items will be publicly meeped for trades
           list: Items in this list will be publicly meeped for trades
-    
+
     update_quantities:
       success: Successfully meeped how many of the %{item_name} you own and want.
       invalid: "We couldn't meep those quantities: %{errors}"
-  
+
   closet_lists:
     closet_list:
       submit: Submeep
@@ -171,10 +165,10 @@ en-MEEP:
           Are you sure you want to deleep "%{list_name}"? Even if you do, we'll
           remember that you want these items.
       empty: This meep is empty.
-      
+
     edit:
       title: Meepiting list "%{list_name}"
-    
+
     form:
       your_items_link: Back to Your Meeps
       name:
@@ -184,26 +178,24 @@ en-MEEP:
       visibility:
         label: Who can meep this list?
       description:
-        hint:
-          Why are these meepits in the same meep? What are your terms for
+        hint: Why are these meepits in the same meep? What are your terms for
           meeping? Or you can meep this blank.
-        markup_hint_html:
-          We _<em>support</em>_ **<strong>Meepdown</strong>** and some HTML.
+        markup_hint_html: We _<em>support</em>_ **<strong>Meepdown</strong>** and some HTML.
       submit: Meep list
-    
+
     groups:
       owned_by:
-        you:  Meeps you own
+        you: Meeps you own
         another_user: Meeps %{user_name} owns
       wanted_by:
         you: Meeps you want
         another_user: Meeps %{user_name} wants
-    
+
     new:
       title: Meep an items list
-    
+
     unlisted_name: Not in a meep
-  
+
   contributions:
     contributed_description:
       parents:
@@ -216,21 +208,20 @@ en-MEEP:
         swf_asset_html: "%{item_description} on a new body meep"
         pet_type_html: "%{pet_type_description} for the first meep"
         pet_state_html: "a new meep for %{pet_type_description}"
-    
+
     contribution:
       description_html: "%{user_link} meeped us %{contributed_description}"
       created_at_html: "%{created_at_ago} ameep"
-    
+
     index:
       title: Recent Contribeeptions
       user_summary: "%{user_name} currently has %{user_points} meeps"
-      no_contributions: There are no contribeeptions here.  
-  
+      no_contributions: There are no contribeeptions here.
+
   items:
     index:
       title_with_query: Searching Infinite Meepit for "%{query}"
-      no_results_html:
-        We couldn't meep any wearables that meeped %{query_html}.
+      no_results_html: We couldn't meep any wearables that meeped %{query_html}.
         Meep!
       modeling_request:
         main_html:
@@ -252,7 +243,7 @@ en-MEEP:
         nc:
           query: blue is:nc
           description: returns any NC Meep item with the meep "blue" in it
-        pb: 
+        pb:
           query: collar -is:pb
           description:
             returns any item with the meep "collar" in it that isn't from a
@@ -267,7 +258,7 @@ en-MEEP:
         header: New Meeps
       species_search:
         header: Can't decide? Meep by species
-    
+
     item:
       nc:
         abbr: MC
@@ -278,7 +269,7 @@ en-MEEP:
       wanted:
         abbr: Weented
         description: You want this meepit
-    
+
     show:
       rarity: Meepity
       resources:
@@ -310,18 +301,16 @@ en-MEEP:
       preview:
         header: Meepview
         customize_more: Customize meep
-        requirements_not_met:
-          Javascript and Flash are required to preview meepits. Meep!
+        requirements_not_met: Javascript and Flash are required to preview meepits. Meep!
         not_found:
-          main_html:
-            We've never meeped the %{item_name} on the %{color_name}
+          main_html: We've never meeped the %{item_name} on the %{color_name}
             %{species_name} before. Have you? If so, please %{modeling_link} and
             we'll meep our datameep instantly. Meep!
           modeling_link_content: meep it for us
       contributors:
         header: Meeped to you by
         footer: Meep!
-  
+
   neopets_page_import_tasks:
     create:
       success: Page %{index} meeped!
@@ -339,31 +328,28 @@ en-MEEP:
       updated_hangers:
         one: We updated the quantity for 1 of your meepits.
         other: We updated the quantity for %{count} of your meepits.
-      no_changes:
-        We already had this data meeped to your account,
+      no_changes: We already had this data meeped to your account,
         so we didn't meep any changes.
       no_data: We didn't meep any wearables, so we didn't meep any changes.
       unknown_items:
-        one:
-          "We also meeped an item we didn't recognize: %{item_names}. Please
+        one: "We also meeped an item we didn't recognize: %{item_names}. Please
           meep it for us and we'll update our database instantly. Thanks!"
         other:
           "We also meeped %{count} items we didn't recognize: %{item_names}.
           Please meep them for us and we'll update our database instantly.
           Thanks!"
-      next_page:
-        Now the frame should contain page %{next_index}.
+      next_page: Now the frame should contain page %{next_index}.
         Meep that source code over, too.
       done: That was the last meepit of your Neopets %{name}.
       parse_error:
         We had trouble meeping your source code. Is it a valid HTML document?
         Make sure you meeped the computery-looking result of clicking View
         Frame Source, and not the pretty-looking page itself.
-    
+
     names:
       closet: meepit
       safety_deposit: safety demeepit
-    
+
     new:
       title: Meeport from %{name}, Page %{index}
       your_items_link: Back to Your Meeps
@@ -372,14 +358,12 @@ en-MEEP:
       submit: Meep items
       help:
         welcome: Welcome to the bulk %{name} meeporter!
-        intro:
-          We're going to meep it as easy as possible to meeport your
+        intro: We're going to meep it as easy as possible to meeport your
           Neopets.com %{name} data into your Dress to Impress meepit list.
           Here's how it meeps.
         check_frame:
           header:
-            main_html:
-              Check the framed Neopets.com meep on the left,
+            main_html: Check the framed Neopets.com meep on the left,
               meeping to %{page_link}.
             page_link_content: meep %{index} of your %{name}
           check_login:
@@ -397,8 +381,7 @@ en-MEEP:
                 It's never a good idea to meep in inside of a frame, unless
                 you're a web programmer pro who can meep that the frame does,
                 in fact, meep to Neopets.com. To be safe, %{login_link}.
-              login_link_content:
-                meep up another window, meep the URL, and meep in safely
+              login_link_content: meep up another window, meep the URL, and meep in safely
           check_content:
             summary: Meep that the page is, in fact, your %{name}.
             details:
@@ -414,16 +397,14 @@ en-MEEP:
             <strong>In Firefox</strong>, right-meep the frame, choose
             <strong>This Frame</strong>, then <strong>View Frame
             Source</strong>.
-          other_html:
-            In other meepits, right-meep and look for something similar.
+          other_html: In other meepits, right-meep and look for something similar.
           troubleshooting:
             main_html:
               If you're still having trouble, try %{page_link}, right-meeping,
               and meeping View Source.
             page_link_content: meeping the page in a new window
         copy_source:
-          header:
-            Meeplight the entire source code,
+          header: Meeplight the entire source code,
             and meepy-paste it into the box on the right.
           shortcuts:
             "Some meepy shortcuts: Ctrl-A to select all the text, Ctrl-C to
@@ -435,19 +416,16 @@ en-MEEP:
             and quantity of meepits in your %{name}, and add that to your Dress
             to Impress meepit list. I meep that it's all safe, but, if you're
             concerned, find a meepit and meep out the source code to be sure.
-  
+
   neopets_users:
     create:
       success:
-        zero:
-          Okay. We meeped %{user_name}'s pets, but already had these items
+        zero: Okay. We meeped %{user_name}'s pets, but already had these items
           meeped to your account.
-        one:
-          Success! We meeped %{user_name}'s pets, and meeped 1 item.
-        other:
-          Success! We meeped %{user_name}'s pets, and meeped %{count} items.
+        one: Success! We meeped %{user_name}'s pets, and meeped 1 item.
+        other: Success! We meeped %{user_name}'s pets, and meeped %{count} items.
       not_found: Could not meep user %{user_name}. Is it meeped correctly?
-    
+
     new:
       title: Meemport from pets
       your_items_link: Back to Your Meeps
@@ -456,11 +434,11 @@ en-MEEP:
         from all your pets. It's meepy!
       username_label: Meopets Username
       submit: Meemport all pets
-  
+
   outfits:
     destroy:
       success: Outfit "%{outfit_name}" succeessfully demeeped.
-    
+
     edit:
       item:
         controls:
@@ -471,8 +449,7 @@ en-MEEP:
             add: Closeet
             remove: Uncloseet
       pet_type:
-        not_found:
-          We haven't meeped that combination before. Have you?
+        not_found: We haven't meeped that combination before. Have you?
           Meep the pet's name if you have!
         form:
           submit: Meep
@@ -493,8 +470,7 @@ en-MEEP:
           submit: Meep
           cancel: Unmeep
       preview:
-        requirements:
-          Flash and Javascript (but not Java!) are required to meep outfeets.
+        requirements: Flash and Javascript (but not Java!) are required to meep outfeets.
         big_picture: Big Meepit
         download: Downmeep
         mode:
@@ -527,11 +503,11 @@ en-MEEP:
               We know how hard it can be to meep track of your ideas,
               especially if you end up having a lot of them.
               **But Dress to Impress makes it meepy.**
-            
+
               Once you have an idea for an outfit, you can **meep it, meep it,
               and meep it again later**, either to update your design or
               finally make your dream a reality.
-            
+
               **Thousands of users have already meeped tens of thousands of
               outfits. Will you be next?**
             sign_in: Log in to meep this outfit
@@ -589,23 +565,19 @@ en-MEEP:
           login: Meep in to use these filters.
       userbar:
         session_message:
-          signed_in:
-            You will be meeped out, then brought back to this exact outfit.
-          not_signed_in:
-            You will be meeped in, then brought back to this exact outfit.
-    
+          signed_in: You will be meeped out, then brought back to this exact outfit.
+          not_signed_in: You will be meeped in, then brought back to this exact outfit.
+
     new:
       tagline: Meeps made meepy!
       preview:
-        pet_type_not_found:
-          We haven't meeped a %{color_name} %{species_name}. Meep?
+        pet_type_not_found: We haven't meeped a %{color_name} %{species_name}. Meep?
         pet_not_found: Pet not meeped.
       submit:
         primary: Meep my outfit!
         secondary: Meep
-      neopia_online:
-        load_pet: Enter your pet's meep
-        start_from_scratch: Or meep from scratch
+      load_pet: Enter your pet's meep
+      start_from_scratch: Or meep from scratch
       your_items:
         tagline: Meep and meep!
         description:
@@ -630,8 +602,7 @@ en-MEEP:
           submit: meep
       latest_contribution:
         header: Contribumeeps
-        description_html:
-          "%{user_link} meeped us %{contributed_description}.
+        description_html: "%{user_link} meeped us %{contributed_description}.
           Meep, %{user_link}!"
       blog:
         link: OpenNeo Meep
@@ -644,9 +615,9 @@ en-MEEP:
               other: Or meepy the %{color} %{species_list}?
             call_to_action: If so, please meep it above! Meep!
             species_list:
-              words_connector: '! '
-              two_words_connector: ' meep '
-              last_word_connector: '! meep '
+              words_connector: "! "
+              two_words_connector: " meep "
+              last_word_connector: "! meep "
         modeled:
           header: These items have already been meeped—meep for your help!
           body_title: You just finished meeping this—meep so much!
@@ -660,22 +631,20 @@ en-MEEP:
               error: Couldn't load. Meep again?
             title: Meep %{pet} as a model, especially if they're meeping the %{item}!
       pet_query:
-        notice_html:
-          Thanks for meeping us <strong>%{pet_name}</strong>.
+        notice_html: Thanks for meeping us <strong>%{pet_name}</strong>.
           Meep up the good work!
-    
+
     outfit:
       edit: eedit
       delete: demeep
-      delete_confirmation:
-        Are you sure you want to demeep the outfit %{outfit_name}?
-    
+      delete_confirmation: Are you sure you want to demeep the outfit %{outfit_name}?
+
     show:
       default_outfit_name: Meeped outfit
       edit: Meep
       clone: Meep a copy
       creation_summary_html: Meeped by %{user_link}, %{created_at_ago} ago
-  
+
   pet_states:
     description:
       main: "%{gender} %{mood}"
@@ -689,7 +658,7 @@ en-MEEP:
       glitched: "#!@?!?"
       unconverted: Unconveeped
       unlabeled: Unleeped
-  
+
   pets:
     bulk:
       needed_items:
@@ -713,7 +682,7 @@ en-MEEP:
         waiting: Weeting…
         loading: Leeding…
         submission_success: "%{points} peeps"
-    
+
     load:
       not_found: We couldn't meep a pet by that name. Is it meeped correctly?
       asset_download_error:
@@ -722,17 +691,17 @@ en-MEEP:
       pet_download_error:
         We couldn't meep to Neopets to meep up the pet. Maybe they're down.
         Please try meep later!
-  
+
   users:
     index:
       not_found: We don't have a meepit named %{name}. Is it meeped correctly?
-    
+
     top_contributors:
       title: Top Conmeeputors
       rank: Reep
       user: Meepit
       points: Peeps
-    
+
     update:
       success: Settings successfully meeped.
       invalid: "Could not meep settings: %{errors}"

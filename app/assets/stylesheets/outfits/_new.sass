@@ -35,7 +35,7 @@ body.outfits-new
     a
       color: #0a58ca
 
-  #pet-not-found, #neopia-error
+  #pet-not-found
     display: none
 
   #outfit-forms
@@ -93,15 +93,6 @@ body.outfits-new
         font-size: 175%
       select
         font-size: 120%
-    [data-require-neopia-status=offline]
-      display: none
-    &[data-neopia-status=offline]
-      [data-require-neopia-status=online]
-        display: none
-      [data-require-neopia-status=offline]
-        display: block
-    [data-require-neopia-status=offline] .load-pet-to-wardrobe legend a
-      font-size: 85%
   #description, #top-contributors
     float: left
   #description

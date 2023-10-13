@@ -50,14 +50,6 @@ module OutfitsHelper
       content_tag(:dd, search_query_description(base, filter_key))
   end
 
-  def neopia_host
-    Rails.configuration.neopia_host
-  end
-
-  def remote_load_pet_path
-    "https://#{neopia_host}/api/1/pet/customization"
-  end
-
   def render_predicted_missing_species_by_color(species_by_color)
     key_prefix = 'outfits.new.newest_items.unmodeled.content'
 
@@ -113,17 +105,6 @@ module OutfitsHelper
   def pet_name_tag(options={})
     options = {:spellcheck => false, :id => nil}.merge(options)
     text_field_tag 'name', nil, options
-  end
-
-  def modeling_i18n_tag
-    localized_cache('modeling_i18n') do
-      modeling_i18n = {
-        modeledBodyTitle: t('.newest_items.modeled.body_title'),
-        pet: t('.newest_items.modeled.pet'),
-        neopetsUsernamesForm: t('.newest_items.modeled.neopets_usernames_form')
-      }
-      javascript_tag("var ModelingI18n = #{modeling_i18n.to_json};")
-    end
   end
 
   def prank_color_message(unfunny_human_name, artist_name, artist_url)

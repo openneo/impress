@@ -663,20 +663,8 @@ en:
       submit:
         primary: Plan my outfit!
         secondary: Go
-      neopia_online:
-        load_pet: Enter your pet's name
-        start_from_scratch: Or start from scratch
-      neopia_offline:
-        start_from_scratch: Choose a pet to get started
-        load_pet:
-          main_html: Or try your pet's name %{link}
-          link_content: (but it looks like Neopets.com is ignoring us)
-      load_pet:
-        legend: Enter your pet's name
-        submit: Plan my outfit!
-      start_from_scratch:
-        legend: Or start from scratch
-        submit: Go
+      load_pet: Enter your pet's name
+      start_from_scratch: Or start from scratch
       your_items:
         tagline: Track and trade!
         description: Make lists of the items you own and want,
@@ -718,16 +706,6 @@ en:
               last_word_connector: ", or "
         modeled:
           header: These items have already been modeled—thanks for your help!
-          body_title: You just finished modeling this—thanks so much!
-          neopets_usernames_form:
-            label: neopets username
-            submit: add
-          pet:
-            status:
-              success: Thanks! <3
-              unworn: Not wearing this item.
-              error: Couldn't load. Try again?
-            title: Submit %{pet} as a model, especially if they're wearing the %{item}!
       pet_query:
         notice_html: Thanks for showing us <strong>%{pet_name}</strong>.
           Keep up the good work!
@@ -797,7 +775,6 @@ en:
       pet_download_error:
         We couldn't connect to Neopets to look up the pet. Maybe they're down.
         Please try again later!
-      neopia_error: 'We couldn''t load that pet: "%{message}". Try again later?'
 
   swf_assets:
     links:

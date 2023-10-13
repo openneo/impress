@@ -3,7 +3,6 @@
 = advertise_campaign_progress @campaign
 
 %p#pet-not-found.alert= t 'pets.load.not_found'
-%p#neopia-error.alert= t 'pets.load.neopia_error'
 
 %section.pardon-our-dust
   = image_tag 'pardon-our-dust/worker.png', class: 'thumbnail',
@@ -23,45 +22,21 @@
     %h1= t 'app_name'
     %h2= t '.tagline'
 
-  %div{'data-require-neopia-status' => 'online'}
-    = form_tag remote_load_pet_path, method: 'GET', class: 'primary load-pet-to-wardrobe' do
-      = hidden_field_tag 'impress_user', current_user.try(:id)
-      - localized_cache action_suffix: 'outfits#new neopia_online main_load_pet_form_content' do
-        = hidden_field_tag 'redirect', "#{wardrobe_url}\#{q}"
-        %fieldset
-          %legend= t '.neopia_online.load_pet'
-          = pet_name_tag class: 'main-pet-name'
-          %button{:type => "submit"}
-            = t '.submit.primary'
+  = form_tag load_pet_path, method: 'POST', class: 'primary load-pet-to-wardrobe' do
+    = hidden_field_tag 'destination', 'wardrobe'
+    %fieldset
+      %legend= t '.load_pet'
+      = pet_name_tag class: 'main-pet-name'
+      %button{:type => "submit"}
+        = t '.submit.primary'
 
-    - localized_cache "outfits#new neopia_online start_from_scratch_form pranks_funny=#{Color.pranks_funny?}" do
-      = form_tag wardrobe_path, method: 'GET', class: 'secondary start-from-scratch', authenticity_token: false do
-        %fieldset
-          %legend= t '.neopia_online.start_from_scratch'
-          = pet_attribute_select 'color', @colors, 8
-          = pet_attribute_select 'species', @species
-          %button{:type => "submit"}
-            = t('.submit.secondary')
-
-  %div{'data-require-neopia-status' => 'offline'}
-    - localized_cache "outfits#new neopia_offline start_from_scratch_form pranks_funny=#{Color.pranks_funny?}" do
-      = form_tag wardrobe_path, method: 'GET', class: 'primary start-from-scratch', authenticity_token: false do
-        %fieldset
-          %legend= t '.neopia_offline.start_from_scratch'
-          = pet_attribute_select 'color', @colors, 8
-          = pet_attribute_select 'species', @species
-          %button{:type => "submit"}
-            = t('.submit.primary')
-
-    = form_tag remote_load_pet_path, method: 'GET', class: 'secondary load-pet-to-wardrobe' do
-      = hidden_field_tag 'impress_user', current_user.try(:id)
-      - localized_cache action_suffix: 'outfits#new neopia_offline main_load_pet_form_content' do
-        = hidden_field_tag 'redirect', "#{wardrobe_url}\#{q}"
-        %fieldset
-          %legend= t '.neopia_offline.load_pet.main_html', link: link_to(t('.neopia_offline.load_pet.link_content'), 'http://blog.openneo.net/')
-          = pet_name_tag class: 'main-pet-name'
-          %button{:type => "submit"}
-            = t '.submit.secondary'
+  = form_tag wardrobe_path, method: 'GET', class: 'secondary start-from-scratch', authenticity_token: false do
+    %fieldset
+      %legend= t '.start_from_scratch'
+      = pet_attribute_select 'color', @colors, 8
+      = pet_attribute_select 'species', @species
+      %button{:type => "submit"}
+        = t('.submit.secondary')
 
 %ul#sections
   - localized_cache :action_suffix => 'your_items_module' do
@@ -95,9 +70,7 @@
     %div
       %h4= t '.modeling_hub.tagline'
       %p= t '.modeling_hub.description'
-      = form_tag remote_load_pet_path, method: 'POST' do
-        = hidden_field_tag 'impress_user', current_user.try(:id)
-        = hidden_field_tag 'redirect', "#{root_url}\#{q}"
+      = form_tag load_pet_path, method: 'POST' do
         = pet_name_tag placeholder: t('.modeling_hub.load_pet.placeholder'),
           required: true
         = submit_tag t('.modeling_hub.load_pet.submit')
@@ -110,7 +83,6 @@
 
 #whats-new
   - if @newest_unmodeled_items.present?
-    #modeling-neopets-users{'data-usernames' => @neopets_usernames.to_json}
     %h3= t '.newest_items.unmodeled.header'
     %ul#newest-unmodeled-items
       - @newest_unmodeled_items.each do |item|
@@ -146,10 +118,6 @@
   %script#preview-pet-not-found-template{:type => 'text/x-jquery-tmpl'}
     = t '.preview.pet_not_found'
 
-- content_for :meta do
-  %meta{name: 'neopia-host', content: neopia_host}
-
 - content_for :javascripts do
   = include_javascript_libraries :jquery20, :jquery_tmpl
-  = modeling_i18n_tag
-  = javascript_include_tag 'ajax_auth', 'react', 'jquery.timeago', 'pet_query', 'modeling', 'outfits/new'
+  = javascript_include_tag 'ajax_auth', 'react', 'jquery.timeago', 'pet_query', 'outfits/new'

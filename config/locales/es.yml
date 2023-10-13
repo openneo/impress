@@ -468,9 +468,8 @@ es:
       submit:
         primary: ¡Diseñar mi atuendo!
         secondary: Ir
-      neopia_online:
-        load_pet: Escribe el nombre de tu pet
-        start_from_scratch: O empieza a partir de una plantilla
+      load_pet: Escribe el nombre de tu pet
+      start_from_scratch: O empieza a partir de una plantilla
       your_items:
         tagline: ¡Añade e intercambia!
         description: Crea listas de los objetos que tú tienes y quieres. ¡Compártelas con el mundo!

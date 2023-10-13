@@ -45,10 +45,8 @@ class OutfitsController < ApplicationController
   end
 
   def new
-    unless localized_fragment_exist?("outfits#new neopia_online start_from_scratch_form pranks_funny=#{Color.pranks_funny?}") && localized_fragment_exist?("outfits#new neopia_offline start_from_scratch_form pranks_funny=#{Color.pranks_funny?}")
-      @colors = Color.funny.alphabetical
-      @species = Species.alphabetical
-    end
+    @colors = Color.funny.alphabetical
+    @species = Species.alphabetical
     
     newest_items = Item.newest.select([:id, :updated_at, :thumbnail_url, :rarity_index]).
       includes(:translations).limit(18)

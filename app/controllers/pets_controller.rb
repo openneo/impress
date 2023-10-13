@@ -53,7 +53,7 @@ class PetsController < ApplicationController
   
   def destination
     case (params[:destination] || params[:origin])
-      when 'wardrobe'     then wardrobe_path     + '#'
+      when 'wardrobe'     then wardrobe_path     + '?'
       when 'needed_items' then needed_items_path + '?'
       else                     root_path         + '#'
     end
