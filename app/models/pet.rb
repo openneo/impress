@@ -31,9 +31,9 @@ class Pet < ApplicationRecord
 
     pet_data = viewer_data[:custom_pet]
 
-    self.pet_type = PetType.find_or_initialize_by_species_id_and_color_id(
-      pet_data[:species_id].to_i,
-      pet_data[:color_id].to_i
+    self.pet_type = PetType.find_or_initialize_by(
+      species_id: pet_data[:species_id].to_i,
+      color_id: pet_data[:color_id].to_i
     )
     self.pet_type.body_id = pet_data[:body_id]
     self.pet_type.origin_pet = self
@@ -166,13 +166,13 @@ class Pet < ApplicationRecord
   end
 
   def self.load(name, options={})
-    pet = Pet.find_or_initialize_by_name(name)
+    pet = Pet.find_or_initialize_by(name: name)
     pet.load!(options)
     pet
   end
 
   def self.from_viewer_data(viewer_data, options={})
-    pet = Pet.find_or_initialize_by_name(viewer_data[:custom_pet][:name])
+    pet = Pet.find_or_initialize_by(name: viewer_data[:custom_pet][:name])
     pet.use_viewer_data(viewer_data, options)
     pet
   end

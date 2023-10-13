@@ -50,7 +50,7 @@ class NeopetsUser
 
     pets_data = envelope.messages[0].data.body
     raise NotFound if pets_data == false
-    pets = pets_data.map { |pet| Pet.find_or_initialize_by_name(pet['name']) }
+    pets = pets_data.map { |pet| Pet.find_or_initialize_by(name: pet['name']) }
     items = pets.each(&:load!).map(&:items).flatten
     item_ids = items.map(&:id)
     item_quantities = {}

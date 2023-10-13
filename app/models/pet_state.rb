@@ -162,10 +162,10 @@ class PetState < ApplicationRecord
     if pet_type.new_record?
       pet_state = self.new :swf_asset_ids => swf_asset_ids_str
     else
-      pet_state = self.find_or_initialize_by_pet_type_id_and_swf_asset_ids(
-          pet_type.id,
-          swf_asset_ids_str
-        )
+      pet_state = self.find_or_initialize_by(
+        pet_type_id: pet_type.id,
+        swf_asset_ids: swf_asset_ids_str
+      )
     end
     existing_swf_assets = SwfAsset.biology_assets.includes(:zone).
       find_all_by_remote_id(swf_asset_ids)
