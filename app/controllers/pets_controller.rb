@@ -86,7 +86,7 @@ class PetsController < ApplicationController
       end
       
       format.json do
-        render :text => options[:long_message], :status => options[:status]
+        render :json => options[:long_message], :status => options[:status]
       end
     end
   end
