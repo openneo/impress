@@ -561,7 +561,8 @@ class Item < ApplicationRecord
 
     # Collect existing relationships
     existing_relationships_by_item_id_and_swf_asset_id = {}
-    existing_items = scope.find_all_by_id(item_ids, :include => :parent_swf_asset_relationships)
+    existing_items = scope.where(id: item_ids).
+      include(:parent_swf_asset_relationships)
     existing_items.each do |item|
       items[item.id] = item
       relationships_by_swf_asset_id = {}
@@ -578,7 +579,7 @@ class Item < ApplicationRecord
       swf_asset_ids << asset_id.to_i if asset_data
     end
     existing_swf_assets = SwfAsset.object_assets.includes(:zone).
-      find_all_by_remote_id swf_asset_ids
+      where(remote_id: swf_asset_ids)
     existing_swf_assets_by_remote_id = {}
     existing_swf_assets.each do |swf_asset|
       existing_swf_assets_by_remote_id[swf_asset.remote_id] = swf_asset

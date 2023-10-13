@@ -168,7 +168,7 @@ class PetState < ApplicationRecord
       )
     end
     existing_swf_assets = SwfAsset.biology_assets.includes(:zone).
-      find_all_by_remote_id(swf_asset_ids)
+      where(remote_id: swf_asset_ids)
     existing_swf_assets_by_id = {}
     existing_swf_assets.each do |swf_asset|
       existing_swf_assets_by_id[swf_asset.remote_id] = swf_asset
