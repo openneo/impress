@@ -94,6 +94,7 @@ OpenneoImpressItems::Application.routes.draw do
   get 'users/top_contributors' => redirect('/users/top-contributors')
 
   get 'image-mode' => 'static#image_mode', :as => :image_mode
+  get '/pardon-our-dust' => 'static#pardon_our_dust', :as => :pardon_our_dust
   get '/terms' => redirect("https://impress-2020.openneo.net/terms"), :as => :terms
 
   get '/sitemap.xml' => 'sitemap#index', :as => :sitemap, :format => :xml

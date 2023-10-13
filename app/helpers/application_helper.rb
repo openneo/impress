@@ -167,7 +167,11 @@ module ApplicationHelper
   end
 
   def show_title_header?
-    params[:controller] != 'items'
+    params[:controller] != 'items' && !@hide_title_header
+  end
+
+  def hide_title_header
+    @hide_title_header = true
   end
 
   def signed_in_meta_tag

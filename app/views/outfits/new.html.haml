@@ -5,6 +5,16 @@
 %p#pet-not-found.alert= t 'pets.load.not_found'
 %p#neopia-error.alert= t 'pets.load.neopia_error'
 
+%section.pardon-our-dust
+  = image_tag 'pardon-our-dust/worker.png', class: 'thumbnail',
+    alt: 'A blue Kacheek wearing a construction hat, pencil over ear, looking at a blueprint'
+  %header Pardon our dust!
+  %p
+    A surprise tech issue shut down the site, oops! We're fixing it by releasing this beta version a bit early!
+  %p
+    There's some rough edges, and also some new things we think you'll like, too!
+    = link_to "Here's the details.", pardon_our_dust_path
+
 #outfit-forms
   - localized_cache :action_suffix => 'outfit_forms_intro' do
     #pet-preview
