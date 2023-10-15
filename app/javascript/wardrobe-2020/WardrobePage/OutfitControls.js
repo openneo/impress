@@ -11,6 +11,9 @@ import {
   HStack,
   IconButton,
   ListItem,
+  Menu,
+  MenuItem,
+  MenuList,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -106,153 +109,194 @@ function OutfitControls({
   return (
     <ClassNames>
       {({ css, cx }) => (
-        <Box
-          role="group"
-          pos="absolute"
-          left="0"
-          right="0"
-          top="0"
-          bottom="0"
-          height="100%" // Required for Safari to size the grid correctly
-          padding={{ base: 2, lg: 6 }}
-          display="grid"
-          overflow="auto"
-          gridTemplateAreas={`"back play-pause sharing"
+        <OutfitControlsContextMenu outfitState={outfitState}>
+          <Box
+            role="group"
+            pos="absolute"
+            left="0"
+            right="0"
+            top="0"
+            bottom="0"
+            height="100%" // Required for Safari to size the grid correctly
+            padding={{ base: 2, lg: 6 }}
+            display="grid"
+            overflow="auto"
+            gridTemplateAreas={`"back play-pause sharing"
                           "space space space"
                           "picker picker picker"`}
-          gridTemplateRows="auto minmax(1rem, 1fr) auto"
-          className={cx(
-            css`
-              opacity: 0;
-              transition: opacity 0.2s;
+            gridTemplateRows="auto minmax(1rem, 1fr) auto"
+            className={cx(
+              css`
+                opacity: 0;
+                transition: opacity 0.2s;
 
-              &:focus-within,
-              &.focus-is-locked {
-                opacity: 1;
-              }
-
-              /* Ignore simulated hovers, only reveal for _real_ hovers. This helps
-           * us avoid state conflicts with the focus-lock from clicks. */
-              @media (hover: hover) {
-                &:hover {
+                &:focus-within,
+                &.focus-is-locked {
                   opacity: 1;
                 }
+
+                /* Ignore simulated hovers, only reveal for _real_ hovers. This helps
+           * us avoid state conflicts with the focus-lock from clicks. */
+                @media (hover: hover) {
+                  &:hover {
+                    opacity: 1;
+                  }
+                }
+              `,
+              focusIsLocked && "focus-is-locked"
+            )}
+            onClickCapture={(e) => {
+              const opacity = parseFloat(
+                getComputedStyle(e.currentTarget).opacity
+              );
+              if (opacity < 0.5) {
+                // If the controls aren't visible right now, then clicks on them are
+                // probably accidental. Ignore them! (We prevent default to block
+                // built-in behaviors like link nav, and we stop propagation to block
+                // our own custom click handlers. I don't know if I can prevent the
+                // select clicks though?)
+                e.preventDefault();
+                e.stopPropagation();
+
+                // We also show the controls, by locking focus. We'll undo this when
+                // the user taps elsewhere (because it will trigger a blur event from
+                // our child components), in `maybeUnlockFocus`.
+                setFocusIsLocked(true);
               }
-            `,
-            focusIsLocked && "focus-is-locked"
-          )}
-          onClickCapture={(e) => {
-            const opacity = parseFloat(
-              getComputedStyle(e.currentTarget).opacity
-            );
-            if (opacity < 0.5) {
-              // If the controls aren't visible right now, then clicks on them are
-              // probably accidental. Ignore them! (We prevent default to block
-              // built-in behaviors like link nav, and we stop propagation to block
-              // our own custom click handlers. I don't know if I can prevent the
-              // select clicks though?)
-              e.preventDefault();
-              e.stopPropagation();
-
-              // We also show the controls, by locking focus. We'll undo this when
-              // the user taps elsewhere (because it will trigger a blur event from
-              // our child components), in `maybeUnlockFocus`.
-              setFocusIsLocked(true);
-            }
-          }}
-          onContextMenuCapture={() => {
-            if (!toast.isActive("outfit-controls-context-menu-hint")) {
-              toast({
-                id: "outfit-controls-context-menu-hint",
-                title:
-                  "By the way, to save this image, use the Download button!",
-                description: "It's in the top right of the preview area.",
-                duration: 10000,
-                isClosable: true,
-              });
-            }
-          }}
-          data-test-id="wardrobe-outfit-controls"
-        >
-          <Box gridArea="back" onClick={maybeUnlockFocus}>
-            <BackButton outfitState={outfitState} />
-          </Box>
-
-          <Flex
-            gridArea="play-pause"
-            // HACK: Better visual centering with other controls
-            paddingTop="0.3rem"
-            direction="column"
-            align="center"
+            }}
+            data-test-id="wardrobe-outfit-controls"
           >
-            {showAnimationControls && <PlayPauseButton />}
-            <Box height="2" />
-            <HStack spacing="2" align="center" justify="center">
-              <OutfitHTML5Badge appearance={appearance} />
-              <OutfitKnownGlitchesBadge appearance={appearance} />
-              <SettingsButton
-                onLockFocus={onLockFocus}
-                onUnlockFocus={onUnlockFocus}
-              />
-            </HStack>
-          </Flex>
-          <Stack
-            gridArea="sharing"
-            alignSelf="flex-end"
-            spacing={{ base: "2", lg: "4" }}
-            align="flex-end"
-            onClick={maybeUnlockFocus}
-          >
-            <Box>
-              <DownloadButton outfitState={outfitState} />
+            <Box gridArea="back" onClick={maybeUnlockFocus}>
+              <BackButton outfitState={outfitState} />
             </Box>
-            <Box>
-              <CopyLinkButton outfitState={outfitState} />
-            </Box>
-          </Stack>
-          <Box gridArea="space" onClick={maybeUnlockFocus} />
-          {outfitState.speciesId && outfitState.colorId && (
-            <Flex gridArea="picker" justify="center" onClick={maybeUnlockFocus}>
-              {/**
-               * We try to center the species/color picker, but the left spacer will
-               * shrink more than the pose picker container if we run out of space!
-               */}
-              <Flex
-                flex="1 1 0"
-                paddingRight="3"
-                align="center"
-                justify="flex-end"
-              />
-              <Box flex="0 0 auto">
-                <DarkMode>
-                  <SpeciesColorPicker
-                    speciesId={outfitState.speciesId}
-                    colorId={outfitState.colorId}
-                    idealPose={outfitState.pose}
-                    onChange={onSpeciesColorChange}
-                    stateMustAlwaysBeValid
-                    speciesTestId="wardrobe-species-picker"
-                    colorTestId="wardrobe-color-picker"
-                  />
-                </DarkMode>
-              </Box>
-              <Flex flex="1 1 0" align="center" pl="2">
-                <PosePicker
-                  speciesId={outfitState.speciesId}
-                  colorId={outfitState.colorId}
-                  pose={outfitState.pose}
-                  appearanceId={outfitState.appearanceId}
-                  dispatchToOutfit={dispatchToOutfit}
+
+            <Flex
+              gridArea="play-pause"
+              // HACK: Better visual centering with other controls
+              paddingTop="0.3rem"
+              direction="column"
+              align="center"
+            >
+              {showAnimationControls && <PlayPauseButton />}
+              <Box height="2" />
+              <HStack spacing="2" align="center" justify="center">
+                <OutfitHTML5Badge appearance={appearance} />
+                <OutfitKnownGlitchesBadge appearance={appearance} />
+                <SettingsButton
                   onLockFocus={onLockFocus}
                   onUnlockFocus={onUnlockFocus}
-                  data-test-id="wardrobe-pose-picker"
                 />
-              </Flex>
+              </HStack>
             </Flex>
-          )}
-        </Box>
+            <Stack
+              gridArea="sharing"
+              alignSelf="flex-end"
+              spacing={{ base: "2", lg: "4" }}
+              align="flex-end"
+              onClick={maybeUnlockFocus}
+            >
+              <Box>
+                <DownloadButton outfitState={outfitState} />
+              </Box>
+              <Box>
+                <CopyLinkButton outfitState={outfitState} />
+              </Box>
+            </Stack>
+            <Box gridArea="space" onClick={maybeUnlockFocus} />
+            {outfitState.speciesId && outfitState.colorId && (
+              <Flex
+                gridArea="picker"
+                justify="center"
+                onClick={maybeUnlockFocus}
+              >
+                {/**
+                 * We try to center the species/color picker, but the left spacer will
+                 * shrink more than the pose picker container if we run out of space!
+                 */}
+                <Flex
+                  flex="1 1 0"
+                  paddingRight="3"
+                  align="center"
+                  justify="flex-end"
+                />
+                <Box flex="0 0 auto">
+                  <DarkMode>
+                    <SpeciesColorPicker
+                      speciesId={outfitState.speciesId}
+                      colorId={outfitState.colorId}
+                      idealPose={outfitState.pose}
+                      onChange={onSpeciesColorChange}
+                      stateMustAlwaysBeValid
+                      speciesTestId="wardrobe-species-picker"
+                      colorTestId="wardrobe-color-picker"
+                    />
+                  </DarkMode>
+                </Box>
+                <Flex flex="1 1 0" align="center" pl="2">
+                  <PosePicker
+                    speciesId={outfitState.speciesId}
+                    colorId={outfitState.colorId}
+                    pose={outfitState.pose}
+                    appearanceId={outfitState.appearanceId}
+                    dispatchToOutfit={dispatchToOutfit}
+                    onLockFocus={onLockFocus}
+                    onUnlockFocus={onUnlockFocus}
+                    data-test-id="wardrobe-pose-picker"
+                  />
+                </Flex>
+              </Flex>
+            )}
+          </Box>
+        </OutfitControlsContextMenu>
       )}
     </ClassNames>
+  );
+}
+
+function OutfitControlsContextMenu({ outfitState, children }) {
+  // NOTE: We track these separately, rather than in one atomic state object,
+  // because I want to still keep the menu in the right position when it's
+  // animating itself closed!
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [position, setPosition] = React.useState({ x: 0, y: 0 });
+
+  const { visibleLayers } = useOutfitAppearance(outfitState);
+  const [downloadImageUrl, prepareDownload] =
+    useDownloadableImage(visibleLayers);
+
+  return (
+    <Box
+      onContextMenuCapture={(e) => {
+        setIsOpen(true);
+        setPosition({ x: e.pageX, y: e.pageY });
+        e.preventDefault();
+      }}
+    >
+      {children}
+      <Menu isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <Portal>
+          <MenuList position="absolute" left={position.x} top={position.y}>
+            <MenuItem
+              icon={<DownloadIcon />}
+              as="a"
+              // eslint-disable-next-line no-script-url
+              href={downloadImageUrl || "#"}
+              onClick={(e) => {
+                if (!downloadImageUrl) {
+                  e.preventDefault();
+                }
+              }}
+              download={(outfitState.name || "Outfit") + ".png"}
+              onMouseEnter={prepareDownload}
+              onFocus={prepareDownload}
+              cursor={!downloadImageUrl && "wait"}
+            >
+              Download
+            </MenuItem>
+          </MenuList>
+        </Portal>
+      </Menu>
+    </Box>
   );
 }
 
