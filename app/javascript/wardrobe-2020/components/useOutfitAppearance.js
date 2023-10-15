@@ -139,6 +139,7 @@ export const appearanceLayerFragment = gql`
       depth
       label
     }
+    swfUrl # For the layer info modal
   }
 `;
 

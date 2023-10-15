@@ -41,11 +41,13 @@ import { getBestImageUrlForLayer } from "../components/OutfitPreview";
 import HTML5Badge, { layerUsesHTML5 } from "../components/HTML5Badge";
 import PosePicker from "./PosePicker";
 import SpeciesColorPicker from "../components/SpeciesColorPicker";
-import { loadImage, useLocalStorage } from "../util";
+import { loadImage, loadable, useLocalStorage } from "../util";
 import useCurrentUser from "../components/useCurrentUser";
 import useOutfitAppearance from "../components/useOutfitAppearance";
 import OutfitKnownGlitchesBadge from "./OutfitKnownGlitchesBadge";
 import usePreferArchive from "../components/usePreferArchive";
+
+const LoadableLayersInfoModal = loadable(() => import("./LayersInfoModal"));
 
 /**
  * OutfitControls is the set of controls layered over the outfit preview, to
@@ -260,6 +262,9 @@ function OutfitControlsContextMenu({ outfitState, children }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [position, setPosition] = React.useState({ x: 0, y: 0 });
 
+  const [layersInfoModalIsOpen, setLayersInfoModalIsOpen] =
+    React.useState(false);
+
   const { visibleLayers } = useOutfitAppearance(outfitState);
   const [downloadImageUrl, prepareDownload] =
     useDownloadableImage(visibleLayers);
@@ -293,9 +298,20 @@ function OutfitControlsContextMenu({ outfitState, children }) {
             >
               Download
             </MenuItem>
+            <MenuItem
+              icon={<LinkIcon />}
+              onClick={() => setLayersInfoModalIsOpen(true)}
+            >
+              Layers (SWF, PNG)
+            </MenuItem>
           </MenuList>
         </Portal>
       </Menu>
+      <LoadableLayersInfoModal
+        isOpen={layersInfoModalIsOpen}
+        onClose={() => setLayersInfoModalIsOpen(false)}
+        visibleLayers={visibleLayers}
+      />
     </Box>
   );
 }
