@@ -139,12 +139,10 @@ function setupLogging() {
 
 /**
  * ScopedCSSReset applies a copy of Chakra UI's CSS reset, but only to its
- * children (or, well, any element with the chakra-css-reset class).
+ * children (or, well, any element with the chakra-css-reset class). It also
+ * applies to .chakra-portal elements mounted by <Portal> components.
  *
  * We also apply some base styles, like the default text color.
- *
- * TODO: What about Chakra's portal elements like toast messages, which are
- * intentionally mounted elsewhere in the document?
  *
  * NOTE: We use the `:where` CSS selector, instead of the .chakra-css-reset
  * selector directly, to avoid specificity conflicts. e.g. the selector
@@ -161,7 +159,7 @@ function ScopedCSSReset({ children }) {
       </Box>
       <Global
         styles={`
-          :where(.chakra-css-reset) {
+          :where(.chakra-css-reset, .chakra-portal) {
             *,
             *::before,
             *::after {
