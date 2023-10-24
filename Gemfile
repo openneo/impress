@@ -1,10 +1,10 @@
 source 'http://rubygems.org'
 ruby '3.1.4'
 
-gem 'rails', '= 7.0.6'
+gem 'rails', '= 7.0.7.1'
 
 # The HTTP server running the Rails instance.
-gem 'puma', '~> 6.3'
+gem 'puma', '~> 6.3', '>= 6.3.1'
 
 # Our database is MySQL, in both development and production.
 gem 'mysql2', '~> 0.5.5'
