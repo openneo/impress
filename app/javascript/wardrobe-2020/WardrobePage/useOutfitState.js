@@ -2,7 +2,7 @@ import React from "react";
 import gql from "graphql-tag";
 import produce, { enableMapSet } from "immer";
 import { useQuery, useApolloClient } from "@apollo/client";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 
 import { itemAppearanceFragment } from "../components/useOutfitAppearance";
 
@@ -380,13 +380,26 @@ const EMPTY_CUSTOMIZATION_STATE = {
 };
 
 function useParseOutfitUrl() {
-  const [searchParams] = useSearchParams();
+  // Get params from both the `?a=1` and `#a=1` parts of the URL, because DTI
+  // has historically used both!
+  const location = useLocation();
+  const [justSearchParams] = useSearchParams();
+  const hashParams = new URLSearchParams(location.hash.substr(1));
+
+  // Merge them into one URLSearchParams object.
+  const mergedParams = new URLSearchParams();
+  for (const [key, value] of justSearchParams) {
+    mergedParams.append(key, value);
+  }
+  for (const [key, value] of hashParams) {
+    mergedParams.append(key, value);
+  }
 
   // We memoize this to make `outfitStateWithoutExtras` an even more reliable
   // stable object!
   const memoizedOutfitState = React.useMemo(
-    () => readOutfitStateFromSearchParams(searchParams),
-    [searchParams],
+    () => readOutfitStateFromSearchParams(mergedParams),
+    [mergedParams.toString()],
   );
 
   return memoizedOutfitState;
@@ -395,7 +408,9 @@ function useParseOutfitUrl() {
 function readOutfitStateFromSearchParams(searchParams) {
   // For the /outfits/:id page, ignore the query string, and just wait for the
   // outfit data to load in!
-  const outfitId = searchParams.get("outfitId");
+  // NOTE: We now use `outfitId` when generating URLs, but historically we've
+  // used `outfit` too!
+  const outfitId = searchParams.get("outfitId") ?? searchParams.get("outfit");
   if (outfitId != null) {
     return {
       ...EMPTY_CUSTOMIZATION_STATE,
