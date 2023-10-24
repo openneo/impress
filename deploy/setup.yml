@@ -98,7 +98,9 @@
       user:
         name: impress
         comment: Impress App
+        home: /srv/impress
         create_home: false
+        shell: /bin/bash
 
     - name: Create "impress-deployers" group
       group:
@@ -171,6 +173,18 @@
         group: impress
         mode: "755"
         state: directory
+
+    - name: Add a convenient .bash_profile for when we log in as "impress"
+      copy:
+        owner: impress
+        group: impress
+        dest: /srv/impress/.bash_profile
+        content: |
+          set -a # Export all of the below
+          RAILS_ENV=production
+          EXECJS_RUNTIME=Disabled
+          source /srv/impress/shared/production.env
+          set +a
 
     - name: Create the app's "versions" folder
       become_user: impress
