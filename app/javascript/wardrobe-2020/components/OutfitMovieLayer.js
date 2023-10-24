@@ -209,7 +209,7 @@ function OutfitMovieLayer({
         const roundedFps = Math.round(fps * 100) / 100;
 
         console.debug(
-          `[OutfitMovieLayer] FPS: ${roundedFps} (Target: ${targetFps}) (${libraryUrl})`
+          `[OutfitMovieLayer] FPS: ${roundedFps} (Target: ${targetFps}) (${libraryUrl})`,
         );
 
         if (onLowFps && fps < 2) {
@@ -328,7 +328,7 @@ export function loadMovieLibrary(librarySrc, { preferArchive = false } = {}) {
 
     // Then, load the script tag. (Make sure we set it up to be cancelable!)
     const scriptPromise = loadScriptTag(
-      safeImageUrl(librarySrc, { preferArchive })
+      safeImageUrl(librarySrc, { preferArchive }),
     );
     cancelableResourcePromises.push(scriptPromise);
     await scriptPromise;
@@ -350,16 +350,16 @@ export function loadMovieLibrary(librarySrc, { preferArchive = false } = {}) {
     // the race anymore? But fingers crossed!
     if (Object.keys(window.AdobeAn?.compositions || {}).length === 0) {
       throw new Error(
-        `Movie library ${librarySrc} did not add a composition to window.AdobeAn.compositions.`
+        `Movie library ${librarySrc} did not add a composition to window.AdobeAn.compositions.`,
       );
     }
     const [compositionId, composition] = Object.entries(
-      window.AdobeAn.compositions
+      window.AdobeAn.compositions,
     )[0];
     if (Object.keys(window.AdobeAn.compositions).length > 1) {
       console.warn(
         `Grabbing composition ${compositionId}, but there are >1 here: `,
-        Object.keys(window.AdobeAn.compositions).length
+        Object.keys(window.AdobeAn.compositions).length,
       );
     }
     delete window.AdobeAn.compositions[compositionId];
@@ -380,7 +380,7 @@ export function loadMovieLibrary(librarySrc, { preferArchive = false } = {}) {
           crossOrigin: "anonymous",
           preferArchive,
         }),
-      ])
+      ]),
     );
 
     // Wait for the images, and make sure they're cancelable while we do.
@@ -440,8 +440,8 @@ export function buildMovieClip(library, libraryUrl) {
   } catch (e) {
     throw new Error(
       `Movie libraryUrl ${JSON.stringify(
-        libraryUrl
-      )} did not match expected format: ${e.message}`
+        libraryUrl,
+      )} did not match expected format: ${e.message}`,
     );
   }
 
@@ -449,7 +449,7 @@ export function buildMovieClip(library, libraryUrl) {
   if (!LibraryMovieClipConstructor) {
     throw new Error(
       `Expected JS movie library ${libraryUrl} to contain a constructor ` +
-        `named ${constructorName}, but it did not: ${Object.keys(library)}`
+        `named ${constructorName}, but it did not: ${Object.keys(library)}`,
     );
   }
   const movieClip = new LibraryMovieClipConstructor();

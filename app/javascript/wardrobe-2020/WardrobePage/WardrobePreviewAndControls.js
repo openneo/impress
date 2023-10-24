@@ -76,7 +76,7 @@ function OutfitThumbnailIfCached({ outfitId }) {
       skip: outfitId == null,
       fetchPolicy: "cache-only",
       onError: (e) => console.error(e),
-    }
+    },
   );
 
   if (!data?.outfit) {

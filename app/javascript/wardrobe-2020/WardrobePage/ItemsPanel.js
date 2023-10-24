@@ -164,7 +164,7 @@ function ItemZoneGroup({
     (itemId) => {
       dispatchToOutfit({ type: "removeItem", itemId });
     },
-    [dispatchToOutfit]
+    [dispatchToOutfit],
   );
 
   return (
@@ -472,7 +472,7 @@ function DeleteOutfitMenuItem({ outfitState }) {
         cache.evict(`Outfit:${id}`);
         cache.gc();
       },
-    }
+    },
   );
 
   return (

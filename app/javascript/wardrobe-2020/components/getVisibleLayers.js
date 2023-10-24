@@ -20,10 +20,10 @@ function getVisibleLayers(petAppearance, itemAppearances) {
     validItemAppearances
       .map((a) => a.restrictedZones)
       .flat()
-      .map((z) => z.id)
+      .map((z) => z.id),
   );
   const petRestrictedZoneIds = new Set(
-    petAppearance.restrictedZones.map((z) => z.id)
+    petAppearance.restrictedZones.map((z) => z.id),
   );
 
   const visibleLayers = allLayers.filter((layer) => {

@@ -89,14 +89,14 @@ export function useRouterPagination(totalCount, numPerPage) {
         return newParams;
       });
     },
-    [query, numPerPage]
+    [query, numPerPage],
   );
 
   const goToPageNumber = React.useCallback(
     (newPageNumber) => {
       pushHistory(buildPageUrl(newPageNumber));
     },
-    [buildPageUrl, pushHistory]
+    [buildPageUrl, pushHistory],
   );
 
   return {
@@ -125,7 +125,7 @@ function PageNumberSelect({
 
   const handleChange = React.useCallback(
     (e) => onChange(Number(e.target.value)),
-    [onChange]
+    [onChange],
   );
 
   return (

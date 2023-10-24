@@ -67,7 +67,7 @@ function AllItemLayersSupportModal({ item, isOpen, onClose }) {
 
 function BulkAddBodySpecificAssetsForm({ bulkAddProposal, onSubmit }) {
   const [minAssetId, setMinAssetId] = React.useState(
-    bulkAddProposal?.minAssetId
+    bulkAddProposal?.minAssetId,
   );
   const [assetIdStepValue, setAssetIdStepValue] = React.useState(1);
   const [numSpecies, setNumSpecies] = React.useState(55);
@@ -136,7 +136,7 @@ function BulkAddBodySpecificAssetsForm({ bulkAddProposal, onSubmit }) {
           setMinAssetId(
             e.target.value
               ? Number(e.target.value) - assetIdStepValue * (numSpecies - 1)
-              : null
+              : null,
           )
         }
       />
@@ -230,7 +230,7 @@ function AllItemLayersSupportModalContent({
 
       ${allAppearancesFragment}
     `,
-    { variables: { itemId: item.id } }
+    { variables: { itemId: item.id } },
   );
 
   const {
@@ -293,14 +293,14 @@ function AllItemLayersSupportModalContent({
           ? Array.from({ length: 54 }, (_, i) =>
               String(
                 Number(bulkAddProposal.minAssetId) +
-                  i * bulkAddProposal.assetIdStepValue
-              )
+                  i * bulkAddProposal.assetIdStepValue,
+              ),
             )
           : [],
         colorId: bulkAddProposal?.colorId,
       },
       skip: bulkAddProposal == null,
-    }
+    },
   );
 
   const [
@@ -341,7 +341,7 @@ function AllItemLayersSupportModalContent({
   itemAppearances = mergeBulkAddProposalIntoItemAppearances(
     itemAppearances,
     bulkAddProposal,
-    bulkAddProposalData
+    bulkAddProposalData,
   );
   itemAppearances = [...itemAppearances].sort((a, b) => {
     const aKey = getSortKeyForBody(a.body);
@@ -383,7 +383,7 @@ function AllItemLayersSupportModalContent({
               //       that we use for body assignment in most of this tool.
               const entries = itemAppearances
                 .map((a) =>
-                  a.layers.map((l) => ({ layerId: l.id, bodyId: a.body.id }))
+                  a.layers.map((l) => ({ layerId: l.id, bodyId: a.body.id })),
                 )
                 .flat();
 
@@ -415,7 +415,7 @@ function ItemAppearanceCard({ item, itemAppearance }) {
   const petAppearance = itemAppearance.body.canonicalAppearance;
   const biologyLayers = petAppearance.layers;
   const itemLayers = [...itemAppearance.layers].sort(
-    (a, b) => a.zone.depth - b.zone.depth
+    (a, b) => a.zone.depth - b.zone.depth,
   );
 
   const { brightBackground } = useCommonStyles();
@@ -494,7 +494,7 @@ function capitalize(str) {
 function mergeBulkAddProposalIntoItemAppearances(
   itemAppearances,
   bulkAddProposal,
-  bulkAddProposalData
+  bulkAddProposalData,
 ) {
   if (!bulkAddProposalData) {
     return itemAppearances;
@@ -514,7 +514,7 @@ function mergeBulkAddProposalIntoItemAppearances(
 
   // Set up the incoming data in convenient formats.
   const sortedSpeciesColorPairs = [...speciesColorPairsToInclude].sort((a, b) =>
-    a.species.name.localeCompare(b.species.name)
+    a.species.name.localeCompare(b.species.name),
   );
   const layersToAddByRemoteId = {};
   for (const layer of layersToAdd) {
@@ -527,7 +527,7 @@ function mergeBulkAddProposalIntoItemAppearances(
     // Find the existing item appearance to add to, or create a new one if it
     // doesn't exist yet.
     let itemAppearance = mergedItemAppearances.find(
-      (a) => a.body.id === body.id && !a.body.representsAllBodies
+      (a) => a.body.id === body.id && !a.body.representsAllBodies,
     );
     if (!itemAppearance) {
       itemAppearance = {
@@ -543,7 +543,7 @@ function mergeBulkAddProposalIntoItemAppearances(
 
     const layerToAddRemoteId = String(
       Number(bulkAddProposal.minAssetId) +
-        index * bulkAddProposal.assetIdStepValue
+        index * bulkAddProposal.assetIdStepValue,
     );
     const layerToAdd = layersToAddByRemoteId[layerToAddRemoteId];
     if (!layerToAdd) {
@@ -554,7 +554,7 @@ function mergeBulkAddProposalIntoItemAppearances(
     // override its body ID), then add it to this new one.
     for (const otherItemAppearance of mergedItemAppearances) {
       const indexToDelete = otherItemAppearance.layers.findIndex(
-        (l) => l.remoteId === layerToAddRemoteId
+        (l) => l.remoteId === layerToAddRemoteId,
       );
       if (indexToDelete >= 0) {
         otherItemAppearance.layers.splice(indexToDelete, 1);

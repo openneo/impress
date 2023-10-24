@@ -27,14 +27,14 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
     outfitState.savedOutfitState &&
     outfitStatesAreEqual(
       outfitState.outfitStateWithoutExtras,
-      outfitState.savedOutfitState
+      outfitState.savedOutfitState,
     );
   React.useEffect(() => {
     console.debug(
       "[useOutfitSaving] Latest version is saved? %s\nCurrent: %o\nSaved: %o",
       latestVersionIsSaved,
       outfitState.outfitStateWithoutExtras,
-      outfitState.savedOutfitState
+      outfitState.savedOutfitState,
     );
   }, [
     latestVersionIsSaved,
@@ -107,7 +107,7 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
           fields: {
             outfits: (existingOutfitRefs = [], { readField }) => {
               const isAlreadyInList = existingOutfitRefs.some(
-                (ref) => readField("id", ref) === outfit.id
+                (ref) => readField("id", ref) === outfit.id,
               );
               if (isAlreadyInList) {
                 return existingOutfitRefs;
@@ -139,7 +139,7 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
           });
         }
       },
-    }
+    },
   );
 
   const saveOutfitFromProvidedState = React.useCallback(
@@ -176,12 +176,12 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
     // It's important that this callback _doesn't_ change when the outfit
     // changes, so that the auto-save effect is only responding to the
     // debounced state!
-    [sendSaveOutfitMutation, pathname, navigate, toast]
+    [sendSaveOutfitMutation, pathname, navigate, toast],
   );
 
   const saveOutfit = React.useCallback(
     () => saveOutfitFromProvidedState(outfitState.outfitStateWithoutExtras),
-    [saveOutfitFromProvidedState, outfitState.outfitStateWithoutExtras]
+    [saveOutfitFromProvidedState, outfitState.outfitStateWithoutExtras],
   );
 
   // Auto-saving! First, debounce the outfit state. Use `outfitStateWithoutExtras`,
@@ -196,7 +196,7 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
       // When the outfit ID changes, update the debounced state immediately!
       forceReset: (debouncedOutfitState, newOutfitState) =>
         debouncedOutfitState.id !== newOutfitState.id,
-    }
+    },
   );
   // HACK: This prevents us from auto-saving the outfit state that's still
   //       loading. I worry that this might not catch other loading scenarios
@@ -216,7 +216,7 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
       console.info(
         "[useOutfitSaving] Auto-saving outfit\nSaved: %o\nCurrent (debounced): %o",
         outfitState.savedOutfitState,
-        debouncedOutfitState
+        debouncedOutfitState,
       );
       saveOutfitFromProvidedState(debouncedOutfitState);
     }

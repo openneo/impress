@@ -68,7 +68,7 @@ export default function useOutfitAppearance(outfitState) {
         speciesId == null ||
         colorId == null ||
         (pose == null && appearanceId == null),
-    }
+    },
   );
 
   const {
@@ -99,18 +99,18 @@ export default function useOutfitAppearance(outfitState) {
         wornItemIds,
       },
       skip: speciesId == null || colorId == null || wornItemIds.length === 0,
-    }
+    },
   );
 
   const petAppearance = data1?.petAppearance;
   const items = data2?.items;
   const itemAppearances = React.useMemo(
     () => (items || []).map((i) => i.appearance),
-    [items]
+    [items],
   );
   const visibleLayers = React.useMemo(
     () => getVisibleLayers(petAppearance, itemAppearances),
-    [petAppearance, itemAppearances]
+    [petAppearance, itemAppearances],
   );
 
   const bodyId = petAppearance?.bodyId;

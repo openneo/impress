@@ -185,7 +185,7 @@ function ItemThumbnail({ item, tradeMatchingMode }) {
 
   const thumbnailShadowColor = useColorModeValue(
     `${kindColorScheme}.200`,
-    `${kindColorScheme}.600`
+    `${kindColorScheme}.600`,
   );
   const thumbnailShadowColorValue = useToken("colors", thumbnailShadowColor);
   const mdRadiusValue = useToken("radii", "md");
@@ -318,11 +318,11 @@ function ItemThumbnail({ item, tradeMatchingMode }) {
 function ItemOwnsWantsBadge({ colorScheme, children, label }) {
   const badgeBackground = useColorModeValue(
     `${colorScheme}.100`,
-    `${colorScheme}.500`
+    `${colorScheme}.500`,
   );
   const badgeColor = useColorModeValue(
     `${colorScheme}.500`,
-    `${colorScheme}.100`
+    `${colorScheme}.100`,
   );
 
   const [badgeBackgroundValue, badgeColorValue] = useToken("colors", [
@@ -369,11 +369,11 @@ function ItemOwnsWantsBadge({ colorScheme, children, label }) {
 function ItemThumbnailKindBadge({ colorScheme, children }) {
   const badgeBackground = useColorModeValue(
     `${colorScheme}.100`,
-    `${colorScheme}.500`
+    `${colorScheme}.500`,
   );
   const badgeColor = useColorModeValue(
     `${colorScheme}.500`,
-    `${colorScheme}.100`
+    `${colorScheme}.100`,
   );
 
   const [badgeBackgroundValue, badgeColorValue] = useToken("colors", [

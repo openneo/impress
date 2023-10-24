@@ -56,11 +56,11 @@ function SpeciesFacesPicker({
       variables: { selectedColorId },
       skip: selectedColorId == null || selectedColorIsBasic,
       onError: (e) => console.error(e),
-    }
+    },
   );
 
   const allBodiesAreCompatible = compatibleBodies.some(
-    (body) => body.representsAllBodies
+    (body) => body.representsAllBodies,
   );
   const compatibleBodyIds = compatibleBodies.map((body) => body.id);
 
@@ -68,7 +68,7 @@ function SpeciesFacesPicker({
 
   const allSpeciesFaces = DEFAULT_SPECIES_FACES.map((defaultSpeciesFace) => {
     const providedSpeciesFace = speciesFacesFromData.find(
-      (f) => f.species.id === defaultSpeciesFace.speciesId
+      (f) => f.species.id === defaultSpeciesFace.speciesId,
     );
     if (providedSpeciesFace) {
       return {
@@ -250,7 +250,8 @@ const SpeciesFaceOption = React.memo(
                   input:checked + & {
                     background: ${selectedBackgroundColorValue};
                     border-radius: 6px;
-                    box-shadow: ${xlShadow},
+                    box-shadow:
+                      ${xlShadow},
                       ${selectedBorderColorValue} 0 0 2px 2px;
                     transform: scale(1.2);
                     z-index: 1;
@@ -258,7 +259,9 @@ const SpeciesFaceOption = React.memo(
 
                   input:focus + & {
                     background: ${focusBackgroundColorValue};
-                    box-shadow: ${xlShadow}, ${focusBorderColorValue} 0 0 0 3px;
+                    box-shadow:
+                      ${xlShadow},
+                      ${focusBorderColorValue} 0 0 0 3px;
                   }
                 `}
               >
@@ -324,7 +327,7 @@ const SpeciesFaceOption = React.memo(
         )}
       </ClassNames>
     );
-  }
+  },
 );
 
 /**

@@ -8,5 +8,5 @@ ReactDOM.render(
   <AppProvider>
     <WardrobePage />
   </AppProvider>,
-  rootNode
+  rootNode,
 );

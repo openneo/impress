@@ -111,7 +111,7 @@ function SearchToolbar({
         {text}
       </Box>
     ),
-    [suggestionBgColor, highlightedBgColor]
+    [suggestionBgColor, highlightedBgColor],
   );
 
   const renderSuggestionsContainer = React.useCallback(
@@ -133,7 +133,7 @@ function SearchToolbar({
                   li {
                     list-style: none;
                   }
-                `
+                `,
               )}
               {...SUGGESTIONS_PLACEMENT_PROPS[suggestionsPlacement]}
             >
@@ -153,7 +153,7 @@ function SearchToolbar({
         </ClassNames>
       );
     },
-    [advancedSearchIsOpen, suggestionsPlacement]
+    [advancedSearchIsOpen, suggestionsPlacement],
   );
 
   // When we change the query filters, clear out the suggestions.
@@ -205,7 +205,7 @@ function SearchToolbar({
           //       always happened? Idk? Let's just, gate around it, I guess?
           if (typeof value === "string") {
             setSuggestions(
-              getSuggestions(value, query, zoneLabels, isLoggedIn)
+              getSuggestions(value, query, zoneLabels, isLoggedIn),
             );
           }
         }}
@@ -342,7 +342,7 @@ function getSuggestions(
   query,
   zoneLabels,
   isLoggedIn,
-  { showAll = false } = {}
+  { showAll = false } = {},
 ) {
   if (!value && !showAll) {
     return [];
@@ -467,8 +467,8 @@ function removeLastWord(text) {
     logAndCapture(
       new Error(
         `Assertion failure: pattern should match any input text, ` +
-          `but failed to match ${JSON.stringify(text)}`
-      )
+          `but failed to match ${JSON.stringify(text)}`,
+      ),
     );
     return text;
   }

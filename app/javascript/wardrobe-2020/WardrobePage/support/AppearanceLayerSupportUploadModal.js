@@ -54,7 +54,7 @@ function AppearanceLayerSupportUploadModal({ item, layer, isOpen, onClose }) {
     mergeIntoImageWithAlpha(
       imageOnBlackUrl,
       imageOnWhiteUrl,
-      conflictMode
+      conflictMode,
     ).then(([url, blob, numWarnings]) => {
       setImageWithAlphaUrl(url);
       setImageWithAlphaBlob(blob);
@@ -86,7 +86,7 @@ function AppearanceLayerSupportUploadModal({ item, layer, isOpen, onClose }) {
       };
       reader.readAsDataURL(file);
     },
-    [step]
+    [step],
   );
 
   const onSubmitFinalImage = React.useCallback(async () => {
@@ -104,7 +104,7 @@ function AppearanceLayerSupportUploadModal({ item, layer, isOpen, onClose }) {
       if (!res.ok) {
         setIsUploading(false);
         setUploadError(
-          new Error(`Network error: ${res.status} ${res.statusText}`)
+          new Error(`Network error: ${res.status} ${res.statusText}`),
         );
         return;
       }
@@ -432,7 +432,7 @@ function AppearanceLayerSupportFlashPlayer({ swfUrl, backgroundColor }) {
 async function mergeIntoImageWithAlpha(
   imageOnBlackUrl,
   imageOnWhiteUrl,
-  conflictMode
+  conflictMode,
 ) {
   const [imageOnBlack, imageOnWhite] = await Promise.all([
     readImageDataFromUrl(imageOnBlackUrl),
@@ -442,7 +442,7 @@ async function mergeIntoImageWithAlpha(
   const [imageWithAlphaData, numWarnings] = mergeDataIntoImageWithAlpha(
     imageOnBlack,
     imageOnWhite,
-    conflictMode
+    conflictMode,
   );
   const [imageWithAlphaUrl, imageWithAlphaBlob] =
     await writeImageDataToUrlAndBlob(imageWithAlphaData);
@@ -474,14 +474,14 @@ function mergeDataIntoImageWithAlpha(imageOnBlack, imageOnWhite, conflictMode) {
               ` vs ` +
               `#${rOnBlack.toString(16)}${bOnBlack.toString(16)}` +
               `${gOnWhite.toString(16)}. ` +
-              `Using conflict mode ${conflictMode} to fall back.`
+              `Using conflict mode ${conflictMode} to fall back.`,
           );
         }
 
         const [r, g, b, a] = resolveConflict(
           [rOnBlack, gOnBlack, bOnBlack],
           [rOnWhite, gOnWhite, bOnWhite],
-          conflictMode
+          conflictMode,
         );
         imageWithAlpha.data[pixelIndex] = r;
         imageWithAlpha.data[pixelIndex + 1] = g;
@@ -513,14 +513,14 @@ function mergeDataIntoImageWithAlpha(imageOnBlack, imageOnWhite, conflictMode) {
               ` vs ` +
               `#${rOnBlack.toString(16)}${bOnBlack.toString(16)}` +
               `${gOnWhite.toString(16)}. ` +
-              `Using conflict mode ${conflictMode} to fall back.`
+              `Using conflict mode ${conflictMode} to fall back.`,
           );
         }
 
         const [r, g, b, a] = resolveConflict(
           [rOnBlack, gOnBlack, bOnBlack],
           [rOnWhite, gOnWhite, bOnWhite],
-          conflictMode
+          conflictMode,
         );
         imageWithAlpha.data[pixelIndex] = r;
         imageWithAlpha.data[pixelIndex + 1] = g;
@@ -585,7 +585,7 @@ async function writeImageDataToUrlAndBlob(imageData) {
 
   const dataUrl = canvas.toDataURL("image/png");
   const blob = await new Promise((resolve) =>
-    canvas.toBlob(resolve, "image/png")
+    canvas.toBlob(resolve, "image/png"),
   );
   return [dataUrl, blob];
 }
@@ -593,7 +593,7 @@ async function writeImageDataToUrlAndBlob(imageData) {
 function resolveConflict(
   [rOnBlack, gOnBlack, bOnBlack],
   [rOnWhite, gOnWhite, bOnWhite],
-  conflictMode
+  conflictMode,
 ) {
   if (conflictMode === "onBlack") {
     return [rOnBlack, gOnBlack, bOnBlack, 255];

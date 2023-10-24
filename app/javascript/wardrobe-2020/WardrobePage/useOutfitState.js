@@ -17,7 +17,7 @@ function useOutfitState() {
   const urlOutfitState = useParseOutfitUrl();
   const [localOutfitState, dispatchToOutfit] = React.useReducer(
     outfitStateReducer(apolloClient),
-    urlOutfitState
+    urlOutfitState,
   );
 
   // If there's an outfit ID (i.e. we're on /outfits/:id), load basic data
@@ -68,7 +68,7 @@ function useOutfitState() {
           savedOutfitData: outfitData.outfit,
         });
       },
-    }
+    },
   );
 
   const creator = outfitData?.outfit?.creator;
@@ -78,7 +78,7 @@ function useOutfitState() {
   // stable object!
   const savedOutfitState = React.useMemo(
     () => getOutfitStateFromOutfitData(outfitData?.outfit),
-    [outfitData?.outfit]
+    [outfitData?.outfit],
   );
 
   // Choose which customization state to use. We want it to match the outfit in
@@ -182,7 +182,7 @@ function useOutfitState() {
       // have the species/color ID loaded yet because we're waiting on the
       // saved outfit to load.
       skip: allItemIds.length === 0 || speciesId == null || colorId == null,
-    }
+    },
   );
 
   const resultItems = itemsData?.items || [];
@@ -226,7 +226,7 @@ function useOutfitState() {
   const zonesAndItems = getZonesAndItems(
     itemsById,
     wornItemIds,
-    closetedItemIds
+    closetedItemIds,
   );
   const incompatibleItems = items
     .filter((i) => i.appearanceOn.layers.length === 0)
@@ -334,7 +334,7 @@ const outfitStateReducer = (apolloClient) => (baseState, action) => {
           // Don't include the unworn item in items to reconsider!
           itemIdsToReconsider.filter((x) => x !== itemId),
           state,
-          apolloClient
+          apolloClient,
         );
       });
     case "removeItem":
@@ -350,7 +350,7 @@ const outfitStateReducer = (apolloClient) => (baseState, action) => {
           // Don't include the removed item in items to reconsider!
           itemIdsToReconsider.filter((x) => x !== itemId),
           state,
-          apolloClient
+          apolloClient,
         );
       });
     case "setPose":
@@ -386,7 +386,7 @@ function useParseOutfitUrl() {
   // stable object!
   const memoizedOutfitState = React.useMemo(
     () => readOutfitStateFromSearchParams(searchParams),
-    [searchParams]
+    [searchParams],
   );
 
   return memoizedOutfitState;
@@ -433,7 +433,7 @@ function getOutfitStateFromOutfitData(outfit) {
     // Whereas the items are more convenient to just leave as empty lists!
     wornItemIds: new Set((outfit.wornItems || []).map((item) => item.id)),
     closetedItemIds: new Set(
-      (outfit.closetedItems || []).map((item) => item.id)
+      (outfit.closetedItems || []).map((item) => item.id),
     ),
   };
 }
@@ -475,7 +475,7 @@ function findItemConflicts(itemIdToAdd, state, apolloClient) {
     return [];
   }
   const wornItems = Array.from(wornItemIds).map((id) =>
-    items.find((i) => i.id === id)
+    items.find((i) => i.id === id),
   );
 
   const itemToAddZoneSets = getItemZones(itemToAdd);
@@ -491,11 +491,11 @@ function findItemConflicts(itemIdToAdd, state, apolloClient) {
     const itemsConflict =
       setsIntersect(
         itemToAddZoneSets.occupies,
-        wornItemZoneSets.occupiesOrRestricts
+        wornItemZoneSets.occupiesOrRestricts,
       ) ||
       setsIntersect(
         wornItemZoneSets.occupies,
-        itemToAddZoneSets.occupiesOrRestricts
+        itemToAddZoneSets.occupiesOrRestricts,
       );
 
     if (itemsConflict) {
@@ -536,7 +536,7 @@ function reconsiderItems(itemIdsToReconsider, state, apolloClient) {
     const conflictingIds = findItemConflicts(
       itemIdToReconsider,
       state,
-      apolloClient
+      apolloClient,
     );
     if (conflictingIds.length === 0) {
       state.wornItemIds.add(itemIdToReconsider);
@@ -576,19 +576,19 @@ function getZonesAndItems(itemsById, wornItemIds, closetedItemIds) {
     ([zoneLabel, items]) => ({
       zoneLabel: zoneLabel,
       items: [...items].sort((a, b) => a.name.localeCompare(b.name)),
-    })
+    }),
   );
   zonesAndItems.sort((a, b) => a.zoneLabel.localeCompare(b.zoneLabel));
 
   // As one last step, try to remove zone groups that aren't helpful.
   const groupsWithConflicts = zonesAndItems.filter(
-    ({ items }) => items.length > 1
+    ({ items }) => items.length > 1,
   );
   const itemIdsWithConflicts = new Set(
     groupsWithConflicts
       .map(({ items }) => items)
       .flat()
-      .map((item) => item.id)
+      .map((item) => item.id),
   );
   const itemIdsWeHaveSeen = new Set();
   zonesAndItems = zonesAndItems.filter(({ items }) => {

@@ -9,5 +9,5 @@ ReactDOM.render(
   <AppProvider>
     <ItemPageOutfitPreview itemId={itemId} />
   </AppProvider>,
-  rootNode
+  rootNode,
 );

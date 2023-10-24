@@ -91,7 +91,7 @@ export function ItemPageContent({ itemId, isEmbedded = false }) {
         }
       }
     `,
-    { variables: { itemId }, returnPartialData: true }
+    { variables: { itemId }, returnPartialData: true },
   );
 
   if (error) {
@@ -296,7 +296,7 @@ const ItemPageOwnWantListsDropdownButton = React.forwardRef(
         </Flex>
       </Flex>
     );
-  }
+  },
 );
 
 function ItemPageOwnWantListsDropdownContent({ closetLists, item }) {
@@ -330,7 +330,7 @@ function ItemPageOwnWantsListsDropdownRow({ closetList, item }) {
         }
       }
     `,
-    { context: { sendAuth: true } }
+    { context: { sendAuth: true } },
   );
 
   const [sendRemoveFromListMutation] = useMutation(
@@ -346,7 +346,7 @@ function ItemPageOwnWantsListsDropdownRow({ closetList, item }) {
         }
       }
     `,
-    { context: { sendAuth: true } }
+    { context: { sendAuth: true } },
   );
 
   const onChange = React.useCallback(
@@ -391,7 +391,13 @@ function ItemPageOwnWantsListsDropdownRow({ closetList, item }) {
         });
       }
     },
-    [closetList, item, sendAddToListMutation, sendRemoveFromListMutation, toast]
+    [
+      closetList,
+      item,
+      sendAddToListMutation,
+      sendRemoveFromListMutation,
+      toast,
+    ],
   );
 
   return (
@@ -439,7 +445,7 @@ function ItemPageOwnButton({ itemId, isChecked }) {
           context: { sendAuth: true },
         },
       ],
-    }
+    },
   );
 
   const [sendRemoveMutation] = useMutation(
@@ -470,7 +476,7 @@ function ItemPageOwnButton({ itemId, isChecked }) {
           context: { sendAuth: true },
         },
       ],
-    }
+    },
   );
 
   return (
@@ -565,7 +571,7 @@ function ItemPageWantButton({ itemId, isChecked }) {
           context: { sendAuth: true },
         },
       ],
-    }
+    },
   );
 
   const [sendRemoveMutation] = useMutation(
@@ -596,7 +602,7 @@ function ItemPageWantButton({ itemId, isChecked }) {
           context: { sendAuth: true },
         },
       ],
-    }
+    },
   );
 
   return (
@@ -670,7 +676,7 @@ function ItemPageTradeLinks({ itemId, isEmbedded }) {
         }
       }
     `,
-    { variables: { itemId } }
+    { variables: { itemId } },
   );
 
   if (error) {
@@ -762,7 +768,7 @@ function IconCheckbox({ icon, isChecked, ...props }) {
 export function ItemPageOutfitPreview({ itemId }) {
   const idealPose = React.useMemo(
     () => (Math.random() > 0.5 ? "HAPPY_FEM" : "HAPPY_MASC"),
-    []
+    [],
   );
   const [petState, setPetState] = React.useState({
     // We'll fill these in once the canonical appearance data arrives.
@@ -780,11 +786,11 @@ export function ItemPageOutfitPreview({ itemId }) {
   });
   const [preferredSpeciesId, setPreferredSpeciesId] = useLocalStorage(
     "DTIItemPreviewPreferredSpeciesId",
-    null
+    null,
   );
   const [preferredColorId, setPreferredColorId] = useLocalStorage(
     "DTIItemPreviewPreferredColorId",
-    null
+    null,
   );
 
   const setPetStateFromUserAction = React.useCallback(
@@ -819,7 +825,7 @@ export function ItemPageOutfitPreview({ itemId }) {
 
         return newPetState;
       }),
-    [setPreferredColorId, setPreferredSpeciesId]
+    [setPreferredColorId, setPreferredSpeciesId],
   );
 
   // We don't need to reload this query when preferred species/color change, so
@@ -917,7 +923,7 @@ export function ItemPageOutfitPreview({ itemId }) {
           appearanceId: canonicalPetAppearance?.id,
         });
       },
-    }
+    },
   );
 
   const compatibleBodies =
@@ -933,7 +939,7 @@ export function ItemPageOutfitPreview({ itemId }) {
     compatibleBodies.length === 1 &&
     !compatibleBodies[0].representsAllBodies &&
     (data?.item?.name || "").includes(
-      data?.item?.canonicalAppearance?.body?.canonicalAppearance?.species?.name
+      data?.item?.canonicalAppearance?.body?.canonicalAppearance?.species?.name,
     );
   const couldProbablyModelMoreData = !isProbablySpeciesSpecific;
 
@@ -979,7 +985,7 @@ export function ItemPageOutfitPreview({ itemId }) {
         appearanceId: null,
       });
     },
-    [valids, idealPose, setPetStateFromUserAction]
+    [valids, idealPose, setPetStateFromUserAction],
   );
 
   const borderColor = useColorModeValue("green.700", "green.400");
@@ -1195,8 +1201,8 @@ function ExpandOnGroupHover({ children, ...props }) {
       // I don't think this is possible, but I'd like to know if it happens!
       logAndCapture(
         new Error(
-          `Measurer node not ready during effect. Transition won't be smooth.`
-        )
+          `Measurer node not ready during effect. Transition won't be smooth.`,
+        ),
       );
       return;
     }
@@ -1277,8 +1283,8 @@ export function ItemZonesInfo({
 
   const sortedZonesAndTheirBodies = [...zoneLabelsAndTheirBodies].sort((a, b) =>
     buildSortKeyForZoneLabelsAndTheirBodies(a).localeCompare(
-      buildSortKeyForZoneLabelsAndTheirBodies(b)
-    )
+      buildSortKeyForZoneLabelsAndTheirBodies(b),
+    ),
   );
 
   const restrictedZoneLabels = [
@@ -1290,8 +1296,8 @@ export function ItemZonesInfo({
   // preview available in the list has the zones listed here.
   const bodyGroups = new Set(
     zoneLabelsAndTheirBodies.map(({ bodies }) =>
-      bodies.map((b) => b.id).join(",")
-    )
+      bodies.map((b) => b.id).join(","),
+    ),
   );
   const showBodyInfo = bodyGroups.size > 1;
 

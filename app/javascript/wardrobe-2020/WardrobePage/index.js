@@ -117,7 +117,7 @@ function WardrobePage() {
  */
 function SavedOutfitMetaTags({ outfitState }) {
   const updatedAtTimestamp = Math.floor(
-    new Date(outfitState.updatedAt).getTime() / 1000
+    new Date(outfitState.updatedAt).getTime() / 1000,
   );
   const imageUrl =
     `https://impress-outfit-images.openneo.net/outfits` +

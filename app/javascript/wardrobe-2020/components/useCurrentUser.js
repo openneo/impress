@@ -96,7 +96,7 @@ function useCurrentUserViaDb({ isEnabled }) {
         // something is wrong and they need to reach out.
         console.error("[useCurrentUser] Couldn't get current user:", error);
       },
-    }
+    },
   );
 
   if (!isEnabled) {
@@ -159,7 +159,7 @@ export function useLogout() {
         }
         cache.gc();
       },
-    }
+    },
   );
 
   const logoutWithDb = () => {
@@ -191,13 +191,13 @@ export function useAuthModeFeatureFlag() {
   // setting this override value to auth0 on everyone's devices 😅)
   let [savedValue, setSavedValue] = useLocalStorage(
     "DTIAuthModeFeatureFlag",
-    null
+    null,
   );
 
   if (!["auth0", "db", null].includes(savedValue)) {
     console.warn(
       `Unexpected DTIAuthModeFeatureFlag value: %o. Ignoring.`,
-      savedValue
+      savedValue,
     );
     savedValue = null;
   }
@@ -226,7 +226,7 @@ export function getAuthModeFeatureFlag() {
   if (!["auth0", "db", null].includes(savedValue)) {
     console.warn(
       `Unexpected DTIAuthModeFeatureFlag value: %o. Ignoring.`,
-      savedValue
+      savedValue,
     );
     savedValue = null;
   }

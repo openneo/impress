@@ -117,7 +117,7 @@ export function useCommonStyles() {
  */
 export function safeImageUrl(
   urlString,
-  { crossOrigin = null, preferArchive = false } = {}
+  { crossOrigin = null, preferArchive = false } = {},
 ) {
   if (urlString == null) {
     return urlString;
@@ -133,13 +133,13 @@ export function safeImageUrl(
       // So, we provide "http://images.neopets.com" as the base URL when
       // parsing. Most URLs are absolute and will ignore it, but relative URLs
       // will resolve relative to that base.
-      "http://images.neopets.com"
+      "http://images.neopets.com",
     );
   } catch (e) {
     logAndCapture(
       new Error(
-        `safeImageUrl could not parse URL: ${urlString}. Returning a placeholder.`
-      )
+        `safeImageUrl could not parse URL: ${urlString}. Returning a placeholder.`,
+      ),
     );
     return "https://impress-2020.openneo.net/__error__URL-was-not-parseable__";
   }
@@ -154,7 +154,7 @@ export function safeImageUrl(
     if (preferArchive) {
       const archiveUrl = new URL(
         `/api/readFromArchive`,
-        window.location.origin
+        window.location.origin,
       );
       archiveUrl.search = new URLSearchParams({ url: url.toString() });
       url = archiveUrl;
@@ -175,8 +175,8 @@ export function safeImageUrl(
     logAndCapture(
       new Error(
         `safeImageUrl was provided an unsafe URL, but we don't know how to ` +
-          `upgrade it to HTTPS: ${urlString}. Returning a placeholder.`
-      )
+          `upgrade it to HTTPS: ${urlString}. Returning a placeholder.`,
+      ),
     );
     return "https://impress-2020.openneo.net/__error__URL-was-not-HTTPS__";
   }
@@ -197,11 +197,11 @@ export function safeImageUrl(
 export function useDebounce(
   value,
   delay,
-  { waitForFirstPause = false, initialValue = null, forceReset = null } = {}
+  { waitForFirstPause = false, initialValue = null, forceReset = null } = {},
 ) {
   // State and setters for debounced value
   const [debouncedValue, setDebouncedValue] = React.useState(
-    waitForFirstPause ? initialValue : value
+    waitForFirstPause ? initialValue : value,
   );
 
   React.useEffect(
@@ -218,7 +218,7 @@ export function useDebounce(
         clearTimeout(handler);
       };
     },
-    [value, delay] // Only re-call effect if value or delay changes
+    [value, delay], // Only re-call effect if value or delay changes
   );
 
   // The `forceReset` option helps us decide whether to set the value
@@ -322,7 +322,7 @@ export function useLocalStorage(key, initialValue) {
         console.error(error);
       }
     },
-    [key]
+    [key],
   );
 
   const reloadValue = React.useCallback(() => {
@@ -349,7 +349,7 @@ export function useLocalStorage(key, initialValue) {
 
 export function loadImage(
   rawSrc,
-  { crossOrigin = null, preferArchive = false } = {}
+  { crossOrigin = null, preferArchive = false } = {},
 ) {
   const src = safeImageUrl(rawSrc, { crossOrigin, preferArchive });
   const image = new Image();
@@ -403,7 +403,7 @@ export function loadable(load, options) {
         // Return a component that renders nothing, while we reload!
         return () => null;
       }),
-    options
+    options,
   );
 }
 

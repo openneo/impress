@@ -36,7 +36,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
             We're hiding the item art, which is outdated behavior, and we should
             instead be treating it as entirely incompatible. Fixing this is in
             our todo list, sorry for the confusing UI!
-          </Box>
+          </Box>,
         );
       } else if (compatibleItemLayers.length < allItemLayers.length) {
         glitchMessages.push(
@@ -45,7 +45,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
             we believe this is how it looks: some zones are visible, and some
             zones are hidden. If this isn't quite right, please email me at
             matchu@openneo.net and let me know!
-          </Box>
+          </Box>,
         );
       }
     }
@@ -54,12 +54,12 @@ function OutfitKnownGlitchesBadge({ appearance }) {
   // Look for items with the OFFICIAL_SWF_IS_INCORRECT glitch.
   for (const item of items) {
     const itemHasBrokenOnNeopetsDotCom = item.appearance.layers.some((l) =>
-      (l.knownGlitches || []).includes("OFFICIAL_SWF_IS_INCORRECT")
+      (l.knownGlitches || []).includes("OFFICIAL_SWF_IS_INCORRECT"),
     );
     const itemHasBrokenUnconvertedLayers = item.appearance.layers.some(
       (l) =>
         (l.knownGlitches || []).includes("OFFICIAL_SWF_IS_INCORRECT") &&
-        !layerUsesHTML5(l)
+        !layerUsesHTML5(l),
     );
     if (itemHasBrokenOnNeopetsDotCom) {
       glitchMessages.push(
@@ -79,7 +79,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
               know if it looks right, or still looks wrong! Thank you!
             </>
           )}
-        </Box>
+        </Box>,
       );
     }
   }
@@ -87,7 +87,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
   // Look for items with the OFFICIAL_MOVIE_IS_INCORRECT glitch.
   for (const item of items) {
     const itemHasGlitch = item.appearance.layers.some((l) =>
-      (l.knownGlitches || []).includes("OFFICIAL_MOVIE_IS_INCORRECT")
+      (l.knownGlitches || []).includes("OFFICIAL_MOVIE_IS_INCORRECT"),
     );
     if (itemHasGlitch) {
       glitchMessages.push(
@@ -96,7 +96,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
           looks this way on-site, too. But our version might be out of date! If
           you've seen it look better on-site, please email me at
           matchu@openneo.net so we can fix it!
-        </Box>
+        </Box>,
       );
     }
   }
@@ -106,7 +106,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
   if (hiResMode) {
     for (const item of items) {
       const itemHasOfficialSvgIsIncorrect = item.appearance.layers.some((l) =>
-        (l.knownGlitches || []).includes("OFFICIAL_SVG_IS_INCORRECT")
+        (l.knownGlitches || []).includes("OFFICIAL_SVG_IS_INCORRECT"),
       );
       if (itemHasOfficialSvgIsIncorrect) {
         glitchMessages.push(
@@ -114,7 +114,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
             There's a glitch in the art for <i>{item.name}</i> that prevents us
             from showing the SVG image for Hi-Res Mode. Instead, we're showing a
             PNG, which might look a bit blurry on larger screens.
-          </Box>
+          </Box>,
         );
       }
     }
@@ -123,7 +123,9 @@ function OutfitKnownGlitchesBadge({ appearance }) {
   // Look for items with the DISPLAYS_INCORRECTLY_BUT_CAUSE_UNKNOWN glitch.
   for (const item of items) {
     const itemHasGlitch = item.appearance.layers.some((l) =>
-      (l.knownGlitches || []).includes("DISPLAYS_INCORRECTLY_BUT_CAUSE_UNKNOWN")
+      (l.knownGlitches || []).includes(
+        "DISPLAYS_INCORRECTLY_BUT_CAUSE_UNKNOWN",
+      ),
     );
     if (itemHasGlitch) {
       glitchMessages.push(
@@ -132,7 +134,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
           display incorrectly—but we're not sure if it's on our end, or TNT's.
           If you own this item, please email me at matchu@openneo.net to let us
           know how it looks in the on-site customizer!
-        </Box>
+        </Box>,
       );
     }
   }
@@ -140,7 +142,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
   // Look for items with the OFFICIAL_BODY_ID_IS_INCORRECT glitch.
   for (const item of items) {
     const itemHasOfficialBodyIdIsIncorrect = item.appearance.layers.some((l) =>
-      (l.knownGlitches || []).includes("OFFICIAL_BODY_ID_IS_INCORRECT")
+      (l.knownGlitches || []).includes("OFFICIAL_BODY_ID_IS_INCORRECT"),
     );
     if (itemHasOfficialBodyIdIsIncorrect) {
       glitchMessages.push(
@@ -148,7 +150,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
           Last we checked, <i>{item.name}</i> actually is compatible with this
           pet, even though it seems like it shouldn't be. But TNT might change
           this at any time, so be careful!
-        </Box>
+        </Box>,
       );
     }
   }
@@ -164,7 +166,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
           <i>{item.name}</i> isn't converted to HTML5 yet, and our Classic DTI
           code often shows old Dyeworks items in the wrong color. Once it's
           converted, we'll display it correctly!
-        </Box>
+        </Box>,
       );
     }
   }
@@ -178,7 +180,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
         this pose looks incorrect, you can try another by clicking the emoji
         face next to the species/color picker. But be aware that Neopets.com
         might look different!
-      </Box>
+      </Box>,
     );
   }
 
@@ -194,7 +196,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
         horn with the feminine design, and the yellow horn with the masculine
         design—but the pet's gender does not actually affect which horn you'll
         get, and it will often change over time!
-      </Box>
+      </Box>,
     );
   }
 
@@ -211,7 +213,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
         correct data, we'll use that instead. For now, you could also try
         switching to another pose, by clicking the emoji face next to the
         species/color picker!
-      </Box>
+      </Box>,
     );
   }
 
@@ -220,7 +222,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
   // Look for pet layers with the OFFICIAL_SWF_IS_INCORRECT glitch.
   for (const layer of petLayers) {
     const layerHasGlitch = (layer.knownGlitches || []).includes(
-      "OFFICIAL_SWF_IS_INCORRECT"
+      "OFFICIAL_SWF_IS_INCORRECT",
     );
     if (layerHasGlitch) {
       glitchMessages.push(
@@ -230,7 +232,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
           affected its appearance on Neopets.com, too. But our version might be
           out of date! If you've seen it look better on-site, please email me at
           matchu@openneo.net so we can fix it!
-        </Box>
+        </Box>,
       );
     }
   }
@@ -248,7 +250,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
             zone that prevents us from showing the SVG image for Hi-Res Mode.
             Instead, we're showing a PNG, which might look a bit blurry on
             larger screens.
-          </Box>
+          </Box>,
         );
       }
     }
@@ -257,7 +259,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
   // Look for pet layers with the DISPLAYS_INCORRECTLY_BUT_CAUSE_UNKNOWN glitch.
   for (const layer of petLayers) {
     const layerHasGlitch = (layer.knownGlitches || []).includes(
-      "DISPLAYS_INCORRECTLY_BUT_CAUSE_UNKNOWN"
+      "DISPLAYS_INCORRECTLY_BUT_CAUSE_UNKNOWN",
     );
     if (layerHasGlitch) {
       glitchMessages.push(
@@ -269,7 +271,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
           on our end, or TNT's. If you have this pet, please email me at
           matchu@openneo.net to let us know how it looks in the on-site
           customizer!
-        </Box>
+        </Box>,
       );
     }
   }

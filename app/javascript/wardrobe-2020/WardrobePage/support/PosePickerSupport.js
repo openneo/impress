@@ -82,7 +82,7 @@ function PosePickerSupport({
       ${canonicalPetAppearancesFragment}
       ${petAppearanceForPosePickerFragment}
     `,
-    { variables: { speciesId, colorId } }
+    { variables: { speciesId, colorId } },
   );
 
   // Resize the Popover when we toggle loading state, because it probably will
@@ -111,7 +111,7 @@ function PosePickerSupport({
     UNKNOWN: data?.unknown?.id,
   };
   const canonicalAppearanceIds = Object.values(
-    canonicalAppearanceIdsByPose
+    canonicalAppearanceIdsByPose,
   ).filter((id) => id);
 
   const providedAppearanceId = appearanceId;
@@ -149,7 +149,7 @@ function PosePickerSupport({
   }
 
   const currentPetAppearance = data.petAppearances.find(
-    (pa) => pa.id === appearanceId
+    (pa) => pa.id === appearanceId,
   );
   if (!currentPetAppearance) {
     return (
@@ -353,7 +353,7 @@ function PosePickerSupportPoseFields({ petAppearance, speciesId, colorId }) {
           variables: { speciesId, colorId },
         },
       ],
-    }
+    },
   );
 
   const [mutateIsGlitched, isGlitchedMutation] = useMutation(
@@ -388,7 +388,7 @@ function PosePickerSupportPoseFields({ petAppearance, speciesId, colorId }) {
           variables: { speciesId, colorId },
         },
       ],
-    }
+    },
   );
 
   return (

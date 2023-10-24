@@ -85,7 +85,7 @@ function SearchResults({
   const { loading, error, items, numTotalPages } = useSearchResults(
     query,
     outfitState,
-    currentPageNumber
+    currentPageNumber,
   );
 
   // Preload the previous and next page of search results, with this quick
@@ -121,7 +121,7 @@ function SearchResults({
         onMoveFocusUpToQuery(e);
       }
     },
-    [onMoveFocusUpToQuery]
+    [onMoveFocusUpToQuery],
   );
   const goToNextItem = React.useCallback((e) => {
     const nextLabel = e.target.closest("label").nextSibling;
@@ -223,7 +223,7 @@ function SearchResultItem({
         itemId: item.id,
         itemIdsToReconsider,
       }),
-    [item.id, itemIdsToReconsider, dispatchToOutfit]
+    [item.id, itemIdsToReconsider, dispatchToOutfit],
   );
 
   return (

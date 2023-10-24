@@ -111,7 +111,7 @@ export function useOutfitPreview({
         });
       }
     },
-    [setIsPaused, toast]
+    [setIsPaused, toast],
   );
 
   React.useEffect(() => {
@@ -184,7 +184,7 @@ export function OutfitLayers({
       setLoadingDelayHasPassed(false);
       const t = setTimeout(
         () => setLoadingDelayHasPassed(true),
-        loadingDelayMs
+        loadingDelayMs,
       );
       return () => clearTimeout(t);
     }
@@ -203,8 +203,8 @@ export function OutfitLayers({
         Math.min(
           containerRef.current.offsetWidth,
           containerRef.current.offsetHeight,
-          600
-        )
+          600,
+        ),
       );
     }
 
@@ -283,7 +283,7 @@ export function OutfitLayers({
                       as="img"
                       src={safeImageUrl(
                         getBestImageUrlForLayer(layer, { hiResMode }),
-                        { preferArchive }
+                        { preferArchive },
                       )}
                       alt=""
                       objectFit="contain"
@@ -397,7 +397,7 @@ export function usePreloadLayers(layers) {
     for (const layer of layers) {
       const imageAssetPromise = loadImage(
         getBestImageUrlForLayer(layer, { hiResMode }),
-        { preferArchive }
+        { preferArchive },
       );
       imageAssetPromises.push(imageAssetPromise);
 
@@ -407,7 +407,7 @@ export function usePreloadLayers(layers) {
         // placeholder, which should usually be noticeably faster!
         const movieLibraryPromise = loadMovieLibrary(
           layer.canvasMovieLibraryUrl,
-          { preferArchive }
+          { preferArchive },
         );
         const movieAssetPromise = movieLibraryPromise.then((library) => ({
           library,
@@ -420,7 +420,7 @@ export function usePreloadLayers(layers) {
         // The minimal asset for the movie case is *either* the image *or*
         // the movie, because we can start rendering when either is ready.
         minimalAssetPromises.push(
-          Promise.any([imageAssetPromise, movieAssetPromise])
+          Promise.any([imageAssetPromise, movieAssetPromise]),
         );
       } else {
         minimalAssetPromises.push(imageAssetPromise);
@@ -458,13 +458,13 @@ export function usePreloadLayers(layers) {
       }
 
       setLayersHaveAnimations(
-        (alreadyHasAnimations) => alreadyHasAnimations || assetHasAnimations
+        (alreadyHasAnimations) => alreadyHasAnimations || assetHasAnimations,
       );
     };
     movieAssetPromises.forEach((p) =>
       p.then(checkHasAnimations).catch((e) => {
         console.error(`Error preloading movie library ${p.libraryUrl}:`, e);
-      })
+      }),
     );
 
     return () => {

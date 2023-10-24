@@ -12,7 +12,7 @@ export function useSearchResults(
   query,
   outfitState,
   currentPageNumber,
-  { skip = false } = {}
+  { skip = false } = {},
 ) {
   const { speciesId, colorId } = outfitState;
 
@@ -125,7 +125,7 @@ export function useSearchResults(
       },
       // Return `numTotalItems` from the GQL cache while waiting for next page!
       returnPartialData: true,
-    }
+    },
   );
 
   const loading = debouncedQuery !== query || loadingGQL;

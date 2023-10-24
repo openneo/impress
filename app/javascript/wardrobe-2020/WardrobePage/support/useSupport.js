@@ -21,7 +21,7 @@ function useSupport() {
       typeof localStorage !== "undefined"
         ? localStorage.getItem("supportSecret")
         : null,
-    []
+    [],
   );
 
   const isSupportUser = supportSecret != null;

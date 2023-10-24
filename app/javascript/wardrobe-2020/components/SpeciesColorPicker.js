@@ -110,8 +110,8 @@ function SpeciesColorPicker({
         new Error(
           `Assertion error in SpeciesColorPicker: Entered an invalid state, ` +
             `with prop stateMustAlwaysBeValid: speciesId=${speciesId}, ` +
-            `colorId=${newColorId}.`
-        )
+            `colorId=${newColorId}.`,
+        ),
       );
       return;
     }
@@ -146,8 +146,8 @@ function SpeciesColorPicker({
         new Error(
           `Assertion error in SpeciesColorPicker: species not found. ` +
             `speciesId=${speciesId}, newSpeciesId=${newSpeciesId}, ` +
-            `colorId=${colorId}.`
-        )
+            `colorId=${colorId}.`,
+        ),
       );
       return;
     }
@@ -187,7 +187,8 @@ function SpeciesColorPicker({
   let visibleColors = allColors;
   if (stateMustAlwaysBeValid && valids && speciesId) {
     visibleColors = visibleColors.filter(
-      (c) => getValidPoses(valids, speciesId, c.id).size > 0 || c.id === colorId
+      (c) =>
+        getValidPoses(valids, speciesId, c.id).size > 0 || c.id === colorId,
     );
   }
 
@@ -350,7 +351,7 @@ export function useAllValidPetPoses() {
       responseType: "arrayBuffer",
       // If we already have globally-cached valids, skip the request.
       skip: cachedResponseForAllValidPetPoses != null,
-    }
+    },
   );
 
   // Use the globally-cached response if we have one, or await the network
@@ -360,7 +361,7 @@ export function useAllValidPetPoses() {
 
   const valids = React.useMemo(
     () => validsBuffer && new DataView(validsBuffer),
-    [validsBuffer]
+    [validsBuffer],
   );
 
   // Once a network response comes in, save it as the globally-cached response.
@@ -388,8 +389,8 @@ function getPairByte(valids, speciesId, colorId) {
   } catch (e) {
     logAndCapture(
       new Error(
-        `Error loading valid poses for species=${speciesId}, color=${colorId}: ${e.message}`
-      )
+        `Error loading valid poses for species=${speciesId}, color=${colorId}: ${e.message}`,
+      ),
     );
     return 0;
   }

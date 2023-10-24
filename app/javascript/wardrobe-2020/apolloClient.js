@@ -22,7 +22,7 @@ const typePolicies = {
       },
       items: (_, { args, toReference }) => {
         return args.ids.map((id) =>
-          toReference({ __typename: "Item", id }, true)
+          toReference({ __typename: "Item", id }, true),
         );
       },
       item: (_, { args, toReference }) => {
@@ -63,15 +63,15 @@ const typePolicies = {
           "[appearanceOn] seeking cached appearance",
           speciesId,
           colorId,
-          readField("id")
+          readField("id"),
         );
         const speciesStandardBodyId = readField(
           "standardBodyId",
-          toReference({ __typename: "Species", id: speciesId })
+          toReference({ __typename: "Species", id: speciesId }),
         );
         const colorIsStandard = readField(
           "isStandard",
-          toReference({ __typename: "Color", id: colorId })
+          toReference({ __typename: "Color", id: colorId }),
         );
         if (speciesStandardBodyId == null || colorIsStandard == null) {
           // We haven't loaded all the species/colors into cache yet. We might
@@ -86,7 +86,7 @@ const typePolicies = {
           const itemId = readField("id");
           console.debug(
             "[appearanceOn] standard color, will read:",
-            `item-${itemId}-body-${speciesStandardBodyId}`
+            `item-${itemId}-body-${speciesStandardBodyId}`,
           );
           return toReference({
             __typename: "ItemAppearance",
@@ -121,7 +121,7 @@ const typePolicies = {
         }
 
         const theyOwnThisItem = itemsTheyOwn.some(
-          (itemRef) => readField("id", itemRef) === thisItemId
+          (itemRef) => readField("id", itemRef) === thisItemId,
         );
         return theyOwnThisItem;
       },
@@ -144,7 +144,7 @@ const typePolicies = {
         }
 
         const theyWantThisItem = itemsTheyWant.some(
-          (itemRef) => readField("id", itemRef) === thisItemId
+          (itemRef) => readField("id", itemRef) === thisItemId,
         );
         return theyWantThisItem;
       },
@@ -218,7 +218,7 @@ const buildLink = (getAuth0) =>
     .concat(
       createPersistedQueryLink({
         useGETForHashedQueries: true,
-      })
+      }),
     )
     .concat(httpLink);
 

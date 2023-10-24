@@ -364,7 +364,7 @@ const LinkBadge = React.forwardRef(
         }
       </Badge>
     );
-  }
+  },
 );
 
 const fullDateFormatter = new Intl.DateTimeFormat("en-US", {

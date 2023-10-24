@@ -26,7 +26,7 @@ import useSupport from "./support/useSupport";
 
 const LoadableItemPageDrawer = loadable(() => import("../ItemPageDrawer"));
 const LoadableItemSupportDrawer = loadable(() =>
-  import("./support/ItemSupportDrawer")
+  import("./support/ItemSupportDrawer"),
 );
 
 /**
@@ -151,17 +151,17 @@ function ItemContainer({ children, isDisabled = false }) {
 
   const focusBackgroundColor = useColorModeValue(
     theme.colors.gray["100"],
-    theme.colors.gray["700"]
+    theme.colors.gray["700"],
   );
 
   const activeBorderColor = useColorModeValue(
     theme.colors.green["400"],
-    theme.colors.green["500"]
+    theme.colors.green["500"],
   );
 
   const focusCheckedBorderColor = useColorModeValue(
     theme.colors.green["800"],
-    theme.colors.green["300"]
+    theme.colors.green["300"],
   );
 
   return (
@@ -205,10 +205,10 @@ function ItemBadges({ item }) {
   const { isSupportUser } = useSupport();
   const occupiedZones = item.appearanceOn.layers.map((l) => l.zone);
   const restrictedZones = item.appearanceOn.restrictedZones.filter(
-    (z) => z.isCommonlyUsedByItems
+    (z) => z.isCommonlyUsedByItems,
   );
   const isMaybeAnimated = item.appearanceOn.layers.some(
-    (l) => l.canvasMovieLibraryUrl
+    (l) => l.canvasMovieLibraryUrl,
   );
 
   return (
@@ -237,11 +237,11 @@ function ItemActionButton({ icon, label, to, onClick }) {
 
   const focusBackgroundColor = useColorModeValue(
     theme.colors.gray["300"],
-    theme.colors.gray["800"]
+    theme.colors.gray["800"],
   );
   const focusColor = useColorModeValue(
     theme.colors.gray["700"],
-    theme.colors.gray["200"]
+    theme.colors.gray["200"],
   );
 
   return (

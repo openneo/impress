@@ -62,11 +62,11 @@ function OutfitControls({
   const [focusIsLocked, setFocusIsLocked] = React.useState(false);
   const onLockFocus = React.useCallback(
     () => setFocusIsLocked(true),
-    [setFocusIsLocked]
+    [setFocusIsLocked],
   );
   const onUnlockFocus = React.useCallback(
     () => setFocusIsLocked(false),
-    [setFocusIsLocked]
+    [setFocusIsLocked],
   );
 
   // HACK: As of 1.0.0-rc.0, Chakra's `toast` function rebuilds unnecessarily,
@@ -97,7 +97,7 @@ function OutfitControls({
         });
       }
     },
-    [dispatchToOutfit, toast]
+    [dispatchToOutfit, toast],
   );
 
   const maybeUnlockFocus = (e) => {
@@ -145,11 +145,11 @@ function OutfitControls({
                   }
                 }
               `,
-              focusIsLocked && "focus-is-locked"
+              focusIsLocked && "focus-is-locked",
             )}
             onClickCapture={(e) => {
               const opacity = parseFloat(
-                getComputedStyle(e.currentTarget).opacity
+                getComputedStyle(e.currentTarget).opacity,
               );
               if (opacity < 0.5) {
                 // If the controls aren't visible right now, then clicks on them are
@@ -321,7 +321,7 @@ function OutfitHTML5Badge({ appearance }) {
     appearance.petAppearance?.layers.every(layerUsesHTML5);
 
   const itemsNotUsingHTML5 = appearance.items.filter((item) =>
-    item.appearance.layers.some((l) => !layerUsesHTML5(l))
+    item.appearance.layers.some((l) => !layerUsesHTML5(l)),
   );
   itemsNotUsingHTML5.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -448,7 +448,7 @@ function PlayPauseButton() {
   // We show an intro animation if this mounts while paused. Whereas if we're
   // not paused, we initialize as if we had already finished.
   const [blinkInState, setBlinkInState] = React.useState(
-    isPaused ? { type: "ready" } : { type: "done" }
+    isPaused ? { type: "ready" } : { type: "done" },
   );
   const buttonRef = React.useRef(null);
 
@@ -532,7 +532,7 @@ const PlayPauseButtonContent = React.forwardRef(
         {isPaused ? <>Paused</> : <>Playing</>}
       </TranslucentButton>
     );
-  }
+  },
 );
 
 function SettingsButton({ onLockFocus, onUnlockFocus }) {
@@ -700,7 +700,7 @@ function useDownloadableImage(visibleLayers) {
       loadImage(getBestImageUrlForLayer(layer, { hiResMode }), {
         crossOrigin: "anonymous",
         preferArchive,
-      })
+      }),
     );
 
     let images;
@@ -729,7 +729,7 @@ function useDownloadableImage(visibleLayers) {
     console.debug(
       "Generated image for download",
       layerIds,
-      canvas.toDataURL("image/png")
+      canvas.toDataURL("image/png"),
     );
     setDownloadImageUrl(canvas.toDataURL("image/png"));
     setPreparedForLayerIds(layerIds);

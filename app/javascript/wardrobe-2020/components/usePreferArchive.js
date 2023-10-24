@@ -7,7 +7,7 @@ import { useLocalStorage } from "../util";
 function usePreferArchive() {
   const [preferArchiveSavedValue, setPreferArchive] = useLocalStorage(
     "DTIPreferArchive",
-    null
+    null,
   );
 
   // Oct 13 2022: I might default this back to on again if the lag gets

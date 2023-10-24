@@ -35,7 +35,7 @@ function ItemsAndSearchPanels({
   const hasRoomForSearchFooter = useBreakpointValue({ base: false, md: true });
   const [canUseSearchFooter] = useLocalStorage(
     "DTIFeatureFlagCanUseSearchFooter",
-    false
+    false,
   );
   const isShowingSearchFooter = canUseSearchFooter && hasRoomForSearchFooter;
 

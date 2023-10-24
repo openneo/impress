@@ -50,7 +50,7 @@ function AppearanceLayerSupportModal({
 }) {
   const [selectedBodyId, setSelectedBodyId] = React.useState(layer.bodyId);
   const [selectedKnownGlitches, setSelectedKnownGlitches] = React.useState(
-    layer.knownGlitches
+    layer.knownGlitches,
   );
 
   const [previewBiology, setPreviewBiology] = React.useState({
@@ -140,7 +140,7 @@ function AppearanceLayerSupportModal({
             title: `Saved layer ${layer.id}: ${parentName}`,
           });
         },
-      }
+      },
     );
 
   // TODO: Would be nicer to just learn the correct URL from the server, but we
@@ -148,7 +148,7 @@ function AppearanceLayerSupportModal({
   //       the GraphQL request for non-Support users. We could also just try
   //       loading them, but, ehhh…
   const [newManifestUrl, oldManifestUrl] = convertSwfUrlToPossibleManifestUrls(
-    layer.swfUrl
+    layer.swfUrl,
   );
 
   return (
@@ -553,7 +553,7 @@ function AppearanceLayerSupportModalRemoveButton({
           title: `Removed layer ${layer.id} from ${item.name}`,
         });
       },
-    }
+    },
   );
 
   return (

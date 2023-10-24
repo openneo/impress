@@ -37,7 +37,7 @@ import twemojiFem from "../images/twemoji/fem.svg";
 const PosePickerSupport = loadable(() => import("./support/PosePickerSupport"));
 
 const PosePickerSupportSwitch = loadable(() =>
-  import("./support/PosePickerSupport").then((m) => m.PosePickerSupportSwitch)
+  import("./support/PosePickerSupport").then((m) => m.PosePickerSupportSwitch),
 );
 
 /**
@@ -68,7 +68,7 @@ function PosePicker({
   const { loading, error, poseInfos } = usePoses(speciesId, colorId, pose);
   const [isInSupportMode, setIsInSupportMode] = useLocalStorage(
     "DTIPosePickerIsInSupportMode",
-    false
+    false,
   );
   const { isSupportUser } = useSupport();
   const toast = useToast();
@@ -87,10 +87,10 @@ function PosePicker({
   // can happen with direct URL navigation, or pet loading when modeling isn't
   // updated! Let's do some recovery.
   const selectedPoseIsAvailable = Object.values(poseInfos).some(
-    (pi) => pi.isSelected && pi.isAvailable
+    (pi) => pi.isSelected && pi.isAvailable,
   );
   const firstAvailablePose = Object.values(poseInfos).find(
-    (pi) => pi.isAvailable
+    (pi) => pi.isAvailable,
   )?.pose;
   React.useEffect(() => {
     if (loading) {
@@ -114,7 +114,7 @@ function PosePicker({
 
       console.warn(
         `Pose ${pose} not found for speciesId=${speciesId}, ` +
-          `colorId=${colorId}. Redirecting to pose ${firstAvailablePose}.`
+          `colorId=${colorId}. Redirecting to pose ${firstAvailablePose}.`,
       );
       dispatchToOutfit({ type: "setPose", pose: firstAvailablePose });
     }
@@ -143,7 +143,7 @@ function PosePicker({
   // (Unless we're Support, in which case we want the ability to pop it open to
   // inspect and label the Unknown poses!)
   const numAvailablePoses = Object.values(poseInfos).filter(
-    (p) => p.isAvailable
+    (p) => p.isAvailable,
   ).length;
   if (numAvailablePoses <= 1 && !isSupportUser) {
     return null;
@@ -192,7 +192,7 @@ function PosePicker({
                         border-width: 2px !important;
                       }
                     `,
-                    isOpen && "is-open"
+                    isOpen && "is-open",
                   )}
                   {...props}
                 >
@@ -393,7 +393,7 @@ function PoseOption({
 
   const borderColor = useColorModeValue(
     theme.colors.green["600"],
-    theme.colors.green["300"]
+    theme.colors.green["300"],
   );
 
   return (
@@ -480,7 +480,7 @@ function PoseOption({
                     border-width: 3px;
                   }
                 `,
-                !poseInfo.isAvailable && "not-available"
+                !poseInfo.isAvailable && "not-available",
               )}
             />
             {poseInfo.isAvailable ? (
@@ -580,7 +580,7 @@ function usePoses(speciesId, colorId, selectedPose) {
 
       ${petAppearanceForPosePickerFragment}
     `,
-    { variables: { speciesId, colorId }, onError: (e) => console.error(e) }
+    { variables: { speciesId, colorId }, onError: (e) => console.error(e) },
   );
 
   const poseInfos = {

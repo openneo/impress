@@ -13,13 +13,13 @@ import { useSearchResults } from "./useSearchResults";
 function SearchFooter({ searchQuery, onChangeSearchQuery, outfitState }) {
   const [canUseSearchFooter, setCanUseSearchFooter] = useLocalStorage(
     "DTIFeatureFlagCanUseSearchFooter",
-    false
+    false,
   );
 
   const { items, numTotalPages } = useSearchResults(
     searchQuery,
     outfitState,
-    1
+    1,
   );
 
   React.useEffect(() => {

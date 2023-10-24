@@ -109,12 +109,12 @@ export function ItemThumbnail({
 
   const borderColor = useColorModeValue(
     theme.colors.green["700"],
-    "transparent"
+    "transparent",
   );
 
   const focusBorderColor = useColorModeValue(
     theme.colors.green["600"],
-    "transparent"
+    "transparent",
   );
 
   return (
@@ -233,7 +233,7 @@ export function ItemBadgeList({ children, ...props }) {
     <Wrap spacing="2" opacity="0.7" {...props}>
       {React.Children.map(
         children,
-        (badge) => badge && <WrapItem>{badge}</WrapItem>
+        (badge) => badge && <WrapItem>{badge}</WrapItem>,
       )}
     </Wrap>
   );
@@ -316,7 +316,7 @@ export const ItemKindBadge = React.forwardRef(
     } else {
       return <NpBadge ref={ref} isEditButton={isEditButton} {...props} />;
     }
-  }
+  },
 );
 
 export function YouOwnThisBadge({ variant = "long" }) {

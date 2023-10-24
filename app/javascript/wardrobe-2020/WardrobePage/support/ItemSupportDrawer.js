@@ -114,7 +114,7 @@ function ItemSupportRestrictedZones({ item }) {
         }
       }
     `,
-    { variables: { itemId: item.id, speciesId, colorId } }
+    { variables: { itemId: item.id, speciesId, colorId } },
   );
 
   if (loading) {
@@ -160,7 +160,7 @@ function ItemSupportFields({ item }) {
       //     persuades Apollo that this is a different query, so it re-checks
       //     its cache and finds the empty `manualSpecialColor`. Weird!
       displayName: `ItemSupportFields-${new Date()}`,
-    }
+    },
   );
 
   const errorColor = useColorModeValue("red.500", "red.300");
@@ -196,17 +196,15 @@ function ItemSupportSpecialColorFields({
     loading: colorsLoading,
     error: colorsError,
     data: colorsData,
-  } = useQuery(
-    gql`
-      query ItemSupportDrawerAllColors {
-        allColors {
-          id
-          name
-          isStandard
-        }
+  } = useQuery(gql`
+    query ItemSupportDrawerAllColors {
+      allColors {
+        id
+        name
+        isStandard
       }
-    `
-  );
+    }
+  `);
 
   const [
     mutate,
@@ -253,7 +251,7 @@ function ItemSupportSpecialColorFields({
         // Ignore errors from the promise, because we'll handle them on render!
       });
     },
-    [item.id, mutate, supportSecret]
+    [item.id, mutate, supportSecret],
   );
 
   const nonStandardColors =
@@ -362,7 +360,7 @@ function ItemSupportPetCompatibilityRuleFields({
         // Ignore errors from the promise, because we'll handle them on render!
       });
     },
-    [item.id, mutate, supportSecret]
+    [item.id, mutate, supportSecret],
   );
 
   return (

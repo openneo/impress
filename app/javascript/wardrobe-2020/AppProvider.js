@@ -55,7 +55,7 @@ function DTIApolloProvider({ children, additionalCacheState = {} }) {
         getAuth0: () => auth0Ref.current,
         initialCacheState,
       }),
-    [initialCacheState]
+    [initialCacheState],
   );
 
   // When we get a new `additionalCacheState` object, merge it into the cache:
@@ -88,7 +88,7 @@ function DTIApolloProvider({ children, additionalCacheState = {} }) {
     console.debug(
       "Merging Apollo cache:",
       additionalCacheState,
-      mergedCacheState
+      mergedCacheState,
     );
     client.cache.restore(mergedCacheState);
   }, [client, additionalCacheState]);
