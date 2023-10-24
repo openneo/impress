@@ -1,6 +1,6 @@
 class ClosetList < ApplicationRecord
   belongs_to :user
-  has_many :hangers, :class_name => 'ClosetHanger', :foreign_key => 'list_id'
+  has_many :hangers, class_name: 'ClosetHanger', foreign_key: 'list_id', dependent: :destroy
 
   validates :name, :presence => true, :uniqueness => {:scope => :user_id}
   validates :user, :presence => true

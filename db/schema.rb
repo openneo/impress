@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_02_195548) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_24_221826) do
   create_table "auth_servers", id: :integer, charset: "latin1", force: :cascade do |t|
     t.string "short_name", limit: 10, null: false
     t.string "name", limit: 40, null: false
@@ -114,11 +114,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_02_195548) do
     t.index ["outfit_id", "is_worn"], name: "index_item_outfit_relationships_on_outfit_id_and_is_worn"
   end
 
-  create_table "item_translations", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "item_translations", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "item_id"
     t.string "locale"
     t.string "name"
-    t.text "description"
+    t.text "description", size: :medium
     t.string "rarity"
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
@@ -128,7 +128,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_02_195548) do
     t.index ["name"], name: "index_item_translations_name"
   end
 
-  create_table "items", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+  create_table "items", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.text "zones_restrict", null: false
     t.text "thumbnail_url", size: :medium, null: false
     t.string "category", limit: 50
@@ -187,7 +187,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_02_195548) do
     t.index ["user_id"], name: "index_outfits_on_user_id"
   end
 
-  create_table "parents_swf_assets", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+  create_table "parents_swf_assets", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "parent_id", limit: 3, null: false
     t.integer "swf_asset_id", limit: 3, null: false
     t.string "parent_type", limit: 8, null: false
@@ -202,7 +202,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_02_195548) do
     t.datetime "created_at", precision: nil, null: false
   end
 
-  create_table "pet_states", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+  create_table "pet_states", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "pet_type_id", limit: 3, null: false
     t.text "swf_asset_ids", null: false
     t.boolean "female"
@@ -214,7 +214,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_02_195548) do
     t.index ["pet_type_id"], name: "pet_states_pet_type_id"
   end
 
-  create_table "pet_types", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+  create_table "pet_types", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "color_id", limit: 1, null: false
     t.integer "species_id", limit: 1, null: false
     t.datetime "created_at", precision: nil, null: false
@@ -248,7 +248,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_02_195548) do
     t.index ["species_id"], name: "index_species_translations_on_species_id"
   end
 
-  create_table "swf_assets", id: :integer, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+  create_table "swf_assets", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "type", limit: 7, null: false
     t.integer "remote_id", limit: 3, null: false
     t.text "url", size: :medium, null: false
