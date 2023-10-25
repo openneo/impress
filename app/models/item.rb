@@ -631,8 +631,4 @@ class Item < ApplicationRecord
 
     items.values
   end
-
-  def self.build_proxies(ids)
-    Item::ProxyArray.new(ids)
-  end
 end
