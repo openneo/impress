@@ -164,7 +164,9 @@
 
     - name: Install system dependencies for impress's Ruby gems
       apt:
-        name: libmysqlclient-dev
+        name:
+          - libmysqlclient-dev
+          - libyaml-dev
 
     - name: Create the app folder
       file:

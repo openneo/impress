@@ -14,3 +14,8 @@
 # ActiveSupport::Inflector.inflections(:en) do |inflect|
 #   inflect.acronym "RESTful"
 # end
+
+# Teach Zeitwerk that `RocketAMF` is what to expect in `lib/rocketamf`.
+ActiveSupport::Inflector.inflections(:en) do |inflect|
+  inflect.acronym "RocketAMF"
+end
