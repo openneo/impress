@@ -7,7 +7,7 @@
     = link_to outfit.name, outfit, :class => 'outfit-name'
   
   %footer
-    = link_to_edit_outfit t('.edit'), outfit, :class => 'outfit-edit-link'
+    = link_to t('.edit'), outfit, :class => 'outfit-edit-link'
     = button_to t('.delete'), outfit, :method => 'delete',
                 :class => 'outfit-delete-button',
                 :confirm => t('.delete_confirmation',

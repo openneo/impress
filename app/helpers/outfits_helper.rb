@@ -10,20 +10,6 @@ module OutfitsHelper
       :user_link => link_to(user.name, user_contributions_path(user)),
       :contributed_description => contributed_description(contributed, false)
   end
-
-  def link_to_edit_outfit(content_or_outfit, outfit_or_options, options={}, &block)
-    if block_given?
-      content = capture_haml(&block)
-      outfit = content_or_outfit
-      options = outfit_or_options
-    else
-      content = content_or_outfit
-      outfit = outfit_or_options
-    end
-    query = outfit.to_query
-    query << "&outfit=#{outfit.id}" if user_signed_in? && outfit.user_id == current_user.id
-    link_to content, wardrobe_path(:anchor => query), options
-  end
   
   def search_helper(filter, standard_key)
     key = translate("#{filter}.key")
