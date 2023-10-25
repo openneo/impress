@@ -92,13 +92,9 @@ module ApplicationHelper
   end
 
   JAVASCRIPT_LIBRARIES = {
-    :addthis => 'https://s7.addthis.com/js/250/addthis_widget.js#username=openneo',
-    :bitly => 'https://bit.ly/javascript-api.js?version=latest&login=openneo&apiKey=R_4d0438829b7a99860de1d3edf55d8dc8',
-    :html5 => 'https://html5shim.googlecode.com/svn/trunk/html5.js',
     :jquery => 'https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js',
     :jquery20 => 'https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js',
     :jquery_tmpl => 'https://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js',
-    :swfobject => 'https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js'
   }
 
   def include_javascript_libraries(*library_names)

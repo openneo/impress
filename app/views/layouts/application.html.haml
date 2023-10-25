@@ -11,8 +11,6 @@
       - else
         #{t 'app_name'}: #{t '.title_tagline'}
     %link{href: image_path('favicon.png'), rel: 'icon'}
-    /[if IE]
-      = include_javascript_libraries :html5
     = yield :stylesheets
     = stylesheet_link_tag "application"
     = yield :meta
