@@ -103,8 +103,3 @@ Rails.application.configure do
   # Allow connections on Vagrant's private network.
   config.web_console.permissions = '10.0.2.2'
 end
-
-LocalImpressHost = 'betanewimpress.openneo.net'
-
-RemoteImpressHost = 'beta.impress.openneo.net'
-
