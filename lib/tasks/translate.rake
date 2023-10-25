@@ -26,7 +26,7 @@ namespace :translate do
   desc "Download the Rainbow Pool data for the given locale"
   task :pet_attributes => :environment do
     with_given_locale do |neopets_language_code|
-      pool_url = "http://www.neopets.com/pool/all_pb.phtml"
+      pool_url = "https://www.neopets.com/pool/all_pb.phtml"
       pool_options = {
         :cookies => {:neologin => URI.encode(ENV['NEOLOGIN'])},
         :params => {:lang => neopets_language_code}

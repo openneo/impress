@@ -5,7 +5,7 @@ GIT
     RocketAMF (1.0.0)
 
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     actioncable (7.1.1)
       actionpack (= 7.1.1)

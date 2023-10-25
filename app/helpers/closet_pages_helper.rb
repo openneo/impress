@@ -4,7 +4,7 @@ module ClosetPagesHelper
   end
 
   def neopets_login_url
-    "http://www.neopets.com/loginpage.phtml"
+    "https://www.neopets.com/loginpage.phtml"
   end
 end
 

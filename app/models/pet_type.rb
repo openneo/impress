@@ -1,5 +1,5 @@
 class PetType < ApplicationRecord
-  IMAGE_CPN_FORMAT = 'http://pets.neopets.com/cpn/%s/1/1.png';
+  IMAGE_CPN_FORMAT = 'https://pets.neopets.com/cpn/%s/1/1.png';
   IMAGE_CP_LOCATION_REGEX = %r{^/cp/(.+?)/[0-9]+/[0-9]+\.png$};
   IMAGE_CPN_ACCEPTABLE_NAME = /^[a-z0-9_]+$/
 

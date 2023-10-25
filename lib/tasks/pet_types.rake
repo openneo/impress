@@ -50,7 +50,7 @@ namespace :pet_types do
   desc "Download the Rainbow Pool data for the given locale"
   task :download_basic_image_hashes => :environment do
     Species.find_each do |species|
-      pool_url = "http://www.neopets.com/pool/all_pb.phtml"
+      pool_url = "https://www.neopets.com/pool/all_pb.phtml"
       pool_options = {
         :cookies => {:neologin => URI.encode(ENV['NEOLOGIN'])},
         :params => {:lang => 'en', :f_species_id => species.id}

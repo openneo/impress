@@ -344,7 +344,7 @@ var Neopia = (function ($, I18n) {
       }
       var itemName = this.props.item.name;
       var imageSrc =
-        "http://pets.neopets.com/cpn/" +
+        "https://pets.neopets.com/cpn/" +
         petName +
         "/1/1.png?" +
         this.appearanceQuery();

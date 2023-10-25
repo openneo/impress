@@ -48,7 +48,7 @@
 
   function loadNotable() {
     // TODO: add HTTPS to notables
-    // $.getJSON('http://notables.openneo.net/api/1/days/ago/1?callback=?', function (response) {
+    // $.getJSON('https://notables.openneo.net/api/1/days/ago/1?callback=?', function (response) {
     //   var notables = response.notables;
     //   var i = Math.floor(Math.random() * notables.length);
     //   Preview.Job.fallback = new Preview.Job.Name(notables[i].petName);
@@ -87,7 +87,7 @@
         // lol lazy code for prank image :P
         // TODO: HTTPS?
         return (
-          "http://swfimages.impress.openneo.net" +
+          "https://swfimages.impress.openneo.net" +
           "/biology/000/000/0-2/" +
           key.substr(2) +
           "/300x300.png"
