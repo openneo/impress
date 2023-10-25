@@ -4,26 +4,22 @@ class PetsController < ApplicationController
   rescue_from Pet::DownloadError, :with => :pet_download_error
 
   def load
-    if params[:name] == '!'
-      redirect_to roulette_path
-    else
-      raise Pet::PetNotFound unless params[:name]
-      @pet = Pet.load(
-        params[:name],
-        :item_scope => Item.includes(:translations),
-        :timeout => 1
-      )
-      points = contribute(current_user, @pet)
+    raise Pet::PetNotFound unless params[:name]
+    @pet = Pet.load(
+      params[:name],
+      :item_scope => Item.includes(:translations),
+      :timeout => 1
+    )
+    points = contribute(current_user, @pet)
+    
+    respond_to do |format|
+      format.html do
+        path = destination + @pet.wardrobe_query
+        redirect_to path
+      end
       
-      respond_to do |format|
-        format.html do
-          path = destination + @pet.wardrobe_query
-          redirect_to path
-        end
-        
-        format.json do
-          render :json => {:points => points, :query => @pet.wardrobe_query}
-        end
+      format.json do
+        render :json => {:points => points, :query => @pet.wardrobe_query}
       end
     end
   end
