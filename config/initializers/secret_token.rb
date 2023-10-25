@@ -9,4 +9,11 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-OpenneoImpressItems::Application.config.secret_key_base = ENV.fetch('SECRET_TOKEN')
+if Rails.env.development?
+	# In development, we use a hardcoded secret key, because it doesn't actually
+	# need to be secret!
+	OpenneoImpressItems::Application.config.secret_key_base = "7584841652f89044a8b5a428efa6dfac2461449eb24741a33668cd642130d79f93b0347766ebf4a4d7d5033a263c36431594ad56b5735a7325c8cdda991219c2"
+else
+	# In general, we use the SECRET_TOKEN provided as an environment variable!
+	OpenneoImpressItems::Application.config.secret_key_base = ENV.fetch('SECRET_TOKEN')
+end

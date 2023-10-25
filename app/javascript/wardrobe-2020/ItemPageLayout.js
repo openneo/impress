@@ -159,7 +159,7 @@ function ItemPageBadges({ item, isEmbedded }) {
           }
         >
           {item?.ncTradeValueText && (
-            <LinkBadge href="http://www.neopets.com/~owls">
+            <LinkBadge href="https://www.neopets.com/~owls">
               OWLS: {item?.ncTradeValueText}
             </LinkBadge>
           )}
@@ -169,7 +169,7 @@ function ItemPageBadges({ item, isEmbedded }) {
         {!item?.isNc && !item?.isPb && (
           <LinkBadge
             href={
-              "http://www.neopets.com/shops/wizard.phtml?string=" +
+              "https://www.neopets.com/shops/wizard.phtml?string=" +
               encodeURIComponent(item?.name)
             }
             isEmbedded={isEmbedded}
@@ -182,7 +182,7 @@ function ItemPageBadges({ item, isEmbedded }) {
         {!item?.isNc && !item?.isPb && (
           <LinkBadge
             href={
-              "http://www.neopets.com/portal/supershopwiz.phtml?string=" +
+              "https://www.neopets.com/portal/supershopwiz.phtml?string=" +
               encodeURIComponent(item?.name)
             }
             isEmbedded={isEmbedded}
@@ -195,7 +195,7 @@ function ItemPageBadges({ item, isEmbedded }) {
         {!item?.isNc && !item?.isPb && (
           <LinkBadge
             href={
-              "http://www.neopets.com/island/tradingpost.phtml?type=browse&criteria=item_exact&search_string=" +
+              "https://www.neopets.com/island/tradingpost.phtml?type=browse&criteria=item_exact&search_string=" +
               encodeURIComponent(item?.name)
             }
             isEmbedded={isEmbedded}
@@ -208,7 +208,7 @@ function ItemPageBadges({ item, isEmbedded }) {
         {!item?.isNc && !item?.isPb && (
           <LinkBadge
             href={
-              "http://www.neopets.com/genie.phtml?type=process_genie&criteria=exact&auctiongenie=" +
+              "https://www.neopets.com/genie.phtml?type=process_genie&criteria=exact&auctiongenie=" +
               encodeURIComponent(item?.name)
             }
             isEmbedded={isEmbedded}

@@ -1,7 +1,7 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 ruby '3.1.4'
 
-gem 'rails', '= 7.0.7.1'
+gem 'rails', '~> 7.1', '>= 7.1.1'
 
 # The HTTP server running the Rails instance.
 gem 'puma', '~> 6.3', '>= 6.3.1'
@@ -54,6 +54,9 @@ gem 'letter_opener', '~> 1.8', '>= 1.8.1', group: :development
 # For parallel API calls.
 gem 'parallel', '~> 1.23'
 
+# For miscellaneous HTTP requests.
+gem "httparty", "~> 0.21.0"
+
 # For debugging.
 gem 'web-console', '~> 4.2', group: :development
 
@@ -62,9 +65,3 @@ gem 'record_tag_helper', '~> 1.0', '>= 1.0.1'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '~> 1.16', require: false
-
-# For testing.
-group :test do
-  gem 'factory_girl_rails', '~> 4.9'
-  gem 'rspec-rails', '~> 2.0.0.beta.22'
-end

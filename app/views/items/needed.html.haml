@@ -1,6 +1,6 @@
 - title "Needed items for #{@pet_type.human_name}"
 %h2
-  = image_tag "http://pets.neopets.com/cpn/#{@pet_name}/1/1.png",
+  = image_tag "https://pets.neopets.com/cpn/#{@pet_name}/1/1.png",
     :class => 'inline-image'
   %span.pet-name= @pet_name
   can model&hellip;
@@ -11,6 +11,6 @@
       = hidden_field_tag 'name', @pet_name
       = submit_tag "I'm wearing one now!", :class => 'loud'
   %li
-    = link_to 'What do I own?', 'http://www.neopets.com/closet.phtml',
+    = link_to 'What do I own?', 'https://www.neopets.com/closet.phtml',
       :class => 'button', :target => '_blank'
 = render @items

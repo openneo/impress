@@ -205,7 +205,7 @@ class NeopetsPage
   TYPES = {
     'closet' => Type.new(
       get_name: lambda { I18n.translate('neopets_page_import_tasks.names.closet') },
-      get_url: lambda { |index| "http://www.neopets.com/closet.phtml?per_page=50&page=#{index}" },
+      get_url: lambda { |index| "https://www.neopets.com/closet.phtml?per_page=50&page=#{index}" },
       parser: Parser.new(
         selectors: {
           items:          "form[action=\"process_closet.phtml\"] tr[bgcolor!=silver][bgcolor!=\"#E4E4E4\"]",
@@ -220,7 +220,7 @@ class NeopetsPage
     ),
     'safety_deposit' => Type.new(
       get_name: lambda { I18n.translate('neopets_page_import_tasks.names.safety_deposit') },
-      get_url: lambda { |index| "http://www.neopets.com/safetydeposit.phtml?offset=#{(index - 1) * 30}" },
+      get_url: lambda { |index| "https://www.neopets.com/safetydeposit.phtml?offset=#{(index - 1) * 30}" },
       parser: Parser.new(
         selectors: {
           items:          "#content tr[bgcolor=\"#DFEAF7\"]",
@@ -242,7 +242,7 @@ class NeopetsPage
     ),
     'gallery' => Type.new(
       get_name: lambda { I18n.translate('neopets_page_import_tasks.names.gallery') },
-      get_url: lambda { |index| "http://www.neopets.com/gallery/index.phtml?view=all" },
+      get_url: lambda { |index| "https://www.neopets.com/gallery/index.phtml?view=all" },
       parser: Parser.new(
         selectors: {
           items:          "form[name=gallery_form] td[valign=top]",

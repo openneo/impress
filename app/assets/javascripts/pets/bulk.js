@@ -63,7 +63,7 @@ var DEBUG = (document.location.search.substr(0, 6) == '?debug');
   }
   
   function petThumbnailUrl(pet_name) {
-    return 'http://pets.neopets.com/cpn/' + pet_name + '/1/1.png';
+    return 'https://pets.neopets.com/cpn/' + pet_name + '/1/1.png';
   }
   
   /* Items */

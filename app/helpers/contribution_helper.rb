@@ -26,7 +26,7 @@ module ContributionHelper
     end
   end
   
-  PET_TYPE_IMAGE_FORMAT = 'http://pets.neopets.com/cp/%s/1/3.png'
+  PET_TYPE_IMAGE_FORMAT = 'https://pets.neopets.com/cp/%s/1/3.png'
   def contributed_pet_type(main_key, pet_type, show_image)
     span = content_tag(:span, pet_type.human_name, :class => 'contributed-name')
     description = translate('contributions.contributed_description.parents.pet_type_html',

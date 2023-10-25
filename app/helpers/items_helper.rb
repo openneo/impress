@@ -2,7 +2,7 @@ module ItemsHelper
   JNItemsURLFormat = 'https://items.jellyneo.net/search/?name=%s&name_type=3'
   
   module PetTypeImage
-    Format = 'http://pets.neopets.com/cp/%s/%i/%i.png'
+    Format = 'https://pets.neopets.com/cp/%s/%i/%i.png'
 
     Emotions = {
       :happy => 1,
@@ -85,19 +85,19 @@ module ItemsHelper
   end
   
   def shop_wizard_url_for(item)
-    "http://www.neopets.com/market.phtml?type=wizard&string=#{CGI::escape item.name}"
+    "https://www.neopets.com/market.phtml?type=wizard&string=#{CGI::escape item.name}"
   end
   
   def super_shop_wizard_url_for(item)
-    "http://www.neopets.com/portal/supershopwiz.phtml?string=#{CGI::escape item.name}"
+    "https://www.neopets.com/portal/supershopwiz.phtml?string=#{CGI::escape item.name}"
   end
   
   def trading_post_url_for(item)
-    "http://www.neopets.com/island/tradingpost.phtml?type=browse&criteria=item_exact&search_string=#{CGI::escape item.name}"
+    "https://www.neopets.com/island/tradingpost.phtml?type=browse&criteria=item_exact&search_string=#{CGI::escape item.name}"
   end
   
   def auction_genie_url_for(item)
-    "http://www.neopets.com/genie.phtml?type=process_genie&criteria=exact&auctiongenie=#{CGI::escape item.name}"
+    "https://www.neopets.com/genie.phtml?type=process_genie&criteria=exact&auctiongenie=#{CGI::escape item.name}"
   end
   
   def trading_closet_hangers_header(owned, count)

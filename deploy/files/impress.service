@@ -1,0 +1,29 @@
+[Unit]
+Description=Dress to Impress webapp
+
+[Service]
+User=impress
+Restart=always
+WorkingDirectory=/srv/impress/current
+ExecStart=/opt/ruby-3.1.4/bin/bundle exec puma --port=3000
+Environment="RAILS_ENV=production"
+; Set EXECJS_RUNTIME to save us from needing to install Node
+Environment="EXECJS_RUNTIME=Disabled"
+EnvironmentFile=/srv/impress/shared/production.env
+
+; Some security directives, adapted from Akkoma's service file, they seem like sensible defaults!
+; Use private /tmp and /var/tmp folders inside a new file system namespace, which are discarded after the process stops.
+PrivateTmp=true
+; The /home, /root, and /run/user folders can not be accessed by this service anymore. If your Akkoma user has its home folder in one of the restricted places, or use one of these folders as its working directory, you have to set this to false.
+ProtectHome=true
+; Mount /usr, /boot, and /etc as read-only for processes invoked by this service.
+ProtectSystem=full
+; Sets up a new /dev mount for the process and only adds API pseudo devices like /dev/null, /dev/zero or /dev/random but not physical devices.
+PrivateDevices=true
+; Ensures that the service process and all its children can never gain new privileges through execve().
+NoNewPrivileges=true
+; Drops the sysadmin capability from the daemon.
+CapabilityBoundingSet=~CAP_SYS_ADMIN
+
+[Install]
+WantedBy=multi-user.target

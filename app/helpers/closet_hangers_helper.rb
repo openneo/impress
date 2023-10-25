@@ -13,11 +13,11 @@ module ClosetHangersHelper
   end
 
   def send_neomail_url(neopets_username)
-    "http://www.neopets.com/neomessages.phtml?type=send&recipient=#{CGI.escape neopets_username}"
+    "https://www.neopets.com/neomessages.phtml?type=send&recipient=#{CGI.escape neopets_username}"
   end
 
   def neopets_lookup_url(neopets_username)
-    "http://www.neopets.com/userlookup.phtml?user=#{CGI.escape neopets_username}"
+    "https://www.neopets.com/userlookup.phtml?user=#{CGI.escape neopets_username}"
   end
 
   def hangers_group_visibility_field_name(owned)
@@ -75,7 +75,7 @@ module ClosetHangersHelper
   end
 
   def nc_icon_url
-    "http://#{request.host}#{image_path 'nc.png'}"
+    "https://#{request.host}#{image_path 'nc.png'}"
   end
   
   def petpage_closet_list_checked(closet_list, owned)

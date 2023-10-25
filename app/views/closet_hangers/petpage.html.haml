@@ -5,7 +5,7 @@
 #intro
   %p= t '.description'
   %p= twl '.instructions',
-        :edit_petpage_link_url => 'http://www.neopets.com/edithomepage.phtml'
+        :edit_petpage_link_url => 'https://www.neopets.com/edithomepage.phtml'
 
 = form_tag petpage_user_closet_hangers_path(@user), :method => :get, :id => 'petpage-closet-lists' do
   = hidden_field_tag 'filter', '1'

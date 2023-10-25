@@ -1,5 +1,5 @@
 function petImage(id, size) {
-  return 'http://pets.neopets.com/' + id + '/1/' + size + '.png';
+  return 'https://pets.neopets.com/' + id + '/1/' + size + '.png';
 }
 
 var PetQuery = {},

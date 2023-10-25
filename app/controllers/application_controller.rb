@@ -41,11 +41,6 @@ class ApplicationController < ActionController::Base
       I18n.default_locale
   end
   
-  def localized_fragment_exist?(key)
-    localized_key = localize_fragment_key(key, locale)
-    fragment_exist?(localized_key)
-  end
-  
   def not_found(record_name='record')
     raise ActionController::RoutingError.new("#{record_name} not found")
   end

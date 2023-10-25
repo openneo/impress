@@ -145,7 +145,7 @@ class PetState < ApplicationRecord
 
   def artist_url
     if artist_neopets_username
-      "http://www.neopets.com/userlookup.phtml?user=#{artist_neopets_username}"
+      "https://www.neopets.com/userlookup.phtml?user=#{artist_neopets_username}"
     else
       nil
     end

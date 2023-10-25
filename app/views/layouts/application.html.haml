@@ -11,8 +11,6 @@
       - else
         #{t 'app_name'}: #{t '.title_tagline'}
     %link{href: image_path('favicon.png'), rel: 'icon'}
-    /[if IE]
-      = include_javascript_libraries :html5
     = yield :stylesheets
     = stylesheet_link_tag "application"
     = yield :meta
@@ -60,8 +58,8 @@
           %noscript= submit_tag 'Go'
           
         %ul
-          %li= link_to t('organization_name'), 'http://openneo.net/'
-          %li= link_to t('.footer.blog'), 'http://blog.openneo.net/'
+          %li= link_to t('organization_name'), 'https://openneo.net/'
+          %li= link_to t('.footer.blog'), 'https://blog.openneo.net/'
           %li= link_to t('.footer.source_code'), 'https://github.com/openneo/impress'
           %li= link_to t('.footer.terms'), terms_path
         

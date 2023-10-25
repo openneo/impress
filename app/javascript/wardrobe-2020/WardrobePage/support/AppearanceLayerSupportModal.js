@@ -622,7 +622,7 @@ const SWF_URL_PATTERN =
   /^https?:\/\/images\.neopets\.com\/cp\/(bio|items)\/swf\/(.+?)_([a-z0-9]+)\.swf$/;
 
 function convertSwfUrlToPossibleManifestUrls(swfUrl) {
-  const match = new URL(swfUrl, "http://images.neopets.com")
+  const match = new URL(swfUrl, "https://images.neopets.com")
     .toString()
     .match(SWF_URL_PATTERN);
   if (!match) {
@@ -636,8 +636,8 @@ function convertSwfUrlToPossibleManifestUrls(swfUrl) {
   // TODO: There are a few potential manifest URLs in play! Long-term, we
   //       should get this from modeling data. But these are some good guesses!
   return [
-    `http://images.neopets.com/cp/${type}/data/${folders}/manifest.json`,
-    `http://images.neopets.com/cp/${type}/data/${folders}_${hash}/manifest.json`,
+    `https://images.neopets.com/cp/${type}/data/${folders}/manifest.json`,
+    `https://images.neopets.com/cp/${type}/data/${folders}_${hash}/manifest.json`,
   ];
 }
 
