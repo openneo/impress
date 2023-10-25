@@ -97,6 +97,12 @@ function useOutfitState() {
   // a better representation of the outfit in the URL. (If the saved outfit
   // data isn't loaded yet, then this will be a customization state with
   // partial data, and that's okay.)
+  console.debug(
+    `[useOutfitState] Outfit states:\n- Local: %o\n- Saved: %o\n- URL: %o`,
+    localOutfitState,
+    savedOutfitState,
+    urlOutfitState,
+  );
   let outfitState;
   if (
     urlOutfitState.id === localOutfitState.id &&
@@ -106,17 +112,27 @@ function useOutfitState() {
     // Use the reducer state: they're both for the same saved outfit, or both
     // for an unsaved outfit (null === null). But we don't use it when it's
     // *only* got the ID, and no other fields yet.
-    console.debug("[useOutfitState] Choosing local outfit state");
+    console.debug(
+      "[useOutfitState] Choosing local outfit state",
+      localOutfitState,
+    );
     outfitState = localOutfitState;
   } else if (urlOutfitState.id && urlOutfitState.id === savedOutfitState.id) {
     // Use the saved outfit state: it's for the saved outfit the URL points to.
-    console.debug("[useOutfitState] Choosing saved outfit state");
+    console.debug(
+      "[useOutfitState] Choosing saved outfit state",
+      savedOutfitState,
+    );
     outfitState = savedOutfitState;
   } else {
     // Use the URL state: it's more up-to-date than any of the others. (Worst
     // case, it's empty except for ID, which is fine while the saved outfit
     // data loads!)
-    console.debug("[useOutfitState] Choosing URL outfit state");
+    console.debug(
+      "[useOutfitState] Choosing URL outfit state",
+      urlOutfitState,
+      savedOutfitState,
+    );
     outfitState = urlOutfitState;
   }
 
@@ -261,6 +277,11 @@ function useOutfitState() {
   // Keep the URL up-to-date.
   const path = buildOutfitPath(outfitState);
   React.useEffect(() => {
+    console.debug(
+      `[useOutfitState] Navigating to latest outfit path:`,
+      path,
+      outfitState,
+    );
     navigate(path, { replace: true });
   }, [path]);
 
@@ -398,30 +419,28 @@ function useParseOutfitUrl() {
   // We memoize this to make `outfitStateWithoutExtras` an even more reliable
   // stable object!
   const memoizedOutfitState = React.useMemo(
-    () => readOutfitStateFromSearchParams(mergedParams),
-    [mergedParams.toString()],
+    () => readOutfitStateFromSearchParams(location.pathname, mergedParams),
+    [location.pathname, mergedParams.toString()],
   );
 
   return memoizedOutfitState;
 }
 
-function readOutfitStateFromSearchParams(searchParams) {
+function readOutfitStateFromSearchParams(pathname, searchParams) {
   // For the /outfits/:id page, ignore the query string, and just wait for the
   // outfit data to load in!
-  // NOTE: We now use `outfitId` when generating URLs, but historically we've
-  // used `outfit` too!
-  const outfitId = searchParams.get("outfitId") ?? searchParams.get("outfit");
-  if (outfitId != null) {
+  const pathnameMatch = pathname.match(/^\/outfits\/([0-9]+)/)
+  if (pathnameMatch) {
     return {
       ...EMPTY_CUSTOMIZATION_STATE,
-      id: outfitId,
+      id: pathnameMatch[1],
     };
   }
 
   // Otherwise, parse the query string, and fill in default values for anything
   // not specified.
   return {
-    id: null,
+    id: searchParams.get("outfit"),
     name: searchParams.get("name"),
     speciesId: searchParams.get("species") || "1",
     colorId: searchParams.get("color") || "8",
