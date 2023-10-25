@@ -65,9 +65,3 @@ gem 'record_tag_helper', '~> 1.0', '>= 1.0.1'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '~> 1.16', require: false
-
-# For testing.
-group :test do
-  gem 'factory_girl_rails', '~> 4.9'
-  gem 'rspec-rails', '~> 2.0.0.beta.22'
-end
