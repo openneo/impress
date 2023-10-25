@@ -57,11 +57,11 @@ class Item < ApplicationRecord
   }
   scope :is_nc, -> {
     i = Item.arel_table
-    where(i[:rarity_index].in(Item::NCRarities).or(i[:is_manually_nc]))
+    where(i[:rarity_index].in(Item::NCRarities).or(i[:is_manually_nc].eq(true)))
   }
   scope :is_np, -> {
     i = Item.arel_table
-    where(i[:rarity_index].in(Item::NCRarities).or(i[:is_manually_nc]).not)
+    where(i[:rarity_index].in(Item::NCRarities).or(i[:is_manually_nc].eq(true)).not)
   }
   scope :is_pb, -> {
     it = Item::Translation.arel_table
