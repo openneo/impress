@@ -5,7 +5,7 @@
   become_user: root
   vars:
     email_address: "emi@matchu.dev" # TODO: Extract this to personal config?
-    impress_hostname: beta.impress.openneo.net
+    impress_hostname: impress.openneo.net
   tasks:
     - name: Create SSH folder for logged-in user
       become: no
@@ -312,47 +312,11 @@
         classic: yes
 
     - name: Set up certbot
-      command: "certbot certonly --nginx -n --agree-tos --email {{ email_address }} --domains beta.impress.openneo.net"
+      command: "certbot certonly --nginx -n --agree-tos --email {{ email_address }} --domains {{ impress_hostname }}"
 
-    # TODO: Remove the duplication once we've fully switched over hosts!
-    # NOTE: I migrated over the certs manually, we'll want to have certbot
-    # replace them once it's recognized as impress.openneo.net!
     - name: Add impress config file to nginx
       copy:
         content: |
-          server {
-            server_name impress.openneo.net;
-            listen 80;
-            if ($host = impress.openneo.net) {
-              return 301 https://$host$request_uri;
-            }
-          }
-
-          server {
-            server_name impress.openneo.net;
-            listen 443 ssl;
-            ssl_certificate /etc/letsencrypt/live/impress.openneo.net/fullchain.pem;
-            ssl_certificate_key /etc/letsencrypt/live/impress.openneo.net/privkey.pem;
-            include /etc/letsencrypt/options-ssl-nginx.conf;
-            ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
-            ssl_session_cache shared:SSL:10m; # https://superuser.com/q/1484466/14127
-
-            root /srv/impress/current/public;
-
-            # Try serving static files first. If not found, fall back to the app.
-            try_files $uri/index.html $uri @app;
-
-            location @app {
-              proxy_pass http://127.0.0.1:3000;
-              proxy_set_header X-Real-IP $remote_addr;
-              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-              proxy_set_header X-Forwarded-Proto https;
-              proxy_set_header X-Forwarded-Server $host;
-              proxy_set_header Host $http_host;
-              proxy_redirect off;
-            }
-          }
-
           server {
             server_name {{ impress_hostname }};
             listen 80;
