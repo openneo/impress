@@ -1,8 +1,7 @@
-An extension of Dress to Impress (PHP) that runs on Ruby on Rails.
-I wanted to use Rails initially for Impress, but hoped that using
-PHP would allow me to attract more developers. Looks like that
-wasn't the case, so I just went with what I loved and made the
-items database in Rails.
+<img src="https://i.imgur.com/mZ2FCfX.png" width="200" height="200" alt="Dress to Impress beach logo" />
 
-Future Impress sections will likely find themselves in this
-project, rather than the PHP project.
+# Dress to Impress
+
+Oh! We've been revitalizing the Rails app! Fun!
+
+There'll be more to say about it here soon :3
