@@ -1,5 +1,5 @@
-- title(@outfit.name || t('.default_outfit_name'))
 - if @outfit
+  - title(@outfit.name || t('.default_outfit_name'))
   - open_graph type: 'openneo-impress:outfit', title: yield(:title),
     url: outfit_url(@outfit)
   - if @outfit.image?
