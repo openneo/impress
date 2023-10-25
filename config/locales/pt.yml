@@ -501,7 +501,6 @@ pt:
       default_outfit_name: Roupas Compartilhadas
       edit: Editar
       clone: Editar uma cópia
-      creation_summary_html: Criado por %{user_link}, %{created_at_ago} atrás
   pet_states:
     description:
       main: "%{mood} %{gender}"

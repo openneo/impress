@@ -643,7 +643,6 @@ en-MEEP:
       default_outfit_name: Meeped outfit
       edit: Meep
       clone: Meep a copy
-      creation_summary_html: Meeped by %{user_link}, %{created_at_ago} ago
 
   pet_states:
     description:

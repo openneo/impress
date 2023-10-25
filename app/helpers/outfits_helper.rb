@@ -81,16 +81,6 @@ module OutfitsHelper
     content_tags = contents.map { |c| content_tag(:p, c) }
     content_tags.join('').html_safe
   end
-  
-  def outfit_creation_summary(outfit)
-    user = outfit.user
-    user_link = link_to(user.name, user_contributions_path(user))
-    created_at_ago = content_tag(:abbr, time_ago_in_words(@outfit.created_at),
-                                 :title => @outfit.created_at)
-    translate 'outfits.show.creation_summary_html',
-      :user_link => user_link,
-      :created_at_ago => created_at_ago
-  end
 
   def outfit_li_for(outfit, &block)
     class_name = outfit.starred? ? 'starred' : nil
@@ -105,19 +95,6 @@ module OutfitsHelper
   def pet_name_tag(options={})
     options = {:spellcheck => false, :id => nil}.merge(options)
     text_field_tag 'name', nil, options
-  end
-
-  def prank_color_message(unfunny_human_name, artist_name, artist_url)
-    content_key_base = Color.pranks_funny? ? 'funny' : 'unfunny'
-    if artist_url
-      artist = link_to(artist_name, artist_url,
-        :class => 'prank-color-message-artist')
-    else
-      artist = artist_name
-    end
-    content = t("colors.prank_message.#{content_key_base}_html",
-      color: unfunny_human_name, artist: artist)
-    content_tag('p', content, id: 'prank-color-message', :class => 'warning')
   end
 end
 

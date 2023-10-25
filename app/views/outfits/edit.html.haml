@@ -1,11 +1,22 @@
+- title(@outfit.name || t('.default_outfit_name'))
+- if @outfit
+  - open_graph type: 'openneo-impress:outfit', title: yield(:title),
+    url: outfit_url(@outfit)
+  - if @outfit.image?
+    - open_graph image: absolute_url(@outfit.image.url)
+
 !!! 5
 %html
   %head
     %meta{charset: 'utf-8'}
     %meta{name: 'viewport', content: 'width=device-width, initial-scale=1'}
-    %title Dress to Impress
+    %title
+      - if content_for? :title
+        = yield :title
+        | #{t 'app_name'}
     %link{href: image_path('favicon.png'), rel: 'icon'}
     = stylesheet_link_tag 'fonts'
     = javascript_include_tag 'wardrobe-2020-page', defer: true
+    = open_graph_tags
   %body
     #wardrobe-2020-root

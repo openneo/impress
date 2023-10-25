@@ -503,7 +503,6 @@ es:
       default_outfit_name: Atuendos compartidos
       edit: Editar
       clone: Hacer una copia
-      creation_summary_html: Creado por %{user_link} hace %{created_at_ago}
   pet_states:
     description:
       main: "%{mood} %{gender}"

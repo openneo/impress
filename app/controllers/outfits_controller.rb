@@ -81,11 +81,7 @@ class OutfitsController < ApplicationController
 
   def show
     @outfit = Outfit.find(params[:id])
-    @campaign = Campaign.current rescue nil
-    respond_to do |format|
-      format.html { render }
-      format.json { render :json => @outfit }
-    end
+    render "outfits/edit", layout: false
   end
   
   def start
