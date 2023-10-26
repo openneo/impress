@@ -22,11 +22,16 @@
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": ".devcontainer/post-create.sh",
 
-  // HACK: Out of the box, this dev container doesn't allow installation to the
-  // default GEM_HOME, because of a weird thing going on with RVM. Instead, we
-  // set a custom GEM_HOME and GEM_PATH in our home directory!
-  // https://github.com/devcontainers/templates/issues/188
   "containerEnv": {
+    // Because the database is hosted on the local network at the hostname `db`,
+    // we partially override `config/database.yml` to connect to `db`!
+    "DATABASE_URL_PRIMARY_DEV": "mysql2://db",
+    "DATABASE_URL_OPENNEO_ID_DEV": "mysql2://db",
+
+    // HACK: Out of the box, this dev container doesn't allow installation to
+    // the default GEM_HOME, because of a weird thing going on with RVM.
+    // Instead, we set a custom GEM_HOME and GEM_PATH in our home directory!
+    // https://github.com/devcontainers/templates/issues/188
     "GEM_HOME": "~/.rubygems",
     "GEM_PATH": "~/.rubygems"
   }

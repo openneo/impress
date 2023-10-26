@@ -1,7 +1,9 @@
 development:
   primary:
+    # You can override these default settings with this environment variable,
+    # fully or partially. We do this in the .devcontainer setup!
+    url: <%= ENV['DATABASE_URL_PRIMARY_DEV'] %>
     adapter: mysql2
-    host: db
     database: openneo_impress
     username: impress_dev
     password: impress_dev
@@ -10,8 +12,10 @@ development:
       sql_mode: TRADITIONAL
 
   openneo_id:
+    # You can override these default settings with this environment variable,
+    # fully or partially. We do this in the .devcontainer setup!
+    url: <%= ENV['DATABASE_URL_OPENNEO_ID_DEV'] %>
     adapter: mysql2
-    host: db
     database: openneo_id
     username: impress_dev
     password: impress_dev
