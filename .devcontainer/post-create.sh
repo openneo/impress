@@ -10,4 +10,4 @@ git config --global safe.directory '*'
 bundle install
 
 # Set up the databases: create the schema, and load in some default data.
-rake db:schema:load db:seed
+bin/rails db:schema:load db:seed

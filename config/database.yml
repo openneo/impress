@@ -1,6 +1,7 @@
 development:
   primary:
     adapter: mysql2
+    host: db
     database: openneo_impress
     username: impress_dev
     password: impress_dev
@@ -10,6 +11,7 @@ development:
 
   openneo_id:
     adapter: mysql2
+    host: db
     database: openneo_id
     username: impress_dev
     password: impress_dev
