@@ -1,0 +1,44 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/ruby-rails-postgres
+{
+  "name": "Dress to Impress",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "nodeGypDependencies": true,
+      "version": "lts"
+    }
+  },
+
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  // "features": {},
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // This can be used to network with other containers or the host.
+  "forwardPorts": [3000],
+
+  // Use 'postCreateCommand' to run commands after the container is created.
+  "postCreateCommand": ".devcontainer/post-create.sh",
+
+  "containerEnv": {
+    // Because the database is hosted on the local network at the hostname `db`,
+    // we partially override `config/database.yml` to connect to `db`!
+    "DATABASE_URL_PRIMARY_DEV": "mysql2://db",
+    "DATABASE_URL_OPENNEO_ID_DEV": "mysql2://db",
+
+    // HACK: Out of the box, this dev container doesn't allow installation to
+    // the default GEM_HOME, because of a weird thing going on with RVM.
+    // Instead, we set a custom GEM_HOME and GEM_PATH in our home directory!
+    // https://github.com/devcontainers/templates/issues/188
+    "GEM_HOME": "~/.rubygems",
+    "GEM_PATH": "~/.rubygems"
+  }
+
+  // Configure tool-specific properties.
+  // "customizations": {},
+
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
+}
