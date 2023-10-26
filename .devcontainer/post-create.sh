@@ -11,3 +11,9 @@ bundle install
 
 # Set up the databases: create the schema, and load in some default data.
 bin/rails db:schema:load db:seed
+
+# Install the app's JS dependencies.
+yarn install
+
+# Run a first-time build of the app's JS, in development mode.
+yarn build:dev
