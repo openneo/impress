@@ -11,11 +11,9 @@ Environment="RAILS_ENV=production"
 Environment="EXECJS_RUNTIME=Disabled"
 EnvironmentFile=/srv/impress/shared/production.env
 
-; Try not to go over 75% of the server's RAM, and kill the app at 80%.
-; NOTE: This assumes this is the main thing running on the box! If it were
-; running alongside e.g. a database, you'd want to constrain it differently.
-MemoryHigh=75%
-MemoryMax=80%
+; Try not to go over 1GB of RAM, and kill the app at 1.2GB.
+MemoryHigh=1G
+MemoryMax=1.2G
 
 ; Some security directives, adapted from Akkoma's service file, they seem like sensible defaults!
 ; Use private /tmp and /var/tmp folders inside a new file system namespace, which are discarded after the process stops.
