@@ -11,8 +11,13 @@ Environment="RAILS_ENV=production"
 Environment="EXECJS_RUNTIME=Disabled"
 EnvironmentFile=/srv/impress/shared/production.env
 
-; Try not to go over 1GB of RAM, and kill the app at 1.2GB.
-MemoryHigh=1G
+; Kill the app at 1.2GB of RAM.
+; NOTE: It's generally recommended to pair this with a `MemoryHigh` setting, to
+; try throttling memory usage before killing altogether. But at time of writing,
+; our app has a memory leak that causes it to always keep growing - and then the
+; throttling *successfully* keeps it within the RAM limits, just running very
+; slowly. Instead, let's always reboot it when it gets too high, and hopefully
+; find and fix that leak sometime!
 MemoryMax=1.2G
 
 ; Some security directives, adapted from Akkoma's service file, they seem like sensible defaults!
