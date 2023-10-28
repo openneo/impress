@@ -3,6 +3,7 @@ db/*.sqlite3
 log/*.log
 tmp/**/*
 .env
+.env.*
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
