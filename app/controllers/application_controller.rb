@@ -13,6 +13,13 @@ class ApplicationController < ActionController::Base
   before_action :save_return_to_path,
     if: ->(c) { c.controller_name == 'sessions' && c.action_name == 'new' }
 
+  # Enable profiling tools if logged in as admin.
+  before_action do
+    if current_user && current_user.admin?
+      Rack::MiniProfiler.authorize_request
+    end
+  end
+
   def authenticate_user!
     redirect_to(new_auth_user_session_path) unless user_signed_in?
   end

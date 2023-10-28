@@ -65,3 +65,8 @@ gem 'record_tag_helper', '~> 1.0', '>= 1.0.1'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '~> 1.16', require: false
+
+# For investigating performance issues.
+gem "rack-mini-profiler", "~> 3.1"
+gem "memory_profiler", "~> 1.0"
+gem "stackprof", "~> 0.2.25"
