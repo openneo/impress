@@ -63,6 +63,33 @@ class ClosetHanger < ApplicationRecord
     base << 's' if positive && subject != :you && subject != :i
     base
   end
+
+  def self.preload_items(
+    hangers,
+    items_scope: Item.all,
+    item_translations_scope: Item::Translation.all
+  )
+    # Preload the records we need. (This is like `includes`, but `includes`
+    # always selects all fields for all records, and we give the caller the
+    # opportunity to specify which fields it actually wants via scope!)
+    items = items_scope.where(id: hangers.map(&:item_id))
+    translations = item_translations_scope.where(item_id: items.map(&:id))
+
+    # Group the records by relevant IDs.
+    translations_by_item_id = translations.group_by(&:item_id)
+    items_by_id = items.to_h { |i| [i.id, i] }
+
+    # Assign the preloaded records to the records they belong to. (This is like
+    # doing e.g. i.translations = ..., but that's a database write - we
+    # actually just want to set the `translations` field itself directly!
+    # Hacky, ripped from how `ActiveRecord::Associations::Preloader` does it!)
+    items.each do |item|
+      item.association(:translations).target = translations_by_item_id[item.id]
+    end
+    hangers.each do |hanger|
+      hanger.association(:item).target = items_by_id[hanger.item_id]
+    end
+  end
   
   def self.set_quantity!(quantity, options)
     quantity = quantity.to_i

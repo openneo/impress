@@ -31,6 +31,36 @@ class ClosetList < ApplicationRecord
     send(method_name)
   end
 
+  def self.preload_items(
+    lists,
+    hangers_scope: ClosetHanger.all,
+    items_scope: Item.all,
+    item_translations_scope: Item::Translation.all
+  )
+    # Preload the records we need. (This is like `includes`, but `includes`
+    # always selects all fields for all records, and we give the caller the
+    # opportunity to specify which fields it actually wants via scope!)
+    hangers = hangers_scope.where(list_id: lists.map(&:id))
+
+    # Group the records by relevant IDs.
+    hangers_by_list_id = hangers.group_by(&:list_id)
+
+    # Assign the preloaded records to the records they belong to. (This is like
+    # doing e.g. i.translations = ..., but that's a database write - we
+    # actually just want to set the `translations` field itself directly!
+    # Hacky, ripped from how `ActiveRecord::Associations::Preloader` does it!)
+    lists.each do |list|
+      list.association(:hangers).target = hangers_by_list_id[list.id]
+    end
+
+    # Then, do similar preloading for the hangers and their items.
+    ClosetHanger.preload_items(
+      hangers,
+      items_scope: items_scope,
+      item_translations_scope: item_translations_scope,
+    )
+  end
+
   module VisibilityMethods
     delegate :trading?, to: :visibility_level
 

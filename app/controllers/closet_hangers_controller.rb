@@ -227,22 +227,45 @@ class ClosetHangersController < ApplicationController
     end
   end
 
-  def find_closet_lists_by_owned(closet_lists)
-    return {} if closet_lists == []
-    closet_lists.alphabetical.includes(:hangers => {:item => :translations}).
-      group_by(&:hangers_owned)
+  def find_closet_lists_by_owned(lists_scope)
+    return {} if lists_scope == []
+    lists = lists_scope.alphabetical
+    ClosetList.preload_items(
+      lists,
+      hangers_scope: hangers_scope,
+      items_scope: items_scope,
+      item_translations_scope: item_translations_scope,
+    )
+    lists.group_by(&:hangers_owned)
   end
   
   def find_unlisted_closet_hangers_by_owned(visible_groups)
     unless visible_groups.empty?
-      @user.closet_hangers.unlisted.
+      hangers = @user.closet_hangers.unlisted.
         owned_before_wanted.alphabetical_by_item_name.
-        includes(:item => :translations).
-        where(:owned => [visible_groups]).
-        group_by(&:owned)
+        where(:owned => [visible_groups])
+      ClosetHanger.preload_items(
+        hangers,
+        items_scope: items_scope,
+        item_translations_scope: item_translations_scope,
+      )
+      hangers.group_by(&:owned)
     else
       {}
     end
+  end
+
+  def hangers_scope
+    ClosetHanger.select(:id, :item_id, :list_id, :quantity)
+  end
+
+  def items_scope
+    Item.select(:id, :thumbnail_url, :rarity_index)
+  end
+
+  def item_translations_scope
+    Item::Translation.select(:id, :item_id, :locale, :name, :description).
+      where(locale: I18n.locale)
   end
 
   def owned
