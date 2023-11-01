@@ -1,10 +1,8 @@
 import React from "react";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
-import { Auth0Provider } from "@auth0/auth0-react";
 import { ChakraProvider, Box, useColorModeValue } from "@chakra-ui/react";
 import { ApolloProvider } from "@apollo/client";
-import { useAuth0 } from "@auth0/auth0-react";
 import { BrowserRouter } from "react-router-dom";
 import { Global } from "@emotion/react";
 
@@ -15,46 +13,23 @@ export default function AppProvider({ children }) {
 
   return (
     <BrowserRouter>
-      <Auth0Provider
-        domain="openneo.us.auth0.com"
-        clientId="8LjFauVox7shDxVufQqnviUIywMuuC4r"
-        redirectUri={
-          process.env.NODE_ENV === "development"
-            ? "http://localhost:3000"
-            : "https://impress-2020.openneo.net"
-        }
-        audience="https://impress-2020.openneo.net/api"
-        scope=""
-      >
-        <DTIApolloProvider>
-          <ChakraProvider resetCSS={false}>
-            <ScopedCSSReset>{children}</ScopedCSSReset>
-          </ChakraProvider>
-        </DTIApolloProvider>
-      </Auth0Provider>
+      <DTIApolloProvider>
+        <ChakraProvider resetCSS={false}>
+          <ScopedCSSReset>{children}</ScopedCSSReset>
+        </ChakraProvider>
+      </DTIApolloProvider>
     </BrowserRouter>
   );
 }
 
 function DTIApolloProvider({ children, additionalCacheState = {} }) {
-  const auth0 = useAuth0();
-  const auth0Ref = React.useRef(auth0);
-
-  React.useEffect(() => {
-    auth0Ref.current = auth0;
-  }, [auth0]);
-
   // Save the first `additionalCacheState` we get as our `initialCacheState`,
   // which we'll use to initialize the client without having to wait a tick.
   const [initialCacheState, unusedSetInitialCacheState] =
     React.useState(additionalCacheState);
 
   const client = React.useMemo(
-    () =>
-      buildApolloClient({
-        getAuth0: () => auth0Ref.current,
-        initialCacheState,
-      }),
+    () => buildApolloClient({ initialCacheState }),
     [initialCacheState],
   );
 

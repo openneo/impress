@@ -3,8 +3,6 @@ import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 import { setContext } from "@apollo/client/link/context";
 import { createPersistedQueryLink } from "apollo-link-persisted-queries";
 
-import { getAuthModeFeatureFlag } from "./components/useCurrentUser";
-
 // Use Apollo's error messages in development.
 if (process.env["NODE_ENV"] === "development") {
   loadErrorMessages();
@@ -162,73 +160,19 @@ const typePolicies = {
 const httpLink = createHttpLink({
   uri: "https://impress-2020.openneo.net/api/graphql",
 });
-const buildAuthLink = (getAuth0) =>
-  setContext(async (_, { headers = {}, sendAuth = false }) => {
-    if (!sendAuth) {
-      return;
-    }
 
-    const token = await getAccessToken(getAuth0);
-    if (token) {
-      return {
-        headers: {
-          ...headers,
-          authorization: token ? `Bearer ${token}` : "",
-        },
-      };
-    }
-  });
-
-// This is a temporary way to pass the DTIAuthMode feature flag back to the
-// server!
-const authModeLink = setContext((_, { headers = {} }) => {
-  const authMode = getAuthModeFeatureFlag();
-  return {
-    headers: {
-      ...headers,
-      "DTI-Auth-Mode": authMode,
-    },
-  };
-});
-
-async function getAccessToken(getAuth0) {
-  // Wait for auth0 to stop loading, so we can maybe get a token!
-  // We'll do this hackily by checking every 100ms until it's true.
-  await new Promise((resolve) => {
-    function check() {
-      if (getAuth0().isLoading) {
-        setTimeout(check, 100);
-      } else {
-        resolve();
-      }
-    }
-    check();
-  });
-
-  const { isAuthenticated, getAccessTokenSilently } = getAuth0();
-  if (isAuthenticated) {
-    const token = await getAccessTokenSilently();
-    return token;
-  }
-}
-
-const buildLink = (getAuth0) =>
-  buildAuthLink(getAuth0)
-    .concat(authModeLink)
-    .concat(
-      createPersistedQueryLink({
-        useGETForHashedQueries: true,
-      }),
-    )
-    .concat(httpLink);
+const buildLink = () =>
+  createPersistedQueryLink({
+    useGETForHashedQueries: true,
+  }).concat(httpLink);
 
 /**
  * apolloClient is the global Apollo Client instance we use for GraphQL
  * queries. This is how we communicate with the server!
  */
-const buildClient = ({ getAuth0, initialCacheState }) => {
+const buildClient = ({ initialCacheState }) => {
   return new ApolloClient({
-    link: buildLink(getAuth0),
+    link: buildLink(),
     cache: new InMemoryCache({ typePolicies }).restore(initialCacheState),
     connectToDevTools: true,
   });
