@@ -6,6 +6,7 @@ import useCurrentUser from "../components/useCurrentUser";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/client";
 import { outfitStatesAreEqual } from "./useOutfitState";
+import { useSaveOutfitMutation } from "../loaders/outfits";
 
 function useOutfitSaving(outfitState, dispatchToOutfit) {
   const { isLoggedIn, id: currentUserId } = useCurrentUser();
@@ -52,100 +53,25 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
   // yet, but you can't delete it.
   const canDeleteOutfit = !isNewOutfit && canSaveOutfit;
 
-  const [sendSaveOutfitMutation, { loading: isSaving }] = useMutation(
-    gql`
-      mutation UseOutfitSaving_SaveOutfit(
-        $id: ID # Optional, is null when saving new outfits.
-        $name: String # Optional, server may fill in a placeholder.
-        $speciesId: ID!
-        $colorId: ID!
-        $pose: Pose!
-        $wornItemIds: [ID!]!
-        $closetedItemIds: [ID!]!
+  const saveOutfitMutation = useSaveOutfitMutation({
+    onSuccess: (outfit) => {
+      if (
+        String(outfit.id) === String(outfitState.id) &&
+        outfit.name !== outfitState.name
       ) {
-        outfit: saveOutfit(
-          id: $id
-          name: $name
-          speciesId: $speciesId
-          colorId: $colorId
-          pose: $pose
-          wornItemIds: $wornItemIds
-          closetedItemIds: $closetedItemIds
-        ) {
-          id
-          name
-          petAppearance {
-            id
-            species {
-              id
-            }
-            color {
-              id
-            }
-            pose
-          }
-          wornItems {
-            id
-          }
-          closetedItems {
-            id
-          }
-          creator {
-            id
-          }
-        }
-      }
-    `,
-    {
-      context: { sendAuth: true },
-      update: (cache, { data: { outfit } }) => {
-        // After save, add this outfit to the current user's outfit list. This
-        // will help when navigating back to Your Outfits, to force a refresh.
-        // https://www.apollographql.com/docs/react/caching/cache-interaction/#example-updating-the-cache-after-a-mutation
-        cache.modify({
-          id: cache.identify(outfit.creator),
-          fields: {
-            outfits: (existingOutfitRefs = [], { readField }) => {
-              const isAlreadyInList = existingOutfitRefs.some(
-                (ref) => readField("id", ref) === outfit.id,
-              );
-              if (isAlreadyInList) {
-                return existingOutfitRefs;
-              }
-
-              const newOutfitRef = cache.writeFragment({
-                data: outfit,
-                fragment: gql`
-                  fragment NewOutfit on Outfit {
-                    id
-                  }
-                `,
-              });
-
-              return [...existingOutfitRefs, newOutfitRef];
-            },
-          },
+        dispatchToOutfit({
+          type: "rename",
+          outfitName: outfit.name,
         });
-
-        // Also, send a `rename` action, if this is still the current outfit,
-        // and the server renamed it (e.g. "Untitled outfit (1)"). (It's
-        // tempting to do a full reset, in case the server knows something we
-        // don't, but we don't want to clobber changes the user made since
-        // starting the save!)
-        if (outfit.id === outfitState.id && outfit.name !== outfitState.name) {
-          dispatchToOutfit({
-            type: "rename",
-            outfitName: outfit.name,
-          });
-        }
-      },
+      }
     },
-  );
+  });
+  const isSaving = saveOutfitMutation.isPending;
 
   const saveOutfitFromProvidedState = React.useCallback(
     (outfitState) => {
-      sendSaveOutfitMutation({
-        variables: {
+      saveOutfitMutation
+        .mutateAsync({
           id: outfitState.id,
           name: outfitState.name,
           speciesId: outfitState.speciesId,
@@ -153,9 +79,8 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
           pose: outfitState.pose,
           wornItemIds: [...outfitState.wornItemIds],
           closetedItemIds: [...outfitState.closetedItemIds],
-        },
-      })
-        .then(({ data: { outfit } }) => {
+        })
+        .then((outfit) => {
           // Navigate to the new saved outfit URL. Our Apollo cache should pick
           // up the data from this mutation response, and combine it with the
           // existing cached data, to make this smooth without any loading UI.
@@ -176,7 +101,7 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
     // It's important that this callback _doesn't_ change when the outfit
     // changes, so that the auto-save effect is only responding to the
     // debounced state!
-    [sendSaveOutfitMutation, pathname, navigate, toast],
+    [saveOutfitMutation.mutateAsync, pathname, navigate, toast],
   );
 
   const saveOutfit = React.useCallback(

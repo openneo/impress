@@ -2,7 +2,9 @@ class OutfitsController < ApplicationController
   before_action :find_authorized_outfit, :only => [:update, :destroy]
 
   def create
-    @outfit = Outfit.build_for_user(current_user, outfit_params)
+    @outfit = Outfit.new(outfit_params)
+    @outfit.user = current_user
+
     if @outfit.save
       render :json => @outfit
     else
@@ -81,7 +83,11 @@ class OutfitsController < ApplicationController
 
   def show
     @outfit = Outfit.find(params[:id])
-    render "outfits/edit", layout: false
+
+    respond_to do |format|
+      format.html { render "outfits/edit", layout: false }
+      format.json { render json: @outfit }
+    end
   end
   
   def start
@@ -100,8 +106,7 @@ class OutfitsController < ApplicationController
   end
 
   def update
-    @outfit.attributes = outfit_params
-    if @outfit.save
+    if @outfit.update(outfit_params)
       render :json => @outfit
     else
       render_outfit_errors
@@ -112,7 +117,8 @@ class OutfitsController < ApplicationController
 
   def outfit_params
     params.require(:outfit).permit(
-      :name, :pet_state_id, :starred, :worn_and_unworn_item_ids, :anonymous)
+      :name, :starred, item_ids: {worn: [], closeted: []},
+      biology: [:species_id, :color_id, :pose])
   end
 
   def find_authorized_outfit

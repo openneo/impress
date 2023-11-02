@@ -18,5 +18,7 @@
     = stylesheet_link_tag 'fonts'
     = javascript_include_tag 'wardrobe-2020-page', defer: true
     = open_graph_tags
+    = csrf_meta_tags
+    %meta{name: 'dti-current-user-id', content: user_signed_in? ? current_user.id : "null"}
   %body
     #wardrobe-2020-root

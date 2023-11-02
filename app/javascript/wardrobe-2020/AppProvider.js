@@ -5,19 +5,24 @@ import { ChakraProvider, Box, useColorModeValue } from "@chakra-ui/react";
 import { ApolloProvider } from "@apollo/client";
 import { BrowserRouter } from "react-router-dom";
 import { Global } from "@emotion/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import buildApolloClient from "./apolloClient";
+
+const reactQueryClient = new QueryClient();
 
 export default function AppProvider({ children }) {
   React.useEffect(() => setupLogging(), []);
 
   return (
     <BrowserRouter>
-      <DTIApolloProvider>
-        <ChakraProvider resetCSS={false}>
-          <ScopedCSSReset>{children}</ScopedCSSReset>
-        </ChakraProvider>
-      </DTIApolloProvider>
+      <QueryClientProvider client={reactQueryClient}>
+        <DTIApolloProvider>
+          <ChakraProvider resetCSS={false}>
+            <ScopedCSSReset>{children}</ScopedCSSReset>
+          </ChakraProvider>
+        </DTIApolloProvider>
+      </QueryClientProvider>
     </BrowserRouter>
   );
 }

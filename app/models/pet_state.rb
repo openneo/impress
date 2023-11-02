@@ -16,30 +16,60 @@ class PetState < ApplicationRecord
   
   attr_writer :parent_swf_asset_relationships_to_update
 
-  # Our ideal order is: happy, sad, sick, UC, any+effects, glitched, with male
-  # before female within those groups for consistency. We therefore order as
-  # follows, listed in order of priority:
-  # * Send glitched states to the back
-  # * Bring known happy states to the front (we don't want to sort by mood_id
-  #   DESC first because then labeled sad will appear before unlabeled happy)
-  # * Send states with effect assets to the back
-  # * Bring state with more assets forward (that is, send UC near the back)
-  # * Bring males forward
-  # * Bring states with a lower asset ID sum forward (the idea being that
-  #   sad/female states are usually created after a happy/male base, but that's
-  #   becoming increasingly untrue over time - this is a very last resort)
-  #
-  # Maybe someday, when most states are labeled, we can depend exclusively on
-  # their labels - or at least use more than is-happy and is-female. For now,
-  # though, this strikes a good balance of bringing default to the front for
-  # many pet types (the highest priority!) and otherwise doing decent sorting.
-  bio_effect_zone_id = 4
+  # A simple ordering that tries to bring reliable pet states to the front.
   scope :emotion_order, -> {
-    joins(:parent_swf_asset_relationships).
-    joins("LEFT JOIN swf_assets effect_assets ON effect_assets.id = parents_swf_assets.swf_asset_id AND effect_assets.zone_id = #{bio_effect_zone_id}").
-    group("pet_states.id").
-    order(Arel.sql("glitched ASC, (mood_id = 1) DESC, COUNT(effect_assets.remote_id) ASC, COUNT(parents_swf_assets.swf_asset_id) DESC, female ASC, SUM(parents_swf_assets.swf_asset_id) ASC"))
+    order(Arel.sql(
+      "(mood_id IS NULL) ASC, mood_id ASC, female DESC, unconverted DESC, " +
+      "glitched ASC, id DESC"
+    ))
   }
+
+  # Filter pet states using the "pose" concept we use in the editor.
+  scope :with_pose, ->(pose) {
+    case pose
+    when "UNCONVERTED"
+      where(unconverted: true)
+    when "HAPPY_MASC"
+      where(mood_id: 1, female: false)
+    when "HAPPY_FEM"
+      where(mood_id: 1, female: true)
+    when "SAD_MASC"
+      where(mood_id: 2, female: false)
+    when "SAD_FEM"
+      where(mood_id: 2, female: true)
+    when "SICK_MASC"
+      where(mood_id: 4, female: false)
+    when "SICK_FEM"
+      where(mood_id: 4, female: true)
+    when "UNKNOWN"
+      where(mood_id: nil).or(where(female: nil))
+    else
+      raise ArgumentError, "unexpected pose value #{pose}"
+    end
+  }
+
+  def pose
+    if unconverted?
+      "UNCONVERTED"
+    elsif mood_id.nil? || female.nil?
+      "UNKNOWN"
+    elsif mood_id == 1 && !female?
+      "HAPPY_MASC"
+    elsif mood_id == 1 && female?
+      "HAPPY_FEM"
+    elsif mood_id == 2 && !female?
+      "SAD_MASC"
+    elsif mood_id == 2 && female?
+      "SAD_FEM"
+    elsif mood_id == 4 && !female?
+      "SICK_MASC"
+    elsif mood_id == 4 && female?
+      "SICK_FEM"
+    else
+      raise "could not identify pose: moodId=#{mood_id}, female=#{female}, " +
+        "unconverted=#{unconverted}"
+    end
+  end
 
   def as_json(options={})
     {

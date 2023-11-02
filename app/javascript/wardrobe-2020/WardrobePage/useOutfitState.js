@@ -5,6 +5,7 @@ import { useQuery, useApolloClient } from "@apollo/client";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 
 import { itemAppearanceFragment } from "../components/useOutfitAppearance";
+import { useSavedOutfit } from "../loaders/outfits";
 
 enableMapSet();
 
@@ -23,63 +24,35 @@ function useOutfitState() {
   // If there's an outfit ID (i.e. we're on /outfits/:id), load basic data
   // about the outfit. We'll use it to initialize the local state.
   const {
-    loading: outfitLoading,
+    isLoading: outfitLoading,
     error: outfitError,
     data: outfitData,
-  } = useQuery(
-    gql`
-      query OutfitStateSavedOutfit($id: ID!) {
-        outfit(id: $id) {
-          id
-          name
-          updatedAt
-          creator {
-            id
-          }
-          petAppearance {
-            id
-            species {
-              id
-            }
-            color {
-              id
-            }
-            pose
-          }
-          wornItems {
-            id
-          }
-          closetedItems {
-            id
-          }
+    status: outfitStatus,
+  } = useSavedOutfit(urlOutfitState.id, { enabled: urlOutfitState.id != null });
 
-          # TODO: Consider pre-loading some fields, instead of doing them in
-          #       follow-up queries?
-        }
-      }
-    `,
-    {
-      variables: { id: urlOutfitState.id },
-      skip: urlOutfitState.id == null,
-      returnPartialData: true,
-      onCompleted: (outfitData) => {
-        dispatchToOutfit({
-          type: "resetToSavedOutfitData",
-          savedOutfitData: outfitData.outfit,
-        });
-      },
-    },
-  );
-
-  const creator = outfitData?.outfit?.creator;
-  const updatedAt = outfitData?.outfit?.updatedAt;
+  const creator = outfitData?.user;
+  const updatedAt = outfitData?.updated_at;
 
   // We memoize this to make `outfitStateWithoutExtras` an even more reliable
   // stable object!
   const savedOutfitState = React.useMemo(
-    () => getOutfitStateFromOutfitData(outfitData?.outfit),
-    [outfitData?.outfit],
+    () => getOutfitStateFromOutfitData(outfitData),
+    [outfitData],
   );
+
+  // When the saved outfit data comes in, we reset the local outfit state to
+  // match.
+  // TODO: I forget the details of why we have both resetting the local state,
+  // and a thing where we fallback between the different kinds of outfit state.
+  // Probably something about SSR when we were on Next.js? Could be simplified?`
+  React.useEffect(() => {
+    if (outfitStatus === "success") {
+      dispatchToOutfit({
+        type: "resetToSavedOutfitData",
+        savedOutfitData: outfitData,
+      });
+    }
+  }, [outfitStatus, outfitData]);
 
   // Choose which customization state to use. We want it to match the outfit in
   // the URL immediately, without having to wait for any effects, to avoid race
@@ -405,7 +378,7 @@ function useParseOutfitUrl() {
   // has historically used both!
   const location = useLocation();
   const [justSearchParams] = useSearchParams();
-  const hashParams = new URLSearchParams(location.hash.substr(1));
+  const hashParams = new URLSearchParams(location.hash.slice(1));
 
   // Merge them into one URLSearchParams object.
   const mergedParams = new URLSearchParams();
@@ -429,7 +402,7 @@ function useParseOutfitUrl() {
 function readOutfitStateFromSearchParams(pathname, searchParams) {
   // For the /outfits/:id page, ignore the query string, and just wait for the
   // outfit data to load in!
-  const pathnameMatch = pathname.match(/^\/outfits\/([0-9]+)/)
+  const pathnameMatch = pathname.match(/^\/outfits\/([0-9]+)/);
   if (pathnameMatch) {
     return {
       ...EMPTY_CUSTOMIZATION_STATE,
@@ -457,17 +430,14 @@ function getOutfitStateFromOutfitData(outfit) {
   }
 
   return {
-    id: outfit.id,
+    id: String(outfit.id),
     name: outfit.name,
-    // Note that these fields are intentionally null if loading, rather than
-    // falling back to a default appearance like Blue Acara.
-    speciesId: outfit.petAppearance?.species?.id,
-    colorId: outfit.petAppearance?.color?.id,
-    pose: outfit.petAppearance?.pose,
-    // Whereas the items are more convenient to just leave as empty lists!
-    wornItemIds: new Set((outfit.wornItems || []).map((item) => item.id)),
+    speciesId: String(outfit.species_id),
+    colorId: String(outfit.color_id),
+    pose: outfit.pose,
+    wornItemIds: new Set((outfit.item_ids?.worn || []).map((id) => String(id))),
     closetedItemIds: new Set(
-      (outfit.closetedItems || []).map((item) => item.id),
+      (outfit.item_ids?.closeted || []).map((id) => String(id)),
     ),
   };
 }

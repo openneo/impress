@@ -35,6 +35,10 @@ class User < ApplicationRecord
     name == 'matchu' # you know that's right.
   end
 
+  def as_json
+    serializable_hash only: [:id, :name]
+  end
+
   def unowned_items
     # Join all items against our owned closet hangers, group by item ID, then
     # only return those with zero matching hangers.
