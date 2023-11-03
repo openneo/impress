@@ -454,11 +454,10 @@ export function MajorErrorMessage({ error = null, variant = "unexpected" }) {
           >
             <img
               src={ErrorGrundoImg}
-              srcset={`${ErrorGrundoImg}, ${ErrorGrundoImg2x} 2x`}
+              srcSet={`${ErrorGrundoImg}, ${ErrorGrundoImg2x} 2x`}
               alt="Distressed Grundo programmer"
               width={100}
               height={100}
-              layout="fixed"
             />
           </Box>
         </Box>

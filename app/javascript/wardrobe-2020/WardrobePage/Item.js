@@ -285,7 +285,7 @@ function ItemActionButton({ icon, label, to, onClick }) {
   );
 }
 
-function LinkOrButton({ href, component = Button, ...props }) {
+function LinkOrButton({ href, component, ...props }) {
   const ButtonComponent = component;
   if (href != null) {
     return <ButtonComponent as="a" href={href} {...props} />;

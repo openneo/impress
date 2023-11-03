@@ -1,6 +1,5 @@
 import React from "react";
 import { Box, Button, Flex, Select } from "@chakra-ui/react";
-import { useSearchParams } from "react-router-dom";
 
 function PaginationToolbar({
   isLoading,
@@ -69,42 +68,6 @@ function PaginationToolbar({
       </LinkOrButton>
     </Flex>
   );
-}
-
-export function useRouterPagination(totalCount, numPerPage) {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const currentOffset = parseInt(searchParams.get("offset")) || 0;
-
-  const currentPageIndex = Math.floor(currentOffset / numPerPage);
-  const currentPageNumber = currentPageIndex + 1;
-  const numTotalPages = totalCount ? Math.ceil(totalCount / numPerPage) : null;
-
-  const buildPageUrl = React.useCallback(
-    (newPageNumber) => {
-      setSearchParams((newParams) => {
-        const newPageIndex = newPageNumber - 1;
-        const newOffset = newPageIndex * numPerPage;
-        newParams.set("offset", newOffset);
-        return newParams;
-      });
-    },
-    [query, numPerPage],
-  );
-
-  const goToPageNumber = React.useCallback(
-    (newPageNumber) => {
-      pushHistory(buildPageUrl(newPageNumber));
-    },
-    [buildPageUrl, pushHistory],
-  );
-
-  return {
-    numTotalPages,
-    currentPageNumber,
-    goToPageNumber,
-    buildPageUrl,
-  };
 }
 
 function LinkOrButton({ href, ...props }) {

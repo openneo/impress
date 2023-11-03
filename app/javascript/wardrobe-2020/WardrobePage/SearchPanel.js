@@ -227,6 +227,8 @@ function SearchResultItem({
   );
 
   return (
+    // We're wrapping the control inside the label, which works just fine!
+    // eslint-disable-next-line jsx-a11y/label-has-associated-control
     <label>
       <VisuallyHidden
         as="input"

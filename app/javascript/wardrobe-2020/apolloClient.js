@@ -1,6 +1,5 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
-import { setContext } from "@apollo/client/link/context";
 import { createPersistedQueryLink } from "apollo-link-persisted-queries";
 
 // Use Apollo's error messages in development.

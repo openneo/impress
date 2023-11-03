@@ -242,6 +242,8 @@ function SearchToolbar({
             )}
             <Input
               background={background}
+              // TODO: How to improve a11y here?
+              // eslint-disable-next-line jsx-a11y/no-autofocus
               autoFocus={autoFocus}
               {...inputProps}
             />

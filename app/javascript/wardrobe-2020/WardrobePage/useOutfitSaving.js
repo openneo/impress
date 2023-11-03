@@ -96,7 +96,7 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
     // It's important that this callback _doesn't_ change when the outfit
     // changes, so that the auto-save effect is only responding to the
     // debounced state!
-    [saveOutfitMutation.mutateAsync, pathname, navigate, toast],
+    [saveOutfitMutation, pathname, navigate, toast],
   );
 
   const saveOutfit = React.useCallback(

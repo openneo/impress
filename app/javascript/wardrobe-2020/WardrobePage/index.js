@@ -4,7 +4,6 @@ import { useToast } from "@chakra-ui/react";
 import { emptySearchQuery } from "./SearchToolbar";
 import ItemsAndSearchPanels from "./ItemsAndSearchPanels";
 import SearchFooter from "./SearchFooter";
-import SupportOnly from "./support/SupportOnly";
 import useOutfitSaving from "./useOutfitSaving";
 import useOutfitState, { OutfitStateContext } from "./useOutfitState";
 import WardrobePageLayout from "./WardrobePageLayout";
@@ -108,38 +107,6 @@ function WardrobePage() {
         }
       />
     </OutfitStateContext.Provider>
-  );
-}
-
-/**
- * SavedOutfitMetaTags renders the meta tags that we use to render pretty
- * share cards for social media for saved outfits!
- */
-function SavedOutfitMetaTags({ outfitState }) {
-  const updatedAtTimestamp = Math.floor(
-    new Date(outfitState.updatedAt).getTime() / 1000,
-  );
-  const imageUrl =
-    `https://impress-outfit-images.openneo.net/outfits` +
-    `/${encodeURIComponent(outfitState.id)}` +
-    `/v/${encodeURIComponent(updatedAtTimestamp)}` +
-    `/600.png`;
-
-  return (
-    <>
-      <meta
-        property="og:title"
-        content={outfitState.name || "Untitled outfit"}
-      />
-      <meta property="og:type" content="website" />
-      <meta property="og:image" content={imageUrl} />
-      <meta property="og:url" content={outfitState.url} />
-      <meta property="og:site_name" content="Dress to Impress" />
-      <meta
-        property="og:description"
-        content="A custom Neopets outfit, designed on Dress to Impress!"
-      />
-    </>
   );
 }
 

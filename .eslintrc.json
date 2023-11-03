@@ -1,0 +1,45 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "react", "react-hooks", "jsx-a11y"],
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "globals": {
+    "process": true // For process.env["NODE_ENV"]
+  },
+  "rules": {
+    "no-console": [
+      "warn",
+      {
+        "allow": ["debug", "info", "warn", "error"]
+      }
+    ],
+    "import/first": "off",
+    "import/no-webpack-loader-syntax": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "varsIgnorePattern": "^unused",
+        "argsIgnorePattern": "^_+$|^e$"
+      }
+    ],
+    "react/no-unescaped-entities": ["error", { "forbid": [">", "}"] }],
+    // We have some React.forwardRefs that trigger this, not sure how to improve
+    "react/display-name": "off",
+    "react/prop-types": "off"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}

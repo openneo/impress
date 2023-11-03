@@ -250,13 +250,9 @@ function useOutfitState() {
   // Keep the URL up-to-date.
   const path = buildOutfitPath(outfitState);
   React.useEffect(() => {
-    console.debug(
-      `[useOutfitState] Navigating to latest outfit path:`,
-      path,
-      outfitState,
-    );
+    console.debug(`[useOutfitState] Navigating to latest outfit path:`, path);
     navigate(path, { replace: true });
-  }, [path]);
+  }, [path, navigate]);
 
   return {
     loading: outfitLoading || itemsLoading,
@@ -393,6 +389,9 @@ function useParseOutfitUrl() {
   // stable object!
   const memoizedOutfitState = React.useMemo(
     () => readOutfitStateFromSearchParams(location.pathname, mergedParams),
+    // TODO: This hook is reliable as-is, I think… but is there a simpler way
+    // to make it obvious that it is?
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [location.pathname, mergedParams.toString()],
   );
 
