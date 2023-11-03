@@ -169,7 +169,7 @@ class Item < ApplicationRecord
   end
 
   def nc?
-    NCRarities.include?(rarity_index)
+    is_manually_nc? || NCRarities.include?(rarity_index)
   end
   
   def pb?

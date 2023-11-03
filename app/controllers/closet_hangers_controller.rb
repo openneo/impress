@@ -260,7 +260,7 @@ class ClosetHangersController < ApplicationController
   end
 
   def items_scope
-    Item.select(:id, :thumbnail_url, :rarity_index)
+    Item.select(:id, :thumbnail_url, :rarity_index, :is_manually_nc)
   end
 
   def item_translations_scope
