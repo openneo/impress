@@ -55,10 +55,7 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
 
   const saveOutfitMutation = useSaveOutfitMutation({
     onSuccess: (outfit) => {
-      if (
-        String(outfit.id) === String(outfitState.id) &&
-        outfit.name !== outfitState.name
-      ) {
+      if (outfit.id === outfitState.id && outfit.name !== outfitState.name) {
         dispatchToOutfit({
           type: "rename",
           outfitName: outfit.name,

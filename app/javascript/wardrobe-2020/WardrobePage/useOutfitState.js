@@ -30,8 +30,8 @@ function useOutfitState() {
     status: outfitStatus,
   } = useSavedOutfit(urlOutfitState.id, { enabled: urlOutfitState.id != null });
 
-  const creator = outfitData?.user;
-  const updatedAt = outfitData?.updated_at;
+  const creator = outfitData?.creator;
+  const updatedAt = outfitData?.updatedAt;
 
   // We memoize this to make `outfitStateWithoutExtras` an even more reliable
   // stable object!
@@ -430,15 +430,13 @@ function getOutfitStateFromOutfitData(outfit) {
   }
 
   return {
-    id: String(outfit.id),
+    id: outfit.id,
     name: outfit.name,
-    speciesId: String(outfit.species_id),
-    colorId: String(outfit.color_id),
+    speciesId: outfit.speciesId,
+    colorId: outfit.colorId,
     pose: outfit.pose,
-    wornItemIds: new Set((outfit.item_ids?.worn || []).map((id) => String(id))),
-    closetedItemIds: new Set(
-      (outfit.item_ids?.closeted || []).map((id) => String(id)),
-    ),
+    wornItemIds: new Set(outfit.wornItemIds),
+    closetedItemIds: new Set(outfit.closetedItemIds),
   };
 }
 

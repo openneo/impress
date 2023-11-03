@@ -15,7 +15,7 @@ export function useSaveOutfitMutation(options) {
 		...options,
 		mutationFn: saveOutfit,
 		onSuccess: (outfit) => {
-			queryClient.setQueryData(["outfits", String(outfit.id)], outfit);
+			queryClient.setQueryData(["outfits", outfit.id], outfit);
 			options.onSuccess(outfit);
 		},
 	});
@@ -28,7 +28,7 @@ async function loadSavedOutfit(id) {
 		throw new Error(`loading outfit failed: ${res.status} ${res.statusText}`);
 	}
 
-	return res.json();
+	return res.json().then(normalizeOutfit);
 }
 
 async function saveOutfit({
@@ -77,7 +77,22 @@ async function saveOutfit({
 		throw new Error(`saving outfit failed: ${res.status} ${res.statusText}`);
 	}
 
-	return res.json();
+	return res.json().then(normalizeOutfit);
+}
+
+function normalizeOutfit(outfit) {
+	return {
+		id: String(outfit.id),
+		name: outfit.name,
+		speciesId: String(outfit.species_id),
+		colorId: String(outfit.color_id),
+		pose: outfit.pose,
+		wornItemIds: (outfit.item_ids?.worn || []).map((id) => String(id)),
+		closetedItemIds: (outfit.item_ids?.closeted || []).map((id) => String(id)),
+		creator: outfit.user ? { id: String(outfit.user.id) } : null,
+		createdAt: outfit.created_at,
+		updatedAt: outfit.updated_at,
+	};
 }
 
 function getCSRFToken() {

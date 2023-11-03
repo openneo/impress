@@ -18,7 +18,11 @@ function useCurrentUser() {
 function readCurrentUserId() {
   try {
     const element = document.querySelector("meta[name=dti-current-user-id]");
-    return JSON.parse(element.getAttribute("content"));
+    const value = element.getAttribute("content");
+    if (value === "null") {
+      return null;
+    }
+    return value;
   } catch (error) {
     console.error(
       `[readCurrentUserId] Couldn't read user ID, using null instead`,
