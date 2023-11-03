@@ -3,8 +3,6 @@ import { useToast } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDebounce } from "../util";
 import useCurrentUser from "../components/useCurrentUser";
-import gql from "graphql-tag";
-import { useMutation } from "@apollo/client";
 import { outfitStatesAreEqual } from "./useOutfitState";
 import { useSaveOutfitMutation } from "../loaders/outfits";
 

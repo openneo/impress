@@ -8,7 +8,7 @@ export function useSavedOutfit(id, options) {
 	});
 }
 
-export function useSaveOutfitMutation(options) {
+export function useSaveOutfitMutation(options = {}) {
 	const queryClient = useQueryClient();
 
 	return useMutation({
@@ -16,7 +16,24 @@ export function useSaveOutfitMutation(options) {
 		mutationFn: saveOutfit,
 		onSuccess: (outfit) => {
 			queryClient.setQueryData(["outfits", outfit.id], outfit);
-			options.onSuccess(outfit);
+			if (options.onSuccess) {
+				options.onSuccess(outfit);
+			}
+		},
+	});
+}
+
+export function useDeleteOutfitMutation(options = {}) {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		...options,
+		mutationFn: deleteOutfit,
+		onSuccess: (emptyData, id, context) => {
+			queryClient.invalidateQueries({ queryKey: ["outfits", String(id)] });
+			if (options.onSuccess) {
+				options.onSuccess(emptyData, id, context);
+			}
 		},
 	});
 }
@@ -78,6 +95,19 @@ async function saveOutfit({
 	}
 
 	return res.json().then(normalizeOutfit);
+}
+
+async function deleteOutfit(id) {
+	const res = await fetch(`/outfits/${encodeURIComponent(id)}.json`, {
+		method: "DELETE",
+		headers: {
+			"X-CSRF-Token": getCSRFToken(),
+		},
+	});
+
+	if (!res.ok) {
+		throw new Error(`deleting outfit failed: ${res.status} ${res.statusText}`);
+	}
 }
 
 function normalizeOutfit(outfit) {

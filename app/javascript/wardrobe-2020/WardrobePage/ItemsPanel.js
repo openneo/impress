@@ -36,19 +36,13 @@ import {
 } from "@chakra-ui/icons";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
-import {
-  Delay,
-  ErrorMessage,
-  getGraphQLErrorMessage,
-  Heading1,
-  Heading2,
-} from "../util";
+import { Delay, ErrorMessage, Heading1, Heading2 } from "../util";
 import Item, { ItemListContainer, ItemListSkeleton } from "./Item";
 import { BiRename } from "react-icons/bi";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { MdMoreVert } from "react-icons/md";
 import { buildOutfitUrl } from "./useOutfitState";
-import { gql, useMutation } from "@apollo/client";
+import { useDeleteOutfitMutation } from "../loaders/outfits";
 
 /**
  * ItemsPanel shows the items in the current outfit, and lets the user toggle
@@ -455,25 +449,7 @@ function DeleteOutfitMenuItem({ outfitState }) {
   const { id, name } = outfitState;
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [sendDeleteOutfitMutation, { loading, error }] = useMutation(
-    gql`
-      mutation DeleteOutfitMenuItem($id: ID!) {
-        deleteOutfit(id: $id)
-      }
-    `,
-    {
-      context: { sendAuth: true },
-      update(cache) {
-        // Once this is deleted, evict it from the local cache, and "garbage
-        // collect" to force all queries referencing this outfit to reload the
-        // next time we see them. (This is especially important since we're
-        // about to redirect to the user outfits page, which shouldn't show
-        // the outfit anymore!)
-        cache.evict(`Outfit:${id}`);
-        cache.gc();
-      },
-    },
-  );
+  const { status, error, mutateAsync } = useDeleteOutfitMutation();
 
   return (
     <>
@@ -489,10 +465,9 @@ function DeleteOutfitMenuItem({ outfitState }) {
             We'll delete this data and remove it from your list of outfits.
             Links and image embeds pointing to this outfit will break. Is that
             okay?
-            {error && (
+            {status === "error" && (
               <ErrorMessage marginTop="1em">
-                Error deleting outfit: "{getGraphQLErrorMessage(error)}". Try
-                again?
+                Error deleting outfit: "{error.message}". Try again?
               </ErrorMessage>
             )}
           </ModalBody>
@@ -502,7 +477,7 @@ function DeleteOutfitMenuItem({ outfitState }) {
             <Button
               colorScheme="red"
               onClick={() =>
-                sendDeleteOutfitMutation({ variables: { id } })
+                mutateAsync(id)
                   .then(() => {
                     window.location = "/your-outfits";
                   })
@@ -510,7 +485,9 @@ function DeleteOutfitMenuItem({ outfitState }) {
                     /* handled in error UI */
                   })
               }
-              isLoading={loading}
+              // We continue to show the loading spinner in the success case,
+              // while we redirect away!
+              isLoading={status === "pending" || status === "success"}
             >
               Delete
             </Button>
