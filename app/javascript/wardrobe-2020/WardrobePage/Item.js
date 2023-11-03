@@ -24,7 +24,6 @@ import {
 import SupportOnly from "./support/SupportOnly";
 import useSupport from "./support/useSupport";
 
-const LoadableItemPageDrawer = loadable(() => import("../ItemPageDrawer"));
 const LoadableItemSupportDrawer = loadable(() =>
   import("./support/ItemSupportDrawer"),
 );
@@ -56,7 +55,6 @@ function Item({
   onRemove,
   isDisabled = false,
 }) {
-  const [infoDrawerIsOpen, setInfoDrawerIsOpen] = React.useState(false);
   const [supportDrawerIsOpen, setSupportDrawerIsOpen] = React.useState(false);
 
   return (
@@ -97,24 +95,10 @@ function Item({
             icon={<InfoIcon />}
             label="More info"
             to={`/items/${item.id}`}
-            onClick={(e) => {
-              const willProbablyOpenInNewTab =
-                e.metaKey || e.shiftKey || e.altKey || e.ctrlKey;
-              if (willProbablyOpenInNewTab) {
-                return;
-              }
-
-              setInfoDrawerIsOpen(true);
-              e.preventDefault();
-            }}
+            target="_blank"
           />
         </Box>
       </ItemContainer>
-      <LoadableItemPageDrawer
-        item={item}
-        isOpen={infoDrawerIsOpen}
-        onClose={() => setInfoDrawerIsOpen(false)}
-      />
       <SupportOnly>
         <LoadableItemSupportDrawer
           item={item}
@@ -232,7 +216,7 @@ function ItemBadges({ item }) {
 /**
  * ItemActionButton is one of a list of actions a user can take for this item.
  */
-function ItemActionButton({ icon, label, to, onClick }) {
+function ItemActionButton({ icon, label, to, onClick, ...props }) {
   const theme = useTheme();
 
   const focusBackgroundColor = useColorModeValue(
@@ -249,6 +233,7 @@ function ItemActionButton({ icon, label, to, onClick }) {
       {({ css }) => (
         <Tooltip label={label} placement="top">
           <LinkOrButton
+            {...props}
             component={IconButton}
             href={to}
             icon={icon}
