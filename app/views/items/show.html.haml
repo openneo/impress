@@ -9,6 +9,10 @@
     - unless @item.rarity.blank?
       == #{t '.rarity'}: #{@item.rarity_index} (#{@item.rarity})
     = link_to t('.resources.jn_items'), jn_items_url_for(@item)
+    - if @item.nc_trade_value
+      = link_to t('.resources.owls', value: @item.nc_trade_value.value_text),
+        "https://www.neopets.com/~owls",
+        title: nc_trade_value_updated_at_text(@item.nc_trade_value)
     - unless @item.nc?
       = link_to t('.resources.shop_wizard'), shop_wizard_url_for(@item)
       = link_to t('.resources.super_shop_wizard'), super_shop_wizard_url_for(@item)

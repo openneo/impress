@@ -56,6 +56,7 @@ gem 'parallel', '~> 1.23'
 
 # For miscellaneous HTTP requests.
 gem "httparty", "~> 0.21.0"
+gem "addressable", "~> 2.8"
 
 # For debugging.
 gem 'web-console', '~> 4.2', group: :development

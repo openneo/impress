@@ -308,6 +308,7 @@ PLATFORMS
 
 DEPENDENCIES
   RocketAMF!
+  addressable (~> 2.8)
   bootsnap (~> 1.16)
   devise (~> 4.9, >= 4.9.2)
   devise-encryptable (~> 0.2.0)

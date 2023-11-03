@@ -129,8 +129,17 @@ class Item < ApplicationRecord
       distinct
   }
 
-  def closeted?
-    @owned || @wanted
+  def nc_trade_value
+    return nil unless nc?
+    begin
+      OwlsValueGuide.find_by_name(name(:en))
+    rescue OwlsValueGuide::NotFound => error
+      Rails.logger.debug("No NC trade value listed for #{name(:en)} (#{id})")
+      return nil
+    rescue OwlsValueGuide::NetworkError => error
+      Rails.logger.error("Couldn't load nc_trade_value: #{error.full_message}")
+      return nil
+    end
   end
   
   # Return an OrderedHash mapping users to the number of times they

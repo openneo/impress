@@ -302,6 +302,7 @@ en:
       rarity: Rarity
       resources:
         jn_items: JN Items
+        owls: "Owls: %{value}"
         shop_wizard: Shop Wizard
         super_shop_wizard: Super Wizard
         trading_post: Trades
