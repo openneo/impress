@@ -156,25 +156,24 @@ const typePolicies = {
   },
 };
 
+const cache = new InMemoryCache({ typePolicies });
+
 const httpLink = createHttpLink({
   uri: "https://impress-2020.openneo.net/api/graphql",
 });
 
-const buildLink = () =>
-  createPersistedQueryLink({
-    useGETForHashedQueries: true,
-  }).concat(httpLink);
+const link = createPersistedQueryLink({
+  useGETForHashedQueries: true,
+}).concat(httpLink);
 
 /**
  * apolloClient is the global Apollo Client instance we use for GraphQL
  * queries. This is how we communicate with the server!
  */
-const buildClient = ({ initialCacheState }) => {
-  return new ApolloClient({
-    link: buildLink(),
-    cache: new InMemoryCache({ typePolicies }).restore(initialCacheState),
-    connectToDevTools: true,
-  });
-};
+const apolloClient = new ApolloClient({
+  link,
+  cache,
+  connectToDevTools: true,
+});
 
-export default buildClient;
+export default apolloClient;

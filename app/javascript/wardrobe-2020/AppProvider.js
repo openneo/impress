@@ -7,7 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Global } from "@emotion/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import buildApolloClient from "./apolloClient";
+import apolloClient from "./apolloClient";
 
 const reactQueryClient = new QueryClient();
 
@@ -17,63 +17,14 @@ export default function AppProvider({ children }) {
   return (
     <BrowserRouter>
       <QueryClientProvider client={reactQueryClient}>
-        <DTIApolloProvider>
+        <ApolloProvider client={apolloClient}>
           <ChakraProvider resetCSS={false}>
             <ScopedCSSReset>{children}</ScopedCSSReset>
           </ChakraProvider>
-        </DTIApolloProvider>
+        </ApolloProvider>
       </QueryClientProvider>
     </BrowserRouter>
   );
-}
-
-function DTIApolloProvider({ children, additionalCacheState = {} }) {
-  // Save the first `additionalCacheState` we get as our `initialCacheState`,
-  // which we'll use to initialize the client without having to wait a tick.
-  const [initialCacheState, unusedSetInitialCacheState] =
-    React.useState(additionalCacheState);
-
-  const client = React.useMemo(
-    () => buildApolloClient({ initialCacheState }),
-    [initialCacheState],
-  );
-
-  // When we get a new `additionalCacheState` object, merge it into the cache:
-  // copy the previous cache state, merge the new cache state's entries in,
-  // and "restore" the new merged cache state.
-  //
-  // HACK: Using `useMemo` for this is a dastardly trick!! What we want is the
-  //       semantics of `useEffect` kinda, but we need to ensure it happens
-  //       *before* all the children below get rendered, so they don't fire off
-  //       unnecessary network requests. Using `useMemo` but throwing away the
-  //       result kinda does that. It's evil! It's nasty! It's... perfect?
-  //       (This operation is safe to run multiple times too, in case memo
-  //       re-runs it. It's just, y'know, a performance loss. Maybe it's
-  //       actually kinda perfect lol)
-  //
-  //       I feel like there's probably a better way to do this... like, I want
-  //       the semantic of replacing this client with an updated client - but I
-  //       don't want to actually replace the client, because that'll break
-  //       other kinds of state, like requests loading in the shared layout.
-  //       Idk! I'll see how it goes!
-  React.useMemo(() => {
-    const previousCacheState = client.cache.extract();
-    const mergedCacheState = { ...previousCacheState };
-    for (const key of Object.keys(additionalCacheState)) {
-      mergedCacheState[key] = {
-        ...mergedCacheState[key],
-        ...additionalCacheState[key],
-      };
-    }
-    console.debug(
-      "Merging Apollo cache:",
-      additionalCacheState,
-      mergedCacheState,
-    );
-    client.cache.restore(mergedCacheState);
-  }, [client, additionalCacheState]);
-
-  return <ApolloProvider client={client}>{children}</ApolloProvider>;
 }
 
 function setupLogging() {
