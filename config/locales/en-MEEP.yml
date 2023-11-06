@@ -95,7 +95,6 @@ en-MEEP:
       import_from:
         closet: Impeep from closet
         safety_deposit: Impeep from SDB
-        neopets_user: Impeep from pets
       export_to:
         petpage: Expeep to petpage
       toggle_group:
@@ -416,15 +415,6 @@ en-MEEP:
             and quantity of meepits in your %{name}, and add that to your Dress
             to Impress meepit list. I meep that it's all safe, but, if you're
             concerned, find a meepit and meep out the source code to be sure.
-
-  neopets_users:
-    create:
-      success:
-        zero: Okay. We meeped %{user_name}'s pets, but already had these items
-          meeped to your account.
-        one: Success! We meeped %{user_name}'s pets, and meeped 1 item.
-        other: Success! We meeped %{user_name}'s pets, and meeped %{count} items.
-      not_found: Could not meep user %{user_name}. Is it meeped correctly?
 
     new:
       title: Meemport from pets

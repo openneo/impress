@@ -66,7 +66,6 @@ pt:
       import_from:
         closet: Importar do Armário
         safety_deposit: Importar do Cofre
-        neopets_user: Importar dos Pets
       export_to:
         petpage: Exportar para Petpage
       toggle_group:
@@ -336,13 +335,6 @@ pt:
         submit:
           header: Enviar
           description: Vamos analisar o código que você nos enviou, agarre exclusivamente a identidade e quantidade de itens em seu %{name}, e acrescentar a sua lista de itens do Dress to Impress. Eu prometo que é tudo seguro, mas, se você estiver preocupado, encontre um amigo programador e verifique o código fonte para ter certeza.
-  neopets_users:
-    create:
-      success:
-        zero: Ok. Nós carregamos o pet de %{user_name}, mas já tínhamos esses itens registrados na sua conta.
-        one: Sucesso! Nós carregamos o pet de %{user_name}, e adicionamos 1 item.
-        other: Sucesso! Nós carregamos o pet de %{user_name} e adicionamos %{count} itens.
-      not_found: Não encontramos o usuário %{user_name}. Está escrito corretamente?
     new:
       title: "Importar dos pets "
       your_items_link: Voltar para "Seus Items"

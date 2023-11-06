@@ -103,7 +103,6 @@ en:
         closet: Import from closet
         safety_deposit: Import from SDB
         gallery: Import from gallery
-        neopets_user: Import from pets
       export_to:
         petpage: Export to petpage
       toggle_group:
@@ -476,15 +475,6 @@ en:
             to Impress items list. I promise it's all safe, but, if you're
             concerned, find a programmer buddy and check out the source code to
             be sure.
-
-  neopets_users:
-    create:
-      success:
-        zero: Okay. We loaded %{user_name}'s pets, but already had these items
-          recorded to your account.
-        one: Success! We loaded %{user_name}'s pets, and added 1 item.
-        other: Success! We loaded %{user_name}'s pets, and added %{count} items.
-      not_found: Could not find user %{user_name}. Is it spelled correctly?
 
     new:
       title: Import from pets

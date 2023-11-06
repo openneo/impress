@@ -66,7 +66,6 @@ es:
       import_from:
         closet: Importar desde el ropero
         safety_deposit: Importar desde la Caja de Seguridad
-        neopets_user: Importar desde pets
       export_to:
         petpage: Exportar para petpage
       toggle_group:
@@ -336,13 +335,6 @@ es:
         submit:
           header: ¡Envíalo!
           description: El código será analizado y obtendrá sólo la información de la cantidad de objetos y qué objetos hay en tu %{name}. Estos objetos los podrás añadir a tus listas de Dress to Impress. Este proceso es totalmente seguro pero si no te fías contacta con algún programador para que revise el código y estar seguro.
-  neopets_users:
-    create:
-      success:
-        zero: ¡Hemos cargado los pets de %{user_name}, pero ya tenías estos objetos guardados en tu cuenta!
-        one: ¡Hecho! Hemos cargado los pets de %{user_name} y hemos añadido 1 objeto.
-        other: ¡Hecho! Hemos cargado los pets de %{user_name} y hemos añadido %{count} objetos.
-      not_found: No hemos podido encontrar a %{user_name}. ¿Lo has escrito bien?
     new:
       title: Importar de pets
       your_items_link: Volver a Tus Objetos

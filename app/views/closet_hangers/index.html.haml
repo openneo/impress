@@ -53,7 +53,6 @@
     = link_to t('.import_from.closet'), new_neopets_page_import_task_path(page_type: 'closet', expected_index: 1)
     = link_to t('.import_from.safety_deposit'), new_neopets_page_import_task_path(page_type: 'safety_deposit', expected_index: 1)
     = link_to t('.import_from.gallery'), new_neopets_page_import_task_path(page_type: 'gallery', expected_index: 1)
-    = link_to t('.import_from.neopets_user'), new_neopets_user_path
     = link_to t('.export_to.petpage'), petpage_user_closet_hangers_path(@user)
 
 - unless public_perspective?

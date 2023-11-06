@@ -35,8 +35,6 @@ OpenneoImpressItems::Application.routes.draw do
   scope 'import' do
     resources :neopets_page_import_tasks, only: [:new, :create],
       path: ':page_type/pages/:expected_index'
-
-    resources :neopets_users, :only => [:new, :create], :path => 'neopets-users'
   end
 
   get '/your-outfits', to: 'outfits#index', as: :current_user_outfits
