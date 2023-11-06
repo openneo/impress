@@ -130,6 +130,7 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
     if (
       !isNewOutfit &&
       canSaveOutfit &&
+      !isSaving &&
       debouncedOutfitStateIsSaveable &&
       !outfitStatesAreEqual(debouncedOutfitState, outfitState.savedOutfitState)
     ) {
@@ -143,6 +144,7 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
   }, [
     isNewOutfit,
     canSaveOutfit,
+    isSaving,
     debouncedOutfitState,
     debouncedOutfitStateIsSaveable,
     outfitState.savedOutfitState,
