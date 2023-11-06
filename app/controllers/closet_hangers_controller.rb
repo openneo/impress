@@ -70,7 +70,8 @@ class ClosetHangersController < ApplicationController
 
   def petpage
     # Find all closet lists, and also the hangers of the visible closet lists
-    closet_lists = @user.closet_lists.select([:id, :name, :hangers_owned]).alphabetical
+    closet_lists = @user.closet_lists.select([
+      :id, :name, :hangers_owned, :description]).alphabetical
     if params[:filter]
       # If user specified which lists should be visible, restrict to those
       if params[:lists] && params[:lists].respond_to?(:keys)
