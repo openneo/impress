@@ -12,10 +12,6 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
   const navigate = useNavigate();
   const toast = useToast();
 
-  // There's not a way to reset an Apollo mutation state to clear out the error
-  // when the outfit changes… so we track the error state ourselves!
-  const [saveError, setSaveError] = React.useState(null);
-
   // Whether this outfit is new, i.e. local-only, i.e. has _never_ been saved
   // to the server.
   const isNewOutfit = outfitState.id == null;
@@ -62,6 +58,7 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
     },
   });
   const isSaving = saveOutfitMutation.isPending;
+  const saveError = saveOutfitMutation.error;
 
   const saveOutfitFromProvidedState = React.useCallback(
     (outfitState) => {
@@ -85,7 +82,6 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
         })
         .catch((e) => {
           console.error(e);
-          setSaveError(e);
           toast({
             status: "error",
             title: "Sorry, there was an error saving this outfit!",
@@ -131,6 +127,7 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
       !isNewOutfit &&
       canSaveOutfit &&
       !isSaving &&
+      !saveError &&
       debouncedOutfitStateIsSaveable &&
       !outfitStatesAreEqual(debouncedOutfitState, outfitState.savedOutfitState)
     ) {
@@ -145,6 +142,7 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
     isNewOutfit,
     canSaveOutfit,
     isSaving,
+    saveError,
     debouncedOutfitState,
     debouncedOutfitStateIsSaveable,
     outfitState.savedOutfitState,
@@ -154,9 +152,11 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
   // When the outfit changes, clear out the error state from previous saves.
   // We'll send the mutation again after the debounce, and we don't want to
   // show the error UI in the meantime!
-  React.useEffect(() => {
-    setSaveError(null);
-  }, [outfitState.outfitStateWithoutExtras]);
+  const resetMutation = saveOutfitMutation.reset;
+  React.useEffect(
+    () => resetMutation(),
+    [outfitState.outfitStateWithoutExtras, resetMutation],
+  );
 
   return {
     canSaveOutfit,
