@@ -71,3 +71,7 @@ gem 'bootsnap', '~> 1.16', require: false
 gem "rack-mini-profiler", "~> 3.1"
 gem "memory_profiler", "~> 1.0"
 gem "stackprof", "~> 0.2.25"
+
+# For monitoring errors in production.
+gem "sentry-ruby", "~> 5.12"
+gem "sentry-rails", "~> 5.12"
