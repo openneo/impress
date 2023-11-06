@@ -22,9 +22,9 @@
   %body{:class => body_class}
     #container
       = yield :before_title
+      = render 'static/announcement'
       - if content_for?(:title) && show_title_header?
         %h1#title= yield :title
-      = render 'static/announcement'
       = yield :before_flashes
       = flashes
 
