@@ -66,7 +66,7 @@ class NeopetsPageImportTasksController < ApplicationController
   end
 
   def tt(key, params={})
-    t("neopets_page_import_tasks.create.#{key}", params)
+    t("neopets_page_import_tasks.create.#{key}", **params)
   end
 
   def require_source
