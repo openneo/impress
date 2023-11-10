@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_07_005748) do
+ActiveRecord::Schema[7.1].define(version: 2023_08_07_005748) do
   create_table "users", id: { type: :integer, unsigned: true }, charset: "utf8mb3", force: :cascade do |t|
     t.string "name", limit: 20, null: false
     t.string "encrypted_password", limit: 64, null: false

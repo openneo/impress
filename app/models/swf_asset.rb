@@ -16,6 +16,8 @@ class SwfAsset < ApplicationRecord
   
   scope :includes_depth, -> { includes(:zone) }
 
+  before_validation :normalize_manifest_url
+
   def swf_image_dir
     @swf_image_dir ||= Rails.root.join('tmp', 'asset_images_before_upload', self.id.to_s)
   end
@@ -141,6 +143,7 @@ class SwfAsset < ApplicationRecord
     self.zone_id = data[:zone_id].to_i
     self.url = data[:asset_url]
     self.zones_restrict = data[:zones_restrict]
+    self.manifest_url = data[:manifest]
   end
 
   def origin_object_data=(data)
@@ -149,11 +152,18 @@ class SwfAsset < ApplicationRecord
     self.zone_id = data[:zone_id].to_i
     self.url = data[:asset_url]
     self.zones_restrict = ""
+    self.manifest_url = data[:manifest]
   end
 
   def mall_data=(data)
     self.zone_id = data['zone'].to_i
     self.url = "https://images.neopets.com/#{data['url']}"
+  end
+
+  def normalize_manifest_url
+    parsed_manifest_url = Addressable::URI.parse(manifest_url)
+    parsed_manifest_url.scheme = "https"
+    self.manifest_url = parsed_manifest_url.to_s
   end
 
   def self.from_wardrobe_link_params(ids)
