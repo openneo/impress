@@ -27,7 +27,7 @@ class Pet < ApplicationRecord
   end
 
   def use_viewer_data(viewer_data, options={})
-    options[:item_scope] ||= Item.scoped
+    options[:item_scope] ||= Item.all
 
     pet_data = viewer_data[:custom_pet]
 

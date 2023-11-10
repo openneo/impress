@@ -185,7 +185,7 @@ class Item < ApplicationRecord
   end
 
   def restricted_zones(options={})
-    options[:scope] ||= Zone.scoped
+    options[:scope] ||= Zone.all
     options[:scope].find(restricted_zone_ids)
   end
   
@@ -204,7 +204,7 @@ class Item < ApplicationRecord
   end
 
   def occupied_zones(options={})
-    options[:scope] ||= Zone.scoped
+    options[:scope] ||= Zone.all
     all_body_ids = []
     zone_body_ids = {}
     selected_assets = swf_assets.select('body_id, zone_id').each do |swf_asset|
@@ -370,7 +370,7 @@ class Item < ApplicationRecord
               inject({}) { |h, pt| h[pt.species_id] = pt.body_id; h }
   end
 
-  def predicted_missing_standard_body_ids_by_species(species_scope=Species.scoped)
+  def predicted_missing_standard_body_ids_by_species(species_scope=Species.all)
     species = species_scope.where(id: predicted_missing_standard_body_ids_by_species_id.keys)
     species_by_id = species.inject({}) { |h, s| h[s.id] = s; h }
     predicted_missing_standard_body_ids_by_species_id.inject({}) { |h, (sid, bid)|
@@ -383,7 +383,7 @@ class Item < ApplicationRecord
                   colors: {standard: false})
   end
 
-  def predicted_missing_nonstandard_body_ids_by_species_by_color(colors_scope=Color.scoped, species_scope=Species.scoped)
+  def predicted_missing_nonstandard_body_ids_by_species_by_color(colors_scope=Color.all, species_scope=Species.all)
     pet_types = predicted_missing_nonstandard_body_pet_types
 
     species_by_id = {}
@@ -555,7 +555,7 @@ class Item < ApplicationRecord
     end
   end
 
-  def self.collection_from_pet_type_and_registries(pet_type, info_registry, asset_registry, scope=Item.scoped)
+  def self.collection_from_pet_type_and_registries(pet_type, info_registry, asset_registry, scope=Item.all)
     # bear in mind that registries are arrays with many nil elements,
     # due to how the parser works
 
