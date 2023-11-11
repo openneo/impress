@@ -10,31 +10,6 @@ module OutfitsHelper
       :user_link => link_to(user.name, user_contributions_path(user)),
       :contributed_description => contributed_description(contributed, false)
   end
-  
-  def search_helper(filter, standard_key)
-    key = translate("#{filter}.key")
-    default_value = translate("#{filter}.default_value")
-    content_tag :span, default_value, :class => 'search-helper',
-                                      'data-search-filter-key' => standard_key,
-                                      'data-search-filter-name' => key
-  end
-  
-  def search_query_description(base, standard_key)
-    translate "#{base}.description_html",
-              :default_value => search_helper("#{base}.filter", standard_key)
-  end
-  
-  def search_query_with_helper(base, standard_key)
-    translate "#{base}.query_html",
-              :filter_key => content_tag(:span, translate("#{base}.filter.key")),
-              :filter_value => search_helper("#{base}.filter", standard_key)
-  end
-  
-  def search_query(translation_key, filter_key)
-    base = "outfits.edit.search.examples.#{translation_key}"
-    content_tag(:dt, search_query_with_helper(base, filter_key)) +
-      content_tag(:dd, search_query_description(base, filter_key))
-  end
 
   def render_predicted_missing_species_by_color(species_by_color)
     key_prefix = 'outfits.new.newest_items.unmodeled.content'
