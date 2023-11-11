@@ -57,7 +57,19 @@ namespace :swf_assets do
 				# for the transactional semantics, but because it's notably faster than
 				# doing a commit between each query, which is what sending the queries
 				# individually would effectively do!)
-				SwfAsset.transaction { batch.each(&:save!) }
+				begin
+					SwfAsset.transaction do
+						batch.each do |asset|
+							begin
+								asset.save!
+							rescue StandardError => error
+								puts "⚠️  Saving asset #{asset.id} failed: #{error.full_message}"
+							end
+						end
+					end
+				rescue StandardError => error
+					puts "⚠️  Saving this batch failed: #{error.full_message}"
+				end
 			end
 		end
 	end
