@@ -641,7 +641,7 @@ function ItemZonesInfoListItem({ zoneLabel, bodies, showBodyInfo }) {
       //       "Acara" in either case! (We are at least gonna be defensive here
       //       and remove duplicates, though, in case both the Blue Acara and
       //       Mutant Acara body end up in the same list.)
-      const speciesNames = new Set(bodies.map((b) => b.species.name));
+      const speciesNames = new Set(bodies.map((b) => b.species.humanName));
       const speciesListString = [...speciesNames].sort().join(", ");
 
       content = (

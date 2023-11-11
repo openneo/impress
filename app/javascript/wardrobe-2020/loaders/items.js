@@ -51,7 +51,7 @@ function normalizeBody(body) {
 		species: {
 			id: String(body.species.id),
 			name: body.species.name,
-			humanName: body.species.humanName,
+			humanName: body.species.human_name,
 		},
 	};
 }
