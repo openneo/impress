@@ -105,6 +105,7 @@ function ItemPageOutfitPreview({ itemId }) {
     loading: loadingAppearances,
     error: errorAppearances,
   } = useItemAppearances(itemId);
+  const itemName = itemAppearancesData?.name ?? "";
   const itemAppearances = itemAppearancesData?.appearances ?? [];
   const restrictedZones = itemAppearancesData?.restrictedZones ?? [];
 
@@ -132,7 +133,6 @@ function ItemPageOutfitPreview({ itemId }) {
       ) {
         item(id: $itemId) {
           id
-          name
           canonicalAppearance(
             preferredSpeciesId: $preferredSpeciesId
             preferredColorId: $preferredColorId
@@ -189,14 +189,13 @@ function ItemPageOutfitPreview({ itemId }) {
   // appears in the item name, then this is probably a species-specific item,
   // and we should adjust the UI to avoid implying that other species could
   // model it.
+  const speciesName =
+    data?.item?.canonicalAppearance?.body?.canonicalAppearance?.species?.name ??
+    "";
   const isProbablySpeciesSpecific =
     compatibleBodies.length === 1 &&
     compatibleBodies[0] !== "all" &&
-    (data?.item?.name || "")
-      .toLowerCase()
-      .includes(
-        data?.item?.canonicalAppearance?.body?.canonicalAppearance?.species?.name.toLowerCase(),
-      );
+    itemName.toLowerCase().includes(speciesName.toLowerCase());
   const couldProbablyModelMoreData = !isProbablySpeciesSpecific;
 
   // TODO: Does this double-trigger the HTTP request with SpeciesColorPicker?

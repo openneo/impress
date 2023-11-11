@@ -22,6 +22,7 @@ async function loadItemAppearancesData(id) {
 
 function normalizeItemAppearancesData(data) {
 	return {
+		name: data.name,
 		appearances: data.appearances.map((appearance) => ({
 			body: normalizeBody(appearance.body),
 			swfAssets: appearance.swf_assets.map((asset) => ({
