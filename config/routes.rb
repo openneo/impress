@@ -32,10 +32,6 @@ OpenneoImpressItems::Application.routes.draw do
   
   post '/locales/choose' => 'locales#choose', :as => :choose_locale
 
-  get "petpages/new"
-  get "closet_lists/new"
-  get "closet_lists/create"
-
   resources :users, :path => 'user', :only => [:index, :update] do
     resources :contributions, :only => [:index]
     resources :closet_hangers, :only => [:index, :update, :destroy], :path => 'closet' do
