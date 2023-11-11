@@ -18,6 +18,10 @@ class Zone < ActiveRecord::Base
   }
   scope :for_items, -> { where(arel_table[:type_id].gt(1)) }
 
+  def as_json(options={})
+    super({only: [:id, :depth, :label]}.merge(options))
+  end
+
   def uncertain_label
     @sometimes ? "#{label} sometimes" : label
   end

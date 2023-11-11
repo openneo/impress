@@ -96,22 +96,41 @@ class SwfAsset < ApplicationRecord
   end
 
   def as_json(options={})
-    json = {
-      :id => remote_id,
-      :type => type,
-      :depth => depth,
-      :body_id => body_id,
-      :zone_id => zone_id,
-      :zones_restrict => zones_restrict,
-      :is_body_specific => body_specific?,
-      # Now that we don't proactively convert images anymore, let's just always
-      # say `has_image: true` when sending data to the frontend, so it'll use the
-      # new URLs anyway!
-      :has_image => true,
-      :images => images
+    super({
+      only: [:id, :known_glitches],
+      methods: [:zone, :restricted_zones, :urls]
+    }.merge(options))
+  end
+
+  def urls
+    {
+      swf: url,
+      png: image_url,
+      manifest: manifest_url,
     }
-    json[:parent_id] = options[:parent_id] if options[:parent_id]
-    json
+  end
+
+  def known_glitches
+    self[:known_glitches].split(',')
+  end
+
+  def known_glitches=(new_known_glitches)
+    if new_known_glitches.is_a? Array
+      new_known_glitches = new_known_glitches.join(',')
+    end
+    self[:known_glitches] = new_known_glitches
+  end
+
+  def restricted_zone_ids
+    [].tap do |ids|
+      zones_restrict.chars.each_with_index do |bit, index|
+        ids << index + 1 if bit == "1"
+      end
+    end
+  end
+
+  def restricted_zones
+    Zone.where(id: restricted_zone_ids)
   end
 
   def body_specific?

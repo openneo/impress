@@ -88,7 +88,7 @@
       - @newest_unmodeled_items.each do |item|
         - localized_cache "items/#{item.id} modeling_progress updated_at=#{item.updated_at.to_i}" do
           %li{'data-item-id' => item.id}
-            = link_to image_tag(item.thumbnail.secure_url), item, :class => 'image-link'
+            = link_to image_tag(item.thumbnail_url), item, :class => 'image-link'
             = link_to item, :class => 'header' do
               %h2= item.name
               %span.meter{style: "width: #{@newest_unmodeled_items_predicted_modeled_ratio[item]*100}%"}
@@ -101,7 +101,7 @@
       - @newest_modeled_items.each do |item|
         %li.object
           = link_to item, title: item.name, alt: item.name do
-            = image_tag item.thumbnail.secure_url
+            = image_tag item.thumbnail_url
             = nc_icon_for(item)
 
 

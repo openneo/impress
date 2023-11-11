@@ -30,6 +30,7 @@ import {
 } from "./components/useOutfitAppearance";
 import { useOutfitPreview } from "./components/OutfitPreview";
 import { logAndCapture, useLocalStorage } from "./util";
+import { useItemAppearances } from "./loaders/items";
 
 function ItemPageOutfitPreview({ itemId }) {
   const idealPose = React.useMemo(
@@ -99,6 +100,15 @@ function ItemPageOutfitPreview({ itemId }) {
   const [initialPreferredSpeciesId] = React.useState(preferredSpeciesId);
   const [initialPreferredColorId] = React.useState(preferredColorId);
 
+  const {
+    data: itemAppearancesData,
+    loading: loadingAppearances,
+    error: errorAppearances,
+  } = useItemAppearances(itemId);
+  const itemName = itemAppearancesData?.name ?? "";
+  const itemAppearances = itemAppearancesData?.appearances ?? [];
+  const restrictedZones = itemAppearancesData?.restrictedZones ?? [];
+
   // Start by loading the "canonical" pet and item appearance for the outfit
   // preview. We'll use this to initialize both the preview and the picker.
   //
@@ -123,25 +133,6 @@ function ItemPageOutfitPreview({ itemId }) {
       ) {
         item(id: $itemId) {
           id
-          name
-          restrictedZones {
-            id
-            label
-          }
-          compatibleBodiesAndTheirZones {
-            body {
-              id
-              representsAllBodies
-              species {
-                id
-                name
-              }
-            }
-            zones {
-              id
-              label
-            }
-          }
           canonicalAppearance(
             preferredSpeciesId: $preferredSpeciesId
             preferredColorId: $preferredColorId
@@ -192,21 +183,19 @@ function ItemPageOutfitPreview({ itemId }) {
     },
   );
 
-  const compatibleBodies =
-    data?.item?.compatibleBodiesAndTheirZones?.map(({ body }) => body) || [];
-  const compatibleBodiesAndTheirZones =
-    data?.item?.compatibleBodiesAndTheirZones || [];
+  const compatibleBodies = itemAppearances?.map(({ body }) => body) || [];
 
   // If there's only one compatible body, and the canonical species's name
   // appears in the item name, then this is probably a species-specific item,
   // and we should adjust the UI to avoid implying that other species could
   // model it.
+  const speciesName =
+    data?.item?.canonicalAppearance?.body?.canonicalAppearance?.species?.name ??
+    "";
   const isProbablySpeciesSpecific =
     compatibleBodies.length === 1 &&
-    !compatibleBodies[0].representsAllBodies &&
-    (data?.item?.name || "").includes(
-      data?.item?.canonicalAppearance?.body?.canonicalAppearance?.species?.name,
-    );
+    compatibleBodies[0] !== "all" &&
+    itemName.toLowerCase().includes(speciesName.toLowerCase());
   const couldProbablyModelMoreData = !isProbablySpeciesSpecific;
 
   // TODO: Does this double-trigger the HTTP request with SpeciesColorPicker?
@@ -257,7 +246,7 @@ function ItemPageOutfitPreview({ itemId }) {
   const borderColor = useColorModeValue("green.700", "green.400");
   const errorColor = useColorModeValue("red.600", "red.400");
 
-  const error = errorGQL || errorValids;
+  const error = errorGQL || errorAppearances || errorValids;
   if (error) {
     return <Box color="red.400">{error.message}</Box>;
   }
@@ -350,6 +339,7 @@ function ItemPageOutfitPreview({ itemId }) {
             // Wait for us to start _requesting_ the appearance, and _then_
             // for it to load, and _then_ check compatibility.
             !loadingGQL &&
+              !loadingAppearances &&
               !appearance.loading &&
               petState.isValid &&
               !isCompatible && (
@@ -386,14 +376,14 @@ function ItemPageOutfitPreview({ itemId }) {
           compatibleBodies={compatibleBodies}
           couldProbablyModelMoreData={couldProbablyModelMoreData}
           onChange={onChange}
-          isLoading={loadingGQL || loadingValids}
+          isLoading={loadingGQL || loadingAppearances || loadingValids}
         />
       </Box>
       <Flex gridArea="zones" justifySelf="center" align="center">
-        {compatibleBodiesAndTheirZones.length > 0 && (
+        {itemAppearances.length > 0 && (
           <ItemZonesInfo
-            compatibleBodiesAndTheirZones={compatibleBodiesAndTheirZones}
-            restrictedZones={data?.item?.restrictedZones || []}
+            itemAppearances={itemAppearances}
+            restrictedZones={restrictedZones}
           />
         )}
         <Box width="6" />
@@ -526,13 +516,13 @@ function PlayPauseButton({ isPaused, onClick }) {
   );
 }
 
-function ItemZonesInfo({ compatibleBodiesAndTheirZones, restrictedZones }) {
+function ItemZonesInfo({ itemAppearances, restrictedZones }) {
   // Reorganize the body-and-zones data, into zone-and-bodies data. Also, we're
   // merging zones with the same label, because that's how user-facing zone UI
   // generally works!
   const zoneLabelsAndTheirBodiesMap = {};
-  for (const { body, zones } of compatibleBodiesAndTheirZones) {
-    for (const zone of zones) {
+  for (const { body, swfAssets } of itemAppearances) {
+    for (const { zone } of swfAssets) {
       if (!zoneLabelsAndTheirBodiesMap[zone.label]) {
         zoneLabelsAndTheirBodiesMap[zone.label] = {
           zoneLabel: zone.label,

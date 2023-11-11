@@ -7,25 +7,18 @@ OpenneoImpressItems::Application.routes.draw do
   get '/wardrobe' => redirect('/outfits/new')
   get '/start/:color_name/:species_name' => 'outfits#start'
 
-  # DEPRECATED
-  get '/bodies/:body_id/swf_assets.json' => 'swf_assets#index', :as => :body_swf_assets
-  
-  get '/items/:item_id/swf_assets.json' => 'swf_assets#index', :as => :item_swf_assets
-  get '/items/:item_id/bodies/:body_id/swf_assets.json' => 'swf_assets#index', :as => :item_swf_assets_for_body_id
-  get '/pet_types/:pet_type_id/swf_assets.json' => 'swf_assets#index', :as => :pet_type_swf_assets
-  get '/pet_types/:pet_type_id/items/swf_assets.json' => 'swf_assets#index', :as => :item_swf_assets_for_pet_type
-  get '/pet_states/:pet_state_id/swf_assets.json' => 'swf_assets#index', :as => :pet_state_swf_assets
   get '/species/:species_id/color/:color_id/pet_type.json' => 'pet_types#show'
 
   resources :contributions, :only => [:index]
   resources :items, :only => [:index, :show] do
+    resources :appearances, controller: 'item_appearances', only: [:index]
     collection do
       get :needed
     end
   end
   resources :outfits, :only => [:show, :create, :update, :destroy]
   resources :pet_attributes, :only => [:index]
-  resources :swf_assets, :only => [:index, :show] do
+  resources :swf_assets, :only => [:show] do
     collection do
       get :links
     end

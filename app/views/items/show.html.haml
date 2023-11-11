@@ -2,7 +2,7 @@
 - canonical_path @item
 
 %header#item-header
-  = image_tag @item.thumbnail.secure_url, :id => 'item-thumbnail'
+  = image_tag @item.thumbnail_url, :id => 'item-thumbnail'
   %div
     %h2#item-name= @item.name
     = nc_icon_for(@item)

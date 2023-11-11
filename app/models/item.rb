@@ -413,38 +413,11 @@ class Item < ApplicationRecord
     modeled_body_ids.size.to_f / predicted_body_ids.size
   end
 
-  def thumbnail
-    if thumbnail_url.present?
-      url = thumbnail_url
-    else
-      url = ActionController::Base.helpers.asset_path(
-        "broken_item_thumbnail.gif")
-    end
-    @thumbnail ||= Image.from_insecure_url(url)
-  end
-
   def as_json(options={})
-    json = {
-      :description => description,
-      :id => id,
-      :name => name,
-      :thumbnail_url => thumbnail.secure_url,
-      :zones_restrict => zones_restrict,
-      :rarity_index => rarity_index,
-      :nc => nc?
-    }
-    
-    # Set owned and wanted keys, unless explicitly told not to. (For example,
-    # item proxies don't want us to bother, since they'll override.)
-    unless options.has_key?(:include_hanger_status)
-      options[:include_hanger_status] = true
-    end
-    if options[:include_hanger_status]
-      json[:owned] = owned?
-      json[:wanted] = wanted?
-    end
-    
-    json
+    super({
+      only: [:id, :name, :description, :thumbnail_url, :rarity_index],
+      methods: [:zones_restrict],
+    }.merge(options))
   end
 
   before_create do
@@ -511,17 +484,34 @@ class Item < ApplicationRecord
   def parent_swf_asset_relationships_to_update=(rels)
     @parent_swf_asset_relationships_to_update = rels
   end
-  
-  def needed_translations
-    translatable_locales = Set.new(I18n.locales_with_neopets_language_code)
-    translated_locales = Set.new(translations.map(&:locale))
-    translatable_locales - translated_locales
-  end
 
-  def method_cached?(method_name)
-    # No methods are cached on a full item. This is for duck typing with item
-    # proxies.
-    false
+  Body = Struct.new(:id, :species)
+  Appearance = Struct.new(:body, :swf_assets)
+  def appearances
+    all_swf_assets = swf_assets.to_a
+
+    # If there are no assets yet, there are no appearances.
+    return [] if all_swf_assets.empty?
+
+    # Get all SWF assets, and separate the ones that fit everyone (body_id=0).
+    swf_assets_by_body_id = all_swf_assets.group_by(&:body_id)
+    swf_assets_for_all_bodies = swf_assets_by_body_id.delete(0) || []
+
+    # If there are no body-specific assets, return one appearance for them all.
+    if swf_assets_by_body_id.empty?
+      body = Body.new(0, nil)
+      return [Appearance.new(body, swf_assets_for_all_bodies)]
+    end
+
+    # Otherwise, create an appearance for each real (nonzero) body ID. We don't
+    # generally expect body_id = 0 and body_id != 0 to mix, but if they do,
+    # uhh, let's merge the body_id = 0 ones in?
+    swf_assets_by_body_id.map do |body_id, body_specific_assets|
+      swf_assets_for_body = body_specific_assets + swf_assets_for_all_bodies
+      species = Species.with_body_id(body_id).first!
+      body = Body.new(body_id, species)
+      Appearance.new(body, swf_assets_for_body)
+    end
   end
 
   def self.all_by_ids_or_children(ids, swf_assets)

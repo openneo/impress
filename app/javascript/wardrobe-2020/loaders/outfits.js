@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-export function useSavedOutfit(id, options) {
+export function useSavedOutfit(id, options = {}) {
 	return useQuery({
 		...options,
 		queryKey: ["outfits", String(id)],
