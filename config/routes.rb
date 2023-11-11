@@ -15,7 +15,6 @@ OpenneoImpressItems::Application.routes.draw do
     end
   end
   resources :outfits, :only => [:show, :create, :update, :destroy]
-  resources :pet_attributes, :only => [:index]
 
   scope 'import' do
     resources :neopets_page_import_tasks, only: [:new, :create],
