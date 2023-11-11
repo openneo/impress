@@ -526,7 +526,7 @@ class Item < ApplicationRecord
 
     # If there are no body-specific assets, return one appearance for them all.
     if swf_assets_by_body_id.empty?
-      return Appearance.new(:all, swf_assets_for_all_bodies)
+      return [Appearance.new(:all, swf_assets_for_all_bodies)]
     end
 
     # Otherwise, create an appearance for each real (nonzero) body ID. We don't
