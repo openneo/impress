@@ -16,7 +16,7 @@ class SwfAsset < ApplicationRecord
   
   scope :includes_depth, -> { includes(:zone) }
 
-  before_validation :normalize_manifest_url
+  before_validation :normalize_manifest_url, if: :manifest_url?
 
   def swf_image_dir
     @swf_image_dir ||= Rails.root.join('tmp', 'asset_images_before_upload', self.id.to_s)
