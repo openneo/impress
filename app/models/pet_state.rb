@@ -157,18 +157,6 @@ class PetState < ApplicationRecord
     end
   end
 
-  def replace_with(other)
-    PetState.transaction do
-      count = outfits.count
-      outfits.find_each { |outfit|
-        outfit.pet_state = other
-        outfit.save!
-      }
-      destroy
-    end
-    count
-  end
-
   def artist_name
     artist_neopets_username || I18n.translate("pet_states.default_artist_name")
   end
@@ -234,25 +222,6 @@ class PetState < ApplicationRecord
     pet_state.parent_swf_asset_relationships_to_update = relationships
     pet_state.unconverted = (relationships.size == 1)
     pet_state
-  end
-
-  def self.repair_all!
-    self.transaction do
-      self.all.each do |pet_state|
-        pet_state.sort_swf_asset_ids!
-        pet_state.save
-      end
-
-      self.
-        select('pet_states.pet_type_id, pet_states.swf_asset_ids, GROUP_CONCAT(DISTINCT pet_states.id) AS duplicate_ids').
-        joins('INNER JOIN pet_states ps2 ON pet_states.pet_type_id = ps2.pet_type_id AND pet_states.swf_asset_ids = ps2.swf_asset_ids').
-        group('pet_states.pet_type_id, pet_states.swf_asset_ids').
-        having('count(*) > 1').
-        all.
-      each do |pet_state|
-        pet_state.reassign_duplicates!
-      end
-    end
   end
 
   # Copied from https://github.com/matchu/neopets/blob/5d13a720b616ba57fbbd54541f3e5daf02b3fedc/lib/neopets/pet/mood.rb
