@@ -413,16 +413,6 @@ class Item < ApplicationRecord
     modeled_body_ids.size.to_f / predicted_body_ids.size
   end
 
-  def thumbnail
-    if thumbnail_url.present?
-      url = thumbnail_url
-    else
-      url = ActionController::Base.helpers.asset_path(
-        "broken_item_thumbnail.gif")
-    end
-    @thumbnail ||= Image.from_insecure_url(url)
-  end
-
   def as_json(options={})
     json = {
       :description => description,

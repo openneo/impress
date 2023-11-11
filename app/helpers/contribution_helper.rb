@@ -19,7 +19,7 @@ module ContributionHelper
                               :item_link => link)
       output = translate("contributions.contributed_description.main.#{main_key}_html",
                          :item_description => description)
-      output << image_tag(item.thumbnail.secure_url) if show_image
+      output << image_tag(item.thumbnail_url) if show_image
       output
     else
       translate('contributions.contributed_description.parents.item.blank')
