@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_11_10_043543) do
+ActiveRecord::Schema[7.1].define(version: 2023_11_11_232015) do
   create_table "auth_servers", id: :integer, charset: "latin1", force: :cascade do |t|
     t.string "short_name", limit: 10, null: false
     t.string "name", limit: 40, null: false
@@ -278,7 +278,6 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_10_043543) do
     t.boolean "beta", default: false, null: false
     t.string "remember_token"
     t.datetime "remember_created_at", precision: nil
-    t.boolean "image_mode_tester", default: false, null: false
     t.integer "owned_closet_hangers_visibility", default: 1, null: false
     t.integer "wanted_closet_hangers_visibility", default: 1, null: false
     t.integer "contact_neopets_connection_id"
