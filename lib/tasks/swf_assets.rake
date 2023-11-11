@@ -89,5 +89,5 @@ def infer_manifest_url(swf_url, internet)
   end
 
   # Otherwise, there's no valid manifest URL.
-  raise "none of the common manifest URL patterns returned HTTP 200"
+  raise "all of the common manifest URL patterns returned HTTP 404"
 end
