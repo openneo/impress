@@ -511,17 +511,30 @@ class Item < ApplicationRecord
   def parent_swf_asset_relationships_to_update=(rels)
     @parent_swf_asset_relationships_to_update = rels
   end
-  
-  def needed_translations
-    translatable_locales = Set.new(I18n.locales_with_neopets_language_code)
-    translated_locales = Set.new(translations.map(&:locale))
-    translatable_locales - translated_locales
-  end
 
-  def method_cached?(method_name)
-    # No methods are cached on a full item. This is for duck typing with item
-    # proxies.
-    false
+  Appearance = Struct.new(:body_id, :swf_assets)
+  def appearances
+    all_swf_assets = swf_assets.to_a
+
+    # If there are no assets yet, there are no appearances.
+    return [] if all_swf_assets.empty?
+
+    # Get all SWF assets, and separate the ones that fit everyone (body_id=0).
+    swf_assets_by_body_id = all_swf_assets.group_by(&:body_id)
+    swf_assets_for_all_bodies = swf_assets_by_body_id.delete(0) || []
+
+    # If there are no body-specific assets, return one appearance for them all.
+    if swf_assets_by_body_id.empty?
+      return Appearance.new(0, swf_assets_for_all_bodies)
+    end
+
+    # Otherwise, create an appearance for each real (nonzero) body ID. We don't
+    # generally expect body_id = 0 and body_id != 0 to mix, but if they do,
+    # uhh, let's merge the body_id = 0 ones in?
+    swf_assets_by_body_id.map do |body_id, body_specific_assets|
+      swf_assets_for_body = body_specific_assets + swf_assets_for_all_bodies
+      Appearance.new(body_id, swf_assets_for_body)
+    end
   end
 
   def self.all_by_ids_or_children(ids, swf_assets)
