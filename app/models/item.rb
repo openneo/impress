@@ -414,27 +414,10 @@ class Item < ApplicationRecord
   end
 
   def as_json(options={})
-    json = {
-      :description => description,
-      :id => id,
-      :name => name,
-      :thumbnail_url => thumbnail.secure_url,
-      :zones_restrict => zones_restrict,
-      :rarity_index => rarity_index,
-      :nc => nc?
-    }
-    
-    # Set owned and wanted keys, unless explicitly told not to. (For example,
-    # item proxies don't want us to bother, since they'll override.)
-    unless options.has_key?(:include_hanger_status)
-      options[:include_hanger_status] = true
-    end
-    if options[:include_hanger_status]
-      json[:owned] = owned?
-      json[:wanted] = wanted?
-    end
-    
-    json
+    super({
+      only: [:id, :name, :description, :thumbnail_url, :rarity_index],
+      methods: [:zones_restrict],
+    }.merge(options))
   end
 
   before_create do

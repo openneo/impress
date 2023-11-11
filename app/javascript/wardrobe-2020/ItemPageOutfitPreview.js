@@ -105,7 +105,8 @@ function ItemPageOutfitPreview({ itemId }) {
     loading: loadingAppearances,
     error: errorAppearances,
   } = useItemAppearances(itemId);
-  const itemAppearances = itemAppearancesData || [];
+  const itemAppearances = itemAppearancesData?.appearances ?? [];
+  const restrictedZones = itemAppearancesData?.restrictedZones ?? [];
 
   // Start by loading the "canonical" pet and item appearance for the outfit
   // preview. We'll use this to initialize both the preview and the picker.
@@ -132,10 +133,6 @@ function ItemPageOutfitPreview({ itemId }) {
         item(id: $itemId) {
           id
           name
-          restrictedZones {
-            id
-            label
-          }
           canonicalAppearance(
             preferredSpeciesId: $preferredSpeciesId
             preferredColorId: $preferredColorId
@@ -387,7 +384,7 @@ function ItemPageOutfitPreview({ itemId }) {
         {itemAppearances.length > 0 && (
           <ItemZonesInfo
             itemAppearances={itemAppearances}
-            restrictedZones={data?.item?.restrictedZones || []}
+            restrictedZones={restrictedZones}
           />
         )}
         <Box width="6" />

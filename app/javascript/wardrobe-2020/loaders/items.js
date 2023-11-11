@@ -4,11 +4,11 @@ export function useItemAppearances(id, options = {}) {
 	return useQuery({
 		...options,
 		queryKey: ["items", String(id)],
-		queryFn: () => loadItemAppearances(id),
+		queryFn: () => loadItemAppearancesData(id),
 	});
 }
 
-async function loadItemAppearances(id) {
+async function loadItemAppearancesData(id) {
 	const res = await fetch(`/items/${encodeURIComponent(id)}/appearances.json`);
 
 	if (!res.ok) {
@@ -17,24 +17,27 @@ async function loadItemAppearances(id) {
 		);
 	}
 
-	return res.json().then(normalizeItemAppearances);
+	return res.json().then(normalizeItemAppearancesData);
 }
 
-function normalizeItemAppearances(appearances) {
-	return appearances.map((appearance) => ({
-		body: normalizeBody(appearance.body),
-		swfAssets: appearance.swf_assets.map((asset) => ({
-			id: String(asset.id),
-			knownGlitches: asset.known_glitches,
-			zone: normalizeZone(asset.zone),
-			restrictedZones: asset.restricted_zones.map((z) => normalizeZone(z)),
-			urls: {
-				swf: asset.urls.swf,
-				png: asset.urls.png,
-				manifest: asset.urls.manifest,
-			},
+function normalizeItemAppearancesData(data) {
+	return {
+		appearances: data.appearances.map((appearance) => ({
+			body: normalizeBody(appearance.body),
+			swfAssets: appearance.swf_assets.map((asset) => ({
+				id: String(asset.id),
+				knownGlitches: asset.known_glitches,
+				zone: normalizeZone(asset.zone),
+				restrictedZones: asset.restricted_zones.map((z) => normalizeZone(z)),
+				urls: {
+					swf: asset.urls.swf,
+					png: asset.urls.png,
+					manifest: asset.urls.manifest,
+				},
+			})),
 		})),
-	}));
+		restrictedZones: data.restricted_zones.map((z) => normalizeZone(z)),
+	};
 }
 
 function normalizeBody(body) {
