@@ -97,7 +97,7 @@ class SwfAsset < ApplicationRecord
 
   def as_json(options={})
     super({
-      only: [:id],
+      only: [:id, :known_glitches],
       methods: [:zone, :restricted_zones, :urls]
     }.merge(options))
   end
@@ -108,6 +108,17 @@ class SwfAsset < ApplicationRecord
       png: image_url,
       manifest: manifest_url,
     }
+  end
+
+  def known_glitches
+    self[:known_glitches].split(',')
+  end
+
+  def known_glitches=(new_known_glitches)
+    if new_known_glitches.is_a? Array
+      new_known_glitches = new_known_glitches.join(',')
+    end
+    self[:known_glitches] = new_known_glitches
   end
 
   def restricted_zone_ids
