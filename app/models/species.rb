@@ -1,5 +1,6 @@
 class Species < ApplicationRecord
   translates :name
+  has_many :pet_types
   
   scope :alphabetical, -> {
     st = Species::Translation.arel_table
@@ -12,6 +13,11 @@ class Species < ApplicationRecord
       where(st[:name].matches(sanitize_sql_like(name)))
   }
 
+  scope :with_body_id, -> body_id {
+    pt = PetType.arel_table
+    joins(:pet_types).where(pt[:body_id].eq(body_id)).limit(1)
+  }
+
   # TODO: Should we consider replacing this at call sites? This used to be
   # built into the globalize gem but isn't anymore!
   def self.find_by_name(name)
@@ -19,7 +25,7 @@ class Species < ApplicationRecord
   end
   
   def as_json(options={})
-    {:id => id, :name => human_name}
+    super({only: [:id, :name], methods: [:human_name]}.merge(options))
   end
   
   def human_name

@@ -512,7 +512,8 @@ class Item < ApplicationRecord
     @parent_swf_asset_relationships_to_update = rels
   end
 
-  Appearance = Struct.new(:body_id, :swf_assets)
+  Body = Struct.new(:id, :species)
+  Appearance = Struct.new(:body, :swf_assets)
   def appearances
     all_swf_assets = swf_assets.to_a
 
@@ -525,7 +526,7 @@ class Item < ApplicationRecord
 
     # If there are no body-specific assets, return one appearance for them all.
     if swf_assets_by_body_id.empty?
-      return Appearance.new(0, swf_assets_for_all_bodies)
+      return Appearance.new(:all, swf_assets_for_all_bodies)
     end
 
     # Otherwise, create an appearance for each real (nonzero) body ID. We don't
@@ -533,7 +534,9 @@ class Item < ApplicationRecord
     # uhh, let's merge the body_id = 0 ones in?
     swf_assets_by_body_id.map do |body_id, body_specific_assets|
       swf_assets_for_body = body_specific_assets + swf_assets_for_all_bodies
-      Appearance.new(body_id, swf_assets_for_body)
+      species = Species.with_body_id(body_id).first!
+      body = Body.new(body_id, species)
+      Appearance.new(body, swf_assets_for_body)
     end
   end
 
