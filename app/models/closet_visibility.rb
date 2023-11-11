@@ -1,7 +1,6 @@
 module ClosetVisibility
   class Level
     attr_accessor :id, :name
-    attr_writer :description
 
     def initialize(data)
       data.each do |key, value|
