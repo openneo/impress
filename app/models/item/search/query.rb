@@ -65,7 +65,7 @@ class Item
               pet_type = PetType.where(color_id: color.id, species_id: species.id).first!
             rescue ActiveRecord::RecordNotFound
               message = I18n.translate('items.search.errors.not_found.species',
-                species_name: species_name.capitalize)
+                species_name: value.capitalize)
               raise Item::Search::Error, message
             end
             filters << (is_positive ?
