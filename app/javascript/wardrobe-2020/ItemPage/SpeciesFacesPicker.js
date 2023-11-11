@@ -60,7 +60,7 @@ function SpeciesFacesPicker({
   );
 
   const allBodiesAreCompatible = compatibleBodies.some(
-    (body) => body.representsAllBodies,
+    (body) => body.id === "0",
   );
   const compatibleBodyIds = compatibleBodies.map((body) => body.id);
 
