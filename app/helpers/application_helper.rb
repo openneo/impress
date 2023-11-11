@@ -148,10 +148,6 @@ module ApplicationHelper
       end.html_safe
     end
   end
-  
-  def safely_to_json(obj)
-    obj.to_json.gsub('/', '\/')
-  end
 
   def secondary_nav(&block)
     content_for :before_flashes,
