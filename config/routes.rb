@@ -7,8 +7,6 @@ OpenneoImpressItems::Application.routes.draw do
   get '/wardrobe' => redirect('/outfits/new')
   get '/start/:color_name/:species_name' => 'outfits#start'
 
-  get '/species/:species_id/color/:color_id/pet_type.json' => 'pet_types#show'
-
   resources :contributions, :only => [:index]
   resources :items, :only => [:index, :show] do
     resources :appearances, controller: 'item_appearances', only: [:index]
@@ -18,12 +16,6 @@ OpenneoImpressItems::Application.routes.draw do
   end
   resources :outfits, :only => [:show, :create, :update, :destroy]
   resources :pet_attributes, :only => [:index]
-  resources :swf_assets, :only => [:show] do
-    collection do
-      get :links
-    end
-  end
-  resources :zones, only: [:index]
 
   scope 'import' do
     resources :neopets_page_import_tasks, only: [:new, :create],

@@ -1,8 +1,0 @@
-- title t('.title')
-
-%ul#swf-assets
-  - @swf_assets.each do |swf_asset|
-    %li
-      = link_to swf_asset.url do
-        = image_tag(swf_asset.image_url([150, 150]))
-        %span= swf_asset.url
