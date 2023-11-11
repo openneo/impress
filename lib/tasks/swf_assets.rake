@@ -4,6 +4,8 @@ require 'async/http/internet/instance'
 namespace :swf_assets do
 	desc "Backfill manifest_url for SwfAsset models"
 	task manifests: [:environment] do
+		timeout = ENV.fetch("TIMEOUT", "5").to_i
+
 		assets = SwfAsset.where(manifest_url: nil)
 		count = assets.count
 		puts "Found #{count} assets without manifests"
@@ -32,7 +34,7 @@ namespace :swf_assets do
 					semaphore.async do |task|
 						manifest_url = nil
 						begin
-							task.with_timeout(5) do
+							task.with_timeout(timeout) do
 								manifest_url = infer_manifest_url(asset.url, internet)
 							end
 						rescue StandardError => error
