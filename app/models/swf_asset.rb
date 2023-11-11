@@ -174,11 +174,6 @@ class SwfAsset < ApplicationRecord
     self.manifest_url = data[:manifest]
   end
 
-  def mall_data=(data)
-    self.zone_id = data['zone'].to_i
-    self.url = "https://images.neopets.com/#{data['url']}"
-  end
-
   def normalize_manifest_url
     parsed_manifest_url = Addressable::URI.parse(manifest_url)
     parsed_manifest_url.scheme = "https"

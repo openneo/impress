@@ -34,13 +34,6 @@ class Item < ApplicationRecord
     order(arel_table[:created_at].desc) if arel_table[:created_at]
   }
 
-  scope :spidered_longest_ago, -> {
-    order(["(last_spidered IS NULL) DESC", "last_spidered DESC"])
-  }
-
-  scope :sold_in_mall, -> { where(:sold_in_mall => true) }
-  scope :not_sold_in_mall, -> { where(:sold_in_mall => false) }
-
   scope :sitemap, -> { order([:id]).limit(49999) }
 
   scope :with_closet_hangers, -> { joins(:closet_hangers) }
@@ -418,11 +411,6 @@ class Item < ApplicationRecord
       only: [:id, :name, :description, :thumbnail_url, :rarity_index],
       methods: [:zones_restrict],
     }.merge(options))
-  end
-
-  before_create do
-    self.sold_in_mall ||= false
-    true
   end
 
   def handle_assets!

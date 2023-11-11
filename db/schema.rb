@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_11_11_232015) do
+ActiveRecord::Schema[7.1].define(version: 2023_11_11_234255) do
   create_table "auth_servers", id: :integer, charset: "latin1", force: :cascade do |t|
     t.string "short_name", limit: 10, null: false
     t.string "name", limit: 40, null: false
@@ -137,15 +137,12 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_11_232015) do
     t.integer "price", limit: 3, null: false
     t.integer "weight_lbs", limit: 2
     t.text "species_support_ids", size: :medium
-    t.boolean "sold_in_mall", default: false, null: false
-    t.datetime "last_spidered", precision: nil
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.boolean "explicitly_body_specific", default: false, null: false
     t.integer "manual_special_color_id"
     t.column "modeling_status_hint", "enum('done','glitchy')"
     t.boolean "is_manually_nc", default: false, null: false
-    t.index ["last_spidered"], name: "objects_last_spidered"
     t.index ["modeling_status_hint", "created_at", "id"], name: "items_modeling_status_hint_and_created_at_and_id"
     t.index ["modeling_status_hint", "created_at"], name: "items_modeling_status_hint_and_created_at"
     t.index ["modeling_status_hint", "id"], name: "items_modeling_status_hint_and_id"
