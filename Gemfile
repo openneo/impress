@@ -58,6 +58,11 @@ gem 'parallel', '~> 1.23'
 gem "httparty", "~> 0.21.0"
 gem "addressable", "~> 2.8"
 
+# For advanced batching of many HTTP requests.
+gem "async", "~> 2.6", require: false
+gem "async-http", "~> 0.61.0", require: false
+gem "thread-local", "~> 1.1", require: false
+
 # For debugging.
 gem 'web-console', '~> 4.2', group: :development
 
