@@ -35,7 +35,6 @@ gem 'globalize', '~> 6.2', '>= 6.2.1'
 
 # For reading and parsing HTML from Neopets.com, like importing Closet pages.
 gem 'nokogiri', '~> 1.15', '>= 1.15.3'
-gem 'rest-client', '~> 2.1'
 
 # For safely rendering users' Markdown + HTML on item list pages.
 gem 'rdiscount', '~> 2.2', '>= 2.2.7.1'
