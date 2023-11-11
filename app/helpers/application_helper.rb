@@ -69,11 +69,7 @@ module ApplicationHelper
   end
 
   def contact_email
-    "webmaster@openneo.net"
-  end
-
-  def feedback_url
-    "https://openneo.uservoice.com/forums/40720-dress-to-impress"
+    "matchu@openneo.net"
   end
 
   def flashes
