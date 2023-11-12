@@ -16,11 +16,16 @@ OpenneoImpressItems::Application.routes.draw do
   get '/your-outfits', to: 'outfits#index', as: :current_user_outfits
   get '/users/current-user/outfits', to: redirect('/your-outfits')
 
-  # The item database!
+  # Our customization data! Both the item pages, and JSON API endpoints.
   resources :items, :only => [:index, :show] do
     resources :appearances, controller: 'item_appearances', only: [:index]
     collection do
       get :needed
+    end
+  end
+  resources :species do
+    resources :colors do
+      get :pet_type, to: 'pet_types#show'
     end
   end
 

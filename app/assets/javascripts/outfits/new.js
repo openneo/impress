@@ -217,12 +217,9 @@
         url:
           "/species/" +
           type.species +
-          "/color/" +
+          "/colors/" +
           type.color +
           "/pet_type.json",
-        data: {
-          for: "image",
-        },
         dataType: "json",
         success: function (data) {
           var job;
