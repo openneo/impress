@@ -17,6 +17,7 @@
     %link{href: image_path('favicon.png'), rel: 'icon'}
     = stylesheet_link_tag 'fonts'
     = javascript_include_tag 'wardrobe-2020-page', defer: true
+    = render 'static/analytics'
     = open_graph_tags
     = csrf_meta_tags
     %meta{name: 'dti-current-user-id', content: user_signed_in? ? current_user.id : "null"}

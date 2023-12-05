@@ -13,6 +13,7 @@
     %link{href: image_path('favicon.png'), rel: 'icon'}
     = yield :stylesheets
     = stylesheet_link_tag "application"
+    = render 'static/analytics'
     = yield :meta
     = open_graph_tags
     = csrf_meta_tag
