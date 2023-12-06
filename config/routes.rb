@@ -23,10 +23,13 @@ OpenneoImpressItems::Application.routes.draw do
       get :needed
     end
   end
-  resources :species do
-    resources :colors do
+  resources :species, only: [] do
+    resources :colors, only: [] do
       get :pet_type, to: 'pet_types#show'
     end
+  end
+  resources :colors, only: [] do
+    resources :pet_types, only: [:index]
   end
 
   # Loading and modeling pets!

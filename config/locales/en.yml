@@ -715,7 +715,6 @@ en:
       glitched: Glitched
       unconverted: Unconverted
       unlabeled: Unlabeled
-    default_artist_name: the OpenNeo team
 
   pet_types:
     human_name: "%{color_human_name} %{species_human_name}"

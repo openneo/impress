@@ -59,15 +59,10 @@ class PetType < ApplicationRecord
   end
 
   def as_json(options={})
-    if options[:for] == 'wardrobe'
-      {
-        :id => id,
-        :body_id => body_id,
-        :pet_states => pet_states.emotion_order.as_json
-      }
-    else
-      {:image_hash => image_hash}
-    end
+    super({
+      only: [:id],
+      methods: [:color, :species]
+    }.merge(options))
   end
 
   def image_hash
@@ -155,6 +150,31 @@ class PetType < ApplicationRecord
         raise DownloadError, "CPN image pointed to #{new_url}, which does not match CP image format"
       end
     end
+  end
+
+  def canonical_pet_state
+    # For consistency (randomness is always scary!), we use the PetType ID to
+    # determine which gender to prefer. That way, it'll be stable, but we'll
+    # still get the *vibes* of uniform randomness.
+    preferred_gender = id % 2 == 0 ? :fem : :masc
+
+    # NOTE: If this were only being called on one pet type at a time, it would
+    # be more efficient to send this as a single query with an `order` part and
+    # just get the first record. But we most importantly call this on all the
+    # pet types for a single color at once, in which case it's better for the
+    # caller to use `includes(:pet_states)` to preload the pet states then sort
+    # then in Ruby here, rather than send ~50 queries. Also, there's generally
+    # very few pet states per pet type, so the perf difference is negligible.
+    pet_states.sort_by { |pet_state|
+      gender = pet_state.female? ? :fem : :masc
+      [
+        pet_state.mood_id.present? ? -1 : 1, # Prefer mood is labeled
+        pet_state.mood_id, # Prefer mood is happy, then sad, then sick
+        gender == preferred_gender ? -1 : 1, # Prefer our "random" gender
+        -pet_state.id, # Prefer newer pet states
+        !pet_state.glitched? ? -1 : 1, # Prefer is not glitched
+      ]
+    }.first
   end
 
   def self.all_by_ids_or_children(ids, pet_states)

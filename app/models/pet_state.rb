@@ -25,7 +25,7 @@ class PetState < ApplicationRecord
   }
 
   # Filter pet states using the "pose" concept we use in the editor.
-  scope :with_pose, ->(pose) {
+  scope :with_pose, -> pose {
     case pose
     when "UNCONVERTED"
       where(unconverted: true)
@@ -69,16 +69,6 @@ class PetState < ApplicationRecord
       raise "could not identify pose: moodId=#{mood_id}, female=#{female}, " +
         "unconverted=#{unconverted}"
     end
-  end
-
-  def as_json(options={})
-    {
-      id: id,
-      gender_mood_description: gender_mood_description,
-      swf_asset_ids: swf_asset_ids_array,
-      artist_name: artist_name,
-      artist_url: artist_url
-    }
   end
 
   def reassign_children_to!(main_pet_state)
@@ -125,47 +115,6 @@ class PetState < ApplicationRecord
     @parent_swf_asset_relationships_to_update.each do |rel|
       rel.swf_asset.save!
       rel.save!
-    end
-  end
-  
-  def mood
-    Mood.find(self.mood_id)
-  end
-  
-  def gender_name
-    if female?
-      I18n.translate("pet_states.description.gender.female")
-    else
-      I18n.translate("pet_states.description.gender.male")
-    end
-  end
-  
-  def mood_name
-    I18n.translate("pet_states.description.mood.#{mood.name}")
-  end
-  
-  def gender_mood_description
-    if glitched?
-      I18n.translate('pet_states.description.glitched')
-    elsif unconverted?
-      I18n.translate('pet_states.description.unconverted')
-    elsif labeled?
-      I18n.translate('pet_states.description.main', :gender => gender_name,
-                     :mood => mood_name)
-    else
-      I18n.translate('pet_states.description.unlabeled')
-    end
-  end
-
-  def artist_name
-    artist_neopets_username || I18n.translate("pet_states.default_artist_name")
-  end
-
-  def artist_url
-    if artist_neopets_username
-      "https://www.neopets.com/userlookup.phtml?user=#{artist_neopets_username}"
-    else
-      nil
     end
   end
 
@@ -222,32 +171,6 @@ class PetState < ApplicationRecord
     pet_state.parent_swf_asset_relationships_to_update = relationships
     pet_state.unconverted = (relationships.size == 1)
     pet_state
-  end
-
-  # Copied from https://github.com/matchu/neopets/blob/5d13a720b616ba57fbbd54541f3e5daf02b3fedc/lib/neopets/pet/mood.rb
-  class Mood
-    attr_reader :id, :name
-    
-    def initialize(options)
-      @id = options[:id]
-      @name = options[:name]
-    end
-    
-    def self.find(id)
-      self.all_by_id[id.to_i]
-    end
-    
-    def self.all
-      @all ||= [
-        Mood.new(:id => 1, :name => :happy),
-        Mood.new(:id => 2, :name => :sad),
-        Mood.new(:id => 4, :name => :sick)
-      ]
-    end
-    
-    def self.all_by_id
-      @all_by_id ||= self.all.inject({}) { |h, m| h[m.id] = m; h }
-    end
   end
 end
 

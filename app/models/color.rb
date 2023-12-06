@@ -1,5 +1,6 @@
 class Color < ApplicationRecord
   translates :name
+  has_many :pet_types
   
   scope :alphabetical, -> {
     ct = Color::Translation.arel_table
@@ -24,7 +25,7 @@ class Color < ApplicationRecord
   end
   
   def as_json(options={})
-    {id: id, name: human_name, unfunny_name: unfunny_human_name, prank: prank?}
+    {id: id, name: name, human_name: human_name}
   end
 
   def human_name
