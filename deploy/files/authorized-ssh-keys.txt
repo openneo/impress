@@ -12,5 +12,5 @@
 # proves it owns this key - but that requires the *private* key, whereas this is
 # the *public* key. That's why it's secure to publish these!
 
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID2/yLvpetD14BVK+Zd88ZofOxIfLRdl4FI2pdV+fmy3 Matchu's Desktop (Leviathan) WSL
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIu5a+mp2KKSGkOGWQPrARCrsqJS4g2vK7TmRIbj/YBh Matchu's Desktop (Leviathan 2023)
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKFwWryq6slOQqkrJ7HIig7BvEQVQeH19hFwb+9VpXgz Matchu's Laptop (Ebon Hawk)
