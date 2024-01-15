@@ -126,9 +126,11 @@ class PetType < ApplicationRecord
 
   before_save do
     if @origin_pet && @origin_pet.name =~ IMAGE_CPN_ACCEPTABLE_NAME
-      cpn_uri = URI.parse sprintf(IMAGE_CPN_FORMAT, CGI.escape(@origin_pet.name));
+      cpn_uri = URI.parse sprintf(IMAGE_CPN_FORMAT, CGI.escape(@origin_pet.name))
       begin
-        res = Net::HTTP.get_response(cpn_uri)
+        res = Net::HTTP.get_response(cpn_uri, {
+          'User-Agent' => Rails.configuration.user_agent_for_neopets
+        })
       rescue Exception => e
         raise DownloadError, e.message
       end

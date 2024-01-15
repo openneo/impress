@@ -60,6 +60,12 @@ module OpenneoImpressItems
     config.assets.initialize_on_precompile = false
 
     config.middleware.insert_after ActionDispatch::Flash, Rack::Attack
+
+    # It seems like some Neopets servers reject any user agent containing
+    # symbols? So I can't provide anything helpful like a URL, email address,
+    # version number, etc. So let's only send this to Neopets systems, where it
+    # should hopefully be clear who we are from context!
+    config.user_agent_for_neopets = "Dress to Impress"
   end
 end
 

@@ -676,7 +676,8 @@ en-MEEP:
       not_found: We couldn't meep a pet by that name. Is it meeped correctly?
       asset_download_error:
         We meeped the pet and what it's wearing, but couldn't meep the
-        associated Flash files. Maybe Neopets is down. Please meep again later!
+        associated meepia files. Maybe Neopets is down, or changed their
+        firewall rules? Please meep again later!
       pet_download_error:
         We couldn't meep to Neopets to meep up the pet. Maybe they're down.
         Please try meep later!
