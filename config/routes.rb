@@ -82,7 +82,6 @@ OpenneoImpressItems::Application.routes.draw do
   get '/donate' => 'campaigns#current', as: :donate
 
   # Static pages!
-  get '/pardon-our-dust' => 'static#pardon_our_dust', :as => :pardon_our_dust
   get '/terms' => redirect("https://impress-2020.openneo.net/terms"), :as => :terms
 
   # Other useful lil things!
