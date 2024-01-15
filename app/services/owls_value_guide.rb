@@ -8,7 +8,7 @@ module OwlsValueGuide
 	def self.find_by_name(item_name)
 		# Load the itemdata, pulling from the Rails cache if possible.
 		cache_key = "OwlsValueGuide/itemdata/#{item_name}"
-		data = Rails.cache.fetch(cache_key, expires_in: 15.minutes) do
+		data = Rails.cache.fetch(cache_key, expires_in: 1.day) do
 			load_itemdata(item_name)
 		end
 
