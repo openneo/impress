@@ -39,7 +39,7 @@
     "typescript": "^5.2.2"
   },
   "scripts": {
-    "build": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds --public-path=/assets --asset-names=[name]-[hash].digested --loader:.js=jsx --loader:.png=file --loader:.svg=file --loader:.min.js=text",
+    "build": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds --public-path=/assets --asset-names='[name]-[hash].digested' --loader:.js=jsx --loader:.png=file --loader:.svg=file --loader:.min.js=text",
     "build:dev": "yarn build --public-path=/dev-assets",
     "dev": "yarn build:dev --watch",
     "lint": "eslint app/javascript",
