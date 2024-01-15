@@ -2,6 +2,5 @@
 
 # Dress to Impress
 
-Oh! We've been revitalizing the Rails app! Fun!
-
-There'll be more to say about it here soon :3
+**This repository has moved!** We're now developing on our own self-hosted
+code platform, at https://code.openneo.net/OpenNeo/impress. See you there!
