@@ -19,29 +19,27 @@ class ClosetHanger < ApplicationRecord
   }
   scope :trading, -> {
     ch = arel_table
+    # sigh… our default-lists continue to be a pain
     cl = ClosetList.arel_table
     u = User.arel_table
-    joins(:user, :list).where(
-      # sigh… our default-lists continue to be a pain
-      (
-        ch[:list_id].not_eq(nil).and(cl[:visibility].gteq(
+    joins(:user).left_outer_joins(:list).where(
+      ch[:list_id].not_eq(nil).and(cl[:visibility].gteq(
           ClosetVisibility[:trading].id))
-      ).or(
-        (
-          ch[:list_id].eq(nil).and(ch[:owned].eq(true))
-        ).and(
-          u[:owned_closet_hangers_visibility].gteq(
-            ClosetVisibility[:trading].id)
-        )
-      ).or(
-        (
-          ch[:list_id].eq(nil).and(ch[:owned].eq(false))
-        ).and(
-          u[:wanted_closet_hangers_visibility].gteq(
-            ClosetVisibility[:trading].id)
-        )
+    ).or(where(
+      (
+        ch[:list_id].eq(nil).and(ch[:owned].eq(true))
+      ).and(
+        u[:owned_closet_hangers_visibility].gteq(
+          ClosetVisibility[:trading].id)
       )
-    )
+    )).or(where(
+      (
+        ch[:list_id].eq(nil).and(ch[:owned].eq(false))
+      ).and(
+        u[:wanted_closet_hangers_visibility].gteq(
+          ClosetVisibility[:trading].id)
+      )
+    ))
   }
   scope :newest, -> { order(arel_table[:created_at].desc) }
   scope :owned_before_wanted, -> { order(arel_table[:owned].desc) }
