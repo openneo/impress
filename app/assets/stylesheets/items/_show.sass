@@ -116,11 +116,12 @@ body.items-show
         &:first-child
           margin-bottom: .5em
 
-        &.overflows
+        &[data-overflows]
+          overflow: hidden
           .toggle
             display: block
 
-        &.showing-more
+        &[data-showing-more]
           .toggle
             .less
               display: block
@@ -138,8 +139,10 @@ body.items-show
         position: absolute
         right: 0
 
-        &:hover
-          text-decoration: underline
+        button
+          +reset-awesome-button
+          &:hover
+            text-decoration: underline
 
         .less
           display: none

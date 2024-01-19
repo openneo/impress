@@ -46,8 +46,8 @@
             = trading_users_header(owned, @trading_users_by_owned[owned].size)
           = render_trading_users(owned)
           %span.toggle
-            %span.more= t '.trading_users.show_more'
-            %span.less= t '.trading_users.show_less'
+            %button.more= t '.trading_users.show_more'
+            %button.less= t '.trading_users.show_less'
 
   - if user_signed_in?
     #your-items-form
