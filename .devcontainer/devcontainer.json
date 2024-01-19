@@ -27,6 +27,8 @@
     // we partially override `config/database.yml` to connect to `db`!
     "DATABASE_URL_PRIMARY_DEV": "mysql2://db",
     "DATABASE_URL_OPENNEO_ID_DEV": "mysql2://db",
+    "DATABASE_URL_PRIMARY_TEST": "mysql2://db",
+    "DATABASE_URL_OPENNEO_ID_TEST": "mysql2://db",
 
     // HACK: Out of the box, this dev container doesn't allow installation to
     // the default GEM_HOME, because of a weird thing going on with RVM.

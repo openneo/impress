@@ -25,6 +25,12 @@ class User < ApplicationRecord
   scope :top_contributors, -> { order('points DESC').where('points > 0') }
 
   after_update :sync_name_with_auth_user!, if: :saved_change_to_name?
+  after_update :log_trade_activity, if: -> user {
+    (user.saved_change_to_owned_closet_hangers_visibility? &&
+      user.owned_closet_hangers_visibility >= ClosetVisibility[:trading].id) ||
+    (user.saved_change_to_wanted_closet_hangers_visibility? &&
+      user.wanted_closet_hangers_visibility >= ClosetVisibility[:trading].id)
+  }
 
   def sync_name_with_auth_user!
     auth_user.name = name
@@ -167,6 +173,10 @@ class User < ApplicationRecord
 
   def contact_neopets_username
     contact_neopets_connection.try(:neopets_username)
+  end
+
+  def log_trade_activity
+    touch(:last_trade_activity_at)
   end
 
   def self.points_required_to_pass_top_contributor(offset)

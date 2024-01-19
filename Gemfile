@@ -79,3 +79,8 @@ gem "stackprof", "~> 0.2.25"
 # For monitoring errors in production.
 gem "sentry-ruby", "~> 5.12"
 gem "sentry-rails", "~> 5.12"
+
+# For automated testing.
+group :test do
+	gem 'sqlite3', '~> 1.7'
+end

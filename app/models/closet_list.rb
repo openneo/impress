@@ -6,9 +6,14 @@ class ClosetList < ApplicationRecord
   validates :user, :presence => true
   validates :hangers_owned, :inclusion => {:in => [true, false], :message => "can't be blank"}
 
+  delegate :log_trade_activity, to: :user
+
   scope :alphabetical, -> { order(:name) }
   scope :publicly_visible, -> {
     where(arel_table[:visibility].gteq(ClosetVisibility[:public].id))
+  }
+  scope :trading, -> {
+    where(arel_table[:visibility].gteq(ClosetVisibility[:trading].id))
   }
   scope :visible_to, ->(user) {
     condition = arel_table[:visibility].gteq(ClosetVisibility[:public].id)
@@ -17,6 +22,12 @@ class ClosetList < ApplicationRecord
   }
 
   after_save :sync_hangers_owned!
+  after_save :log_trade_activity, if: :trading?
+  after_destroy :log_trade_activity, if: :trading?
+
+  def trading?
+    visibility >= ClosetVisibility[:trading].id
+  end
 
   def sync_hangers_owned!
     if hangers_owned_changed?

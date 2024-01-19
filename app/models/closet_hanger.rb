@@ -4,6 +4,7 @@ class ClosetHanger < ApplicationRecord
   belongs_to :user
 
   delegate :name, to: :item, prefix: true
+  delegate :log_trade_activity, to: :user
 
   validates :item_id, :uniqueness => {:scope => [:user_id, :owned, :list_id]}
   validates :quantity, :numericality => {:greater_than => 0}
@@ -15,6 +16,32 @@ class ClosetHanger < ApplicationRecord
     it = Item::Translation.arel_table
     joins(:item => :translations).where(it[:locale].eq(I18n.locale)).
       order(it[:name].asc)
+  }
+  scope :trading, -> {
+    ch = arel_table
+    cl = ClosetList.arel_table
+    u = User.arel_table
+    joins(:user, :list).where(
+      # sigh… our default-lists continue to be a pain
+      (
+        ch[:list_id].not_eq(nil).and(cl[:visibility].gteq(
+          ClosetVisibility[:trading].id))
+      ).or(
+        (
+          ch[:list_id].eq(nil).and(ch[:owned].eq(true))
+        ).and(
+          u[:owned_closet_hangers_visibility].gteq(
+            ClosetVisibility[:trading].id)
+        )
+      ).or(
+        (
+          ch[:list_id].eq(nil).and(ch[:owned].eq(false))
+        ).and(
+          u[:wanted_closet_hangers_visibility].gteq(
+            ClosetVisibility[:trading].id)
+        )
+      )
+    )
   }
   scope :newest, -> { order(arel_table[:created_at].desc) }
   scope :owned_before_wanted, -> { order(arel_table[:owned].desc) }
@@ -35,6 +62,9 @@ class ClosetHanger < ApplicationRecord
   end
 
   before_validation :merge_quantities, :set_owned_by_list
+
+  after_save :log_trade_activity, if: :trading?
+  after_destroy :log_trade_activity, if: :trading?
 
   def possibly_null_closet_list
     list || user.null_closet_list(owned)

@@ -24,6 +24,32 @@ development:
       sql_mode: TRADITIONAL
     migrations_paths: db/openneo_id_migrate
 
+test:
+  primary:
+    # You can override these default settings with this environment variable,
+    # fully or partially. We do this in the .devcontainer setup!
+    url: <%= ENV['DATABASE_URL_PRIMARY_TEST'] %>
+    adapter: mysql2
+    database: openneo_impress_test
+    username: impress_dev
+    password: impress_dev
+    pool: 5
+    variables:
+      sql_mode: TRADITIONAL
+
+  openneo_id:
+    # You can override these default settings with this environment variable,
+    # fully or partially. We do this in the .devcontainer setup!
+    url: <%= ENV['DATABASE_URL_OPENNEO_ID_TEST'] %>
+    adapter: mysql2
+    database: openneo_id_test
+    username: impress_dev
+    password: impress_dev
+    pool: 2
+    variables:
+      sql_mode: TRADITIONAL
+    migrations_paths: db/openneo_id_migrate
+
 production:
   primary:
     url: <%= ENV['DATABASE_URL_PRIMARY'] %>
