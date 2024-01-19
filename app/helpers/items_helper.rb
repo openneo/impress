@@ -83,14 +83,14 @@ module ItemsHelper
     "https://www.neopets.com/genie.phtml?type=process_genie&criteria=exact&auctiongenie=#{CGI::escape item.name}"
   end
   
-  def trading_closet_hangers_header(owned, count)
+  def trading_users_header(owned, count)
     ownership_key = owned ? 'owned' : 'wanted'
-    translate ".trading_closet_hangers.header.#{ownership_key}", :count => count
+    translate ".trading_users.header.#{ownership_key}", :count => count
   end
 
-  def render_trading_closet_hangers(owned)
-    @trading_closet_hangers_by_owned[owned].map do |hanger|
-      link_to hanger.user.name, user_closet_hangers_path(hanger.user)
+  def render_trading_users(owned)
+    @trading_users_by_owned[owned].map do |user|
+      link_to user.name, user_closet_hangers_path(user)
     end.to_sentence.html_safe
   end
   

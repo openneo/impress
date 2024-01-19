@@ -224,7 +224,7 @@ pt:
         occupied_header: Ocupações
         restricted_header: Restrições
         none: Nada
-      trading_closet_hangers:
+      trading_users:
         header:
           owned:
             zero: Ninguém quer trocar esse item

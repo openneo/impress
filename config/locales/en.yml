@@ -314,7 +314,7 @@ en:
         occupied_header: Occupies
         restricted_header: Restricts
         none: None
-      trading_closet_hangers:
+      trading_users:
         header:
           owned:
             zero: We don't know anyone who has this item up for trade.

@@ -285,7 +285,7 @@ en-MEEP:
         occupied_header: Occupeeps
         restricted_header: Restreeps
         none: Meepless
-      trading_closet_hangers:
+      trading_users:
         header:
           owned:
             zero: We don't know anymeep who has this item meep for trade.

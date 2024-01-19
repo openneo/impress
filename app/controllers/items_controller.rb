@@ -71,12 +71,16 @@ class ItemsController < ApplicationController
         @basic_colored_pet_types_by_species_id = PetType.special_color_or_basic(@item.special_color).
           includes_child_translations.group_by(&:species)
 
-        trading_closet_hangers = @item.closet_hangers.trading.newest.
-          user_is_active.includes(:user)
+        trading_closet_hangers = @item.closet_hangers.trading.includes(:user).
+          user_is_active.order('users.last_trade_activity_at DESC')
 
-        @trading_closet_hangers_by_owned = {
-          true => trading_closet_hangers.filter { |c| c.owned? },
-          false => trading_closet_hangers.filter { |c| c.wanted? },
+
+        owned_trading_hangers = trading_closet_hangers.filter { |c| c.owned? }
+        wanted_trading_hangers = trading_closet_hangers.filter { |c| c.wanted? }
+
+        @trading_users_by_owned = {
+          true => owned_trading_hangers.map(&:user).uniq,
+          false => wanted_trading_hangers.map(&:user).uniq,
         }
 
         if user_signed_in?
