@@ -72,7 +72,7 @@ class ItemsController < ApplicationController
           includes_child_translations.group_by(&:species)
 
         trading_closet_hangers = @item.closet_hangers.trading.newest.
-          includes(:user)
+          user_is_active.includes(:user)
 
         @trading_closet_hangers_by_owned = {
           true => trading_closet_hangers.filter { |c| c.owned? },

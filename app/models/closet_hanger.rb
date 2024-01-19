@@ -46,6 +46,10 @@ class ClosetHanger < ApplicationRecord
   scope :newest, -> { order(arel_table[:created_at].desc) }
   scope :owned_before_wanted, -> { order(arel_table[:owned].desc) }
   scope :unlisted, -> { where(:list_id => nil) }
+  scope :user_is_active, -> {
+    u = User.arel_table
+    joins(:user).where(u[:last_trade_activity_at].gteq(6.months.ago))
+  }
 
   before_validation :merge_quantities, :set_owned_by_list
 
