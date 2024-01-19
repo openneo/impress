@@ -19,9 +19,9 @@ try {
   const tradeSections = document.querySelectorAll("#trade-hangers p");
   for (const section of tradeSections) {
     const oneLine = parseFloat(getComputedStyle(section)['line-height']);
-    const maxHeight = oneLine * 2;
+    const maxHeight = Math.ceil(oneLine * 2);
 
-    if (section.offsetHeight > maxHeight) {
+    if (section.clientHeight > maxHeight) {
       section.style.maxHeight = `${maxHeight}px`;
       section.setAttribute("data-overflows", "");
     }
