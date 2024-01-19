@@ -47,20 +47,6 @@ class ClosetHanger < ApplicationRecord
   scope :owned_before_wanted, -> { order(arel_table[:owned].desc) }
   scope :unlisted, -> { where(:list_id => nil) }
 
-  {:owned => true, :wanted => false}.each do |name, owned|
-    scope "#{name}_trading", -> {
-      joins(:user).includes(:list).
-        where(:owned => owned).
-        where((
-          arel_table[:list_id].eq(nil).and(
-            User.arel_table["#{name}_closet_hangers_visibility"].gteq(ClosetVisibility[:trading].id)
-          )
-          ).or(
-          ClosetList.arel_table[:visibility].gteq(ClosetVisibility[:trading].id)
-        ))
-      }
-  end
-
   before_validation :merge_quantities, :set_owned_by_list
 
   after_save :log_trade_activity, if: :trading?
@@ -72,6 +58,10 @@ class ClosetHanger < ApplicationRecord
 
   def trading?
     possibly_null_closet_list.trading?
+  end
+
+  def wanted?
+    !owned?
   end
 
   def possibly_null_list_id=(list_id_or_owned)
