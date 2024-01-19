@@ -16,17 +16,20 @@ body.items-show
 
     #item-thumbnail
       grid-area: img
+
       border: 1px solid $module-border-color
       height: 80px
       width: 80px
 
     #item-name
       grid-area: name
+
       text-align: left
       line-height: 100%
       
     #item-links
       grid-area: links
+
       text-align: left
       a
         font-size: 75%
@@ -34,57 +37,112 @@ body.items-show
     
   #item-name
     margin-bottom: 0
+
+  #item-info-section
+    display: grid
+
+    grid-template-areas: "info form"
+    grid-template-columns: 1fr auto
+
+    #item-info
+      grid-area: info
     
-  #item-zones
-    font:
-      family: $text-font
-      size: 85%
-    margin-bottom: 1em
+      #item-zones
+        font:
+          family: $text-font
+          size: 85%
+        margin-bottom: 1em
 
-    p
-      display: inline
+        p
+          display: inline
 
-      &:first-child
-        margin-right: 1em
-        
-  #trade-hangers
-    font-size: 85%
-    margin-bottom: 3em
-    text-align: left
+          &:first-child
+            margin-right: 1em
 
-    p
+    #your-items-form
+      grid-area: form
+
+      border: 1px solid $module-border-color
+      font-size: 85%
+      margin-bottom: 3em
+      margin-left: 1em
+      padding: 1em
+      width: 30em
+      
+      // compete with #trade-hangers
       position: relative
+      z-index: 2
 
-      &:first-child
+      h3
+        font-size: 150%
+        font-weight: bold
+        margin-bottom: .25em
+      
+      #closet-hangers-ownership-groups
+        +clearfix
         margin-bottom: .5em
+      
+        div
+          float: left
+          margin: 0 5%
+          text-align: left
+          width: 40%
+          
+          li
+            list-style: none
+            word-wrap: break-word
+            
+            label.unlisted
+              font-style: italic
 
-      &.overflows
-        .toggle
-          display: block
+      form
+        padding: .5em 0
 
-      &.showing-more
-        .toggle
-          .less
+      select
+        width: 9em
+
+      input[type=number]
+        margin-right: .5em
+        width: 3em
+          
+    #trade-hangers
+      font-size: 85%
+      margin-bottom: 3em
+      text-align: left
+
+      p
+        position: relative
+
+        &:first-child
+          margin-bottom: .5em
+
+        &.overflows
+          .toggle
             display: block
 
-          .more
-            display: none
+        &.showing-more
+          .toggle
+            .less
+              display: block
 
-    .toggle
-      background: white
-      bottom: 0
-      cursor: pointer
-      display: none
-      font-family: $main-font
-      padding: 0 1em
-      position: absolute
-      right: 0
+            .more
+              display: none
 
-      &:hover
-        text-decoration: underline
-
-      .less
+      .toggle
+        background: white
+        bottom: 0
+        cursor: pointer
         display: none
+        font-family: $main-font
+        padding: 0 1em
+        position: absolute
+        right: 0
+
+        &:hover
+          text-decoration: underline
+
+        .less
+          display: none
   
   #item-contributors
     +subtle-banner
@@ -111,51 +169,6 @@ body.items-show
   .nc-icon
     height: 16px
     width: 16px
-
-  #closet-hangers
-    border: 1px solid $module-border-color
-    float: right
-    font-size: 85%
-    margin-bottom: 3em
-    margin-left: 1em
-    padding: 1em
-    width: 30em
-    
-    // compete with #trade-hangers
-    position: relative
-    z-index: 2
-
-    h3
-      font-size: 150%
-      font-weight: bold
-      margin-bottom: .25em
-    
-    #closet-hangers-ownership-groups
-      +clearfix
-      margin-bottom: .5em
-    
-      div
-        float: left
-        margin: 0 5%
-        text-align: left
-        width: 40%
-        
-        li
-          list-style: none
-          word-wrap: break-word
-          
-          label.unlisted
-            font-style: italic
-
-    form
-      padding: .5em 0
-
-    select
-      width: 9em
-
-    input[type=number]
-      margin-right: .5em
-      width: 3em
 
   &.js
     #trade-hangers

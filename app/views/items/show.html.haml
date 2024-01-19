@@ -19,59 +19,61 @@
       = link_to t('.resources.trading_post'), trading_post_url_for(@item)
       = link_to t('.resources.auction_genie'), auction_genie_url_for(@item)
 
-- if user_signed_in?
-  #closet-hangers
-    %h3
-      = t '.closet_hangers.header_html',
-          :user_items_link => link_to(t('your_items'),
-                                      user_closet_hangers_path(current_user))
-    = form_tag update_quantities_user_item_closet_hangers_path(:user_id => current_user, :item_id => @item), :method => :put do
-      #closet-hangers-ownership-groups
-        - @current_user_lists.each do |owned, lists|
-          %div
-            %h4= closet_lists_group_name(:you, owned)
-            %ul
-              - lists.each do |list|
+%section#item-info-section
+  #item-info
+    %p= @item.description
+
+    #item-zones
+      %p
+        %strong #{t '.zones.occupied_header'}:
+        = list_zones @occupied_zones, :uncertain_label
+      %p
+        %strong #{t '.zones.restricted_header'}:
+        - if @restricted_zones.empty?
+          = t '.zones.none'
+        - else
+          = list_zones @restricted_zones
+
+    #trade-hangers
+      - [true, false].each do |owned|
+        %p
+          %strong
+            = trading_closet_hangers_header(owned, @trading_closet_hangers_by_owned[owned].size)
+          = render_trading_closet_hangers(owned)
+          %span.toggle
+            %span.more= t '.trading_closet_hangers.show_more'
+            %span.less= t '.trading_closet_hangers.show_less'
+
+  - if user_signed_in?
+    #your-items-form
+      %h3
+        = t '.closet_hangers.header_html',
+            :user_items_link => link_to(t('your_items'),
+                                        user_closet_hangers_path(current_user))
+      = form_tag update_quantities_user_item_closet_hangers_path(:user_id => current_user, :item_id => @item), :method => :put do
+        #closet-hangers-ownership-groups
+          - @current_user_lists.each do |owned, lists|
+            %div
+              %h4= closet_lists_group_name(:you, owned)
+              %ul
+                - lists.each do |list|
+                  %li
+                    = number_field_tag "quantity[#{list.id}]",
+                      @current_user_quantities[list.id], :min => 0
+                    = label_tag "quantity[#{list.id}]", list.name
+                
                 %li
-                  = number_field_tag "quantity[#{list.id}]",
-                    @current_user_quantities[list.id], :min => 0
-                  = label_tag "quantity[#{list.id}]", list.name
-              
-              %li
-                = number_field_tag "quantity[#{owned}]",
-                  @current_user_quantities[owned], :min => 0
-                    
-                - unless lists.empty?
-                  = label_tag "quantity[#{owned}]",
-                              t('closet_lists.unlisted_name'),
-                              :class => 'unlisted'
-                - else
-                  = label_tag "quantity[#{owned}]",
-                              t('.closet_hangers.quantity_label')
-      = submit_tag t('.closet_hangers.submit')
-
-%p= @item.description
-
-#item-zones
-  %p
-    %strong #{t '.zones.occupied_header'}:
-    = list_zones @occupied_zones, :uncertain_label
-  %p
-    %strong #{t '.zones.restricted_header'}:
-    - if @restricted_zones.empty?
-      = t '.zones.none'
-    - else
-      = list_zones @restricted_zones
-
-#trade-hangers
-  - [true, false].each do |owned|
-    %p
-      %strong
-        = trading_closet_hangers_header(owned, @trading_closet_hangers_by_owned[owned].size)
-      = render_trading_closet_hangers(owned)
-      %span.toggle
-        %span.more= t '.trading_closet_hangers.show_more'
-        %span.less= t '.trading_closet_hangers.show_less'
+                  = number_field_tag "quantity[#{owned}]",
+                    @current_user_quantities[owned], :min => 0
+                      
+                  - unless lists.empty?
+                    = label_tag "quantity[#{owned}]",
+                                t('closet_lists.unlisted_name'),
+                                :class => 'unlisted'
+                  - else
+                    = label_tag "quantity[#{owned}]",
+                                t('.closet_hangers.quantity_label')
+        = submit_tag t('.closet_hangers.submit')
 
 #outfit-preview-root{'data-item-id': @item.id}
 
