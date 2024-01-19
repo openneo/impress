@@ -35,6 +35,11 @@
           = list_zones @restricted_zones
 
     #trade-hangers
+      - if Time.now < Date.new(2024, 1, 26)
+        %p
+          ✨⏳️
+          %i We now only show recently-updated lists here!
+          ⏳️✨
       - [true, false].each do |owned|
         %p
           %strong
