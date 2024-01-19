@@ -4,25 +4,33 @@
 body.items-show
   #item-header
     border-bottom: 1px solid $module-border-color
-    display: block
     margin-bottom: 1em
     padding: 1em 0
-    
-    div, img
-      +inline-block
-      
-    div
+
+    display: grid
+    grid-template-areas: "img gap1" "img name" "img links" "img gap2"
+    align-items: center
+    justify-content: center
+    column-gap: 1em
+    row-gap: .5em
+
+    #item-thumbnail
+      grid-area: img
+      border: 1px solid $module-border-color
+      height: 80px
+      width: 80px
+
+    #item-name
+      grid-area: name
       text-align: left
+      line-height: 100%
       
-    a
-      font-size: 75%
-      margin-left: 1em
-      
-  #item-thumbnail
-    border: 1px solid $module-border-color
-    height: 80px
-    margin-right: .5em
-    width: 80px
+    #item-links
+      grid-area: links
+      text-align: left
+      a
+        font-size: 75%
+        margin-left: 1em
     
   #item-name
     margin-bottom: 0

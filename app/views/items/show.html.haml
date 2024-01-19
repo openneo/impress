@@ -3,8 +3,8 @@
 
 %header#item-header
   = image_tag @item.thumbnail_url, :id => 'item-thumbnail'
-  %div
-    %h2#item-name= @item.name
+  %h2#item-name= @item.name
+  %nav#item-links
     = nc_icon_for(@item)
     - unless @item.rarity.blank?
       == #{t '.rarity'}: #{@item.rarity_index} (#{@item.rarity})
