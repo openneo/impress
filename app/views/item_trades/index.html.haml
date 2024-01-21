@@ -13,13 +13,10 @@
 				%th= t(".table.headings.user.#{@type}")
 				%th= t(".table.headings.lists")
 		%tbody
-			- @trades.each do |trade|
+			- sorted_vaguely_by_trade_activity(@trades).each do |trade|
 				%tr
 					%td
-						-# TODO: Replace this with the coarse-grained version from 2020,
-						-# and translate it!
-						= time_ago_in_words trade.user.last_trade_activity_at
-						ago
+						= vague_trade_timestamp trade.user.last_trade_activity_at
 					%td= trade.user.name
 					%td
 						- if trade.lists.present?
