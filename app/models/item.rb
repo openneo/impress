@@ -278,17 +278,6 @@ class Item < ApplicationRecord
     write_attribute('species_support_ids', replacement)
   end
   
-  def supported_species_ids
-    return Species.select([:id]).map(&:id) if modeled_body_ids.include?(0)
-    
-    pet_types = PetType.where(:body_id => modeled_body_ids).select('DISTINCT species_id')
-    species_ids = pet_types.map(&:species_id)
-    
-    # If there are multiple known supported species, it probably supports them
-    # all. (I've never heard of only a handful of species being supported :P)
-    species_ids.size >= 2 ? Species.select([:id]).map(&:id) : species_ids
-  end
-  
   def support_species?(species)
     species_support_ids.blank? || species_support_ids.include?(species.id)
   end

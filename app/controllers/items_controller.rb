@@ -67,13 +67,8 @@ class ItemsController < ApplicationController
         
         @contributors_with_counts = @item.contributors_with_counts
 
-        @supported_species_ids = @item.supported_species_ids
-        @basic_colored_pet_types_by_species_id = PetType.special_color_or_basic(@item.special_color).
-          includes_child_translations.group_by(&:species)
-
         trading_closet_hangers = @item.closet_hangers.trading.includes(:user).
           user_is_active.order('users.last_trade_activity_at DESC')
-
 
         owned_trading_hangers = trading_closet_hangers.filter { |c| c.owned? }
         wanted_trading_hangers = trading_closet_hangers.filter { |c| c.wanted? }
