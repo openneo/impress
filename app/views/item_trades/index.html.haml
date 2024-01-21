@@ -1,0 +1,30 @@
+- title t(".title.#{@type}")
+- hide_title_header
+
+%h2.item-page-subtitle= t(".title.#{@type}")
+
+- if @trades.present?
+	%table
+		%thead
+			%tr
+				%th= t(".table.headings.last_active")
+				%th= t(".table.headings.user.#{@type}")
+				%th= t(".table.headings.lists")
+		%tbody
+			- @trades.each do |trade|
+				%tr
+					%td
+						-# TODO: Replace this with the coarse-grained version from 2020,
+						-# and translate it!
+						= time_ago_in_words trade.user.last_trade_activity_at
+						ago
+					%td= trade.user.name
+					%td
+						- if trade.lists.present?
+							%ul
+								- trade.lists.each do |list|
+									%li= list.name
+						- else
+							%span.not-in-a-list= t(".table.not_in_a_list")
+- else
+	%p= t(".no_trades_yet")

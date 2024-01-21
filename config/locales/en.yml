@@ -369,6 +369,23 @@ en:
         user_wants: wants
         fits_pet_type: fits
 
+  item_trades:
+    index:
+      title:
+        offering: "Trades: Offering"
+        seeking: "Trades: Seeking"
+      table:
+        headings:
+          last_active: Last active
+          user:
+            offering: Owner
+            seeking: Seeker
+          lists: Lists
+        not_in_a_list: Not in a list
+      no_trades_yet:
+        No trades yet! To add your name to this page, add this item to one of
+        your lists, and mark the list as "Trading".
+
   neopets_page_import_tasks:
     create:
       success: Page %{index} saved!

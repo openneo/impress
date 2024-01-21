@@ -18,7 +18,11 @@ OpenneoImpressItems::Application.routes.draw do
 
   # Our customization data! Both the item pages, and JSON API endpoints.
   resources :items, :only => [:index, :show] do
+    resources :trades, path: 'trades/:type', controller: 'item_trades',
+      only: [:index], constraints: {type: ['offering', 'seeking']}
+
     resources :appearances, controller: 'item_appearances', only: [:index]
+
     collection do
       get :needed
     end

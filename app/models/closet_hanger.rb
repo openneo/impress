@@ -161,12 +161,6 @@ class ClosetHanger < ApplicationRecord
   #
   # We don't preload anything here - if you want user names or list names, you
   # should `includes` them in the hanger scope first, to avoid extra queries!
-  Trade = Struct.new('Trade', :user_id, :hangers) do
-    def user
-      # Take advantage of `includes(:user)` on the hangers, if applied.
-      hangers.first.user
-    end
-  end
   def self.to_trades
     # Let's ensure that the `trading` filter is applied, to avoid data leaks.
     # (I still recommend doing it at the call site too for clarity, though!)
@@ -183,6 +177,17 @@ class ClosetHanger < ApplicationRecord
     end
 
     {offering: offering, seeking: seeking}
+  end
+
+  Trade = Struct.new('Trade', :user_id, :hangers) do
+    def user
+      # Take advantage of `includes(:user)` on the hangers, if applied.
+      hangers.first.user
+    end
+
+    def lists
+      hangers.map(&:list).filter(&:present?)
+    end
   end
 
   protected
