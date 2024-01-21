@@ -30,10 +30,31 @@
     .item-links
       grid-area: links
 
+      font-size: 85%
       text-align: left
-      a
-        font-size: 75%
-        margin-left: 1em
+      display: flex
+      align-items: center
+      gap: 1em
+      
+      .nc-or-np
+        padding: .25em .5em
+        border-radius: .25em
+        cursor: help
+
+        font-weight: bold
+        line-height: 1
+
+        // These colors are copied from DTI 2020, for initial consistency!
+        // They're based on the Chakra UI colors, which I think are in turn the
+        // Bootstrap colors? Or something?
+        &[data-type=nc]
+          background: #E9D8FD
+          color: #44337A
+
+        &[data-type=np]
+          background: #E2E8F0
+          color: #1A202C
+
 
   .item-description
     margin-top: .5em
