@@ -270,7 +270,6 @@ en-MEEP:
         description: You want this meepit
 
     show:
-      rarity: Meepity
       resources:
         jn_items: JN Meepits
         shop_wizard: Meep Wizard

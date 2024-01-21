@@ -209,7 +209,6 @@ pt:
         abbr: Procura
         description: Você procura esse item
     show:
-      rarity: Raridade
       resources:
         jn_items: JN Itens
         shop_wizard: Mágico Pecincheiro

@@ -8,14 +8,14 @@
     %h2.item-name= item.name
     %nav.item-links
       - if item.nc?
-        .item-kind{'data-type' => 'nc', title: 'Purchaseable with Neocash'}
-          NC
+        %abbr.item-kind{'data-type' => 'nc', title: t('items.show.item_kinds.nc.description')}
+          = t('items.show.item_kinds.nc.label')
       - elsif item.pb?
-        .item-kind{'data-type' => 'pb', title: 'Only obtainable via paintbrush'}
-          PB
+        %abbr.item-kind{'data-type' => 'pb', title: t('items.show.item_kinds.pb.description')}
+          = t('items.show.item_kinds.pb.label')
       - else
-        .item-kind{'data-type' => 'np', title: 'Purchaseable with Neopoints'}
-          NP
+        %abbr.item-kind{'data-type' => 'np', title: t('items.show.item_kinds.np.description')}
+          = t('items.show.item_kinds.np.label')
 
       = link_to t('items.show.resources.jn_items'), jn_items_url_for(item)
       - if item.nc_trade_value

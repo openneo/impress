@@ -298,7 +298,16 @@ en:
         description: You want this item
 
     show:
-      rarity: Rarity
+      item_kinds:
+        nc:
+          label: NC
+          description: Purchaseable with Neocash
+        np:
+          label: NP
+          description: Purchaseable with Neopoints
+        pb:
+          label: PB
+          description: Only obtainable via paintbrush
       resources:
         jn_items: JN Items
         owls: "Owls: %{value}"

@@ -209,7 +209,6 @@ es:
         abbr: Buscado
         description: Quieres este objeto
     show:
-      rarity: Rareza
       resources:
         jn_items: Objetos de JN
         shop_wizard: Asistente de Tiendas
