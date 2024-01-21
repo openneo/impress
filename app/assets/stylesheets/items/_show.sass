@@ -24,10 +24,6 @@ body.items-show
       margin-left: 1em
       padding: 1em
       width: 30em
-      
-      // compete with #trade-hangers
-      position: relative
-      z-index: 2
 
       h3
         font-size: 150%
@@ -60,49 +56,7 @@ body.items-show
       input[type=number]
         margin-right: .5em
         width: 3em
-          
-    #trade-hangers
-      font-size: 85%
-      margin-bottom: 3em
-      text-align: left
 
-      p
-        position: relative
-
-        &:first-child
-          margin-bottom: .5em
-
-        &[data-overflows]
-          overflow: hidden
-          .toggle
-            display: block
-
-        &[data-showing-more]
-          .toggle
-            .less
-              display: block
-
-            .more
-              display: none
-
-      .toggle
-        background: white
-        bottom: 0
-        cursor: pointer
-        display: none
-        font-family: $main-font
-        padding: 0 1em
-        position: absolute
-        right: 0
-
-        button
-          +reset-awesome-button
-          &:hover
-            text-decoration: underline
-
-        .less
-          display: none
-  
   #item-contributors
     +subtle-banner
     clear: both
@@ -128,13 +82,3 @@ body.items-show
   .nc-icon
     height: 16px
     width: 16px
-
-  &.js
-    #trade-hangers
-      p
-        max-height: 3em
-        overflow: hidden
-
-        &.showing-more
-          max-height: none
-

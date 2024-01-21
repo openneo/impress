@@ -78,12 +78,6 @@ module ItemsHelper
   def auction_genie_url_for(item)
     "https://www.neopets.com/genie.phtml?type=process_genie&criteria=exact&auctiongenie=#{CGI::escape item.name}"
   end
-
-  def render_trades(trades)
-    trades.map do |trade|
-      link_to trade.user.name, user_closet_hangers_path(trade.user)
-    end.to_sentence.html_safe
-  end
   
   def format_contribution_count(count)
     " (&times;#{count})".html_safe if count > 1

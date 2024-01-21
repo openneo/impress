@@ -58,8 +58,7 @@ class ItemsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        @trades = @item.closet_hangers.trading.includes(:user).user_is_active.
-          order('users.last_trade_activity_at DESC').to_trades
+        @trades = @item.closet_hangers.trading.user_is_active.to_trades
 
         @contributors_with_counts = @item.contributors_with_counts
 

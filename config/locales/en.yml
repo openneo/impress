@@ -314,18 +314,6 @@ en:
         occupied_header: Occupies
         restricted_header: Restricts
         none: None
-      trading_users:
-        header:
-          owned:
-            zero: We don't know anyone who has this item up for trade.
-            one: "1 user has this item up for trade:"
-            other: "%{count} users have this item up for trade:"
-          wanted:
-            zero: "We don't know anyone who wants this item."
-            one: "1 user wants this item:"
-            other: "%{count} users want this item:"
-        show_more: more
-        show_less: less
       subpages_nav:
         preview: Preview
         trades:

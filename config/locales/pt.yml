@@ -224,18 +224,6 @@ pt:
         occupied_header: Ocupações
         restricted_header: Restrições
         none: Nada
-      trading_users:
-        header:
-          owned:
-            zero: Ninguém quer trocar esse item
-            one: "1 usuário quer trocar esse item:"
-            other: "%{count} usuários possuem, e querem trocar esse item:"
-          wanted:
-            zero: "Nós não conhecemos ninguém que procure esse item."
-            one: "1 usuário procura esse item:"
-            other: "%{count} usuários procuram esse item:"
-        show_more: mais
-        show_less: menos
       preview:
         header: Pré-Visualizar
         customize_more: Personalize mais

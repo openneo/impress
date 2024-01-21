@@ -224,18 +224,6 @@ es:
         occupied_header: Ocupa
         restricted_header: Restringe
         none: Nada
-      trading_users:
-        header:
-          owned:
-            zero: No conocemos a nadie que tenga este objeto para intercambiar.
-            one: "1 usuario tiene este objeto para intercambiar:"
-            other: "%{count} usuarios tienen este objeto para intercambiar:"
-          wanted:
-            zero: "No conocemos a nadie que busque este objeto."
-            one: "1 usuario busca este objeto:"
-            other: "%{count} usuarios buscan este objeto:"
-        show_more: más
-        show_less: menos
       preview:
         header: Previsualizar
         customize_more: Personalizar más

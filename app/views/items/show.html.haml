@@ -8,27 +8,6 @@
   #item-info
     %p= @item.description
 
-    #trade-hangers
-      - if Time.now < Date.new(2024, 1, 26)
-        %p
-          ✨⏳️
-          %i We now only show recently-updated lists here!
-          ⏳️✨
-      %p
-        %strong
-          = t '.trading_users.header.owned', count: @trades[:offering].size
-        = render_trades(@trades[:offering])
-        %span.toggle
-          %button.more= t '.trading_users.show_more'
-          %button.less= t '.trading_users.show_less'
-      %p
-        %strong
-          = t '.trading_users.header.wanted', count: @trades[:seeking].size
-        = render_trades(@trades[:seeking])
-        %span.toggle
-          %button.more= t '.trading_users.show_more'
-          %button.less= t '.trading_users.show_less'
-
   - if user_signed_in?
     #your-items-form
       %h3

@@ -285,18 +285,6 @@ en-MEEP:
         occupied_header: Occupeeps
         restricted_header: Restreeps
         none: Meepless
-      trading_users:
-        header:
-          owned:
-            zero: We don't know anymeep who has this item meep for trade.
-            one: "1 user has this item meep for trade:"
-            other: "%{count} users have this item meep for trade:"
-          wanted:
-            zero: "We don't know anymeep who meeps this item."
-            one: "1 user meeps this item:"
-            other: "%{count} users meep this item:"
-        show_more: meep more
-        show_less: meep less
       preview:
         header: Meepview
         customize_more: Customize meep
