@@ -29,14 +29,20 @@
           ✨⏳️
           %i We now only show recently-updated lists here!
           ⏳️✨
-      - [true, false].each do |owned|
-        %p
-          %strong
-            = trading_users_header(owned, @trading_users_by_owned[owned].size)
-          = render_trading_users(owned)
-          %span.toggle
-            %button.more= t '.trading_users.show_more'
-            %button.less= t '.trading_users.show_less'
+      %p
+        %strong
+          = t '.trading_users.header.owned', count: @trades[:offering].size
+        = render_trades(@trades[:offering])
+        %span.toggle
+          %button.more= t '.trading_users.show_more'
+          %button.less= t '.trading_users.show_less'
+      %p
+        %strong
+          = t '.trading_users.header.wanted', count: @trades[:seeking].size
+        = render_trades(@trades[:seeking])
+        %span.toggle
+          %button.more= t '.trading_users.show_more'
+          %button.less= t '.trading_users.show_less'
 
   - if user_signed_in?
     #your-items-form

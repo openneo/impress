@@ -58,18 +58,10 @@ class ItemsController < ApplicationController
 
     respond_to do |format|
       format.html do
+        @trades = @item.closet_hangers.trading.includes(:user).user_is_active.
+          order('users.last_trade_activity_at DESC').to_trades
+
         @contributors_with_counts = @item.contributors_with_counts
-
-        trading_closet_hangers = @item.closet_hangers.trading.includes(:user).
-          user_is_active.order('users.last_trade_activity_at DESC')
-
-        owned_trading_hangers = trading_closet_hangers.filter { |c| c.owned? }
-        wanted_trading_hangers = trading_closet_hangers.filter { |c| c.wanted? }
-
-        @trading_users_by_owned = {
-          true => owned_trading_hangers.map(&:user).uniq,
-          false => wanted_trading_hangers.map(&:user).uniq,
-        }
 
         if user_signed_in?
           # Empty arrays are important so that we can loop over this and still
