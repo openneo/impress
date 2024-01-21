@@ -2,7 +2,9 @@
 - canonical_path @item
 
 = render partial: "item_header",
-  locals: {item: @item, trades: @trades, current_subpage: "preview"}
+  locals: {item: @item, trades: @trades, current_subpage: "preview",
+    current_user_lists: @current_user_lists,
+    current_user_quantities: @current_user_quantities}
 
 #outfit-preview-root{'data-item-id': @item.id}
 

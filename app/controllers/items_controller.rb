@@ -63,23 +63,10 @@ class ItemsController < ApplicationController
         @contributors_with_counts = @item.contributors_with_counts
 
         if user_signed_in?
-          # Empty arrays are important so that we can loop over this and still
-          # show the generic no-list case
-          @current_user_lists = {true => [], false => []}
-          current_user.closet_lists.alphabetical.each do |list|
-            @current_user_lists[list.hangers_owned] << list
-          end
-          
-          @current_user_quantities = Hash.new(0) # default is zero
-          hangers = current_user.closet_hangers.where(item_id: @item.id).
-            select([:owned, :list_id, :quantity])
-            
-          hangers.each do |hanger|
-            key = hanger.list_id || hanger.owned
-            @current_user_quantities[key] = hanger.quantity
-          end
+          @current_user_lists = current_user.closet_lists.alphabetical.
+            group_by_owned
+          @current_user_quantities = current_user.item_quantities_for(@item)
         end
-
       end
 
       format.gif do

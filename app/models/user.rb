@@ -175,6 +175,18 @@ class User < ApplicationRecord
     contact_neopets_connection.try(:neopets_username)
   end
 
+  def item_quantities_for(item_id)
+    quantities = Hash.new(0)
+
+    hangers = closet_hangers.where(item_id: item_id).
+      select([:owned, :list_id, :quantity])
+    hangers.each do |hanger|
+      quantities[hanger.list_id || hanger.owned?] = hanger.quantity
+    end
+
+    quantities
+  end
+
   def log_trade_activity
     touch(:last_trade_activity_at)
   end

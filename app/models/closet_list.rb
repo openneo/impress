@@ -87,6 +87,13 @@ class ClosetList < ApplicationRecord
     end
   end
 
+  def self.group_by_owned
+    h = all.group_by(&:hangers_owned?)
+    h[true] ||= []
+    h[false] ||= []
+    h
+  end
+
   include VisibilityMethods
 
   class Null
