@@ -3,33 +3,77 @@
 =item-header
   border-bottom: 1px solid $module-border-color
   margin-bottom: 1em
-  padding: 1em 0
 
-  display: grid
-  grid-template-areas: "img gap1" "img name" "img links" "img gap2"
-  align-items: center
-  justify-content: center
-  column-gap: 1em
-  row-gap: .5em
+  .item-header-main
+    padding: 1em 0
 
-  #item-thumbnail
-    grid-area: img
+    display: grid
+    grid-template-areas: "img gap1" "img name" "img links" "img gap2" "nav nav"
+    align-items: center
+    justify-content: center
+    column-gap: 1em
+    row-gap: .5em
 
-    border: 1px solid $module-border-color
-    height: 80px
-    width: 80px
+    .item-thumbnail
+      grid-area: img
 
-  #item-name
-    grid-area: name
+      border: 1px solid $module-border-color
+      height: 80px
+      width: 80px
 
-    text-align: left
-    line-height: 100%
-    margin-bottom: 0
-    
-  #item-links
-    grid-area: links
+    .item-name
+      grid-area: name
 
-    text-align: left
+      text-align: left
+      line-height: 100%
+      margin-bottom: 0
+      
+    .item-links
+      grid-area: links
+
+      text-align: left
+      a
+        font-size: 75%
+        margin-left: 1em
+
+  .item-subpages-nav
+    display: flex
+    align-items: flex-end
+
+    .preview-link
+      margin-right: auto
+
+    .trades-section
+      display: flex
+      gap: .5em
+
+      header
+        align-self: center
+        font-weight: bold
+
+        &::after
+          content: ":"
+
+      ul
+        align-self: flex-end
+        list-style: none
+        display: flex
+        gap: .5em
+
+        li
+          display: block
+
     a
-      font-size: 75%
-      margin-left: 1em
+      display: block
+      border: 1px solid $module-border-color
+      border-bottom: 0
+      border-radius: .5em .5em 0 0
+      padding: .5em 1em
+      text-decoration: none
+
+      &:hover, &:focus
+        text-decoration: underline
+
+      &[data-is-current=true]
+        background: $module-bg-color
+        font-weight: bold

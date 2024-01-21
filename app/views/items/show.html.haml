@@ -1,7 +1,8 @@
 - title @item.name
 - canonical_path @item
 
-= render partial: "item_header", locals: {item: @item}
+= render partial: "item_header",
+  locals: {item: @item, current_subpage: "preview"}
 
 %section#item-info-section
   #item-info

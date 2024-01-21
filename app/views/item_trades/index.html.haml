@@ -1,9 +1,10 @@
 - title t(".title.#{@type}")
 - hide_title_header
 
-= render partial: "items/item_header", locals: {item: @item}
+= render partial: "items/item_header",
+	locals: {item: @item, current_subpage: "trades_#{@type}"}
 
-%h2.item-page-subtitle= t(".title.#{@type}")
+%h2.item-subpage-title= t(".title.#{@type}")
 
 - if @trades.present?
 	%table.trades-table

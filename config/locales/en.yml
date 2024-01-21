@@ -326,6 +326,12 @@ en:
             other: "%{count} users want this item:"
         show_more: more
         show_less: less
+      subpages_nav:
+        preview: Preview
+        trades:
+          header: Trades
+          offering: Offering
+          seeking: Seeking
       preview:
         header: Preview
         customize_more: Customize more
