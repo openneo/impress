@@ -316,6 +316,7 @@ en:
         trading_post: Trades
         auction_genie: Auctions
       closet_hangers:
+        button: Add to your lists
         header_html: Track this in %{user_items_link}
         quantity_label: How many?
         submit: Save to Your Items

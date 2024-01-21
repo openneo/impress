@@ -28,6 +28,43 @@
         = link_to t('items.show.resources.trading_post'), trading_post_url_for(item)
         = link_to t('items.show.resources.auction_genie'), auction_genie_url_for(item)
 
+    - if user_signed_in?
+      .user-lists-section
+        = link_to t('items.show.closet_hangers.button'),
+          user_closet_hangers_path(current_user),
+          class: 'dialog-opener'
+        %dialog
+          %h3
+            = t 'items.show.closet_hangers.header_html',
+              user_items_link: link_to(t('your_items'),
+              user_closet_hangers_path(current_user))
+          = form_tag update_quantities_user_item_closet_hangers_path(:user_id => current_user, :item_id => @item), :method => :put do
+            .closet-hangers-ownership-groups
+              - @current_user_lists.each do |owned, lists|
+                %div
+                  %h4= closet_lists_group_name(:you, owned)
+                  %ul
+                    - lists.each_with_index do |list, index|
+                      %li
+                        = number_field_tag "quantity[#{list.id}]",
+                          @current_user_quantities[list.id], min: 0,
+                          autofocus: owned && index == 0
+                        = label_tag "quantity[#{list.id}]", list.name
+                    
+                    %li
+                      = number_field_tag "quantity[#{owned}]",
+                        @current_user_quantities[owned], min: 0,
+                        autofocus: owned && lists.empty?
+                          
+                      - unless lists.empty?
+                        = label_tag "quantity[#{owned}]",
+                                    t('closet_lists.unlisted_name'),
+                                    :class => 'unlisted'
+                      - else
+                        = label_tag "quantity[#{owned}]",
+                                    t('items.show.closet_hangers.quantity_label')
+            = submit_tag t('items.show.closet_hangers.submit')
+
   %p.item-description= @item.description
 
   %nav.item-subpages-nav
@@ -46,3 +83,6 @@
               count: trades[:offering].size),
             item_trades_path(item, type: 'seeking'),
             'data-is-current' => current_subpage == 'trades_seeking'
+
+- content_for :javascripts do
+  = javascript_include_tag 'items/item_header'
