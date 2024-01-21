@@ -13,8 +13,11 @@ body.item_trades-index
 		width: 100%
 		table-layout: fixed
 
-		th:nth-child(1), th:nth-child(2)
-			width: 15ch
+		th, td
+			&:nth-child(1), &:nth-child(2)
+				width: 15ch
+				overflow: hidden
+				text-overflow: ellipsis
 
 		.trade-list-names
 			list-style: none
