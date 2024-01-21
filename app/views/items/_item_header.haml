@@ -8,10 +8,13 @@
     %h2.item-name= item.name
     %nav.item-links
       - if item.nc?
-        .nc-or-np{'data-type' => 'nc', title: 'Purchaseable with Neocash'}
+        .item-kind{'data-type' => 'nc', title: 'Purchaseable with Neocash'}
           NC
+      - elsif item.pb?
+        .item-kind{'data-type' => 'pb', title: 'Only obtainable via paintbrush'}
+          PB
       - else
-        .nc-or-np{'data-type' => 'np', title: 'Purchaseable with Neopoints'}
+        .item-kind{'data-type' => 'np', title: 'Purchaseable with Neopoints'}
           NP
 
       = link_to t('items.show.resources.jn_items'), jn_items_url_for(item)
