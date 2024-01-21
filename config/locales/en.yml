@@ -330,8 +330,8 @@ en:
         preview: Preview
         trades:
           header: Trades
-          offering: Offering
-          seeking: Seeking
+          offering: Offering (%{count})
+          seeking: Seeking (%{count})
       preview:
         header: Preview
         customize_more: Customize more

@@ -1,4 +1,5 @@
 - raise ArgumentError unless defined? item
+- raise ArgumentError unless defined? trades
 - raise ArgumentError unless defined? current_subpage
 
 %header.item-header
@@ -27,10 +28,12 @@
       %header= t('items.show.subpages_nav.trades.header')
       %ul
         %li
-          = link_to t('items.show.subpages_nav.trades.offering'),
+          = link_to t('items.show.subpages_nav.trades.offering',
+              count: trades[:offering].size),
             item_trades_path(item, type: 'offering'),
             'data-is-current' => current_subpage == 'trades_offering'
         %li
-          = link_to t('items.show.subpages_nav.trades.seeking'),
+          = link_to t('items.show.subpages_nav.trades.seeking',
+              count: trades[:offering].size),
             item_trades_path(item, type: 'seeking'),
             'data-is-current' => current_subpage == 'trades_seeking'

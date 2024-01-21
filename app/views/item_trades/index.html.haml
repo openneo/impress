@@ -1,8 +1,8 @@
 - title t(".title.#{@type}")
 - hide_title_header
 
-= render partial: "items/item_header",
-	locals: {item: @item, current_subpage: "trades_#{@type}"}
+= render partial: "items/item_header", locals: {item: @item,
+	trades: @item_trades, current_subpage: "trades_#{@type}"}
 
 %h2.item-subpage-title= t(".title.#{@type}")
 
