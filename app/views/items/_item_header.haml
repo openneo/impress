@@ -82,7 +82,7 @@
             'data-is-current' => current_subpage == 'trades_offering'
         %li
           = link_to t('items.show.subpages_nav.trades.seeking',
-              count: trades[:offering].size),
+              count: trades[:seeking].size),
             item_trades_path(item, type: 'seeking'),
             'data-is-current' => current_subpage == 'trades_seeking'
 
