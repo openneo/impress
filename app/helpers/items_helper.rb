@@ -49,10 +49,6 @@ module ItemsHelper
 
     content_tag :div, content, :class => 'closeted-icons'
   end
-
-  def list_zones(zones, method=:label)
-    zones.map(&method).join(', ')
-  end
   
   def nc_icon
     image_tag 'nc.png', :title => t('items.item.nc.description'),

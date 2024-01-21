@@ -23,17 +23,6 @@
   #item-info
     %p= @item.description
 
-    #item-zones
-      %p
-        %strong #{t '.zones.occupied_header'}:
-        = list_zones @occupied_zones, :uncertain_label
-      %p
-        %strong #{t '.zones.restricted_header'}:
-        - if @restricted_zones.empty?
-          = t '.zones.none'
-        - else
-          = list_zones @restricted_zones
-
     #trade-hangers
       - if Time.now < Date.new(2024, 1, 26)
         %p

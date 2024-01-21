@@ -58,13 +58,6 @@ class ItemsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        @occupied_zones = @item.occupied_zones(
-          scope: Zone.includes_translations.alphabetical
-        )
-        @restricted_zones = @item.restricted_zones(
-          scope: Zone.includes_translations.alphabetical
-        )
-        
         @contributors_with_counts = @item.contributors_with_counts
 
         trading_closet_hangers = @item.closet_hangers.trading.includes(:user).
