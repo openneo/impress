@@ -26,6 +26,8 @@
 									%li= link_to list.name, user_closet_hangers_path(trade.user,
 										anchor: "closet-list-#{list.id}")
 						- else
-							%span.not-in-a-list= t(".table.not_in_a_list")
+							= link_to t(".table.not_in_a_list.#{@type}"), user_closet_hangers_path(trade.user,
+								anchor: "closet-hangers-group-#{@type == :offering}"),
+								class: "not-in-a-list"
 - else
 	%p= t(".no_trades_yet")

@@ -387,7 +387,9 @@ en:
           lists: Lists
         last_active:
           this_week: This week
-        not_in_a_list: Not in a list
+        not_in_a_list:
+          offering: Items they own
+          seeking: Items they want
       no_trades_yet:
         No trades yet! To add your name to this page, add this item to one of
         your lists, and mark the list as "Trading".
