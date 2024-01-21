@@ -6,56 +6,46 @@ body.items-show
   .item-header
     +item-header
 
-  #item-info-section
-    display: grid
+  #your-items-form
+    border: 1px solid $module-border-color
+    font-size: 85%
+    margin-bottom: 2em
+    margin-left: auto
+    margin-right: auto
+    padding: 1em
+    width: 30em
 
-    grid-template-areas: "info form"
-    grid-template-columns: 1fr auto
-
-    #item-info
-      grid-area: info
-
-    #your-items-form
-      grid-area: form
-
-      border: 1px solid $module-border-color
-      font-size: 85%
-      margin-bottom: 3em
-      margin-left: 1em
-      padding: 1em
-      width: 30em
-
-      h3
-        font-size: 150%
-        font-weight: bold
-        margin-bottom: .25em
-      
-      #closet-hangers-ownership-groups
-        +clearfix
-        margin-bottom: .5em
-      
-        div
-          float: left
-          margin: 0 5%
-          text-align: left
-          width: 40%
+    h3
+      font-size: 150%
+      font-weight: bold
+      margin-bottom: .25em
+    
+    #closet-hangers-ownership-groups
+      +clearfix
+      margin-bottom: .5em
+    
+      div
+        float: left
+        margin: 0 5%
+        text-align: left
+        width: 40%
+        
+        li
+          list-style: none
+          word-wrap: break-word
           
-          li
-            list-style: none
-            word-wrap: break-word
-            
-            label.unlisted
-              font-style: italic
+          label.unlisted
+            font-style: italic
 
-      form
-        padding: .5em 0
+    form
+      padding: .5em 0
 
-      select
-        width: 9em
+    select
+      width: 9em
 
-      input[type=number]
-        margin-right: .5em
-        width: 3em
+    input[type=number]
+      margin-right: .5em
+      width: 3em
 
   #item-contributors
     +subtle-banner
