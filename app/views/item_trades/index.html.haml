@@ -1,10 +1,12 @@
 - title t(".title.#{@type}")
 - hide_title_header
 
+= render partial: "items/item_header", locals: {item: @item}
+
 %h2.item-page-subtitle= t(".title.#{@type}")
 
 - if @trades.present?
-	%table
+	%table.trades-table
 		%thead
 			%tr
 				%th= t(".table.headings.last_active")
@@ -21,9 +23,10 @@
 					%td= trade.user.name
 					%td
 						- if trade.lists.present?
-							%ul
+							%ul.trade-list-names
 								- trade.lists.each do |list|
-									%li= list.name
+									%li= link_to list.name, user_closet_hangers_path(trade.user,
+										anchor: "closet-list-#{list.id}")
 						- else
 							%span.not-in-a-list= t(".table.not_in_a_list")
 - else

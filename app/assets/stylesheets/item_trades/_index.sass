@@ -1,0 +1,25 @@
+@import "../partials/item_header"
+
+body.item_trades-index
+	.item-header
+		+item-header
+
+	.item-page-subtitle
+		text-align: left
+
+	.trades-table
+		text-align: left
+		width: 100%
+		table-layout: fixed
+
+		th:nth-child(1), th:nth-child(2)
+			width: 15ch
+
+		.trade-list-names
+			list-style: none
+
+			li
+				display: inline
+
+				&:not(:last-child)::after
+					content: ", "
