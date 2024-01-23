@@ -1,6 +1,6 @@
 function setFormStateCookie(value) {
 	const thirtyDays = 60 * 60 * 24 * 30;
-	document.cookie = `DTIItemPageUserListsFormState=open;max-age=${thirtyDays}`;
+	document.cookie = `DTIItemPageUserListsFormState=${value};max-age=${thirtyDays}`;
 }
 
 const headers = document.querySelectorAll(".item-header");
