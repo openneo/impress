@@ -118,5 +118,9 @@ module ItemsHelper
     human_name = pet_type.species.name.humanize
     image_tag(src, :alt => human_name, :title => human_name)
   end
+
+  def item_header_user_lists_form_state
+    cookies.fetch("DTIItemPageUserListsFormState", "closed")
+  end
 end
 
