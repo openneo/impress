@@ -106,7 +106,7 @@ module ItemsHelper
     species_ids = species.map(&:id)
     pet_types = special_color ?
       PetType.where(:color_id => special_color.id, :species_id => species_ids).
-        order(:species_id).includes_child_translations :
+        order(:species_id) :
       PetType.random_basic_per_species(species.map(&:id))
     pet_types.map(&block).join.html_safe
   end

@@ -11,8 +11,7 @@ class ContributionsController < ApplicationController
       @contributions,
       :scopes => {
         'Item' => Item.includes(:translations),
-        'PetType' => PetType.includes({:species => :translations,
-                                       :color => :translations})
+        'PetType' => PetType.includes(:species, :color)
       }
     )
   end

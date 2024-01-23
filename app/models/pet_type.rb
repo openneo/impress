@@ -19,9 +19,6 @@ class PetType < ApplicationRecord
 
   scope :nonstandard_colors, -> { where(:color_id => Color.nonstandard) }
   
-  scope :includes_child_translations,
-    -> { includes({:color => :translations, :species => :translations}) }
-  
   scope :matching_name, ->(color_name, species_name) {
     color = Color.find_by_name!(color_name)
     species = Species.find_by_name!(species_name)

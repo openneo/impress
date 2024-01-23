@@ -2,7 +2,7 @@ class PetTypesController < ApplicationController
 	def index
 		color = Color.find params[:color_id]
 		pet_types = color.pet_types.includes(pet_states: [:swf_assets]).
-			includes(species: [:translations])
+			includes(:species)
 
 		# This is a relatively big request, for relatively static data. Let's
 		# consider it fresh for 10min (so new pet releases show up quickly), but

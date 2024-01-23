@@ -352,8 +352,8 @@ class Item < ApplicationRecord
               inject({}) { |h, pt| h[pt.species_id] = pt.body_id; h }
   end
 
-  def predicted_missing_standard_body_ids_by_species(species_scope=Species.all)
-    species = species_scope.where(id: predicted_missing_standard_body_ids_by_species_id.keys)
+  def predicted_missing_standard_body_ids_by_species
+    species = Species.where(id: predicted_missing_standard_body_ids_by_species_id.keys)
     species_by_id = species.inject({}) { |h, s| h[s.id] = s; h }
     predicted_missing_standard_body_ids_by_species_id.inject({}) { |h, (sid, bid)|
       h[species_by_id[sid]] = bid; h }
@@ -365,16 +365,16 @@ class Item < ApplicationRecord
                   colors: {standard: false})
   end
 
-  def predicted_missing_nonstandard_body_ids_by_species_by_color(colors_scope=Color.all, species_scope=Species.all)
+  def predicted_missing_nonstandard_body_ids_by_species_by_color
     pet_types = predicted_missing_nonstandard_body_pet_types
 
     species_by_id = {}
-    species_scope.find(pet_types.map(&:species_id)).each do |species|
+    Species.find(pet_types.map(&:species_id)).each do |species|
       species_by_id[species.id] = species
     end
 
     colors_by_id = {}
-    colors_scope.find(pet_types.map(&:color_id)).each do |color|
+    Color.find(pet_types.map(&:color_id)).each do |color|
       colors_by_id[color.id] = color
     end
 

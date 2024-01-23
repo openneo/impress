@@ -2,10 +2,7 @@ class Species < ApplicationRecord
   translates # TODO: Remove once we're all done with translations!
   has_many :pet_types
   
-  scope :alphabetical, -> {
-    st = Species::Translation.arel_table
-    with_translations(I18n.locale).order(st[:name].asc)
-  }
+  scope :alphabetical, -> { order(:name) }
 
   scope :with_body_id, -> body_id {
     pt = PetType.arel_table

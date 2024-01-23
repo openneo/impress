@@ -59,12 +59,9 @@ class OutfitsController < ApplicationController
     @newest_unmodeled_items_predicted_missing_species_by_color = {}
     @newest_unmodeled_items_predicted_modeled_ratio = {}
     @newest_unmodeled_items.each do |item|
-      h = item.predicted_missing_nonstandard_body_ids_by_species_by_color(
-        Color.includes(:translations),
-        Species.includes(:translations))
+      h = item.predicted_missing_nonstandard_body_ids_by_species_by_color
       standard_body_ids_by_species = item.
-        predicted_missing_standard_body_ids_by_species(
-          Species.includes(:translations))
+        predicted_missing_standard_body_ids_by_species
       if standard_body_ids_by_species.present?
         h[:standard] = standard_body_ids_by_species
       end
