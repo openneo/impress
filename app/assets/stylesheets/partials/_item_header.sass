@@ -59,57 +59,59 @@
           background: #E2E8F0
           color: #1A202C
 
-    .user-lists-section
+    .user-lists-info
       grid-area: lists
       font-size: 85%
       text-align: left
 
-      .dialog-opener
+      .user-lists-form-opener
         &::after
           content: " ›"
 
-      dialog
-        background: $background-color
-        border: 1px solid $module-border-color
-        border-radius: .5em
-        padding: 1em
-        width: 30em
-        text-align: center
-        z-index: 2
-        margin-top: .5em
-        box-shadow: 0px 1px 4px #666
+  .user-lists-form
+    background: $background-color
+    border: 1px solid $module-border-color
+    border-radius: .5em
+    padding: 1em
+    width: 30em
+    text-align: center
+    z-index: 2
+    margin-top: .5em
+    margin-inline: auto
+    margin-bottom: 1.5em
+    font-size: 85%
 
-        h3
-          font-size: 150%
-          font-weight: bold
-          margin-bottom: .25em
+    h3
+      font-size: 150%
+      font-weight: bold
+      margin-bottom: .75em
+    
+    .closet-hangers-ownership-groups
+      +clearfix
+      margin-bottom: .5em
+    
+      div
+        float: left
+        margin: 0 5%
+        text-align: left
+        width: 40%
         
-        .closet-hangers-ownership-groups
-          +clearfix
-          margin-bottom: .5em
-        
-          div
-            float: left
-            margin: 0 5%
-            text-align: left
-            width: 40%
-            
-            li
-              list-style: none
-              word-wrap: break-word
-              
-              label.unlisted
-                font-style: italic
+        li
+          list-style: none
+          word-wrap: break-word
+          
+          label.unlisted
+            font-style: italic
 
-        form
-          padding: .5em 0
+    form
+      padding: .5em 0
 
-        select
-          width: 9em
+    select
+      width: 9em
 
-        input[type=number]
-          margin-right: .5em
-          width: 3em
+    input[type=number]
+      margin-right: .5em
+      width: 3em
 
   .item-description
     margin-top: .5em
