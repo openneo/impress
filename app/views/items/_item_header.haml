@@ -42,7 +42,8 @@
               user_closet_hangers_path(current_user))
           = form_tag update_quantities_user_item_closet_hangers_path(:user_id => current_user, :item_id => item), :method => :put do
             .closet-hangers-ownership-groups
-              - current_user_lists.each do |owned, lists|
+              - [true, false].each do |owned|
+                - lists = current_user_lists[owned]
                 %div
                   %h4= closet_lists_group_name(:you, owned)
                   %ul

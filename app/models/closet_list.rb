@@ -88,10 +88,9 @@ class ClosetList < ApplicationRecord
   end
 
   def self.group_by_owned
-    h = all.group_by(&:hangers_owned?)
-    h[true] ||= []
-    h[false] ||= []
-    h
+    {true => [], false => []}.tap do |h|
+      all.each { |list| h[list.hangers_owned?] << list}
+    end
   end
 
   include VisibilityMethods
