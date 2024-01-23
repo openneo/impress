@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_19_061745) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_23_125509) do
   create_table "auth_servers", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
     t.string "short_name", limit: 10, null: false
     t.string "name", limit: 40, null: false
@@ -74,6 +74,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_19_061745) do
     t.boolean "basic"
     t.boolean "standard"
     t.boolean "prank", default: false, null: false
+    t.string "name", null: false
   end
 
   create_table "contributions", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
@@ -233,6 +234,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_19_061745) do
   end
 
   create_table "species", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+    t.string "name", null: false
   end
 
   create_table "species_translations", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|

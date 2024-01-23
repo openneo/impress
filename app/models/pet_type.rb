@@ -22,9 +22,9 @@ class PetType < ApplicationRecord
   scope :includes_child_translations,
     -> { includes({:color => :translations, :species => :translations}) }
   
-  scope :matching_name, ->(color_name, species_name, locale = I18n.locale) {
-    color = Color.matching_name(color_name, locale).first!
-    species = Species.matching_name(species_name, locale).first!
+  scope :matching_name, ->(color_name, species_name) {
+    color = Color.find_by_name!(color_name)
+    species = Species.find_by_name!(species_name)
     where(color_id: color.id, species_id: species.id)
   }
 

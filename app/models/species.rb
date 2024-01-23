@@ -1,5 +1,5 @@
 class Species < ApplicationRecord
-  translates :name
+  translates # TODO: Remove once we're all done with translations!
   has_many :pet_types
   
   scope :alphabetical, -> {
@@ -7,21 +7,19 @@ class Species < ApplicationRecord
     with_translations(I18n.locale).order(st[:name].asc)
   }
 
-  scope :matching_name, ->(name, locale = I18n.locale) {
-    st = Species::Translation.arel_table
-    joins(:translations).where(st[:locale].eq(locale)).
-      where(st[:name].matches(sanitize_sql_like(name)))
-  }
-
   scope :with_body_id, -> body_id {
     pt = PetType.arel_table
     joins(:pet_types).where(pt[:body_id].eq(body_id)).limit(1)
   }
 
-  # TODO: Should we consider replacing this at call sites? This used to be
-  # built into the globalize gem but isn't anymore!
-  def self.find_by_name(name)
-    matching_name(name).first
+  # Temporary writer to keep the English translation record updated, while
+  # primarily using the attribute on the model itself.
+  #
+  # Once this app and DTI 2020 are both comfortably off the translation system,
+  # we can remove this!
+  def name=(new_name)
+    globalize.write(:en, :name, new_name)
+    write_attribute(:name, new_name)
   end
   
   def as_json(options={})

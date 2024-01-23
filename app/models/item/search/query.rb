@@ -49,7 +49,7 @@ class Item
           when 'fits'
             color_name, species_name = value.split('-')
             begin
-              pet_type = PetType.matching_name(color_name, species_name, locale).first!
+              pet_type = PetType.matching_name(color_name, species_name).first!
             rescue ActiveRecord::RecordNotFound
               message = I18n.translate('items.search.errors.not_found.pet_type',
                 name1: color_name.capitalize, name2: species_name.capitalize)
@@ -60,8 +60,8 @@ class Item
               Filter.not_fits(pet_type.body_id, color_name, species_name))
           when 'species'
             begin
-              species = Species.matching_name(value, locale).first!
-              color = Color.matching_name('blue', 'en').first!
+              species = Species.find_by_name!(value)
+              color = Color.find_by_name!('blue', 'en')
               pet_type = PetType.where(color_id: color.id, species_id: species.id).first!
             rescue ActiveRecord::RecordNotFound
               message = I18n.translate('items.search.errors.not_found.species',

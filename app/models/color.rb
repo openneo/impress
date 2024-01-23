@@ -1,27 +1,23 @@
 class Color < ApplicationRecord
-  translates :name
+  translates # TODO: Remove once we're all done with translations!
   has_many :pet_types
   
-  scope :alphabetical, -> {
-    ct = Color::Translation.arel_table
-    with_translations(I18n.locale).order(ct[:name].asc)
-  }
-  scope :basic, -> { where(:basic => true) }
-  scope :standard, -> { where(:standard => true) }
-  scope :nonstandard, -> { where(:standard => false) }
+  scope :alphabetical, -> { order(:name) }
+  scope :basic, -> { where(basic: true) }
+  scope :standard, -> { where(standard: true) }
+  scope :nonstandard, -> { where(standard: false) }
   scope :funny, -> { order(:prank) unless pranks_funny? }
-  scope :matching_name, ->(name, locale = I18n.locale) {
-    ct = Color::Translation.arel_table
-    joins(:translations).where(ct[:locale].eq(locale)).
-      where(ct[:name].matches(sanitize_sql_like(name)))
-  }
 
   validates :name, presence: true
 
-  # TODO: Should we consider replacing this at call sites? This used to be
-  # built into the globalize gem but isn't anymore!
-  def self.find_by_name(name)
-    matching_name(name).first
+  # Temporary writer to keep the English translation record updated, while
+  # primarily using the attribute on the model itself.
+  #
+  # Once this app and DTI 2020 are both comfortably off the translation system,
+  # we can remove this!
+  def name=(new_name)
+    globalize.write(:en, :name, new_name)
+    write_attribute(:name, new_name)
   end
   
   def as_json(options={})
