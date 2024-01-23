@@ -68,13 +68,13 @@ class Item < ApplicationRecord
       where('description NOT LIKE ?',
         '%' + sanitize_sql_like(PAINTBRUSH_SET_DESCRIPTION) + '%')
   }
-  scope :occupies, ->(zone_label, locale = I18n.locale) {
-    zone_ids = Zone.matching_label(zone_label, locale).map(&:id)
+  scope :occupies, ->(zone_label) {
+    zone_ids = Zone.matching_label(zone_label).map(&:id)
     sa = SwfAsset.arel_table
     joins(:swf_assets).where(sa[:zone_id].in(zone_ids)).distinct
   }
-  scope :not_occupies, ->(zone_label, locale = I18n.locale) {
-    zone_ids = Zone.matching_label(zone_label, locale).map(&:id)
+  scope :not_occupies, ->(zone_label) {
+    zone_ids = Zone.matching_label(zone_label).map(&:id)
     i = Item.arel_table
     sa = SwfAsset.arel_table
     # Querying for "has NO swf_assets matching these zone IDs" is trickier than
@@ -87,13 +87,13 @@ class Item < ApplicationRecord
     condition = zone_ids.map { 'FIND_IN_SET(?, GROUP_CONCAT(zone_id)) = 0' }.join(' AND ')
     joins(:swf_assets).group(i[:id]).having(condition, *zone_ids).distinct
   }
-  scope :restricts, ->(zone_label, locale = I18n.locale) {
-    zone_ids = Zone.matching_label(zone_label, locale).map(&:id)
+  scope :restricts, ->(zone_label) {
+    zone_ids = Zone.matching_label(zone_label).map(&:id)
     condition = zone_ids.map { '(SUBSTR(items.zones_restrict, ?, 1) = "1")' }.join(' OR ')
     where(condition, *zone_ids)
   }
-  scope :not_restricts, ->(zone_label, locale = I18n.locale) {
-    zone_ids = Zone.matching_label(zone_label, locale).map(&:id)
+  scope :not_restricts, ->(zone_label) {
+    zone_ids = Zone.matching_label(zone_label).map(&:id)
     condition = zone_ids.map { '(SUBSTR(items.zones_restrict, ?, 1) = "1")' }.join(' OR ')
     where("NOT (#{condition})", *zone_ids)
   }

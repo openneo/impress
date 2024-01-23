@@ -40,12 +40,12 @@ class Item
               Filter.name_excludes(value, locale))
           when 'occupies'
             filters << (is_positive ?
-              Filter.occupies(value, locale) :
-              Filter.not_occupies(value, locale))
+              Filter.occupies(value) :
+              Filter.not_occupies(value))
           when 'restricts'
             filters << (is_positive ?
-              Filter.restricts(value, locale) :
-              Filter.not_restricts(value, locale))
+              Filter.restricts(value) :
+              Filter.not_restricts(value))
           when 'fits'
             color_name, species_name = value.split('-')
             begin
@@ -196,20 +196,20 @@ class Item
         self.new Item.name_excludes(value, locale), "-#{q value}"
       end
 
-      def self.occupies(value, locale)
-        self.new Item.occupies(value, locale), "occupies:#{q value}"
+      def self.occupies(value)
+        self.new Item.occupies(value), "occupies:#{q value}"
       end
 
-      def self.not_occupies(value, locale)
-        self.new Item.not_occupies(value, locale), "-occupies:#{q value}"
+      def self.not_occupies(value)
+        self.new Item.not_occupies(value), "-occupies:#{q value}"
       end
 
-      def self.restricts(value, locale)
-        self.new Item.restricts(value, locale), "restricts:#{q value}"
+      def self.restricts(value)
+        self.new Item.restricts(value), "restricts:#{q value}"
       end
 
-      def self.not_restricts(value, locale)
-        self.new Item.not_restricts(value, locale), "-restricts:#{q value}"
+      def self.not_restricts(value)
+        self.new Item.not_restricts(value), "-restricts:#{q value}"
       end
 
       def self.fits(body_id, color_name, species_name)

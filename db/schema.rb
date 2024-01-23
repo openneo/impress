@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_23_125509) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_23_133215) do
   create_table "auth_servers", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
     t.string "short_name", limit: 10, null: false
     t.string "name", limit: 40, null: false
@@ -297,6 +297,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_23_125509) do
   create_table "zones", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
     t.integer "depth"
     t.integer "type_id"
+    t.string "label", null: false
+    t.string "plain_label", null: false
   end
 
 end
