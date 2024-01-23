@@ -61,7 +61,7 @@ class Item
           when 'species'
             begin
               species = Species.find_by_name!(value)
-              color = Color.find_by_name!('blue', 'en')
+              color = Color.find_by_name!('blue')
               pet_type = PetType.where(color_id: color.id, species_id: species.id).first!
             rescue ActiveRecord::RecordNotFound
               message = I18n.translate('items.search.errors.not_found.species',
