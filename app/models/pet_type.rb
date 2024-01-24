@@ -135,9 +135,9 @@ class PetType < ApplicationRecord
         begin
           res.error!
         rescue Exception => e
-          raise DownloadError, "Error loading CPN image at #{cpn_uri}: #{e.message}"
+          Rails.logger.warn "Error loading CPN image at #{cpn_uri}: #{e.message}"
         else
-          raise DownloadError, "Error loading CPN image at #{cpn_uri}. Response: #{res.inspect}"
+          Rails.logger.warn "Error loading CPN image at #{cpn_uri}. Response: #{res.inspect}"
         end
       end
       new_url = res['location']
@@ -146,7 +146,7 @@ class PetType < ApplicationRecord
         self.image_hash = new_image_hash
         Rails.logger.info "Successfully loaded #{cpn_uri}, saved image hash #{new_image_hash}"
       else
-        raise DownloadError, "CPN image pointed to #{new_url}, which does not match CP image format"
+        Rails.logger.warn "CPN image pointed to #{new_url}, which does not match CP image format"
       end
     end
   end
