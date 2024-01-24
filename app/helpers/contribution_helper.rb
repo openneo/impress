@@ -9,6 +9,8 @@ module ContributionHelper
       contributed_pet_type('pet_type', contributed, show_image)
     when PetState
       contributed_pet_type('pet_state', contributed.pet_type, show_image)
+    when AltStyle
+      contributed_alt_style(contributed, show_image)
     end
   end
   
@@ -34,6 +36,20 @@ module ContributionHelper
     output = translate("contributions.contributed_description.main.#{main_key}_html",
                        :pet_type_description => description)
     output << image_tag(sprintf(PET_TYPE_IMAGE_FORMAT, pet_type.image_hash)) if show_image
+    output
+  end
+
+  def contributed_alt_style(alt_style, show_image)
+    span = content_tag(:span, alt_style.name, class: 'contributed-name')
+    output = translate("contributions.contributed_description.main.alt_style_html",
+                       alt_style_name: span)
+    # HACK: Just assume this is a Nostalgic Alt Style, and that the thumbnail
+    # is named reliably!
+    if show_image
+      thumbnail_url = "https://images.neopets.com/items/nostalgic_" +
+        "#{alt_style.color.name.downcase}_#{alt_style.species.name.downcase}.gif"
+      output << image_tag(thumbnail_url)
+    end
     output
   end
   

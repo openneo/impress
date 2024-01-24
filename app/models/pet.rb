@@ -79,7 +79,7 @@ class Pet < ApplicationRecord
   end
 
   def contributables
-    contributables = [pet_type, @pet_state]
+    contributables = [pet_type, @pet_state, @alt_style].filter(&:present?)
     items.each do |item|
       contributables << item
       contributables += item.pending_swf_assets

@@ -4,6 +4,12 @@ class AltStyle < ApplicationRecord
 
   has_many :parent_swf_asset_relationships, as: :parent
   has_many :swf_assets, through: :parent_swf_asset_relationships
+  has_many :contributions, as: :contributed, inverse_of: :contributed
+
+  def name
+    I18n.translate('pet_types.human_name', color_human_name: color.human_name,
+                   species_human_name: species.human_name)
+  end
 
   def biology=(biology)
     # TODO: This is very similar to what `PetState` does, but like… much much

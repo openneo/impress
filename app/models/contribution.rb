@@ -3,7 +3,8 @@ class Contribution < ApplicationRecord
     'Item' => 3,
     'SwfAsset' => 2,
     'PetType' => 15,
-    'PetState' => 10
+    'PetState' => 10,
+    'AltStyle' => 30,
   }
 
   belongs_to :contributed, :polymorphic => true
@@ -24,7 +25,7 @@ class Contribution < ApplicationRecord
     'SwfAsset' => 'Item',
     'PetState' => 'PetType'
   }
-  CONTRIBUTED_CHILDREN = CONTRIBUTED_RELATIONSHIPS.keys
+  CONTRIBUTED_CHILDREN = CONTRIBUTED_RELATIONSHIPS.keys + ['AltStyle']
   CONTRIBUTED_TYPES = CONTRIBUTED_CHILDREN + CONTRIBUTED_RELATIONSHIPS.values
   def self.preload_contributeds_and_parents(contributions, options={})
     options[:scopes] ||= {}
