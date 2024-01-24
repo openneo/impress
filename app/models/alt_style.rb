@@ -15,8 +15,8 @@ class AltStyle < ApplicationRecord
     # TODO: This is very similar to what `PetState` does, but like… much much
     # more compact? Idk if I'm missing something, or if I was just that much
     # more clueless back when I wrote it, lol 😅
-    biology.values.each do |asset_data|
-      self.swf_assets << SwfAsset.from_biology_data(self.body_id, asset_data)
+    self.swf_assets = biology.values.map do |asset_data|
+      SwfAsset.from_biology_data(self.body_id, asset_data)
     end
   end
 end

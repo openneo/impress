@@ -54,8 +54,8 @@ class Pet < ApplicationRecord
       raise UnexpectedDataFormat unless pet_data[:alt_color]
       raise UnexpectedDataFormat if pet_data[:biology_by_zone].empty?
 
-      @alt_style = AltStyle.new(
-        id: pet_data[:alt_style].to_i,
+      @alt_style = AltStyle.find_or_initialize_by(id: pet_data[:alt_style].to_i)
+      @alt_style.assign_attributes(
         color_id: pet_data[:alt_color].to_i,
         species_id: pet_data[:species_id].to_i,
         body_id: pet_data[:body_id].to_i,
