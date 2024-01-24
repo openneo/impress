@@ -5,7 +5,8 @@ class PetsController < ApplicationController
   rescue_from Pet::AltStyleNotSupportedYet, with: :alt_style_not_supported_yet
 
   def load
-    return modeling_disabled unless user_signed_in? && current_user.admin?
+    # Uncomment this to temporarily disable modeling for most users.
+    # return modeling_disabled unless user_signed_in? && current_user.admin?
 
     raise Pet::PetNotFound unless params[:name]
     @pet = Pet.load(
