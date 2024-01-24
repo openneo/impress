@@ -2,6 +2,7 @@ class PetsController < ApplicationController
   rescue_from Pet::PetNotFound, :with => :pet_not_found
   rescue_from PetType::DownloadError, SwfAsset::DownloadError, :with => :asset_download_error
   rescue_from Pet::DownloadError, :with => :pet_download_error
+  rescue_from Pet::ModelingDisabled, with: :modeling_disabled
 
   def load
     raise Pet::PetNotFound unless params[:name]
@@ -73,5 +74,10 @@ class PetsController < ApplicationController
         render :json => options[:long_message], :status => options[:status]
       end
     end
+  end
+
+  def modeling_disabled
+    pet_load_error long_message: t('pets.load.modeling_disabled'),
+      status: :forbidden
   end
 end

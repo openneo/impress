@@ -17,7 +17,9 @@ class Pet < ApplicationRecord
     joins(:pet_type).where(PetType.arel_table[:id].in(color_ids))
   }
 
+  class ModelingDisabled < RuntimeError;end
   def load!(options={})
+    raise ModelingDisabled
     options[:locale] ||= I18n.default_locale
     I18n.with_locale(options.delete(:locale)) do
       use_viewer_data(fetch_viewer_data(options.delete(:timeout)), options)

@@ -781,6 +781,9 @@ en:
       pet_download_error:
         We couldn't connect to Neopets to look up the pet. Maybe they're down.
         Please try again later!
+      modeling_disabled: We've turned off pet loading for a bit, while we
+        investigate some changes in how it works. We'll be back as soon as we
+        can!
 
   swf_assets:
     links:
