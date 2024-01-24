@@ -19,4 +19,11 @@ class AltStyle < ApplicationRecord
       SwfAsset.from_biology_data(self.body_id, asset_data)
     end
   end
+
+  # For convenience in the console!
+  def self.find_by_name(color_name, species_name)
+    color = Color.find_by_name(color_name)
+    species = Species.find_by_name(species_name)
+    where(color_id: color, species_id: species).first
+  end
 end
