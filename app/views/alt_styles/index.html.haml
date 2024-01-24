@@ -13,4 +13,6 @@
 	so there's not a great way for us to get style tokens onto tradelists… this
 	may change someday, but probably not soon, sorry!)
 
-%ul.alt-styles-list= render partial: "alt_style", collection: @alt_styles
+- @alt_styles.group_by(&:species).each do |species, species_styles|
+	%h2= species.human_name
+	%ul.alt-styles-list= render partial: "alt_style", collection: species_styles
