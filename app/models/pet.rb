@@ -44,7 +44,10 @@ class Pet < ApplicationRecord
       options[:item_scope])
   end
   
-  def fetch_viewer_data(timeout=4, locale=nil)
+  # NOTE: Ideally pet requests shouldn't take this long, but Neopets can be
+  # slow sometimes! Since we're on the Falcon server, long timeouts shouldn't
+  # slow down the rest of the request queue, like it used to be in the past.
+  def fetch_viewer_data(timeout=10, locale=nil)
     locale ||= I18n.default_locale
     begin
       neopets_language_code = I18n.compatible_neopets_language_code_for(locale)

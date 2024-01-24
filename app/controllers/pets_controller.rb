@@ -8,7 +8,6 @@ class PetsController < ApplicationController
     @pet = Pet.load(
       params[:name],
       :item_scope => Item.includes(:translations),
-      :timeout => 1
     )
     points = contribute(current_user, @pet)
     
