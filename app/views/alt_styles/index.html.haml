@@ -9,9 +9,14 @@
 	homepage! Thank you! 💖
 
 %p
-	(Also, heads-up: our system can only collect data on <em>wearable</em> items,
-	so there's not a great way for us to get style tokens onto tradelists… this
-	may change someday, but probably not soon, sorry!)
+	Also, heads-up: Style tokens are pretty different from normal wearables, so
+	we haven't decided how to bring them into the customizer yet! Whatever we do,
+	it'll be a bit tricky and new 😅❗️
+
+%p
+	Also, second heads-up: Because our system can only collect data about normal
+	wearables, there's not a great way for us to get style tokens onto
+	tradelists… this may change someday, but probably not soon, sorry!
 
 - @alt_styles.group_by(&:species).each do |species, species_styles|
 	%h2.alt-styles-header= species.human_name
