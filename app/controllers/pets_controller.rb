@@ -2,9 +2,10 @@ class PetsController < ApplicationController
   rescue_from Pet::PetNotFound, :with => :pet_not_found
   rescue_from PetType::DownloadError, SwfAsset::DownloadError, :with => :asset_download_error
   rescue_from Pet::DownloadError, :with => :pet_download_error
-  rescue_from Pet::ModelingDisabled, with: :modeling_disabled
 
   def load
+    return modeling_disabled unless user_signed_in? && current_user.admin?
+
     raise Pet::PetNotFound unless params[:name]
     @pet = Pet.load(
       params[:name],
