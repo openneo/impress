@@ -15,7 +15,7 @@ class AltStyle < ApplicationRecord
     # HACK: Just assume this is a Nostalgic Alt Style, and that the thumbnail
     # is named reliably!
     "https://images.neopets.com/items/nostalgic_" +
-      "#{color.name.downcase}_#{species.name.downcase}.gif"
+      "#{color.name.gsub(/\s+/, '').downcase}_#{species.name.downcase}.gif"
   end
 
   MANIFEST_PATTERN = %r{^https://images.neopets.com/(?<prefix>.+)/(?<id>[0-9]+)(?<hash_part>_[^/]+)?/manifest\.json}
