@@ -11,7 +11,7 @@ class Pet < ApplicationRecord
 
   belongs_to :pet_type
 
-  attr_reader :items, :pet_state
+  attr_reader :items, :pet_state, :viewer_data
 
   scope :with_pet_type_color_ids, ->(color_ids) {
     joins(:pet_type).where(PetType.arel_table[:id].in(color_ids))
@@ -20,7 +20,10 @@ class Pet < ApplicationRecord
   def load!(options={})
     options[:locale] ||= I18n.default_locale
     I18n.with_locale(options.delete(:locale)) do
-      use_viewer_data(fetch_viewer_data(options.delete(:timeout)), options)
+      use_viewer_data(
+        self.class.fetch_viewer_data(name, options.delete(:timeout)),
+        options,
+      )
     end
     true
   end
@@ -42,30 +45,6 @@ class Pet < ApplicationRecord
     @items = Item.collection_from_pet_type_and_registries(self.pet_type,
       viewer_data[:object_info_registry], viewer_data[:object_asset_registry],
       options[:item_scope])
-  end
-  
-  # NOTE: Ideally pet requests shouldn't take this long, but Neopets can be
-  # slow sometimes! Since we're on the Falcon server, long timeouts shouldn't
-  # slow down the rest of the request queue, like it used to be in the past.
-  def fetch_viewer_data(timeout=10, locale=nil)
-    locale ||= I18n.default_locale
-    begin
-      neopets_language_code = I18n.compatible_neopets_language_code_for(locale)
-      envelope = PET_VIEWER.request([name, 0]).post(
-        :timeout => timeout,
-        :headers => {
-          'Cookie' => "lang=#{neopets_language_code}"
-        }
-      )
-    rescue RocketAMF::RemoteGateway::AMFError => e
-      if e.message == PET_NOT_FOUND_REMOTE_ERROR
-        raise PetNotFound, "Pet #{name.inspect} does not exist"
-      end
-      raise DownloadError, e.message
-    rescue RocketAMF::RemoteGateway::ConnectionError => e
-      raise DownloadError, e.message, e.backtrace
-    end
-    HashWithIndifferentAccess.new(envelope.messages[0].data.body)
   end
 
   def wardrobe_query
@@ -112,6 +91,30 @@ class Pet < ApplicationRecord
     pet = Pet.find_or_initialize_by(name: viewer_data[:custom_pet][:name])
     pet.use_viewer_data(viewer_data, options)
     pet
+  end
+
+  # NOTE: Ideally pet requests shouldn't take this long, but Neopets can be
+  # slow sometimes! Since we're on the Falcon server, long timeouts shouldn't
+  # slow down the rest of the request queue, like it used to be in the past.
+  def self.fetch_viewer_data(name, timeout=10, locale=nil)
+    locale ||= I18n.default_locale
+    begin
+      neopets_language_code = I18n.compatible_neopets_language_code_for(locale)
+      envelope = PET_VIEWER.request([name, 0]).post(
+        :timeout => timeout,
+        :headers => {
+          'Cookie' => "lang=#{neopets_language_code}"
+        }
+      )
+    rescue RocketAMF::RemoteGateway::AMFError => e
+      if e.message == PET_NOT_FOUND_REMOTE_ERROR
+        raise PetNotFound, "Pet #{name.inspect} does not exist"
+      end
+      raise DownloadError, e.message
+    rescue RocketAMF::RemoteGateway::ConnectionError => e
+      raise DownloadError, e.message, e.backtrace
+    end
+    HashWithIndifferentAccess.new(envelope.messages[0].data.body)
   end
 
   class PetNotFound < Exception;end
