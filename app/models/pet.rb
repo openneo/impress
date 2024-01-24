@@ -33,6 +33,10 @@ class Pet < ApplicationRecord
 
     pet_data = viewer_data[:custom_pet]
 
+    if pet_data[:alt_style]
+      raise AltStyleNotSupportedYet
+    end
+
     self.pet_type = PetType.find_or_initialize_by(
       species_id: pet_data[:species_id].to_i,
       color_id: pet_data[:color_id].to_i
@@ -117,7 +121,8 @@ class Pet < ApplicationRecord
     HashWithIndifferentAccess.new(envelope.messages[0].data.body)
   end
 
-  class PetNotFound < Exception;end
-  class DownloadError < Exception;end
+  class PetNotFound < RuntimeError;end
+  class DownloadError < RuntimeError;end
+  class AltStyleNotSupportedYet < RuntimeError;end
 end
 
