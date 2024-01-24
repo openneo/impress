@@ -14,5 +14,5 @@
 	may change someday, but probably not soon, sorry!)
 
 - @alt_styles.group_by(&:species).each do |species, species_styles|
-	%h2= species.human_name
+	%h2.alt-styles-header= species.human_name
 	%ul.alt-styles-list= render partial: "alt_style", collection: species_styles
