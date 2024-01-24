@@ -11,7 +11,7 @@ class Pet < ApplicationRecord
 
   belongs_to :pet_type
 
-  attr_reader :items, :pet_state, :viewer_data
+  attr_reader :items, :pet_state
 
   scope :with_pet_type_color_ids, ->(color_ids) {
     joins(:pet_type).where(PetType.arel_table[:id].in(color_ids))
