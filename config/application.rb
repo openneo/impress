@@ -61,6 +61,10 @@ module OpenneoImpressItems
 
     config.middleware.insert_after ActionDispatch::Flash, Rack::Attack
 
+    # On the Falcon server, requests run on fibers. Isolate Rails internal
+    # state to the per-fiber level, to avoid conflicts that crash stuff!
+    config.active_support.isolation_level = :fiber
+
     # It seems like some Neopets servers reject any user agent containing
     # symbols? So I can't provide anything helpful like a URL, email address,
     # version number, etc. So let's only send this to Neopets systems, where it
