@@ -1,6 +1,6 @@
 require 'timeout'
 
-module RocketAMF
+module RocketAMFExtensions
   class RemoteGateway
     class Request
       ERROR_CODE = 'AMFPHP_RUNTIME_ERROR'
@@ -51,7 +51,7 @@ module RocketAMF
         
         first_message_data = HashWithIndifferentAccess.new(result.messages[0].data)
         if first_message_data.respond_to?(:[]) && first_message_data[:code] == ERROR_CODE
-          raise AMFError.new(first_message_data)
+          raise RocketAMF::AMFError.new(first_message_data)
         end
         
         result
@@ -60,17 +60,17 @@ module RocketAMF
       private
       
       def envelope
-        output = Envelope.new
+        output = RocketAMF::Envelope.new
         output.messages << wrapper_message
         output
       end
       
       def wrapper_message
-        message = Message.new 'null', '/1', [remoting_message]
+        message = RocketAMF::Message.new 'null', '/1', [remoting_message]
       end
       
       def remoting_message
-        message = Values::RemotingMessage.new
+        message = RocketAMF::Values::RemotingMessage.new
         message.source = @action.service.name
         message.operation = @action.name
         message.body = @params

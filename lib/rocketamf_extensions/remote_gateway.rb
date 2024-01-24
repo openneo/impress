@@ -1,8 +1,8 @@
 require 'net/http'
 require 'rocketamf'
-require File.join(File.dirname(__FILE__), 'remote_gateway', 'service')
+require_relative 'remote_gateway/service'
 
-module RocketAMF
+module RocketAMFExtensions
   class RemoteGateway
     attr_reader :uri
 

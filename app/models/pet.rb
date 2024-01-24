@@ -1,10 +1,10 @@
-require 'rocketamf/remote_gateway'
+require 'rocketamf_extensions/remote_gateway'
 require 'ostruct'
 
 class Pet < ApplicationRecord
   NEOPETS_URL_ORIGIN = ENV['NEOPETS_URL_ORIGIN'] || 'https://www.neopets.com'
   GATEWAY_URL = NEOPETS_URL_ORIGIN + '/amfphp/gateway.php'
-  PET_VIEWER = RocketAMF::RemoteGateway.new(GATEWAY_URL).
+  PET_VIEWER = RocketAMFExtensions::RemoteGateway.new(GATEWAY_URL).
     service('CustomPetService').action('getViewerData')
   PET_NOT_FOUND_REMOTE_ERROR = 'PHP: Unable to retrieve records from the database.'
   WARDROBE_PATH = '/wardrobe'
@@ -110,12 +110,12 @@ class Pet < ApplicationRecord
           'Cookie' => "lang=#{neopets_language_code}"
         }
       )
-    rescue RocketAMF::RemoteGateway::AMFError => e
+    rescue RocketAMFExtensions::RemoteGateway::AMFError => e
       if e.message == PET_NOT_FOUND_REMOTE_ERROR
         raise PetNotFound, "Pet #{name.inspect} does not exist"
       end
       raise DownloadError, e.message
-    rescue RocketAMF::RemoteGateway::ConnectionError => e
+    rescue RocketAMFExtensions::RemoteGateway::ConnectionError => e
       raise DownloadError, e.message, e.backtrace
     end
     HashWithIndifferentAccess.new(envelope.messages[0].data.body)

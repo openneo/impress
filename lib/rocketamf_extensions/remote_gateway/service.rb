@@ -1,6 +1,6 @@
-require File.join(File.dirname(__FILE__), 'action')
+require_relative 'action'
 
-module RocketAMF
+module RocketAMFExtensions
   class RemoteGateway
     class Service
       attr_reader :gateway, :name
