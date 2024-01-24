@@ -43,13 +43,7 @@ module ContributionHelper
     span = content_tag(:span, alt_style.name, class: 'contributed-name')
     output = translate("contributions.contributed_description.main.alt_style_html",
                        alt_style_name: span)
-    # HACK: Just assume this is a Nostalgic Alt Style, and that the thumbnail
-    # is named reliably!
-    if show_image
-      thumbnail_url = "https://images.neopets.com/items/nostalgic_" +
-        "#{alt_style.color.name.downcase}_#{alt_style.species.name.downcase}.gif"
-      output << image_tag(thumbnail_url)
-    end
+    output << image_tag(alt_style.thumbnail_url) if show_image
     output
   end
   

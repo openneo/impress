@@ -11,6 +11,28 @@ class AltStyle < ApplicationRecord
                    species_human_name: species.human_name)
   end
 
+  def thumbnail_url
+    # HACK: Just assume this is a Nostalgic Alt Style, and that the thumbnail
+    # is named reliably!
+    "https://images.neopets.com/items/nostalgic_" +
+      "#{color.name.downcase}_#{species.name.downcase}.gif"
+  end
+
+  MANIFEST_PATTERN = %r{^https://images.neopets.com/(?<prefix>.+)/(?<id>[0-9]+)(?<hash_part>_[^/]+)?/manifest\.json}
+  def preview_image_url
+    swf_asset = swf_assets.first
+    return nil if swf_asset.nil?
+
+    # HACK: Just assuming all of these were well-formed by the same process,
+    # and infer the image URL from the manifest URL! But strictly speaking we
+    # should be reading the manifest to check!
+    match = swf_asset.manifest_url.match(MANIFEST_PATTERN)
+    return nil if match.nil?
+    
+    "https://images.neopets.com/#{match[:prefix]}/" +
+      "#{match[:id]}#{match[:hash_part]}/#{match[:id]}.png"
+  end
+
   def biology=(biology)
     # TODO: This is very similar to what `PetState` does, but like… much much
     # more compact? Idk if I'm missing something, or if I was just that much
