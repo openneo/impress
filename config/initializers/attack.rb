@@ -12,7 +12,7 @@ Rack::Attack.throttled_responder = lambda do |req|
     if req.path.end_with?('.json')
       [503, {}, [PETS_THROTTLE_MESSAGE]]
     else
-      flash = req.flash
+      flash = req.env['action_dispatch.request.flash_hash']
       flash[:warning] = PETS_THROTTLE_MESSAGE
       [302, {"Location" => "/"}, [PETS_THROTTLE_MESSAGE]]
     end
