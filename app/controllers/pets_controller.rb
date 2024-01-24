@@ -2,7 +2,7 @@ class PetsController < ApplicationController
   rescue_from Pet::PetNotFound, with: :pet_not_found
   rescue_from PetType::DownloadError, SwfAsset::DownloadError, with: :asset_download_error
   rescue_from Pet::DownloadError, with: :pet_download_error
-  rescue_from Pet::AltStyleNotSupportedYet, with: :alt_style_not_supported_yet
+  rescue_from Pet::UnexpectedDataFormat, with: :unexpected_data_format
 
   def load
     # Uncomment this to temporarily disable modeling for most users.
@@ -84,11 +84,8 @@ class PetsController < ApplicationController
       status: :forbidden
   end
 
-  def alt_style_not_supported_yet
-    pet_load_error(
-      long_message: "This pet is using the new Alt Styles feature, which " +
-        "we're still working on. Thank you for trying, we'll be ready soon!!",
-      status: :bad_request,
-    )
+  def unexpected_data_format
+    pet_load_error long_message: t('pets.load.unexpected_data_format'),
+      status: :internal_server_error
   end
 end

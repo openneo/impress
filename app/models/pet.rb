@@ -11,7 +11,7 @@ class Pet < ApplicationRecord
 
   belongs_to :pet_type
 
-  attr_reader :items, :pet_state
+  attr_reader :items, :pet_state, :alt_style
 
   scope :with_pet_type_color_ids, ->(color_ids) {
     joins(:pet_type).where(PetType.arel_table[:id].in(color_ids))
@@ -33,9 +33,9 @@ class Pet < ApplicationRecord
 
     pet_data = viewer_data[:custom_pet]
 
-    if pet_data[:alt_style]
-      raise AltStyleNotSupportedYet
-    end
+    raise UnexpectedDataFormat unless pet_data[:species_id]
+    raise UnexpectedDataFormat unless pet_data[:color_id]
+    raise UnexpectedDataFormat unless pet_data[:body_id]
 
     self.pet_type = PetType.find_or_initialize_by(
       species_id: pet_data[:species_id].to_i,
@@ -43,9 +43,26 @@ class Pet < ApplicationRecord
     )
     self.pet_type.body_id = pet_data[:body_id]
     self.pet_type.origin_pet = self
-    biology = pet_data[:biology_by_zone]
-    biology[0] = nil # remove effects if present
-    @pet_state = self.pet_type.add_pet_state_from_biology! biology
+
+    pet_state_biology = pet_data[:alt_style] ?
+      pet_data[:original_biology] : pet_data[:biology_by_zone]
+    raise UnexpectedDataFormat if pet_state_biology.empty?
+    pet_state_biology[0] = nil # remove effects if present
+    @pet_state = self.pet_type.add_pet_state_from_biology! pet_state_biology
+
+    if pet_data[:alt_style]
+      raise UnexpectedDataFormat unless pet_data[:alt_color]
+      raise UnexpectedDataFormat if pet_data[:biology_by_zone].empty?
+
+      @alt_style = AltStyle.new(
+        id: pet_data[:alt_style].to_i,
+        color_id: pet_data[:alt_color].to_i,
+        species_id: pet_data[:species_id].to_i,
+        body_id: pet_data[:body_id].to_i,
+        biology: pet_data[:biology_by_zone],
+      )
+    end
+
     @items = Item.collection_from_pet_type_and_registries(self.pet_type,
       viewer_data[:object_info_registry], viewer_data[:object_asset_registry],
       options[:item_scope])
@@ -82,6 +99,10 @@ class Pet < ApplicationRecord
         item.save! if item.changed?
         item.handle_assets!
       end
+    end
+
+    if @alt_style
+      @alt_style.save!
     end
   end
 
@@ -123,6 +144,6 @@ class Pet < ApplicationRecord
 
   class PetNotFound < RuntimeError;end
   class DownloadError < RuntimeError;end
-  class AltStyleNotSupportedYet < RuntimeError;end
+  class UnexpectedDataFormat < RuntimeError;end
 end
 

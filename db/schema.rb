@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_23_133215) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_24_102340) do
+  create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.integer "species_id", null: false
+    t.integer "color_id", null: false
+    t.integer "body_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["color_id"], name: "index_alt_styles_on_color_id"
+    t.index ["species_id"], name: "index_alt_styles_on_species_id"
+  end
+
   create_table "auth_servers", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
     t.string "short_name", limit: 10, null: false
     t.string "name", limit: 40, null: false
@@ -301,4 +311,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_23_133215) do
     t.string "plain_label", null: false
   end
 
+  add_foreign_key "alt_styles", "colors"
+  add_foreign_key "alt_styles", "species"
 end

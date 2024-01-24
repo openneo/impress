@@ -180,6 +180,15 @@ class SwfAsset < ApplicationRecord
     self.manifest_url = parsed_manifest_url.to_s
   end
 
+  def self.from_biology_data(body_id, data)
+    remote_id = data[:part_id].to_i
+    swf_asset = SwfAsset.find_or_initialize_by type: 'biology',
+      remote_id: remote_id
+    swf_asset.body_id = body_id
+    swf_asset.origin_biology_data = data
+    swf_asset
+  end
+
   def self.from_wardrobe_link_params(ids)
     where((
       arel_table[:remote_id].in(ids[:biology]).and(arel_table[:type].eq('biology'))
