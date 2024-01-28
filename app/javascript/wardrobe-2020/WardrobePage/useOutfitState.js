@@ -629,7 +629,7 @@ export function buildOutfitUrl(outfitState, options = {}) {
   const origin =
     typeof window !== "undefined"
       ? window.location.origin
-      : "https://impress-2020.openneo.net";
+      : "https://impress.openneo.net";
 
   return origin + buildOutfitPath(outfitState, options);
 }

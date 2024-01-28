@@ -2,6 +2,8 @@ import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 import { createPersistedQueryLink } from "apollo-link-persisted-queries";
 
+import { buildImpress2020Url } from "./impress-2020-config";
+
 // Use Apollo's error messages in development.
 if (process.env["NODE_ENV"] === "development") {
   loadErrorMessages();
@@ -159,7 +161,7 @@ const typePolicies = {
 const cache = new InMemoryCache({ typePolicies });
 
 const httpLink = createHttpLink({
-  uri: "https://impress-2020.openneo.net/api/graphql",
+  uri: buildImpress2020Url("/api/graphql"),
 });
 
 const link = createPersistedQueryLink({

@@ -87,7 +87,8 @@ OpenneoImpressItems::Application.routes.draw do
   get '/donate' => 'campaigns#current', as: :donate
 
   # Static pages!
-  get '/terms' => redirect("https://impress-2020.openneo.net/terms"), :as => :terms
+  get '/terms', as: :terms,
+    to: redirect(Rails.configuration.impress_2020_origin + "/terms")
 
   # Other useful lil things!
   get '/sitemap.xml' => 'sitemap#index', :as => :sitemap, :format => :xml

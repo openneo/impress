@@ -11,6 +11,8 @@ import loadableLibrary from "@loadable/component";
 import * as Sentry from "@sentry/react";
 import { WarningIcon } from "@chakra-ui/icons";
 
+import { buildImpress2020Url } from "./impress-2020-config";
+
 import ErrorGrundoImg from "./images/error-grundo.png";
 import ErrorGrundoImg2x from "./images/error-grundo@2x.png";
 
@@ -141,7 +143,7 @@ export function safeImageUrl(
         `safeImageUrl could not parse URL: ${urlString}. Returning a placeholder.`,
       ),
     );
-    return "https://impress-2020.openneo.net/__error__URL-was-not-parseable__";
+    return buildImpress2020Url("/__error__URL-was-not-parseable__");
   }
 
   // Rewrite Neopets URLs to their HTTPS equivalents, and additionally to our
@@ -178,7 +180,7 @@ export function safeImageUrl(
           `upgrade it to HTTPS: ${urlString}. Returning a placeholder.`,
       ),
     );
-    return "https://impress-2020.openneo.net/__error__URL-was-not-HTTPS__";
+    return buildImpress2020Url("/__error__URL-was-not-HTTPS__");
   }
 
   return url.toString();

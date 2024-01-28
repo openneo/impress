@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 import { useQuery } from "@apollo/client";
 import { Box, Flex, Select, Text, useColorModeValue } from "@chakra-ui/react";
 
+import { buildImpress2020Url } from "../impress-2020-config";
 import { Delay, logAndCapture, useFetch } from "../util";
 
 /**
@@ -346,7 +347,7 @@ let cachedResponseForAllValidPetPoses = null;
  */
 export function useAllValidPetPoses() {
   const networkResponse = useFetch(
-    "https://impress-2020.openneo.net/api/validPetPoses",
+    buildImpress2020Url("/api/validPetPoses"),
     {
       responseType: "arrayBuffer",
       // If we already have globally-cached valids, skip the request.

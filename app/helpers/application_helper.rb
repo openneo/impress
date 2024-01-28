@@ -87,6 +87,11 @@ module ApplicationHelper
     !@hide_home_link
   end
 
+  def impress_2020_meta_tag
+    tag 'meta', name: "impress-2020-origin",
+      content: Rails.configuration.impress_2020_origin
+  end
+
   JAVASCRIPT_LIBRARIES = {
     :jquery => 'https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js',
     :jquery20 => 'https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js',
