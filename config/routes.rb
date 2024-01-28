@@ -31,6 +31,7 @@ OpenneoImpressItems::Application.routes.draw do
     resources :colors, only: [] do
       get :pet_type, to: 'pet_types#show'
     end
+    resources :alt_styles, path: 'alt-styles', only: [:index]
   end
   resources :colors, only: [] do
     resources :pet_types, only: [:index]

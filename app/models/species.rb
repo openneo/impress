@@ -1,6 +1,7 @@
 class Species < ApplicationRecord
   translates # TODO: Remove once we're all done with translations!
   has_many :pet_types
+  has_many :alt_styles
   
   scope :alphabetical, -> { order(:name) }
 
