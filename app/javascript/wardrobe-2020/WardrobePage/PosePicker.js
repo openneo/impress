@@ -17,6 +17,7 @@ import {
   TabPanel,
   TabPanels,
   VisuallyHidden,
+  useBreakpointValue,
   useColorModeValue,
   useTheme,
   useToast,
@@ -84,6 +85,8 @@ function PosePicker({
   const error = posesQuery.error ?? altStylesQuery.error;
   const poseInfos = posesQuery.poseInfos;
   const altStyles = altStylesQuery.data ?? [];
+
+  const placement = useBreakpointValue({ base: "bottom-end", md: "top-end" });
 
   // Resize the Popover when we toggle support mode, because it probably will
   // affect the content size.
@@ -161,7 +164,7 @@ function PosePicker({
 
   return (
     <Popover
-      placement="bottom-end"
+      placement={placement}
       returnFocusOnClose
       onOpen={onLockFocus}
       onClose={onUnlockFocus}
@@ -176,9 +179,22 @@ function PosePicker({
           </PopoverTrigger>
           <Portal>
             <PopoverContent>
-              <Tabs size="sm" variant="soft-rounded">
+              <Tabs
+                size="sm"
+                variant="soft-rounded"
+                display="flex"
+                flexDirection={{ base: "column", md: "column-reverse" }}
+                paddingY="2"
+                gap="2"
+              >
+                <SupportOnly>
+                  <TabList paddingX="2" paddingY="0">
+                    <Tab width="50%">Expressions</Tab>
+                    <Tab width="50%">Styles</Tab>
+                  </TabList>
+                </SupportOnly>
                 <TabPanels position="relative">
-                  <TabPanel>
+                  <TabPanel paddingX="4" paddingY="0">
                     {isInSupportMode ? (
                       <PosePickerSupport
                         speciesId={speciesId}
@@ -201,7 +217,7 @@ function PosePicker({
                       </>
                     )}
                     <SupportOnly>
-                      <Box position="absolute" top="5" left="3">
+                      <Box position="absolute" top="1" left="3">
                         <PosePickerSupportSwitch
                           isChecked={isInSupportMode}
                           onChange={(e) => setIsInSupportMode(e.target.checked)}
@@ -209,17 +225,11 @@ function PosePicker({
                       </Box>
                     </SupportOnly>
                   </TabPanel>
-                  <TabPanel>
+                  <TabPanel paddingX="4" paddingY="0">
                     <StyleSelect altStyles={altStyles} />
                     <StyleExplanation />
                   </TabPanel>
                 </TabPanels>
-                <SupportOnly>
-                  <TabList paddingX="2" paddingY="1">
-                    <Tab width="50%">Expressions</Tab>
-                    <Tab width="50%">Styles</Tab>
-                  </TabList>
-                </SupportOnly>
               </Tabs>
               <PopoverArrow />
             </PopoverContent>
