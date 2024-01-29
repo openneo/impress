@@ -665,7 +665,16 @@ function StyleExplanation() {
       marginTop="2"
     >
       "Alt Styles" are special NC items that override the pet's usual appearance
-      via the "Styling Studio". The pet's color doesn't have to match.
+      via the{" "}
+      <Box
+        as="a"
+        href="https://www.neopets.com/stylingchamber/"
+        target="_blank"
+        textDecoration="underline"
+      >
+        Styling Chamber
+      </Box>
+      . The pet's color doesn't have to match.
       <SupportOnly>
         <br />
         WIP: Only Support staff see this tab for now! 💖
