@@ -11,6 +11,11 @@ import {
   PopoverContent,
   PopoverTrigger,
   Portal,
+  Tab,
+  Tabs,
+  TabList,
+  TabPanel,
+  TabPanels,
   VisuallyHidden,
   useColorModeValue,
   useTheme,
@@ -63,7 +68,6 @@ function PosePicker({
   onUnlockFocus,
   ...props
 }) {
-  const theme = useTheme();
   const initialFocusRef = React.useRef();
   const { loading, error, poseInfos } = usePoses(speciesId, colorId, pose);
   const [isInSupportMode, setIsInSupportMode] = useLocalStorage(
@@ -164,35 +168,46 @@ function PosePicker({
           </PopoverTrigger>
           <Portal>
             <PopoverContent>
-              <Box p="4" position="relative">
-                {isInSupportMode ? (
-                  <PosePickerSupport
-                    speciesId={speciesId}
-                    colorId={colorId}
-                    pose={pose}
-                    appearanceId={appearanceId}
-                    initialFocusRef={initialFocusRef}
-                    dispatchToOutfit={dispatchToOutfit}
-                  />
-                ) : (
-                  <>
-                    <PosePickerTable
-                      poseInfos={poseInfos}
-                      onChange={onChange}
-                      initialFocusRef={initialFocusRef}
-                    />
-                    {numStandardPoses == 0 && <PosePickerEmptyExplanation />}
-                  </>
-                )}
-                <SupportOnly>
-                  <Box position="absolute" top="5" left="3">
-                    <PosePickerSupportSwitch
-                      isChecked={isInSupportMode}
-                      onChange={(e) => setIsInSupportMode(e.target.checked)}
-                    />
-                  </Box>
-                </SupportOnly>
-              </Box>
+              <Tabs size="sm" variant="soft-rounded">
+                <TabPanels position="relative">
+                  <TabPanel>
+                    {isInSupportMode ? (
+                      <PosePickerSupport
+                        speciesId={speciesId}
+                        colorId={colorId}
+                        pose={pose}
+                        appearanceId={appearanceId}
+                        initialFocusRef={initialFocusRef}
+                        dispatchToOutfit={dispatchToOutfit}
+                      />
+                    ) : (
+                      <>
+                        <PosePickerTable
+                          poseInfos={poseInfos}
+                          onChange={onChange}
+                          initialFocusRef={initialFocusRef}
+                        />
+                        {numStandardPoses == 0 && (
+                          <PosePickerEmptyExplanation />
+                        )}
+                      </>
+                    )}
+                    <SupportOnly>
+                      <Box position="absolute" top="5" left="3">
+                        <PosePickerSupportSwitch
+                          isChecked={isInSupportMode}
+                          onChange={(e) => setIsInSupportMode(e.target.checked)}
+                        />
+                      </Box>
+                    </SupportOnly>
+                  </TabPanel>
+                  <TabPanel>WIP: Styles go here!</TabPanel>
+                </TabPanels>
+                <TabList paddingX="2" paddingY="1">
+                  <Tab width="50%">Expressions</Tab>
+                  <Tab width="50%">Styles</Tab>
+                </TabList>
+              </Tabs>
               <PopoverArrow />
             </PopoverContent>
           </Portal>
@@ -217,10 +232,13 @@ function PosePickerButton({ pose, isOpen, ...props }, ref) {
           _focus={{ borderColor: "gray.50" }}
           _hover={{ borderColor: "gray.50" }}
           outline="initial"
+          fontSize="sm"
+          fontWeight="normal"
           className={cx(
             css`
               border: 1px solid transparent !important;
               transition: border-color 0.2s !important;
+              padding-inline: 0.75em;
 
               &:focus,
               &:hover,
@@ -237,7 +255,9 @@ function PosePickerButton({ pose, isOpen, ...props }, ref) {
           {...props}
           ref={ref}
         >
-          <EmojiImage src={getIcon(pose)} alt="Choose a pose" />
+          <EmojiImage src={getIcon(pose)} alt="" />
+          <Box width=".5em" />
+          {getLabel(pose)}
         </Button>
       )}
     </ClassNames>
@@ -514,7 +534,7 @@ function PosePickerEmptyExplanation() {
       marginTop="2"
     >
       We're still working on labeling these! For now, we're just giving you one
-      of the poses we have.
+      of the expressions we have.
     </Box>
   );
 }
@@ -654,7 +674,21 @@ function getIcon(pose) {
   } else if (pose === "UNCONVERTED") {
     return twemojiSunglasses;
   } else {
-    return twemojiQuestion;
+    return twemojiPaintbrush;
+  }
+}
+
+function getLabel(pose) {
+  if (pose === "HAPPY_MASC" || pose === "HAPPY_FEM") {
+    return "Happy";
+  } else if (pose === "SAD_MASC" || pose === "SAD_FEM") {
+    return "Sad";
+  } else if (pose === "SICK_MASC" || pose === "SICK_FEM") {
+    return "Sick";
+  } else if (pose === "UNCONVERTED") {
+    return "Classic UC";
+  } else {
+    return "Default";
   }
 }
 
