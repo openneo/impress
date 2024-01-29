@@ -158,93 +158,92 @@ function PosePicker({
       lazyBehavior="keepMounted"
     >
       {({ isOpen }) => (
-        <ClassNames>
-          {({ css, cx }) => (
-            <>
-              <PopoverTrigger>
-                <Button
-                  variant="unstyled"
-                  boxShadow="md"
-                  d="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  _focus={{ borderColor: "gray.50" }}
-                  _hover={{ borderColor: "gray.50" }}
-                  outline="initial"
-                  className={cx(
-                    css`
-                      border: 1px solid transparent !important;
-                      transition: border-color 0.2s !important;
-
-                      &:focus,
-                      &:hover,
-                      &.is-open {
-                        border-color: ${theme.colors.gray["50"]} !important;
-                      }
-
-                      &.is-open {
-                        border-width: 2px !important;
-                      }
-                    `,
-                    isOpen && "is-open",
-                  )}
-                  {...props}
-                >
-                  <EmojiImage src={getIcon(pose)} alt="Choose a pose" />
-                </Button>
-              </PopoverTrigger>
-              <Portal>
-                <PopoverContent>
-                  <Box p="4" position="relative">
-                    {isInSupportMode ? (
-                      <PosePickerSupport
-                        speciesId={speciesId}
-                        colorId={colorId}
-                        pose={pose}
-                        appearanceId={appearanceId}
-                        initialFocusRef={initialFocusRef}
-                        dispatchToOutfit={dispatchToOutfit}
-                      />
-                    ) : (
-                      <>
-                        <PosePickerTable
-                          poseInfos={poseInfos}
-                          onChange={onChange}
-                          initialFocusRef={initialFocusRef}
-                        />
-                        {numStandardPoses == 0 && (
-                          <Box
-                            fontSize="xs"
-                            fontStyle="italic"
-                            textAlign="center"
-                            opacity="0.7"
-                            marginTop="2"
-                          >
-                            We're still working on labeling these! For now,
-                            we're just giving you one of the poses we have.
-                          </Box>
-                        )}
-                      </>
-                    )}
-                    <SupportOnly>
-                      <Box position="absolute" top="5" left="3">
-                        <PosePickerSupportSwitch
-                          isChecked={isInSupportMode}
-                          onChange={(e) => setIsInSupportMode(e.target.checked)}
-                        />
-                      </Box>
-                    </SupportOnly>
+        <>
+          <PopoverTrigger>
+            <PosePickerButton pose={pose} isOpen={isOpen} {...props} />
+          </PopoverTrigger>
+          <Portal>
+            <PopoverContent>
+              <Box p="4" position="relative">
+                {isInSupportMode ? (
+                  <PosePickerSupport
+                    speciesId={speciesId}
+                    colorId={colorId}
+                    pose={pose}
+                    appearanceId={appearanceId}
+                    initialFocusRef={initialFocusRef}
+                    dispatchToOutfit={dispatchToOutfit}
+                  />
+                ) : (
+                  <>
+                    <PosePickerTable
+                      poseInfos={poseInfos}
+                      onChange={onChange}
+                      initialFocusRef={initialFocusRef}
+                    />
+                    {numStandardPoses == 0 && <PosePickerEmptyExplanation />}
+                  </>
+                )}
+                <SupportOnly>
+                  <Box position="absolute" top="5" left="3">
+                    <PosePickerSupportSwitch
+                      isChecked={isInSupportMode}
+                      onChange={(e) => setIsInSupportMode(e.target.checked)}
+                    />
                   </Box>
-                  <PopoverArrow />
-                </PopoverContent>
-              </Portal>
-            </>
-          )}
-        </ClassNames>
+                </SupportOnly>
+              </Box>
+              <PopoverArrow />
+            </PopoverContent>
+          </Portal>
+        </>
       )}
     </Popover>
   );
 }
+
+function PosePickerButton({ pose, isOpen, ...props }, ref) {
+  const theme = useTheme();
+
+  return (
+    <ClassNames>
+      {({ css, cx }) => (
+        <Button
+          variant="unstyled"
+          boxShadow="md"
+          d="flex"
+          alignItems="center"
+          justifyContent="center"
+          _focus={{ borderColor: "gray.50" }}
+          _hover={{ borderColor: "gray.50" }}
+          outline="initial"
+          className={cx(
+            css`
+              border: 1px solid transparent !important;
+              transition: border-color 0.2s !important;
+
+              &:focus,
+              &:hover,
+              &.is-open {
+                border-color: ${theme.colors.gray["50"]} !important;
+              }
+
+              &.is-open {
+                border-width: 2px !important;
+              }
+            `,
+            isOpen && "is-open",
+          )}
+          {...props}
+          ref={ref}
+        >
+          <EmojiImage src={getIcon(pose)} alt="Choose a pose" />
+        </Button>
+      )}
+    </ClassNames>
+  );
+}
+PosePickerButton = React.forwardRef(PosePickerButton);
 
 function PosePickerTable({ poseInfos, onChange, initialFocusRef }) {
   return (
@@ -502,6 +501,21 @@ function PoseOption({
         </Box>
       )}
     </ClassNames>
+  );
+}
+
+function PosePickerEmptyExplanation() {
+  return (
+    <Box
+      fontSize="xs"
+      fontStyle="italic"
+      textAlign="center"
+      opacity="0.7"
+      marginTop="2"
+    >
+      We're still working on labeling these! For now, we're just giving you one
+      of the poses we have.
+    </Box>
   );
 }
 
