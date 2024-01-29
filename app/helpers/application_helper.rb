@@ -87,9 +87,20 @@ module ApplicationHelper
     !@hide_home_link
   end
 
-  def impress_2020_meta_tag
-    tag 'meta', name: "impress-2020-origin",
-      content: Rails.configuration.impress_2020_origin
+  def support_staff?
+    user_signed_in? && current_user.support_staff?
+  end
+
+  def impress_2020_meta_tags
+    impress_2020 = Rails.configuration.x.impress_2020
+    capture do
+      concat tag("meta", name: "impress-2020-origin",
+        content: impress_2020.origin)
+      if support_staff? && impress_2020.support_secret.present?
+        concat tag("meta", name: "impress-2020-support-secret",
+          content: impress_2020.support_secret)
+      end
+    end
   end
 
   JAVASCRIPT_LIBRARIES = {

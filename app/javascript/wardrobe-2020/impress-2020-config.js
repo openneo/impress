@@ -1,10 +1,20 @@
-const IMPRESS_2020_ORIGIN = readImpress2020Origin();
+const ORIGIN = readOrigin();
+const SUPPORT_SECRET = readSupportSecret();
 
 export function buildImpress2020Url(path) {
-	return new URL(path, IMPRESS_2020_ORIGIN).toString();
+	return new URL(path, ORIGIN).toString();
 }
 
-function readImpress2020Origin() {
+export function getSupportSecret() {
+	return SUPPORT_SECRET;
+}
+
+function readOrigin() {
 	const node = document.querySelector("meta[name=impress-2020-origin]");
 	return node?.content || "https://impress-2020.openneo.net"
+}
+
+function readSupportSecret() {
+	const node = document.querySelector("meta[name=impress-2020-support-secret]");
+	return node?.content || null;
 }

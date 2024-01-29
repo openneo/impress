@@ -7,253 +7,253 @@
     email_address: "emi@matchu.dev" # TODO: Extract this to personal config?
     impress_hostname: impress.openneo.net
   tasks:
-    # - name: Create SSH folder for logged-in user
-    #   become: no
-    #   file:
-    #     name: .ssh
-    #     mode: "700"
-    #     state: directory
+    - name: Create SSH folder for logged-in user
+      become: no
+      file:
+        name: .ssh
+        mode: "700"
+        state: directory
 
-    # - name: Copy authorized SSH keys to logged-in user
-    #   become: no
-    #   copy:
-    #     dest: ~/.ssh/authorized_keys
-    #     src: files/authorized-ssh-keys.txt
-    #     mode: "600"
+    - name: Copy authorized SSH keys to logged-in user
+      become: no
+      copy:
+        dest: ~/.ssh/authorized_keys
+        src: files/authorized-ssh-keys.txt
+        mode: "600"
 
-    # - name: Disable root SSH login
-    #   lineinfile:
-    #     dest: /etc/ssh/sshd_config
-    #     regexp: ^#?PermitRootLogin
-    #     line: PermitRootLogin no
+    - name: Disable root SSH login
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: ^#?PermitRootLogin
+        line: PermitRootLogin no
 
-    # - name: Disable password-based SSH authentication
-    #   lineinfile:
-    #     dest: /etc/ssh/sshd_config
-    #     regexp: ^#?PasswordAuthentication
-    #     line: PasswordAuthentication no
+    - name: Disable password-based SSH authentication
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: ^#?PasswordAuthentication
+        line: PasswordAuthentication no
 
-    # - name: Enable public-key SSH authentication
-    #   lineinfile:
-    #     dest: /etc/ssh/sshd_config
-    #     regexp: ^#?PubkeyAuthentication
-    #     line: PubkeyAuthentication yes
+    - name: Enable public-key SSH authentication
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: ^#?PubkeyAuthentication
+        line: PubkeyAuthentication yes
 
-    # - name: Update the apt cache
-    #   apt:
-    #     update_cache: yes
+    - name: Update the apt cache
+      apt:
+        update_cache: yes
 
-    # - name: Install fail2ban firewall with default settings
-    #   apt:
-    #     name: fail2ban
+    - name: Install fail2ban firewall with default settings
+      apt:
+        name: fail2ban
 
-    # - name: Configure ufw firewall to allow SSH connections on port 22
-    #   community.general.ufw:
-    #     rule: allow
-    #     port: "22"
+    - name: Configure ufw firewall to allow SSH connections on port 22
+      community.general.ufw:
+        rule: allow
+        port: "22"
 
-    # - name: Configure ufw firewall to allow HTTP connections on port 80
-    #   community.general.ufw:
-    #     rule: allow
-    #     port: "80"
+    - name: Configure ufw firewall to allow HTTP connections on port 80
+      community.general.ufw:
+        rule: allow
+        port: "80"
 
-    # - name: Configure ufw firewall to allow HTTPS connections on port 443
-    #   community.general.ufw:
-    #     rule: allow
-    #     port: "443"
+    - name: Configure ufw firewall to allow HTTPS connections on port 443
+      community.general.ufw:
+        rule: allow
+        port: "443"
 
-    # - name: Enable ufw firewall with all other ports closed by default
-    #   community.general.ufw:
-    #     state: enabled
-    #     policy: deny
+    - name: Enable ufw firewall with all other ports closed by default
+      community.general.ufw:
+        state: enabled
+        policy: deny
 
-    # - name: Install unattended-upgrades
-    #   apt:
-    #     name: unattended-upgrades
+    - name: Install unattended-upgrades
+      apt:
+        name: unattended-upgrades
 
-    # - name: Enable unattended-upgrades to auto-upgrade our system
-    #   copy:
-    #     content: |
-    #       APT::Periodic::Update-Package-Lists "1";
-    #       APT::Periodic::Unattended-Upgrade "1";
-    #     dest: /etc/apt/apt.conf.d/20auto-upgrades
+    - name: Enable unattended-upgrades to auto-upgrade our system
+      copy:
+        content: |
+          APT::Periodic::Update-Package-Lists "1";
+          APT::Periodic::Unattended-Upgrade "1";
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
 
-    # - name: Configure unattended-upgrades to auto-reboot our server when necessary
-    #   lineinfile:
-    #     regex: ^(//\s*)?Unattended-Upgrade::Automatic-Reboot ".*";$
-    #     line: Unattended-Upgrade::Automatic-Reboot "true";
-    #     dest: /etc/apt/apt.conf.d/50unattended-upgrades
+    - name: Configure unattended-upgrades to auto-reboot our server when necessary
+      lineinfile:
+        regex: ^(//\s*)?Unattended-Upgrade::Automatic-Reboot ".*";$
+        line: Unattended-Upgrade::Automatic-Reboot "true";
+        dest: /etc/apt/apt.conf.d/50unattended-upgrades
 
-    # - name: Configure unattended-upgrades to delay necessary reboots to 3am
-    #   lineinfile:
-    #     regex: ^(//\s*)?Unattended-Upgrade::Automatic-Reboot-Time ".*";$
-    #     line: Unattended-Upgrade::Automatic-Reboot-Time "03:00";
-    #     dest: /etc/apt/apt.conf.d/50unattended-upgrades
+    - name: Configure unattended-upgrades to delay necessary reboots to 3am
+      lineinfile:
+        regex: ^(//\s*)?Unattended-Upgrade::Automatic-Reboot-Time ".*";$
+        line: Unattended-Upgrade::Automatic-Reboot-Time "03:00";
+        dest: /etc/apt/apt.conf.d/50unattended-upgrades
 
-    # - name: Configure the system timezone to be US Pacific time
-    #   community.general.timezone:
-    #     name: America/Los_Angeles
+    - name: Configure the system timezone to be US Pacific time
+      community.general.timezone:
+        name: America/Los_Angeles
 
-    # - name: Create "impress" user
-    #   user:
-    #     name: impress
-    #     comment: Impress App
-    #     home: /srv/impress
-    #     create_home: false
-    #     shell: /bin/bash
+    - name: Create "impress" user
+      user:
+        name: impress
+        comment: Impress App
+        home: /srv/impress
+        create_home: false
+        shell: /bin/bash
 
-    # - name: Create "impress-deployers" group
-    #   group:
-    #     name: impress-deployers
+    - name: Create "impress-deployers" group
+      group:
+        name: impress-deployers
 
-    # - name: Add the current user to the "impress-deployers" group
-    #   user:
-    #     name: "{{ lookup('env', 'USER') }}"
-    #     groups:
-    #       - impress-deployers
-    #     append: yes
+    - name: Add the current user to the "impress-deployers" group
+      user:
+        name: "{{ lookup('env', 'USER') }}"
+        groups:
+          - impress-deployers
+        append: yes
 
-    # # We use this so the deploy playbook doesn't have to prompt for a root
-    # # password: this user just is trusted to act as "impress" in the future.
-    # - name: Enable the "impress-deployers" group to freely act as the "impress" user
-    #   community.general.sudoers:
-    #     name: impress-deployers-as-impress
-    #     group: impress-deployers
-    #     runas: impress
-    #     commands: ALL
-    #     nopassword: yes
+    # We use this so the deploy playbook doesn't have to prompt for a root
+    # password: this user just is trusted to act as "impress" in the future.
+    - name: Enable the "impress-deployers" group to freely act as the "impress" user
+      community.general.sudoers:
+        name: impress-deployers-as-impress
+        group: impress-deployers
+        runas: impress
+        commands: ALL
+        nopassword: yes
 
-    # # Similarly, this enables us to manage the impress service in the deploy playbook
-    # # and in live debugging without a password.
-    # # NOTE: In the sudoers file, you need to specify the full path to the
-    # # command, to avoid tricks where you use PATH to get around the intent!
-    # - name: Enable the "impress-deployers" group to freely start and stop the impress service
-    #   community.general.sudoers:
-    #     name: impress-deployers-systemctl
-    #     group: impress-deployers
-    #     commands:
-    #       - /bin/systemctl status impress
-    #       - /bin/systemctl start impress
-    #       - /bin/systemctl stop impress
-    #       - /bin/systemctl restart impress
-    #     nopassword: yes
+    # Similarly, this enables us to manage the impress service in the deploy playbook
+    # and in live debugging without a password.
+    # NOTE: In the sudoers file, you need to specify the full path to the
+    # command, to avoid tricks where you use PATH to get around the intent!
+    - name: Enable the "impress-deployers" group to freely start and stop the impress service
+      community.general.sudoers:
+        name: impress-deployers-systemctl
+        group: impress-deployers
+        commands:
+          - /bin/systemctl status impress
+          - /bin/systemctl start impress
+          - /bin/systemctl stop impress
+          - /bin/systemctl restart impress
+        nopassword: yes
 
-    # - name: Install ACL, to enable us to run commands as the "impress" user
-    #   apt:
-    #     name: acl
+    - name: Install ACL, to enable us to run commands as the "impress" user
+      apt:
+        name: acl
 
-    # - name: Install ruby-build
-    #   git:
-    #     repo: https://github.com/rbenv/ruby-build.git
-    #     dest: /opt/ruby-build
-    #     version: 4d4678bc1ed89aa6900c0ea0da23495445dbcf50
+    - name: Install ruby-build
+      git:
+        repo: https://github.com/rbenv/ruby-build.git
+        dest: /opt/ruby-build
+        version: 4d4678bc1ed89aa6900c0ea0da23495445dbcf50
 
-    # - name: Check if Ruby 3.1.4 is already installed
-    #   stat:
-    #     path: /opt/ruby-3.1.4
-    #   register: ruby_dir
+    - name: Check if Ruby 3.1.4 is already installed
+      stat:
+        path: /opt/ruby-3.1.4
+      register: ruby_dir
 
-    # - name: Install Ruby 3.1.4
-    #   command: "/opt/ruby-build/bin/ruby-build 3.1.4 /opt/ruby-3.1.4"
-    #   when: not ruby_dir.stat.exists
+    - name: Install Ruby 3.1.4
+      command: "/opt/ruby-build/bin/ruby-build 3.1.4 /opt/ruby-3.1.4"
+      when: not ruby_dir.stat.exists
 
-    # - name: Add Ruby 3.1.4 to the global PATH, for developer convenience
-    #   lineinfile:
-    #     dest: /etc/profile
-    #     line: 'PATH="/opt/ruby-3.1.4/bin:$PATH" # Added by impress deploy setup script'
+    - name: Add Ruby 3.1.4 to the global PATH, for developer convenience
+      lineinfile:
+        dest: /etc/profile
+        line: 'PATH="/opt/ruby-3.1.4/bin:$PATH" # Added by impress deploy setup script'
 
-    # - name: Install system dependencies for impress's Ruby gems
-    #   apt:
-    #     name:
-    #       - libmysqlclient-dev
-    #       - libyaml-dev
+    - name: Install system dependencies for impress's Ruby gems
+      apt:
+        name:
+          - libmysqlclient-dev
+          - libyaml-dev
 
-    # - name: Create the app folder
-    #   file:
-    #     path: /srv/impress
-    #     owner: impress
-    #     group: impress
-    #     mode: "755"
-    #     state: directory
+    - name: Create the app folder
+      file:
+        path: /srv/impress
+        owner: impress
+        group: impress
+        mode: "755"
+        state: directory
 
-    # - name: Add a convenient .bash_profile for when we log in as "impress"
-    #   copy:
-    #     owner: impress
-    #     group: impress
-    #     dest: /srv/impress/.bash_profile
-    #     content: |
-    #       set -a # Export all of the below
-    #       RAILS_ENV=production
-    #       EXECJS_RUNTIME=Disabled
-    #       source /srv/impress/shared/production.env
-    #       set +a
+    - name: Add a convenient .bash_profile for when we log in as "impress"
+      copy:
+        owner: impress
+        group: impress
+        dest: /srv/impress/.bash_profile
+        content: |
+          set -a # Export all of the below
+          RAILS_ENV=production
+          EXECJS_RUNTIME=Disabled
+          source /srv/impress/shared/production.env
+          set +a
 
-    # - name: Create the app's "versions" folder
-    #   become_user: impress
-    #   file:
-    #     path: /srv/impress/versions
-    #     state: directory
+    - name: Create the app's "versions" folder
+      become_user: impress
+      file:
+        path: /srv/impress/versions
+        state: directory
 
-    # - name: Create the app's "shared" folder
-    #   become_user: impress
-    #   file:
-    #     path: /srv/impress/shared
-    #     state: directory
+    - name: Create the app's "shared" folder
+      become_user: impress
+      file:
+        path: /srv/impress/shared
+        state: directory
 
-    # - name: Check for a current app version
-    #   stat:
-    #     path: /srv/impress/current
-    #   register: current_app_version
+    - name: Check for a current app version
+      stat:
+        path: /srv/impress/current
+      register: current_app_version
 
-    # - name: Check whether we already have a placeholder app
-    #   stat:
-    #     path: /srv/impress/versions/initial-placeholder
-    #   register: existing_placeholder_app
-    #   when: not current_app_version.stat.exists
+    - name: Check whether we already have a placeholder app
+      stat:
+        path: /srv/impress/versions/initial-placeholder
+      register: existing_placeholder_app
+      when: not current_app_version.stat.exists
 
-    # - name: Create a placeholder app, to run until we deploy a real version
-    #   become_user: impress
-    #   copy:
-    #     src: files/initial-placeholder
-    #     dest: /srv/impress/versions
-    #   when: |
-    #     not current_app_version.stat.exists and
-    #       not existing_placeholder_app.stat.exists
+    - name: Create a placeholder app, to run until we deploy a real version
+      become_user: impress
+      copy:
+        src: files/initial-placeholder
+        dest: /srv/impress/versions
+      when: |
+        not current_app_version.stat.exists and
+          not existing_placeholder_app.stat.exists
 
-    # - name: Configure the placeholder app to run in deployment mode
-    #   become_user: impress
-    #   command:
-    #     chdir: /srv/impress/versions/initial-placeholder
-    #     cmd: /opt/ruby-3.1.4/bin/bundle config set --local deployment true
-    #   when: not current_app_version.stat.exists
+    - name: Configure the placeholder app to run in deployment mode
+      become_user: impress
+      command:
+        chdir: /srv/impress/versions/initial-placeholder
+        cmd: /opt/ruby-3.1.4/bin/bundle config set --local deployment true
+      when: not current_app_version.stat.exists
 
-    # - name: Install the placeholder app's dependencies
-    #   become_user: impress
-    #   command:
-    #     chdir: /srv/impress/versions/initial-placeholder
-    #     cmd: /opt/ruby-3.1.4/bin/bundle install
-    #   when: not current_app_version.stat.exists
+    - name: Install the placeholder app's dependencies
+      become_user: impress
+      command:
+        chdir: /srv/impress/versions/initial-placeholder
+        cmd: /opt/ruby-3.1.4/bin/bundle install
+      when: not current_app_version.stat.exists
 
-    # - name: Set the placeholder app as the current version
-    #   become_user: impress
-    #   file:
-    #     src: /srv/impress/versions/initial-placeholder
-    #     dest: /srv/impress/current
-    #     state: link
-    #   when: not current_app_version.stat.exists
+    - name: Set the placeholder app as the current version
+      become_user: impress
+      file:
+        src: /srv/impress/versions/initial-placeholder
+        dest: /srv/impress/current
+        state: link
+      when: not current_app_version.stat.exists
 
-    # # NOTE: This file is uploaded with stricter permissions, to help protect
-    # # the secrets inside. Most of the app is world-readable for convenience
-    # # for debugging and letting nginx serve static files, but keep this safer!
-    # - name: Upload the production.env file
-    #   become_user: impress
-    #   copy:
-    #     dest: /srv/impress/shared/production.env
-    #     src: files/production.env
-    #     mode: "600"
-    #   notify:
-    #     - Reload systemctl
-    #     - Restart impress
+    # NOTE: This file is uploaded with stricter permissions, to help protect
+    # the secrets inside. Most of the app is world-readable for convenience
+    # for debugging and letting nginx serve static files, but keep this safer!
+    - name: Upload the production.env file
+      become_user: impress
+      copy:
+        dest: /srv/impress/shared/production.env
+        src: files/production.env
+        mode: "600"
+      notify:
+        - Reload systemctl
+        - Restart impress
 
     - name: Create service file for impress
       copy:
