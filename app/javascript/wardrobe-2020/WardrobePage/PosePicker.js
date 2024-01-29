@@ -81,7 +81,7 @@ function PosePicker({
   const { isSupportUser } = useSupport();
   const toast = useToast();
 
-  const loading = posesQuery.loading || altStylesQuery.loading;
+  const loading = posesQuery.loading || altStylesQuery.isLoading;
   const error = posesQuery.error ?? altStylesQuery.error;
   const poseInfos = posesQuery.poseInfos;
   const altStyles = altStylesQuery.data ?? [];
