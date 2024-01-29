@@ -186,6 +186,11 @@ function PosePicker({
                 flexDirection={{ base: "column", md: "column-reverse" }}
                 paddingY="2"
                 gap="2"
+                // HACK: To only apply `initialFocusRef` to the selected input
+                // in the *active* tab, we just use `isLazy` to only *render*
+                // the active tab. We could also watch the tab state and set
+                // the ref accordingly!
+                isLazy
               >
                 <SupportOnly>
                   <TabList paddingX="2" paddingY="0">
@@ -226,7 +231,10 @@ function PosePicker({
                     </SupportOnly>
                   </TabPanel>
                   <TabPanel paddingX="4" paddingY="0">
-                    <StyleSelect altStyles={altStyles} />
+                    <StyleSelect
+                      altStyles={altStyles}
+                      initialFocusRef={initialFocusRef}
+                    />
                     <StyleExplanation />
                   </TabPanel>
                 </TabPanels>
@@ -564,10 +572,12 @@ function PosePickerEmptyExplanation() {
   );
 }
 
-function StyleSelect({ altStyles }) {
+function StyleSelect({ altStyles, initialFocusRef }) {
   const [selectedStyleId, setSelectedStyleId] = React.useState(null);
 
   const defaultStyle = { id: null, adjectiveName: "Default" };
+
+  const styles = [defaultStyle, ...altStyles];
 
   return (
     <Flex
@@ -578,24 +588,20 @@ function StyleSelect({ altStyles }) {
       padding="4px"
       overflow="auto"
     >
-      <StyleOption
-        altStyle={defaultStyle}
-        checked={selectedStyleId == null}
-        onChange={setSelectedStyleId}
-      />
-      {altStyles.map((altStyle) => (
+      {styles.map((altStyle) => (
         <StyleOption
           key={altStyle.id}
           altStyle={altStyle}
           checked={selectedStyleId === altStyle.id}
           onChange={setSelectedStyleId}
+          inputRef={selectedStyleId === altStyle.id ? initialFocusRef : null}
         />
       ))}
     </Flex>
   );
 }
 
-function StyleOption({ altStyle, checked, onChange }) {
+function StyleOption({ altStyle, checked, onChange, inputRef }) {
   const theme = useTheme();
   const selectedBorderColor = useColorModeValue(
     theme.colors.green["600"],
@@ -622,6 +628,7 @@ function StyleOption({ altStyle, checked, onChange }) {
             value={altStyle.id}
             checked={checked}
             onChange={(e) => onChange(altStyle.id)}
+            ref={inputRef}
           />
           <Flex
             alignItems="center"
