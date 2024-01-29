@@ -10,7 +10,11 @@ class AltStylesController < ApplicationController
 
 		respond_to do |format|
 			format.html { render }
-			format.json { render json: @alt_styles }
+			format.json {
+				render json: @alt_styles.as_json(
+					methods: [:adjective_name, :thumbnail_url],
+				)
+			}
 		end
 	end
 end

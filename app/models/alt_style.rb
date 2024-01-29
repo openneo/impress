@@ -11,6 +11,10 @@ class AltStyle < ApplicationRecord
                    species_human_name: species.human_name)
   end
 
+  def adjective_name
+    "Nostalgic #{color.human_name}"
+  end
+
   def thumbnail_url
     # HACK: Just assume this is a Nostalgic Alt Style, and that the thumbnail
     # is named reliably!

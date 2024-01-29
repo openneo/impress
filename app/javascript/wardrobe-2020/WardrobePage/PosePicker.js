@@ -20,6 +20,7 @@ import {
   useColorModeValue,
   useTheme,
   useToast,
+  useToken,
 } from "@chakra-ui/react";
 import { loadable } from "../util";
 
@@ -27,6 +28,7 @@ import { petAppearanceFragment } from "../components/useOutfitAppearance";
 import getVisibleLayers from "../components/getVisibleLayers";
 import { OutfitLayers } from "../components/OutfitPreview";
 import SupportOnly from "./support/SupportOnly";
+import { useAltStylesForSpecies } from "../loaders/alt-styles";
 import useSupport from "./support/useSupport";
 import { useLocalStorage } from "../util";
 
@@ -69,13 +71,19 @@ function PosePicker({
   ...props
 }) {
   const initialFocusRef = React.useRef();
-  const { loading, error, poseInfos } = usePoses(speciesId, colorId, pose);
+  const posesQuery = usePoses(speciesId, colorId, pose);
+  const altStylesQuery = useAltStylesForSpecies(speciesId);
   const [isInSupportMode, setIsInSupportMode] = useLocalStorage(
     "DTIPosePickerIsInSupportMode",
     false,
   );
   const { isSupportUser } = useSupport();
   const toast = useToast();
+
+  const loading = posesQuery.loading || altStylesQuery.loading;
+  const error = posesQuery.error ?? altStylesQuery.error;
+  const poseInfos = posesQuery.poseInfos;
+  const altStyles = altStylesQuery.data ?? [];
 
   // Resize the Popover when we toggle support mode, because it probably will
   // affect the content size.
@@ -201,7 +209,10 @@ function PosePicker({
                       </Box>
                     </SupportOnly>
                   </TabPanel>
-                  <TabPanel>WIP: Styles go here!</TabPanel>
+                  <TabPanel>
+                    <StyleSelect altStyles={altStyles} />
+                    <StyleExplanation />
+                  </TabPanel>
                 </TabPanels>
                 <TabList paddingX="2" paddingY="1">
                   <Tab width="50%">Expressions</Tab>
@@ -535,6 +546,126 @@ function PosePickerEmptyExplanation() {
     >
       We're still working on labeling these! For now, we're just giving you one
       of the expressions we have.
+    </Box>
+  );
+}
+
+function StyleSelect({ altStyles }) {
+  const [selectedStyleId, setSelectedStyleId] = React.useState(null);
+
+  const defaultStyle = { id: null, adjectiveName: "Default" };
+
+  return (
+    <Flex
+      as="form"
+      direction="column"
+      gap="2"
+      maxHeight="40vh"
+      padding="4px"
+      overflow="auto"
+    >
+      <StyleOption
+        altStyle={defaultStyle}
+        checked={selectedStyleId == null}
+        onChange={setSelectedStyleId}
+      />
+      {altStyles.map((altStyle) => (
+        <StyleOption
+          key={altStyle.id}
+          altStyle={altStyle}
+          checked={selectedStyleId === altStyle.id}
+          onChange={setSelectedStyleId}
+        />
+      ))}
+    </Flex>
+  );
+}
+
+function StyleOption({ altStyle, checked, onChange }) {
+  const theme = useTheme();
+  const selectedBorderColor = useColorModeValue(
+    theme.colors.green["600"],
+    theme.colors.green["300"],
+  );
+  const outlineShadow = useToken("shadows", "outline");
+
+  return (
+    <ClassNames>
+      {({ css, cx }) => (
+        <Box
+          as="label"
+          cursor="pointer"
+          onClick={(e) => {
+            // HACK: We need the timeout to beat the popover's focus stealing!
+            const input = e.currentTarget.querySelector("input");
+            setTimeout(() => input.focus(), 0);
+          }}
+        >
+          <VisuallyHidden
+            as="input"
+            type="radio"
+            name="style"
+            value={altStyle.id}
+            checked={checked}
+            onChange={(e) => onChange(altStyle.id)}
+          />
+          <Flex
+            alignItems="center"
+            gap="2"
+            borderRadius="md"
+            // HACK: Don't let the thumbnail image overlap the border
+            paddingLeft="2px"
+            paddingY="2px"
+            className={cx(css`
+              border: 2px solid transparent;
+              opacity: 0.8;
+              transition: all 0.2s;
+
+              input:focus + & {
+                box-shadow: ${outlineShadow};
+              }
+
+              input:checked + & {
+                border-color: ${selectedBorderColor};
+                opacity: 1;
+                font-weight: bold;
+              }
+            `)}
+          >
+            {altStyle.thumbnailUrl ? (
+              <Box
+                as="img"
+                src={altStyle.thumbnailUrl}
+                alt="Item thumbnail"
+                width="40px"
+                height="40px"
+                loading="lazy"
+              />
+            ) : (
+              <Box width="40px" height="40px" />
+            )}
+            <Box width="2" />
+            {altStyle.adjectiveName}
+          </Flex>
+        </Box>
+      )}
+    </ClassNames>
+  );
+}
+
+function StyleExplanation() {
+  return (
+    <Box
+      fontSize="xs"
+      fontStyle="italic"
+      textAlign="center"
+      opacity="0.7"
+      marginTop="2"
+    >
+      "Alt Styles" are special NC items that override the pet's usual appearance
+      via the "Styling Studio". The pet's color doesn't have to match.
+      <br />
+      WIP: The styles can't actually be applied yet!
     </Box>
   );
 }
