@@ -139,15 +139,9 @@ function PosePicker({
     return null;
   }
 
-  // If there's only one pose anyway, don't bother showing a picker!
-  // (Unless we're Support, in which case we want the ability to pop it open to
-  // inspect and label the Unknown poses!)
-  const numAvailablePoses = Object.values(poseInfos).filter(
-    (p) => p.isAvailable,
+  const numStandardPoses = Object.values(poseInfos).filter(
+    (p) => p.isAvailable && STANDARD_POSES.includes(p.pose),
   ).length;
-  if (numAvailablePoses <= 1 && !isSupportUser) {
-    return null;
-  }
 
   const onChange = (e) => {
     dispatchToOutfit({ type: "setPose", pose: e.target.value });
@@ -218,20 +212,17 @@ function PosePicker({
                           onChange={onChange}
                           initialFocusRef={initialFocusRef}
                         />
-                        {numAvailablePoses <= 1 && (
-                          <SupportOnly>
-                            <Box
-                              fontSize="xs"
-                              fontStyle="italic"
-                              textAlign="center"
-                              opacity="0.7"
-                              marginTop="2"
-                            >
-                              The empty picker is hidden for most users!
-                              <br />
-                              You can see it because you're a Support user.
-                            </Box>
-                          </SupportOnly>
+                        {numStandardPoses == 0 && (
+                          <Box
+                            fontSize="xs"
+                            fontStyle="italic"
+                            textAlign="center"
+                            opacity="0.7"
+                            marginTop="2"
+                          >
+                            We're still working on labeling these! For now,
+                            we're just giving you one of the poses we have.
+                          </Box>
                         )}
                       </>
                     )}
@@ -370,6 +361,8 @@ const GENDER_PRESENTATION_STRINGS = {
   SAD_FEM: "Feminine",
   SICK_FEM: "Feminine",
 };
+
+const STANDARD_POSES = Object.keys(EMOTION_STRINGS);
 
 function PoseOption({
   poseInfo,
