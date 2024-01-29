@@ -7,7 +7,6 @@ gem 'rails', '~> 7.1', '>= 7.1.1'
 # NOTE: Once we're migrated, remove puma! I have both to allow the upgrade to
 # be incremental: push this out with `bin/deploy`, then change the service file
 # with `bin/deploy:setup`.
-gem 'puma', '~> 6.3', '>= 6.3.1'
 gem 'falcon', '~> 0.42.3'
 
 # Our database is MySQL, in both development and production.

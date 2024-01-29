@@ -233,8 +233,6 @@ GEM
     psych (5.1.1.1)
       stringio
     public_suffix (5.0.3)
-    puma (6.4.2)
-      nio4r (~> 2.0)
     racc (1.7.1)
     rack (2.2.8)
     rack-attack (6.7.0)
@@ -380,7 +378,6 @@ DEPENDENCIES
   mysql2 (~> 0.5.5)
   nokogiri (~> 1.15, >= 1.15.3)
   parallel (~> 1.23)
-  puma (~> 6.3, >= 6.3.1)
   rack-attack (~> 6.7)
   rack-mini-profiler (~> 3.1)
   rails (~> 7.1, >= 7.1.1)
