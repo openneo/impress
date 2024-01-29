@@ -269,8 +269,10 @@ function PosePickerButton({ pose, isOpen, ...props }, ref) {
           ref={ref}
         >
           <EmojiImage src={getIcon(pose)} alt="" />
-          <Box width=".5em" />
-          {getLabel(pose)}
+          <SupportOnly>
+            <Box width=".5em" />
+            {getLabel(pose)}
+          </SupportOnly>
         </Button>
       )}
     </ClassNames>
