@@ -214,10 +214,12 @@ function PosePicker({
                     <StyleExplanation />
                   </TabPanel>
                 </TabPanels>
-                <TabList paddingX="2" paddingY="1">
-                  <Tab width="50%">Expressions</Tab>
-                  <Tab width="50%">Styles</Tab>
-                </TabList>
+                <SupportOnly>
+                  <TabList paddingX="2" paddingY="1">
+                    <Tab width="50%">Expressions</Tab>
+                    <Tab width="50%">Styles</Tab>
+                  </TabList>
+                </SupportOnly>
               </Tabs>
               <PopoverArrow />
             </PopoverContent>
@@ -664,8 +666,10 @@ function StyleExplanation() {
     >
       "Alt Styles" are special NC items that override the pet's usual appearance
       via the "Styling Studio". The pet's color doesn't have to match.
-      <br />
-      WIP: The styles can't actually be applied yet!
+      <SupportOnly>
+        <br />
+        WIP: Only Support staff see this tab for now! 💖
+      </SupportOnly>
     </Box>
   );
 }
