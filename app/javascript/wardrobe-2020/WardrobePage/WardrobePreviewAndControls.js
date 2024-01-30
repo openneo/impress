@@ -24,6 +24,7 @@ function WardrobePreviewAndControls({
     speciesId: outfitState.speciesId,
     colorId: outfitState.colorId,
     pose: outfitState.pose,
+    altStyleId: outfitState.altStyleId,
     appearanceId: outfitState.appearanceId,
     wornItemIds: outfitState.wornItemIds,
     onChangeHasAnimations: setHasAnimations,

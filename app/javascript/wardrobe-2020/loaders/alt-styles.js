@@ -8,6 +8,17 @@ export function useAltStylesForSpecies(speciesId, options = {}) {
 	});
 }
 
+// NOTE: This is actually just a wrapper for `useAltStylesForSpecies`, to share
+// the same cache key!
+export function useAltStyle(id, speciesId, options = {}) {
+	const query = useAltStylesForSpecies(speciesId, options);
+
+	return {
+		...query,
+		data: query.data?.find((s) => s.id === id) ?? null,
+	};
+}
+
 async function loadAltStylesForSpecies(speciesId) {
 	const res = await fetch(
 		`/species/${encodeURIComponent(speciesId)}/alt-styles.json`,
@@ -35,5 +46,37 @@ function normalizeAltStyle(altStyleData) {
 		seriesName: altStyleData.series_name,
 		adjectiveName: altStyleData.adjective_name,
 		thumbnailUrl: altStyleData.thumbnail_url,
+
+		// This matches the PetAppearanceForOutfitPreview GQL fragment!
+		appearance: {
+			bodyId: String(altStyleData.body_id),
+			pose: "UNKNOWN",
+			isGlitched: false,
+			species: { id: String(altStyleData.species_id) },
+			color: { id: String(altStyleData.species_id) },
+			layers: altStyleData.swf_assets.map(normalizeSwfAssetToLayer),
+			restrictedZones: [],
+		},
+	};
+}
+
+function normalizeSwfAssetToLayer(swfAssetData) {
+	return {
+		id: String(swfAssetData.id),
+		zone: {
+			id: String(swfAssetData.zone.id),
+			depth: swfAssetData.zone.depth,
+			label: swfAssetData.zone.label,
+		},
+		bodyId: swfAssetData.body_id,
+		knownGlitches: [], // TODO
+
+		// HACK: We're just simplifying this adapter, but it would be better to
+		// actually check what file formats the manifest says!
+		// TODO: For example, these do generally have SVGs, we could use them!
+		svgUrl: null,
+		canvasMovieLibraryUrl: null,
+		imageUrl: swfAssetData.image_url,
+		swfUrl: swfAssetData.url,
 	};
 }

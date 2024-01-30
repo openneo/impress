@@ -52,6 +52,7 @@ export function useOutfitPreview({
   speciesId,
   colorId,
   pose,
+  altStyleId,
   wornItemIds,
   appearanceId = null,
   isLoading = false,
@@ -68,6 +69,7 @@ export function useOutfitPreview({
     speciesId,
     colorId,
     pose,
+    altStyleId,
     appearanceId,
     wornItemIds,
   });

@@ -1,17 +1,20 @@
 import React from "react";
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/client";
+
 import getVisibleLayers, {
   itemAppearanceFragmentForGetVisibleLayers,
   petAppearanceFragmentForGetVisibleLayers,
-} from "../components/getVisibleLayers";
+} from "./getVisibleLayers";
+import { useAltStyle } from "../loaders/alt-styles";
 
 /**
  * useOutfitAppearance downloads the outfit's appearance data, and returns
  * visibleLayers for rendering.
  */
 export default function useOutfitAppearance(outfitState) {
-  const { wornItemIds, speciesId, colorId, pose, appearanceId } = outfitState;
+  const { wornItemIds, speciesId, colorId, pose, altStyleId, appearanceId } =
+    outfitState;
 
   // We split this query out from the other one, so that we can HTTP cache it.
   //
@@ -102,7 +105,13 @@ export default function useOutfitAppearance(outfitState) {
     },
   );
 
-  const petAppearance = data1?.petAppearance;
+  const {
+    isLoading: loading3,
+    error: error3,
+    data: altStyle,
+  } = useAltStyle(altStyleId, speciesId);
+
+  const petAppearance = altStyle?.appearance ?? data1?.petAppearance;
   const items = data2?.items;
   const itemAppearances = React.useMemo(
     () => (items || []).map((i) => i.appearance),
@@ -116,8 +125,8 @@ export default function useOutfitAppearance(outfitState) {
   const bodyId = petAppearance?.bodyId;
 
   return {
-    loading: loading1 || loading2,
-    error: error1 || error2,
+    loading: loading1 || loading2 || loading3,
+    error: error1 || error2 || error3,
     petAppearance,
     items: items || [],
     itemAppearances,

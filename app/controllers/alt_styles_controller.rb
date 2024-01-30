@@ -11,7 +11,8 @@ class AltStylesController < ApplicationController
 		respond_to do |format|
 			format.html { render }
 			format.json {
-				render json: @alt_styles.as_json(
+				render json: @alt_styles.includes(swf_assets: [:zone]).as_json(
+					include: {swf_assets: {include: [:zone], methods: [:image_url]}},
 					methods: [:series_name, :adjective_name, :thumbnail_url],
 				)
 			}

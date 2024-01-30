@@ -46,7 +46,7 @@ class SwfAsset < ApplicationRecord
     size_key = size.join('x')
     
     image_dir = "#{self['type']}/#{partition_path}#{self.remote_id}"
-    "//#{host}/#{image_dir}/#{size_key}.png?#{image_version}"
+    "https://#{host}/#{image_dir}/#{size_key}.png?#{image_version}"
   end
   
   def images
