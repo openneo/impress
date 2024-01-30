@@ -66,6 +66,7 @@ function PosePicker({
   speciesId,
   colorId,
   pose,
+  altStyleId,
   appearanceId,
   dispatchToOutfit,
   onLockFocus,
@@ -90,8 +91,7 @@ function PosePicker({
   const [isOpen, setIsOpen] = React.useState(false);
   const [tabIndex, setTabIndex] = React.useState(0);
 
-  const [styleId, setStyleId] = React.useState(null);
-  const altStyle = altStyles.find((s) => s.id === styleId);
+  const altStyle = altStyles.find((s) => s.id === altStyleId);
 
   const placement = useBreakpointValue({ base: "bottom-end", md: "top-end" });
 
@@ -172,8 +172,12 @@ function PosePicker({
     (p) => p.isAvailable && STANDARD_POSES.includes(p.pose),
   ).length;
 
-  const onChange = (e) => {
+  const onChangePose = (e) => {
     dispatchToOutfit({ type: "setPose", pose: e.target.value });
+  };
+
+  const onChangeStyle = (altStyleId) => {
+    dispatchToOutfit({ type: "setStyle", altStyleId });
   };
 
   return (
@@ -241,7 +245,7 @@ function PosePicker({
                       <>
                         <PosePickerTable
                           poseInfos={poseInfos}
-                          onChange={onChange}
+                          onChange={onChangePose}
                           initialFocusRef={initialFocusRef}
                         />
                         {numStandardPoses == 0 && (
@@ -260,9 +264,9 @@ function PosePicker({
                   </TabPanel>
                   <TabPanel paddingX="4" paddingY="0">
                     <StyleSelect
-                      selectedStyleId={styleId}
+                      selectedStyleId={altStyleId}
                       altStyles={altStyles}
-                      onChange={setStyleId}
+                      onChange={onChangeStyle}
                       initialFocusRef={initialFocusRef}
                     />
                     <StyleExplanation />

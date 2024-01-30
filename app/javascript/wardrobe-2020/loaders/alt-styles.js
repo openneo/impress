@@ -28,10 +28,10 @@ function normalizeAltStyles(altStylesData) {
 
 function normalizeAltStyle(altStyleData) {
 	return {
-		id: altStyleData.id,
-		speciesId: altStyleData.species_id,
-		colorId: altStyleData.color_id,
-		bodyId: altStyleData.body_id,
+		id: String(altStyleData.id),
+		speciesId: String(altStyleData.species_id),
+		colorId: String(altStyleData.color_id),
+		bodyId: String(altStyleData.body_id),
 		seriesName: altStyleData.series_name,
 		adjectiveName: altStyleData.adjective_name,
 		thumbnailUrl: altStyleData.thumbnail_url,

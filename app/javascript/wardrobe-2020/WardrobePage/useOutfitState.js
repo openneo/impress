@@ -113,7 +113,8 @@ function useOutfitState() {
   // IDs. It's more convenient to manage them as a Set in state, but most
   // callers will find it more convenient to access them as arrays! e.g. for
   // `.map()`.
-  const { id, name, speciesId, colorId, pose, appearanceId } = outfitState;
+  const { id, name, speciesId, colorId, pose, altStyleId, appearanceId } =
+    outfitState;
   const wornItemIds = Array.from(outfitState.wornItemIds);
   const closetedItemIds = Array.from(outfitState.closetedItemIds);
   const allItemIds = [...wornItemIds, ...closetedItemIds];
@@ -236,6 +237,7 @@ function useOutfitState() {
     speciesId,
     colorId,
     pose,
+    altStyleId,
     appearanceId,
     url,
 
@@ -351,6 +353,10 @@ const outfitStateReducer = (apolloClient) => (baseState, action) => {
         // particular about which version of the pose to show if more than one.
         state.appearanceId = action.appearanceId || null;
       });
+    case "setStyle":
+      return produce(baseState, (state) => {
+        state.altStyleId = action.altStyleId;
+      });
     case "resetToSavedOutfitData":
       return getOutfitStateFromOutfitData(action.savedOutfitData);
     default:
@@ -417,6 +423,7 @@ function readOutfitStateFromSearchParams(pathname, searchParams) {
     speciesId: searchParams.get("species") || "1",
     colorId: searchParams.get("color") || "8",
     pose: searchParams.get("pose") || "HAPPY_FEM",
+    altStyleId: searchParams.get("style") || null,
     appearanceId: searchParams.get("state") || null,
     wornItemIds: new Set(searchParams.getAll("objects[]")),
     closetedItemIds: new Set(searchParams.getAll("closet[]")),
@@ -640,6 +647,7 @@ function buildOutfitQueryString(outfitState) {
     speciesId,
     colorId,
     pose,
+    altStyleId,
     appearanceId,
     wornItemIds,
     closetedItemIds,
@@ -656,6 +664,9 @@ function buildOutfitQueryString(outfitState) {
   }
   for (const itemId of closetedItemIds) {
     params.append("closet[]", itemId);
+  }
+  if (altStyleId != null) {
+    params.append("style", altStyleId);
   }
   if (appearanceId != null) {
     // `state` is an old name for compatibility with old-style DTI URLs. It
