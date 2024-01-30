@@ -87,10 +87,24 @@ function PosePicker({
   const poseInfos = posesQuery.poseInfos;
   const altStyles = altStylesQuery.data ?? [];
 
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [tabIndex, setTabIndex] = React.useState(0);
+
   const [styleId, setStyleId] = React.useState(null);
   const altStyle = altStyles.find((s) => s.id === styleId);
 
   const placement = useBreakpointValue({ base: "bottom-end", md: "top-end" });
+
+  React.useEffect(() => {
+    // While the popover is open, don't change which tab is open.
+    if (isOpen) {
+      return;
+    }
+
+    // Otherwise, set the tab to Styles if we're wearing an Alt Style, or
+    // Expressions if we're not.
+    setTabIndex(altStyle != null ? 1 : 0);
+  }, [altStyle, isOpen]);
 
   // Resize the Popover when we toggle support mode, because it probably will
   // affect the content size.
@@ -166,13 +180,19 @@ function PosePicker({
     <Popover
       placement={placement}
       returnFocusOnClose
-      onOpen={onLockFocus}
-      onClose={onUnlockFocus}
+      onOpen={() => {
+        setIsOpen(true);
+        onLockFocus();
+      }}
+      onClose={() => {
+        setIsOpen(false);
+        onUnlockFocus();
+      }}
       initialFocusRef={initialFocusRef}
       isLazy
       lazyBehavior="keepMounted"
     >
-      {({ isOpen }) => (
+      {() => (
         <>
           <PopoverTrigger>
             <PosePickerButton
@@ -192,6 +212,8 @@ function PosePicker({
                 flexDirection={{ base: "column", md: "column-reverse" }}
                 paddingY="2"
                 gap="2"
+                index={tabIndex}
+                onChange={setTabIndex}
                 // HACK: To only apply `initialFocusRef` to the selected input
                 // in the *active* tab, we just use `isLazy` to only *render*
                 // the active tab. We could also watch the tab state and set
