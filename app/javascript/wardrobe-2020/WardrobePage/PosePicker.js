@@ -23,6 +23,7 @@ import {
   useToast,
   useToken,
 } from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import { loadable } from "../util";
 
 import { petAppearanceFragment } from "../components/useOutfitAppearance";
@@ -144,10 +145,6 @@ function PosePicker({
     dispatchToOutfit,
   ]);
 
-  if (loading) {
-    return null;
-  }
-
   // This is a low-stakes enough control, where enough pairs don't have data
   // anyway, that I think I want to just not draw attention to failures.
   if (error) {
@@ -175,7 +172,12 @@ function PosePicker({
       {({ isOpen }) => (
         <>
           <PopoverTrigger>
-            <PosePickerButton pose={pose} isOpen={isOpen} {...props} />
+            <PosePickerButton
+              pose={pose}
+              isOpen={isOpen}
+              loading={loading}
+              {...props}
+            />
           </PopoverTrigger>
           <Portal>
             <PopoverContent>
@@ -248,7 +250,7 @@ function PosePicker({
   );
 }
 
-function PosePickerButton({ pose, isOpen, ...props }, ref) {
+function PosePickerButton({ pose, isOpen, loading, ...props }, ref) {
   const theme = useTheme();
 
   return (
@@ -265,16 +267,28 @@ function PosePickerButton({ pose, isOpen, ...props }, ref) {
           outline="initial"
           fontSize="sm"
           fontWeight="normal"
+          minWidth="12ch"
+          disabled={loading}
           className={cx(
             css`
               border: 1px solid transparent !important;
-              transition: border-color 0.2s !important;
-              padding-inline: 0.75em;
+              color: ${theme.colors.gray["300"]};
+              cursor: ${loading ? "wait" : "pointer"} !important;
+              transition:
+                color 0.2s,
+                border-color 0.2s !important;
+              padding-left: 0.75em;
+              padding-right: 0.5em;
 
-              &:focus,
               &:hover,
               &.is-open {
                 border-color: ${theme.colors.gray["50"]} !important;
+                color: ${theme.colors.gray["50"]};
+              }
+
+              &:focus {
+                border-color: ${theme.colors.gray["50"]} !important;
+                box-shadow: ${theme.shadows.outline};
               }
 
               &.is-open {
@@ -286,11 +300,11 @@ function PosePickerButton({ pose, isOpen, ...props }, ref) {
           {...props}
           ref={ref}
         >
-          <EmojiImage src={getIcon(pose)} alt="" />
-          <SupportOnly>
-            <Box width=".5em" />
-            {getLabel(pose)}
-          </SupportOnly>
+          <EmojiImage src={getIcon(pose)} alt="Style" />
+          <Box width=".5em" />
+          {getLabel(pose)}
+          <Box width=".5em" />
+          <ChevronDownIcon />
         </Button>
       )}
     </ClassNames>

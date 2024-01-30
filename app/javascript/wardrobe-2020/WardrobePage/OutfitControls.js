@@ -215,12 +215,6 @@ function OutfitControls({
                  * We try to center the species/color picker, but the left spacer will
                  * shrink more than the pose picker container if we run out of space!
                  */}
-                <Flex
-                  flex="1 1 0"
-                  paddingRight="3"
-                  align="center"
-                  justify="flex-end"
-                />
                 <Box flex="0 0 auto">
                   <DarkMode>
                     <SpeciesColorPicker
@@ -234,7 +228,7 @@ function OutfitControls({
                     />
                   </DarkMode>
                 </Box>
-                <Flex flex="1 1 0" align="center" pl="2">
+                <Flex flex="0 0 auto" align="center" pl="2">
                   <PosePicker
                     speciesId={outfitState.speciesId}
                     colorId={outfitState.colorId}
