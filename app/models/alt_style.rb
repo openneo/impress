@@ -6,13 +6,25 @@ class AltStyle < ApplicationRecord
   has_many :swf_assets, through: :parent_swf_asset_relationships
   has_many :contributions, as: :contributed, inverse_of: :contributed
 
+  SERIES_ID_RANGES = {
+    nostalgic: (87249..87503)
+  }
+
   def name
     I18n.translate('pet_types.human_name', color_human_name: color.human_name,
                    species_human_name: species.human_name)
   end
 
+  def series_name
+    if SERIES_ID_RANGES[:nostalgic].include?(id)
+      "Nostalgic"
+    else
+      "???"
+    end
+  end
+
   def adjective_name
-    "Nostalgic #{color.human_name}"
+    "#{series_name} #{color.human_name}"
   end
 
   def thumbnail_url

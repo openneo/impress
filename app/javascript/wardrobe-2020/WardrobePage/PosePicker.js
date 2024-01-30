@@ -87,6 +87,9 @@ function PosePicker({
   const poseInfos = posesQuery.poseInfos;
   const altStyles = altStylesQuery.data ?? [];
 
+  const [styleId, setStyleId] = React.useState(null);
+  const altStyle = altStyles.find((s) => s.id === styleId);
+
   const placement = useBreakpointValue({ base: "bottom-end", md: "top-end" });
 
   // Resize the Popover when we toggle support mode, because it probably will
@@ -174,6 +177,7 @@ function PosePicker({
           <PopoverTrigger>
             <PosePickerButton
               pose={pose}
+              altStyle={altStyle}
               isOpen={isOpen}
               loading={loading}
               {...props}
@@ -234,7 +238,9 @@ function PosePicker({
                   </TabPanel>
                   <TabPanel paddingX="4" paddingY="0">
                     <StyleSelect
+                      selectedStyleId={styleId}
                       altStyles={altStyles}
+                      onChange={setStyleId}
                       initialFocusRef={initialFocusRef}
                     />
                     <StyleExplanation />
@@ -250,8 +256,11 @@ function PosePicker({
   );
 }
 
-function PosePickerButton({ pose, isOpen, loading, ...props }, ref) {
+function PosePickerButton({ pose, altStyle, isOpen, loading, ...props }, ref) {
   const theme = useTheme();
+
+  const icon = altStyle != null ? twemojiSunglasses : getIcon(pose);
+  const label = altStyle != null ? altStyle.seriesName : getLabel(pose);
 
   return (
     <ClassNames>
@@ -300,9 +309,9 @@ function PosePickerButton({ pose, isOpen, loading, ...props }, ref) {
           {...props}
           ref={ref}
         >
-          <EmojiImage src={getIcon(pose)} alt="Style" />
+          <EmojiImage src={icon} alt="Style" />
           <Box width=".5em" />
-          {getLabel(pose)}
+          {label}
           <Box width=".5em" />
           <ChevronDownIcon />
         </Button>
@@ -586,9 +595,12 @@ function PosePickerEmptyExplanation() {
   );
 }
 
-function StyleSelect({ altStyles, initialFocusRef }) {
-  const [selectedStyleId, setSelectedStyleId] = React.useState(null);
-
+function StyleSelect({
+  selectedStyleId,
+  altStyles,
+  onChange,
+  initialFocusRef,
+}) {
   const defaultStyle = { id: null, adjectiveName: "Default" };
 
   const styles = [defaultStyle, ...altStyles];
@@ -607,7 +619,7 @@ function StyleSelect({ altStyles, initialFocusRef }) {
           key={altStyle.id}
           altStyle={altStyle}
           checked={selectedStyleId === altStyle.id}
-          onChange={setSelectedStyleId}
+          onChange={onChange}
           inputRef={selectedStyleId === altStyle.id ? initialFocusRef : null}
         />
       ))}

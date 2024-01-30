@@ -12,7 +12,7 @@ class AltStylesController < ApplicationController
 			format.html { render }
 			format.json {
 				render json: @alt_styles.as_json(
-					methods: [:adjective_name, :thumbnail_url],
+					methods: [:series_name, :adjective_name, :thumbnail_url],
 				)
 			}
 		end

@@ -32,6 +32,7 @@ function normalizeAltStyle(altStyleData) {
 		speciesId: altStyleData.species_id,
 		colorId: altStyleData.color_id,
 		bodyId: altStyleData.body_id,
+		seriesName: altStyleData.series_name,
 		adjectiveName: altStyleData.adjective_name,
 		thumbnailUrl: altStyleData.thumbnail_url,
 	};
