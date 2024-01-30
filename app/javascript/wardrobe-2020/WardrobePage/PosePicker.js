@@ -837,7 +837,7 @@ function getIcon(pose) {
   } else if (pose === "UNCONVERTED") {
     return twemojiSunglasses;
   } else {
-    return twemojiPaintbrush;
+    return twemojiSmile;
   }
 }
 
