@@ -12,7 +12,12 @@ class AltStylesController < ApplicationController
 			format.html { render }
 			format.json {
 				render json: @alt_styles.includes(swf_assets: [:zone]).as_json(
-					include: {swf_assets: {include: [:zone], methods: [:image_url]}},
+					include: {
+						swf_assets: {
+							include: [:zone],
+							methods: [:html5_image_url, :html5_svg_url],
+						}
+					},
 					methods: [:series_name, :adjective_name, :thumbnail_url],
 				)
 			}

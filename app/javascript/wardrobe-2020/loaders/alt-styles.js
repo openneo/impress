@@ -73,10 +73,9 @@ function normalizeSwfAssetToLayer(swfAssetData) {
 
 		// HACK: We're just simplifying this adapter, but it would be better to
 		// actually check what file formats the manifest says!
-		// TODO: For example, these do generally have SVGs, we could use them!
-		svgUrl: null,
+		svgUrl: swfAssetData.html5_svg_url,
 		canvasMovieLibraryUrl: null,
-		imageUrl: swfAssetData.image_url,
+		imageUrl: swfAssetData.html5_image_url,
 		swfUrl: swfAssetData.url,
 	};
 }
