@@ -77,20 +77,22 @@ function ItemsPanel({ outfitState, outfitSaving, loading, dispatchToOutfit }) {
                 itemCount={outfitState.allItemIds.length}
               />
             ) : (
-              <TransitionGroup component={null}>
-                {zonesAndItems.map(({ zoneId, zoneLabel, items }) => (
-                  <CSSTransition
-                    key={zoneId}
-                    {...fadeOutAndRollUpTransition(css)}
-                  >
-                    <ItemZoneGroup
-                      zoneLabel={zoneLabel}
-                      items={items}
-                      outfitState={outfitState}
-                      dispatchToOutfit={dispatchToOutfit}
-                    />
-                  </CSSTransition>
-                ))}
+              <>
+                <TransitionGroup component={null}>
+                  {zonesAndItems.map(({ zoneId, zoneLabel, items }) => (
+                    <CSSTransition
+                      key={zoneId}
+                      {...fadeOutAndRollUpTransition(css)}
+                    >
+                      <ItemZoneGroup
+                        zoneLabel={zoneLabel}
+                        items={items}
+                        outfitState={outfitState}
+                        dispatchToOutfit={dispatchToOutfit}
+                      />
+                    </CSSTransition>
+                  ))}
+                </TransitionGroup>
                 {incompatibleItems.length > 0 && (
                   <ItemZoneGroup
                     zoneLabel="Incompatible"
@@ -109,7 +111,7 @@ function ItemsPanel({ outfitState, outfitSaving, loading, dispatchToOutfit }) {
                     isDisabled
                   />
                 )}
-              </TransitionGroup>
+              </>
             )}
           </Flex>
         </Box>

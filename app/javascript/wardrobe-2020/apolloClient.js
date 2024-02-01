@@ -53,17 +53,26 @@ const typePolicies = {
           return appearance;
         }
 
-        // Otherwise, we're going to see if this is a standard color, in which
-        // case we can reuse the standard color appearance if we already have
-        // it! This helps for fast loading when switching between standard
-        // colors.
-        const { speciesId, colorId } = args;
+        const { speciesId, colorId, altStyleId } = args;
         console.debug(
           "[appearanceOn] seeking cached appearance",
           speciesId,
           colorId,
+          altStyleId,
           readField("id"),
         );
+
+        // If this is an alt style, don't try to mess with clever caching.
+        // (Note that, if it's already in the cache, the first condition will
+        // catch that! This won't *always* force a fresh load!)
+        if (altStyleId != null) {
+          return undefined;
+        }
+
+        // Otherwise, we're going to see if this is a standard color, in which
+        // case we can reuse the standard color appearance if we already have
+        // it! This helps for fast loading when switching between standard
+        // colors.
         const speciesStandardBodyId = readField(
           "standardBodyId",
           toReference({ __typename: "Species", id: speciesId }),

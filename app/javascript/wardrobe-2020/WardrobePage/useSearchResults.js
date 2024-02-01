@@ -14,7 +14,7 @@ export function useSearchResults(
   currentPageNumber,
   { skip = false } = {},
 ) {
-  const { speciesId, colorId } = outfitState;
+  const { speciesId, colorId, altStyleId } = outfitState;
 
   // We debounce the search query, so that we don't resend a new query whenever
   // the user types anything.
@@ -56,6 +56,7 @@ export function useSearchResults(
         $zoneIds: [ID!]!
         $speciesId: ID!
         $colorId: ID!
+        $altStyleId: ID
         $offset: Int!
         $perPage: Int!
       ) {
@@ -78,7 +79,11 @@ export function useSearchResults(
             currentUserOwnsThis
             currentUserWantsThis
 
-            appearanceOn(speciesId: $speciesId, colorId: $colorId) {
+            appearanceOn(
+              speciesId: $speciesId
+              colorId: $colorId
+              altStyleId: $altStyleId
+            ) {
               # This enables us to quickly show the item when the user clicks it!
               ...ItemAppearanceForOutfitPreview
 
@@ -104,12 +109,13 @@ export function useSearchResults(
     {
       variables: {
         query: debouncedQuery.value,
-        fitsPet: { speciesId, colorId },
+        fitsPet: { speciesId, colorId, altStyleId },
         itemKind: debouncedQuery.filterToItemKind,
         currentUserOwnsOrWants: debouncedQuery.filterToCurrentUserOwnsOrWants,
         zoneIds: filterToZoneIds,
         speciesId,
         colorId,
+        altStyleId,
         offset,
         perPage: SEARCH_PER_PAGE,
       },

@@ -83,12 +83,17 @@ export default function useOutfitAppearance(outfitState) {
       query OutfitItemsAppearance(
         $speciesId: ID!
         $colorId: ID!
+        $altStyleId: ID
         $wornItemIds: [ID!]!
       ) {
         items(ids: $wornItemIds) {
           id
           name # HACK: This is for HTML5 detection UI in OutfitControls!
-          appearance: appearanceOn(speciesId: $speciesId, colorId: $colorId) {
+          appearance: appearanceOn(
+            speciesId: $speciesId
+            colorId: $colorId
+            altStyleId: $altStyleId
+          ) {
             ...ItemAppearanceForOutfitPreview
           }
         }
@@ -99,6 +104,7 @@ export default function useOutfitAppearance(outfitState) {
       variables: {
         speciesId,
         colorId,
+        altStyleId,
         wornItemIds,
       },
       skip: speciesId == null || colorId == null || wornItemIds.length === 0,

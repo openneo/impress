@@ -129,6 +129,7 @@ function useOutfitState() {
         $allItemIds: [ID!]!
         $speciesId: ID!
         $colorId: ID!
+        $altStyleId: ID
       ) {
         items(ids: $allItemIds) {
           # TODO: De-dupe this from SearchPanel?
@@ -140,7 +141,11 @@ function useOutfitState() {
           currentUserOwnsThis
           currentUserWantsThis
 
-          appearanceOn(speciesId: $speciesId, colorId: $colorId) {
+          appearanceOn(
+            speciesId: $speciesId
+            colorId: $colorId
+            altStyleId: $altStyleId
+          ) {
             # This enables us to quickly show the item when the user clicks it!
             ...ItemAppearanceForOutfitPreview
 
@@ -166,7 +171,7 @@ function useOutfitState() {
       ${itemAppearanceFragment}
     `,
     {
-      variables: { allItemIds, speciesId, colorId },
+      variables: { allItemIds, speciesId, colorId, altStyleId },
       context: { sendAuth: true },
       // Skip if this outfit has no items, as an optimization; or if we don't
       // have the species/color ID loaded yet because we're waiting on the
@@ -448,7 +453,7 @@ function getOutfitStateFromOutfitData(outfit) {
 }
 
 function findItemConflicts(itemIdToAdd, state, apolloClient) {
-  const { wornItemIds, speciesId, colorId } = state;
+  const { wornItemIds, speciesId, colorId, altStyleId } = state;
 
   const { items } = apolloClient.readQuery({
     query: gql`
@@ -456,10 +461,15 @@ function findItemConflicts(itemIdToAdd, state, apolloClient) {
         $itemIds: [ID!]!
         $speciesId: ID!
         $colorId: ID!
+        $altStyleId: ID
       ) {
         items(ids: $itemIds) {
           id
-          appearanceOn(speciesId: $speciesId, colorId: $colorId) {
+          appearanceOn(
+            speciesId: $speciesId
+            colorId: $colorId
+            altStyleId: $altStyleId
+          ) {
             layers {
               zone {
                 id
@@ -477,6 +487,7 @@ function findItemConflicts(itemIdToAdd, state, apolloClient) {
       itemIds: [itemIdToAdd, ...wornItemIds],
       speciesId,
       colorId,
+      altStyleId,
     },
   });
   const itemToAdd = items.find((i) => i.id === itemIdToAdd);
