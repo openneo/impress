@@ -4,6 +4,7 @@ class Outfit < ApplicationRecord
     class_name: 'ItemOutfitRelationship'
   has_many :worn_items, through: :worn_item_outfit_relationships, source: :item
 
+  belongs_to :alt_style, optional: true
   belongs_to :pet_state, optional: true # We validate presence below!
   belongs_to :user, optional: true
 
@@ -82,7 +83,8 @@ class Outfit < ApplicationRecord
   
   def as_json(more_options={})
     serializable_hash(
-      only: [:id, :name, :pet_state_id, :starred, :created_at, :updated_at],
+      only: [:id, :name, :pet_state_id, :starred, :created_at, :updated_at,
+        :alt_style_id],
       methods: [:color_id, :species_id, :pose, :item_ids, :user]
     )
   end

@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_29_114639) do
-  create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+ActiveRecord::Schema[7.1].define(version: 2024_02_01_134440) do
+  create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "species_id", null: false
     t.integer "color_id", null: false
     t.integer "body_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["color_id"], name: "index_alt_styles_on_color_id"
     t.index ["species_id"], name: "index_alt_styles_on_species_id"
   end
@@ -125,11 +125,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_29_114639) do
     t.index ["outfit_id", "is_worn"], name: "index_item_outfit_relationships_on_outfit_id_and_is_worn"
   end
 
-  create_table "item_translations", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+  create_table "item_translations", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
     t.integer "item_id"
     t.string "locale"
     t.string "name"
-    t.text "description", size: :medium
+    t.text "description"
     t.string "rarity"
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
@@ -191,6 +191,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_29_114639) do
     t.string "image"
     t.string "image_layers_hash"
     t.boolean "image_enqueued", default: false, null: false
+    t.bigint "alt_style_id"
+    t.index ["alt_style_id"], name: "index_outfits_on_alt_style_id"
     t.index ["pet_state_id"], name: "index_outfits_on_pet_state_id"
     t.index ["user_id"], name: "index_outfits_on_user_id"
   end
@@ -314,4 +316,5 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_29_114639) do
 
   add_foreign_key "alt_styles", "colors"
   add_foreign_key "alt_styles", "species"
+  add_foreign_key "outfits", "alt_styles"
 end

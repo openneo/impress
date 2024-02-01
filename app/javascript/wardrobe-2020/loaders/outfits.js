@@ -30,7 +30,9 @@ export function useDeleteOutfitMutation(options = {}) {
 		...options,
 		mutationFn: deleteOutfit,
 		onSuccess: (emptyData, id, context) => {
-			queryClient.invalidateQueries({ queryKey: ["outfits", String(id)] });
+			queryClient.invalidateQueries({
+				queryKey: ["outfits", String(id)],
+			});
 			if (options.onSuccess) {
 				options.onSuccess(emptyData, id, context);
 			}
@@ -42,7 +44,9 @@ async function loadSavedOutfit(id) {
 	const res = await fetch(`/outfits/${encodeURIComponent(id)}.json`);
 
 	if (!res.ok) {
-		throw new Error(`loading outfit failed: ${res.status} ${res.statusText}`);
+		throw new Error(
+			`loading outfit failed: ${res.status} ${res.statusText}`,
+		);
 	}
 
 	return res.json().then(normalizeOutfit);
@@ -54,6 +58,7 @@ async function saveOutfit({
 	speciesId,
 	colorId,
 	pose,
+	altStyleId,
 	wornItemIds,
 	closetedItemIds,
 }) {
@@ -65,6 +70,7 @@ async function saveOutfit({
 				color_id: colorId,
 				pose: pose,
 			},
+			alt_style_id: altStyleId,
 			item_ids: { worn: wornItemIds, closeted: closetedItemIds },
 		},
 	};
@@ -91,7 +97,9 @@ async function saveOutfit({
 	}
 
 	if (!res.ok) {
-		throw new Error(`saving outfit failed: ${res.status} ${res.statusText}`);
+		throw new Error(
+			`saving outfit failed: ${res.status} ${res.statusText}`,
+		);
 	}
 
 	return res.json().then(normalizeOutfit);
@@ -106,7 +114,9 @@ async function deleteOutfit(id) {
 	});
 
 	if (!res.ok) {
-		throw new Error(`deleting outfit failed: ${res.status} ${res.statusText}`);
+		throw new Error(
+			`deleting outfit failed: ${res.status} ${res.statusText}`,
+		);
 	}
 }
 
@@ -117,8 +127,11 @@ function normalizeOutfit(outfit) {
 		speciesId: String(outfit.species_id),
 		colorId: String(outfit.color_id),
 		pose: outfit.pose,
+		altStyleId: outfit.alt_style_id ? String(outfit.alt_style_id) : null,
 		wornItemIds: (outfit.item_ids?.worn || []).map((id) => String(id)),
-		closetedItemIds: (outfit.item_ids?.closeted || []).map((id) => String(id)),
+		closetedItemIds: (outfit.item_ids?.closeted || []).map((id) =>
+			String(id),
+		),
 		creator: outfit.user ? { id: String(outfit.user.id) } : null,
 		createdAt: outfit.created_at,
 		updatedAt: outfit.updated_at,
