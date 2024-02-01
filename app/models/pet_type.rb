@@ -25,6 +25,8 @@ class PetType < ApplicationRecord
     where(color_id: color.id, species_id: species.id)
   }
 
+  before_save :load_image_hash
+
   def self.special_color_or_basic(special_color)
     color_ids = special_color ? [special_color.id] : Color.basic.select([:id]).map(&:id)
     where(color_id: color_ids)
@@ -121,7 +123,7 @@ class PetType < ApplicationRecord
     pet_state
   end
 
-  before_save do
+  def load_image_hash
     if @origin_pet && @origin_pet.name =~ IMAGE_CPN_ACCEPTABLE_NAME
       cpn_uri = URI.parse sprintf(IMAGE_CPN_FORMAT, CGI.escape(@origin_pet.name))
       begin
@@ -136,8 +138,10 @@ class PetType < ApplicationRecord
           res.error!
         rescue Exception => e
           Rails.logger.warn "Error loading CPN image at #{cpn_uri}: #{e.message}"
+          return
         else
           Rails.logger.warn "Error loading CPN image at #{cpn_uri}. Response: #{res.inspect}"
+          return
         end
       end
       new_url = res['location']
