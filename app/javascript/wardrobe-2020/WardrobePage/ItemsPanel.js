@@ -78,9 +78,9 @@ function ItemsPanel({ outfitState, outfitSaving, loading, dispatchToOutfit }) {
               />
             ) : (
               <TransitionGroup component={null}>
-                {zonesAndItems.map(({ zoneLabel, items }) => (
+                {zonesAndItems.map(({ zoneId, zoneLabel, items }) => (
                   <CSSTransition
-                    key={zoneLabel}
+                    key={zoneId}
                     {...fadeOutAndRollUpTransition(css)}
                   >
                     <ItemZoneGroup

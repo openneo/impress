@@ -560,36 +560,49 @@ function getZonesAndItems(itemsById, wornItemIds, closetedItemIds) {
     .map((id) => itemsById[id])
     .filter((i) => i);
 
-  // We use zone label here, rather than ID, because some zones have the same
-  // label and we *want* to over-simplify that in this UI. (e.g. there are
-  // multiple Hat zones, and some items occupy different ones, but mostly let's
-  // just group them and if they don't conflict then all the better!)
+  // Loop over all the items, grouping them by zone, and also gathering all the
+  // zone metadata.
   const allItems = [...wornItems, ...closetedItems];
-  const itemsByZoneLabel = new Map();
+  const itemsByZone = new Map();
+  const zonesById = new Map();
   for (const item of allItems) {
     if (!item.appearanceOn) {
       continue;
     }
 
     for (const layer of item.appearanceOn.layers) {
-      const zoneLabel = layer.zone.label;
+      const zoneId = layer.zone.id;
+      zonesById.set(zoneId, layer.zone);
 
-      if (!itemsByZoneLabel.has(zoneLabel)) {
-        itemsByZoneLabel.set(zoneLabel, []);
+      if (!itemsByZone.has(zoneId)) {
+        itemsByZone.set(zoneId, []);
       }
-      itemsByZoneLabel.get(zoneLabel).push(item);
+      itemsByZone.get(zoneId).push(item);
     }
   }
 
-  let zonesAndItems = Array.from(itemsByZoneLabel.entries()).map(
-    ([zoneLabel, items]) => ({
-      zoneLabel: zoneLabel,
+  // Convert `itemsByZone` into an array of item groups.
+  let zonesAndItems = Array.from(itemsByZone.entries()).map(
+    ([zoneId, items]) => ({
+      zoneId,
+      zoneLabel: zonesById.get(zoneId).label,
       items: [...items].sort((a, b) => a.name.localeCompare(b.name)),
     }),
   );
-  zonesAndItems.sort((a, b) => a.zoneLabel.localeCompare(b.zoneLabel));
 
-  // As one last step, try to remove zone groups that aren't helpful.
+  // Sort groups by the zone label's alphabetically, and tiebreak by the zone
+  // ID. (That way, "Markings (#6)" sorts before "Markings (#16)".) We do this
+  // before the data simplification step, because it's useful to have
+  // consistent ordering for the algorithm that might choose to skip zones!
+  zonesAndItems.sort((a, b) => {
+    if (a.zoneLabel !== b.zoneLabel) {
+      return a.zoneLabel.localeCompare(b.zoneLabel);
+    } else {
+      return a.zoneId - b.zoneId;
+    }
+  });
+
+  // Data simplification step! Try to remove zone groups that aren't helpful.
   const groupsWithConflicts = zonesAndItems.filter(
     ({ items }) => items.length > 1,
   );
@@ -619,6 +632,25 @@ function getZonesAndItems(itemsById, wornItemIds, closetedItemIds) {
       return true;
     }
   });
+
+  // Finally, for groups with the same label, append the ID number.
+  //
+  // First, loop over the groups, to count how many times each zone label is
+  // used. Then, loop over them again, appending the ID number if count > 1.
+  const labelCounts = new Map();
+  for (const itemZoneGroup of zonesAndItems) {
+    const { zoneId, zoneLabel } = itemZoneGroup;
+
+    const count = labelCounts.get(zoneLabel) ?? 0;
+    labelCounts.set(zoneLabel, count + 1);
+  }
+  for (const itemZoneGroup of zonesAndItems) {
+    const { zoneId, zoneLabel } = itemZoneGroup;
+
+    if (labelCounts.get(zoneLabel) > 1) {
+      itemZoneGroup.zoneLabel += ` (#${zoneId})`;
+    }
+  }
 
   return zonesAndItems;
 }
