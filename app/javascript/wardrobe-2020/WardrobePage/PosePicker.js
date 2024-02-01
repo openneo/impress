@@ -23,7 +23,7 @@ import {
   useToast,
   useToken,
 } from "@chakra-ui/react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import { loadable } from "../util";
 
 import { petAppearanceFragment } from "../components/useOutfitAppearance";
@@ -422,14 +422,22 @@ function PosePickerTable({ poseInfos, onChange, initialFocusRef }) {
         </tbody>
       </table>
       {poseInfos.unconverted.isAvailable && (
-        <PoseOption
-          poseInfo={poseInfos.unconverted}
-          onChange={onChange}
-          inputRef={poseInfos.unconverted.isSelected && initialFocusRef}
-          size="sm"
-          label="Unconverted"
+        <Flex
+          align="center"
+          justify="center"
+          gap="1"
           marginTop="2"
-        />
+          marginBottom="2"
+        >
+          <PoseOption
+            poseInfo={poseInfos.unconverted}
+            onChange={onChange}
+            inputRef={poseInfos.unconverted.isSelected && initialFocusRef}
+            size="sm"
+            label="Retired UC"
+          />
+          <RetiredUCWarning isSelected={poseInfos.unconverted.isSelected} />
+        </Flex>
       )}
     </Box>
   );
@@ -619,6 +627,40 @@ function PosePickerEmptyExplanation() {
       We're still working on labeling these! For now, we're just giving you one
       of the expressions we have.
     </Box>
+  );
+}
+
+function RetiredUCWarning({ isSelected }) {
+  return (
+    <Popover placement="right" trigger="hover">
+      <PopoverTrigger>
+        <Box
+          as="button"
+          tabIndex="0"
+          aria-label="Warning"
+          cursor="help"
+          lineHeight="1"
+          opacity={isSelected ? "1" : "0.75"}
+          transform={isSelected ? "scale(1)" : "scale(0.8)"}
+          color={isSelected ? "yellow.500" : "inherit"}
+          transition="all 0.2s"
+          padding="1"
+        >
+          <WarningTwoIcon />
+        </Box>
+      </PopoverTrigger>
+      <PopoverContent
+        background="blackAlpha.800"
+        borderColor="blackAlpha.900"
+        color="white"
+        padding="2"
+        fontSize="sm"
+      >
+        "Unconverted" pets are no longer available on Neopets.com, and have been
+        replaced with the very similar Styles feature. We're just keeping this
+        as an archive!
+      </PopoverContent>
+    </Popover>
   );
 }
 
@@ -897,7 +939,7 @@ function getLabel(pose) {
   } else if (pose === "SICK_MASC" || pose === "SICK_FEM") {
     return "Sick";
   } else if (pose === "UNCONVERTED") {
-    return "Classic UC";
+    return "Retired UC";
   } else {
     return "Default";
   }
