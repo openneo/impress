@@ -42,6 +42,7 @@ import twemojiSunglasses from "../images/twemoji/sunglasses.svg";
 import twemojiQuestion from "../images/twemoji/question.svg";
 import twemojiMasc from "../images/twemoji/masc.svg";
 import twemojiFem from "../images/twemoji/fem.svg";
+import twemojiHourglass from "../images/twemoji/hourglass.svg";
 
 const PosePickerSupport = loadable(() => import("./support/PosePickerSupport"));
 
@@ -925,7 +926,7 @@ function getIcon(pose) {
   } else if (["SICK_MASC", "SICK_FEM"].includes(pose)) {
     return twemojiSick;
   } else if (pose === "UNCONVERTED") {
-    return twemojiSunglasses;
+    return twemojiHourglass;
   } else {
     return twemojiSmile;
   }
