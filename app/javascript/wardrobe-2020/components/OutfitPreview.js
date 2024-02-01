@@ -215,6 +215,10 @@ export function OutfitLayers({
     return () => window.removeEventListener("resize", computeAndSaveCanvasSize);
   }, [setCanvasSize]);
 
+  const layersWithAssets = visibleLayers.filter((l) =>
+    layerHasUsableAssets(l, { hiResMode }),
+  );
+
   return (
     <ClassNames>
       {({ css }) => (
@@ -247,7 +251,7 @@ export function OutfitLayers({
             </FullScreenCenter>
           )}
           <TransitionGroup enter={false} exit={doTransitions}>
-            {visibleLayers.map((layer) => (
+            {layersWithAssets.map((layer) => (
               <CSSTransition
                 // We manage the fade-in and fade-out separately! The fade-out
                 // happens here, when the layer exits the DOM.
@@ -359,9 +363,15 @@ export function FullScreenCenter({ children, ...otherProps }) {
 export function getBestImageUrlForLayer(layer, { hiResMode = false } = {}) {
   if (hiResMode && layer.svgUrl) {
     return layer.svgUrl;
-  } else {
+  } else if (layer.imageUrl) {
     return layer.imageUrl;
+  } else {
+    return null;
   }
+}
+
+function layerHasUsableAssets(layer, options = {}) {
+  return getBestImageUrlForLayer(layer, options) != null;
 }
 
 /**
@@ -397,11 +407,12 @@ export function usePreloadLayers(layers) {
     const imageAssetPromises = [];
     const movieAssetPromises = [];
     for (const layer of layers) {
-      const imageAssetPromise = loadImage(
-        getBestImageUrlForLayer(layer, { hiResMode }),
-        { preferArchive },
-      );
-      imageAssetPromises.push(imageAssetPromise);
+      const imageUrl = getBestImageUrlForLayer(layer, { hiResMode });
+      const imageAssetPromise =
+        imageUrl != null ? loadImage(imageUrl, { preferArchive }) : null;
+      if (imageAssetPromise != null) {
+        imageAssetPromises.push(imageAssetPromise);
+      }
 
       if (layer.canvasMovieLibraryUrl) {
         // Start preloading the movie. But we won't block on it! The blocking
@@ -424,8 +435,12 @@ export function usePreloadLayers(layers) {
         minimalAssetPromises.push(
           Promise.any([imageAssetPromise, movieAssetPromise]),
         );
-      } else {
+      } else if (imageAssetPromise != null) {
         minimalAssetPromises.push(imageAssetPromise);
+      } else {
+        console.warn(
+          `Skipping preloading layer ${layer.id}: no asset URLs found`,
+        );
       }
     }
 
