@@ -219,11 +219,6 @@ function PosePicker({
                 gap="2"
                 index={tabIndex}
                 onChange={setTabIndex}
-                // HACK: To only apply `initialFocusRef` to the selected input
-                // in the *active* tab, we just use `isLazy` to only *render*
-                // the active tab. We could also watch the tab state and set
-                // the ref accordingly!
-                isLazy
               >
                 <TabList paddingX="2" paddingY="0">
                   <Tab width="50%">Expressions</Tab>
@@ -237,7 +232,9 @@ function PosePicker({
                         colorId={colorId}
                         pose={pose}
                         appearanceId={appearanceId}
-                        initialFocusRef={initialFocusRef}
+                        initialFocusRef={
+                          tabIndex === 0 ? initialFocusRef : null
+                        }
                         dispatchToOutfit={dispatchToOutfit}
                       />
                     ) : (
@@ -245,7 +242,9 @@ function PosePicker({
                         <PosePickerTable
                           poseInfos={poseInfos}
                           onChange={onChangePose}
-                          initialFocusRef={initialFocusRef}
+                          initialFocusRef={
+                            tabIndex === 0 ? initialFocusRef : null
+                          }
                         />
                         {numStandardPoses == 0 && (
                           <PosePickerEmptyExplanation />
@@ -266,7 +265,7 @@ function PosePicker({
                       selectedStyleId={altStyleId}
                       altStyles={altStyles}
                       onChange={onChangeStyle}
-                      initialFocusRef={initialFocusRef}
+                      initialFocusRef={tabIndex === 1 ? initialFocusRef : null}
                     />
                     <StyleExplanation />
                   </TabPanel>
