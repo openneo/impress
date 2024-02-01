@@ -169,7 +169,6 @@ class PetState < ApplicationRecord
       end
     end
     pet_state.parent_swf_asset_relationships_to_update = relationships
-    pet_state.unconverted = (relationships.size == 1)
     pet_state
   end
 end
