@@ -738,8 +738,7 @@ function StyleExplanation() {
       opacity="0.7"
       marginTop="2"
     >
-      "Alt Styles" are special NC items that override the pet's usual appearance
-      via the{" "}
+      "Alt Styles" are NC items that override the pet's appearance via the{" "}
       <Box
         as="a"
         href="https://www.neopets.com/stylingchamber/"
@@ -748,7 +747,7 @@ function StyleExplanation() {
       >
         Styling Chamber
       </Box>
-      . The pet's color doesn't have to match.
+      . Not all items fit Alt Style pets. The pet's color doesn't have to match.
       <SupportOnly>
         <br />
         WIP: Only Support staff see this tab for now! 💖
