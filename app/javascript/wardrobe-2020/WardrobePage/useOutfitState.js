@@ -704,12 +704,6 @@ function buildOutfitQueryString(outfitState) {
     color: colorId || "",
     pose: pose || "",
   });
-  for (const itemId of wornItemIds) {
-    params.append("objects[]", itemId);
-  }
-  for (const itemId of closetedItemIds) {
-    params.append("closet[]", itemId);
-  }
   if (altStyleId != null) {
     params.append("style", altStyleId);
   }
@@ -717,6 +711,12 @@ function buildOutfitQueryString(outfitState) {
     // `state` is an old name for compatibility with old-style DTI URLs. It
     // refers to "PetState", the database table name for pet appearances.
     params.append("state", appearanceId);
+  }
+  for (const itemId of wornItemIds) {
+    params.append("objects[]", itemId);
+  }
+  for (const itemId of closetedItemIds) {
+    params.append("closet[]", itemId);
   }
 
   return params.toString();
