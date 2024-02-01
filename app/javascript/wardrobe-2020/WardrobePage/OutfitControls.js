@@ -24,6 +24,7 @@ import {
   Switch,
   Tooltip,
   UnorderedList,
+  useBreakpointValue,
   useClipboard,
   useToast,
 } from "@chakra-ui/react";
@@ -77,6 +78,8 @@ function OutfitControls({
   const _toast = useToast();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const toast = React.useMemo(() => _toast, []);
+
+  const speciesColorPickerSize = useBreakpointValue({ base: "sm", md: "md" });
 
   const onSpeciesColorChange = React.useCallback(
     (species, color, isValid, closestPose) => {
@@ -208,6 +211,7 @@ function OutfitControls({
             {outfitState.speciesId && outfitState.colorId && (
               <Flex
                 gridArea="picker"
+                align="center"
                 justify="center"
                 onClick={maybeUnlockFocus}
               >
@@ -223,6 +227,7 @@ function OutfitControls({
                       idealPose={outfitState.pose}
                       onChange={onSpeciesColorChange}
                       stateMustAlwaysBeValid
+                      size={speciesColorPickerSize}
                       speciesTestId="wardrobe-species-picker"
                       colorTestId="wardrobe-color-picker"
                     />
