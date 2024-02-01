@@ -29,7 +29,7 @@ function OutfitKnownGlitchesBadge({ appearance }) {
         item.appearance,
       ]).filter((l) => l.source === "item");
 
-      if (compatibleItemLayers.length === 0) {
+      if (compatibleItemLayers.length === 0 && allItemLayers.length > 0) {
         glitchMessages.push(
           <Box key={`total-uc-conflict-for-item-${item.id}`}>
             <i>{item.name}</i> isn't actually compatible with this special pet.
