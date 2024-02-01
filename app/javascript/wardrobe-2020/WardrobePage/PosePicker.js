@@ -679,7 +679,7 @@ function StyleSelect({
       as="form"
       direction="column"
       gap="2"
-      maxHeight="40vh"
+      maxHeight={{ base: "30vh", md: "10rem" }}
       padding="4px"
       overflow="auto"
     >
