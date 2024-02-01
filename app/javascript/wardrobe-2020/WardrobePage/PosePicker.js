@@ -293,7 +293,7 @@ function PosePickerButton({ pose, altStyle, isOpen, loading, ...props }, ref) {
       {({ css, cx }) => (
         <Button
           variant="unstyled"
-          boxShadow="md"
+          textShadow={`${theme.colors.blackAlpha["700"]} 0 1px 2px`}
           d="flex"
           alignItems="center"
           justifyContent="center"
@@ -307,10 +307,11 @@ function PosePickerButton({ pose, altStyle, isOpen, loading, ...props }, ref) {
           className={cx(
             css`
               border: 1px solid transparent !important;
-              color: ${theme.colors.gray["300"]};
+              color: ${theme.colors.gray["100"]};
               cursor: ${loading ? "wait" : "pointer"} !important;
               transition:
                 color 0.2s,
+                background: 0.2s,
                 border-color 0.2s !important;
               padding-left: 0.75em;
               padding-right: 0.5em;
@@ -319,6 +320,8 @@ function PosePickerButton({ pose, altStyle, isOpen, loading, ...props }, ref) {
               &.is-open {
                 border-color: ${theme.colors.gray["50"]} !important;
                 color: ${theme.colors.gray["50"]};
+                background: ${theme.colors.blackAlpha["600"]};
+                text-shadow: transparent 0 1px 2px;
               }
 
               &:focus {
