@@ -58,7 +58,7 @@ import { useDeleteOutfitMutation } from "../loaders/outfits";
  * full width of the container, it doesn't look like it!
  */
 function ItemsPanel({ outfitState, outfitSaving, loading, dispatchToOutfit }) {
-  const { zonesAndItems, incompatibleItems } = outfitState;
+  const { altStyleId, zonesAndItems, incompatibleItems } = outfitState;
 
   return (
     <ClassNames>
@@ -98,7 +98,11 @@ function ItemsPanel({ outfitState, outfitSaving, loading, dispatchToOutfit }) {
                     zoneLabel="Incompatible"
                     afterHeader={
                       <Tooltip
-                        label="These items don't fit this pet"
+                        label={
+                          altStyleId != null
+                            ? "Many items don't fit Alt Style pets"
+                            : "These items don't fit this pet"
+                        }
                         placement="top"
                         openDelay={100}
                       >
