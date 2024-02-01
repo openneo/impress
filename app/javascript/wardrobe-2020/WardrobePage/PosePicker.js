@@ -224,12 +224,10 @@ function PosePicker({
                 // the ref accordingly!
                 isLazy
               >
-                <SupportOnly>
-                  <TabList paddingX="2" paddingY="0">
-                    <Tab width="50%">Expressions</Tab>
-                    <Tab width="50%">Styles</Tab>
-                  </TabList>
-                </SupportOnly>
+                <TabList paddingX="2" paddingY="0">
+                  <Tab width="50%">Expressions</Tab>
+                  <Tab width="50%">Styles</Tab>
+                </TabList>
                 <TabPanels position="relative">
                   <TabPanel paddingX="4" paddingY="0">
                     {isInSupportMode ? (
@@ -748,10 +746,6 @@ function StyleExplanation() {
         Styling Chamber
       </Box>
       . Not all items fit Alt Style pets. The pet's color doesn't have to match.
-      <SupportOnly>
-        <br />
-        WIP: Only Support staff see this tab for now! 💖
-      </SupportOnly>
     </Box>
   );
 }
