@@ -1,5 +1,4 @@
 class Color < ApplicationRecord
-  translates # TODO: Remove once we're all done with translations!
   has_many :pet_types
   
   scope :alphabetical, -> { order(:name) }
@@ -9,16 +8,6 @@ class Color < ApplicationRecord
   scope :funny, -> { order(:prank) unless pranks_funny? }
 
   validates :name, presence: true
-
-  # Temporary writer to keep the English translation record updated, while
-  # primarily using the attribute on the model itself.
-  #
-  # Once this app and DTI 2020 are both comfortably off the translation system,
-  # we can remove this!
-  def name=(new_name)
-    globalize.write(:en, :name, new_name)
-    write_attribute(:name, new_name)
-  end
   
   def as_json(options={})
     {id: id, name: name, human_name: human_name}
