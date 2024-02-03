@@ -166,21 +166,21 @@
       git:
         repo: https://github.com/rbenv/ruby-build.git
         dest: /opt/ruby-build
-        version: 4d4678bc1ed89aa6900c0ea0da23495445dbcf50
+        version: e1b36a32fb87d61955ac38f1889b7e3cb3b2f407
 
-    - name: Check if Ruby 3.1.4 is already installed
+    - name: Check if Ruby 3.3.0 is already installed
       stat:
-        path: /opt/ruby-3.1.4
+        path: /opt/ruby-3.3.0
       register: ruby_dir
 
-    - name: Install Ruby 3.1.4
-      command: "/opt/ruby-build/bin/ruby-build 3.1.4 /opt/ruby-3.1.4"
+    - name: Install Ruby 3.3.0
+      command: "/opt/ruby-build/bin/ruby-build 3.3.0 /opt/ruby-3.3.0"
       when: not ruby_dir.stat.exists
 
-    - name: Add Ruby 3.1.4 to the global PATH, for developer convenience
+    - name: Add Ruby 3.3.0 to the global PATH, for developer convenience
       lineinfile:
         dest: /etc/profile
-        line: 'PATH="/opt/ruby-3.1.4/bin:$PATH" # Added by impress deploy setup script'
+        line: 'PATH="/opt/ruby-3.3.0/bin:$PATH" # Added by impress deploy setup script'
 
     - name: Install system dependencies for impress's Ruby gems
       apt:
@@ -244,14 +244,14 @@
       become_user: impress
       command:
         chdir: /srv/impress/versions/initial-placeholder
-        cmd: /opt/ruby-3.1.4/bin/bundle config set --local deployment true
+        cmd: /opt/ruby-3.3.0/bin/bundle config set --local deployment true
       when: not current_app_version.stat.exists
 
     - name: Install the placeholder app's dependencies
       become_user: impress
       command:
         chdir: /srv/impress/versions/initial-placeholder
-        cmd: /opt/ruby-3.1.4/bin/bundle install
+        cmd: /opt/ruby-3.3.0/bin/bundle install
       when: not current_app_version.stat.exists
 
     - name: Set the placeholder app as the current version
