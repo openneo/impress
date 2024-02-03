@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_01_134440) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_03_161355) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "species_id", null: false
     t.integer "color_id", null: false
@@ -68,16 +68,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_01_134440) do
     t.datetime "updated_at", precision: nil
     t.integer "visibility", default: 1, null: false
     t.index ["user_id"], name: "index_closet_lists_on_user_id"
-  end
-
-  create_table "color_translations", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
-    t.integer "color_id"
-    t.string "locale"
-    t.string "name"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["color_id"], name: "index_color_translations_on_color_id"
-    t.index ["locale"], name: "index_color_translations_on_locale"
   end
 
   create_table "colors", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
@@ -249,16 +239,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_01_134440) do
     t.string "name", null: false
   end
 
-  create_table "species_translations", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
-    t.integer "species_id"
-    t.string "locale"
-    t.string "name"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["locale"], name: "index_species_translations_on_locale"
-    t.index ["species_id"], name: "index_species_translations_on_species_id"
-  end
-
   create_table "swf_assets", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "type", limit: 7, null: false
     t.integer "remote_id", limit: 3, null: false
@@ -294,17 +274,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_01_134440) do
     t.integer "contact_neopets_connection_id"
     t.timestamp "last_trade_activity_at"
     t.boolean "support_staff", default: false, null: false
-  end
-
-  create_table "zone_translations", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
-    t.integer "zone_id"
-    t.string "locale"
-    t.string "label"
-    t.string "plain_label"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["locale"], name: "index_zone_translations_on_locale"
-    t.index ["zone_id"], name: "index_zone_translations_on_zone_id"
   end
 
   create_table "zones", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
