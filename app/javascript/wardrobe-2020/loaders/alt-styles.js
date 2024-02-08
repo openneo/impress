@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 
-export function useAltStylesForSpecies(speciesId, options = {}) {
+export function useAltStylesForSpecies(speciesId, options = {enabled = true}) {
 	return useQuery({
 		...options,
 		queryKey: ["altStylesForSpecies", String(speciesId)],
 		queryFn: () => loadAltStylesForSpecies(speciesId),
+		enabled: options.enabled && speciesId != null,
 	});
 }
 
