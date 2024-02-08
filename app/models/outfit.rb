@@ -61,18 +61,36 @@ class Outfit < ApplicationRecord
     OutfitImage.new(image_versions)
   end
   
+  IMAGE_URL_TEMPLATE = Addressable::Template.new(
+    Rails.configuration.x.impress_2020.origin + 
+    "/api/outfitImage{?id,size,updatedAt}"
+  )
   def image_versions
-    # Now, instead of using the saved outfit to S3, we're using out the
-    # DTI 2020 API + CDN cache version. We use openneo-assets.net to get
-    # around a bug on Neopets petpages with openneo.net URLs.
-    base_url = "https://outfits.openneo-assets.net/outfits" +
-      "/#{CGI.escape id.to_s}" +
-      "/v/#{CGI.escape updated_at.to_i.to_s}"
-    {
-      large: "#{base_url}/600.png",
-      medium: "#{base_url}/300.png",
-      small: "#{base_url}/150.png",
-    }
+    if Rails.env.production?
+      # Now, instead of using the saved outfit to S3, we're using out the
+      # DTI 2020 API + CDN cache version. We use openneo-assets.net to get
+      # around a bug on Neopets petpages with openneo.net URLs.
+      base_url = "https://outfits.openneo-assets.net/outfits" +
+        "/#{CGI.escape id.to_s}" +
+        "/v/#{CGI.escape updated_at.to_i.to_s}"
+      {
+        large: "#{base_url}/600.png",
+        medium: "#{base_url}/300.png",
+        small: "#{base_url}/150.png",
+      }
+    else
+      # In development, just talk to our local Impress 2020 directly.
+      build_url = -> size {
+        IMAGE_URL_TEMPLATE.expand(
+          id: id, size: size, updatedAt: updated_at.to_i
+        ).to_s
+      }
+      {
+        large: build_url.call("600"),
+        medium: build_url.call("300"),
+        small: build_url.call("150"),
+      }
+    end
 
     # NOTE: Below is the previous code that uses the saved outfits!
     # {}.tap do |versions|
