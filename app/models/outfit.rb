@@ -102,15 +102,19 @@ class Outfit < ApplicationRecord
   end
 
   def biology=(biology)
-    @biology = biology.slice(:species_id, :color_id, :pose)
+    @biology = biology.slice(:species_id, :color_id, :pose, :pet_state_id)
 
     begin
-      pet_type = PetType.where(
-        species_id: @biology[:species_id],
-        color_id: @biology[:color_id],
-      ).first!
-      self.pet_state = pet_type.pet_states.with_pose(@biology[:pose]).
-        emotion_order.first!
+      if @biology[:pet_state_id]
+        self.pet_state = PetState.find(@biology[:pet_state_id])
+      else
+        pet_type = PetType.where(
+          species_id: @biology[:species_id],
+          color_id: @biology[:color_id],
+        ).first!
+        self.pet_state = pet_type.pet_states.with_pose(@biology[:pose]).
+          emotion_order.first!
+      end
     rescue ActiveRecord::RecordNotFound
       # If there's no such pet state (which shouldn't happen normally in-app),
       # we don't set `pet_state` but we keep `@biology` for validation.

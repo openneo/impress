@@ -85,11 +85,12 @@ class Pet < ApplicationRecord
 
   def wardrobe_query
     {
-      :name => self.name,
-      :color => self.pet_type.color.id,
-      :species => self.pet_type.species.id,
-      :state => self.pet_state.id,
-      :objects => self.items.map(&:id)
+      name: self.name,
+      color: self.pet_type.color.id,
+      species: self.pet_type.species.id,
+      pose: self.pet_state.pose,
+      state: self.pet_state.id,
+      objects: self.items.map(&:id),
     }.to_query
   end
 

@@ -116,7 +116,7 @@ class OutfitsController < ApplicationController
   def outfit_params
     params.require(:outfit).permit(
       :name, :starred, :alt_style_id, item_ids: {worn: [], closeted: []},
-      biology: [:species_id, :color_id, :pose])
+      biology: [:species_id, :color_id, :pose, :pet_state_id])
   end
 
   def find_authorized_outfit
