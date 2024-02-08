@@ -48,6 +48,13 @@ module OutfitsHelper
     content_tag :li, :class => class_name, &block
   end
 
+  def outfit_image_tag(outfit)
+    image_tag(
+      outfit.image.small.url,
+      srcset: [[outfit.image.medium.url, "2x"]],
+    )
+  end
+
   def pet_attribute_select(name, collection, value=nil)
     options = options_from_collection_for_select(collection, :id, :human_name, value)
     select_tag name, options, id: nil, class: name

@@ -1,6 +1,6 @@
 = outfit_li_for(outfit) do
   - if outfit.image?
-    = link_to image_tag(outfit.image.small.url), outfit
+    = link_to outfit_image_tag(outfit), outfit
   
   %header
     .outfit-star
