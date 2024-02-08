@@ -129,7 +129,7 @@ function normalizeOutfit(outfit) {
 		speciesId: String(outfit.species_id),
 		colorId: String(outfit.color_id),
 		pose: outfit.pose,
-		appearanceId: outfit.pet_state_id,
+		appearanceId: String(outfit.pet_state_id),
 		altStyleId: outfit.alt_style_id ? String(outfit.alt_style_id) : null,
 		wornItemIds: (outfit.item_ids?.worn || []).map((id) => String(id)),
 		closetedItemIds: (outfit.item_ids?.closeted || []).map((id) =>

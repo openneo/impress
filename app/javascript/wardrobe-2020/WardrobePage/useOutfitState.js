@@ -447,6 +447,7 @@ function getOutfitStateFromOutfitData(outfit) {
     speciesId: outfit.speciesId,
     colorId: outfit.colorId,
     pose: outfit.pose,
+    appearanceId: outfit.appearanceId,
     altStyleId: outfit.altStyleId,
     wornItemIds: new Set(outfit.wornItemIds),
     closetedItemIds: new Set(outfit.closetedItemIds),

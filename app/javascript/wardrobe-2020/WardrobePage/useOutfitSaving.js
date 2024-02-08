@@ -69,6 +69,7 @@ function useOutfitSaving(outfitState, dispatchToOutfit) {
           speciesId: outfitState.speciesId,
           colorId: outfitState.colorId,
           pose: outfitState.pose,
+          appearanceId: outfitState.appearanceId,
           altStyleId: outfitState.altStyleId,
           wornItemIds: [...outfitState.wornItemIds],
           closetedItemIds: [...outfitState.closetedItemIds],
