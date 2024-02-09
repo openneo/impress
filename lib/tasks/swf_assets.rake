@@ -2,6 +2,39 @@ require 'async/barrier'
 require 'async/http/internet/instance'
 
 namespace :swf_assets do
+	# NOTE: I'm not sure how these duplicate records enter our database, probably
+	# a bug in the modeling code somewhere? For now, let's just remove them, and
+	# be ready to run it again if needed!
+	# NOTE: Run with DRY_RUN=1 to see what it would do first!
+	desc "Remove duplicate SwfAsset records"
+	task remove_duplicates: [:environment] do
+		duplicate_groups = SwfAsset.group(:type, :remote_id).
+			having("COUNT(*) > 1").
+			pluck(:type, :remote_id, Arel.sql("GROUP_CONCAT(id ORDER BY id ASC)"))
+
+		total = duplicate_groups.size
+		puts "Found #{total} groups of duplicate records"
+
+		SwfAsset.transaction do
+			duplicate_groups.each_with_index do |(type, remote_id, ids_str), index|
+				ids = ids_str.split(",")
+				duplicate_ids = ids[1..]
+				duplicate_records = SwfAsset.find(duplicate_ids)
+
+				if ENV["DRY_RUN"]
+					puts "[#{index + 1}/#{total}] #{type}/#{remote_id}: " + 
+						"Would delete #{duplicate_records.size} records " +
+						"(#{duplicate_records.map(&:id).join(", ")})"
+				else
+					puts "[#{index + 1}/#{total}] #{type}/#{remote_id}: " + 
+						"Deleting #{duplicate_records.size} records " +
+						"(#{duplicate_records.map(&:id).join(", ")})"
+					duplicate_records.each(&:destroy)
+				end
+			end
+		end
+	end
+
 	desc "Backfill manifest_url for SwfAsset models"
 	task manifests: [:environment] do
 		timeout = ENV.fetch("TIMEOUT", "5").to_i
