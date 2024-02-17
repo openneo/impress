@@ -86,8 +86,8 @@ class Pet < ApplicationRecord
   def wardrobe_query
     {
       name: self.name,
-      color: self.pet_type.color.id,
-      species: self.pet_type.species.id,
+      color: self.pet_type.color_id,
+      species: self.pet_type.species_id,
       pose: self.pet_state.pose,
       state: self.pet_state.id,
       objects: self.items.map(&:id),

@@ -3,8 +3,12 @@ class PetType < ApplicationRecord
   IMAGE_CP_LOCATION_REGEX = %r{^/cp/(.+?)/[0-9]+/[0-9]+\.png$};
   IMAGE_CPN_ACCEPTABLE_NAME = /^[a-z0-9_]+$/
 
-  belongs_to :species
-  belongs_to :color
+  # NOTE: While a pet type does always functionally belong to a color and
+  # species, sometimes we don't have that record yet, in which case color_id
+  # or species_id will refer to a nonexistant record, and the site should
+  # generally fall back gracefully about that.
+  belongs_to :species, optional: true
+  belongs_to :color, optional: true
   has_one :contribution, :as => :contributed, :inverse_of => :contributed
   has_many :pet_states
   has_many :pets
