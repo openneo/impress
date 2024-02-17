@@ -16,12 +16,6 @@ class PetType < ApplicationRecord
   attr_writer :origin_pet
 
   BasicHashes = YAML::load_file(Rails.root.join('config', 'basic_type_hashes.yml'))
-
-  # Returns all pet types of a single standard color. The caller shouldn't care
-  # which, though, in this implemention, it's always Blue. Don't depend on that.
-  scope :single_standard_color, -> { where(:color_id => Color.basic.first) }
-
-  scope :nonstandard_colors, -> { where(:color_id => Color.nonstandard) }
   
   scope :matching_name, ->(color_name, species_name) {
     color = Color.find_by_name!(color_name)
