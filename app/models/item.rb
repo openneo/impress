@@ -18,7 +18,7 @@ class Item < ApplicationRecord
   NCRarities = [0, 500]
   PAINTBRUSH_SET_DESCRIPTION = 'This item is part of a deluxe paint brush set!'
   SPECIAL_COLOR_DESCRIPTION_REGEX =
-    /This item is only wearable by Neopets painted ([a-zA-Z]+)\.|WARNING: This [a-zA-Z]+ can be worn by ([a-zA-Z]+) [a-zA-Z]+ ONLY!|If your Neopet is not painted ([a-zA-Z]+), it will not be able to wear this item\./
+    /This item is only wearable by [a-zA-Z]+ painted ([a-zA-Z]+)\.|WARNING: This [a-zA-Z]+ can be worn by ([a-zA-Z]+) [a-zA-Z]+ ONLY!|If your Neopet is not painted ([a-zA-Z]+), it will not be able to wear this item\./
 
   cattr_reader :per_page
   @@per_page = 30
