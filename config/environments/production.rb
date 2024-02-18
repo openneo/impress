@@ -83,8 +83,9 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-     :address        => "mail.openneo.net",
-     :port           => 587,
+     :address        => "smtp.fastmail.com",
+     :port           => 465,
+     :tls            => true,
      :domain         => "openneo.net",
      :authentication => :login,
      :user_name      => "matchu@openneo.net",
