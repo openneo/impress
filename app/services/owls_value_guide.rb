@@ -2,8 +2,8 @@ module OwlsValueGuide
 	include HTTParty
 
 	ITEMDATA_URL_TEMPLATE = Addressable::Template.new(
-    "https://neo-owls.net/itemdata/{item_name}"
-  )
+		"https://neo-owls.net/itemdata/{item_name}"
+	)
 
 	def self.find_by_name(item_name)
 		# Load the itemdata, pulling from the Rails cache if possible.
