@@ -505,8 +505,6 @@
 
   */
 
-  $("input, textarea").placeholder();
-
   var itemsSearchForm = $("#closet-hangers-items-search[data-current-user-id]");
   var itemsSearchField = itemsSearchForm.children("input[name=q]");
 
