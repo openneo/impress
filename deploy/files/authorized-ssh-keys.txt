@@ -1,7 +1,7 @@
 # These are the SSH public keys that allow a user to log in and setup or deploy.
 #
 # It's dangerous to add a new key to this file! When you run
-# `yarn deploy-setup`, it will copy these keys to the deploy server, which will
+# `bin/deploy:setup`, it will copy these keys to the deploy server, which will
 # allow the owner of these keys to log into the deploy server in the future.
 #
 # But the keys themselves aren't necessarily sensitive data, except for the name
