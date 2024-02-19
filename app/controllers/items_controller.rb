@@ -18,7 +18,7 @@ class ItemsController < ApplicationController
         assign_closeted!
         respond_to do |format|
           format.html {
-            @campaign = Campaign.current rescue nil
+            @campaign = Fundraising::Campaign.current rescue nil
             if @items.count == 1
               redirect_to @items.first
             else
@@ -45,7 +45,7 @@ class ItemsController < ApplicationController
     else
       respond_to do |format|
         format.html {
-          @campaign = Campaign.current rescue nil
+          @campaign = Fundraising::Campaign.current rescue nil
           @newest_items = Item.newest.includes(:translations).limit(18)
         }
         format.js { render json: {error: '$q required'}}

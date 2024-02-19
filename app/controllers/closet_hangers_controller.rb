@@ -65,7 +65,7 @@ class ClosetHangersController < ApplicationController
       current_user.assign_closeted_to_items!(items)
     end
 
-    @campaign = Campaign.current
+    @campaign = Fundraising::Campaign.current
   end
 
   def petpage

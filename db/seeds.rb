@@ -209,4 +209,4 @@ Zone.create(:id => 52, :label => "Foreground", :plain_label => "foreground", :de
 
 # NOTE: Creating an AuthUser automatically creates a User, too.
 AuthUser.create(name: "test", password: "test123", email: "test@gmail.example")
-Campaign.create(goal: 100_00, active: true, advertised: false, description: "")
+Fundraising::Campaign.create(goal: 100_00, active: true, advertised: false, description: "")
