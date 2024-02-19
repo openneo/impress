@@ -15,7 +15,8 @@ module ApplicationHelper
   end
 
   def body_class
-    "#{params[:controller]} #{params[:controller]}-#{params[:action]}".tap do |output|
+    controller = params[:controller].gsub("/", "-")
+    "#{controller} #{controller}-#{params[:action]}".tap do |output|
       output << @body_class if @body_class
     end
   end

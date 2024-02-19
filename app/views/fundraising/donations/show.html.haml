@@ -43,4 +43,7 @@
 
 - content_for :javascripts do
   = include_javascript_libraries :jquery
-  = javascript_include_tag 'donations/show.js'
+  = javascript_include_tag 'fundraising/donations/show'
+
+- content_for :stylesheets do
+  = stylesheet_link_tag 'fundraising/donations/show'

@@ -1,0 +1,227 @@
+@import "../../partials/clean/constants"
+@import "../../partials/campaign-progress"
+@import "../../partials/outfit"
+
+/* TODO: redundant with outfits/index; why is it not in the partial? */
+$outfit-inner-height: 150px
+$outfit-inner-width: 150px
+$outfit-banner-h-padding: 4px
+$outfit-banner-v-padding: 2px
+$outfit-banner-inner-width: $outfit-inner-width - (2 * $outfit-banner-h-padding)
+
+body.fundraising-campaigns
+  +campaign-progress
+  color: $campaign-text-color
+
+a
+  color: $campaign-text-color + #222 !important
+
+#home-link:hover
+  background-color: $campaign-background-color
+
+#userbar, #footer
+  color: $text-color
+  a
+    color: $link-color
+
+#home-link
+  color: $link-color
+
+#title
+  display: none
+
+#donation-form
+  +module
+  background: $campaign-background-color
+  border-color: $campaign-border-color
+  display: flex
+  flex-direction: row
+  margin-top: 1em
+  margin-bottom: 1.5em
+  padding-bottom: 32px
+  padding-left: 24px
+  padding-right: 24px
+  padding-top: 32px
+  position: relative
+
+  // We ignore the theme attribute on campaigns now, and just do purple.
+  &::after
+    background:
+      image: url(image_path("fundraising/purple.png"))
+      repeat: no-repeat
+    bottom: 0
+    content: " "
+    height: 123px
+    position: absolute
+    right: 4px
+    width: 150px
+
+  header, #donation-fields
+    flex: 1
+
+  #donation-form-title
+    font-size: 125%
+    font-weight: bold
+    margin-bottom: .25em
+    margin-top: 0
+
+  p
+    font-family: $main-font
+    font-size: 85%
+    margin-bottom: 0
+    margin-top: .5em
+
+  #donation-fields
+    margin-left: 20px
+    padding-top: 7px
+
+  #amount-header
+    font-size: 85%
+    font-weight: bold
+    line-height: 1
+
+  #amount-choices
+    $amount-choices-border-color: desaturate(lighten($campaign-border-color, 30%), 30%)
+
+    display: flex
+    flex-direction: row
+    margin-bottom: .75em
+    margin-top: .5em
+
+    li
+      border: 1px solid $amount-choices-border-color
+      border-radius: 5px
+      display: block
+      flex: 1
+      list-style: none
+      overflow: hidden
+      text-align: center
+
+      &:not(:last-of-type)
+        margin-right: .75em
+
+      input[type=radio]
+        height: 0
+        margin: 0
+        padding: 0
+        opacity: 0
+        position: absolute
+        width: 0
+
+      label
+        border: 1px solid transparent
+        box-sizing: border-box
+        display: block
+        padding: .5em .5em
+        width: 100%
+
+      input[type=radio]:checked ~ label
+        background: lighten($amount-choices-border-color, 15%)
+        font-weight: bold
+
+      input[type=radio]:focus ~ label
+        border-color: white
+        border-radius: 5px
+
+      #amount-custom-fields
+        display: none
+
+        input[type=text]
+          font-family: inherit
+          font-size: inherit
+          line-height: 1
+          padding: 0
+          text-align: center
+
+      #amount-custom:checked ~ #amount-custom-fields
+        display: block
+
+      #amount-custom:checked ~ label[for=amount-custom]
+        display: none
+
+  input[type=text]
+    border-color: #cce
+    color: $campaign-text-color
+    width: 3em
+
+  #donation-controls
+    button
+      +awesome-button-color(#004)
+      font-size: 120%
+
+#campaign-text[data-campaign-complete]
+  #description
+    display: none
+    &[data-show]
+      display: block
+
+#success-thanks
+  border: 1px dashed $module-border-color
+  margin-bottom: 1em
+  padding: 1em
+  position: relative
+
+  p:last-child
+    margin-bottom: 0
+
+#success-thanks-toggle-description
+  position: absolute
+  bottom: 1em
+  font-style: italic
+  right: 1em
+
+#outfits
+  +outfits-list
+  text-align: center
+
+  > li
+    +outfit
+
+    height: $outfit-inner-height
+    margin: 2px
+    width: $outfit-inner-width
+
+    header, footer
+      font-size: 85%
+      padding: $outfit-banner-v-padding $outfit-banner-h-padding
+      width: $outfit-banner-inner-width
+
+    img
+      height: $outfit-inner-height
+      width: $outfit-inner-width
+
+    &.banner
+      background-image: url(https://images.neopets.com/themes/004_bir_a2e60/footer_bg.png)
+      background-position: 0 -60px
+      border: 2px solid #006
+      color: white
+      height: 100px
+      line-height: 100px
+      margin: 4px 0
+      text-shadow: #335 2px 2px 1px
+      width: 800px - 4px
+
+      span
+        +inline-block
+        font-size: 32px
+        font-weight: bold
+        line-height: 1.5
+        vertical-align: middle
+
+#last-years-donors
+  font-weight: bold
+  margin-top: 1em
+  text-align: center
+
+#outfits-header > *
+  display: inline-block
+
+#all-campaigns-list
+  li
+    display: inline-block
+    list-style: none
+    margin-left: 1em
+
+#fine-print
+  font-size: 85%
+  margin-top: 2em

@@ -79,13 +79,15 @@ OpenneoImpressItems::Application.routes.draw do
   end
 
   # Donation campaign stuff!
-  resources :donations, only: [:create, :show, :update] do
-    collection do
-      resources :donation_features, path: 'features', only: [:index]
+  scope module: "fundraising" do
+    resources :donations, only: [:create, :show, :update] do
+      collection do
+        resources :donation_features, path: 'features', only: [:index]
+      end
     end
+    resources :campaigns, only: [:show], path: '/donate/campaigns'
+    get '/donate' => 'campaigns#current', as: :donate
   end
-  resources :campaigns, only: [:show], path: '/donate/campaigns'
-  get '/donate' => 'campaigns#current', as: :donate
 
   # Static pages!
   get '/terms', as: :terms,
