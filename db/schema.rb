@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_03_161355) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_20_230420) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "species_id", null: false
     t.integer "color_id", null: false
@@ -144,6 +144,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_03_161355) do
     t.integer "manual_special_color_id"
     t.column "modeling_status_hint", "enum('done','glitchy')"
     t.boolean "is_manually_nc", default: false, null: false
+    t.string "name", null: false
+    t.text "description", default: "", null: false
+    t.string "rarity", default: "", null: false
     t.index ["modeling_status_hint", "created_at", "id"], name: "items_modeling_status_hint_and_created_at_and_id"
     t.index ["modeling_status_hint", "created_at"], name: "items_modeling_status_hint_and_created_at"
     t.index ["modeling_status_hint", "id"], name: "items_modeling_status_hint_and_id"

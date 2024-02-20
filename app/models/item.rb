@@ -6,7 +6,12 @@ class Item < ApplicationRecord
 
   SwfAssetType = 'object'
   
-  translates :name, :description, :rarity
+  # Keep the reference to the deprecated `Item::Translation` record, but don't
+  # bind it directly to any attributes anymore. We have some temporary writers
+  # that hack around the API to keep the attributes synced, while no longer
+  # reading *from* them by default.
+  # TODO: Remove once we're all done with translations, both here and in 2020!
+  translates
 
   has_many :closet_hangers
   has_one :contribution, :as => :contributed, :inverse_of => :contributed
@@ -121,6 +126,24 @@ class Item < ApplicationRecord
       having('FIND_IN_SET(?, GROUP_CONCAT(body_id)) = 0', body_id).
       distinct
   }
+
+  # Temporary writers to keep the English translation record updated, while
+  # primarily using the attributes on the model itself.
+  #
+  # Once this app and DTI 2020 are both comfortably off the translation system,
+  # we can remove this!
+  def name=(new_name)
+    globalize.write(:en, :name, new_name)
+    write_attribute(:name, new_name)
+  end
+  def description=(new_description)
+    globalize.write(:en, :description, new_description)
+    write_attribute(:description, new_description)
+  end
+  def rarity=(new_rarity)
+    globalize.write(:en, :rarity, new_rarity)
+    write_attribute(:rarity, new_rarity)
+  end
 
   def nc_trade_value
     return nil unless nc?
