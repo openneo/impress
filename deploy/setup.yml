@@ -320,6 +320,21 @@
       notify:
         - Reload nginx
 
+    - name: Add openneo-home config file to nginx
+      template:
+        src: files/sites-available/openneo-home.conf
+        dest: /etc/nginx/sites-available/openneo-home.conf
+      notify:
+        - Reload nginx
+
+    - name: Enable openneo-home config file in nginx
+      file:
+        src: /etc/nginx/sites-available/openneo-home.conf
+        dest: /etc/nginx/sites-enabled/openneo-home.conf
+        state: link
+      notify:
+        - Reload nginx
+
     - name: Install MariaDB
       apt:
         name: mariadb-server
