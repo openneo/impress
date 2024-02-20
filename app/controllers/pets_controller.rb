@@ -9,10 +9,7 @@ class PetsController < ApplicationController
     # return modeling_disabled unless user_signed_in? && current_user.admin?
 
     raise Pet::PetNotFound unless params[:name]
-    @pet = Pet.load(
-      params[:name],
-      :item_scope => Item.includes(:translations),
-    )
+    @pet = Pet.load(params[:name])
     points = contribute(current_user, @pet)
     
     respond_to do |format|
