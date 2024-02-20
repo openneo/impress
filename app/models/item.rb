@@ -148,9 +148,9 @@ class Item < ApplicationRecord
   def nc_trade_value
     return nil unless nc?
     begin
-      OwlsValueGuide.find_by_name(name(:en))
+      OwlsValueGuide.find_by_name(name)
     rescue OwlsValueGuide::NotFound => error
-      Rails.logger.debug("No NC trade value listed for #{name(:en)} (#{id})")
+      Rails.logger.debug("No NC trade value listed for #{name} (#{id})")
       return nil
     rescue OwlsValueGuide::NetworkError => error
       Rails.logger.error("Couldn't load nc_trade_value: #{error.full_message}")
