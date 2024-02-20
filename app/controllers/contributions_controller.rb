@@ -10,7 +10,6 @@ class ContributionsController < ApplicationController
     Contribution.preload_contributeds_and_parents(
       @contributions,
       :scopes => {
-        'Item' => Item.includes(:translations),
         'PetType' => PetType.includes(:species, :color),
         'AltStyle' => AltStyle.includes(:species, :color),
       }
