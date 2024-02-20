@@ -463,16 +463,16 @@ class Item < ApplicationRecord
     species_support_strs = info['species_support'] || []
     self.species_support_ids = species_support_strs.map(&:to_i)
 
-    self.name_translations = {locale => info['name']}
-
-    attribute_names.each do |attribute|
-      next if attribute == 'name'
-      value = info[attribute.to_sym]
-      if value
-        value = value.to_i if value.is_a? Float
-        self[attribute] = value
-      end
-    end
+    self.name = info['name']
+    self.description = info['description']
+    self.thumbnail_url = info['thumbnail_url']
+    self.category = info['category']
+    self.type = info['type']
+    self.rarity = info['rarity']
+    self.rarity_index = info['rarity_index'].to_i
+    self.price = info['price'].to_i
+    self.weight_lbs = info['weight_lbs'].to_i
+    self.zones_restrict = info['zones_restrict']
   end
 
   def pending_swf_assets
