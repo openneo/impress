@@ -59,6 +59,19 @@ module ItemsHelper
     nc_icon if item.nc?
   end
 
+  def time_with_only_month_if_old(first_seen_at)
+    # For this month and the previous month, show the full date, so people can
+    # understand *exactly* how recent it was.
+    beginning_of_prev_month = Date.today.beginning_of_month - 1.month
+    if first_seen_at >= beginning_of_prev_month
+      return first_seen_at.strftime("%b %e, %Y")
+    end
+
+    # Otherwise, show just the month and the year, to be concise. (We'll offer
+    # the full date as a tooltip, too.)
+    first_seen_at.strftime("%b %Y")
+  end
+
   def jn_items_url_for(item)
     sprintf(JNItemsURLFormat, CGI::escape(item.name))
   end

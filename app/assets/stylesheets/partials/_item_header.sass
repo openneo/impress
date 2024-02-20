@@ -36,28 +36,30 @@
       display: flex
       align-items: center
       gap: 1em
-      
-      .item-kind
+
+      .item-kind, .first-seen-at
         padding: .25em .5em
         border-radius: .25em
         cursor: help
-        text-decoration: none
 
+        text-decoration: none
         font-weight: bold
         line-height: 1
 
+        background: #E2E8F0
+        color: #1A202C
+      
+      .item-kind
         // These colors are copied from DTI 2020, for initial consistency!
         // They're based on the Chakra UI colors, which I think are in turn the
         // Bootstrap colors? Or something?
+        // NOTE: For the data-type=np case, we use the default gray colors.
         &[data-type=nc]
           background: #E9D8FD
           color: #44337A
         &[data-type=pb]
           background: #FEEBC8
           color: #7B341E
-        &[data-type=np]
-          background: #E2E8F0
-          color: #1A202C
 
     .user-lists-info
       grid-area: lists

@@ -19,6 +19,12 @@
         %abbr.item-kind{'data-type' => 'np', title: t('items.show.item_kinds.np.description')}
           = t('items.show.item_kinds.np.label')
 
+      - if item.created_at?
+        %time.first-seen-at{
+          datetime: item.created_at.iso8601,
+          title: "First seen on #{item.created_at.to_date.to_fs(:long)}",
+        }= time_with_only_month_if_old item.created_at
+
       = link_to t('items.show.resources.jn_items'), jn_items_url_for(item)
       - if item.nc_trade_value
         = link_to t('items.show.resources.owls', value: item.nc_trade_value.value_text),
