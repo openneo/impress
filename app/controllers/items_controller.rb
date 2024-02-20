@@ -11,8 +11,6 @@ class ItemsController < ApplicationController
         else
           per_page = 30
         end
-        # Note that we sort by name by hand, since we might have to use
-        # fallbacks after the fact
         @items = @query.results.includes(:translations).
           paginate(page: params[:page], per_page: per_page)
         assign_closeted!
