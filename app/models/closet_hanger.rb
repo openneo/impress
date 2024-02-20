@@ -13,9 +13,8 @@ class ClosetHanger < ApplicationRecord
   validate :list_belongs_to_user
 
   scope :alphabetical_by_item_name, -> {
-    it = Item::Translation.arel_table
-    joins(:item => :translations).where(it[:locale].eq(I18n.locale)).
-      order(it[:name].asc)
+    i = Item.arel_table
+    joins(:item).order(i[:name].asc)
   }
   scope :trading, -> {
     ch = arel_table
@@ -86,28 +85,24 @@ class ClosetHanger < ApplicationRecord
     base
   end
 
+  # TODO: Is the performance improvement on this actually much better than just
+  # `includes`, now that `Item::Translation` records aren't part of it anymore?
   def self.preload_items(
     hangers,
-    items_scope: Item.all,
-    item_translations_scope: Item::Translation.all
+    items_scope: Item.all
   )
     # Preload the records we need. (This is like `includes`, but `includes`
     # always selects all fields for all records, and we give the caller the
     # opportunity to specify which fields it actually wants via scope!)
     items = items_scope.where(id: hangers.map(&:item_id))
-    translations = item_translations_scope.where(item_id: items.map(&:id))
 
     # Group the records by relevant IDs.
-    translations_by_item_id = translations.group_by(&:item_id)
     items_by_id = items.to_h { |i| [i.id, i] }
 
     # Assign the preloaded records to the records they belong to. (This is like
-    # doing e.g. i.translations = ..., but that's a database write - we
-    # actually just want to set the `translations` field itself directly!
-    # Hacky, ripped from how `ActiveRecord::Associations::Preloader` does it!)
-    items.each do |item|
-      item.association(:translations).target = translations_by_item_id[item.id]
-    end
+    # doing e.g. h.item = ..., but that's a database write - we actually just
+    # want to set the `item` field itself directly! Hacky, ripped from how
+    # `ActiveRecord::Associations::Preloader` does it!)
     hangers.each do |hanger|
       hanger.association(:item).target = items_by_id[hanger.item_id]
     end

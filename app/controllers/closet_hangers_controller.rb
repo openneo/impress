@@ -235,7 +235,6 @@ class ClosetHangersController < ApplicationController
       lists,
       hangers_scope: hangers_scope,
       items_scope: items_scope,
-      item_translations_scope: item_translations_scope,
     )
     lists.group_by(&:hangers_owned)
   end
@@ -248,7 +247,6 @@ class ClosetHangersController < ApplicationController
       ClosetHanger.preload_items(
         hangers,
         items_scope: items_scope,
-        item_translations_scope: item_translations_scope,
       )
       hangers.group_by(&:owned)
     else
@@ -261,12 +259,8 @@ class ClosetHangersController < ApplicationController
   end
 
   def items_scope
-    Item.select(:id, :thumbnail_url, :rarity_index, :is_manually_nc)
-  end
-
-  def item_translations_scope
-    Item::Translation.select(:id, :item_id, :locale, :name, :description).
-      where(locale: I18n.locale)
+    Item.select(:id, :name, :description, :thumbnail_url, :rarity_index,
+      :is_manually_nc)
   end
 
   def owned

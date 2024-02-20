@@ -45,8 +45,7 @@ class ClosetList < ApplicationRecord
   def self.preload_items(
     lists,
     hangers_scope: ClosetHanger.all,
-    items_scope: Item.all,
-    item_translations_scope: Item::Translation.all
+    items_scope: Item.all
   )
     # Preload the records we need. (This is like `includes`, but `includes`
     # always selects all fields for all records, and we give the caller the
@@ -57,9 +56,9 @@ class ClosetList < ApplicationRecord
     hangers_by_list_id = hangers.group_by(&:list_id)
 
     # Assign the preloaded records to the records they belong to. (This is like
-    # doing e.g. i.translations = ..., but that's a database write - we
-    # actually just want to set the `translations` field itself directly!
-    # Hacky, ripped from how `ActiveRecord::Associations::Preloader` does it!)
+    # doing e.g. h.item = ..., but that's a database write - we actually just
+    # want to set the `item` field itself directly! Hacky, ripped from how
+    # `ActiveRecord::Associations::Preloader` does it!)
     lists.each do |list|
       list.association(:hangers).target = hangers_by_list_id[list.id]
     end
@@ -68,7 +67,6 @@ class ClosetList < ApplicationRecord
     ClosetHanger.preload_items(
       hangers,
       items_scope: items_scope,
-      item_translations_scope: item_translations_scope,
     )
   end
 
