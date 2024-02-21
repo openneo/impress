@@ -28,13 +28,6 @@ class Item < ApplicationRecord
   cattr_reader :per_page
   @@per_page = 30
 
-  scope :alphabetize_by_translations, ->(locale) {
-    locale = locale or I18n.locale
-    it = Item::Translation.arel_table
-    joins(:translations).where(it[:locale].eq('en')).
-      order(it[:name].asc)
-  }
-
   scope :newest, -> {
     order(arel_table[:created_at].desc) if arel_table[:created_at]
   }
@@ -44,14 +37,10 @@ class Item < ApplicationRecord
   scope :with_closet_hangers, -> { joins(:closet_hangers) }
 
   scope :name_includes, ->(value, locale = I18n.locale) {
-    it = Item::Translation.arel_table
-    Item.joins(:translations).where(it[:locale].eq(locale)).
-      where(it[:name].matches('%' + sanitize_sql_like(value) + '%'))
+    Item.where("name LIKE ?", "%" + sanitize_sql_like(value) + "%")
   }
   scope :name_excludes, ->(value, locale = I18n.locale) {
-    it = Item::Translation.arel_table
-    Item.joins(:translations).where(it[:locale].eq(locale)).
-      where(it[:name].matches('%' + sanitize_sql_like(value) + '%').not)
+    Item.where("name NOT LIKE ?", "%" + sanitize_sql_like(value) + "%")
   }
   scope :is_nc, -> {
     i = Item.arel_table
@@ -62,16 +51,12 @@ class Item < ApplicationRecord
     where(i[:rarity_index].in(Item::NCRarities).or(i[:is_manually_nc].eq(true)).not)
   }
   scope :is_pb, -> {
-    it = Item::Translation.arel_table
-    joins(:translations).where(it[:locale].eq('en')).
-      where('description LIKE ?',
-        '%' + sanitize_sql_like(PAINTBRUSH_SET_DESCRIPTION) + '%')
+    where('description LIKE ?',
+      '%' + sanitize_sql_like(PAINTBRUSH_SET_DESCRIPTION) + '%')
   }
   scope :is_not_pb, -> {
-    it = Item::Translation.arel_table
-    joins(:translations).where(it[:locale].eq('en')).
-      where('description NOT LIKE ?',
-        '%' + sanitize_sql_like(PAINTBRUSH_SET_DESCRIPTION) + '%')
+    where('description NOT LIKE ?',
+      '%' + sanitize_sql_like(PAINTBRUSH_SET_DESCRIPTION) + '%')
   }
   scope :occupies, ->(zone_label) {
     zone_ids = Zone.matching_label(zone_label).map(&:id)

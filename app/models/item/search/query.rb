@@ -11,8 +11,7 @@ class Item
       end
       
       def results
-        @filters.map(&:to_query).inject(Item.all, &:merge).
-          alphabetize_by_translations(Query.locale)
+        @filters.map(&:to_query).inject(Item.all, &:merge).order(:name)
       end
 
       def to_s

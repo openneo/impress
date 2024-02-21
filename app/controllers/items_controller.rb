@@ -11,8 +11,8 @@ class ItemsController < ApplicationController
         else
           per_page = 30
         end
-        @items = @query.results.includes(:translations).
-          paginate(page: params[:page], per_page: per_page)
+        @items = @query.results.paginate(
+          page: params[:page], per_page: per_page)
         assign_closeted!
         respond_to do |format|
           format.html {
@@ -44,7 +44,7 @@ class ItemsController < ApplicationController
       respond_to do |format|
         format.html {
           @campaign = Fundraising::Campaign.current rescue nil
-          @newest_items = Item.newest.includes(:translations).limit(18)
+          @newest_items = Item.newest.limit(18)
         }
         format.js { render json: {error: '$q required'}}
       end
@@ -86,8 +86,7 @@ class ItemsController < ApplicationController
       raise ActiveRecord::RecordNotFound, 'Pet type not found'
     end
     
-    @items = @pet_type.needed_items.includes(:translations).
-      alphabetize_by_translations
+    @items = @pet_type.needed_items.order(:name)
     assign_closeted!
     
     respond_to do |format|
