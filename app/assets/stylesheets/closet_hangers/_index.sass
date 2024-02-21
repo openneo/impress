@@ -96,6 +96,7 @@ body.closet_hangers-index
   #closet-hangers
     clear: both
     text-align: center
+    border-top: 1px solid $module-border-color
 
     .object
       .quantity
@@ -151,6 +152,9 @@ body.closet_hangers-index
     border-top: 1px solid $module-border-color
     margin-bottom: 2em
     padding-bottom: 1em
+
+    &:first-of-type
+      border-top: 0
 
     > header
       border-bottom: 1px solid $soft-border-color
@@ -376,7 +380,6 @@ body.closet_hangers-index
 
       .bulk-actions
         background: $background-color
-        border-top: 1px solid $module-border-color
         box-sizing: border-box
         display: block
         font-size: 85%
@@ -384,10 +387,10 @@ body.closet_hangers-index
         text-align: center
         width: 800px
 
-        &.isStuck
-          border-bottom: 1px solid $module-border-color
-          border-top: 0
-          z-index: 11  /* beat the visibility form */
+        position: sticky
+        top: 0
+        border-bottom: 1px solid $module-border-color
+        z-index: 11  /* beat the visibility form */
 
         .bulk-actions-intro, .bulk-actions-target-desc-singular
           display: none

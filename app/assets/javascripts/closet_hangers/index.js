@@ -481,13 +481,6 @@
     updateBulkActions();
   });
 
-  // hahaha, nasty hacks to make stickUp use our old jQuery
-  $.fn.on = $.fn.bind;
-
-  $(function () {
-    $(".bulk-actions").stickUp();
-  });
-
   function maintainCheckboxes(fn) {
     var checkedIds = getCheckedIds();
 
