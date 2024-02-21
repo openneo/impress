@@ -1,6 +1,6 @@
 class ClosetHanger < ApplicationRecord
   belongs_to :item
-  belongs_to :list, class_name: 'ClosetList', optional: true
+  belongs_to :list, class_name: 'ClosetList', optional: true, touch: true
   belongs_to :user
 
   delegate :name, to: :item, prefix: true

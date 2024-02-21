@@ -7,7 +7,11 @@
 
   function hangersInit() {
     for (var i = 0; i < hangersInitCallbacks.length; i++) {
-      hangersInitCallbacks[i]();
+      try {
+        hangersInitCallbacks[i]();
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 
@@ -57,6 +61,36 @@
   $("#toggle-compare").click(function () {
     hangersEl.toggleClass("comparing");
   });
+
+  // Read the item IDs of trade matches from the meta tags.
+  const ownedIds =
+    document
+      .querySelector("meta[name=trade-matches-owns]")
+      ?.getAttribute("value")
+      ?.split(",") ?? [];
+  const wantedIds =
+    document
+      .querySelector("meta[name=trade-matches-wants]")
+      ?.getAttribute("value")
+      ?.split(",") ?? [];
+
+  // Apply the `user-owns` and `user-wants` classes to the relevant entries.
+  // This both provides immediate visual feedback, and sets up "Compare with
+  // Your Items" to toggle to just them!
+  //
+  // NOTE: The motivation here is caching: this allows us to share a cache of
+  // the closet list contents across all users, without `user-owns` or
+  // `user-wants` classes for one specific user getting cached and reused.
+  const hangerEls = document.querySelectorAll("#closet-hangers .object");
+  for (const hangerEl of hangerEls) {
+    const itemId = hangerEl.getAttribute("data-item-id");
+    if (ownedIds.includes(itemId)) {
+      hangerEl.classList.add("user-owns");
+    }
+    if (wantedIds.includes(itemId)) {
+      hangerEl.classList.add("user-wants");
+    }
+  }
 
   /*
 

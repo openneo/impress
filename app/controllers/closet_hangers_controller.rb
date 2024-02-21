@@ -45,24 +45,24 @@ class ClosetHangersController < ApplicationController
     visible_groups = @user.closet_hangers_groups_visible_to(@perspective_user)
     @unlisted_closet_hangers_by_owned = find_unlisted_closet_hangers_by_owned(visible_groups)
 
-    items = []
+    @items = []
 
     @closet_lists_by_owned.each do |owned, lists|
       lists.each do |list|
         list.hangers.each do |hanger|
-          items << hanger.item
+          @items << hanger.item
         end
       end
     end
 
     @unlisted_closet_hangers_by_owned.each do |owned, hangers|
       hangers.each do |hanger|
-        items << hanger.item
+        @items << hanger.item
       end
     end
 
     if @public_perspective && user_signed_in?
-      current_user.assign_closeted_to_items!(items)
+      current_user.assign_closeted_to_items!(@items)
     end
 
     @campaign = Fundraising::Campaign.current

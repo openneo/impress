@@ -18,13 +18,15 @@
   - if show_controls
     = render partial: 'closet_lists/trading_neomail_warning', locals: {list: closet_list, user: @user}
 
-  .closet-list-content
-    - if closet_list.description?
-      = closet_list_description_format closet_list
+  -# Cachebuster comment: Updated downstream content at Feb 20 2024, 6:15pm
+  - cache closet_list do
+    .closet-list-content
+      - if closet_list.description?
+        = closet_list_description_format closet_list
 
-    .closet-list-hangers
-      - unless closet_list.hangers.empty?
-        = render_sorted_hangers(closet_list)
-    
-    %span.empty-list= t('.empty')
+      .closet-list-hangers
+        - unless closet_list.hangers.empty?
+          = render_sorted_hangers(closet_list)
+      
+      %span.empty-list= t('.empty')
 

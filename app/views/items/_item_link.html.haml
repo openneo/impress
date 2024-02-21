@@ -1,4 +1,6 @@
+-# NOTE: Changing this requires bumping the cache at `_closet_list.html.haml`!
 = link_to item_path(item) do
-  = image_tag item.thumbnail_url, :alt => item.description, :title => item.description
+  = image_tag item.thumbnail_url, alt: "Thumbnail for #{item.name}",
+    title: item.description, loading: "lazy"
   %span.name= item.name
   = nc_icon_for(item)

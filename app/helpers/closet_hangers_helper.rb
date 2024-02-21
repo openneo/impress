@@ -1,15 +1,9 @@
 require 'cgi'
+require 'digest'
 
 module ClosetHangersHelper
   def closet_hangers_help_class(user)
     'hidden' unless user.closet_hangers.empty?
-  end
-
-  def closet_hanger_partial_class(hanger)
-    'object'.tap do |class_name|
-      class_name << ' user-owns' if hanger.item.owned?
-      class_name << ' user-wants' if hanger.item.wanted?
-    end
   end
 
   def send_neomail_url(neopets_username)
@@ -124,8 +118,8 @@ module ClosetHangersHelper
 
   def render_closet_lists(lists)
     if lists
-      render :partial => 'closet_lists/closet_list', :collection => lists,
-        :locals => {:show_controls => !public_perspective?}
+      render partial: 'closet_lists/closet_list', collection: lists,
+        locals: {show_controls: !public_perspective?}
     end
   end
 
@@ -138,6 +132,20 @@ module ClosetHangersHelper
   def unlisted_hangers_count(owned)
     hangers = @unlisted_closet_hangers_by_owned[owned]
     hangers ? hangers.size : 0
+  end
+
+  def unlisted_hangers_cache_key(owned)
+    # It'd be nice if this was a closet list like any other, instead of being a
+    # weird separate thing! Then we could use the same closet list cache key,
+    # in which adding/removing stuff in the list touches the simple updated_at.
+    # Instead, we encode the hashed list of hanger IDs and last updated_at into
+    # the key! (The digest is to prevent the cache key from getting obscenely
+    # large for long lists!)
+    hangers = @unlisted_closet_hangers_by_owned[owned] || []
+    ids = hangers.map(&:id).join(",")
+    last_updated_at = hangers.map(&:updated_at).max
+
+    ["owned=#{owned}", Digest::MD5.hexdigest(ids), last_updated_at.to_i]
   end
   
   def closet_lists_group_name(subject, owned)
