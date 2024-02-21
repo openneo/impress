@@ -31,7 +31,6 @@ gem 'will_paginate', '~> 4.0'
 # For translation, both for the site UI and for Neopets data.
 gem 'rails-i18n', '~> 7.0', '>= 7.0.7'
 gem 'http_accept_language', '~> 2.1', '>= 2.1.1'
-gem 'globalize', '~> 6.2', '>= 6.2.1'
 
 # For reading and parsing HTML from Neopets.com, like importing Closet pages.
 gem 'nokogiri', '~> 1.15', '>= 1.15.3'
