@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_20_230420) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_21_004332) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "species_id", null: false
     t.integer "color_id", null: false
@@ -162,7 +162,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_20_230420) do
   end
 
   create_table "modeling_logs", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
-    t.datetime "created_at", precision: nil, null: false
+    t.datetime "created_at", precision: nil, default: -> { "current_timestamp()" }, null: false
     t.text "log_json", null: false
     t.string "pet_name", limit: 128, null: false
   end
