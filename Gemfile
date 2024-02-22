@@ -4,7 +4,7 @@ ruby '3.1.4'
 gem 'rails', '~> 7.1', '>= 7.1.3.2'
 
 # The HTTP server running the Rails instance.
-gem 'falcon', '~> 0.42.3'
+gem 'falcon', '~> 0.43.0'
 
 # Our database is MySQL, in both development and production.
 gem 'mysql2', '~> 0.5.5'
