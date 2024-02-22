@@ -5,7 +5,7 @@ Description=Dress to Impress webapp
 User=impress
 Restart=always
 WorkingDirectory=/srv/impress/current
-ExecStart=/opt/ruby-3.1.4/bin/bundle exec falcon host
+ExecStart=/opt/ruby-3.3.0/bin/bundle exec falcon host
 Environment="RAILS_ENV=production"
 ; Set EXECJS_RUNTIME to save us from needing to install Node
 Environment="EXECJS_RUNTIME=Disabled"

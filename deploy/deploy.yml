@@ -9,6 +9,19 @@
     # deploy:setup should have added us to the "impress-deployers" group, so we
     # should be able to become the "impress" user without a password.
     ansible_become_password: ""
+
+    # Set this to `yes` to skip setting this version as `current`. (We also
+    # skip our usual cleanup, to avoid disrupting the `current` version!)
+    #
+    # This can be useful for upgrading our Ruby version without downtime:
+    # 1. Install the new Ruby version, but don't uninstall the old one.
+    # 2. Update the app to reference the new Ruby version in the `Gemfile`.
+    # 3. Deploy the app with `skip_set_as_current`.
+    # 4. Update the service file manually to use the new Ruby to run the new
+    #    version of the app, referenced directly by path.
+    # 5. Link the new version as `current` manually.
+    # 6. Reset the service file to use the new Ruby to run `current`.
+    skip_set_as_current: no
   tasks:
     - name: Generate a version name from the current timestamp
       command: date '+%Y-%m-%d-%s'
@@ -41,7 +54,7 @@
     - name: Configure Bundler to run in deployment mode
       command:
         chdir: "{{ remote_app_root }}"
-        cmd: /opt/ruby-3.1.4/bin/bundle config set --local deployment true
+        cmd: /opt/ruby-3.3.0/bin/bundle config set --local deployment true
 
     # This ensures that, while attempting our current deploy, we don't
     # accidentally delete gems out from under the currently-running version.
@@ -51,7 +64,7 @@
     - name: Configure Bundler to *not* clean up old gems when installing
       command:
         chdir: "{{ remote_app_root }}"
-        cmd: /opt/ruby-3.1.4/bin/bundle config set --local clean false
+        cmd: /opt/ruby-3.3.0/bin/bundle config set --local clean false
 
     # NOTE: Bundler recommends this, and they're pretty smart about it: if the
     # Gemfile changes, this shouldn't disrupt the currently-running version,
@@ -60,18 +73,19 @@
     - name: Configure Bundler to use the bundle folder shared by all app versions
       command:
         chdir: "{{ remote_app_root }}"
-        cmd: "/opt/ruby-3.1.4/bin/bundle config set --local path {{ remote_project_root}}/shared/bundle"
+        cmd: "/opt/ruby-3.3.0/bin/bundle config set --local path {{ remote_project_root}}/shared/bundle"
 
     - name: Run `bundle install` to install dependencies in remote folder
       command:
         chdir: "{{ remote_app_root }}"
-        cmd: /opt/ruby-3.1.4/bin/bundle install
+        cmd: /opt/ruby-3.3.0/bin/bundle install
 
     - name: Update the `current` folder to point to the new version
       file:
         src: "{{ remote_app_root }}"
         dest: /srv/impress/current
         state: link
+      when: not skip_set_as_current
 
     # NOTE: This uses the passwordless sudo rule we set up in deploy:setup.
     # We write it as a command rather than using the built-in `systemd` Ansible
@@ -83,11 +97,13 @@
     - name: Restart the app
       become: no
       command: sudo systemctl restart impress
+      when: not skip_set_as_current
 
     - name: Clean up gems no longer used in the current app version
       command:
         chdir: "{{ remote_app_root }}"
-        cmd: /opt/ruby-3.1.4/bin/bundle clean
+        cmd: /opt/ruby-3.3.0/bin/bundle clean
+      when: not skip_set_as_current
 
     - name: Find older app versions to clean up
       # Print out all but the 5 last-recently-updated versions.
@@ -95,9 +111,11 @@
         chdir: "{{ remote_project_root }}/versions"
         cmd: bash -c 'ls -t | tail -n +6'
       register: versions_to_clean_up
+      when: not skip_set_as_current
 
     - name: Clean up older versions
       file:
         path: "{{ remote_project_root }}/versions/{{ item }}"
         state: absent
       with_items: "{{ versions_to_clean_up.stdout_lines }}"
+      when: not skip_set_as_current
