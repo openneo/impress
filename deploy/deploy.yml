@@ -78,7 +78,10 @@
     - name: Run `bundle install` to install dependencies in remote folder
       command:
         chdir: "{{ remote_app_root }}"
-        cmd: /opt/ruby-3.3.0/bin/bundle install
+        # The `--local` flag instructs Bundler to use the cached dependencies
+        # in `vendor/cache`, instead of reading from the web, which is much
+        # faster and more reliable!
+        cmd: /opt/ruby-3.3.0/bin/bundle install --local
 
     - name: Update the `current` folder to point to the new version
       file:
