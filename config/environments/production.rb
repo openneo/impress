@@ -89,7 +89,7 @@ Rails.application.configure do
      :domain         => "openneo.net",
      :authentication => :login,
      :user_name      => "matchu@openneo.net",
-     :password       => ENV.fetch("MATCHU_EMAIL_PASSWORD"),
+     :password       => Rails.application.credentials.matchu_email_password,
      :enable_starttls_auto => false
   }
   config.action_mailer.raise_delivery_errors = true
