@@ -62,7 +62,7 @@ class Outfit < ApplicationRecord
   end
   
   IMAGE_URL_TEMPLATE = Addressable::Template.new(
-    Rails.configuration.x.impress_2020.origin + 
+    Rails.configuration.impress_2020_origin + 
     "/api/outfitImage{?id,size,updatedAt}"
   )
   def image_versions

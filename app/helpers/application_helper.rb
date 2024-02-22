@@ -93,13 +93,15 @@ module ApplicationHelper
   end
 
   def impress_2020_meta_tags
-    impress_2020 = Rails.configuration.x.impress_2020
+    origin = Rails.configuration.impress_2020_origin
+    support_secret = Rails.application.credentials.impress_2020.support_secret
+
     capture do
-      concat tag("meta", name: "impress-2020-origin",
-        content: impress_2020.origin)
-      if support_staff? && impress_2020.support_secret.present?
+      concat tag("meta", name: "impress-2020-origin", content: origin)
+
+      if support_staff? && support_secret.present?
         concat tag("meta", name: "impress-2020-support-secret",
-          content: impress_2020.support_secret)
+          content: support_secret)
       end
     end
   end

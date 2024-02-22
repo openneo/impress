@@ -121,4 +121,9 @@ Rails.application.configure do
   # ]
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
+  # Use the live copy of Impress 2020. (Can override this with the
+  # IMPRESS_2020_ORIGIN environment variable!)
+  config.impress_2020_origin = ENV.fetch("IMPRESS_2020_ORIGIN",
+    "https://impress-2020.openneo.net")
 end

@@ -102,4 +102,9 @@ Rails.application.configure do
 
   # Allow connections on Vagrant's private network.
   config.web_console.permissions = '10.0.2.2'
+
+  # Use a local copy of Impress 2020, presumably running on port 4000. (Can
+  # override this with the IMPRESS_2020_ORIGIN environment variable!)
+  config.impress_2020_origin = ENV.fetch("IMPRESS_2020_ORIGIN",
+    "http://localhost:4000")
 end

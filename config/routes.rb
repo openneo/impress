@@ -91,7 +91,7 @@ OpenneoImpressItems::Application.routes.draw do
 
   # Static pages!
   get '/terms', as: :terms,
-    to: redirect(Rails.configuration.x.impress_2020.origin + "/terms")
+    to: redirect(Rails.configuration.impress_2020_origin + "/terms")
 
   # Other useful lil things!
   get '/sitemap.xml' => 'sitemap#index', :as => :sitemap, :format => :xml
