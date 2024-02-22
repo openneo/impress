@@ -23,7 +23,7 @@
 
   var hangerGroups = [];
 
-  $("div.closet-hangers-group").each(function () {
+  $(".closet-hangers-group").each(function () {
     var el = $(this);
     var lists = [];
 
@@ -45,7 +45,7 @@
     };
   });
 
-  $("div.closet-hangers-group span.toggle").live("click", function () {
+  $(".closet-hangers-group span.toggle").live("click", function () {
     $(this).closest(".closet-hangers-group").toggleClass("hidden");
   });
 
@@ -112,7 +112,7 @@
   onHangersInit(function () {
     // Super-lame hack to get the user ID from where it already is :/
     var currentUserId = itemsSearchForm.data("current-user-id");
-    $("#closet-hangers div.closet-hangers-group").each(function () {
+    $("#closet-hangers .closet-hangers-group").each(function () {
       var groupEl = $(this);
       var owned = groupEl.data("owned");
 
@@ -244,7 +244,7 @@
       return $("#closet-list-" + id);
     } else {
       return $(
-        "div.closet-hangers-group[data-owned=" +
+        ".closet-hangers-group[data-owned=" +
           owned +
           "] div.closet-list.unlisted",
       );
@@ -615,7 +615,7 @@
         for (var i in hangerGroups) {
           group = hangerGroups[i];
           itemEl = $(
-            "div.closet-hangers-group[data-owned=" +
+            ".closet-hangers-group[data-owned=" +
               group.owned +
               "] div.object[data-item-id=" +
               item.id +
