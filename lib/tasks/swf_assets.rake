@@ -112,29 +112,29 @@ end
 
 SWF_URL_PATTERN = %r{^(?:https?:)?//images\.neopets\.com/cp/(bio|items)/swf/(.+?)_([a-z0-9]+)\.swf$}
 def infer_manifest_url(swf_url, internet)
-  url_match = swf_url.match(SWF_URL_PATTERN)
-  raise ArgumentError, "not a valid SWF URL: #{swf_url}" if url_match.nil?
-  
-  # Build the potential manifest URLs, from the two structures we know of.
-  type, folders, hash_str = url_match.captures
-  potential_manifest_urls = [
-    "https://images.neopets.com/cp/#{type}/data/#{folders}/manifest.json",
-    "https://images.neopets.com/cp/#{type}/data/#{folders}_#{hash_str}/manifest.json",
-  ]
+	url_match = swf_url.match(SWF_URL_PATTERN)
+	raise ArgumentError, "not a valid SWF URL: #{swf_url}" if url_match.nil?
+	
+	# Build the potential manifest URLs, from the two structures we know of.
+	type, folders, hash_str = url_match.captures
+	potential_manifest_urls = [
+		"https://images.neopets.com/cp/#{type}/data/#{folders}/manifest.json",
+		"https://images.neopets.com/cp/#{type}/data/#{folders}_#{hash_str}/manifest.json",
+	]
 
-  # Send a HEAD request to test each manifest URL, without downloading its
-  # content. If it succeeds, we're done!
-  potential_manifest_urls.each do |potential_manifest_url|
-    res = internet.head potential_manifest_url
-    if res.ok?
-      return potential_manifest_url 
-    elsif res.status == 404
-      next # Ok, this was not the manifest!
-    else
-      raise "unexpected manifest response code: #{res.status}"
-    end
-  end
+	# Send a HEAD request to test each manifest URL, without downloading its
+	# content. If it succeeds, we're done!
+	potential_manifest_urls.each do |potential_manifest_url|
+		res = internet.head potential_manifest_url
+		if res.ok?
+			return potential_manifest_url
+		elsif res.status == 404
+			next # Ok, this was not the manifest!
+		else
+			raise "unexpected manifest response code: #{res.status}"
+		end
+	end
 
-  # Otherwise, there's no valid manifest URL.
-  raise "all of the common manifest URL patterns returned HTTP 404"
+	# Otherwise, there's no valid manifest URL.
+	raise "all of the common manifest URL patterns returned HTTP 404"
 end

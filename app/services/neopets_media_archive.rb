@@ -1,4 +1,3 @@
-require "addressable/template"
 require "addressable/uri"
 require "httparty"
 require "json"
@@ -15,12 +14,7 @@ module NeopetsMediaArchive
   include HTTParty
   base_uri "https://images.neopets.com/"
 
-  OLD_MANIFEST_PATH_TEMPLATE = Addressable::Template.new(
-    "https://images.neopets.com/cp/{short_type}/data/{id1}/{id2}/{id3}/{id}_{hash}/manifest.json"
-  )
-  NEW_MANIFEST_PATH_TEMPLATE = Addressable::Template.new(
-    "https://images.neopets.com/cp/{short_type}/data/{id1}/{id2}/{id3}/{id}/manifest.json"
-  )
+  ROOT_PATH = Pathname.new(Rails.configuration.neopets_media_archive_root)
 
   # Load the file from the given `images.neopets.com` URI, as JSON.
   def self.load_json(uri)
@@ -102,7 +96,7 @@ module NeopetsMediaArchive
   end
 
   def self.local_file_path(uri)
-    Rails.configuration.neopets_media_archive_root + path_within_archive(uri)
+    ROOT_PATH + path_within_archive(uri)
   end
 
   class NotFound < StandardError; end
