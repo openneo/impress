@@ -11,9 +11,11 @@ class ItemsController < ApplicationController
         else
           per_page = 30
         end
+
         @items = @query.results.paginate(
           page: params[:page], per_page: per_page)
         assign_closeted!
+
         respond_to do |format|
           format.html {
             @campaign = Fundraising::Campaign.current rescue nil
@@ -24,13 +26,14 @@ class ItemsController < ApplicationController
             end
           }
           format.json {
-            render json: {items: @items, total_pages: @items.total_pages,
-                          query: @query.to_s}
-          }
-          format.js {
-            render json: {items: @items, total_pages: @items.total_pages,
-                          query: @query.to_s},
-                   callback: params[:callback]
+            render json: {
+              items: @items.as_json(
+                methods: [:nc?, :pb?, :owned?, :wanted?],
+              ),
+              appearances: load_appearances,
+              total_pages: @items.total_pages,
+              query: @query.to_s,
+            }
           }
         end
       end
@@ -46,7 +49,6 @@ class ItemsController < ApplicationController
           @campaign = Fundraising::Campaign.current rescue nil
           @newest_items = Item.newest.limit(18)
         }
-        format.js { render json: {error: '$q required'}}
       end
     end
   end
@@ -100,14 +102,20 @@ class ItemsController < ApplicationController
   def assign_closeted!
     current_user.assign_closeted_to_items!(@items) if user_signed_in?
   end
+
+  def load_appearances
+    pet_type_name = params[:with_appearances_for]
+    return {} if pet_type_name.blank?
+
+    pet_type = Item::Search::Query.load_pet_type_by_name(pet_type_name)
+    pet_type.appearances_for(@items.map(&:id))
+  end
   
   def search_error(e)
     @items = []
     respond_to do |format|
       format.html { flash.now[:alert] = e.message; render }
       format.json { render :json => {error: e.message} }
-      format.js   { render :json => {error: e.message},
-                           :callback => params[:callback] }
     end
   end
 
@@ -122,7 +130,7 @@ class ItemsController < ApplicationController
         @query = params[:q]
         raise
       end
-    elsif q.is_a?(Hash)
+    elsif q.is_a?(ActionController::Parameters)
       @query = Item::Search::Query.from_params(q, current_user)
     end
   end

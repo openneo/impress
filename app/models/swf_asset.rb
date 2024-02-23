@@ -82,7 +82,10 @@ class SwfAsset < ApplicationRecord
   scope :object_assets, -> { where(:type => Item::SwfAssetType) }
   scope :for_item_ids, ->(item_ids) {
     joins(:parent_swf_asset_relationships).
-      where(ParentSwfAssetRelationship.arel_table[:parent_id].in(item_ids))
+      where(parent_swf_asset_relationships: {
+        parent_type: "Item",
+        parent_id: item_ids,
+      })
   }
   scope :with_parent_ids, -> {
     select('swf_assets.*, parents_swf_assets.parent_id')

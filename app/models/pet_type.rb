@@ -178,6 +178,18 @@ class PetType < ApplicationRecord
     }.first
   end
 
+  def appearances_for(item_ids)
+    # First, load all the relationships for these items that also fit this
+    # body.
+    relationships = ParentSwfAssetRelationship.includes(:swf_asset).
+      where(parent_type: "Item", parent_id: item_ids).
+      where(swf_asset: {body_id: [body_id, 0]})
+
+    # Then, convert this into a hash from item ID to SWF assets.
+    assets_by_item_id = relationships.group_by(&:parent_id).
+      transform_values { |rels| rels.map(&:swf_asset) }
+  end
+
   def self.all_by_ids_or_children(ids, pet_states)
     pet_states_by_pet_type_id = {}
     pet_states.each do |pet_state|

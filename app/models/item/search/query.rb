@@ -46,17 +46,10 @@ class Item
               Filter.restricts(value) :
               Filter.not_restricts(value))
           when 'fits'
-            color_name, species_name = value.split('-')
-            begin
-              pet_type = PetType.matching_name(color_name, species_name).first!
-            rescue ActiveRecord::RecordNotFound
-              message = I18n.translate('items.search.errors.not_found.pet_type',
-                name1: color_name.capitalize, name2: species_name.capitalize)
-              raise Item::Search::Error, message
-            end
+            pet_type = load_pet_type_by_name(value)
             filters << (is_positive ?
-              Filter.fits(pet_type.body_id, color_name, species_name) :
-              Filter.not_fits(pet_type.body_id, color_name, species_name))
+              Filter.fits(pet_type.body_id, value.downcase) :
+              Filter.not_fits(pet_type.body_id, value.downcase))
           when 'species'
             begin
               species = Species.find_by_name!(value)
@@ -139,9 +132,11 @@ class Item
             pet_type = PetType.find(value)
             color_name = pet_type.color.name
             species_name = pet_type.species.name
+            # NOTE: Some color syntaxes are weird, like `fits:"polka dot-aisha"`!
+            value = "#{color_name}-#{species_name}"
             filters << (is_positive ?
-              Filter.fits(pet_type.body_id, color_name, species_name) :
-              Filter.not_fits(pet_type.body_id, color_name, species_name))
+              Filter.fits(pet_type.body_id, value) :
+              Filter.not_fits(pet_type.body_id, value))
           when 'user_closet_hanger_ownership'
             case value
             when 'true'
@@ -159,6 +154,18 @@ class Item
         end
 
         self.new(filters, user)
+      end
+
+      def self.load_pet_type_by_name(pet_type_string)
+        color_name, species_name = pet_type_string.split("-")
+
+        begin
+          PetType.matching_name(color_name, species_name).first!
+        rescue ActiveRecord::RecordNotFound
+          message = I18n.translate('items.search.errors.not_found.pet_type',
+            name1: color_name.capitalize, name2: species_name.capitalize)
+          raise Item::Search::Error, message
+        end
       end
     end
 
@@ -211,15 +218,11 @@ class Item
         self.new Item.not_restricts(value), "-restricts:#{q value}"
       end
 
-      def self.fits(body_id, color_name, species_name)
-        # NOTE: Some color syntaxes are weird, like `fits:"polka dot-aisha"`!
-        value = "#{color_name.downcase}-#{species_name.downcase}"
+      def self.fits(body_id, value)
         self.new Item.fits(body_id), "fits:#{q value}"
       end
 
-      def self.not_fits(body_id, color_name, species_name)
-        # NOTE: Some color syntaxes are weird, like `fits:"polka dot-aisha"`!
-        value = "#{color_name.downcase}-#{species_name.downcase}"
+      def self.not_fits(body_id, value)
         self.new Item.not_fits(body_id), "-fits:#{q value}"
       end
 
@@ -276,14 +279,6 @@ class Item
       # Add quotes around the value, if needed.
       def self.q(value)
         /\s/.match(value) ? '"' + value + '"' : value
-      end
-
-      def self.build_fits_filter_text(color_name, species_name)
-        # NOTE: Colors like "Polka Dot" must be written as
-        # `fits:"polka dot-aisha"`.
-        value = "#{color_name.downcase}-#{species_name.downcase}"
-        value = '"' + value + '"' if value.include? ' '
-        "fits:#{value}"
       end
     end
   end

@@ -153,11 +153,11 @@ class Item < ApplicationRecord
   end
 
   def owned?
-    @owned
+    @owned || false
   end
 
   def wanted?
-    @wanted
+    @wanted || false
   end
 
   def restricted_zones(options={})
@@ -445,8 +445,8 @@ class Item < ApplicationRecord
     @parent_swf_asset_relationships_to_update = rels
   end
 
-  Body = Struct.new(:id, :species)
   Appearance = Struct.new(:body, :swf_assets)
+  Appearance::Body = Struct.new(:id, :species)
   def appearances
     all_swf_assets = swf_assets.to_a
 
@@ -469,7 +469,7 @@ class Item < ApplicationRecord
     swf_assets_by_body_id.map do |body_id, body_specific_assets|
       swf_assets_for_body = body_specific_assets + swf_assets_for_all_bodies
       species = Species.with_body_id(body_id).first!
-      body = Body.new(body_id, species)
+      body = Appearance::Body.new(body_id, species)
       Appearance.new(body, swf_assets_for_body)
     end
   end
