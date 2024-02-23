@@ -126,4 +126,8 @@ Rails.application.configure do
   # IMPRESS_2020_ORIGIN environment variable!)
   config.impress_2020_origin = ENV.fetch("IMPRESS_2020_ORIGIN",
     "https://impress-2020.openneo.net")
+
+  # Save the Neopets Media Archive in `/var/lib/neopets-media-archive`, a
+  # long-term storage location.
+  config.neopets_media_archive_root = "/var/lib/neopets-media-archive"
 end

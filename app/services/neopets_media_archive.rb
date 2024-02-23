@@ -1,0 +1,119 @@
+require "addressable/template"
+require "addressable/uri"
+require "httparty"
+require "json"
+
+# The Neopets Media Archive is a service that mirrors images.neopets.com files
+# locally. You can request a file from it, and we'll serve it from disk if we
+# have it, or request and save it if not.
+#
+# This is a bit different than a cache, because the intention is not just
+# optimization but that we *want* to be saving images.neopets.com as a
+# long-term archive, not dependent on their services having 100% uptime in
+# order for us to operate. We never discard old files, we just keep going!
+module NeopetsMediaArchive
+  include HTTParty
+  base_uri "https://images.neopets.com/"
+
+  OLD_MANIFEST_PATH_TEMPLATE = Addressable::Template.new(
+    "https://images.neopets.com/cp/{short_type}/data/{id1}/{id2}/{id3}/{id}_{hash}/manifest.json"
+  )
+  NEW_MANIFEST_PATH_TEMPLATE = Addressable::Template.new(
+    "https://images.neopets.com/cp/{short_type}/data/{id1}/{id2}/{id3}/{id}/manifest.json"
+  )
+
+  # Load the file from the given `images.neopets.com` URI, as JSON.
+  def self.load_json(uri)
+    JSON.parse(load_file(uri))
+  end
+
+  # Load the file from the given `images.neopets.com` URI.
+  def self.load_file(uri, return_content: true)
+    local_path = local_file_path(uri)
+
+    # Read the file locally if we have it.
+    if return_content
+      begin
+        content = File.read(local_path)
+        debug "Loaded source file from filesystem: #{local_path}"
+        return content
+      rescue Errno::ENOENT
+        # If it doesn't exist, that's fine: just move on and download it.
+      end
+    else
+      # When we don't need the content, "loading" the file is just ensuring
+      # it exists. If it doesn't, we'll move on and load it from source.
+      # (We use this when preloading files, to save the cost of reading files
+      # we're not ready to use yet.)
+      if File.exist?(local_path)
+        debug "Source file is already loaded, skipping: #{local_path}"
+        return
+      end
+    end
+
+    # Download the file from the origin, then save a copy for next time.
+    response = load_file_from_origin(uri)
+    info "Loaded source file from origin: #{uri}"
+    content = response.body
+    local_path.dirname.mkpath
+    File.write(local_path, content)
+    info "Wrote source file to filesystem: #{local_path}"
+    
+    return_content ? content : nil
+  end
+
+  # Load the file from the given `images.neopets.com` URI, but don't return its
+  # content. This can be faster in cases where the file's content isn't
+  # relevant to us, and we just want to ensure it exists.
+  def self.preload_file(uri)
+    load_file(uri, return_content: false)
+  end
+
+  # Load the file from the given `images.neopets.com` URI, directly from the
+  # source, without checking the local filesystem.
+  def self.load_file_from_origin(uri)
+    unless Addressable::URI.parse(uri).origin == "https://images.neopets.com"
+      raise ArgumentError, "NeopetsMediaArchive can only load from " +
+        "https://images.neopets.com, but got #{uri}"
+    end
+
+    response = get(uri)
+    if response.code == 404
+      raise NotFound, "origin server returned 404: #{uri}"
+    elsif response.code != 200
+      raise "expected status 200 but got #{response.code} (#{uri})"
+    end
+    response
+  end
+
+  def self.path_within_archive(uri)
+    uri = Addressable::URI.parse(uri)
+    path = uri.host + uri.path
+
+    # We include the query string as part of the file path, which is a bit odd!
+    # But Neopets often uses this for cache-busting, so we do need a mechanism
+    # for knowing whether we're holding the right version of the file. We could
+    # also consider storing the file by just its normal path, but with some
+    # metadata to track versioning information (e.g. a sqlite db, or a metadata
+    # file in the same directory).
+    path += "?" + uri.query if !uri.query.nil? && !uri.query.empty?
+
+    path
+  end
+
+  def self.local_file_path(uri)
+    Rails.configuration.neopets_media_archive_root + path_within_archive(uri)
+  end
+
+  class NotFound < StandardError; end
+
+  private
+
+  def self.info(message)
+    Rails.logger.info "[NeopetsMediaArchive] #{message}"
+  end
+
+  def self.debug(message)
+    Rails.logger.debug "[NeopetsMediaArchive] #{message}"
+  end
+end

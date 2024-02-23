@@ -107,4 +107,9 @@ Rails.application.configure do
   # override this with the IMPRESS_2020_ORIGIN environment variable!)
   config.impress_2020_origin = ENV.fetch("IMPRESS_2020_ORIGIN",
     "http://localhost:4000")
+
+  # Save the Neopets Media Archive in the local `tmp` folder. (In production,
+  # we keep this in a long-term location instead!)
+  config.neopets_media_archive_root = Rails.root / "tmp" /
+    "neopets_media_archive" / "development"
 end

@@ -113,31 +113,33 @@ class SwfAsset < ApplicationRecord
     }
   end
 
-  MANIFEST_PATTERN = %r{^https://images.neopets.com/(?<prefix>.+)/(?<id>[0-9]+)(?<hash_part>_[^/]+)?/manifest\.json}
-  def html5_image_url
-    return nil if manifest_url.nil?
+  def manifest
+    NeopetsMediaArchive.load_json(manifest_url)
+  end
 
-    # HACK: Just assuming all of these were well-formed by the same process,
-    # and infer the image URL from the manifest URL! But strictly speaking we
-    # should be reading the manifest to check!
-    match = manifest_url.match(MANIFEST_PATTERN)
-    return nil if match.nil?
-    
-    "https://images.neopets.com/#{match[:prefix]}/" +
-      "#{match[:id]}#{match[:hash_part]}/#{match[:id]}.png"
+  MANIFEST_BASE_URL = Addressable::URI.parse("https://images.neopets.com")
+  def manifest_asset_urls
+    return {} if manifest_url.nil?
+
+    begin
+      # Organize the asset URLs by file extension, grab the ones we want, and
+      # convert them from paths to full URLs.
+      manifest["cpmanifest"]["assets"][0]["asset_data"].
+        to_h { |a| [a["file_ext"].to_sym, a] }.
+        slice(:png, :svg, :js)
+        .transform_values { |a| (MANIFEST_BASE_URL + a["url"]).to_s }
+    rescue StandardError => error
+      Rails.logger.error "Could not read URLs from manifest: #{error.full_message}"
+      return {}
+    end
+  end
+
+  def html5_image_url
+    manifest_asset_urls[:png]
   end
 
   def html5_svg_url
-    return nil if manifest_url.nil?
-
-    # HACK: Just assuming all of these were well-formed by the same process,
-    # and infer the image URL from the manifest URL! But strictly speaking we
-    # should be reading the manifest to check!
-    match = manifest_url.match(MANIFEST_PATTERN)
-    return nil if match.nil?
-    
-    "https://images.neopets.com/#{match[:prefix]}/" +
-      "#{match[:id]}#{match[:hash_part]}/#{match[:id]}.svg"
+    manifest_asset_urls[:svg]
   end
 
   def known_glitches

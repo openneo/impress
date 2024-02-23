@@ -402,6 +402,14 @@
         password: "{{ mysql_user_password_2020 }}"
         priv: "openneo_impress.*:ALL,openneo_id.*:ALL"
 
+    - name: Create the Neopets Media Archive data directory
+      file:
+        path: /var/lib/neopets-media-archive
+        owner: impress
+        group: impress
+        mode: "755"
+        state: directory
+
   handlers:
     - name: Reload nginx
       systemd:
