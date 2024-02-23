@@ -117,10 +117,12 @@ class SwfAsset < ApplicationRecord
   end
 
   def manifest
+    raise "manifest_url is blank" if manifest_url.blank?
     NeopetsMediaArchive.load_json(manifest_url)
   end
 
   def preload_manifest
+    raise "manifest_url is blank" if manifest_url.blank?
     NeopetsMediaArchive.preload_file(manifest_url)
   end
 
@@ -251,7 +253,14 @@ class SwfAsset < ApplicationRecord
       # NeopetsMediaArchive will share a pool of persistent connections for
       # them.
       swf_assets.map do |swf_asset|
-        semaphore.async { swf_asset.preload_manifest }
+        semaphore.async do
+          begin
+            swf_asset.preload_manifest
+          rescue StandardError => error
+            Rails.logger.error "Could not preload manifest for asset " + 
+              "#{swf_asset.id} (#{swf_asset.manifest_url}): #{error.message}"
+          end
+        end
       end
 
       # Wait until all tasks are done.
