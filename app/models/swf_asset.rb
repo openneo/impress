@@ -1,3 +1,6 @@
+require 'async'
+require 'async/barrier'
+require 'async/semaphore'
 require 'fileutils'
 require 'uri'
 
@@ -117,6 +120,10 @@ class SwfAsset < ApplicationRecord
     NeopetsMediaArchive.load_json(manifest_url)
   end
 
+  def preload_manifest
+    NeopetsMediaArchive.preload_file(manifest_url)
+  end
+
   MANIFEST_BASE_URL = Addressable::URI.parse("https://images.neopets.com")
   def manifest_asset_urls
     return {} if manifest_url.nil?
@@ -227,6 +234,31 @@ class SwfAsset < ApplicationRecord
     ).or(
       arel_table[:remote_id].in(ids[:object]).and(arel_table[:type].eq('object'))
     ))
+  end
+
+  # Given a list of SWF assets, ensure all of their manifests are loaded, with
+  # fast concurrent execution!
+  def self.preload_manifests(swf_assets)
+    # Blocks all tasks beneath it.
+    barrier = Async::Barrier.new
+
+    Sync do
+      # Only allow 10 manifests to be loaded at a time.
+      semaphore = Async::Semaphore.new(10, parent: barrier)
+
+      # Load all the manifests in async tasks. This will load them 10 at a time
+      # rather than all at once (because of the semaphore), and the
+      # NeopetsMediaArchive will share a pool of persistent connections for
+      # them.
+      swf_assets.map do |swf_asset|
+        semaphore.async { swf_asset.preload_manifest }
+      end
+
+      # Wait until all tasks are done.
+      barrier.wait
+    ensure
+      barrier.stop # If something goes wrong, clean up all tasks.
+    end
   end
 
   before_save do

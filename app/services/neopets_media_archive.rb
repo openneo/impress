@@ -1,5 +1,5 @@
 require "addressable/uri"
-require "httparty"
+require "async/http/internet/instance"
 require "json"
 
 # The Neopets Media Archive is a service that mirrors images.neopets.com files
@@ -11,8 +11,9 @@ require "json"
 # long-term archive, not dependent on their services having 100% uptime in
 # order for us to operate. We never discard old files, we just keep going!
 module NeopetsMediaArchive
-  include HTTParty
-  base_uri "https://images.neopets.com/"
+  # Share a pool of persistent connections, rather than reconnecting on
+  # each request. (This library does that automatically!)
+  INTERNET = Async::HTTP::Internet.instance
 
   ROOT_PATH = Pathname.new(Rails.configuration.neopets_media_archive_root)
 
@@ -46,9 +47,8 @@ module NeopetsMediaArchive
     end
 
     # Download the file from the origin, then save a copy for next time.
-    response = load_file_from_origin(uri)
+    content = load_file_from_origin(uri)
     info "Loaded source file from origin: #{uri}"
-    content = response.body
     local_path.dirname.mkpath
     File.write(local_path, content)
     info "Wrote source file to filesystem: #{local_path}"
@@ -71,13 +71,20 @@ module NeopetsMediaArchive
         "https://images.neopets.com, but got #{uri}"
     end
 
-    response = get(uri)
-    if response.code == 404
-      raise NotFound, "origin server returned 404: #{uri}"
-    elsif response.code != 200
-      raise "expected status 200 but got #{response.code} (#{uri})"
+    # By running this request in a `Sync` block, we make this method look
+    # synchronous to the caller—but if run in the context of an async task, it
+    # will pause execution and move onto other work until the request is done.
+    # We use this in the `swf_assets:manifests:load` task to perform many
+    # requests in parallel!
+    Sync do
+      response = INTERNET.get(uri)
+      if response.status == 404
+        raise NotFound, "origin server returned 404: #{uri}"
+      elsif response.status != 200
+        raise "expected status 200 but got #{response.status} (#{uri})"
+      end
+      response.body.read
     end
-    response
   end
 
   def self.path_within_archive(uri)

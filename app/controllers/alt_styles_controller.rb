@@ -8,6 +8,10 @@ class AltStylesController < ApplicationController
 			@alt_styles = @alt_styles.merge(@species.alt_styles)
 		end
 
+		# We're going to link to the HTML5 image URL, so make sure we have all the
+		# manifests ready!
+		SwfAsset.preload_manifests @alt_styles.map(&:swf_assets).flatten
+
 		respond_to do |format|
 			format.html { render }
 			format.json {
