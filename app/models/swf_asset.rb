@@ -45,11 +45,11 @@ class SwfAsset < ApplicationRecord
   end
   
   def image_url(size=IMAGE_SIZES[:large])
-    host = ASSET_HOSTS[:swf_asset_images]
     size_key = size.join('x')
-    
     image_dir = "#{self['type']}/#{partition_path}#{self.remote_id}"
-    "https://#{host}/#{image_dir}/#{size_key}.png?#{image_version}"
+
+    "https://impress-asset-images.openneo.net/#{image_dir}/#{size_key}.png?" +
+      "#{image_version}"
   end
   
   def images
