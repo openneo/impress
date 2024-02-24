@@ -50,17 +50,9 @@ class SwfAsset < ApplicationRecord
   has_many :parent_swf_asset_relationships
 
   delegate :depth, :to => :zone
-  
-  def self.body_ids_fitting_standard
-    @body_ids_fitting_standard ||= PetType.standard_body_ids + [0]
-  end
 
   scope :fitting_body_id, ->(body_id) {
     where(arel_table[:body_id].in([body_id, 0]))
-  }
-
-  scope :fitting_standard_body_ids, -> {
-    where(arel_table[:body_id].in(body_ids_fitting_standard))
   }
 
   scope :fitting_color, ->(color) {

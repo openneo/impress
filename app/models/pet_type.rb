@@ -29,15 +29,6 @@ class PetType < ApplicationRecord
     color_ids = special_color ? [special_color.id] : Color.basic.select([:id]).map(&:id)
     where(color_id: color_ids)
   end
-  
-  def self.standard_body_ids
-    [].tap do |body_ids|
-      # TODO: the nil hack is lame :P
-      special_color_or_basic(nil).group_by(&:species_id).each do |species_id, pet_types|
-        body_ids.concat(pet_types.map(&:body_id))
-      end
-    end
-  end
 
   def self.random_basic_per_species(species_ids)
     random_pet_types = []
