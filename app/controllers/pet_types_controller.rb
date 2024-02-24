@@ -23,7 +23,7 @@ class PetTypesController < ApplicationController
 						include: {
 							swf_assets: {
 								only: [:id, :known_glitches],
-      					methods: [:zone, :restricted_zones, :urls],
+								methods: [:zone, :restricted_zones, :urls],
 							},
 						},
 					},
