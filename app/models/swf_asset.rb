@@ -16,8 +16,6 @@ class SwfAsset < ApplicationRecord
   
   belongs_to :zone
   has_many :parent_swf_asset_relationships
-  
-  scope :includes_depth, -> { includes(:zone) }
 
   before_validation :normalize_manifest_url, if: :manifest_url?
 
@@ -51,28 +49,8 @@ class SwfAsset < ApplicationRecord
 
   delegate :depth, :to => :zone
 
-  scope :fitting_body_id, ->(body_id) {
-    where(arel_table[:body_id].in([body_id, 0]))
-  }
-
-  scope :fitting_color, ->(color) {
-    body_ids = PetType.select(:body_id).where(:color_id => color.id).map(&:body_id)
-    body_ids << 0
-    where(arel_table[:body_id].in(body_ids))
-  }
-
   scope :biology_assets, -> { where(:type => PetState::SwfAssetType) }
   scope :object_assets, -> { where(:type => Item::SwfAssetType) }
-  scope :for_item_ids, ->(item_ids) {
-    joins(:parent_swf_asset_relationships).
-      where(parent_swf_asset_relationships: {
-        parent_type: "Item",
-        parent_id: item_ids,
-      })
-  }
-  scope :with_parent_ids, -> {
-    select('swf_assets.*, parents_swf_assets.parent_id')
-  }
 
   # To manually change the body ID without triggering the usual change to 0,
   # use this override method.
