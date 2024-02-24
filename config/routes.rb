@@ -33,9 +33,6 @@ OpenneoImpressItems::Application.routes.draw do
     end
     resources :alt_styles, path: 'alt-styles', only: [:index]
   end
-  resources :colors, only: [] do
-    resources :pet_types, only: [:index]
-  end
   resources :alt_styles, path: 'alt-styles', only: [:index]
 
   # Loading and modeling pets!
