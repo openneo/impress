@@ -51,10 +51,6 @@ class SwfAsset < ApplicationRecord
     "https://impress-asset-images.openneo.net/#{image_dir}/#{size_key}.png?" +
       "#{image_version}"
   end
-  
-  def images
-    IMAGE_SIZES.values.map { |size| {:size => size, :url => image_url(size)} }
-  end
 
   attr_accessor :item
 
