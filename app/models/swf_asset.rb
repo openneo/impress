@@ -21,14 +21,6 @@ class SwfAsset < ApplicationRecord
 
   before_validation :normalize_manifest_url, if: :manifest_url?
 
-  def swf_image_dir
-    @swf_image_dir ||= Rails.root.join('tmp', 'asset_images_before_upload', self.id.to_s)
-  end
-
-  def swf_image_path(size)
-    swf_image_dir.join("#{size.join 'x'}.png")
-  end
-
   PARTITION_COUNT = 3
   PARTITION_DIGITS = 3
   PARTITION_ID_LENGTH = PARTITION_COUNT * PARTITION_DIGITS
