@@ -8,6 +8,9 @@ class SwfAsset < ApplicationRecord
   # We use the `type` column to mean something other than what Rails means!
   self.inheritance_column = nil
 
+  # Used in `item_is_body_specific?`. (TODO: Could we refactor this out?)
+  attr_accessor :item
+
   IMAGE_SIZES = {
     :small => [150, 150],
     :medium => [300, 300],
@@ -16,8 +19,15 @@ class SwfAsset < ApplicationRecord
   
   belongs_to :zone
   has_many :parent_swf_asset_relationships
+  has_one :contribution, :as => :contributed, :inverse_of => :contributed
+  has_many :parent_swf_asset_relationships
 
   before_validation :normalize_manifest_url, if: :manifest_url?
+
+  delegate :depth, :to => :zone
+
+  scope :biology_assets, -> { where(:type => PetState::SwfAssetType) }
+  scope :object_assets, -> { where(:type => Item::SwfAssetType) }
 
   PARTITION_COUNT = 3
   PARTITION_DIGITS = 3
@@ -41,16 +51,6 @@ class SwfAsset < ApplicationRecord
     "https://impress-asset-images.openneo.net/#{image_dir}/#{size_key}.png?" +
       "#{image_version}"
   end
-
-  attr_accessor :item
-
-  has_one :contribution, :as => :contributed, :inverse_of => :contributed
-  has_many :parent_swf_asset_relationships
-
-  delegate :depth, :to => :zone
-
-  scope :biology_assets, -> { where(:type => PetState::SwfAssetType) }
-  scope :object_assets, -> { where(:type => Item::SwfAssetType) }
 
   # To manually change the body ID without triggering the usual change to 0,
   # use this override method.
