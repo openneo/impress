@@ -52,13 +52,6 @@ class SwfAsset < ApplicationRecord
       "#{image_version}"
   end
 
-  # To manually change the body ID without triggering the usual change to 0,
-  # use this override method.
-  def override_body_id(new_body_id)
-    @body_id_overridden = true
-    self.body_id = new_body_id
-  end
-
   def as_json(options={})
     super({
       only: [:id, :known_glitches],
@@ -177,6 +170,13 @@ class SwfAsset < ApplicationRecord
     parsed_manifest_url = Addressable::URI.parse(manifest_url)
     parsed_manifest_url.scheme = "https"
     self.manifest_url = parsed_manifest_url.to_s
+  end
+
+  # To manually change the body ID without triggering the usual change to 0,
+  # use this override method. (This is intended for use from the console.)
+  def override_body_id(new_body_id)
+    @body_id_overridden = true
+    self.body_id = new_body_id
   end
 
   def self.from_biology_data(body_id, data)
