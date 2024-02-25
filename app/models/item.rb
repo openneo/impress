@@ -459,7 +459,7 @@ class Item < ApplicationRecord
 
     # If there are no body-specific assets, return one appearance for them all.
     if swf_assets_by_body_id.empty?
-      body = Body.new(0, nil)
+      body = Appearance::Body.new(0, nil)
       return [Appearance.new(body, swf_assets_for_all_bodies)]
     end
 
