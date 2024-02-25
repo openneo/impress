@@ -1,4 +1,4 @@
-class Zone < ActiveRecord::Base  
+class Zone < ActiveRecord::Base
   # When selecting zones that an asset occupies, we allow the zone to set
   # whether or not the zone is "sometimes" occupied. This is false by default.
   attr_writer :sometimes
@@ -15,6 +15,14 @@ class Zone < ActiveRecord::Base
 
   def uncertain_label
     @sometimes ? "#{label} sometimes" : label
+  end
+
+  def is_commonly_used_by_items
+    # Zone metadata marks item zones with types 2, 3, and 4. But also, in
+    # practice, the Biology Effects zone (type 1, ID 4) has been used for a few
+    # items too. So, that's what we return true for!
+    # TODO: It'd probably be better to make this a database field?
+    [2, 3, 4].include?(type_id) || id == 4
   end
   
   def self.plainify_label(label)

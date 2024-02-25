@@ -30,8 +30,22 @@ class ItemsController < ApplicationController
               items: @items.as_json(
                 methods: [:nc?, :pb?, :owned?, :wanted?],
               ),
-              appearances: load_appearances,
+              appearances: load_appearances.as_json(
+                include: {
+                  swf_assets: {
+                    only: [:id, :remote_id, :body_id],
+                    include: {
+                      zone: {
+                        only: [:id, :depth, :label],
+                        methods: [:is_commonly_used_by_items],
+                      }
+                    },
+                    methods: [:urls, :known_glitches],
+                  },
+                }
+              ),
               total_pages: @items.total_pages,
+              total_count: @items.count,
               query: @query.to_s,
             }
           }
@@ -108,7 +122,7 @@ class ItemsController < ApplicationController
     return {} if pet_type_name.blank?
 
     pet_type = Item::Search::Query.load_pet_type_by_name(pet_type_name)
-    pet_type.appearances_for(@items.map(&:id))
+    pet_type.appearances_for(@items.map(&:id), swf_asset_includes: [:zone])
   end
   
   def search_error(e)

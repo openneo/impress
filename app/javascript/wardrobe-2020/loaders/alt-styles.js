@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { normalizeSwfAssetToLayer } from "./shared-types";
+
 export function useAltStylesForSpecies(speciesId, options = {}) {
 	return useQuery({
 		...options,
@@ -61,23 +63,5 @@ function normalizeAltStyle(altStyleData) {
 			layers: altStyleData.swf_assets.map(normalizeSwfAssetToLayer),
 			restrictedZones: [],
 		},
-	};
-}
-
-function normalizeSwfAssetToLayer(swfAssetData) {
-	return {
-		id: String(swfAssetData.id),
-		zone: {
-			id: String(swfAssetData.zone.id),
-			depth: swfAssetData.zone.depth,
-			label: swfAssetData.zone.label,
-		},
-		bodyId: swfAssetData.body_id,
-		knownGlitches: swfAssetData.known_glitches,
-
-		svgUrl: swfAssetData.urls.svg,
-		canvasMovieLibraryUrl: swfAssetData.urls.canvas_library,
-		imageUrl: swfAssetData.urls.png,
-		swfUrl: swfAssetData.urls.swf,
 	};
 }

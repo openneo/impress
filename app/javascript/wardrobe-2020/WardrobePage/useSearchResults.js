@@ -41,6 +41,9 @@ export function useSearchResults(
   const currentPageIndex = currentPageNumber - 1;
   const offset = currentPageIndex * SEARCH_PER_PAGE;
 
+  // const filters = buildSearchFilters(/* TODO */);
+  // const { loading, error, data } = useItemSearch(filters);
+
   // Here's the actual GQL query! At the bottom we have more config than usual!
   const {
     loading: loadingGQL,

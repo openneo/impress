@@ -445,8 +445,23 @@ class Item < ApplicationRecord
     @parent_swf_asset_relationships_to_update = rels
   end
 
-  Appearance = Struct.new(:body, :swf_assets)
-  Appearance::Body = Struct.new(:id, :species)
+  # NOTE: Adding the JSON serializer makes `as_json` treat this like a model
+  # instead of like a hash, so you can target its children with things like
+  # the `include` option. This feels clunky though, I wish I had something a
+  # bit more suited to it!
+  Appearance = Struct.new(:body, :swf_assets) do
+    include ActiveModel::Serializers::JSON
+    def attributes
+      {body: body, swf_assets: swf_assets}
+    end
+  end
+  Appearance::Body = Struct.new(:id, :species) do
+    include ActiveModel::Serializers::JSON
+    def attributes
+      {id: id, species: species}
+    end
+  end
+
   def appearances
     all_swf_assets = swf_assets.to_a
 
