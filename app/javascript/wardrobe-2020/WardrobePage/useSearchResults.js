@@ -1,7 +1,9 @@
+import React from "react";
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/client";
-import { useDebounce } from "../util";
-import { emptySearchQuery } from "./SearchToolbar";
+import { useDebounce, useLocalStorage } from "../util";
+import { useItemSearch } from "../loaders/items";
+import { emptySearchQuery, searchQueryIsEmpty } from "./SearchToolbar";
 import { itemAppearanceFragment } from "../components/useOutfitAppearance";
 import { SEARCH_PER_PAGE } from "./SearchPanel";
 
@@ -41,14 +43,20 @@ export function useSearchResults(
   const currentPageIndex = currentPageNumber - 1;
   const offset = currentPageIndex * SEARCH_PER_PAGE;
 
-  // const filters = buildSearchFilters(/* TODO */);
-  // const { loading, error, data } = useItemSearch(filters);
+  // Until the new item search is ready, we can toggle between them! Use
+  // `setItemSearchQueryMode` in the JS console to choose "gql" or "new".
+  const [queryMode, setQueryMode] = useLocalStorage(
+    "DTIItemSearchQueryMode",
+    "gql",
+  );
+  React.useEffect(() => {
+    window.setItemSearchQueryMode = setQueryMode;
+  }, [setQueryMode]);
 
-  // Here's the actual GQL query! At the bottom we have more config than usual!
   const {
     loading: loadingGQL,
-    error,
-    data,
+    error: errorGQL,
+    data: dataGQL,
   } = useQuery(
     gql`
       query SearchPanel(
@@ -125,6 +133,7 @@ export function useSearchResults(
       context: { sendAuth: true },
       skip:
         skip ||
+        queryMode !== "gql" ||
         (!debouncedQuery.value &&
           !debouncedQuery.filterToItemKind &&
           !debouncedQuery.filterToZoneLabel &&
@@ -137,10 +146,69 @@ export function useSearchResults(
     },
   );
 
-  const loading = debouncedQuery !== query || loadingGQL;
-  const items = data?.itemSearch?.items ?? [];
-  const numTotalItems = data?.itemSearch?.numTotalItems ?? null;
-  const numTotalPages = Math.ceil(numTotalItems / SEARCH_PER_PAGE);
+  const {
+    isLoading: loadingQuery,
+    error: errorQuery,
+    data: dataQuery,
+  } = useItemSearch(
+    {
+      filters: buildSearchFilters(debouncedQuery, outfitState),
+      withAppearancesFor: { speciesId, colorId, altStyleId },
+      page: currentPageIndex + 1,
+      perPage: SEARCH_PER_PAGE,
+    },
+    {
+      enabled:
+        !skip && queryMode === "new" && !searchQueryIsEmpty(debouncedQuery),
+    },
+  );
+
+  const loading =
+    debouncedQuery !== query ||
+    (queryMode === "gql" ? loadingGQL : loadingQuery);
+  const error = queryMode === "gql" ? errorGQL : errorQuery;
+  const items =
+    (queryMode === "gql" ? dataGQL?.itemSearch?.items : dataQuery?.items) ?? [];
+  const numTotalPages =
+    (queryMode === "gql"
+      ? Math.ceil((dataGQL?.itemSearch?.numTotalItems ?? 0) / SEARCH_PER_PAGE)
+      : dataQuery?.numTotalPages) ?? 0;
 
   return { loading, error, items, numTotalPages };
+}
+
+function buildSearchFilters(query, { speciesId, colorId, altStyleId }) {
+  const filters = [];
+
+  if (query.value) {
+    filters.push({ key: "name", value: query.value });
+  }
+
+  if (query.filterToItemKind === "NC") {
+    filters.push({ key: "is_nc" });
+  } else if (query.filterToItemKind === "PB") {
+    filters.push({ key: "is_pb" });
+  } else if (query.filterToItemKind === "NP") {
+    filters.push({ key: "is_np" });
+  }
+
+  if (query.filterToZoneLabel != null) {
+    filters.push({
+      key: "occupied_zone_set_name",
+      value: query.filterToZoneLabel,
+    });
+  }
+
+  if (query.filterToCurrentUserOwnsOrWants === "OWNS") {
+    filters.push({ key: "user_closet_hanger_ownership", value: "true" });
+  } else if (query.filterToCurrentUserOwnsOrWants === "WANTS") {
+    filters.push({ key: "user_closet_hanger_ownership", value: "false" });
+  }
+
+  filters.push({
+    key: "fits",
+    value: { speciesId, colorId, altStyleId },
+  });
+
+  return filters;
 }

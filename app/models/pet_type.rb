@@ -180,16 +180,19 @@ class PetType < ApplicationRecord
     pet_type_body = Item::Appearance::Body.new(body_id, species)
     all_pets_body = Item::Appearance::Body.new(0, nil)
 
-    # Then, convert this into a hash from item ID to appearances.
-    relationships.group_by(&:parent_id).
-      transform_values do |rels|
-        assets = rels.map(&:swf_asset)
-        if assets.all? { |a| a.body_id == 0 }
-          Item::Appearance.new all_pets_body, assets
-        else
-          Item::Appearance.new pet_type_body, assets
-        end
-      end
+    # Then, convert this into a hash from item ID to SWF assets.
+    assets_by_item_id = relationships.group_by(&:parent_id).
+      transform_values { |rels| rels.map(&:swf_asset) }
+
+    # Finally, for each item, return an appearance—even if it's empty!
+    item_ids.to_h do |item_id|
+      assets = assets_by_item_id.fetch(item_id, [])
+
+      fits_all_pets = assets.present? && assets.all? { |a| a.body_id == 0 }
+      body = fits_all_pets ? all_pets_body : pet_type_body
+
+      [item_id, Item::Appearance.new(body, assets)]
+    end
   end
 
   def self.all_by_ids_or_children(ids, pet_states)

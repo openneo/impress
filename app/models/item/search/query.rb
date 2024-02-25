@@ -46,10 +46,11 @@ class Item
               Filter.restricts(value) :
               Filter.not_restricts(value))
           when 'fits'
-            pet_type = load_pet_type_by_name(value)
+            color_name, species_name = value.split("-")
+            pet_type = load_pet_type_by_name(color_name, species_name)
             filters << (is_positive ?
-              Filter.fits(pet_type.body_id, value.downcase) :
-              Filter.not_fits(pet_type.body_id, value.downcase))
+              Filter.fits(pet_type.body_id, color_name, species_name) :
+              Filter.not_fits(pet_type.body_id, color_name, species_name))
           when 'species'
             begin
               species = Species.find_by_name!(value)
@@ -132,15 +133,15 @@ class Item
             filters << (is_positive ?
               Filter.restricts(value, locale) :
               Filter.not_restricts(value, locale))
-          when 'fits_pet_type'
-            pet_type = PetType.find(value)
-            color_name = pet_type.color.name
-            species_name = pet_type.species.name
-            # NOTE: Some color syntaxes are weird, like `fits:"polka dot-aisha"`!
-            value = "#{color_name}-#{species_name}"
+          when 'fits'
+            raise NotImplementedError if value[:alt_style_id].present?
+            pet_type = load_pet_type_by_color_and_species(
+              value[:color_id], value[:species_id])
+            color = Color.find value[:color_id]
+            species = Species.find value[:species_id]
             filters << (is_positive ?
-              Filter.fits(pet_type.body_id, value) :
-              Filter.not_fits(pet_type.body_id, value))
+              Filter.fits(pet_type.body_id, color.name, species.name) :
+              Filter.not_fits(pet_type.body_id, color.name, species.name))
           when 'user_closet_hanger_ownership'
             case value
             when 'true'
@@ -160,12 +161,22 @@ class Item
         self.new(filters, user)
       end
 
-      def self.load_pet_type_by_name(pet_type_string)
-        color_name, species_name = pet_type_string.split("-")
-
+      def self.load_pet_type_by_name(color_name, species_name)
         begin
           PetType.matching_name(color_name, species_name).first!
         rescue ActiveRecord::RecordNotFound
+          message = I18n.translate('items.search.errors.not_found.pet_type',
+            name1: color_name.capitalize, name2: species_name.capitalize)
+          raise Item::Search::Error, message
+        end
+      end
+
+      def self.load_pet_type_by_color_and_species(color_id, species_id)
+        begin
+          PetType.where(color_id: color_id, species_id: species_id).first!
+        rescue ActiveRecord::RecordNotFound
+          color_name = Color.find(color_id).name rescue "Color #{color_id}"
+          species_name = Species.find(species_id).name rescue "Species #{species_id}"
           message = I18n.translate('items.search.errors.not_found.pet_type',
             name1: color_name.capitalize, name2: species_name.capitalize)
           raise Item::Search::Error, message
@@ -222,11 +233,15 @@ class Item
         self.new Item.not_restricts(value), "-restricts:#{q value}"
       end
 
-      def self.fits(body_id, value)
+      def self.fits(body_id, color_name, species_name)
+        # NOTE: Some color syntaxes are weird, like `fits:"polka dot-aisha"`!
+        value = "#{color_name}-#{species_name}".downcase
         self.new Item.fits(body_id), "fits:#{q value}"
       end
 
-      def self.not_fits(body_id, value)
+      def self.not_fits(body_id, color_name, species_name)
+        # NOTE: Some color syntaxes are weird, like `fits:"polka dot-aisha"`!
+        value = "#{color_name}-#{species_name}".downcase
         self.new Item.not_fits(body_id), "-fits:#{q value}"
       end
 

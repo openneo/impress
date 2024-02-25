@@ -38,14 +38,17 @@ class ItemsController < ApplicationController
                       zone: {
                         only: [:id, :depth, :label],
                         methods: [:is_commonly_used_by_items],
-                      }
+                      },
+                      restricted_zones: {
+                        only: [:id, :depth, :label],
+                        methods: [:is_commonly_used_by_items],
+                      },
                     },
                     methods: [:urls, :known_glitches],
                   },
                 }
               ),
               total_pages: @items.total_pages,
-              total_count: @items.count,
               query: @query.to_s,
             }
           }
@@ -118,10 +121,11 @@ class ItemsController < ApplicationController
   end
 
   def load_appearances
-    pet_type_name = params[:with_appearances_for]
-    return {} if pet_type_name.blank?
+    appearance_params = params[:with_appearances_for]
+    return {} if appearance_params.blank?
 
-    pet_type = Item::Search::Query.load_pet_type_by_name(pet_type_name)
+    pet_type = Item::Search::Query.load_pet_type_by_color_and_species(
+      appearance_params[:color_id], appearance_params[:species_id])
     pet_type.appearances_for(@items.map(&:id), swf_asset_includes: [:zone])
   end
   

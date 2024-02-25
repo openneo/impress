@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { normalizeSwfAssetToLayer } from "./shared-types";
+import { normalizeSwfAssetToLayer, normalizeZone } from "./shared-types";
 
 export function useItemAppearances(id, options = {}) {
 	return useQuery({
@@ -25,10 +25,19 @@ async function loadItemAppearancesData(id) {
 }
 
 export function useItemSearch(searchOptions, queryOptions = {}) {
+	// Item searches are considered fresh for an hour, unless the search
+	// includes user-specific filters, in which case React Query will pretty
+	// aggressively reload it!
+	const includesUserSpecificFilters = searchOptions.filters.some(
+		(f) => f.key === "user_closet_hanger_ownership",
+	);
+	const staleTime = includesUserSpecificFilters ? 0 : 1000 * 60 * 5;
+
 	return useQuery({
 		...queryOptions,
 		queryKey: ["itemSearch", buildItemSearchParams(searchOptions)],
 		queryFn: () => loadItemSearch(searchOptions),
+		staleTime,
 	});
 }
 
@@ -39,15 +48,28 @@ function buildItemSearchParams({
 	perPage = 30,
 }) {
 	const params = new URLSearchParams();
-	for (const [i, filter] of filters.entries()) {
-		params.append(`q[${i}][key]`, filter.key);
-		params.append(`q[${i}][value]`, filter.value);
-		if (params.isPositive == false) {
+	for (const [i, { key, value, isPositive }] of filters.entries()) {
+		params.append(`q[${i}][key]`, key);
+		if (key === "fits") {
+			params.append(`q[${i}][value][species_id]`, value.speciesId);
+			params.append(`q[${i}][value][color_id]`, value.colorId);
+			if (value.altStyleId != null) {
+				params.append(`q[${i}][value][alt_style_id]`, value.altStyleId);
+			}
+		} else {
+			params.append(`q[${i}][value]`, value);
+		}
+		if (isPositive == false) {
 			params.append(`q[${i}][is_positive]`, "false");
 		}
 	}
 	if (withAppearancesFor != null) {
-		params.append("with_appearances_for", withAppearancesFor);
+		const { speciesId, colorId, altStyleId } = withAppearancesFor;
+		params.append(`with_appearances_for[species_id]`, speciesId);
+		params.append(`with_appearances_for[color_id]`, colorId);
+		if (altStyleId != null) {
+			params.append(`with_appearances_for[alt_style_id]`, altStyleId);
+		}
 	}
 	params.append("page", page);
 	params.append("per_page", perPage);
@@ -85,7 +107,7 @@ function normalizeItemAppearancesData(data) {
 function normalizeItemSearchData(data, searchOptions) {
 	return {
 		id: buildItemSearchParams(searchOptions),
-		numTotalItems: data.total_count,
+		numTotalPages: data.total_pages,
 		items: data.items.map((item) => ({
 			id: String(item.id),
 			name: item.name,
@@ -110,6 +132,10 @@ function normalizeItemSearchAppearance(data, item) {
 	return {
 		id: `item-${item.id}-body-${data.body.id}`,
 		layers: data.swf_assets.map(normalizeSwfAssetToLayer),
+		restrictedZones: data.swf_assets
+			.map((a) => a.restricted_zones)
+			.flat()
+			.map(normalizeZone),
 	};
 }
 
@@ -126,8 +152,4 @@ function normalizeBody(body) {
 			humanName: body.species.human_name,
 		},
 	};
-}
-
-function normalizeZone(zone) {
-	return { id: String(zone.id), label: zone.label, depth: zone.depth };
 }
