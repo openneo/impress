@@ -52,7 +52,34 @@ class SwfAsset < ApplicationRecord
 
   def manifest
     raise "manifest_url is blank" if manifest_url.blank?
-    @manifest ||= NeopetsMediaArchive.load_json(manifest_url)
+    @manifest ||= load_manifest
+  end
+
+  def load_manifest
+    begin
+      NeopetsMediaArchive.load_file(manifest_url) => {content:, source:}
+    rescue NeopetsMediaArchive::ResponseNotOK => error
+      Rails.logger.warn "Failed to load manifest for asset #{id}: " +
+        error.message
+      self.manifest_loaded_at = DateTime.now
+      self.manifest_status_code = error.status
+      save!
+      return nil
+    end
+
+    if source == "network" || manifest_loaded_at.blank?
+      self.manifest_loaded_at = DateTime.now
+      self.manifest_status_code = 200
+      save!
+    end
+
+    begin
+      JSON.parse(content)
+    rescue JSON::ParserError => error
+      Rails.logger.warn "Failed to parse manifest for asset #{id}: " +
+        error.message
+      return nil
+    end
   end
 
   def preload_manifest

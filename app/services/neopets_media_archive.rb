@@ -17,11 +17,6 @@ module NeopetsMediaArchive
 
   ROOT_PATH = Pathname.new(Rails.configuration.neopets_media_archive_root)
 
-  # Load the file from the given `images.neopets.com` URI, as JSON.
-  def self.load_json(uri)
-    JSON.parse(load_file(uri))
-  end
-
   # Load the file from the given `images.neopets.com` URI.
   def self.load_file(uri, return_content: true)
     local_path = local_file_path(uri)
@@ -31,7 +26,7 @@ module NeopetsMediaArchive
       begin
         content = File.read(local_path)
         debug "Loaded source file from filesystem: #{local_path}"
-        return content
+        return {content: content, source: "filesystem"}
       rescue Errno::ENOENT
         # If it doesn't exist, that's fine: just move on and download it.
       end
@@ -53,7 +48,7 @@ module NeopetsMediaArchive
     File.write(local_path, content)
     info "Wrote source file to filesystem: #{local_path}"
     
-    return_content ? content : nil
+    {content: return_content ? content : nil, source: "network"}
   end
 
   # Load the file from the given `images.neopets.com` URI, but don't return its
@@ -78,10 +73,9 @@ module NeopetsMediaArchive
     # requests in parallel!
     Sync do
       response = INTERNET.get(uri)
-      if response.status == 404
-        raise NotFound, "origin server returned 404: #{uri}"
-      elsif response.status != 200
-        raise "expected status 200 but got #{response.status} (#{uri})"
+      if response.status != 200
+        raise ResponseNotOK.new(response.status),
+          "expected status 200 but got #{response.status} (#{uri})"
       end
       response.body.read
     end
@@ -106,7 +100,13 @@ module NeopetsMediaArchive
     ROOT_PATH + path_within_archive(uri)
   end
 
-  class NotFound < StandardError; end
+  class ResponseNotOK < StandardError
+    attr_reader :status
+    def initialize(status)
+      super
+      @status = status
+    end
+  end
 
   private
 

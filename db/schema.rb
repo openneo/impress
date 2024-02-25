@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_21_005949) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_25_231346) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "species_id", null: false
     t.integer "color_id", null: false
@@ -245,6 +245,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_21_005949) do
     t.timestamp "manifest_cached_at"
     t.string "known_glitches", limit: 128, default: ""
     t.string "manifest_url"
+    t.datetime "manifest_loaded_at"
+    t.integer "manifest_status_code"
     t.index ["body_id"], name: "swf_assets_body_id_and_object_id"
     t.index ["type", "remote_id"], name: "swf_assets_type_and_id"
     t.index ["zone_id"], name: "idx_swf_assets_zone_id"
