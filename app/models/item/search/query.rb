@@ -17,11 +17,6 @@ class Item
       def to_s
         @text || @filters.map(&:to_s).join(' ')
       end
-
-      def self.locale
-        (I18n.fallbacks[I18n.locale] &
-          I18n.locales_with_neopets_language_code).first
-      end
       
       TEXT_FILTER_EXPR = /([+-]?)(?:(\p{Word}+):)?(?:"([^"]+)"|(\S+))/
       def self.from_text(text, user=nil)
@@ -35,8 +30,8 @@ class Item
           case key
           when 'name'
             filters << (is_positive ?
-              Filter.name_includes(value, locale) :
-              Filter.name_excludes(value, locale))
+              Filter.name_includes(value) :
+              Filter.name_excludes(value))
           when 'occupies'
             filters << (is_positive ?
               Filter.occupies(value) :
@@ -117,8 +112,8 @@ class Item
           case filter_params[:key]
           when 'name'
             filters << (is_positive ?
-              Filter.name_includes(value, locale) :
-              Filter.name_excludes(value, locale))
+              Filter.name_includes(value) :
+              Filter.name_excludes(value))
           when 'is_nc'
             filters << (is_positive ? Filter.is_nc : Filter.is_not_nc)
           when 'is_pb'
@@ -126,13 +121,12 @@ class Item
           when 'is_np'
             filters << (is_positive ? Filter.is_np : Filter.is_not_np)
           when 'occupied_zone_set_name'
-            filters << (is_positive ?
-              Filter.occupies(value, locale) :
-              Filter.not_occupies(value, locale))
+            filters << (is_positive ? Filter.occupies(value) :
+              Filter.not_occupies(value))
           when 'restricted_zone_set_name'
             filters << (is_positive ?
-              Filter.restricts(value, locale) :
-              Filter.not_restricts(value, locale))
+              Filter.restricts(value) :
+              Filter.not_restricts(value))
           when 'fits'
             raise NotImplementedError if value[:alt_style_id].present?
             pet_type = load_pet_type_by_color_and_species(
@@ -209,12 +203,12 @@ class Item
         "#<#{self.class.name} #{@text.inspect}>"
       end
 
-      def self.name_includes(value, locale)
-        self.new Item.name_includes(value, locale), "#{q value}"
+      def self.name_includes(value)
+        self.new Item.name_includes(value), "#{q value}"
       end
 
-      def self.name_excludes(value, locale)
-        self.new Item.name_excludes(value, locale), "-#{q value}"
+      def self.name_excludes(value)
+        self.new Item.name_excludes(value), "-#{q value}"
       end
 
       def self.occupies(value)

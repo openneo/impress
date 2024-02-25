@@ -29,10 +29,10 @@ class Item < ApplicationRecord
 
   scope :with_closet_hangers, -> { joins(:closet_hangers) }
 
-  scope :name_includes, ->(value, locale = I18n.locale) {
+  scope :name_includes, ->(value) {
     Item.where("name LIKE ?", "%" + sanitize_sql_like(value) + "%")
   }
-  scope :name_excludes, ->(value, locale = I18n.locale) {
+  scope :name_excludes, ->(value) {
     Item.where("name NOT LIKE ?", "%" + sanitize_sql_like(value) + "%")
   }
   scope :is_nc, -> {
