@@ -778,7 +778,10 @@ function StyleExplanation() {
       opacity="0.7"
       marginTop="2"
     >
-      "Alt Styles" are NC items that override the pet's appearance via the{" "}
+      <Box as="a" href="/alt-styles" target="_blank" textDecoration="underline">
+        Alt Styles
+      </Box>{" "}
+      are NC items that override the pet's appearance via the{" "}
       <Box
         as="a"
         href="https://www.neopets.com/stylingchamber/"
