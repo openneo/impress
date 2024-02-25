@@ -56,19 +56,36 @@ class SwfAsset < ApplicationRecord
   end
 
   def load_manifest
+    # If we recently tried loading the manifest and got a 4xx HTTP status code
+    # (e.g. a 404, there's a surprising amount of these!), don't try again. But
+    # after enough time passes, if this is called again, we will!
+    #
+    # (We always retry 5xx errors, on the assumption that they probably
+    # represent intermittent failures, whereas 4xx errors are not likely to
+    # succeed just by retrying.)
+    if manifest_loaded_at.present?
+      last_try_was_4xx =(400...500).include?(manifest_status_code)
+      last_try_was_recent = (Time.now - manifest_loaded_at) <= 1.day
+      if last_try_was_4xx and last_try_was_recent
+        Rails.logger.debug "Skipping loading manifest for asset #{id}: " +
+          "last try was status #{manifest_status_code} at #{manifest_loaded_at}"
+        return nil
+      end
+    end
+
     begin
       NeopetsMediaArchive.load_file(manifest_url) => {content:, source:}
     rescue NeopetsMediaArchive::ResponseNotOK => error
       Rails.logger.warn "Failed to load manifest for asset #{id}: " +
         error.message
-      self.manifest_loaded_at = DateTime.now
+      self.manifest_loaded_at = Time.now
       self.manifest_status_code = error.status
       save!
       return nil
     end
 
     if source == "network" || manifest_loaded_at.blank?
-      self.manifest_loaded_at = DateTime.now
+      self.manifest_loaded_at = Time.now
       self.manifest_status_code = 200
       save!
     end
