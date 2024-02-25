@@ -22,7 +22,7 @@ class AltStylesController < ApplicationController
 						swf_assets: {
 							only: [:id, :body_id],
 							include: [:zone],
-							methods: [:urls],
+							methods: [:urls, :known_glitches],
 						}
 					},
 					methods: [:series_name, :adjective_name, :thumbnail_url],

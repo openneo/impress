@@ -70,7 +70,7 @@ function normalizeSwfAssetToLayer(swfAssetData) {
 			label: swfAssetData.zone.label,
 		},
 		bodyId: swfAssetData.body_id,
-		knownGlitches: [], // TODO
+		knownGlitches: swfAssetData.known_glitches,
 
 		svgUrl: swfAssetData.urls.svg,
 		canvasMovieLibraryUrl: swfAssetData.urls.canvas_library,
