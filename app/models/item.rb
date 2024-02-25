@@ -87,8 +87,7 @@ class Item < ApplicationRecord
     where("NOT (#{condition})", *zone_ids)
   }
   scope :fits, ->(body_id) {
-    sa = SwfAsset.arel_table
-    joins(:swf_assets).where(sa[:body_id].eq(body_id)).distinct
+    joins(:swf_assets).where(swf_assets: {body_id: [body_id, 0]}).distinct
   }
   scope :not_fits, ->(body_id) {
     i = Item.arel_table
