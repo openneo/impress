@@ -38,7 +38,7 @@ class AltStyle < ApplicationRecord
     swf_asset = swf_assets.first
     return nil if swf_asset.nil?
 
-    swf_asset.html5_image_url
+    swf_asset.image_url
   end
 
   def biology=(biology)

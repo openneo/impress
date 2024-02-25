@@ -1,3 +1,4 @@
+require 'addressable/template'
 require 'async'
 require 'async/barrier'
 require 'async/semaphore'
@@ -10,12 +11,6 @@ class SwfAsset < ApplicationRecord
 
   # Used in `item_is_body_specific?`. (TODO: Could we refactor this out?)
   attr_accessor :item
-
-  IMAGE_SIZES = {
-    :small => [150, 150],
-    :medium => [300, 300],
-    :large => [600, 600]
-  }
   
   belongs_to :zone
   has_many :parent_swf_asset_relationships
@@ -29,28 +24,14 @@ class SwfAsset < ApplicationRecord
   scope :biology_assets, -> { where(:type => PetState::SwfAssetType) }
   scope :object_assets, -> { where(:type => Item::SwfAssetType) }
 
-  PARTITION_COUNT = 3
-  PARTITION_DIGITS = 3
-  PARTITION_ID_LENGTH = PARTITION_COUNT * PARTITION_DIGITS
-  def partition_path
-    (remote_id / 10**PARTITION_DIGITS).to_s.rjust(PARTITION_ID_LENGTH, '0').tap do |id_str|
-      PARTITION_COUNT.times do |n|
-        id_str.insert(PARTITION_ID_LENGTH - (n * PARTITION_DIGITS), '/')
-      end
-    end
-  end
-  
-  def image_version
-    converted_at.to_i
-  end
-  
-  def image_url(size=IMAGE_SIZES[:large])
-    size_key = size.join('x')
-    image_dir = "#{self['type']}/#{partition_path}#{self.remote_id}"
-
-    "https://impress-asset-images.openneo.net/#{image_dir}/#{size_key}.png?" +
-      "#{image_version}"
-  end
+  CANVAS_MOVIE_IMAGE_URL_TEMPLATE = Addressable::Template.new(
+    Rails.configuration.impress_2020_origin +
+    "/api/assetImage{?libraryUrl,size}"
+  )
+  LEGACY_IMAGE_URL_TEMPLATE = Addressable::Template.new(
+    "https://aws.impress-asset-images.openneo.net/{type}" +
+    "/{id1}/{id2}/{id3}/{id}/{size}x{size}.png?v2-{time}"
+  )
 
   def as_json(options={})
     super({
@@ -63,13 +44,14 @@ class SwfAsset < ApplicationRecord
     {
       swf: url,
       png: image_url,
+      svg: manifest_asset_urls[:svg],
       manifest: manifest_url,
     }
   end
 
   def manifest
     raise "manifest_url is blank" if manifest_url.blank?
-    NeopetsMediaArchive.load_json(manifest_url)
+    @manifest ||= NeopetsMediaArchive.load_json(manifest_url)
   end
 
   def preload_manifest
@@ -82,16 +64,87 @@ class SwfAsset < ApplicationRecord
     return {} if manifest_url.nil?
 
     begin
-      # Organize the asset URLs by file extension, grab the ones we want, and
-      # convert them from paths to full URLs.
-      manifest["cpmanifest"]["assets"][0]["asset_data"].
-        to_h { |a| [a["file_ext"].to_sym, a] }.
-        slice(:png, :svg, :js)
-        .transform_values { |a| (MANIFEST_BASE_URL + a["url"]).to_s }
+      # Organize the asset URLs by file extension, convert them from paths to
+      # full URLs, and grab the ones we want.
+      assets_by_ext = manifest["cpmanifest"]["assets"][0]["asset_data"].
+        group_by { |a| a["file_ext"].to_sym }.
+        transform_values do |assets|
+          assets.map { |a| (MANIFEST_BASE_URL + a["url"]).to_s }
+        end
+
+      if assets_by_ext[:js].present?
+        # If a JS asset is present, assume any other assets are supporting
+        # assets, and skip them. (e.g. if there's a PNG, it's likely to be an
+        # "atlas" file used in the animation, rather than a thumbnail.)
+        #
+        # NOTE: We take the last one, because sometimes there are multiple JS
+        # assets in the same manifest, and earlier ones are broken and later
+        # ones are fixed. I don't know the logic exactly, but that's what we've
+        # seen!
+        { js: assets_by_ext[:js].last }
+      else
+        # Otherwise, return the last PNG and the last SVG, arbitrarily.
+        # (There's probably only one of each! I'm just going by the same logic
+        # we've seen in the JS library case, that later entries are more likely
+        # to be correct.)
+        { png: assets_by_ext[:png].last, svg: assets_by_ext[:svg].last }
+      end
     rescue StandardError => error
       Rails.logger.error "Could not read URLs from manifest: #{error.full_message}"
       return {}
     end
+  end
+
+  def image_url
+    # Use the PNG image from the manifest, if one exists.
+    return manifest_asset_urls[:png] if manifest_asset_urls[:png].present?
+
+    # Or, if this is a canvas movie, let Impress 2020 generate a PNG for us.
+    return canvas_movie_image_url if manifest_asset_urls[:js].present?
+
+    # Otherwise, if we don't have the manifest or it doesn't have the files we
+    # need, fall back to the Classic DTI image storage, which was generated
+    # from the SWFs via an old version of gnash (or sometimes manually
+    # overridden). It's less accurate, but well-tested to generally work okay,
+    # and it's the only image we have for assets not yet converted to HTML5.
+    #
+    # NOTE: We've stopped generating these images for new assets! This is
+    #       mainly for old assets not yet converted to HTML5.
+    #
+    # NOTE: If you're modeling from a fresh development database, `has_image?`
+    #       might be false even though we *do* have a saved copy of the image
+    #       available in production. But if you're using the public modeling
+    #       data exported from production, then this check should be fine!
+    #
+    # TODO: Rename `has_image?` to `has_legacy_image?`.
+    return legacy_image_url if has_image?
+
+    # Otherwise, there's no image URL.
+    nil
+  end
+
+  def canvas_movie_image_url
+    return nil unless manifest_asset_urls[:js]
+
+    CANVAS_MOVIE_IMAGE_URL_TEMPLATE.expand(
+      libraryUrl: manifest_asset_urls[:js],
+      size: 600,
+    ).to_s
+  end
+
+  def legacy_image_url
+    return nil unless has_image?
+
+    padded_id = remote_id.to_s.rjust(12, "0")
+    LEGACY_IMAGE_URL_TEMPLATE.expand(
+      type: type,
+      id1: padded_id[0...3],
+      id2: padded_id[3...6],
+      id3: padded_id[6...9],
+      id: remote_id,
+      size: "600",
+      time: converted_at.to_i,
+    ).to_s
   end
 
   def html5_image_url
