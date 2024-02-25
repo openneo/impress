@@ -39,9 +39,15 @@ class Item < ApplicationRecord
     i = Item.arel_table
     where(i[:rarity_index].in(Item::NCRarities).or(i[:is_manually_nc].eq(true)))
   }
-  scope :is_np, -> {
+  scope :is_not_nc, -> {
     i = Item.arel_table
     where(i[:rarity_index].in(Item::NCRarities).or(i[:is_manually_nc].eq(true)).not)
+  }
+  scope :is_np, -> {
+    self.is_not_nc.is_not_pb
+  }
+  scope :is_not_np, -> {
+    self.merge Item.is_nc.or(Item.is_pb)
   }
   scope :is_pb, -> {
     where('description LIKE ?',

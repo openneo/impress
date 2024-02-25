@@ -120,6 +120,10 @@ class Item
               Filter.name_excludes(value, locale))
           when 'is_nc'
             filters << (is_positive ? Filter.is_nc : Filter.is_not_nc)
+          when 'is_pb'
+            filters << (is_positive ? Filter.is_pb : Filter.is_not_pb)
+          when 'is_np'
+            filters << (is_positive ? Filter.is_np : Filter.is_not_np)
           when 'occupied_zone_set_name'
             filters << (is_positive ?
               Filter.occupies(value, locale) :
@@ -255,7 +259,7 @@ class Item
       end
 
       def self.is_not_nc
-        self.new Item.is_np, '-is:nc'
+        self.new Item.is_not_nc, '-is:nc'
       end
 
       def self.is_np
@@ -263,7 +267,7 @@ class Item
       end
 
       def self.is_not_np
-        self.new Item.is_nc, '-is:np'
+        self.new Item.is_not_np, '-is:np'
       end
 
       def self.is_pb
