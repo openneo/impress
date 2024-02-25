@@ -72,11 +72,9 @@ function normalizeSwfAssetToLayer(swfAssetData) {
 		bodyId: swfAssetData.body_id,
 		knownGlitches: [], // TODO
 
-		// HACK: We're just simplifying this adapter, but it would be better to
-		// actually check what file formats the manifest says!
-		svgUrl: swfAssetData.html5_svg_url,
-		canvasMovieLibraryUrl: null,
-		imageUrl: swfAssetData.html5_image_url,
-		swfUrl: swfAssetData.url,
+		svgUrl: swfAssetData.urls.svg,
+		canvasMovieLibraryUrl: swfAssetData.urls.canvas_library,
+		imageUrl: swfAssetData.urls.png,
+		swfUrl: swfAssetData.urls.swf,
 	};
 }

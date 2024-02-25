@@ -45,6 +45,7 @@ class SwfAsset < ApplicationRecord
       swf: url,
       png: image_url,
       svg: manifest_asset_urls[:svg],
+      canvas_library: manifest_asset_urls[:js],
       manifest: manifest_url,
     }
   end
@@ -145,14 +146,6 @@ class SwfAsset < ApplicationRecord
       size: "600",
       time: converted_at.to_i,
     ).to_s
-  end
-
-  def html5_image_url
-    manifest_asset_urls[:png]
-  end
-
-  def html5_svg_url
-    manifest_asset_urls[:svg]
   end
 
   def known_glitches
