@@ -40,19 +40,31 @@ function useOutfitState() {
     [outfitData],
   );
 
-  // When the saved outfit data comes in, we reset the local outfit state to
-  // match.
+  // When the saved outfit data comes in for the first time, we reset the local
+  // outfit state to match. (We don't reset it on subsequent outfit data
+  // updates, e.g. when an outfit saves and the response comes back from the
+  // server, because then we could be in a loop of replacing the local state
+  // with the persisted state if the user makes changes in the meantime!)
+  //
+  // HACK: I feel like not having species/color is one of the best ways to tell
+  // if we're replacing an incomplete outfit state… but it feels a bit fragile
+  // and not-quite-what-we-mean.
+  //
   // TODO: I forget the details of why we have both resetting the local state,
   // and a thing where we fallback between the different kinds of outfit state.
-  // Probably something about SSR when we were on Next.js? Could be simplified?`
+  // Probably something about SSR when we were on Next.js? Could be simplified?
   React.useEffect(() => {
-    if (outfitStatus === "success") {
+    if (
+      outfitStatus === "success" &&
+      localOutfitState.speciesId == null &&
+      localOutfitState.colorId == null
+    ) {
       dispatchToOutfit({
         type: "resetToSavedOutfitData",
         savedOutfitData: outfitData,
       });
     }
-  }, [outfitStatus, outfitData]);
+  }, [outfitStatus, outfitData, localOutfitState]);
 
   // Choose which customization state to use. We want it to match the outfit in
   // the URL immediately, without having to wait for any effects, to avoid race
@@ -365,6 +377,32 @@ const outfitStateReducer = (apolloClient) => (baseState, action) => {
       });
     case "resetToSavedOutfitData":
       return getOutfitStateFromOutfitData(action.savedOutfitData);
+    case "handleOutfitSaveResponse":
+      return produce(baseState, (state) => {
+        const { outfitData } = action;
+
+        // If this is a save result for a different outfit, ignore it.
+        if (state.id != null && outfitData.id != state.id) {
+          return;
+        }
+
+        // Otherwise, update the local outfit to match the fields the server
+        // controls: it chooses the ID for new outfits, and it can choose a
+        // different name if ours was already in use.
+        state.id = outfitData.id;
+        state.name = outfitData.name;
+
+        // The server also tries to lock the outfit to a specific appearanceId
+        // for the given species/color/pose. Accept that change too—but only if
+        // we haven't already changed species/color/pose since then!
+        if (
+          state.speciesId == outfitData.speciesId &&
+          state.colorId == outfitData.colorId &&
+          state.pose == outfitData.pose
+        ) {
+          state.appearanceId = outfitData.appearanceId;
+        }
+      });
     default:
       throw new Error(`unexpected action ${JSON.stringify(action)}`);
   }
