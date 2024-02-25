@@ -88,7 +88,10 @@ class SwfAsset < ApplicationRecord
         # (There's probably only one of each! I'm just going by the same logic
         # we've seen in the JS library case, that later entries are more likely
         # to be correct.)
-        { png: assets_by_ext[:png].last, svg: assets_by_ext[:svg].last }
+        {
+          png: assets_by_ext.fetch(:png, []).last,
+          svg: assets_by_ext.fetch(:svg, []).last,
+        }
       end
     rescue StandardError => error
       Rails.logger.error "Could not read URLs from manifest: #{error.full_message}"
