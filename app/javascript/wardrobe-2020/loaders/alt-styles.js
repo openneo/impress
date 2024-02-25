@@ -12,7 +12,10 @@ export function useAltStylesForSpecies(speciesId, options = {}) {
 // NOTE: This is actually just a wrapper for `useAltStylesForSpecies`, to share
 // the same cache key!
 export function useAltStyle(id, speciesId, options = {}) {
-	const query = useAltStylesForSpecies(speciesId, options);
+	const query = useAltStylesForSpecies(speciesId, {
+		...options,
+		enabled: (options.enabled ?? true) && id != null,
+	});
 
 	return {
 		...query,
