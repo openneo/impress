@@ -384,6 +384,14 @@
           skip-bind-address
       notify: Restart MariaDB
 
+    - name: Enable slow query logging for MariaDB
+      copy:
+        dest: /etc/mysql/mariadb.conf.d/80-logging.cnf
+        content: |
+          [mysqld]
+          slow-query-log
+      notify: Restart MariaDB
+
     - name: Create MySQL databases
       community.mysql.mysql_db:
         name:
