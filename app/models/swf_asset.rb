@@ -59,7 +59,7 @@ class SwfAsset < ApplicationRecord
   end
 
   def load_manifest(return_content: true, save_changes: true)
-    raise "manifest_url is blank" if manifest_url.blank?
+    return nil if manifest_url.blank?
 
     # If we recently tried loading the manifest and got a 4xx HTTP status code
     # (e.g. a 404, there's a surprising amount of these!), don't try again. But
@@ -109,7 +109,7 @@ class SwfAsset < ApplicationRecord
 
   MANIFEST_BASE_URL = Addressable::URI.parse("https://images.neopets.com")
   def manifest_asset_urls
-    return {} if manifest_url.nil?
+    return {} unless manifest.present?
 
     begin
       # Organize the asset URLs by file extension, convert them from paths to
