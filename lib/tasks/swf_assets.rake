@@ -56,11 +56,7 @@ namespace :swf_assets do
 			Sync do
 				saved_count = 0
 				swf_assets.find_in_batches(batch_size: 1000) do |swf_assets|
-					# NOTE: Loading the manifests can both write to the filesystem *and*
-					# to the database, because we track timestamp and status in the db!
-					SwfAsset.transaction do
-						SwfAsset.preload_manifests(swf_assets)
-					end
+					SwfAsset.preload_manifests(swf_assets)
 					saved_count += swf_assets.size
 					puts "Loaded #{saved_count} of #{total_count} manifests"
 				end

@@ -37,7 +37,7 @@ module NeopetsMediaArchive
       # we're not ready to use yet.)
       if File.exist?(local_path)
         debug "Source file is already loaded, skipping: #{local_path}"
-        return
+        return {content: nil, source: "filesystem"}
       end
     end
 

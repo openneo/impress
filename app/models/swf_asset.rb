@@ -51,11 +51,16 @@ class SwfAsset < ApplicationRecord
   end
 
   def manifest
-    raise "manifest_url is blank" if manifest_url.blank?
     @manifest ||= load_manifest
   end
 
-  def load_manifest
+  def preload_manifest(save_changes: true)
+    load_manifest(return_content: false, save_changes:)
+  end
+
+  def load_manifest(return_content: true, save_changes: true)
+    raise "manifest_url is blank" if manifest_url.blank?
+
     # If we recently tried loading the manifest and got a 4xx HTTP status code
     # (e.g. a 404, there's a surprising amount of these!), don't try again. But
     # after enough time passes, if this is called again, we will!
@@ -74,21 +79,24 @@ class SwfAsset < ApplicationRecord
     end
 
     begin
-      NeopetsMediaArchive.load_file(manifest_url) => {content:, source:}
+      NeopetsMediaArchive.load_file(manifest_url, return_content:) =>
+        {content:, source:}
     rescue NeopetsMediaArchive::ResponseNotOK => error
       Rails.logger.warn "Failed to load manifest for asset #{id}: " +
         error.message
       self.manifest_loaded_at = Time.now
       self.manifest_status_code = error.status
-      save!
+      save! if save_changes
       return nil
     end
 
     if source == "network" || manifest_loaded_at.blank?
       self.manifest_loaded_at = Time.now
       self.manifest_status_code = 200
-      save!
+      save! if save_changes
     end
+
+    return nil unless return_content
 
     begin
       JSON.parse(content)
@@ -97,11 +105,6 @@ class SwfAsset < ApplicationRecord
         error.message
       return nil
     end
-  end
-
-  def preload_manifest
-    raise "manifest_url is blank" if manifest_url.blank?
-    NeopetsMediaArchive.preload_file(manifest_url)
   end
 
   MANIFEST_BASE_URL = Addressable::URI.parse("https://images.neopets.com")
@@ -306,7 +309,9 @@ class SwfAsset < ApplicationRecord
       swf_assets.map do |swf_asset|
         semaphore.async do
           begin
-            swf_asset.preload_manifest
+            # Don't save changes in this big async situation; we'll do it all
+            # in one batch after, to avoid too much database concurrency!
+            swf_asset.preload_manifest(save_changes: false)
           rescue StandardError => error
             Rails.logger.error "Could not preload manifest for asset " + 
               "#{swf_asset.id} (#{swf_asset.manifest_url}): #{error.message}"
@@ -318,6 +323,10 @@ class SwfAsset < ApplicationRecord
       barrier.wait
     ensure
       barrier.stop # If something goes wrong, clean up all tasks.
+    end
+
+    SwfAsset.transaction do
+      swf_assets.each(&:save!)
     end
   end
 
