@@ -63,6 +63,7 @@ class Item
           is_positive ? Filter.restricts(value) : Filter.not_restricts(value)
         when 'fits'
           # First, try the `fits:blue-acara` case.
+          # NOTE: This will also work for `fits:"usuki girl-usul"`!
           match = value.match(/^([^-]+)-([^-]+)$/)
           if match.present?
             color_name, species_name = match.captures
@@ -83,6 +84,7 @@ class Item
           end
 
           # Next, try the `fits:nostalgic-faerie-draik` case.
+          # NOTE: This will also work for `fits:"nostalgic-usuki girl-usul"`!
           match = value.match(/^([^-]+)-([^-]+)-([^-]+)$/)
           if match.present?
             series_name, color_name, species_name = match.captures
@@ -362,7 +364,17 @@ class Item
       end
 
       def self.alt_style_to_filter_text(alt_style)
-        "alt-style-#{alt_style.id}"
+        # If the real series name has been set in the database by support
+        # staff, use that for the canonical filter text for this alt style.
+        # Otherwise, represent this alt style by ID.
+        if alt_style.has_real_series_name?
+          series_name = alt_style.series_name.downcase
+          color_name = alt_style.color.name.downcase
+          species_name = alt_style.species.name.downcase
+          "#{series_name}-#{color_name}-#{species_name}"
+        else
+          "alt-style-#{alt_style.id}"
+        end
       end
     end
   end
