@@ -361,6 +361,8 @@ en:
           alt_style: We have no record of the "%{filter_text}" alt style. Is it
             spelled correctly?
           pet_type_id: We have no record of pet type %{id}. Weird.
+          fits_target: I'm not sure what "fits:%{value}" means. You can
+            use "fits:blue-acara", "fits:nostalgic-faerie-draik", or similar!
         not_logged_in: The "user" filters are only available if you're logged in.
       flag_keywords:
         is: is

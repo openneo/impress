@@ -62,11 +62,17 @@ class Item
         when 'restricts'
           is_positive ? Filter.restricts(value) : Filter.not_restricts(value)
         when 'fits'
-          color_name, species_name = value.split("-")
-          pet_type = load_pet_type_by_name(color_name, species_name)
-          is_positive ?
-            Filter.fits_pet_type(pet_type, color_name:, species_name:) :
-            Filter.not_fits_pet_type(pet_type, color_name:, species_name:)
+          match = value.match(/^([^-]+)-([^-]+)$/)
+          if match.present?
+            color_name, species_name = match.captures
+            pet_type = load_pet_type_by_name(color_name, species_name)
+            return is_positive ?
+              Filter.fits_pet_type(pet_type, color_name:, species_name:) :
+              Filter.not_fits_pet_type(pet_type, color_name:, species_name:)
+          end
+          message = I18n.translate('items.search.errors.not_found.fits_target',
+            value: value)
+          raise Item::Search::Error, message
         when 'species'
           begin
             species = Species.find_by_name!(value)
