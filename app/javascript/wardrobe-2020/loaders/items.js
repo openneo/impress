@@ -136,7 +136,7 @@ function writeItemToApolloCache(item, { speciesId, colorId, altStyleId }) {
 							knownGlitches
 							svgUrl
 							canvasMovieLibraryUrl
-							imageUrl
+							imageUrl: imageUrlV2(idealSize: SIZE_600)
 							swfUrl
 							zone {
 								id
