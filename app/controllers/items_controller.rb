@@ -4,55 +4,53 @@ class ItemsController < ApplicationController
 
   def index
     if @query
-      begin
-        if params[:per_page]
-          per_page = params[:per_page].to_i
-          per_page = 50 if per_page && per_page > 50
-        else
-          per_page = 30
-        end
+      if params[:per_page]
+        per_page = params[:per_page].to_i
+        per_page = 50 if per_page && per_page > 50
+      else
+        per_page = 30
+      end
 
-        @items = @query.results.paginate(
-          page: params[:page], per_page: per_page)
-        assign_closeted!
+      @items = @query.results.paginate(
+        page: params[:page], per_page: per_page)
+      assign_closeted!
 
-        respond_to do |format|
-          format.html {
-            @campaign = Fundraising::Campaign.current rescue nil
-            if @items.count == 1
-              redirect_to @items.first
-            else
-              render
-            end
-          }
-          format.json {
-            render json: {
-              items: @items.as_json(
-                methods: [:nc?, :pb?, :owned?, :wanted?],
-              ),
-              appearances: load_appearances.as_json(
-                include: {
-                  swf_assets: {
-                    only: [:id, :remote_id, :body_id],
-                    include: {
-                      zone: {
-                        only: [:id, :depth, :label],
-                        methods: [:is_commonly_used_by_items],
-                      },
-                      restricted_zones: {
-                        only: [:id, :depth, :label],
-                        methods: [:is_commonly_used_by_items],
-                      },
+      respond_to do |format|
+        format.html {
+          @campaign = Fundraising::Campaign.current rescue nil
+          if @items.count == 1
+            redirect_to @items.first
+          else
+            render
+          end
+        }
+        format.json {
+          render json: {
+            items: @items.as_json(
+              methods: [:nc?, :pb?, :owned?, :wanted?],
+            ),
+            appearances: load_appearances.as_json(
+              include: {
+                swf_assets: {
+                  only: [:id, :remote_id, :body_id],
+                  include: {
+                    zone: {
+                      only: [:id, :depth, :label],
+                      methods: [:is_commonly_used_by_items],
                     },
-                    methods: [:urls, :known_glitches],
+                    restricted_zones: {
+                      only: [:id, :depth, :label],
+                      methods: [:is_commonly_used_by_items],
+                    },
                   },
-                }
-              ),
-              total_pages: @items.total_pages,
-              query: @query.to_s,
-            }
+                  methods: [:urls, :known_glitches],
+                },
+              }
+            ),
+            total_pages: @items.total_pages,
+            query: @query.to_s,
           }
-        end
+        }
       end
     elsif params.has_key?(:ids) && params[:ids].is_a?(Array)
       @items = Item.find(params[:ids])
