@@ -44,8 +44,8 @@ class Item
             color_name, species_name = value.split("-")
             pet_type = load_pet_type_by_name(color_name, species_name)
             filters << (is_positive ?
-              Filter.fits(pet_type.body_id, color_name, species_name) :
-              Filter.not_fits(pet_type.body_id, color_name, species_name))
+              Filter.fits_pet_type(pet_type, color_name:, species_name:) :
+              Filter.not_fits_pet_type(pet_type, color_name:, species_name:))
           when 'species'
             begin
               species = Species.find_by_name!(value)
@@ -131,11 +131,9 @@ class Item
             raise NotImplementedError if value[:alt_style_id].present?
             pet_type = load_pet_type_by_color_and_species(
               value[:color_id], value[:species_id])
-            color = Color.find value[:color_id]
-            species = Species.find value[:species_id]
             filters << (is_positive ?
-              Filter.fits(pet_type.body_id, color.name, species.name) :
-              Filter.not_fits(pet_type.body_id, color.name, species.name))
+              Filter.fits_pet_type(pet_type) :
+              Filter.not_fits_pet_type(pet_type))
           when 'user_closet_hanger_ownership'
             case value
             when 'true'
@@ -227,16 +225,14 @@ class Item
         self.new Item.not_restricts(value), "-restricts:#{q value}"
       end
 
-      def self.fits(body_id, color_name, species_name)
-        # NOTE: Some color syntaxes are weird, like `fits:"polka dot-aisha"`!
-        value = "#{color_name}-#{species_name}".downcase
-        self.new Item.fits(body_id), "fits:#{q value}"
+      def self.fits_pet_type(pet_type, color_name: nil, species_name: nil)
+        value = pet_type_to_filter_text(pet_type, color_name:, species_name:)
+        self.new Item.fits(pet_type.body_id), "fits:#{q value}"
       end
 
-      def self.not_fits(body_id, color_name, species_name)
-        # NOTE: Some color syntaxes are weird, like `fits:"polka dot-aisha"`!
-        value = "#{color_name}-#{species_name}".downcase
-        self.new Item.not_fits(body_id), "-fits:#{q value}"
+      def self.not_fits_pet_type(pet_type, color_name: nil, species_name: nil)
+        value = pet_type_to_filter_text(pet_type, color_name:, species_name:)
+        self.new Item.not_fits(pet_type.body_id), "-fits:#{q value}"
       end
 
       def self.fits_species(body_id, species_name)
@@ -292,6 +288,16 @@ class Item
       # Add quotes around the value, if needed.
       def self.q(value)
         /\s/.match(value) ? '"' + value + '"' : value
+      end
+
+      def self.pet_type_to_filter_text(pet_type, color_name: nil, species_name: nil)
+        # Load the color & species name if needed, or use them from the params
+        # if already known (e.g. from parsing a "fits:blue-acara" text query).
+        color_name ||= pet_type.color.name
+        species_name ||= pet_type.species.name
+
+        # NOTE: Some color syntaxes are weird, like `fits:"polka dot-aisha"`!
+        value = "#{color_name}-#{species_name}".downcase
       end
     end
   end
