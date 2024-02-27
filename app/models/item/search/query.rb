@@ -27,7 +27,7 @@ class Item
           value = quoted_value || unquoted_value
           is_positive = (sign != '-')
           
-          filter = parse_text_filter(key, value, is_positive)
+          filter = parse_text_filter(key, value, is_positive, user)
           filters << filter if filter.present?
         end
         
@@ -42,7 +42,7 @@ class Item
           value = filter_params[:value]
           is_positive = filter_params[:is_positive] != 'false'
 
-          filter = parse_params_filter(key, value, is_positive)
+          filter = parse_params_filter(key, value, is_positive, user)
           filters << filter if filter.present?
         end
 
@@ -51,7 +51,7 @@ class Item
 
       private
 
-      def self.parse_text_filter(key, value, is_positive)
+      def self.parse_text_filter(key, value, is_positive, user)
         case key
         when 'name'
           is_positive ?
@@ -111,7 +111,7 @@ class Item
         end
       end
 
-      def self.parse_params_filter(key, value, is_positive)
+      def self.parse_params_filter(key, value, is_positive, user)
         case key
         when 'name'
           is_positive ?
