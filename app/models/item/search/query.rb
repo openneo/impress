@@ -27,75 +27,8 @@ class Item
           value = quoted_value || unquoted_value
           is_positive = (sign != '-')
           
-          case key
-          when 'name'
-            filters << (is_positive ?
-              Filter.name_includes(value) :
-              Filter.name_excludes(value))
-          when 'occupies'
-            filters << (is_positive ?
-              Filter.occupies(value) :
-              Filter.not_occupies(value))
-          when 'restricts'
-            filters << (is_positive ?
-              Filter.restricts(value) :
-              Filter.not_restricts(value))
-          when 'fits'
-            color_name, species_name = value.split("-")
-            pet_type = load_pet_type_by_name(color_name, species_name)
-            filters << (is_positive ?
-              Filter.fits_pet_type(pet_type, color_name:, species_name:) :
-              Filter.not_fits_pet_type(pet_type, color_name:, species_name:))
-          when 'species'
-            begin
-              species = Species.find_by_name!(value)
-              color = Color.find_by_name!('blue')
-              pet_type = PetType.where(color_id: color.id, species_id: species.id).first!
-            rescue ActiveRecord::RecordNotFound
-              message = I18n.translate('items.search.errors.not_found.species',
-                species_name: value.capitalize)
-              raise Item::Search::Error, message
-            end
-            filters << (is_positive ?
-              Filter.fits_species(pet_type.body_id, value) :
-              Filter.not_fits_species(pet_type.body_id, value))
-          when 'user'
-            if user.nil?
-              message = I18n.translate('items.search.errors.not_logged_in')
-              raise Item::Search::Error, message
-            end
-            case value
-            when 'owns'
-              filters << (is_positive ?
-                Filter.owned_by(user) :
-                Filter.not_owned_by(user))
-            when 'wants'
-              filters << (is_positive ?
-                Filter.wanted_by(user) :
-                Filter.not_wanted_by(user))
-            else
-              message = I18n.translate('items.search.errors.not_found.ownership',
-                keyword: value)
-              raise Item::Search::Error, message
-            end
-          when 'is'
-            case value
-            when 'nc'
-              filters << (is_positive ? Filter.is_nc : Filter.is_not_nc)
-            when 'np'
-              filters << (is_positive ? Filter.is_np : Filter.is_not_np)
-            when 'pb'
-              filters << (is_positive ? Filter.is_pb : Filter.is_not_pb)
-            else
-              message = I18n.translate('items.search.errors.not_found.label',
-                :label => "is:#{value}")
-              raise Item::Search::Error, message
-            end
-          else
-            message = I18n.translate('items.search.errors.not_found.label',
-              :label => key)
-            raise Item::Search::Error, message
-          end
+          filter = parse_text_filter(key, value, is_positive)
+          filters << filter if filter.present?
         end
         
         self.new(filters, user, text)
@@ -109,54 +42,122 @@ class Item
           value = filter_params[:value]
           is_positive = filter_params[:is_positive] != 'false'
 
-          case filter_params[:key]
-          when 'name'
-            filters << (is_positive ?
-              Filter.name_includes(value) :
-              Filter.name_excludes(value))
-          when 'is_nc'
-            filters << (is_positive ? Filter.is_nc : Filter.is_not_nc)
-          when 'is_pb'
-            filters << (is_positive ? Filter.is_pb : Filter.is_not_pb)
-          when 'is_np'
-            filters << (is_positive ? Filter.is_np : Filter.is_not_np)
-          when 'occupied_zone_set_name'
-            filters << (is_positive ? Filter.occupies(value) :
-              Filter.not_occupies(value))
-          when 'restricted_zone_set_name'
-            filters << (is_positive ?
-              Filter.restricts(value) :
-              Filter.not_restricts(value))
-          when 'fits'
-            if value[:alt_style_id].present?
-              alt_style = load_alt_style_by_id(value[:alt_style_id])
-              filters << (is_positive ?
-                Filter.fits_alt_style(alt_style) :
-                Filter.fits_alt_style(alt_style))
-            else
-              pet_type = load_pet_type_by_color_and_species(
-                value[:color_id], value[:species_id])
-              filters << (is_positive ?
-                Filter.fits_pet_type(pet_type) :
-                Filter.not_fits_pet_type(pet_type))
-            end
-          when 'user_closet_hanger_ownership'
-            case value
-            when 'true'
-              filters << (is_positive ?
-                Filter.owned_by(user) :
-                Filter.not_owned_by(user))
-            when 'false'
-              filters << (is_positive ?
-                Filter.wanted_by(user) :
-                Filter.not_wanted_by(user))
-            end
-          else
-            Rails.logger.warn "Ignoring unexpected search filter key: #{key}"
-          end
+          filter = parse_params_filter(key, value, is_positive)
+          filters << filter if filter.present?
         end
 
         self.new(filters, user)
+      end
+
+      private
+
+      def self.parse_text_filter(key, value, is_positive)
+        case key
+        when 'name'
+          is_positive ?
+            Filter.name_includes(value) :
+            Filter.name_excludes(value)
+        when 'occupies'
+          is_positive ? Filter.occupies(value) : Filter.not_occupies(value)
+        when 'restricts'
+          is_positive ? Filter.restricts(value) : Filter.not_restricts(value)
+        when 'fits'
+          color_name, species_name = value.split("-")
+          pet_type = load_pet_type_by_name(color_name, species_name)
+          is_positive ?
+            Filter.fits_pet_type(pet_type, color_name:, species_name:) :
+            Filter.not_fits_pet_type(pet_type, color_name:, species_name:)
+        when 'species'
+          begin
+            species = Species.find_by_name!(value)
+            color = Color.find_by_name!('blue')
+            pet_type = PetType.where(color_id: color.id, species_id: species.id).first!
+          rescue ActiveRecord::RecordNotFound
+            message = I18n.translate('items.search.errors.not_found.species',
+              species_name: value.capitalize)
+            raise Item::Search::Error, message
+          end
+          is_positive ?
+            Filter.fits_species(pet_type.body_id, value) :
+            Filter.not_fits_species(pet_type.body_id, value)
+        when 'user'
+          if user.nil?
+            message = I18n.translate('items.search.errors.not_logged_in')
+            raise Item::Search::Error, message
+          end
+          case value
+          when 'owns'
+            is_positive ? Filter.owned_by(user) : Filter.not_owned_by(user)
+          when 'wants'
+            is_positive ? Filter.wanted_by(user) : Filter.not_wanted_by(user)
+          else
+            message = I18n.translate('items.search.errors.not_found.ownership',
+              keyword: value)
+            raise Item::Search::Error, message
+          end
+        when 'is'
+          case value
+          when 'nc'
+            is_positive ? Filter.is_nc : Filter.is_not_nc
+          when 'np'
+            is_positive ? Filter.is_np : Filter.is_not_np
+          when 'pb'
+            is_positive ? Filter.is_pb : Filter.is_not_pb
+          else
+            message = I18n.translate('items.search.errors.not_found.label',
+              :label => "is:#{value}")
+            raise Item::Search::Error, message
+          end
+        else
+          message = I18n.translate('items.search.errors.not_found.label',
+            :label => key)
+          raise Item::Search::Error, message
+        end
+      end
+
+      def self.parse_params_filter(key, value, is_positive)
+        case key
+        when 'name'
+          is_positive ?
+            Filter.name_includes(value) :
+            Filter.name_excludes(value)
+        when 'is_nc'
+          is_positive ? Filter.is_nc : Filter.is_not_nc
+        when 'is_pb'
+          is_positive ? Filter.is_pb : Filter.is_not_pb
+        when 'is_np'
+          is_positive ? Filter.is_np : Filter.is_not_np
+        when 'occupied_zone_set_name'
+          is_positive ? Filter.occupies(value) : Filter.not_occupies(value)
+        when 'restricted_zone_set_name'
+          is_positive ? Filter.restricts(value) : Filter.not_restricts(value)
+        when 'fits'
+          if value[:alt_style_id].present?
+            alt_style = load_alt_style_by_id(value[:alt_style_id])
+            is_positive ?
+              Filter.fits_alt_style(alt_style) :
+              Filter.fits_alt_style(alt_style)
+          else
+            pet_type = load_pet_type_by_color_and_species(
+              value[:color_id], value[:species_id])
+            is_positive ?
+              Filter.fits_pet_type(pet_type) :
+              Filter.not_fits_pet_type(pet_type)
+          end
+        when 'user_closet_hanger_ownership'
+          case value
+          when 'true'
+            is_positive ?
+              Filter.owned_by(user) :
+              Filter.not_owned_by(user)
+          when 'false'
+            is_positive ?
+              Filter.wanted_by(user) :
+              Filter.not_wanted_by(user)
+          end
+        else
+          Rails.logger.warn "Ignoring unexpected search filter key: #{key}"
+        end
       end
 
       def self.load_pet_type_by_name(color_name, species_name)
