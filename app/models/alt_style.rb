@@ -17,6 +17,20 @@ class AltStyle < ApplicationRecord
                    species_human_name: species.human_name)
   end
 
+  # If the series_name hasn't yet been set manually by support staff, show the
+  # string "<New?>" instead. But it won't be searchable by that string—that is,
+  # `fits:<New?>-faerie-draik` intentionally will not work, and the canonical
+  # filter name will be `fits:alt-style-IDNUMBER`, instead.
+  def series_name
+    self[:series_name] || "<New?>"
+  end
+
+  # You can use this to check whether `series_name` is returning the actual
+  # value or its placeholder value.
+  def has_real_series_name?
+    self[:series_name].present?
+  end
+
   def adjective_name
     "#{series_name} #{color.human_name}"
   end
