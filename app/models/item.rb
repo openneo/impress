@@ -103,7 +103,11 @@ class Item < ApplicationRecord
     # bother looking into this, but one thing I notice is items with no assets
     # somehow would not match either scope in this impl (but LEFT JOIN would!)
     joins(:swf_assets).group(i[:id]).
-      having('FIND_IN_SET(?, GROUP_CONCAT(body_id)) = 0', body_id).
+      having(
+        "FIND_IN_SET(?, GROUP_CONCAT(body_id)) = 0 AND " +
+        "FIND_IN_SET(0, GROUP_CONCAT(body_id)) = 0",
+        body_id
+      ).
       distinct
   }
 
