@@ -62,6 +62,7 @@ class Item
         when 'restricts'
           is_positive ? Filter.restricts(value) : Filter.not_restricts(value)
         when 'fits'
+          # First, try the `fits:blue-acara` case.
           match = value.match(/^([^-]+)-([^-]+)$/)
           if match.present?
             color_name, species_name = match.captures
@@ -70,6 +71,22 @@ class Item
               Filter.fits_pet_type(pet_type, color_name:, species_name:) :
               Filter.not_fits_pet_type(pet_type, color_name:, species_name:)
           end
+
+          # Next, try the `fits:nostalgic-faerie-draik` case.
+          match = value.match(/^([^-]+)-([^-]+)-([^-]+)$/)
+          if match.present?
+            series_name, color_name, species_name = match.captures
+            alt_style = load_alt_style_by_name(
+              series_name, color_name, species_name)
+            return is_positive ?
+              Filter.fits_alt_style(alt_style) :
+              Filter.not_fits_alt_style(alt_style)
+          end
+
+          # TODO: We could make `fits:acara` an alias for `species:acara`, or
+          # even the primary syntax?
+
+          # If none of these cases work, raise an error.
           raise_search_error "not_found.fits_target", value: value
         when 'species'
           begin
@@ -176,10 +193,19 @@ class Item
         end
       end
 
+      def self.load_alt_style_by_name(series_name, color_name, species_name)
+        begin
+          AltStyle.matching_name(series_name, color_name, species_name).first!
+        rescue ActiveRecord::RecordNotFound
+          raise_search_error "not_found.alt_style",
+            filter_text: "#{series_name}-#{color_name}-#{species_name}"
+        end
+      end
+
       def self.load_alt_style_by_id(alt_style_id)
         begin
           AltStyle.find(alt_style_id)
-        rescue
+        rescue ActiveRecord::RecordNotFound
           raise_search_error "not_found.alt_style",
             filter_text: "alt-style-#{alt_style_id}"
         end

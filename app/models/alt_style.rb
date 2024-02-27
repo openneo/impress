@@ -6,6 +6,12 @@ class AltStyle < ApplicationRecord
   has_many :swf_assets, through: :parent_swf_asset_relationships
   has_many :contributions, as: :contributed, inverse_of: :contributed
 
+  scope :matching_name, ->(series_name, color_name, species_name) {
+    color = Color.find_by_name!(color_name)
+    species = Species.find_by_name!(species_name)
+    where(series_name:, color_id: color.id, species_id: species.id)
+  }
+
   def name
     I18n.translate('pet_types.human_name', color_human_name: color.human_name,
                    species_human_name: species.human_name)
