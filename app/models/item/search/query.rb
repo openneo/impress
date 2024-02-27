@@ -72,6 +72,16 @@ class Item
               Filter.not_fits_pet_type(pet_type, color_name:, species_name:)
           end
 
+          # Next, try the `fits:alt-style-87305` case.
+          match = value.match(/^alt-style-([0-9]+)$/)
+          if match.present?
+            alt_style_id, = match.captures
+            alt_style = load_alt_style_by_id(alt_style_id)
+            return is_positive ?
+              Filter.fits_alt_style(alt_style) :
+              Filter.not_fits_alt_style(alt_style)
+          end
+
           # Next, try the `fits:nostalgic-faerie-draik` case.
           match = value.match(/^([^-]+)-([^-]+)-([^-]+)$/)
           if match.present?
