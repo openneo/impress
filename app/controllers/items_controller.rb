@@ -130,6 +130,7 @@ class ItemsController < ApplicationController
   
   def search_error(e)
     @items = []
+    @query = params[:q]
     respond_to do |format|
       format.html { flash.now[:alert] = e.message; render }
       format.json { render :json => {error: e.message} }
@@ -139,14 +140,7 @@ class ItemsController < ApplicationController
   def set_query
     q = params[:q]
     if q.is_a?(String)
-      begin
-        @query = Item::Search::Query.from_text(q, current_user)
-      rescue
-        # Set the query string for error handling messages, but let the error
-        # bubble up.
-        @query = params[:q]
-        raise
-      end
+      @query = Item::Search::Query.from_text(q, current_user)
     elsif q.is_a?(ActionController::Parameters)
       @query = Item::Search::Query.from_params(q, current_user)
     end
