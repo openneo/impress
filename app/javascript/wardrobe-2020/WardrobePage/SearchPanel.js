@@ -4,6 +4,7 @@ import { Box, Text, useColorModeValue, VisuallyHidden } from "@chakra-ui/react";
 import Item, { ItemListContainer, ItemListSkeleton } from "./Item";
 import PaginationToolbar from "../components/PaginationToolbar";
 import { useSearchResults } from "./useSearchResults";
+import { MajorErrorMessage } from "../util";
 
 export const SEARCH_PER_PAGE = 30;
 
@@ -134,17 +135,8 @@ function SearchResults({
 
   const searchPanelBackground = useColorModeValue("white", "gray.900");
 
-  // If the results aren't ready, we have some special case UI!
   if (error) {
-    return (
-      <Text>
-        We hit an error trying to load your search results{" "}
-        <span role="img" aria-label="(sweat emoji)">
-          😓
-        </span>{" "}
-        Try again?
-      </Text>
-    );
+    return <MajorErrorMessage error={error} variant="network" />;
   }
 
   // Finally, render the item list, with checkboxes and Item components!
