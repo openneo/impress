@@ -70,26 +70,22 @@ class Item
               Filter.fits_pet_type(pet_type, color_name:, species_name:) :
               Filter.not_fits_pet_type(pet_type, color_name:, species_name:)
           end
-          message = I18n.translate('items.search.errors.not_found.fits_target',
-            value: value)
-          raise Item::Search::Error, message
+          raise_search_error "not_found.fits_target", value: value
         when 'species'
           begin
             species = Species.find_by_name!(value)
             color = Color.find_by_name!('blue')
             pet_type = PetType.where(color_id: color.id, species_id: species.id).first!
           rescue ActiveRecord::RecordNotFound
-            message = I18n.translate('items.search.errors.not_found.species',
-              species_name: value.capitalize)
-            raise Item::Search::Error, message
+            raise_search_error "not_found.species",
+              species_name: value.capitalize
           end
           is_positive ?
             Filter.fits_species(pet_type.body_id, value) :
             Filter.not_fits_species(pet_type.body_id, value)
         when 'user'
           if user.nil?
-            message = I18n.translate('items.search.errors.not_logged_in')
-            raise Item::Search::Error, message
+            raise_search_error "not_logged_in"
           end
           case value
           when 'owns'
@@ -97,9 +93,7 @@ class Item
           when 'wants'
             is_positive ? Filter.wanted_by(user) : Filter.not_wanted_by(user)
           else
-            message = I18n.translate('items.search.errors.not_found.ownership',
-              keyword: value)
-            raise Item::Search::Error, message
+            raise_search_error "not_found.ownership", keyword: value
           end
         when 'is'
           case value
@@ -110,14 +104,10 @@ class Item
           when 'pb'
             is_positive ? Filter.is_pb : Filter.is_not_pb
           else
-            message = I18n.translate('items.search.errors.not_found.label',
-              :label => "is:#{value}")
-            raise Item::Search::Error, message
+            raise_search_error "not_found.label", label: "is:#{value}"
           end
         else
-          message = I18n.translate('items.search.errors.not_found.label',
-            :label => key)
-          raise Item::Search::Error, message
+          raise_search_error "not_found.label", label: key
         end
       end
 
@@ -170,9 +160,8 @@ class Item
         begin
           PetType.matching_name(color_name, species_name).first!
         rescue ActiveRecord::RecordNotFound
-          message = I18n.translate('items.search.errors.not_found.pet_type',
-            name1: color_name.capitalize, name2: species_name.capitalize)
-          raise Item::Search::Error, message
+          raise_search_error "not_found.pet_type",
+            name1: color_name.capitalize, name2: species_name.capitalize
         end
       end
 
@@ -182,9 +171,8 @@ class Item
         rescue ActiveRecord::RecordNotFound
           color_name = Color.find(color_id).name rescue "Color #{color_id}"
           species_name = Species.find(species_id).name rescue "Species #{species_id}"
-          message = I18n.translate('items.search.errors.not_found.pet_type',
-            name1: color_name.capitalize, name2: species_name.capitalize)
-          raise Item::Search::Error, message
+          raise_search_error "not_found.pet_type",
+            name1: color_name.capitalize, name2: species_name.capitalize
         end
       end
 
@@ -192,10 +180,14 @@ class Item
         begin
           AltStyle.find(alt_style_id)
         rescue
-          message = I18n.translate('items.search.errors.not_found.alt_style',
-            filter_text: "alt-style-#{alt_style_id}")
-          raise Item::Search::Error, message
+          raise_search_error "not_found.alt_style",
+            filter_text: "alt-style-#{alt_style_id}"
         end
+      end
+
+      def self.raise_search_error(kind, ...)
+        raise Item::Search::Error,
+          I18n.translate("items.search.errors.#{kind}", ...)
       end
     end
 
