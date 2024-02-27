@@ -495,7 +495,8 @@ function getOutfitStateFromOutfitData(outfit) {
 function findItemConflicts(itemIdToAdd, state, apolloClient) {
   const { wornItemIds, speciesId, colorId, altStyleId } = state;
 
-  const { items } = apolloClient.readQuery({
+  const itemIds = [itemIdToAdd, ...wornItemIds];
+  const data = apolloClient.readQuery({
     query: gql`
       query OutfitStateItemConflicts(
         $itemIds: [ID!]!
@@ -524,12 +525,21 @@ function findItemConflicts(itemIdToAdd, state, apolloClient) {
       }
     `,
     variables: {
-      itemIds: [itemIdToAdd, ...wornItemIds],
+      itemIds,
       speciesId,
       colorId,
       altStyleId,
     },
   });
+  if (data == null) {
+    throw new Error(
+      `[findItemConflicts] Cache lookup failed for: ` +
+        `items=${itemIds.join(",")}, speciesId=${speciesId}, ` +
+        `colorId=${colorId}, altStyleId=${altStyleId}`,
+    );
+  }
+
+  const { items } = data;
   const itemToAdd = items.find((i) => i.id === itemIdToAdd);
   if (!itemToAdd.appearanceOn) {
     return [];

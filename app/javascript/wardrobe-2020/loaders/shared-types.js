@@ -1,5 +1,6 @@
 export function normalizeSwfAssetToLayer(data) {
 	return {
+		__typename: "AppearanceLayer",
 		id: String(data.id),
 		remoteId: String(data.remote_id),
 		zone: normalizeZone(data.zone),
@@ -15,6 +16,7 @@ export function normalizeSwfAssetToLayer(data) {
 
 export function normalizeZone(data) {
 	return {
+		__typename: "Zone",
 		id: String(data.id),
 		depth: data.depth,
 		label: data.label,

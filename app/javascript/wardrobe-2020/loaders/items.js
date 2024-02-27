@@ -1,5 +1,7 @@
+import gql from "graphql-tag";
 import { useQuery } from "@tanstack/react-query";
 
+import apolloClient from "../apolloClient";
 import { normalizeSwfAssetToLayer, normalizeZone } from "./shared-types";
 
 export function useItemAppearances(id, options = {}) {
@@ -87,11 +89,76 @@ async function loadItemSearch(searchOptions) {
 		);
 	}
 
-	return res
-		.json()
-		.then((data) => normalizeItemSearchData(data, searchOptions));
+	const data = await res.json();
+	const result = normalizeItemSearchData(data, searchOptions);
+
+	for (const item of result.items) {
+		writeItemToApolloCache(item, searchOptions.withAppearancesFor);
+	}
+
+	return result;
 }
 window.loadItemSearch = loadItemSearch;
+
+/**
+ * writeItemToApolloCache is one last important bridge between our loaders and
+ * GQL! In `useOutfitState`, we consult the GraphQL cache to look up basic item
+ * info like zones, to decide when wearing an item would trigger a conflict
+ * with another.
+ */
+function writeItemToApolloCache(item, { speciesId, colorId, altStyleId }) {
+	apolloClient.writeQuery({
+		query: gql`
+			query WriteItemFromLoader(
+				$itemId: ID!
+				$speciesId: ID!
+				$colorId: ID!
+				$altStyleId: ID
+			) {
+				item(id: $itemId) {
+					id
+					name
+					thumbnailUrl
+					isNc
+					isPb
+					currentUserOwnsThis
+					currentUserWantsThis
+					appearanceOn(
+						speciesId: $speciesId
+						colorId: $colorId
+						altStyleId: $altStyleId
+					) {
+						id
+						layers {
+							id
+							remoteId
+							bodyId
+							knownGlitches
+							svgUrl
+							canvasMovieLibraryUrl
+							imageUrl
+							swfUrl
+							zone {
+								id
+							}
+						}
+
+						restrictedZones {
+							id
+						}
+					}
+				}
+			}
+		`,
+		variables: {
+			itemId: item.id,
+			speciesId,
+			colorId,
+			altStyleId,
+		},
+		data: { item },
+	});
+}
 
 function normalizeItemAppearancesData(data) {
 	return {
@@ -106,9 +173,11 @@ function normalizeItemAppearancesData(data) {
 
 function normalizeItemSearchData(data, searchOptions) {
 	return {
+		__typename: "ItemSearchResultV2",
 		id: buildItemSearchParams(searchOptions),
 		numTotalPages: data.total_pages,
 		items: data.items.map((item) => ({
+			__typename: "Item",
 			id: String(item.id),
 			name: item.name,
 			thumbnailUrl: item.thumbnail_url,
@@ -130,6 +199,7 @@ function normalizeItemSearchAppearance(data, item) {
 	}
 
 	return {
+		__typename: "ItemAppearance",
 		id: `item-${item.id}-body-${data.body.id}`,
 		layers: data.swf_assets.map(normalizeSwfAssetToLayer),
 		restrictedZones: data.swf_assets
@@ -145,6 +215,7 @@ function normalizeBody(body) {
 	}
 
 	return {
+		__typename: "Body",
 		id: String(body.id),
 		species: {
 			id: String(body.species.id),
