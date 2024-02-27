@@ -10,13 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_25_231346) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_27_231815) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.integer "species_id", null: false
     t.integer "color_id", null: false
     t.integer "body_id", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.string "series_name", default: "<New?>", null: false
     t.index ["color_id"], name: "index_alt_styles_on_color_id"
     t.index ["species_id"], name: "index_alt_styles_on_species_id"
   end
@@ -113,6 +114,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_25_231346) do
     t.datetime "updated_at", precision: nil
     t.index ["item_id"], name: "index_item_outfit_relationships_on_item_id"
     t.index ["outfit_id", "is_worn"], name: "index_item_outfit_relationships_on_outfit_id_and_is_worn"
+  end
+
+  create_table "item_translations", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+    t.integer "item_id"
+    t.string "locale"
+    t.string "name"
+    t.text "description"
+    t.string "rarity"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.index ["item_id", "locale"], name: "index_item_translations_on_item_id_and_locale"
+    t.index ["item_id"], name: "index_item_translations_on_item_id"
+    t.index ["locale"], name: "index_item_translations_on_locale"
+    t.index ["name"], name: "index_item_translations_name"
   end
 
   create_table "items", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
