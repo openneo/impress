@@ -128,12 +128,18 @@ class Item
               Filter.restricts(value) :
               Filter.not_restricts(value))
           when 'fits'
-            raise NotImplementedError if value[:alt_style_id].present?
-            pet_type = load_pet_type_by_color_and_species(
-              value[:color_id], value[:species_id])
-            filters << (is_positive ?
-              Filter.fits_pet_type(pet_type) :
-              Filter.not_fits_pet_type(pet_type))
+            if value[:alt_style_id].present?
+              alt_style = load_alt_style_by_id(value[:alt_style_id])
+              filters << (is_positive ?
+                Filter.fits_alt_style(alt_style) :
+                Filter.fits_alt_style(alt_style))
+            else
+              pet_type = load_pet_type_by_color_and_species(
+                value[:color_id], value[:species_id])
+              filters << (is_positive ?
+                Filter.fits_pet_type(pet_type) :
+                Filter.not_fits_pet_type(pet_type))
+            end
           when 'user_closet_hanger_ownership'
             case value
             when 'true'
@@ -171,6 +177,16 @@ class Item
           species_name = Species.find(species_id).name rescue "Species #{species_id}"
           message = I18n.translate('items.search.errors.not_found.pet_type',
             name1: color_name.capitalize, name2: species_name.capitalize)
+          raise Item::Search::Error, message
+        end
+      end
+
+      def self.load_alt_style_by_id(alt_style_id)
+        begin
+          AltStyle.find(alt_style_id)
+        rescue
+          message = I18n.translate('items.search.errors.not_found.alt_style',
+            filter_text: "alt-style-#{alt_style_id}")
           raise Item::Search::Error, message
         end
       end
@@ -235,6 +251,16 @@ class Item
         self.new Item.not_fits(pet_type.body_id), "-fits:#{q value}"
       end
 
+      def self.fits_alt_style(alt_style)
+        value = alt_style_to_filter_text(alt_style)
+        self.new Item.fits(alt_style.body_id), "fits:#{q value}"
+      end
+
+      def self.not_fits_alt_style(alt_style)
+        value = alt_style_to_filter_text(alt_style)
+        self.new Item.not_fits(alt_style.body_id), "-fits:#{q value}"
+      end
+
       def self.fits_species(body_id, species_name)
         self.new Item.fits(body_id), "species:#{q species_name}"
       end
@@ -297,7 +323,11 @@ class Item
         species_name ||= pet_type.species.name
 
         # NOTE: Some color syntaxes are weird, like `fits:"polka dot-aisha"`!
-        value = "#{color_name}-#{species_name}".downcase
+        "#{color_name}-#{species_name}".downcase
+      end
+
+      def self.alt_style_to_filter_text(alt_style)
+        "alt-style-#{alt_style.id}"
       end
     end
   end

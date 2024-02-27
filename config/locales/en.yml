@@ -358,6 +358,8 @@ en:
             user:wants?
           pet_type: We have no record of the %{name1} %{name2}.
             It is spelled correctly?
+          alt_style: We have no record of the "%{filter_text}" alt style. Is it
+            spelled correctly?
           pet_type_id: We have no record of pet type %{id}. Weird.
         not_logged_in: The "user" filters are only available if you're logged in.
       flag_keywords:

@@ -123,6 +123,7 @@ class ItemsController < ApplicationController
   def load_appearances
     appearance_params = params[:with_appearances_for]
     return {} if appearance_params.blank?
+    raise NotImplementedError if appearance_params[:alt_style_id].present?
 
     pet_type = Item::Search::Query.load_pet_type_by_color_and_species(
       appearance_params[:color_id], appearance_params[:species_id])
