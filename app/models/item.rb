@@ -495,6 +495,34 @@ class Item < ApplicationRecord
     end
   end
 
+  # Given a list of item IDs, return how they look on the given target (either
+  # a pet type or an alt style).
+  def self.appearances_for(item_ids, target, swf_asset_includes: [])
+    # First, load all the relationships for these items that also fit this
+    # body.
+    relationships = ParentSwfAssetRelationship.
+      includes(swf_asset: swf_asset_includes).
+      where(parent_type: "Item", parent_id: item_ids).
+      where(swf_asset: {body_id: [target.body_id, 0]})
+
+    pet_type_body = Appearance::Body.new(target.body_id, target.species)
+    all_pets_body = Appearance::Body.new(0, nil)
+
+    # Then, convert this into a hash from item ID to SWF assets.
+    assets_by_item_id = relationships.group_by(&:parent_id).
+      transform_values { |rels| rels.map(&:swf_asset) }
+
+    # Finally, for each item, return an appearance—even if it's empty!
+    item_ids.to_h do |item_id|
+      assets = assets_by_item_id.fetch(item_id, [])
+
+      fits_all_pets = assets.present? && assets.all? { |a| a.body_id == 0 }
+      body = fits_all_pets ? all_pets_body : pet_type_body
+
+      [item_id, Appearance.new(body, assets)]
+    end
+  end
+
   def self.all_by_ids_or_children(ids, swf_assets)
     swf_asset_ids = []
     swf_assets_by_id = {}

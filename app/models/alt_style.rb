@@ -49,6 +49,11 @@ class AltStyle < ApplicationRecord
     swf_asset.image_url
   end
 
+  # Given a list of item IDs, return how they look on this alt style.
+  def appearances_for(item_ids, ...)
+    Item.appearances_for(item_ids, self, ...)
+  end
+
   def biology=(biology)
     # TODO: This is very similar to what `PetState` does, but like… much much
     # more compact? Idk if I'm missing something, or if I was just that much

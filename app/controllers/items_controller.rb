@@ -121,11 +121,16 @@ class ItemsController < ApplicationController
   def load_appearances
     appearance_params = params[:with_appearances_for]
     return {} if appearance_params.blank?
-    raise NotImplementedError if appearance_params[:alt_style_id].present?
+    
+    if appearance_params[:alt_style_id].present?
+      target = Item::Search::Query.load_alt_style_by_id(
+        appearance_params[:alt_style_id])
+    else
+      target = Item::Search::Query.load_pet_type_by_color_and_species(
+        appearance_params[:color_id], appearance_params[:species_id])
+    end
 
-    pet_type = Item::Search::Query.load_pet_type_by_color_and_species(
-      appearance_params[:color_id], appearance_params[:species_id])
-    pet_type.appearances_for(@items.map(&:id), swf_asset_includes: [:zone])
+    target.appearances_for(@items.map(&:id), swf_asset_includes: [:zone])
   end
   
   def search_error(e)
