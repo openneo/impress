@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
   rescue_from AccessDenied, :with => :on_access_denied
 
   def on_access_denied
-    render template: 'public/403.html', :layout => false, :status => :forbidden
+    render file: 'public/403.html', layout: false, status: :forbidden
   end
 
   def redirect_back!(default=:back)
