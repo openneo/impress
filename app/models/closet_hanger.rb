@@ -203,7 +203,7 @@ class ClosetHanger < ApplicationRecord
     # hanger. Select enough for our logic and to update flex_source.
     # TODO: We deleted flex, does this reduce what data we need here?
     conflicting_hanger = self.class.select([:id, :quantity, :user_id, :item_id,
-                                            :owned]).
+                                            :owned, :list_id]).
       where(:user_id => user_id, :item_id => item_id, :owned => owned,
         :list_id => list_id).where(['id != ?', self.id]).first
     
