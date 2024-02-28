@@ -98,7 +98,6 @@ async function loadItemSearch(searchOptions) {
 
 	return result;
 }
-window.loadItemSearch = loadItemSearch;
 
 /**
  * writeItemToApolloCache is one last important bridge between our loaders and
