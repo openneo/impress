@@ -171,6 +171,21 @@ function OutfitKnownGlitchesBadge({ appearance }) {
     }
   }
 
+  // Look for Baby Body Paint items.
+  for (const item of items) {
+    const itemIsBabyBodyPaint = item.name.includes("Baby Body Paint");
+    if (itemIsBabyBodyPaint) {
+      glitchMessages.push(
+        <Box key={`baby-body-paint-warning-for-item-${item.id}`}>
+          <i>{item.name}</i> seems to have new zone restriction rules that our
+          system doesn't support yet, whuh oh! This might require major changes
+          to how we handle zones. Until then, this item will be very buggy,
+          sorry!
+        </Box>,
+      );
+    }
+  }
+
   // Check whether the pet is Invisible. If so, we'll show a blanket warning.
   if (petAppearance?.color?.id === "38") {
     glitchMessages.push(
