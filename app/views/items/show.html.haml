@@ -6,6 +6,13 @@
     current_user_lists: @current_user_lists,
     current_user_quantities: @current_user_quantities}
 
+- if @item.name.include? "Baby Body Paint"
+  %p.warning
+    The Baby Body Paint items seem to have new zone restriction rules that our
+    system doesn't support yet, whuh oh! This might require major changes to
+    how we handle zones. Until then, these items will be <em>very</em> buggy,
+    sorry!
+
 #outfit-preview-root{'data-item-id': @item.id}
 
 - unless @contributors_with_counts.empty?
