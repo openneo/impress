@@ -1,5 +1,5 @@
 Sentry.init do |config|
-  config.dsn = 'https://cb4b3f56c1ec50ba0667b189617446bb@o506079.ingest.sentry.io/4506180803559424'
+  config.dsn = 'https://2d3c5b739af149a0b3beb86a4d498e1f@health.openneo.net/1'
   config.breadcrumbs_logger = [:active_support_logger, :http_logger]
-  config.traces_sample_rate = 0.2
+  config.traces_sample_rate = 0.05
 end
