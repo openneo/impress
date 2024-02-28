@@ -1,10 +1,6 @@
-import React from "react";
-import gql from "graphql-tag";
-import { useQuery } from "@apollo/client";
-import { useDebounce, useLocalStorage } from "../util";
+import { useDebounce } from "../util";
 import { useItemSearch } from "../loaders/items";
 import { emptySearchQuery, searchQueryIsEmpty } from "./SearchToolbar";
-import { itemAppearanceFragment } from "../components/useOutfitAppearance";
 import { SEARCH_PER_PAGE } from "./SearchPanel";
 
 /**
@@ -25,154 +21,21 @@ export function useSearchResults(
     initialValue: emptySearchQuery,
   });
 
-  // NOTE: This query should always load ~instantly, from the client cache.
-  const { data: zoneData } = useQuery(gql`
-    query SearchPanelZones {
-      allZones {
-        id
-        label
-      }
-    }
-  `);
-  const allZones = zoneData?.allZones || [];
-  const filterToZones = query.filterToZoneLabel
-    ? allZones.filter((z) => z.label === query.filterToZoneLabel)
-    : [];
-  const filterToZoneIds = filterToZones.map((z) => z.id);
-
-  const currentPageIndex = currentPageNumber - 1;
-  const offset = currentPageIndex * SEARCH_PER_PAGE;
-
-  // Until the new item search is ready, we can toggle between them! Use
-  // `setItemSearchQueryMode` in the JS console to choose "gql" or "new".
-  const [queryMode, setQueryMode] = useLocalStorage(
-    "DTIItemSearchQueryMode",
-    "gql",
-  );
-  React.useEffect(() => {
-    window.setItemSearchQueryMode = setQueryMode;
-  }, [setQueryMode]);
-
-  const {
-    loading: loadingGQL,
-    error: errorGQL,
-    data: dataGQL,
-  } = useQuery(
-    gql`
-      query SearchPanel(
-        $query: String!
-        $fitsPet: FitsPetSearchFilter
-        $itemKind: ItemKindSearchFilter
-        $currentUserOwnsOrWants: OwnsOrWants
-        $zoneIds: [ID!]!
-        $speciesId: ID!
-        $colorId: ID!
-        $altStyleId: ID
-        $offset: Int!
-        $perPage: Int!
-      ) {
-        itemSearch: itemSearchV2(
-          query: $query
-          fitsPet: $fitsPet
-          itemKind: $itemKind
-          currentUserOwnsOrWants: $currentUserOwnsOrWants
-          zoneIds: $zoneIds
-        ) {
-          id
-          numTotalItems
-          items(offset: $offset, limit: $perPage) {
-            # TODO: De-dupe this from useOutfitState?
-            id
-            name
-            thumbnailUrl
-            isNc
-            isPb
-            currentUserOwnsThis
-            currentUserWantsThis
-
-            appearanceOn(
-              speciesId: $speciesId
-              colorId: $colorId
-              altStyleId: $altStyleId
-            ) {
-              # This enables us to quickly show the item when the user clicks it!
-              ...ItemAppearanceForOutfitPreview
-
-              # This is used to group items by zone, and to detect conflicts when
-              # wearing a new item.
-              layers {
-                zone {
-                  id
-                  label
-                }
-              }
-              restrictedZones {
-                id
-                label
-                isCommonlyUsedByItems
-              }
-            }
-          }
-        }
-      }
-      ${itemAppearanceFragment}
-    `,
-    {
-      variables: {
-        query: debouncedQuery.value,
-        fitsPet: { speciesId, colorId, altStyleId },
-        itemKind: debouncedQuery.filterToItemKind,
-        currentUserOwnsOrWants: debouncedQuery.filterToCurrentUserOwnsOrWants,
-        zoneIds: filterToZoneIds,
-        speciesId,
-        colorId,
-        altStyleId,
-        offset,
-        perPage: SEARCH_PER_PAGE,
-      },
-      context: { sendAuth: true },
-      skip:
-        skip ||
-        queryMode !== "gql" ||
-        (!debouncedQuery.value &&
-          !debouncedQuery.filterToItemKind &&
-          !debouncedQuery.filterToZoneLabel &&
-          !debouncedQuery.filterToCurrentUserOwnsOrWants),
-      onError: (e) => {
-        console.error("Error loading search results", e);
-      },
-      // Return `numTotalItems` from the GQL cache while waiting for next page!
-      returnPartialData: true,
-    },
-  );
-
-  const {
-    isLoading: loadingQuery,
-    error: errorQuery,
-    data: dataQuery,
-  } = useItemSearch(
+  const { isLoading, error, data } = useItemSearch(
     {
       filters: buildSearchFilters(debouncedQuery, outfitState),
       withAppearancesFor: { speciesId, colorId, altStyleId },
-      page: currentPageIndex + 1,
+      page: currentPageNumber,
       perPage: SEARCH_PER_PAGE,
     },
     {
-      enabled:
-        !skip && queryMode === "new" && !searchQueryIsEmpty(debouncedQuery),
+      enabled: !skip && !searchQueryIsEmpty(debouncedQuery),
     },
   );
 
-  const loading =
-    debouncedQuery !== query ||
-    (queryMode === "gql" ? loadingGQL : loadingQuery);
-  const error = queryMode === "gql" ? errorGQL : errorQuery;
-  const items =
-    (queryMode === "gql" ? dataGQL?.itemSearch?.items : dataQuery?.items) ?? [];
-  const numTotalPages =
-    (queryMode === "gql"
-      ? Math.ceil((dataGQL?.itemSearch?.numTotalItems ?? 0) / SEARCH_PER_PAGE)
-      : dataQuery?.numTotalPages) ?? 0;
+  const loading = debouncedQuery !== query || isLoading;
+  const items = data?.items ?? [];
+  const numTotalPages = data?.numTotalPages ?? 0;
 
   return { loading, error, items, numTotalPages };
 }
