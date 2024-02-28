@@ -1,3 +1,5 @@
+require 'async'
+require 'async/container'
 require 'ipaddr'
 
 class ApplicationController < ActionController::Base
@@ -19,6 +21,11 @@ class ApplicationController < ActionController::Base
       Rack::MiniProfiler.authorize_request
     end
   end
+
+  class AccessDenied < StandardError; end
+  rescue_from AccessDenied, with: :on_access_denied
+  rescue_from Async::Stop, Async::Container::Terminate,
+    with: :on_request_stopped
 
   def authenticate_user!
     redirect_to(new_auth_user_session_path) unless user_signed_in?
@@ -52,12 +59,13 @@ class ApplicationController < ActionController::Base
     raise ActionController::RoutingError.new("#{record_name} not found")
   end
 
-  class AccessDenied < StandardError;end
-
-  rescue_from AccessDenied, :with => :on_access_denied
-
   def on_access_denied
     render file: 'public/403.html', layout: false, status: :forbidden
+  end
+
+  def on_request_stopped
+    render file: 'public/stopped.html', layout: false,
+      status: :internal_server_error
   end
 
   def redirect_back!(default=:back)
