@@ -10,8 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_27_233743) do
-  create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+ActiveRecord::Schema[7.1].define(version: 2024_02_29_015410) do
+  create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "species_id", null: false
     t.integer "color_id", null: false
     t.integer "body_id", null: false
@@ -22,29 +22,29 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_27_233743) do
     t.index ["species_id"], name: "index_alt_styles_on_species_id"
   end
 
-  create_table "auth_servers", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+  create_table "auth_servers", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.string "short_name", limit: 10, null: false
     t.string "name", limit: 40, null: false
-    t.text "icon", size: :medium, null: false
-    t.text "gateway", size: :medium, null: false
+    t.text "icon", size: :long, null: false
+    t.text "gateway", size: :long, null: false
     t.string "secret", limit: 64, null: false
   end
 
-  create_table "campaigns", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+  create_table "campaigns", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "progress", default: 0, null: false
     t.integer "goal", null: false
     t.boolean "active", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.boolean "advertised", default: true, null: false
-    t.text "description", null: false
+    t.text "description", size: :long, null: false
     t.string "purpose", default: "our hosting costs this year", null: false
     t.string "theme_id", default: "hug", null: false
-    t.text "thanks"
+    t.text "thanks", size: :long
     t.string "name"
   end
 
-  create_table "closet_hangers", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+  create_table "closet_hangers", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "item_id"
     t.integer "user_id"
     t.integer "quantity"
@@ -60,9 +60,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_27_233743) do
     t.index ["user_id"], name: "index_closet_hangers_on_user_id"
   end
 
-  create_table "closet_lists", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+  create_table "closet_lists", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.string "name"
-    t.text "description"
+    t.text "description", size: :long
     t.integer "user_id"
     t.boolean "hangers_owned", null: false
     t.datetime "created_at", precision: nil
@@ -71,14 +71,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_27_233743) do
     t.index ["user_id"], name: "index_closet_lists_on_user_id"
   end
 
-  create_table "colors", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+  create_table "colors", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.boolean "basic"
     t.boolean "standard"
     t.boolean "prank", default: false, null: false
     t.string "name", null: false
   end
 
-  create_table "contributions", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+  create_table "contributions", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.string "contributed_type", limit: 8, null: false
     t.integer "contributed_id", null: false
     t.integer "user_id", null: false
@@ -87,14 +87,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_27_233743) do
     t.index ["user_id"], name: "index_contributions_on_user_id"
   end
 
-  create_table "donation_features", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+  create_table "donation_features", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "donation_id", null: false
     t.integer "outfit_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "donations", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+  create_table "donations", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "amount", null: false
     t.string "charge_id", null: false
     t.integer "user_id"
@@ -106,7 +106,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_27_233743) do
     t.integer "campaign_id", null: false
   end
 
-  create_table "item_outfit_relationships", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+  create_table "item_outfit_relationships", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "item_id"
     t.integer "outfit_id"
     t.boolean "is_worn"
@@ -116,15 +116,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_27_233743) do
     t.index ["outfit_id", "is_worn"], name: "index_item_outfit_relationships_on_outfit_id_and_is_worn"
   end
 
-  create_table "items", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
-    t.text "zones_restrict", null: false
-    t.text "thumbnail_url", size: :medium, null: false
+  create_table "items", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
+    t.text "zones_restrict", size: :medium, null: false
+    t.text "thumbnail_url", size: :long, null: false
     t.string "category", limit: 50
     t.string "type", limit: 50
     t.integer "rarity_index", limit: 2
     t.integer "price", limit: 3, null: false
     t.integer "weight_lbs", limit: 2
-    t.text "species_support_ids", size: :medium
+    t.text "species_support_ids", size: :long
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.boolean "explicitly_body_specific", default: false, null: false
@@ -132,7 +132,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_27_233743) do
     t.column "modeling_status_hint", "enum('done','glitchy')"
     t.boolean "is_manually_nc", default: false, null: false
     t.string "name", null: false
-    t.text "description", default: "", null: false
+    t.text "description", size: :medium, default: "", null: false
     t.string "rarity", default: "", null: false
     t.index ["modeling_status_hint", "created_at", "id"], name: "items_modeling_status_hint_and_created_at_and_id"
     t.index ["modeling_status_hint", "created_at"], name: "items_modeling_status_hint_and_created_at"
@@ -140,7 +140,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_27_233743) do
     t.index ["modeling_status_hint"], name: "items_modeling_status_hint"
   end
 
-  create_table "login_cookies", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+  create_table "login_cookies", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "series", null: false
     t.integer "token", null: false
@@ -148,20 +148,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_27_233743) do
     t.index ["user_id"], name: "login_cookies_user_id"
   end
 
-  create_table "modeling_logs", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+  create_table "modeling_logs", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil, default: -> { "current_timestamp()" }, null: false
-    t.text "log_json", null: false
+    t.text "log_json", size: :long, null: false
     t.string "pet_name", limit: 128, null: false
   end
 
-  create_table "neopets_connections", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+  create_table "neopets_connections", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "user_id"
     t.string "neopets_username"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "outfits", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+  create_table "outfits", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "pet_state_id"
     t.integer "user_id"
     t.datetime "created_at", precision: nil
@@ -177,7 +177,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_27_233743) do
     t.index ["user_id"], name: "index_outfits_on_user_id"
   end
 
-  create_table "parents_swf_assets", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+  create_table "parents_swf_assets", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "parent_id", limit: 3, null: false
     t.integer "swf_asset_id", limit: 3, null: false
     t.string "parent_type", limit: 8, null: false
@@ -186,15 +186,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_27_233743) do
     t.index ["swf_asset_id"], name: "parents_swf_assets_swf_asset_id"
   end
 
-  create_table "pet_loads", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+  create_table "pet_loads", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.string "pet_name", limit: 20, null: false
-    t.text "amf", size: :medium, null: false
+    t.text "amf", size: :long, null: false
     t.datetime "created_at", precision: nil, null: false
   end
 
-  create_table "pet_states", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+  create_table "pet_states", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "pet_type_id", limit: 3, null: false
-    t.text "swf_asset_ids", null: false
+    t.text "swf_asset_ids", size: :medium, null: false
     t.boolean "female"
     t.integer "mood_id"
     t.boolean "unconverted"
@@ -204,7 +204,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_27_233743) do
     t.index ["pet_type_id"], name: "pet_states_pet_type_id"
   end
 
-  create_table "pet_types", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+  create_table "pet_types", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "color_id", limit: 1, null: false
     t.integer "species_id", limit: 1, null: false
     t.datetime "created_at", precision: nil, null: false
@@ -218,23 +218,23 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_27_233743) do
     t.index ["species_id", "color_id"], name: "pet_types_species_color", unique: true
   end
 
-  create_table "pets", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+  create_table "pets", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.string "name", limit: 20, null: false
     t.integer "pet_type_id", limit: 3, null: false
     t.index ["name"], name: "pets_name", unique: true
     t.index ["pet_type_id"], name: "pets_pet_type_id"
   end
 
-  create_table "species", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+  create_table "species", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.string "name", null: false
   end
 
-  create_table "swf_assets", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
+  create_table "swf_assets", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.string "type", limit: 7, null: false
     t.integer "remote_id", limit: 3, null: false
-    t.text "url", size: :medium, null: false
+    t.text "url", size: :long, null: false
     t.integer "zone_id", limit: 1, null: false
-    t.text "zones_restrict", null: false
+    t.text "zones_restrict", size: :medium, null: false
     t.datetime "created_at", precision: nil, null: false
     t.integer "body_id", limit: 2, null: false
     t.boolean "has_image", default: false, null: false
@@ -242,7 +242,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_27_233743) do
     t.datetime "reported_broken_at", precision: nil
     t.datetime "converted_at", precision: nil
     t.boolean "image_manual", default: false, null: false
-    t.text "manifest", size: :medium
+    t.text "manifest", size: :long
     t.timestamp "manifest_cached_at"
     t.string "known_glitches", limit: 128, default: ""
     t.string "manifest_url"
@@ -253,7 +253,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_27_233743) do
     t.index ["zone_id"], name: "idx_swf_assets_zone_id"
   end
 
-  create_table "users", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+  create_table "users", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.string "name", limit: 20, null: false
     t.integer "auth_server_id", limit: 1, null: false
     t.integer "remote_id", null: false
@@ -268,7 +268,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_27_233743) do
     t.boolean "support_staff", default: false, null: false
   end
 
-  create_table "zones", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
+  create_table "zones", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "depth"
     t.integer "type_id"
     t.string "label", null: false

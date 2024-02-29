@@ -8,6 +8,8 @@ development:
     username: impress_dev
     password: impress_dev
     pool: 5
+    encoding: utf8mb4
+    collation: utf8mb4_unicode_520_ci
     variables:
       sql_mode: TRADITIONAL
 
@@ -34,6 +36,8 @@ test:
     username: impress_dev
     password: impress_dev
     pool: 5
+    encoding: utf8mb4
+    collation: utf8mb4_unicode_520_ci
     variables:
       sql_mode: TRADITIONAL
 
@@ -53,6 +57,8 @@ test:
 production:
   primary:
     url: <%= ENV['DATABASE_URL_PRIMARY'] %>
+    encoding: utf8mb4
+    collation: utf8mb4_unicode_520_ci
     variables:
       sql_mode: TRADITIONAL
 

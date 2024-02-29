@@ -384,6 +384,18 @@
           skip-bind-address
       notify: Restart MariaDB
 
+    # This is the best Unicode collation available in our version of MariaDB!
+    # We already specify it for all the tables in `schema.rb`, but also set it
+    # as the default collation for new tables here, too.
+    - name: Set MariaDb's default collation to utf8mb4_unicode_520_ci
+      copy:
+        dest: /etc/mysql/mariadb.conf.d/80-charsets.cnf
+        content: |
+          [mysqld]
+          character-set-server=utf8mb4
+          collation-server=utf8mb4_unicode_520_ci
+      notify: Restart MariaDB
+
     - name: Enable slow query logging for MariaDB
       copy:
         dest: /etc/mysql/mariadb.conf.d/80-logging.cnf
