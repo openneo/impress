@@ -17,7 +17,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_27_233743) do
     t.integer "body_id", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.string "series_name", default: "<New?>", null: false
+    t.string "series_name"
     t.index ["color_id"], name: "index_alt_styles_on_color_id"
     t.index ["species_id"], name: "index_alt_styles_on_species_id"
   end
