@@ -116,20 +116,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_27_233743) do
     t.index ["outfit_id", "is_worn"], name: "index_item_outfit_relationships_on_outfit_id_and_is_worn"
   end
 
-  create_table "item_translations", id: :integer, charset: "latin1", collation: "latin1_swedish_ci", force: :cascade do |t|
-    t.integer "item_id"
-    t.string "locale"
-    t.string "name"
-    t.text "description"
-    t.string "rarity"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["item_id", "locale"], name: "index_item_translations_on_item_id_and_locale"
-    t.index ["item_id"], name: "index_item_translations_on_item_id"
-    t.index ["locale"], name: "index_item_translations_on_locale"
-    t.index ["name"], name: "index_item_translations_name"
-  end
-
   create_table "items", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.text "zones_restrict", null: false
     t.text "thumbnail_url", size: :medium, null: false
