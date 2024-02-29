@@ -51,6 +51,12 @@
           - "--exclude=.git"
           - "--filter=':- .gitignore'"
 
+    - name: Link the public-data folder to the shared public-data folder
+      file:
+        src: "{{ remote_project_root }}/shared/public-data"
+        dest: "{{ remote_app_root }}/public/public-data"
+        state: link
+
     - name: Configure Bundler to run in deployment mode
       command:
         chdir: "{{ remote_app_root }}"

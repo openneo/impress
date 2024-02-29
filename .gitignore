@@ -8,6 +8,8 @@ tmp/**/*
 /app/assets/builds/*
 !/app/assets/builds/.keep
 
+/public/public-data
+
 /node_modules
 
 .pnp.*

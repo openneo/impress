@@ -275,6 +275,13 @@
         - Reload systemctl
         - Restart impress
 
+    - name: Create the shared public-data folder
+      become_user: impress
+      file:
+        dest: /srv/impress/shared/public-data
+        mode: "755"
+        state: directory
+
     - name: Create service file for impress
       copy:
         src: files/impress.service

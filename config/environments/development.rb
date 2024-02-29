@@ -112,4 +112,8 @@ Rails.application.configure do
   # we keep this in a long-term location instead!)
   config.neopets_media_archive_root = Rails.root / "tmp" /
     "neopets_media_archive" / "development"
+
+  # When developing the `public_data:commit` command, save to the local `tmp`
+  # folder. (In production, we keep this in a long-term location instead!)
+  config.public_data_root = Rails.root / "tmp" / "public_data"
 end

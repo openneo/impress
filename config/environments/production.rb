@@ -130,4 +130,8 @@ Rails.application.configure do
   # Save the Neopets Media Archive in `/var/lib/neopets-media-archive`, a
   # long-term storage location.
   config.neopets_media_archive_root = "/var/lib/neopets-media-archive"
+
+  # Save our public data exports in `public/public-data`. (This should be
+  # symlinked to a shared folder persisted across all versions.)
+  config.public_data_root = Rails.root / "public" / "public-data"
 end
