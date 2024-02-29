@@ -200,6 +200,18 @@ module ApplicationHelper
   def md(text)
     RDiscount.new(text).to_html.html_safe
   end
+
+  def terms_updated_at
+    Date.new(2024, 2, 29)
+  end
+
+  def terms_updated_timestamp
+    terms_updated_at.strftime("%b %Y")
+  end
+
+  def terms_updated_recently
+    terms_updated_at >= 2.months.ago
+  end
   
   def translate_markdown(key, options={})
     md translate("#{key}_markdown", **options)

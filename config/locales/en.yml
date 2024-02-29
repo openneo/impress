@@ -33,7 +33,7 @@ en:
       footer:
         blog: Blog
         source_code: Source Code
-        terms: Terms of Use (updated Feb 2024)
+        terms: Terms of Use (updated %{date})
         contact: Contact
         suggestions: Suggestions
         email: Questions, comments, bugs
