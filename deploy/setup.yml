@@ -437,6 +437,15 @@
         mode: "755"
         state: directory
 
+    - name: Create weekly cron job to run `rails public_data:commit`
+      become_user: impress
+      cron:
+        name: "Impress: commit public data"
+        weekday: "0" # Sunday
+        hour: "1" # 1:15am
+        minute: "15" # 1:15am
+        job: "cd /srv/impress/current && bin/rails public_data:commit[scheduled]"
+
   handlers:
     - name: Reload nginx
       systemd:
