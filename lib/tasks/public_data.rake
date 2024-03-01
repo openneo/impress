@@ -1,3 +1,4 @@
+require "open-uri"
 require "open3"
 
 desc "Tools to save and import DTI's public modeling data"
@@ -11,8 +12,6 @@ namespace :public_data do
 				"locally and save to #{Rails.configuration.public_data_root}, though!"
 		end
 
-		config = ApplicationRecord.connection_db_config.configuration_hash
-
 		# Generate a filename from the current time, and the option name argument
 		# provided to the command (e.g. `rails public_data:commit[scheduled]`).
 		timestamp = Time.now.utc.iso8601.gsub(':', '_')
@@ -23,6 +22,7 @@ namespace :public_data do
 		args = []
 
 		# The connection details for our database!
+		config = ApplicationRecord.connection_db_config.configuration_hash
 		args << "--host=#{config[:host]}" if config[:host]
 		args << "--user=#{config[:username]}" if config[:username]
 		args << "--password=#{config[:password]}" if config[:password]
@@ -45,23 +45,50 @@ namespace :public_data do
 		dest_path.dirname.mkpath
 
 		# Run mysqldump, pipe it into gzip, and output to the destination file.
-		sh.mysqldump(*args) | sh.gzip("-c") > dest_path.to_s
+		sh.transact do
+			sh.mysqldump(*args) | sh.gzip("-c") > dest_path.to_s
+		end
+
 		puts "Saved dump to #{dest_path}"
 
 		# Link this latest dump as `latest.sql.gz`.
 		latest_path = Rails.configuration.public_data_root / "latest.sql.gz"
 		File.unlink(latest_path) if File.exist?(latest_path)
 		File.symlink(dest_path, latest_path)
+
 		puts "Linked dump to #{latest_path}"
 	end
 
 	desc "Pull and import the latest public data from production (dev only)"
-	task :pull do
+	task :pull => :environment do
 		unless Rails.env.development?
 			raise "Can only pull public data in development mode! This helps us " +
 				"ensure we won't overwrite the production database accidentally."
 		end
 
-		raise NotImplementedError, "TODO!"
+		args = []
+
+		# The connection details for our database!
+		config = ApplicationRecord.connection_db_config.configuration_hash
+		args << "--host=#{config[:host]}" if config[:host]
+		args << "--user=#{config[:username]}" if config[:username]
+		args << "--password=#{config[:password]}" if config[:password]
+		args << "--database=#{config.fetch(:database)}"
+
+		# Set up a shell, and register the commands we need.
+		Shell.def_system_command("mysql")
+		Shell.def_system_command("gunzip")
+		sh = Shell.new
+
+		URI.open("https://impress.openneo.net/public-data/latest.sql.gz") do |file|
+			# Pipe the latest public data SQL into `gunzip` to unpack it, then pipe
+			# it into mysql to execute it.
+			#
+			# NOTE: We need `open(file)` to wrap it in a plain `File` object, so the
+			# `Shell` will recognize it correctly! It doesn't accept `Tempfile`.
+			sh.transact do
+				(sh.gunzip("-c") < open(file)) | sh.mysql(*args)
+			end
+		end
 	end
 end
