@@ -131,13 +131,13 @@ class SwfAsset < ApplicationRecord
         # seen!
         { js: assets_by_ext[:js].last }
       else
-        # Otherwise, return the last PNG and the last SVG, arbitrarily.
-        # (There's probably only one of each! I'm just going by the same logic
-        # we've seen in the JS library case, that later entries are more likely
-        # to be correct.)
+        # Otherwise, return the first PNG and the first SVG. (Unlike the JS
+        # case, it's important to choose the *first* PNG, because sometimes
+        # reference art is included in the manifest, like with the Stealthy
+        # Eyrie Shirt's asset 304486_b28cae0d76.)
         {
-          png: assets_by_ext.fetch(:png, []).last,
-          svg: assets_by_ext.fetch(:svg, []).last,
+          png: assets_by_ext.fetch(:png, []).first,
+          svg: assets_by_ext.fetch(:svg, []).first,
         }
       end
     rescue StandardError => error
