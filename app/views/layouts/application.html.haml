@@ -13,7 +13,7 @@
     %link{href: image_path('favicon.png'), rel: 'icon'}
     = yield :stylesheets
     = stylesheet_link_tag "application"
-    = render 'static/analytics'
+    = render 'analytics'
     = yield :meta
     = open_graph_tags
     = csrf_meta_tag
@@ -24,7 +24,7 @@
   %body{:class => body_class}
     #container
       = yield :before_title
-      = render 'static/announcement'
+      = render 'announcement'
       - if content_for?(:title) && show_title_header?
         %h1#title= yield :title
       = yield :before_flashes
