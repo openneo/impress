@@ -4,11 +4,10 @@
   
   %header
     .outfit-star
-    = link_to outfit.name, outfit, :class => 'outfit-name'
+    = link_to outfit.name, outfit, class: 'outfit-name'
   
   %footer
-    = link_to t('.edit'), outfit, :class => 'outfit-edit-link'
-    = button_to t('.delete'), outfit, :method => 'delete',
-                :class => 'outfit-delete-button',
-                :confirm => t('.delete_confirmation',
-                              :outfit_name => outfit.name)
+    = link_to t('.edit'), outfit, class: 'outfit-edit-link'
+    = button_to t('.delete'), outfit, method: 'delete',
+      class: 'outfit-delete-button',
+      data: {turbo_confirm: t('.delete_confirmation', outfit_name: outfit.name)}
