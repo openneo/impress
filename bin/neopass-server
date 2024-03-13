@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+
+const { OAuth2Server } = require("oauth2-mock-server");
+
+async function main() {
+	const server = new OAuth2Server();
+	await server.issuer.keys.add({
+		// A key we generated for the NeoPass test server. It's okay for its
+		// "secret" info to be here, because it's for development only!
+		kid: "neopass-server-DEVLOPMENT-ONLY-NOT-FOR-PRODUCTION",
+		p: "50btwsJlPbGLUFnCSBZzddyMX_oRQ8nz4lMrpAd4umPLqMUmS0NbBZNf6DI7s8PkRUxtV8KdvZh3OYWavFnbk55GDG4Y_J_wA4XlHU3d5KIfSNaIdbtVp4CFOq1lovho4sYX_26vcGgYb2Azeg7nz_gDpqNmIdJdKuZxzsrboK8",
+		kty: "RSA",
+		q: "xha0i9_lbOMQhmmni02Dtpocil26GI7W8xbOFyOvceBCRNf-XOA_-W_Xk9ItJRHnAWM1TML36PN0l864d4QAXbBo64FHu2cjdFKnXJNliJaPcOPAMQB_D8GSylU1gTwSpP_vVe8t232LeF1oBwbOoBIS-6NsOpLmL8Sezv6Fpac",
+		d: "WSUNeEd_EyaELK7wqT6GJJK_RfYjaE5h6USe9rD9cd_tQE2PaZWXMyZ4OCk5Z5hdG2ryZY7NYsOI2CPs8HCFBqMoKd0z0A0EgB8Dq2fe_-t5Rm0Zq1ZnI5tnBcZeQmw0hDT98Wg00FA53SSUqfnOgI_VuLvquM6f18_XQOKRRfTcwh1a4teDAH0g0s8FVOS5DANtg71mTdq5fEkWmQMD3qKC6SNrx3WXXHezDs0MWdeFqn9Dg7gssSqB7PnqB-hlC_fHnu4gm9nDqPTMzsJC2i8d3adm0AeORRCulGLe7hU-_TgTbZzgIYCgOK_asaewW-6Qk9qFj-J4djBaKIee-Q",
+		e: "AQAB",
+		use: "sig",
+		qi: "WNiwCcAk2x7e0KvuupL2DNU-JUjLEF9Onee5T9u9ihbgGSDIyP04_96TzCIK3wsY6lct64oOo0Er-z5cf_5eOBPD3n0eEL-JuKIgn0mEKrazJOnGQzlyeZPzk4dUO2J7D42ObopfYsoBIcJx-Y_43a6WORDMGSVCiURmKavTHUU",
+		dp: "p1_wj-Npq3VDElpzPQJqeuCrAoaSWhHcm21_hs0VdSbl6_UJ2qwbQnS-kudPx7A8El7WPw4MZHrjxdBIBImvXCzOGw7OrHz_ET2ka0nADUe7BlakGTgDLB7ZzHZSuNe36G5eTbCH7PyYunnPp0UERMEDu2RDdLSuUm7F7FdpDOc",
+		alg: "RS256",
+		dq: "purLCHKKKM7NRfYRsFiI_H2wPwfroHX8uqokz2rKk_Kc5NX9CNYOEmokBfO9BtenCIxIhX5k2G8NeD5BQrSAenIEdy5g-5FVVtevH1s023vDMyU29hOs_eHnh4d1poiwTUk8q_T3d1S7CZnr5r_drRSN2m1C7biLLwVHrLTceVE",
+		n: "svVfGU4NGcfBCmQiIOW5uzg5SAN2CWSIQSstnhqZoCdjy5OoKpKVR8O9TbDvxixrvkFyAav90Q0Xse8iFTcjfCKuqINYiuYMXhCvfBlc_DVVOQca9pMpN03LaDofd5Ll4_BFTtt1nSPahwWU7xDM-Bkkh_TcS2qS4N2xbpEGi0q0ZkrJN4WyiDBC2k9WbK-YHr4Rj4JKypFVSeBIrjxVPmlPzgfqlLGGIB0l92SnJDXDMlkWcCCTyLgqSBM04nkxGDSykq_ei76qCdRd7b10wMBaoS9DeBThAyHpur2LoPdH3gxbcwoWExi-jPlNP1LdKVZD8b95OY3CRyMAAMGdKQ",
+	});
+
+	await server.start(8585, "localhost");
+	console.log("Started NeoPass server at: ", server.issuer.url);
+}
+
+main().catch((error) => {
+	console.error(error);
+});
