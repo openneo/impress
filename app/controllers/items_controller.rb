@@ -86,7 +86,7 @@ class ItemsController < ApplicationController
 
       format.gif do
         expires_in 1.month
-        redirect_to @item.thumbnail_url
+        redirect_to @item.thumbnail_url, allow_other_host: true
       end
     end
   end
