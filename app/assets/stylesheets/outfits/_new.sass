@@ -1,3 +1,4 @@
+@import "partials/clean/constants"
 @import "partials/campaign-progress"
 
 body.outfits-new
@@ -5,6 +6,23 @@ body.outfits-new
 
   #pet-not-found
     display: none
+
+  .neopass-announcement
+    border: 1px solid #7bd5ce
+    color: #3b6c68
+    padding: .5em
+    display: grid
+    grid-template-areas: "thumbnail content"
+    grid-template-columns: auto 1fr
+    column-gap: .5em
+    margin-bottom: 1em
+
+    p
+      font-family: $main-font
+      margin-bottom: .5em
+
+    p:last-of-type
+      margin-bottom: 0
 
   #outfit-forms
     +clearfix

@@ -4,6 +4,20 @@
 
 %p#pet-not-found.alert= t 'pets.load.not_found'
 
+%section.neopass-announcement
+  = image_tag "about/neopass-thumbnail.png", width: 70, height: 70,
+    srcset: {"about/neopass-thumbnail@2x.png": "2x"},
+    class: "neopass-thumbnail"
+  .neopass-content
+    %p
+      %strong
+        Big news: we're adding NeoPass and other integrations to DTI over the
+        coming months!
+    %p
+      We're hoping it will help new users, and can be part of a more sustainable future for the site.
+      %br
+      = link_to "Here's what's coming and why.", about_neopass_path
+
 #outfit-forms
   - localized_cache :action_suffix => 'outfit_forms_intro' do
     #pet-preview
