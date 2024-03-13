@@ -1,3 +1,5 @@
+- turbo_page_requires_reload
+
 - if @outfit
   - title(@outfit.name || t('.default_outfit_name'))
   - open_graph type: 'openneo-impress:outfit', title: yield(:title),
@@ -22,5 +24,6 @@
     = csrf_meta_tags
     = impress_2020_meta_tags
     %meta{name: 'dti-current-user-id', content: user_signed_in? ? current_user.id : "null"}
+    = yield :head
   %body
     #wardrobe-2020-root

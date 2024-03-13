@@ -341,6 +341,10 @@ GEM
     timeout (0.4.1)
     timers (4.3.5)
     traces (0.11.1)
+    turbo-rails (2.0.5)
+      actionpack (>= 6.0.0)
+      activejob (>= 6.0.0)
+      railties (>= 6.0.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     warden (1.2.9)
@@ -396,6 +400,7 @@ DEPENDENCIES
   stackprof (~> 0.2.25)
   terser (~> 1.1, >= 1.1.17)
   thread-local (~> 1.1)
+  turbo-rails (~> 2.0)
   web-console (~> 4.2)
   will_paginate (~> 4.0)
 

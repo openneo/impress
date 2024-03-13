@@ -21,6 +21,7 @@
     = signed_in_meta_tag
     - if user_signed_in?
       = current_user_id_meta_tag
+    = yield :head
   %body{:class => body_class}
     #container
       = yield :before_title
@@ -50,7 +51,8 @@
           = button_to t('.userbar.logout'), destroy_auth_user_session_path, method: :delete,
             params: {return_to: request.fullpath}
         - else
-          = link_to auth_user_sign_in_path_with_return_to, :id => 'userbar-log-in' do
+          = link_to auth_user_sign_in_path_with_return_to,
+            id: 'userbar-log-in', "data-turbo-prefetch": false do
             %span= t('.userbar.login')
 
       #footer
