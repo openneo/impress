@@ -1,8 +1,23 @@
 #!/usr/bin/env node
+/**
+ * A test NeoPass server! This is a very lean, hacky implementation, designed
+ * to just see the basic OAuth interactions Work At All.
+ *
+ * First, we have a "backing server", which is a `oauth2-mock-server` instance
+ * that's easy to spin up and have perform OAuth for us. We give it a hardcoded
+ * development-only key, and it just auto-grants permissions!
+ *
+ * We also have a "main server", which obeys the actual NeoPass API: the
+ * backing server isn't configurable with stuff like paths, so we use the main
+ * server to proxy from the paths in the NeoPass spec to the paths the backing
+ * server uses.
+ */
 
+const urlLib = require("node:url");
 const { OAuth2Server } = require("oauth2-mock-server");
+const express = require("express");
 
-async function main() {
+async function startBackingServer(port) {
 	const server = new OAuth2Server();
 	await server.issuer.keys.add({
 		// A key we generated for the NeoPass test server. It's okay for its
@@ -21,8 +36,38 @@ async function main() {
 		n: "svVfGU4NGcfBCmQiIOW5uzg5SAN2CWSIQSstnhqZoCdjy5OoKpKVR8O9TbDvxixrvkFyAav90Q0Xse8iFTcjfCKuqINYiuYMXhCvfBlc_DVVOQca9pMpN03LaDofd5Ll4_BFTtt1nSPahwWU7xDM-Bkkh_TcS2qS4N2xbpEGi0q0ZkrJN4WyiDBC2k9WbK-YHr4Rj4JKypFVSeBIrjxVPmlPzgfqlLGGIB0l92SnJDXDMlkWcCCTyLgqSBM04nkxGDSykq_ei76qCdRd7b10wMBaoS9DeBThAyHpur2LoPdH3gxbcwoWExi-jPlNP1LdKVZD8b95OY3CRyMAAMGdKQ",
 	});
 
-	await server.start(8585, "localhost");
-	console.log("Started NeoPass server at: ", server.issuer.url);
+	await server.start(port, "localhost");
+	console.log(`Started NeoPass backing server at: ${server.issuer.url}`);
+}
+
+async function startMainServer(port) {
+	const fetch = await import("node-fetch");
+
+	const app = express();
+	app.use(express.raw());
+
+	app.get("/", (req, res) => res.end("NeoPass development server for DTI!"));
+
+	app.get("/oauth2/auth", (req, res) => {
+		const query = urlLib.parse(req.url).query;
+		res.redirect(`http://localhost:8686/authorize?${query}`);
+	});
+
+	app.post("/oauth2/token", (req, res) => {
+		// For POST requests, the HTTP spec doesn't allow a redirect to a POST,
+		// so we proxy the request instead.
+		// TODO: Actually do that! For now we just log it.
+		console.log(req.body);
+		res.end("owo");
+	});
+
+	await new Promise((resolve) => app.listen(port, resolve));
+	console.log(`Started NeoPass main server at: http://localhost:${port}`);
+}
+
+async function main() {
+	await startBackingServer(8686);
+	await startMainServer(8585);
 }
 
 main().catch((error) => {
