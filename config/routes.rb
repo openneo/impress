@@ -87,7 +87,7 @@ OpenneoImpressItems::Application.routes.draw do
   get '/donate' => 'fundraising/campaigns#current', as: :donate
 
   # Static pages!
-  get '/terms', to: "static#terms", as: :terms
+  get '/terms', to: "about#terms", as: :terms
 
   # Other useful lil things!
   get '/sitemap.xml' => 'sitemap#index', :as => :sitemap, :format => :xml
