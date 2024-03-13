@@ -117,8 +117,7 @@ es:
       edit: Editar
       delete: Eliminar
       delete_confirmation:
-        owned: ¿Estás seguro/a que quieres eliminar la lista "%{list_name}"? Recuerda que si eliminas la lista seguirás teniendo estos objetos.
-        wanted: ¿Estás seguro/a que quieres eliminar la lista "%{list_name}"? Recuerda que si eliminas la lista seguirás queriendo estos objetos.
+        ¿Estás seguro/a que quieres eliminar la lista "%{list_name}"?
       empty: Esta lista está vacía.
     edit:
       title: Editando la lista "%{list_name}"

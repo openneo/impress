@@ -169,10 +169,8 @@ en:
       edit: Edit
       delete: Delete
       delete_confirmation:
-        owned: Are you sure you want to delete "%{list_name}"?
-          If you do, we'll move these items into Items You Own, not in a list.
-        wanted: Are you sure you want to delete "%{list_name}"?
-          If you do, we'll move these items into Items You Want, not in a list.
+        Are you sure you want to delete "%{list_name}"?
+        If you do, we'll delete all the items in it, too.
       remove_all:
         confirm: "Remove all items from this list?"
         submit: Remove all

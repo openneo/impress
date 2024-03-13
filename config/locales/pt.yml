@@ -117,8 +117,7 @@ pt:
       edit: Editar
       delete: Excluir
       delete_confirmation:
-        owned: Você tem certeza que deseja excluir "%{list_name}"? Mesmo se você fizer isso, vamos lembrar que você possui esses itens.
-        wanted: Você tem certeza que deseja excluir "%{list_name}"? Mesmo se você fizer isso, vamos lembrar que você procura esses itens.
+        Você tem certeza que deseja excluir "%{list_name}"?
       empty: Esta lista está vazia.
     edit:
       title: Editando lista "%{list_name}"

@@ -157,12 +157,8 @@ en-MEEP:
       edit: Meepit
       delete: Deleep
       delete_confirmation:
-        owned:
-          Are you sure you want to deleep "%{list_name}"? Even if you do, we'll
-          remember that you own these items.
-        wanted:
-          Are you sure you want to deleep "%{list_name}"? Even if you do, we'll
-          remember that you want these items.
+        Are you sure you want to deleep "%{list_name}"? If you do, we'll deleep
+        all the items in it, too.
       empty: This meep is empty.
 
     edit:

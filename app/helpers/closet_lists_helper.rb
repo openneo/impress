@@ -1,10 +1,4 @@
 module ClosetListsHelper
-  def closet_list_delete_confirmation(closet_list)
-    ownership_key = closet_list.hangers_owned? ? 'owned' : 'wanted'
-    translate("closet_lists.closet_list.delete_confirmation.#{ownership_key}",
-              :list_name => closet_list.name)
-  end
-
   def closet_list_description_format(list)
     md = RDiscount.new(list.description)
     Sanitize.clean(md.to_html, Sanitize::Config::BASIC).html_safe
