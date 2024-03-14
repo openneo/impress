@@ -309,6 +309,7 @@ en:
           description: Only obtainable via paintbrush
       resources:
         jn_items: JN Items
+        impress_2020: DTI 2020
         owls: "Owls: %{value}"
         shop_wizard: Shop Wizard
         super_shop_wizard: Super Wizard

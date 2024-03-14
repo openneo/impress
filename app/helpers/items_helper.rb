@@ -1,3 +1,5 @@
+require "addressable/template"
+
 module ItemsHelper
   JNItemsURLFormat = 'https://items.jellyneo.net/search/?name=%s&name_type=3'
   
@@ -74,6 +76,13 @@ module ItemsHelper
 
   def jn_items_url_for(item)
     sprintf(JNItemsURLFormat, CGI::escape(item.name))
+  end
+
+  IMPRESS_2020_ITEM_URL_TEMPLATE = Addressable::Template.new(
+    "#{Rails.configuration.impress_2020_origin}/items/{id}"
+  )
+  def impress_2020_url_for(item)
+    IMPRESS_2020_ITEM_URL_TEMPLATE.expand(id: item.id).to_s
   end
   
   def shop_wizard_url_for(item)
