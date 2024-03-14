@@ -1,15 +1,28 @@
 import React from "react";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
-import { ChakraProvider, Box, useColorModeValue } from "@chakra-ui/react";
+import {
+  ChakraProvider,
+  Box,
+  theme as defaultTheme,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { ApolloProvider } from "@apollo/client";
 import { BrowserRouter } from "react-router-dom";
 import { Global } from "@emotion/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import produce from "immer";
 
 import apolloClient from "./apolloClient";
 
 const reactQueryClient = new QueryClient();
+
+// Use Chakra's default theme, but with the global styles removed. (We've
+// copied them into our `ScopedCSSReset` component, to apply in only the places
+// we actually want them!)
+const theme = produce(defaultTheme, (theme) => {
+  theme.styles.global = {};
+});
 
 export default function AppProvider({ children }) {
   React.useEffect(() => setupLogging(), []);
@@ -18,7 +31,7 @@ export default function AppProvider({ children }) {
     <BrowserRouter>
       <QueryClientProvider client={reactQueryClient}>
         <ApolloProvider client={apolloClient}>
-          <ChakraProvider resetCSS={false}>
+          <ChakraProvider resetCSS={false} theme={theme}>
             <ScopedCSSReset>{children}</ScopedCSSReset>
           </ChakraProvider>
         </ApolloProvider>
@@ -91,6 +104,16 @@ function ScopedCSSReset({ children }) {
       <Global
         styles={`
           :where(.chakra-css-reset, .chakra-portal) {
+            /* Chakra's default global styles, placed here so we can override
+             * the actual _global_ styles in the theme to be empty. That way,
+             * it only affects Chakra stuff, not all elements! */
+            font-family: var(--chakra-fonts-body);
+            color: var(--chakra-colors-gray-800);
+            background: var(--chakra-colors-white);
+            transition-property: background-color;
+            transition-duration: var(--chakra-transition-duration-normal);
+            line-height: var(--chakra-lineHeights-base);
+
             *,
             *::before,
             *::after {
