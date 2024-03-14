@@ -108,7 +108,6 @@ module ApplicationHelper
 
   JAVASCRIPT_LIBRARIES = {
     :jquery => 'https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js',
-    :jquery20 => 'https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js',
     :jquery_tmpl => 'https://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js',
   }
 
