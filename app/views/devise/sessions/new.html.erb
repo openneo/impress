@@ -1,5 +1,12 @@
 <h2>Log in</h2>
 
+<% if @can_use_neopass %>
+  <%= button_to "Log in with NeoPass",
+                auth_user_developer_omniauth_authorize_path,
+                data: {turbo: false} # important for developer strategy
+  %>
+<% end %>
+
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <div class="field">
     <%= f.label :name, 'Username' %><br />

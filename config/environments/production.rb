@@ -134,4 +134,7 @@ Rails.application.configure do
   # Save our public data exports in `public/public-data`. (This should be
   # symlinked to a shared folder persisted across all versions.)
   config.public_data_root = Rails.root / "public" / "public-data"
+
+  # To see NeoPass features, add ?neopass=<SECRET> to relevant pages.
+  config.neopass_access_secret = Rails.credentials.neopass.access_secret
 end

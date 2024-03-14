@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
 
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :check_neopass_access, if: :devise_controller?
   before_action :save_return_to_path,
     if: ->(c) { c.controller_name == 'sessions' && c.action_name == 'new' }
 
@@ -85,6 +86,12 @@ class ApplicationController < ActionController::Base
     # the password, but we need to let the email field through ourselves.
     devise_parameter_sanitizer.permit(:sign_up, keys: [:email])
     devise_parameter_sanitizer.permit(:account_update, keys: [:email])
+  end
+
+  def check_neopass_access
+    @can_use_neopass = (
+      params[:neopass] == Rails.configuration.neopass_access_secret
+    )
   end
 
   def save_return_to_path
