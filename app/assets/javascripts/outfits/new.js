@@ -194,7 +194,7 @@
     Preview.updateWithName(name_el);
 
     name_el.keyup(function () {
-      if (previewWithNameTimeout) {
+      if (previewWithNameTimeout && Preview.Job.current) {
         clearTimeout(previewWithNameTimeout);
         Preview.Job.current.loading = false;
       }

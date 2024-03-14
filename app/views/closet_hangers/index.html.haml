@@ -153,7 +153,10 @@
 - content_for :javascripts do
   = include_javascript_libraries :jquery, :jquery_tmpl
   = javascript_include_tag 'ajax_auth', 'lib/jquery.ui', 'lib/jquery.jgrowl',
-    'closet_hangers/index'
+    defer: true
+
+- content_for :javascripts_body do
+  = javascript_include_tag 'closet_hangers/index', defer: true
 
 - if public_perspective? && user_signed_in?
   - content_for :meta do

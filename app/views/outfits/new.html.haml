@@ -124,4 +124,7 @@
 
 - content_for :javascripts do
   = include_javascript_libraries :jquery20, :jquery_tmpl
-  = javascript_include_tag 'ajax_auth', 'lib/jquery.timeago', 'outfits/new'
+  = javascript_include_tag 'ajax_auth', 'lib/jquery.timeago', defer: true
+
+- content_for :javascripts_body do
+  = javascript_include_tag 'outfits/new', defer: true

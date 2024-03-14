@@ -114,7 +114,7 @@ module ApplicationHelper
 
   def include_javascript_libraries(*library_names)
     raw(library_names.inject('') do |html, name|
-      html + javascript_include_tag(JAVASCRIPT_LIBRARIES[name])
+      html + javascript_include_tag(JAVASCRIPT_LIBRARIES[name], defer: true)
     end)
   end
   

@@ -21,6 +21,8 @@
     = signed_in_meta_tag
     - if user_signed_in?
       = current_user_id_meta_tag
+    = javascript_include_tag 'application', defer: true
+    = yield :javascripts
     = yield :head
   %body{:class => body_class}
     #container
@@ -73,7 +75,9 @@
             %li= mail_to contact_email, t('.footer.email')
         
         %p= t '.footer.copyright', :year => Date.today.year
-      
-      = javascript_include_tag 'application'
-      = yield(:javascripts)
 
+    -# For scripts that expect to get to just execute once every time the page
+    -# loads. For future JS, it would be advisable to write it such that it's
+    -# okay for Turbo to run it once at the start of the page, then listen to
+    -# `turbo:load` events or use inline scripts to actually _do_ things.
+    = yield :javascripts_body

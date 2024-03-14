@@ -3,22 +3,17 @@ function setFormStateCookie(value) {
 	document.cookie = `DTIItemPageUserListsFormState=${value};max-age=${thirtyDays}`;
 }
 
-const headers = document.querySelectorAll(".item-header");
-for (const header of headers) {
-	try {
+document.addEventListener("click", (event) => {
+	if (event.target.matches(".item-header .user-lists-form-opener")) {
+		const header = event.target.closest(".item-header");
 		const form = header.querySelector(".user-lists-form");
-		const opener = header.querySelector(".user-lists-form-opener");
-		opener.addEventListener("click", (event) => {
-			if (form.hasAttribute("hidden")) {
-				form.removeAttribute("hidden");
-				setFormStateCookie("open");
-			} else {
-				form.setAttribute("hidden", "");
-				setFormStateCookie("closed");
-			}
-			event.preventDefault();
-		});
-	} catch (error) {
-		console.error(`Error applying dialog behavior to item header:`, error);
+		if (form.hasAttribute("hidden")) {
+			form.removeAttribute("hidden");
+			setFormStateCookie("open");
+		} else {
+			form.setAttribute("hidden", "");
+			setFormStateCookie("closed");
+		}
+		event.preventDefault();
 	}
-}
+});

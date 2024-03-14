@@ -96,4 +96,4 @@
             'data-is-current' => current_subpage == 'trades_seeking'
 
 - content_for :javascripts do
-  = javascript_include_tag 'items/item_header'
+  = javascript_include_tag 'items/item_header', defer: true

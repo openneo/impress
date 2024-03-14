@@ -749,16 +749,6 @@
 
   /*
 
-    Hanger list controls
-
-  */
-
-  $("input[type=submit][data-confirm]").live("click", function (e) {
-    if (!confirm(this.getAttribute("data-confirm"))) e.preventDefault();
-  });
-
-  /*
-
     Closet list droppable
 
   */

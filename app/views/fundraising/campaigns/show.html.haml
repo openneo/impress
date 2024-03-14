@@ -123,9 +123,5 @@
     #{mail_to 'webmaster@openneo.net', "Please email us for more information."}
     Thank you!!
 
-- content_for :javascripts do
-  = javascript_include_tag 'https://checkout.stripe.com/checkout.js',
-      'fundraising/campaigns/show'
-
 - content_for :stylesheets do
   = stylesheet_link_tag 'fundraising/campaigns/show'

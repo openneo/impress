@@ -23,6 +23,6 @@
         %li= link_to(contributor.name, user_contributions_path(contributor)) + format_contribution_count(count)
     %footer= t '.contributors.footer'
 
-- content_for :javascripts do
+- content_for :javascripts_body do
   = javascript_include_tag 'item-page', defer: true
 
