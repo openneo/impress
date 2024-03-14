@@ -9,11 +9,11 @@ require "rails"
 # Disabled:
 # - active_storage/engine
 # - active_job/railtie
-# - action_cable/engine
 # - action_mailbox/engine
 # - action_text/engine
 %w(
   active_record/railtie
+  action_cable/engine
   action_controller/railtie
   action_view/railtie
   action_mailer/railtie
