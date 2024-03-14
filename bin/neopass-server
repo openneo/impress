@@ -41,10 +41,10 @@ async function startBackingServer(port) {
 }
 
 async function startMainServer(port) {
-	const fetch = await import("node-fetch");
+	const fetch = (await import("node-fetch")).default;
 
 	const app = express();
-	app.use(express.raw());
+	app.use(express.text({ type: "*/*" }));
 
 	app.get("/", (req, res) => res.end("NeoPass development server for DTI!"));
 
@@ -53,12 +53,27 @@ async function startMainServer(port) {
 		res.redirect(`http://localhost:8686/authorize?${query}`);
 	});
 
-	app.post("/oauth2/token", (req, res) => {
-		// For POST requests, the HTTP spec doesn't allow a redirect to a POST,
-		// so we proxy the request instead.
-		// TODO: Actually do that! For now we just log it.
-		console.log(req.body);
-		res.end("owo");
+	app.post("/oauth2/token", async (req, res) => {
+		try {
+			// For POST requests, the HTTP spec doesn't allow a redirect to a
+			// POST, so we proxy the request instead.
+			const backingRes = await fetch("http://localhost:8686/token", {
+				method: "POST",
+				headers: {
+					"Content-Type": req.get("Content-Type"),
+				},
+				body: req.body,
+			});
+			if (!backingRes.ok) {
+				throw new Error(`backing server returned status ${res.status}`);
+			}
+
+			res.set("Content-Type", backingRes.headers.get("Content-Type"));
+			return res.end(await backingRes.text());
+		} catch (error) {
+			console.error(error);
+			return res.end(error.message);
+		}
 	});
 
 	await new Promise((resolve) => app.listen(port, resolve));
