@@ -27,6 +27,7 @@ gem 'devise', '~> 4.9', '>= 4.9.2'
 gem 'devise-encryptable', '~> 0.2.0'
 gem 'omniauth', '~> 2.1'
 gem 'omniauth-rails_csrf_protection', '~> 1.0'
+gem 'omniauth-oauth2', '~> 1.8'
 
 # For pagination UI.
 gem 'will_paginate', '~> 4.0'

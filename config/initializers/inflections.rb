@@ -15,7 +15,10 @@
 #   inflect.acronym "RESTful"
 # end
 
-# Teach Zeitwerk that `RocketAMF` is what to expect in `lib/rocketamf`.
 ActiveSupport::Inflector.inflections(:en) do |inflect|
+  # Teach Zeitwerk that `RocketAMF` is what to expect in `lib/rocketamf`.
   inflect.acronym "RocketAMF"
+
+  # Teach Zeitwerk that "NeoPass" is what to expect in `neopass.rb`.
+  inflect.acronym "NeoPass"
 end

@@ -3,7 +3,7 @@ class AuthUser < AuthRecord
 
   devise :database_authenticatable, :encryptable, :registerable, :validatable,
     :rememberable, :trackable, :recoverable, :omniauthable,
-    omniauth_providers: [:developer]
+    omniauth_providers: [:neopass]
 
   validates :name, presence: true, uniqueness: {case_sensitive: false},
     length: {maximum: 20}

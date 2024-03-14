@@ -119,4 +119,7 @@ Rails.application.configure do
 
   # To see NeoPass features, add ?neopass=1 to relevant pages.
   config.neopass_access_secret = "1"
+
+  # Use the local NeoPass development server.
+  config.neopass_origin = "http://localhost:8585"
 end
