@@ -144,5 +144,5 @@ Rails.application.configure do
 
   # Set the NeoPass redirect callback URL.
   config.neopass_redirect_uri =
-    "https://impress.openneo.net/auth_users/auth/neopass/callback"
+    "https://impress.openneo.net/users/auth/neopass/callback"
 end

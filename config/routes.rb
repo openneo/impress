@@ -2,7 +2,7 @@ OpenneoImpressItems::Application.routes.draw do
   root :to => 'outfits#new'
 
   # Login and account management!
-  devise_for :auth_users
+  devise_for :auth_users, path: "users"
 
   # The outfit editor!
   # TODO: It's a bit silly that outfits/new points to outfits#edit.

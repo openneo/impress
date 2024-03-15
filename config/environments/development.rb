@@ -125,5 +125,5 @@ Rails.application.configure do
 
   # Set the NeoPass redirect callback URL.
   config.neopass_redirect_uri =
-    "http://localhost:3000/auth_users/auth/neopass/callback"
+    "http://localhost:3000/users/auth/neopass/callback"
 end
