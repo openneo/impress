@@ -136,7 +136,8 @@ Rails.application.configure do
   config.public_data_root = Rails.root / "public" / "public-data"
 
   # To see NeoPass features, add ?neopass=<SECRET> to relevant pages.
-  config.neopass_access_secret = Rails.credentials.neopass.access_secret
+  config.neopass_access_secret =
+    Rails.application.credentials.neopass.access_secret
 
   # Use the live NeoPass production server.
   config.neopass_origin = "https://oidc.neopets.com"

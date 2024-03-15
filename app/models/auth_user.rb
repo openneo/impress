@@ -37,7 +37,7 @@ class AuthUser < AuthRecord
   end
 
   def password_required?
-    !uses_omniauth?
+    super && !uses_omniauth?
   end
 
   def self.from_omniauth(auth)
