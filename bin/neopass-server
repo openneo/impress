@@ -21,9 +21,10 @@ const urlLib = require("node:url");
 const { OAuth2Server } = require("oauth2-mock-server");
 const express = require("express");
 
-// This is the Neopets username we'll report back to DTI when you authenticate
-// through here.
-const USERNAME = "theneopetsteam";
+// This is the Neopets username and email we'll report back to DTI when you
+// authenticate through here.
+const USERNAME = "test";
+const EMAIL = "theneopetsteam@neopets.com";
 
 const certPath = pathLib.join(__dirname, "..", "tmp", "localhost.pem");
 const keyPath = pathLib.join(__dirname, "..", "tmp", "localhost-key.pem");
@@ -88,8 +89,12 @@ async function startServer(port) {
 		n: "svVfGU4NGcfBCmQiIOW5uzg5SAN2CWSIQSstnhqZoCdjy5OoKpKVR8O9TbDvxixrvkFyAav90Q0Xse8iFTcjfCKuqINYiuYMXhCvfBlc_DVVOQca9pMpN03LaDofd5Ll4_BFTtt1nSPahwWU7xDM-Bkkh_TcS2qS4N2xbpEGi0q0ZkrJN4WyiDBC2k9WbK-YHr4Rj4JKypFVSeBIrjxVPmlPzgfqlLGGIB0l92SnJDXDMlkWcCCTyLgqSBM04nkxGDSykq_ei76qCdRd7b10wMBaoS9DeBThAyHpur2LoPdH3gxbcwoWExi-jPlNP1LdKVZD8b95OY3CRyMAAMGdKQ",
 	});
 
-	server.service.on("beforeTokenSigning", (token, req) => {
+	server.service.on("beforeTokenSigning", (token) => {
 		token.payload.sub = USERNAME;
+	});
+
+	server.service.on("beforeUserinfo", (userInfoResponse) => {
+		userInfoResponse.body.email = EMAIL;
 	});
 
 	await server.start(port, "localhost");

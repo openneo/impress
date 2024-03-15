@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_13_200849) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_15_020053) do
   create_table "users", id: { type: :integer, unsigned: true }, charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
     t.string "name", limit: 20, null: false
-    t.string "encrypted_password", limit: 64, null: false
-    t.string "email", limit: 50, null: false
-    t.string "password_salt", limit: 32, null: false
+    t.string "encrypted_password", limit: 64
+    t.string "email", limit: 50
+    t.string "password_salt", limit: 32
     t.string "reset_password_token"
     t.integer "sign_in_count", default: 0
     t.datetime "current_sign_in_at", precision: nil
