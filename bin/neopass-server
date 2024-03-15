@@ -13,12 +13,65 @@
  * server uses.
  */
 
+const fs = require("node:fs/promises");
+const pathLib = require("node:path");
+const { spawn } = require("node:child_process");
 const urlLib = require("node:url");
+
 const { OAuth2Server } = require("oauth2-mock-server");
 const express = require("express");
 
+const certPath = pathLib.join(__dirname, "..", "tmp", "localhost.pem");
+const keyPath = pathLib.join(__dirname, "..", "tmp", "localhost-key.pem");
+
+async function fileExists(path) {
+	try {
+		await fs.stat(path);
+	} catch (error) {
+		if (error.code === "ENOENT") {
+			return false;
+		}
+		throw error;
+	}
+	return true;
+}
+
+async function ensureCertsExist() {
+	if (!(await fileExists(certPath)) || !(await fileExists(keyPath))) {
+		console.log(
+			"Using mkcert to create localhost.pem and localhost-key.pem in " +
+				"the Rails tmp dir, to serve over HTTPS.",
+		);
+
+		const mkcertProc = spawn("mkcert", [
+			"-cert-file",
+			certPath,
+			"-key-file",
+			keyPath,
+			"localhost",
+		], {stdio: ["ignore", process.stdout, process.stderr]});
+
+		// Wait for the process to finish, raising an error if it fails.
+		await new Promise((resolve, reject) => {
+			mkcertProc.on("close", (code) => {
+				if (code === 0) {
+					resolve();
+				} else {
+					reject(new Error(`mkcert returned status ${code}`));
+				}
+			});
+			mkcertProc.on("error", (error) => {
+				reject(error);
+			});
+		});
+	}
+}
+
 async function startBackingServer(port) {
-	const server = new OAuth2Server();
+	const server = new OAuth2Server(
+		keyPath,
+		certPath,
+	);
 	await server.issuer.keys.add({
 		// A key we generated for the NeoPass test server. It's okay for its
 		// "secret" info to be here, because it's for development only!
@@ -81,6 +134,7 @@ async function startMainServer(port) {
 }
 
 async function main() {
+	await ensureCertsExist();
 	await startBackingServer(8686);
 	await startMainServer(8585);
 }
