@@ -140,4 +140,8 @@ Rails.application.configure do
 
   # Use the live NeoPass production server.
   config.neopass_origin = "https://oidc.neopets.com"
+
+  # Set the NeoPass redirect callback URL.
+  config.neopass_redirect_uri =
+    "https://impress.openneo.net/auth_users/auth/neopass/callback"
 end

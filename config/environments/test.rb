@@ -76,5 +76,9 @@ Rails.application.configure do
   config.neopass_access_secret = "1"
 
   # Use the local NeoPass development server.
-  config.neopass_origin = "http://localhost:8585"
+  config.neopass_origin = "https://localhost:8585"
+
+  # Set the NeoPass redirect callback URL.
+  config.neopass_redirect_uri =
+    "http://localhost:3000/auth_users/auth/neopass/callback"
 end

@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require "strategies/neopass"
 
 # Assuming you have not yet modified this file, each configuration option below
 # is set to its default value. Note that some are commented out while others
@@ -274,7 +273,21 @@ Devise.setup do |config|
   # ==> OmniAuth
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
-  config.omniauth :neopass, strategy_class: Strategies::NeoPass
+  config.omniauth :openid_connect, {
+    name: :neopass,
+    scope: [:openid, :email, :profile],
+    response_type: :code,
+    issuer: Rails.configuration.neopass_origin,
+    discovery: true,
+    client_options: {
+      identifier: "DTI-TODO",
+      secret: "DTI-TODO",
+      redirect_uri: Rails.configuration.neopass_redirect_uri,
+    },
+  }
+
+  # Output OmniAuth debug info to the server logs in development
+  OmniAuth.config.logger = Rails.logger if Rails.env.development?
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
