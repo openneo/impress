@@ -1,10 +1,15 @@
 <h2>Log in</h2>
 
 <% if @can_use_neopass %>
+  🌟✨🌟✨🌟✨🌟✨🌟
+  <br />
   <%= button_to "Log in with NeoPass",
                 auth_user_neopass_omniauth_authorize_path,
                 data: {turbo: false} # Turbo can't handle this redirect!
   %>
+  🌟✨🌟✨🌟✨🌟✨🌟
+  <br />
+  <br />
 <% end %>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
