@@ -1,6 +1,6 @@
 class Devise::OmniauthCallbacksController < ApplicationController
 	def neopass
-		render plain: "Success!"
+		render plain: request.env["omniauth.auth"].uid
 	end
 
 	def failure
