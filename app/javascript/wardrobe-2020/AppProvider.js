@@ -4,12 +4,15 @@ import { Integrations } from "@sentry/tracing";
 import {
   ChakraProvider,
   Box,
-  theme as defaultTheme,
-  useColorModeValue,
+  css as resolveCSS,
+  extendTheme,
+  useColorMode,
+  useTheme,
 } from "@chakra-ui/react";
+import { mode } from "@chakra-ui/theme-tools";
 import { ApolloProvider } from "@apollo/client";
 import { BrowserRouter } from "react-router-dom";
-import { Global } from "@emotion/react";
+import { css, Global } from "@emotion/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import produce from "immer";
 
@@ -17,12 +20,28 @@ import apolloClient from "./apolloClient";
 
 const reactQueryClient = new QueryClient();
 
-// Use Chakra's default theme, but with the global styles removed. (We've
-// copied them into our `ScopedCSSReset` component, to apply in only the places
-// we actually want them!)
-const theme = produce(defaultTheme, (theme) => {
-  theme.styles.global = {};
+let theme = extendTheme({
+  styles: {
+    global: (props) => ({
+      body: {
+        background: mode("gray.50", "gray.800")(props),
+        color: mode("green.800", "green.50")(props),
+        transition: "all 0.25s",
+      },
+    }),
+  },
 });
+
+// Capture the global styles function from our theme, but remove it from the
+// theme's `styles.global` key. We don't actually want to apply these styles
+// globally, because they conflict with the app's other styles when embedded in
+// e.g. the item page! We'll apply them more carefully in `ScopedCSSReset`.
+//
+// NOTE: We get this from `theme`, instead of just declaring the function
+// separately, because `extendTheme` returns a wrapped version of our function
+// that also returns some of Chakra's own default global styles.
+const globalStyles = theme.styles.global;
+theme.styles.global = {};
 
 export default function AppProvider({ children }) {
   React.useEffect(() => setupLogging(), []);
@@ -94,26 +113,46 @@ function setupLogging() {
  * the selector `:where(.chakra-css-reset) h1` is lower specificity.
  */
 function ScopedCSSReset({ children }) {
-  const baseTextColor = useColorModeValue("green.800", "green.50");
+  // Get the current theme and color mode.
+  //
+  // NOTE: The theme object returned by `useTheme` has some extensions that are
+  // necessary for the code below, but aren't present in the theme config
+  // returned by `extendTheme`! That's why we use this here instead of `theme`.
+  const liveTheme = useTheme();
+  const colorMode = useColorMode();
+
+  // Resolve the theme's global styles into CSS objects for Emotion.
+  const globalStylesCSS = resolveCSS(
+    globalStyles({ theme: liveTheme, colorMode }),
+  )(liveTheme);
+
+  // Prepend our special scope selector to the global styles.
+  const scopedGlobalStylesCSS = {};
+  for (let [selector, rules] of Object.entries(globalStylesCSS)) {
+    // The `body` selector is where typography etc rules go, but `body` isn't
+    // actually *inside* our scoped element! Instead, ignore the `body` part,
+    // and just apply it to the scoping element itself.
+    if (selector.trim() === "body") {
+      selector = "";
+    }
+
+    const scopedSelector =
+      ":where(.chakra-css-reset, .chakra-portal) " + selector;
+    scopedGlobalStylesCSS[scopedSelector] = rules;
+  }
 
   return (
     <>
-      <Box className="chakra-css-reset" color={baseTextColor}>
-        {children}
-      </Box>
+      <Box className="chakra-css-reset">{children}</Box>
       <Global
-        styles={`
-          :where(.chakra-css-reset, .chakra-portal) {
-            /* Chakra's default global styles, placed here so we can override
-             * the actual _global_ styles in the theme to be empty. That way,
-             * it only affects Chakra stuff, not all elements! */
-            font-family: var(--chakra-fonts-body);
-            color: var(--chakra-colors-gray-800);
-            background: var(--chakra-colors-white);
-            transition-property: background-color;
-            transition-duration: var(--chakra-transition-duration-normal);
-            line-height: var(--chakra-lineHeights-base);
+        styles={css`
+          /* Chakra's default global styles, placed here so we can override
+           * the actual _global_ styles in the theme to be empty. That way,
+           * it only affects Chakra stuff, not all elements! */
+          ${scopedGlobalStylesCSS}
 
+          /* Chakra's CSS reset, copy-pasted and rescoped! */
+          :where(.chakra-css-reset, .chakra-portal) {
             *,
             *::before,
             *::after {
