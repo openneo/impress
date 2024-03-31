@@ -88,6 +88,8 @@ OpenneoImpressItems::Application.routes.draw do
 
   # About pages!
   get '/terms', to: "about#terms", as: :terms
+  get '/privacy',
+    to: redirect(Rails.configuration.impress_2020_origin + "/privacy")
   get '/about/neopass', to: 'about#neopass'
 
   # Other useful lil things!
