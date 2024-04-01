@@ -6,7 +6,7 @@ class AuthUser < AuthRecord
     omniauth_providers: [:neopass]
 
   validates :name, presence: true, uniqueness: {case_sensitive: false},
-    length: {maximum: 20}
+    length: {maximum: 30}
   
   has_one :user, foreign_key: :remote_id, inverse_of: :auth_user
   
