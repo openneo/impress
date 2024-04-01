@@ -121,13 +121,43 @@ Rails.application.configure do
   config.neopass_access_secret = "1"
 
   # Use the local NeoPass development server.
-  #
-  # NOTE: In my testing, using the live NeoPass server here returns "403
-  #       Forbidden", I suspect because the development callback URL didn't
-  #       make it into the live config? Ah, well!
   config.neopass_origin = "https://localhost:8585"
 
   # Set the NeoPass redirect callback URL.
   config.neopass_redirect_uri =
     "http://localhost:3000/users/auth/neopass/callback"
+
+  # If the "USE_LIVE_NEOPASS=1" environment variable is set, override the
+  # NeoPass config with the production values instead.
+  #
+  # Note that this does *not* allow you to just use NeoPass with the
+  # development server as one might like! Our `localhost:3000` redirect URL is
+  # not registered with live NeoPass, so we have to provide the production
+  # callback, or else NeoPass will reject the initial auth request altogether!
+  #
+  # Instead, you'll need to somehow intercept the flow:
+  #     1. Dress to Impress (development) sends you to NeoPass, with production
+  #        configuration in the request.
+  #     2. NeoPass redirects back to Dress to Impress (production).
+  #     3. Use some kind of tool to prevent the above redirect, and rewrite it
+  #        to `localhost:3000` instead.
+  #        - For me, it's convenient to do this via the Burp Suite's "Proxy"
+  #          tool: intercept the request, cancel it, and manually rewrite the
+  #          URL and navigate to it.
+  #        - Another way I've used for similar things in the past is to edit my
+  #          /etc/hosts file to temporarily point `impress.openneo.net` to
+  #          `127.0.0.1`. Then, when the request fails, manually rewrite the
+  #          URL and navigate to it.
+  #        - I suppose you could also have your browser's Network panel persist
+  #          logs, then you can see the `/users/auth/neopass/callback` request
+  #          that fails and redirects back to the production sign-in page, and
+  #          manually rewrite it? (The request should be safe to let through,
+  #          because production DTI will reject the callback, because it knows
+  #          from the `state` parameter that it didn't initiate this flow.)
+  if ENV["USE_LIVE_NEOPASS"].present?
+    puts "Using live NeoPass, instead of the development server."
+    config.neopass_origin = "https://oidc.neopets.com"
+    config.neopass_redirect_uri =
+      "https://impress.openneo.net/users/auth/neopass/callback"
+  end
 end
