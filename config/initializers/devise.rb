@@ -275,15 +275,37 @@ Devise.setup do |config|
   # up on your models and hooks.
   config.omniauth :openid_connect, {
     name: :neopass,
+
+    # We'll request only basic info, and we'll "discover" most of the server's
+    # configuration by reading its `/.well-known/openid_configuation` endpoint.
     scope: [:openid, :email],
     response_type: :code,
     issuer: Rails.configuration.neopass_origin,
     discovery: true,
+
+    # Here's the client info registered with the NeoPass team! They generated
+    # a Client ID and a Client Secret for us; and we provided them with a
+    # redirect URL, which must match the one used here, or the initial auth
+    # request will be rejected.
     client_options: {
       identifier: "19ea1361-f0b1-48f2-9405-b570c655afd9",
       secret: Rails.application.credentials.dig(:neopass, :client_secret),
       redirect_uri: Rails.configuration.neopass_redirect_uri,
     },
+
+    # Specify that the client ID and secret should be passed as POST form data,
+    # rather than the default of an `Authorization` header. This is necessary
+    # to match the NeoPass specification; if we use the header instead, it will
+    # tell us their record of the Dress to Impress client isn't configured to
+    # allow this!
+    #
+    # NOTE: This isn't a documented supported value for `client_auth_method`
+    #       here. The `omniauth_openid_connect` docs say it must be `:basic` or
+    #       `:jwks`, but as far as I can tell, the value gets passed to
+    #       `Rack::OAuth2::Client#access_token!`, which uses an `Authorization`
+    #       header if the value is `:basic`, or POST form data if the value is
+    #       anything else. So this option isn't stable, but it works for now!
+    client_auth_method: :request_body,
   }
 
   # Output OmniAuth debug info to the server logs.
