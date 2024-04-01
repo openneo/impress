@@ -41,14 +41,13 @@ class AuthUser < AuthRecord
   end
 
   def self.from_omniauth(auth)
-    raise MissingAuthInfoError, "Username missing" if auth.uid.blank?
     raise MissingAuthInfoError, "Email missing" if auth.info.email.blank?
 
     transaction do
       find_or_create_by!(provider: auth.provider, uid: auth.uid) do |user|
-        # Use the Neopets username if possible, or a unique username if not.
-        dti_username = build_unique_username_like(auth.uid)
-        user.name = dti_username
+        # TODO: Can we somehow get the Neopets username if one exists, instead
+        # of just using total randomness?
+        user.name = build_unique_username
 
         # Copy the email address from their Neopets account to their DTI
         # account, unless they already have a DTI account with this email, in
@@ -60,25 +59,32 @@ class AuthUser < AuthRecord
     end
   end
 
-  def self.build_unique_username_like(name)
-    name_query = sanitize_sql_like(name) + "%"
-    similar_names = where("name LIKE ?", name_query).pluck(:name)
+  def self.build_unique_username
+    # Start with a base name like "neopass-kougra-".
+    random_species_name = Species.all.pluck(:name).sample
+    base_name = "neopass-#{random_species_name}"
 
-    # Use the given name itself, if we can.
-    return name unless similar_names.include?(name)
+    # Fetch the list of names that already start with that.
+    name_query = sanitize_sql_like(base_name) + "%"
+    similar_names = where("name LIKE ?", name_query).pluck(:name).to_set
 
-    # If not, try appending "-neopass".
-    return "#{name}-neopass" unless similar_names.include?("#{name}-neopass")
+    # Shuffle the list of four-digit numbers to create 10000 possible names,
+    # then use the first one that's not already claimed.
+    potential_names = (0..9999).map { |n| "#{base_name}-#{n}" }.shuffle
+    name = potential_names.find { |name| !similar_names.include?(name) }
+    return name unless name.nil?
 
-    # After that, try appending "-neopass-1", "-neopass-2", etc, until a
-    # unique name arises. (We don't expect this to happen basically ever, but
-    # it's nice to have a guarantee!)
-    max = similar_names.size + 1
-    candidates = (1..max).map { |n| "#{name}-neopass-#{n}"}
-    numerical_name = candidates.find { |name| !similar_names.include?(name) }
-    return numerical_name unless numerical_name.nil?
+    # If that failed, try again but with six digits.
+    potential_names = (0..999999).map { |n| "#{base_name}-#{n}" }.shuffle
+    name = potential_names.find { |name| !similar_names.include?(name) }
+    return name unless name.nil?
 
-    raise "Failed to build unique username (shouldn't be possible?)"
+    # If *that* failed, then golly gee, we have millions of NeoPass users
+    # running around using the default username. Good for us, I guess?? If so,
+    # uhh, let's cross that bridge when we come to it. (At time of writing,
+    # there are about 60k total registered DTI users at *all*.)
+    raise "Failed to build unique username (all million+ names starting with " +
+      "\"#{base_name}\" are taken??)"
   end
 
   class MissingAuthInfoError < ArgumentError;end
