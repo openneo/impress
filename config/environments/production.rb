@@ -137,7 +137,7 @@ Rails.application.configure do
 
   # To see NeoPass features, add ?neopass=<SECRET> to relevant pages.
   config.neopass_access_secret =
-    Rails.application.credentials.neopass.access_secret
+    Rails.application.credentials.neopass.access_secret!
 
   # Use the live NeoPass production server.
   config.neopass_origin = "https://oidc.neopets.com"

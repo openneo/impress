@@ -121,6 +121,10 @@ Rails.application.configure do
   config.neopass_access_secret = "1"
 
   # Use the local NeoPass development server.
+  #
+  # NOTE: In my testing, using the live NeoPass server here returns "403
+  #       Forbidden", I suspect because the development callback URL didn't
+  #       make it into the live config? Ah, well!
   config.neopass_origin = "https://localhost:8585"
 
   # Set the NeoPass redirect callback URL.

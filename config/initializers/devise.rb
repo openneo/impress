@@ -275,19 +275,25 @@ Devise.setup do |config|
   # up on your models and hooks.
   config.omniauth :openid_connect, {
     name: :neopass,
-    scope: [:openid, :email, :profile],
+    scope: [:openid, :email],
     response_type: :code,
     issuer: Rails.configuration.neopass_origin,
     discovery: true,
     client_options: {
-      identifier: "DTI-TODO",
-      secret: "DTI-TODO",
+      identifier: "19ea1361-f0b1-48f2-9405-b570c655afd9",
+      secret: Rails.application.credentials.dig(:neopass, :client_secret),
       redirect_uri: Rails.configuration.neopass_redirect_uri,
     },
   }
 
-  # Output OmniAuth debug info to the server logs in development
-  OmniAuth.config.logger = Rails.logger if Rails.env.development?
+  # Output OmniAuth debug info to the server logs.
+  #
+  # TODO: We should perhaps evaluate whether these logs contain sensitive
+  #       information in production? I wouldn't think so, and it will be useful
+  #       for debugging NeoPass, but let's keep an eye on that! Consider
+  #       setting this to only be true in development mode, if we're not
+  #       actively using it anymore.
+  OmniAuth.config.logger = Rails.logger
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
