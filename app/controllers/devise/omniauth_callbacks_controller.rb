@@ -7,11 +7,12 @@ class Devise::OmniauthCallbacksController < ApplicationController
 
 		if @auth_user.previously_new_record?
 			flash[:notice] =
-				"Welcome to Dress to Impress, #{@auth_user.name}! We've set up a DTI " +
-				"account for you. Click Settings in the top right to learn more, or " +
-				"just go ahead and get started!"
+				"Welcome to Dress to Impress! We've set up a DTI account for you, " +
+				"attached to your NeoPass. Click Settings in the top right to learn " +
+				"more, or just go ahead and get started!"
 		else
-			flash[:notice] = "Welcome back, #{@auth_user.name}! 💖"
+			flash[:notice] =
+				"Welcome back, #{@auth_user.name}! You are now logged in. 💖"
 		end
 
 		sign_in_and_redirect @auth_user, event: :authentication
