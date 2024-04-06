@@ -121,12 +121,6 @@ class Pet < ApplicationRecord
     pet
   end
 
-  def self.from_viewer_data(viewer_data)
-    pet = Pet.find_or_initialize_by(name: viewer_data[:custom_pet][:name])
-    pet.use_viewer_data(viewer_data)
-    pet
-  end
-
   # NOTE: Ideally pet requests shouldn't take this long, but Neopets can be
   # slow sometimes! Since we're on the Falcon server, long timeouts shouldn't
   # slow down the rest of the request queue, like it used to be in the past.
