@@ -7,7 +7,6 @@ class Pet < ApplicationRecord
   PET_VIEWER = RocketAMFExtensions::RemoteGateway.new(GATEWAY_URL).
     service('CustomPetService').action('getViewerData')
   PET_NOT_FOUND_REMOTE_ERROR = 'PHP: Unable to retrieve records from the database.'
-  WARDROBE_PATH = '/wardrobe'
 
   belongs_to :pet_type
 
