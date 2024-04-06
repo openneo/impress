@@ -4,8 +4,9 @@ require 'ostruct'
 class Pet < ApplicationRecord
   NEOPETS_URL_ORIGIN = ENV['NEOPETS_URL_ORIGIN'] || 'https://www.neopets.com'
   GATEWAY_URL = NEOPETS_URL_ORIGIN + '/amfphp/gateway.php'
-  PET_VIEWER = RocketAMFExtensions::RemoteGateway.new(GATEWAY_URL).
-    service('CustomPetService').action('getViewerData')
+  GATEWAY = RocketAMFExtensions::RemoteGateway.new(GATEWAY_URL)
+  CUSTOM_PET_SERVICE = GATEWAY.service('CustomPetService')
+  PET_SERVICE = GATEWAY.service('PetService')
 
   belongs_to :pet_type
 
@@ -123,17 +124,18 @@ class Pet < ApplicationRecord
   # slow sometimes! Since we're on the Falcon server, long timeouts shouldn't
   # slow down the rest of the request queue, like it used to be in the past.
   def self.fetch_viewer_data(name, timeout: 10)
-    begin
-      envelope = PET_VIEWER.request([name, 0]).post(timeout: timeout)
-    rescue RocketAMFExtensions::RemoteGateway::AMFError => e
-      raise DownloadError, e.message
-    rescue RocketAMFExtensions::RemoteGateway::ConnectionError => e
-      raise DownloadError, e.message, e.backtrace
-    end
-    
-    HashWithIndifferentAccess.new(envelope.messages[0].data.body).tap do |data|
-      # When the pet doesn't exist, the service returns an empty pet object.
+    request = CUSTOM_PET_SERVICE.action('getViewerData').request([name])
+    send_amfphp_request(request).tap do |data|
       if data[:custom_pet][:name].blank?
+        raise PetNotFound, "Pet #{name.inspect} does not exist"
+      end
+    end
+  end
+
+  def self.fetch_metadata(name, timeout: 10)
+    request = PET_SERVICE.action('getPet').request([name])
+    send_amfphp_request(request).tap do |data|
+      if data[:name].blank?
         raise PetNotFound, "Pet #{name.inspect} does not exist"
       end
     end
@@ -141,48 +143,29 @@ class Pet < ApplicationRecord
 
   # Given a pet's name, load its image hash, for use in `pets.neopets.com`
   # image URLs. (This corresponds to its current biology and items.)
-  IMAGE_CPN_FORMAT = 'https://pets.neopets.com/cpn/%s/1/1.png';
-  IMAGE_CP_LOCATION_REGEX = %r{^/cp/(.+?)/[0-9]+/[0-9]+\.png$};
-  IMAGE_CPN_ACCEPTABLE_NAME = /^[A-Za-z0-9_]+$/
-  def self.fetch_image_hash(name)
-    return nil unless name.match?(IMAGE_CPN_ACCEPTABLE_NAME)
-
-    cpn_uri = URI.parse sprintf(IMAGE_CPN_FORMAT, CGI.escape(name))
-    begin
-      res = Net::HTTP.get_response(cpn_uri, {
-        'User-Agent' => Rails.configuration.user_agent_for_neopets
-      })
-    rescue Exception => e
-      raise DownloadError, e.message
-    end
-    unless res.is_a? Net::HTTPFound
-      begin
-        res.error!
-      rescue Exception => e
-        Rails.logger.warn "Error loading CPN image at #{cpn_uri}: #{e.message}"
-        return
-      else
-        Rails.logger.warn "Error loading CPN image at #{cpn_uri}. Response: #{res.inspect}"
-        return
-      end
-    end
-    new_url = res['location']
-    new_image_hash = get_hash_from_cp_path(new_url)
-    if new_image_hash
-      Rails.logger.info "Successfully loaded #{cpn_uri}, with image hash #{new_image_hash}"
-      new_image_hash
-    else
-      Rails.logger.warn "CPN image pointed to #{new_url}, which does not match CP image format"
-    end
-  end
-
-  def self.get_hash_from_cp_path(path)
-    match = path.match(IMAGE_CP_LOCATION_REGEX)
-    match ? match[1] : nil
+  def self.fetch_image_hash(name, timeout: 10)
+    metadata = fetch_metadata(name, timeout:)
+    metadata[:hash]
   end
 
   class PetNotFound < RuntimeError;end
   class DownloadError < RuntimeError;end
   class UnexpectedDataFormat < RuntimeError;end
+
+  private
+
+  # Send an AMFPHP request, re-raising errors as `Pet::DownloadError`.
+  # Return the response body as a `HashWithIndifferentAccess`.
+  def self.send_amfphp_request(request, timeout: 10)
+    begin
+      response = request.post(timeout: timeout)
+    rescue RocketAMFExtensions::RemoteGateway::AMFError => e
+      raise DownloadError, e.message
+    rescue RocketAMFExtensions::RemoteGateway::ConnectionError => e
+      raise DownloadError, e.message, e.backtrace
+    end
+
+    HashWithIndifferentAccess.new(response.messages[0].data.body)
+  end
 end
 
