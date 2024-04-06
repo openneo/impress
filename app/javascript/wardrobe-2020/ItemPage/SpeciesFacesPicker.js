@@ -266,10 +266,10 @@ const SpeciesFaceOption = React.memo(
                 `}
               >
                 <CrossFadeImage
-                  src={`https://pets.neopets-asset-proxy.openneo.net/cp/${neopetsImageHash}/${emotionId}/1.png`}
+                  src={`https://pets.neopets.com/cp/${neopetsImageHash}/${emotionId}/1.png`}
                   srcSet={
-                    `https://pets.neopets-asset-proxy.openneo.net/cp/${neopetsImageHash}/${emotionId}/1.png 1x, ` +
-                    `https://pets.neopets-asset-proxy.openneo.net/cp/${neopetsImageHash}/${emotionId}/6.png 2x`
+                    `https://pets.neopets.com/cp/${neopetsImageHash}/${emotionId}/1.png 1x, ` +
+                    `https://pets.neopets.com/cp/${neopetsImageHash}/${emotionId}/6.png 2x`
                   }
                   alt={speciesName}
                   width={55}
