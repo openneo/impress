@@ -161,7 +161,11 @@ export function safeImageUrl(
       archiveUrl.search = new URLSearchParams({ url: url.toString() });
       url = archiveUrl;
     } else if (crossOrigin) {
-      url.host = "images.neopets-asset-proxy.openneo.net";
+      // NOTE: Previously we would rewrite this to our proxy that adds an
+      // `Access-Control-Allow-Origin` header (images.neopets-asset-proxy.
+      // openneo.net), but images.neopets.com now includes this header for us!
+      //
+      // So, do nothing!
     }
   } else if (
     url.origin === "http://pets.neopets.com" ||
