@@ -43,7 +43,9 @@ class Pet < ApplicationRecord
       species_id: pet_data[:species_id].to_i,
       color_id: pet_data[:color_id].to_i
     )
-    self.pet_type.origin_pet = self
+
+    new_image_hash = Pet.fetch_image_hash(self.name)
+    self.pet_type.image_hash = new_image_hash if new_image_hash.present?
 
     # With an alt style, `body_id` in the biology data refers to the body ID of
     # the *alt* style, not the usual pet type. (We have `original_biology` for
@@ -156,6 +158,48 @@ class Pet < ApplicationRecord
       raise DownloadError, e.message, e.backtrace
     end
     HashWithIndifferentAccess.new(envelope.messages[0].data.body)
+  end
+
+  # Given a pet's name, load its image hash, for use in `pets.neopets.com`
+  # image URLs. (This corresponds to its current biology and items.)
+  IMAGE_CPN_FORMAT = 'https://pets.neopets.com/cpn/%s/1/1.png';
+  IMAGE_CP_LOCATION_REGEX = %r{^/cp/(.+?)/[0-9]+/[0-9]+\.png$};
+  IMAGE_CPN_ACCEPTABLE_NAME = /^[A-Za-z0-9_]+$/
+  def self.fetch_image_hash(name)
+    return nil unless name.match?(IMAGE_CPN_ACCEPTABLE_NAME)
+
+    cpn_uri = URI.parse sprintf(IMAGE_CPN_FORMAT, CGI.escape(name))
+    begin
+      res = Net::HTTP.get_response(cpn_uri, {
+        'User-Agent' => Rails.configuration.user_agent_for_neopets
+      })
+    rescue Exception => e
+      raise DownloadError, e.message
+    end
+    unless res.is_a? Net::HTTPFound
+      begin
+        res.error!
+      rescue Exception => e
+        Rails.logger.warn "Error loading CPN image at #{cpn_uri}: #{e.message}"
+        return
+      else
+        Rails.logger.warn "Error loading CPN image at #{cpn_uri}. Response: #{res.inspect}"
+        return
+      end
+    end
+    new_url = res['location']
+    new_image_hash = get_hash_from_cp_path(new_url)
+    if new_image_hash
+      Rails.logger.info "Successfully loaded #{cpn_uri}, with image hash #{new_image_hash}"
+      new_image_hash
+    else
+      Rails.logger.warn "CPN image pointed to #{new_url}, which does not match CP image format"
+    end
+  end
+
+  def self.get_hash_from_cp_path(path)
+    match = path.match(IMAGE_CP_LOCATION_REGEX)
+    match ? match[1] : nil
   end
 
   class PetNotFound < RuntimeError;end
