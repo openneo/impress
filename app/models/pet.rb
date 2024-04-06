@@ -17,20 +17,12 @@ class Pet < ApplicationRecord
     joins(:pet_type).where(PetType.arel_table[:id].in(color_ids))
   }
 
-  def load!(options={})
-    options[:locale] ||= I18n.default_locale
-    I18n.with_locale(options.delete(:locale)) do
-      use_viewer_data(
-        self.class.fetch_viewer_data(name, options.delete(:timeout)),
-        options,
-      )
-    end
-    true
+  def load!(timeout: nil)
+    viewer_data = self.class.fetch_viewer_data(name, timeout:)
+    use_viewer_data(viewer_data)
   end
 
-  def use_viewer_data(viewer_data, options={})
-    options[:item_scope] ||= Item.all
-
+  def use_viewer_data(viewer_data)
     pet_data = viewer_data[:custom_pet]
 
     raise UnexpectedDataFormat unless pet_data[:species_id]
@@ -81,8 +73,7 @@ class Pet < ApplicationRecord
     end
 
     @items = Item.collection_from_pet_type_and_registries(self.pet_type,
-      viewer_data[:object_info_registry], viewer_data[:object_asset_registry],
-      options[:item_scope])
+      viewer_data[:object_info_registry], viewer_data[:object_asset_registry])
   end
 
   def wardrobe_query
@@ -124,31 +115,24 @@ class Pet < ApplicationRecord
     end
   end
 
-  def self.load(name, options={})
+  def self.load(name, **options)
     pet = Pet.find_or_initialize_by(name: name)
-    pet.load!(options)
+    pet.load!(**options)
     pet
   end
 
-  def self.from_viewer_data(viewer_data, options={})
+  def self.from_viewer_data(viewer_data)
     pet = Pet.find_or_initialize_by(name: viewer_data[:custom_pet][:name])
-    pet.use_viewer_data(viewer_data, options)
+    pet.use_viewer_data(viewer_data)
     pet
   end
 
   # NOTE: Ideally pet requests shouldn't take this long, but Neopets can be
   # slow sometimes! Since we're on the Falcon server, long timeouts shouldn't
   # slow down the rest of the request queue, like it used to be in the past.
-  def self.fetch_viewer_data(name, timeout=10, locale=nil)
-    locale ||= I18n.default_locale
+  def self.fetch_viewer_data(name, timeout: 10)
     begin
-      neopets_language_code = I18n.compatible_neopets_language_code_for(locale)
-      envelope = PET_VIEWER.request([name, 0]).post(
-        :timeout => timeout,
-        :headers => {
-          'Cookie' => "lang=#{neopets_language_code}"
-        }
-      )
+      envelope = PET_VIEWER.request([name, 0]).post(timeout: timeout)
     rescue RocketAMFExtensions::RemoteGateway::AMFError => e
       if e.message == PET_NOT_FOUND_REMOTE_ERROR
         raise PetNotFound, "Pet #{name.inspect} does not exist"
