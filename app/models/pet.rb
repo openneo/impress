@@ -6,7 +6,6 @@ class Pet < ApplicationRecord
   GATEWAY_URL = NEOPETS_URL_ORIGIN + '/amfphp/gateway.php'
   PET_VIEWER = RocketAMFExtensions::RemoteGateway.new(GATEWAY_URL).
     service('CustomPetService').action('getViewerData')
-  PET_NOT_FOUND_REMOTE_ERROR = 'PHP: Unable to retrieve records from the database.'
 
   belongs_to :pet_type
 
@@ -127,14 +126,17 @@ class Pet < ApplicationRecord
     begin
       envelope = PET_VIEWER.request([name, 0]).post(timeout: timeout)
     rescue RocketAMFExtensions::RemoteGateway::AMFError => e
-      if e.message == PET_NOT_FOUND_REMOTE_ERROR
-        raise PetNotFound, "Pet #{name.inspect} does not exist"
-      end
       raise DownloadError, e.message
     rescue RocketAMFExtensions::RemoteGateway::ConnectionError => e
       raise DownloadError, e.message, e.backtrace
     end
-    HashWithIndifferentAccess.new(envelope.messages[0].data.body)
+    
+    HashWithIndifferentAccess.new(envelope.messages[0].data.body).tap do |data|
+      # When the pet doesn't exist, the service returns an empty pet object.
+      if data[:custom_pet][:name].blank?
+        raise PetNotFound, "Pet #{name.inspect} does not exist"
+      end
+    end
   end
 
   # Given a pet's name, load its image hash, for use in `pets.neopets.com`
