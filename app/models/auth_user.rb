@@ -48,6 +48,27 @@ class AuthUser < AuthRecord
     neopass_email || uid
   end
 
+  def disconnect_neopass
+    # If there's no NeoPass, we're already done!
+    return true if !neopass?
+
+    begin
+      # Remove all of the NeoPass fields, and return whether we were
+      # successful. (I don't know why it wouldn't be, but let's be resilient!)
+      #
+      # NOTE: I considered leaving `neopass_email` in place, to help us support
+      #       users who accidentally got locked out… but I think it's more
+      #       important to respect data privacy and not be holding onto an
+      #       email address the user doesn't realize we have!
+      update(provider: nil, uid: nil, neopass_email: nil)
+    rescue => error
+      # If something strange happens, log it and gracefully return `false`!
+      Sentry.capture_exception error
+      Rails.logger.error error
+      false
+    end
+  end
+
   def self.from_omniauth(auth)
     raise MissingAuthInfoError, "Email missing" if auth.info.email.blank?
 

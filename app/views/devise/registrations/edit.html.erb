@@ -53,8 +53,14 @@
 <% end %>
 
 <% if resource.neopass? %>
-  <%= form_with model: resource, url: registration_path(resource_name),
-      html: { method: :put, class: "settings-form" } do |form| %>
+  <%= form_with url: user_neopass_connection_path(resource), method: :delete,
+      class: "settings-form", data: {
+        turbo_confirm: "Are you sure? Without a NeoPass, you'll need to use " +
+          "your password or your recovery email \"#{resource.email}\" to " +
+          "log in again.\n\nMake sure you have everything all set up first! " +
+          "Otherwise, you might be locked out of this account forever!"
+      } do |form|
+  %>
     <h2>Your NeoPass</h2>
     <section class="neopass-info">
       <strong>
@@ -70,6 +76,7 @@
         Impress account, using the Email saved in "Your info".
       </p>
     </section>
+    <%= form.submit "Disconnect your NeoPass" %>
   <% end %>
 <% end %>
 
