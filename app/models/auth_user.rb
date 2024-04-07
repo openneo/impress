@@ -45,6 +45,8 @@ class AuthUser < AuthRecord
 
     transaction do
       find_or_create_by!(provider: auth.provider, uid: auth.uid) do |user|
+        # This account is new! Let's do the initial setup.
+
         # TODO: Can we somehow get the Neopets username if one exists, instead
         # of just using total randomness?
         user.name = build_unique_username
@@ -55,6 +57,15 @@ class AuthUser < AuthRecord
         # password recovery!)
         email_exists = AuthUser.where(email: auth.info.email).exists?
         user.email = auth.info.email unless email_exists
+      end.tap do |user|
+        # Additionally, whether this account is new or existing, make sure
+        # we've saved the latest email to `neopass_email`.
+        #
+        # We track this separately from `email`, which the user can edit, to
+        # use in the Settings UI to indicate what NeoPass you're linked to. (In
+        # practice, this *shouldn't* ever change after initial setup, because
+        # NeoPass emails are immutable? But why not be resilient!)
+        user.update!(neopass_email: auth.info.email)
       end
     end
   end
