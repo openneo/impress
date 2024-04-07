@@ -41,17 +41,19 @@
   padding: .5em .75em .45em
   color: #fff
   text-decoration: none
-  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5)
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5)
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5)
   text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25)
   border-bottom: 1px solid rgba(0, 0, 0, 0.25)
   position: relative
   font-weight: bold
   line-height: 1
-  &:hover
+  &:hover:not(:disabled)
     color: #fff
-  &:active
+  &:active:not(:disabled)
     transform: translateY(1px)
+  &:disabled
+    background: #999999 image-url("alert-overlay.png") repeat-x
+    cursor: not-allowed
 
 =reset-awesome-button
   border-radius: 0

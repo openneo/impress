@@ -75,8 +75,23 @@
         you can still use "Forgot your password?" to recover your Dress to
         Impress account, using the Email saved in "Your info".
       </p>
+      <% if !resource.uses_password? && !resource.email %>
+        <p>
+          You can't remove this NeoPass yet, because you need to either set a
+          password or a recovery email first. (Ideally both!)
+        </p>
+      <% elsif !resource.uses_password? %>
+        <p>
+          Be extra careful here! Your account doesn't have a password set.
+        </p>
+      <% elsif !resource.email? %>
+        <p>
+          Be extra careful here! Your account doesn't have an email set.
+        </p>
+      <% end %>
     </section>
-    <%= form.submit "Disconnect your NeoPass" %>
+    <%= form.submit "Disconnect your NeoPass",
+        disabled: !resource.uses_password? && !resource.email? %>
   <% end %>
 <% end %>
 

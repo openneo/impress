@@ -48,6 +48,10 @@ class AuthUser < AuthRecord
     neopass_email || uid
   end
 
+  def uses_password?
+    encrypted_password?
+  end
+
   def disconnect_neopass
     # If there's no NeoPass, we're already done!
     return true if !uses_neopass?
