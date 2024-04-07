@@ -33,7 +33,29 @@ class AuthUser < AuthRecord
   end
 
   def email_required?
-    !uses_omniauth?
+    # Email is required when creating a new account from scratch, but it isn't
+    # required when creating a new account via third-party login (e.g. it's
+    # already taken). It's also okay to remove your email address, though this
+    if new_record?
+      # When creating a new account, email is required when building it from
+      # scratch, but not required when using third-party login. This is mainly
+      # because third-party login can't reliably offer an unused email!
+      !uses_omniauth?
+    else
+      # TODO: I had wanted to make email required if you already have one, to
+      #       make it harder to accidentally remove? I expected
+      #       `email_before_last_save` to be the way to check this, but it
+      #       seemed to be `nil` when calling this, go figure! For now, we're
+      #       allowing email to be removed.
+      #
+      # NOTE: This is important for the case where you're disconnecting a
+      #       NeoPass, but you don't have an email set, because your NeoPass
+      #       email already belonged to another account. I don't think it makes
+      #       sense to require people to add an alternate real email address in
+      #       order to be able to disconnect a NeoPass from a DTI account they
+      #       maybe even created by accident!
+      false
+    end
   end
 
   def password_required?
