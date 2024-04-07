@@ -40,7 +40,7 @@ class AuthUser < AuthRecord
     super && !uses_omniauth?
   end
 
-  def neopass?
+  def uses_neopass?
     provider == "neopass"
   end
 
@@ -50,7 +50,7 @@ class AuthUser < AuthRecord
 
   def disconnect_neopass
     # If there's no NeoPass, we're already done!
-    return true if !neopass?
+    return true if !uses_neopass?
 
     begin
       # Remove all of the NeoPass fields, and return whether we were

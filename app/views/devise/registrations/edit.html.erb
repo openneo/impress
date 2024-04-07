@@ -52,7 +52,7 @@
   </div>
 <% end %>
 
-<% if resource.neopass? %>
+<% if resource.uses_neopass? %>
   <%= form_with url: user_neopass_connection_path(resource.user), method: :delete,
       class: "settings-form", data: {
         turbo_confirm: "Are you sure? Without a NeoPass, you'll need to use " +
