@@ -23,7 +23,7 @@ class NeopassConnectionsController < ApplicationController
 		# the provided user ID matches. The user ID param is only really for REST
 		# semantics and such!
 		raise AccessDenied unless user_signed_in?
-		raise AccessDenied unless current_user.id.to_s == params[:user_id]
+		raise AccessDenied unless current_user.id == params[:user_id].to_i
 		current_user
 	end
 end
