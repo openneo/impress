@@ -40,6 +40,14 @@ class AuthUser < AuthRecord
     super && !uses_omniauth?
   end
 
+  def neopass?
+    provider == "neopass"
+  end
+
+  def neopass_friendly_id
+    neopass_email || uid
+  end
+
   def self.from_omniauth(auth)
     raise MissingAuthInfoError, "Email missing" if auth.info.email.blank?
 

@@ -4,6 +4,7 @@ class User < ApplicationRecord
   PreviewTopContributorsCount = 3
 
   belongs_to :auth_user, foreign_key: :remote_id, inverse_of: :user
+  delegate :neopass?, to: :auth_user
 
   has_many :closet_hangers
   has_many :closet_lists
