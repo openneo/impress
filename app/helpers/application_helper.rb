@@ -69,6 +69,10 @@ module ApplicationHelper
     end
   end
 
+  def can_use_neopass
+    params[:neopass] == Rails.configuration.neopass_access_secret
+  end
+
   def contact_email
     "matchu@openneo.net"
   end

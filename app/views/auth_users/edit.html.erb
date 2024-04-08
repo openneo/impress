@@ -96,7 +96,7 @@
     <%= form.submit "Disconnect your NeoPass",
         disabled: !@auth_user.uses_password? && !@auth_user.email? %>
   <% end %>
-<% else %>
+<% elsif can_use_neopass %>
   <%= form_with url: auth_user_neopass_omniauth_authorize_path(intent: "connect"),
       method: :post, class: "settings-form", data: {turbo: false} do |form|
   %>
