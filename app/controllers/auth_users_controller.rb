@@ -25,6 +25,10 @@ class AuthUsersController < ApplicationController
 		@auth_user = load_auth_user
 
 		if @auth_user.update_with_password(auth_user_params)
+			# NOTE: Changing the password will sign you out, so make sure we stay
+			# signed in!
+			bypass_sign_in @auth_user, scope: :auth_user
+
 			flash[:notice] = "Settings successfully saved."
 			redirect_to action: :edit
 		else
