@@ -13,7 +13,7 @@ class NeopassConnectionsController < ApplicationController
 				"know!"
 		end
 
-		redirect_to edit_auth_user_registration_path
+		redirect_to edit_auth_user_path
 	end
 
 	private
