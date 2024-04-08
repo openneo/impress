@@ -38,14 +38,17 @@
     </div>
   </fieldset>
 
-  <fieldset>
-    <div class="field">
-      <%= f.label :current_password %>
-      <span class="hint">We need your current password to confirm your changes.</span>
-      <br />
-      <%= f.password_field :current_password, autocomplete: "current-password" %>
-    </div>
-  </fieldset>
+  <%# Current password is only required if you have one! %>
+  <% if @auth_user.uses_password? %>
+    <fieldset>
+      <div class="field">
+        <%= f.label :current_password %>
+        <span class="hint">We need your current password to confirm your changes.</span>
+        <br />
+        <%= f.password_field :current_password, autocomplete: "current-password" %>
+      </div>
+    </fieldset>
+  <% end %>
 
   <div class="actions">
     <%= f.submit "Save changes" %>

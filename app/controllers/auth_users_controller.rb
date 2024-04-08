@@ -24,7 +24,13 @@ class AuthUsersController < ApplicationController
 	def update
 		@auth_user = load_auth_user
 
-		if @auth_user.update_with_password(auth_user_params)
+		# If the user has a password, then the `current_password` field is required
+		# when updating. If not, then it's not!
+		success = @auth_user.uses_password? ?
+			@auth_user.update_with_password(auth_user_params) :
+			@auth_user.update(auth_user_params)
+
+		if success
 			# NOTE: Changing the password will sign you out, so make sure we stay
 			# signed in!
 			bypass_sign_in @auth_user, scope: :auth_user
