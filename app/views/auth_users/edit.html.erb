@@ -96,6 +96,20 @@
     <%= form.submit "Disconnect your NeoPass",
         disabled: !@auth_user.uses_password? && !@auth_user.email? %>
   <% end %>
+<% else %>
+  <%= form_with url: auth_user_neopass_omniauth_authorize_path(intent: "connect"),
+      method: :post, class: "settings-form", data: {turbo: false} do |form|
+  %>
+    <h2>Your NeoPass</h2>
+    <section class="neopass-explanation">
+      <p>
+        If you connect a NeoPass, you can use it to log into this DTI account!
+        You'll still be able to use your password to log in too, and you can
+        disconnect this later if you'd like.
+      </p>
+    </section>
+    <%= form.submit "Connect your NeoPass" %>
+  <% end %>
 <% end %>
 
 <% content_for :stylesheets do %>

@@ -7,6 +7,8 @@ class AuthUser < AuthRecord
 
   validates :name, presence: true, uniqueness: {case_sensitive: false},
     length: {maximum: 30}
+
+  validates :uid, uniqueness: {scope: :provider, allow_nil: true}
   
   has_one :user, foreign_key: :remote_id, inverse_of: :auth_user
 
@@ -79,6 +81,23 @@ class AuthUser < AuthRecord
     encrypted_password?
   end
 
+  def connect_omniauth!(auth)
+    raise MissingAuthInfoError, "Email missing" if auth.info.email.blank?
+
+    begin
+      update!(provider: auth.provider, uid: auth.uid,
+              neopass_email: auth.info.email)
+    rescue ActiveRecord::RecordInvalid
+      # If this auth is already bound to another account, raise a specific
+      # error about it, instead of the normal error.
+      if errors.where(:uid).any? { |e| e.type == :taken }
+        raise AuthAlreadyConnected, "there's already an account with " +
+          "provider #{auth.provider}, uid #{auth.uid}"
+      end
+      raise
+    end
+  end
+
   def disconnect_neopass
     # If there's no NeoPass, we're already done!
     return true if !uses_neopass?
@@ -98,6 +117,10 @@ class AuthUser < AuthRecord
       Rails.logger.error error
       false
     end
+  end
+
+  def self.find_by_omniauth(auth)
+    find_by(provider: auth.provider, uid: auth.uid)
   end
 
   def self.from_omniauth(auth)
@@ -160,5 +183,6 @@ class AuthUser < AuthRecord
       "\"#{base_name}\" are taken??)"
   end
 
+  class AuthAlreadyConnected < ArgumentError;end
   class MissingAuthInfoError < ArgumentError;end
 end

@@ -4,7 +4,7 @@
   🌟✨🌟✨🌟✨🌟✨🌟
   <br />
   <%= button_to "Log in with NeoPass",
-                auth_user_neopass_omniauth_authorize_path,
+                auth_user_neopass_omniauth_authorize_path(intent: "login"),
                 data: {turbo: false} # Turbo can't handle this redirect!
   %>
   🌟✨🌟✨🌟✨🌟✨🌟
