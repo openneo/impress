@@ -1,8 +1,8 @@
 <h2>Settings</h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "settings-form" }) do |f| %>
+<%= form_with(model: @auth_user, method: :put, class: "settings-form") do |f| %>
   <h2>Your info</h2>
-  <%= render "devise/shared/error_messages", resource: resource %>
+  <%= render "devise/shared/error_messages", resource: @auth_user %>
 
   <fieldset>
     <div class="field">
@@ -52,11 +52,11 @@
   </div>
 <% end %>
 
-<% if resource.uses_neopass? %>
-  <%= form_with url: user_neopass_connection_path(resource.user), method: :delete,
-      class: "settings-form", data: {
+<% if @auth_user.uses_neopass? %>
+  <%= form_with url: user_neopass_connection_path(@auth_user.user),
+      method: :delete, class: "settings-form", data: {
         turbo_confirm: "Are you sure? Without a NeoPass, you'll need to use " +
-          "your password or your recovery email \"#{resource.email}\" to " +
+          "your password or your recovery email \"#{@auth_user.email}\" to " +
           "log in again.\n\nMake sure you have everything all set up first! " +
           "Otherwise, you might be locked out of this account forever!"
       } do |form|
@@ -66,7 +66,7 @@
       <strong>
         NeoPass ID:
       </strong>
-      <%= resource.neopass_friendly_id %>
+      <%= @auth_user.neopass_friendly_id %>
     </section>
     <section class="neopass-explanation">
       <p>
@@ -75,26 +75,26 @@
         you can still use "Forgot your password?" to recover your Dress to
         Impress account, using the Email saved in "Your info".
       </p>
-      <% if !resource.uses_password? && !resource.email %>
+      <% if !@auth_user.uses_password? && !@auth_user.email %>
         <p>
           You can't remove this NeoPass yet, because you need to either set a
           password or a recovery email first. (Ideally both!)
         </p>
-      <% elsif !resource.uses_password? %>
+      <% elsif !@auth_user.uses_password? %>
         <p>
           Be extra careful here! Your account doesn't have a password set.
         </p>
-      <% elsif !resource.email? %>
+      <% elsif !@auth_user.email? %>
         <p>
           Be extra careful here! Your account doesn't have an email set.
         </p>
       <% end %>
     </section>
     <%= form.submit "Disconnect your NeoPass",
-        disabled: !resource.uses_password? && !resource.email? %>
+        disabled: !@auth_user.uses_password? && !@auth_user.email? %>
   <% end %>
 <% end %>
 
 <% content_for :stylesheets do %>
-  <%= stylesheet_link_tag "devise/registrations/edit" %>
+  <%= stylesheet_link_tag "auth_users/edit" %>
 <% end %>

@@ -1,7 +1,7 @@
 <h2>Sign up</h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+<%= form_with(model: @auth_user, method: :post) do |f| %>
+  <%= render "devise/shared/error_messages", resource: @auth_user %>
 
   <p>
     Choose a username, and an email address we can use to reset your password.
