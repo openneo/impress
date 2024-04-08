@@ -9,6 +9,11 @@ class AuthUser < AuthRecord
     length: {maximum: 30}
   
   has_one :user, foreign_key: :remote_id, inverse_of: :auth_user
+
+  # If the email is blank, ensure that it's `nil` rather than an empty string,
+  # or else the database's uniqueness constraint will object to multiple users
+  # who all have the empty string as their email.
+  before_validation { self.email = nil if email.blank? }
   
   # It's important to keep AuthUser and User in sync. When we create an AuthUser
   # (e.g. through the registration process), we create a matching User, too. And
