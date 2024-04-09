@@ -39,7 +39,7 @@
   </fieldset>
 
   <%# Current password is only required if you have one! %>
-  <% if @auth_user.uses_password? %>
+  <% if @persisted_auth_user.uses_password? %>
     <fieldset>
       <div class="field">
         <%= f.label :current_password %>
@@ -55,13 +55,14 @@
   </div>
 <% end %>
 
-<% if @auth_user.uses_neopass? %>
+<% if @persisted_auth_user.uses_neopass? %>
   <%= form_with url: user_neopass_connection_path(@auth_user.user),
       method: :delete, class: "settings-form", data: {
         turbo_confirm: "Are you sure? Without a NeoPass, you'll need to use " +
-          "your password or your recovery email \"#{@auth_user.email}\" to " +
-          "log in again.\n\nMake sure you have everything all set up first! " +
-          "Otherwise, you might be locked out of this account forever!"
+          "your password or your recovery email " +
+          "\"#{@persisted_auth_user.email}\" to log in again.\n\nMake sure " +
+          "you have everything all set up first! Otherwise, you might be " +
+          "locked out of this account forever!"
       } do |form|
   %>
     <h2>Your NeoPass</h2>
@@ -69,7 +70,7 @@
       <strong>
         NeoPass ID:
       </strong>
-      <%= @auth_user.neopass_friendly_id %>
+      <%= @persisted_auth_user.neopass_friendly_id %>
     </section>
     <section class="neopass-explanation">
       <p>
@@ -78,23 +79,24 @@
         you can still use "Forgot your password?" to recover your Dress to
         Impress account, using the Email saved in "Your info".
       </p>
-      <% if !@auth_user.uses_password? && !@auth_user.email %>
+      <% if !@persisted_auth_user.uses_password? && !@persisted_auth_user.email? %>
         <p>
           You can't remove this NeoPass yet, because you need to either set a
           password or a recovery email first. (Ideally both!)
         </p>
-      <% elsif !@auth_user.uses_password? %>
+      <% elsif !@persisted_auth_user.uses_password? %>
         <p>
           Be extra careful here! Your account doesn't have a password set.
         </p>
-      <% elsif !@auth_user.email? %>
+      <% elsif !@persisted_auth_user.email? %>
         <p>
           Be extra careful here! Your account doesn't have an email set.
         </p>
       <% end %>
     </section>
     <%= form.submit "Disconnect your NeoPass",
-        disabled: !@auth_user.uses_password? && !@auth_user.email? %>
+        disabled: !@persisted_auth_user.uses_password? &&
+          !@persisted_auth_user.email? %>
   <% end %>
 <% elsif can_use_neopass %>
   <%= form_with url: auth_user_neopass_omniauth_authorize_path(intent: "connect"),

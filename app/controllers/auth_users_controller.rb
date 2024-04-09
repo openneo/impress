@@ -14,7 +14,9 @@ class AuthUsersController < ApplicationController
 	end
 
 	def edit
-		@auth_user = current_auth_user
+		# For the edit form, the auth user *is* the persisted auth user.
+		@persisted_auth_user = current_auth_user
+		@auth_user = @persisted_auth_user
 	end
 
 	def new
@@ -22,7 +24,16 @@ class AuthUsersController < ApplicationController
 	end
 
 	def update
+		# When updating, we hold onto the original `@persisted_auth_user`, then
+		# make our changes to `@auth_user`. That way, the form can check the *live*
+		# value of `uses_password?` to decide whether to show the "Current
+		# password" field, instead of getting thrown off if the password changed
+		# but the record didn't get saved.
+		#
+		# HACK: Is there a way to get the kind of copy we want for real? `dup`
+		#       actually returns a *new* unsaved record with the same attributes.
 		@auth_user = load_auth_user
+		@persisted_auth_user = @auth_user.dup
 
 		if @auth_user.update_with_password(auth_user_params)
 			# NOTE: Changing the password will sign you out, so make sure we stay
