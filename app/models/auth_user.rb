@@ -9,6 +9,8 @@ class AuthUser < AuthRecord
     length: {maximum: 30}
 
   validates :uid, uniqueness: {scope: :provider, allow_nil: true}
+
+  validate :has_at_least_one_login_method
   
   has_one :user, foreign_key: :remote_id, inverse_of: :auth_user
 
@@ -133,6 +135,13 @@ class AuthUser < AuthRecord
       Sentry.capture_exception error
       Rails.logger.error error
       false
+    end
+  end
+
+  def has_at_least_one_login_method
+    if !uses_password? && !email? && !uses_neopass?
+      errors.add(:base, "You must have either a password, an email, or a " +
+        "NeoPass. Otherwise, you can't log in!")
     end
   end
 
