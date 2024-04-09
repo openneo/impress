@@ -81,6 +81,23 @@ class AuthUser < AuthRecord
     encrypted_password?
   end
 
+  def update_with_password(params)
+    # If this account already uses passwords, use Devise's default behavior.
+    return super(params) if uses_password?
+
+    # Otherwise, we implement similar logic, but skipping the check for
+    # `current_password`: Bulk-assign most attributes, but only set the
+    # password if it's non-empty.
+    self.attributes = params.except(:password, :password_confirmation,
+      :current_password)
+    if params[:password].present?
+      self.password = params[:password]
+      self.password_confirmation = params[:password_confirmation]
+    end
+
+    self.save
+  end
+
   def connect_omniauth!(auth)
     raise MissingAuthInfoError, "Email missing" if auth.info.email.blank?
 
