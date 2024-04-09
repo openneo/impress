@@ -36,7 +36,9 @@ module OwlsValueGuide
 
 		url = ITEMDATA_URL_TEMPLATE.expand(item_name: item_name)
 		begin
-			res = get(url)
+			res = get(url, headers: {
+				"User-Agent" => Rails.configuration.user_agent_for_neopets,
+			})
 		rescue StandardError => error
 			raise NetworkError, "Couldn't connect to Owls: #{error.message}"
 		end
