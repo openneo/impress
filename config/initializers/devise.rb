@@ -278,7 +278,7 @@ Devise.setup do |config|
 
     # We'll request only basic info, and we'll "discover" most of the server's
     # configuration by reading its `/.well-known/openid_configuation` endpoint.
-    scope: [:openid, :email],
+    scope: [:openid, :email, :linkage],
     response_type: :code,
     issuer: Rails.configuration.neopass_origin,
     discovery: true,

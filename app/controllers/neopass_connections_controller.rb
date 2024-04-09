@@ -1,4 +1,4 @@
-class NeopassConnectionsController < ApplicationController
+class NeoPassConnectionsController < ApplicationController
 	def destroy
 		@user = load_user
 

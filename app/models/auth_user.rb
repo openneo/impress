@@ -156,9 +156,26 @@ class AuthUser < AuthRecord
       find_or_create_by!(provider: auth.provider, uid: auth.uid) do |user|
         # This account is new! Let's do the initial setup.
 
-        # TODO: Can we somehow get the Neopets username if one exists, instead
-        # of just using total randomness?
-        user.name = build_unique_username
+        # First, get the user's Neopets username if possible, as a base for the
+        # name we create for them. (This is an async task under the hood, which
+        # means we can wrap it in a `with_timeout` block!)
+        neopets_username = Sync do |task|
+          task.with_timeout(5) do
+            NeoPass.load_main_neopets_username(auth.credentials.token)
+          end
+        rescue Async::TimeoutError
+          nil # If the request times out, just move on!
+        rescue => error
+          # If the request fails, log it and move on. (Could be a service
+          # outage, or a change on NeoPass's end that we're not in sync with.)
+          Rails.logger.error error
+          Sentry.capture_exception error
+          nil
+        end
+
+        # Generate a unique username for this user, based on their Neopets
+        # username, if they have one.
+        user.name = build_unique_username(neopets_username)
 
         # Copy the email address from their Neopets account to their DTI
         # account, unless they already have a DTI account with this email, in
@@ -183,17 +200,28 @@ class AuthUser < AuthRecord
     end
   end
 
-  def self.build_unique_username
-    # Start with a base name like "neopass-kougra-".
-    random_species_name = Species.all.pluck(:name).sample
-    base_name = "neopass-#{random_species_name}"
+  def self.build_unique_username(preferred_name = nil)
+    # If there's no preferred name provided (ideally the user's Neopets
+    # username), start with a base name like `neopass-kougra`.
+    if preferred_name.present?
+      base_name = preferred_name
+    else
+      random_species_name = Species.all.pluck(:name).sample
+      base_name = "neopass-#{random_species_name}"
+    end
 
     # Fetch the list of names that already start with that.
     name_query = sanitize_sql_like(base_name) + "%"
     similar_names = where("name LIKE ?", name_query).pluck(:name).to_set
 
-    # Shuffle the list of four-digit numbers to create 10000 possible names,
-    # then use the first one that's not already claimed.
+    # If this was the user's preferred name (rather than a random one), try
+    # using the preferred name itself, if not already taken.
+    if preferred_name.present? && !similar_names.include?(preferred_name)
+      return preferred_name
+    end
+
+    # Otherwise, shuffle the list of four-digit numbers to create 10000
+    # possible names, then use the first one that's not already claimed.
     potential_names = (0..9999).map { |n| "#{base_name}-#{n}" }.shuffle
     name = potential_names.find { |name| !similar_names.include?(name) }
     return name unless name.nil?
