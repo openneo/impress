@@ -140,14 +140,16 @@ class AuthUser < AuthRecord
         # password recovery!)
         email_exists = AuthUser.where(email: auth.info.email).exists?
         user.email = auth.info.email unless email_exists
+
+        # Additionally, regardless of whether we save it as `email`, we also
+        # save the email address as `neopass_email`, to use in the Settings UI
+        # to indicate what NeoPass you're linked to.
+        user.neopass_email = auth.info.email
       end.tap do |user|
         # If this account already existed, make sure we've saved the latest
-        # email to `neopass_email`.
-        #
-        # We track this separately from `email`, which the user can edit, to
-        # use in the Settings UI to indicate what NeoPass you're linked to. (In
-        # practice, this *shouldn't* ever change after initial setup, because
-        # NeoPass emails are immutable? But why not be resilient!)
+        # email to `neopass_email`. (In practice, this *shouldn't* ever change
+        # after initial setup, because NeoPass emails are immutable? But why
+        # not be resilient!)
         unless user.previously_new_record?
           user.update!(neopass_email: auth.info.email)
         end
