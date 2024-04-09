@@ -69,8 +69,17 @@ module ApplicationHelper
     end
   end
 
+  # Add ?neopass=1 to the URL, or set the `neopass_access_secret=1` cookie, to
+  # view NeoPass features. (NOTE: In production, this is a secret value
+  # instead!)
+  #
+  # NOTE: We intentionally don't e.g. set the cookie just because you went to
+  #       the secret URL once, to avoid demo users getting confused about
+  #       whether NeoPass is publicly available: if they go to the public page,
+  #       they should NOT see NeoPass anymore, rather than think it's live!
   def can_use_neopass
-    params[:neopass] == Rails.configuration.neopass_access_secret
+    params[:neopass] == Rails.configuration.neopass_access_secret ||
+      cookies[:neopass_access_secret] == Rails.configuration.neopass_access_secret
   end
 
   def contact_email
