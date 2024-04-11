@@ -1,4 +1,4 @@
-<h2>Log in</h2>
+<% title "Log into Dress to Impress" %>
 
 <div class="login-options">
   <section class="login-option-password">
@@ -14,13 +14,12 @@
         <%= f.password_field :password, autocomplete: "current-password" %>
       </div>
 
-      <div class="field checkbox-field">
-        <%= f.check_box :remember_me %>
-        <%= f.label :remember_me %>
-      </div>
-
       <div class="actions">
         <%= f.submit "Log in" %>
+        <div class="remember-me">
+          <%= f.check_box :remember_me %>
+          <%= f.label :remember_me %>
+        </div>
       </div>
     <% end %>
 

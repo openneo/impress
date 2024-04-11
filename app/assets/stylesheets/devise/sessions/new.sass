@@ -1,8 +1,13 @@
 @import "../../partials/clean/constants"
 
 body.devise-sessions, body.devise-sessions-new
+	#title
+		text-align: center
+		font-size: 2.5rem
+
 	.login-options
 		display: flex
+		margin-block: 3em
 
 		section
 			flex: 1 1 0
@@ -36,18 +41,25 @@ body.devise-sessions, body.devise-sessions-new
 		margin-bottom: 1em
 
 		.field
-			margin-bottom: .5em
+			margin-bottom: .75em
 
 		.input-field label
 			font-weight: bold
 
-		.checkbox-field
+		.actions
 			display: flex
-			gap: .25em
-			font-size: 85%
-			input[type=checkbox]
-				height: 1em
-				width: 1em
+			align-items: center
+			gap: .5em
+
+			.remember-me
+				display: flex
+				align-items: center
+				gap: .25em
+				font-size: 85%
+
+				input[type=checkbox]
+					height: 1em
+					width: 1em
 
 	.login-links
 		font-size: 85%
