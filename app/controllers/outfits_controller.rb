@@ -47,9 +47,6 @@ class OutfitsController < ApplicationController
   end
 
   def new
-    session[:neopass_test_group] ||= rand(0..99)
-    @neopass_test_group = session[:neopass_test_group]
-
     @colors = Color.funny.alphabetical
     @species = Species.alphabetical
 

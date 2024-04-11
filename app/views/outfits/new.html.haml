@@ -18,12 +18,13 @@
       %br
       = link_to "Here's what's coming and why.", about_neopass_path
 
-    - if @neopass_test_group < 50
-      %p
-        %strong ➡️ Seeking beta testers, please!
-        = link_to "Check out the secret testing info",
-          "https://forms.gle/hEkw5bXY1W4YhUZb7"
-        and let us know how it goes!
+    %p
+      %strong ➡️ Seeking beta testers, please!
+      We need help making sure NeoPass login actually works reliably!
+      %br
+      = link_to "Check out the secret testing info",
+        "https://forms.gle/hEkw5bXY1W4YhUZb7"
+      and let us know how it goes! Thank you!! 💖
 
 #outfit-forms
   - localized_cache :action_suffix => 'outfit_forms_intro' do
