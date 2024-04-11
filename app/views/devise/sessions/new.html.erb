@@ -1,39 +1,67 @@
 <h2>Log in</h2>
 
-<% if can_use_neopass %>
-  <%= button_to auth_user_neopass_omniauth_authorize_path(intent: "login"),
-                data: {turbo: false}, class: "log-in-with-neopass-button" do
-  %>
-    Log in with
-    <%= image_tag "neopass_icon.png", alt: "NeoPass", class: "neopass-icon" %>
+<div class="login-options">
+  <section class="login-option-password">
+    <%= form_with(model: resource, url: session_path(resource_name),
+                  class: "login-form") do |f| %>
+      <div class="field input-field">
+        <%= f.label :name, 'DTI Username' %><br />
+        <%= f.text_field :name, autofocus: true, autocomplete: "username" %>
+      </div>
+
+      <div class="field input-field">
+        <%= f.label :password, "DTI Password" %><br />
+        <%= f.password_field :password, autocomplete: "current-password" %>
+      </div>
+
+      <div class="field checkbox-field">
+        <%= f.check_box :remember_me %>
+        <%= f.label :remember_me %>
+      </div>
+
+      <div class="actions">
+        <%= f.submit "Log in" %>
+      </div>
+    <% end %>
+
+    <div class="login-links">
+      <%= link_to "Sign up", new_auth_user_path %>
+      <%= link_to "Forgot your password?", new_auth_user_password_path %>
+    </div>
+  </section>
+
+  <% if can_use_neopass %>
+    <section class="login-option-neopass">
+      <header>Have a NeoPass?</header>
+
+      <%= button_to auth_user_neopass_omniauth_authorize_path(intent: "login"),
+                    data: {turbo: false}, class: "log-in-with-neopass-button" do
+      %>
+        Log in with
+        <%= image_tag "neopass_icon.png", alt: "NeoPass", class: "neopass-icon" %>
+      <% end %>
+
+      <details class="neopass-explanation">
+        <summary>How does it work?</summary>
+        <p>
+          If this is your first time using NeoPass at Dress to Impress, we'll
+          create a new DTI account for you automatically!
+        </p>
+        <p>
+          You'll be asked for 3 permissions: <em>OpenID</em> and
+          <em>Email</em> tell us who you are, and
+          <em>Linkage</em> tells us your Neopets username.
+        </p>
+        <p>
+          After that, you'll be able to one-click log in here, any time!
+        </p>
+        <p>
+          To connect an existing DTI account, don't start here! Log in with
+          your password first, then check the Settings page.
+        </p>
+      </details>
+    </section>
   <% end %>
-<% end %>
-
-<%= form_with(model: resource, url: session_path(resource_name),
-              class: "login-form") do |f| %>
-  <div class="field input-field">
-    <%= f.label :name, 'Username' %><br />
-    <%= f.text_field :name, autofocus: true, autocomplete: "username" %>
-  </div>
-
-  <div class="field input-field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "current-password" %>
-  </div>
-
-  <div class="field checkbox-field">
-    <%= f.check_box :remember_me %>
-    <%= f.label :remember_me %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Log in" %>
-  </div>
-<% end %>
-
-<div class="login-links">
-  <%= link_to "Sign up", new_auth_user_path %>
-  <%= link_to "Forgot your password?", new_auth_user_password_path %>
 </div>
 
 <% content_for :stylesheets do %>

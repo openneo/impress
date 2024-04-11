@@ -1,4 +1,37 @@
+@import "../../partials/clean/constants"
+
 body.devise-sessions, body.devise-sessions-new
+	.login-options
+		display: flex
+
+		section
+			flex: 1 1 0
+			padding-block: 1em
+			display: flex
+			flex-direction: column
+			justify-content: center
+			align-items: center
+
+			&:not(:last-of-type)
+				border-right: 1px solid $module-border-color
+				margin-right: 1em
+				padding-right: 1em
+
+		.login-option-neopass
+			text-align: center
+
+			header
+				font-weight: bold
+				font-size: 125%
+				margin-bottom: .5em
+
+			.neopass-explanation
+				font-size: 85%
+
+				summary
+					cursor: pointer
+					margin-bottom: 1em
+
 	.login-form
 		margin-bottom: 1em
 
