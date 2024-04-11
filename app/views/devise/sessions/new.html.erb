@@ -1,15 +1,12 @@
 <h2>Log in</h2>
 
 <% if can_use_neopass %>
-  🌟✨🌟✨🌟✨🌟✨🌟
-  <br />
-  <%= button_to "Log in with NeoPass",
-                auth_user_neopass_omniauth_authorize_path(intent: "login"),
-                data: {turbo: false} # Turbo can't handle this redirect!
+  <%= button_to auth_user_neopass_omniauth_authorize_path(intent: "login"),
+                data: {turbo: false}, class: "log-in-with-neopass-button" do
   %>
-  🌟✨🌟✨🌟✨🌟✨🌟
-  <br />
-  <br />
+    Log in with
+    <%= image_tag "neopass_icon.png", alt: "NeoPass", class: "neopass-icon" %>
+  <% end %>
 <% end %>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
@@ -36,3 +33,7 @@
 <% end %>
 
 <%= render "devise/shared/links" %>
+
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag "devise/sessions/new" %>
+<% end %>
