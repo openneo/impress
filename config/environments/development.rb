@@ -117,9 +117,6 @@ Rails.application.configure do
   # folder. (In production, we keep this in a long-term location instead!)
   config.public_data_root = Rails.root / "tmp" / "public_data"
 
-  # To see NeoPass features, add ?neopass=1 to relevant pages.
-  config.neopass_access_secret = "1"
-
   # Use the local NeoPass development server.
   config.neopass_origin = "https://localhost:8585"
 

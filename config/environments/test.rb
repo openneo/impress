@@ -72,9 +72,6 @@ Rails.application.configure do
   config.neopets_media_archive_root = Rails.root / "tmp" /
     "neopets_media_archive" / "test"
 
-  # To see NeoPass features, add ?neopass=1 to relevant pages.
-  config.neopass_access_secret = "1"
-
   # Use the local NeoPass development server.
   config.neopass_origin = "https://localhost:8585"
 
