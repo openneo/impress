@@ -42,20 +42,24 @@
     <details class="neopass-explanation">
       <summary>How does it work?</summary>
       <p>
-        If this is your first time using NeoPass at Dress to Impress, we'll
-        create a new DTI account for you automatically!
-      </p>
+        When you click the button above, we'll connect with
+        <%= link_to "https://account.neopets.com/", target: "_blank" do %>
+          your currently logged-in NeoPass
+          <%= external_link_icon %><% end %>. If this is your first time here,
+          we'll create a new DTI account for you automatically!
+       </p>
       <p>
         You'll be asked for 3 permissions: <em>OpenID</em> and
         <em>Email</em> tell us who you are, and
         <em>Linkage</em> tells us your Neopets username.
       </p>
       <p>
-        After that, you'll be able to one-click log in here, any time!
+        After that, you'll be able to one-click log in here, any time! You'll
+        never be asked for these permissions again.
       </p>
       <p>
         To connect an existing DTI account, don't start here! Log in with
-        your password first, then check the Settings page.
+        your password first, then connect via the Settings page.
       </p>
     </details>
   </section>

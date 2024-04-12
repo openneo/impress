@@ -73,6 +73,13 @@ module ApplicationHelper
     "matchu@openneo.net"
   end
 
+  # SVG icon source from Chakra UI!
+  EXTERNAL_LINK_SVG_SOURCE = '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><path d="M15 3h6v6"></path><path d="M10 14L21 3"></path></g>'.html_safe
+  def external_link_icon
+    content_tag :svg, EXTERNAL_LINK_SVG_SOURCE, alt: "(external link)",
+      viewBox: "0 0 24 24", style: "width: 1em; height: 1em"
+  end
+
   def flashes
     raw(flash.inject('') do |html, pair|
       key, value = pair

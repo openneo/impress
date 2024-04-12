@@ -106,6 +106,17 @@
     <section class="neopass-explanation">
       <p>
         If you connect a NeoPass, you can use it to log into this DTI account!
+      </p>
+      <p>
+        When you click below, you'll be connected to
+        <%= link_to "https://account.neopets.com/", target: "_blank" do %>
+          whatever NeoPass is already logged in
+          <%= external_link_icon %><% end %>.
+        If it's your first time connecting, you'll be asked for 3 permissions:
+        <em>OpenID</em> and <em>Email</em> tell us who you are, and
+        <em>Linkage</em> tells us your Neopets username.
+      </p>
+      <p>
         You'll still be able to use your password to log in too, and you can
         disconnect this later if you'd like.
       </p>
