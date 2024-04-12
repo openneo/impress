@@ -11,20 +11,26 @@
   .neopass-content
     %p
       %strong
-        Big news: we're adding NeoPass and other integrations to DTI over the
-        coming months!
+        🎉 Big news: Login with NeoPass is ready!
+      - if user_signed_in?
+        - if current_user.uses_neopass?
+          And hey, you're already on it, thank you for giving it a try!! 🥰
+        - else
+          You can connect your existing account via the
+          #{link_to "Settings page", edit_auth_user_path}.
+      - else
+        If you're new to Dress to Impress, try logging in right now!! 🎉
+
     %p
-      We're hoping it will help new users, and can be part of a more sustainable future for the site.
+      We're hoping NeoPass will help new users, and can be part of a more sustainable future for the site.
       %br
       = link_to "Here's what's coming and why.", about_neopass_path
 
     %p
-      %strong ➡️ Seeking beta testers, please!
-      We need help making sure NeoPass login actually works reliably!
+      Big thanks to our beta testers! More to come soon! Thank you all for
+      your constant love and support! 💖
       %br
-      = link_to "Check out the secret testing info",
-        "https://forms.gle/hEkw5bXY1W4YhUZb7"
-      and let us know how it goes! Thank you!! 💖
+      %em —Matchu
 
 #outfit-forms
   - localized_cache :action_suffix => 'outfit_forms_intro' do
