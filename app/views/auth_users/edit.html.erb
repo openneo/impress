@@ -98,7 +98,7 @@
         disabled: !@persisted_auth_user.uses_password? &&
           !@persisted_auth_user.email? %>
   <% end %>
-<% elsif can_use_neopass %>
+<% else %>
   <%= form_with url: auth_user_neopass_omniauth_authorize_path(intent: "connect"),
       method: :post, class: "settings-form", data: {turbo: false} do |form|
   %>
