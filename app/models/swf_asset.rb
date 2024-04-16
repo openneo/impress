@@ -78,9 +78,18 @@ class SwfAsset < ApplicationRecord
       end
     end
 
+    # Try loading the manifest. If we fail, record that we failed and return.
     begin
-      NeopetsMediaArchive.load_file(manifest_url, return_content:) =>
-        {content:, source:}
+      Sync do |task|
+        task.with_timeout(5) do
+          NeopetsMediaArchive.load_file(manifest_url, return_content:)
+        end
+      end => {content:, source:}
+    rescue Async::TimeoutError
+      # If the request times out, record nothing and return nothing! We'll try
+      # again sometime, on the assumption that this is intermittent.
+      Rails.logger.warn("Timed out loading manifest for asset #{id}")
+      return nil
     rescue NeopetsMediaArchive::ResponseNotOK => error
       Rails.logger.warn "Failed to load manifest for asset #{id}: " +
         error.message
@@ -90,14 +99,17 @@ class SwfAsset < ApplicationRecord
       return nil
     end
 
+    # If this was a fresh load over the network (or for some reason we're
+    # missing the timestamp), record that we succeeded.
     if source == "network" || manifest_loaded_at.blank?
       self.manifest_loaded_at = Time.now
       self.manifest_status_code = 200
       save! if save_changes
     end
 
-    return nil unless return_content
+    return nil unless return_content # skip parsing if not needed!
 
+    # Parse the manifest as JSON, and return it!
     begin
       JSON.parse(content)
     rescue JSON::ParserError => error
