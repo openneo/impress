@@ -1,7 +1,8 @@
 - secondary_nav do
   = link_to t('.your_items_link'), user_closet_hangers_path(current_user), :class => 'button'
 
-= form_for [@closet_list.user, @closet_list] do |f|
+= form_for [@closet_list.user, @closet_list],
+  html: {data: {"list-visibility" => @closet_list.visibility}} do |f|
   %ul.fields
     %li
       = f.label :name
@@ -18,5 +19,16 @@
       %span.hint= t '.description.hint'
       = f.text_area :description
       %span.hint= t '.description.markup_hint_html'
+    %li.trade-warning
+      :markdown
+        Please use these lists *only* for real NC trades, negotiated on
+        Neopets.com! We need to keep users safe, so we'll delete *any* list
+        that seems suspicious.
+
+        If you're doing something more creative, please do so in another
+        setting, where traders can better manage reputation and trust. Thank
+        you!
   = f.submit t('.submit')
 
+- content_for :javascripts do
+  = javascript_include_tag "closet_lists/form"
