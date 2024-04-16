@@ -151,6 +151,9 @@ class Pet < ApplicationRecord
   # Given a pet's name, load its image hash, for use in `pets.neopets.com`
   # image URLs. (This corresponds to its current biology and items.)
   def self.fetch_image_hash(name, timeout: 10)
+    # If this is an image hash "pet name", just take off the `@`!
+    return name[1..] if name.start_with?("@")
+
     metadata = fetch_metadata(name, timeout:)
     metadata[:hash]
   end
