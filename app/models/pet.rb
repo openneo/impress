@@ -35,7 +35,11 @@ class Pet < ApplicationRecord
       color_id: pet_data[:color_id].to_i
     )
 
-    new_image_hash = Pet.fetch_image_hash(self.name)
+    begin
+      new_image_hash = Pet.fetch_image_hash(self.name)
+    rescue => error
+      Rails.logger.warn "Failed to load image hash: #{error.full_message}"
+    end
     self.pet_type.image_hash = new_image_hash if new_image_hash.present?
 
     # With an alt style, `body_id` in the biology data refers to the body ID of
