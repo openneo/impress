@@ -137,6 +137,9 @@ class Pet < ApplicationRecord
   end
 
   def self.fetch_metadata(name, timeout: 10)
+    # If this is an image hash "pet name", it has no metadata.
+    return nil if name.start_with?("@")
+
     request = PET_SERVICE.action('getPet').request([name])
     send_amfphp_request(request).tap do |data|
       if data[:name].blank?
