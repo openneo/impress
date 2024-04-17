@@ -8,7 +8,7 @@ class ClosetListsController < ApplicationController
       save_successful!
     else
       save_failed!
-      render :action => :new
+      render action: :new, status: :unprocessable_entity
     end
   end
 
@@ -28,7 +28,7 @@ class ClosetListsController < ApplicationController
       save_successful!
     else
       save_failed!
-      render :action => :edit
+      render action: :edit, status: :unprocessable_entity
     end
   end
 

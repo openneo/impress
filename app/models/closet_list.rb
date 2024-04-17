@@ -5,6 +5,12 @@ class ClosetList < ApplicationRecord
   validates :name, :presence => true, :uniqueness => {:scope => :user_id}
   validates :user, :presence => true
   validates :hangers_owned, :inclusion => {:in => [true, false], :message => "can't be blank"}
+  validates :description, format: {
+    # This isn't a very careful email filter! It's easy to avoid. But the
+    # purpose is to communicate the rules, more than actual prevention.
+    without: /\b([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\b/i, # from emailregex.com
+    message: "must not contain email addresses"
+  }
 
   delegate :log_trade_activity, to: :user
 
