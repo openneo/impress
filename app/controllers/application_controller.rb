@@ -1,6 +1,5 @@
 require 'async'
 require 'async/container'
-require 'ipaddr'
 
 class ApplicationController < ActionController::Base
   include FragmentLocalization

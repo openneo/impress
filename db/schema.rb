@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_01_124200) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_21_033509) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "species_id", null: false
     t.integer "color_id", null: false
@@ -266,6 +266,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_01_124200) do
     t.integer "contact_neopets_connection_id"
     t.timestamp "last_trade_activity_at"
     t.boolean "support_staff", default: false, null: false
+    t.boolean "shadowbanned", default: false, null: false
   end
 
   create_table "zones", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|

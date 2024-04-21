@@ -46,6 +46,12 @@ class User < ApplicationRecord
     serializable_hash only: [:id, :name]
   end
 
+  # Given info about a request, return whether that request is likely to be
+  # coming from the same person who owns this account.
+  def likely_is?(current_user, remote_ip)
+    current_user == self || auth_user.current_sign_in_ip == remote_ip
+  end
+
   def unowned_items
     # Join all items against our owned closet hangers, group by item ID, then
     # only return those with zero matching hangers.

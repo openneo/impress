@@ -2,6 +2,7 @@ class ClosetHangersController < ApplicationController
   before_action :authorize_user!, :only => [:destroy, :create, :update, :update_quantities, :petpage]
   before_action :find_item, :only => [:create, :update_quantities]
   before_action :find_user, :only => [:index, :petpage, :update_quantities]
+  before_action :enforce_shadowban, only: [:index]
 
   def destroy
     if params[:list_id]
@@ -211,6 +212,14 @@ class ClosetHangersController < ApplicationController
       }
       
       format.json { render :json => true }
+    end
+  end
+
+  def enforce_shadowban
+    # If this user is shadowbanned, and this *doesn't* seem to be a request
+    # from that user, render the 404 page.
+    if @user.shadowbanned? && !@user.likely_is?(current_user, request.remote_ip)
+      render file: "public/404.html", layout: false, status: :not_found
     end
   end
 
