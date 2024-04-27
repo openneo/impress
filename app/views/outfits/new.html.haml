@@ -5,30 +5,38 @@
 %p#pet-not-found.alert= t 'pets.load.not_found'
 
 %section.neopass-announcement
-  = image_tag "about/neopass-thumbnail.png", width: 70, height: 70,
-    srcset: {"about/neopass-thumbnail@2x.png": "2x"},
+  = image_tag "about/neopass-survey.png", width: 70, height: 70,
+    srcset: {"about/neopass-survey@2x.png": "2x"},
     class: "neopass-thumbnail"
   .neopass-content
     %p
       %strong
-        🎉 Big news: Login with NeoPass is ready!
+        💭 Can you help us and TNT decide what to build next with NeoPass?
+
+    %p
       - if user_signed_in?
         - if current_user.uses_neopass?
-          And hey, you're already on it, thank you for giving it a try!! 🥰
+          = link_to "Login with NeoPass", about_neopass_path
+          is ready—and you're already on it, thank you! 🥰
         - else
-          You can connect your existing account via the
+          = link_to "Login with NeoPass", about_neopass_path
+          is ready! You can connect via the
           #{link_to "Settings page", edit_auth_user_path}.
       - else
-        If you're new to Dress to Impress, try logging in right now!! 🎉
+        = link_to "Login with NeoPass", about_neopass_path
+        is ready! If you're new to Dress to Impress, try logging in right now!!
+        🎉
 
     %p
-      We're hoping NeoPass will help new users, and can be part of a more sustainable future for the site.
-      %br
-      = link_to "Here's what's coming and why.", about_neopass_path
+      Now that we've built the foundation, TNT are looking for our help deciding what integration to build
+      next.
+      = link_to "Would you fill out this survey for us, please?",
+        "https://docs.google.com/forms/d/e/1FAIpQLSdyi7bZB3-gyztdOVSmikRrfts6KM5mK2r37D0SBla3JO3GbQ/viewform"
+      We've got some ideas, and we're looking for more! Even if you don't use
+      NeoPass yet, your input would be <em>super</em> useful.
 
     %p
-      Big thanks to our beta testers! More to come soon! Thank you all for
-      your constant love and support! 💖
+      Thanks again to everyone for helping us out! We're grateful, as always 💖
       %br
       %em —Matchu
 
