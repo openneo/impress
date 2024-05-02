@@ -700,7 +700,7 @@ function getZonesAndItems(itemsById, wornItemIds, closetedItemIds) {
   // used. Then, loop over them again, appending the ID number if count > 1.
   const labelCounts = new Map();
   for (const itemZoneGroup of zonesAndItems) {
-    const { zoneId, zoneLabel } = itemZoneGroup;
+    const { zoneLabel } = itemZoneGroup;
 
     const count = labelCounts.get(zoneLabel) ?? 0;
     labelCounts.set(zoneLabel, count + 1);

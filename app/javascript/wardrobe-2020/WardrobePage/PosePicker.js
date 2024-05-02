@@ -31,7 +31,6 @@ import getVisibleLayers from "../components/getVisibleLayers";
 import { OutfitLayers } from "../components/OutfitPreview";
 import SupportOnly from "./support/SupportOnly";
 import { useAltStylesForSpecies } from "../loaders/alt-styles";
-import useSupport from "./support/useSupport";
 import { useLocalStorage } from "../util";
 
 // From https://twemoji.twitter.com/, thank you!
@@ -81,7 +80,6 @@ function PosePicker({
     "DTIPosePickerIsInSupportMode",
     false,
   );
-  const { isSupportUser } = useSupport();
   const toast = useToast();
 
   const loading = posesQuery.loading || altStylesQuery.isLoading;
@@ -280,30 +278,31 @@ function PosePicker({
   );
 }
 
-function PosePickerButton({ pose, altStyle, isOpen, loading, ...props }, ref) {
-  const theme = useTheme();
+const PosePickerButton = React.forwardRef(
+  ({ pose, altStyle, isOpen, loading, ...props }, ref) => {
+    const theme = useTheme();
 
-  const icon = altStyle != null ? twemojiSunglasses : getIcon(pose);
-  const label = altStyle != null ? altStyle.seriesName : getLabel(pose);
+    const icon = altStyle != null ? twemojiSunglasses : getIcon(pose);
+    const label = altStyle != null ? altStyle.seriesName : getLabel(pose);
 
-  return (
-    <ClassNames>
-      {({ css, cx }) => (
-        <Button
-          variant="unstyled"
-          textShadow={`${theme.colors.blackAlpha["700"]} 0 1px 2px`}
-          d="flex"
-          alignItems="center"
-          justifyContent="center"
-          _focus={{ borderColor: "gray.50" }}
-          _hover={{ borderColor: "gray.50" }}
-          outline="initial"
-          fontSize="sm"
-          fontWeight="normal"
-          minWidth="12ch"
-          disabled={loading}
-          className={cx(
-            css`
+    return (
+      <ClassNames>
+        {({ css, cx }) => (
+          <Button
+            variant="unstyled"
+            textShadow={`${theme.colors.blackAlpha["700"]} 0 1px 2px`}
+            d="flex"
+            alignItems="center"
+            justifyContent="center"
+            _focus={{ borderColor: "gray.50" }}
+            _hover={{ borderColor: "gray.50" }}
+            outline="initial"
+            fontSize="sm"
+            fontWeight="normal"
+            minWidth="12ch"
+            disabled={loading}
+            className={cx(
+              css`
               border: 1px solid transparent !important;
               color: ${theme.colors.gray["100"]};
               cursor: ${loading ? "wait" : "pointer"} !important;
@@ -331,22 +330,22 @@ function PosePickerButton({ pose, altStyle, isOpen, loading, ...props }, ref) {
                 border-width: 2px !important;
               }
             `,
-            isOpen && "is-open",
-          )}
-          {...props}
-          ref={ref}
-        >
-          <EmojiImage src={icon} alt="Style" />
-          <Box width=".5em" />
-          {label}
-          <Box width=".5em" />
-          <ChevronDownIcon />
-        </Button>
-      )}
-    </ClassNames>
-  );
-}
-PosePickerButton = React.forwardRef(PosePickerButton);
+              isOpen && "is-open",
+            )}
+            {...props}
+            ref={ref}
+          >
+            <EmojiImage src={icon} alt="Style" />
+            <Box width=".5em" />
+            {label}
+            <Box width=".5em" />
+            <ChevronDownIcon />
+          </Button>
+        )}
+      </ClassNames>
+    );
+  },
+);
 
 function PosePickerTable({ poseInfos, onChange, initialFocusRef }) {
   return (

@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { getSupportSecret } from "../../impress-2020-config";
 
 /**

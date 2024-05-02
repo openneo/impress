@@ -14,7 +14,6 @@ import { ApolloProvider } from "@apollo/client";
 import { BrowserRouter } from "react-router-dom";
 import { css, Global } from "@emotion/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import produce from "immer";
 
 import apolloClient from "./apolloClient";
 
