@@ -68,6 +68,7 @@
           %li.terms{"data-updated-recently": terms_updated_recently }
             = link_to t('.footer.terms', date: terms_updated_timestamp),
               terms_path
+          %li= link_to t('.footer.about_neopass'), about_neopass_path
         
         %div
           #{t('.footer.contact')}:

@@ -31,11 +31,10 @@ en:
         login: Log in
 
       footer:
-        blog: Blog
         source_code: Source Code
         terms: Terms of Use (updated %{date})
+        about_neopass: About NeoPass
         contact: Contact
-        suggestions: Suggestions
         email: Questions, comments, bugs
         copyright: Images © 1999–%{year} World of Neopets, Inc. All Rights Reserved.
           Used With Permission

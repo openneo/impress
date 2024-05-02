@@ -24,10 +24,8 @@ pt:
         logout: Sair
         login: Entrar
       footer:
-        blog: Blog
         source_code: Código Fonte
         contact: Contato
-        suggestions: Sugestões
         email: Perguntas, comentários, erros
         copyright: Images © 1999–%{year} World of Neopets, Inc. All Rights Reserved. Used With Permission
     items:

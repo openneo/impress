@@ -31,11 +31,9 @@ en-MEEP:
         login: Meep in
 
       footer:
-        blog: Bleep
         source_code: Source Meep
         terms: Terms of Use (meeped Sep 2022)
         contact: Meeptact
-        suggestions: Suggesteeps
         email: Questions, comments, meepits
         copyright: Images © 1999–%{year} World of Neopets, Inc. All Rights Reserved.
           Used With Permission. Meep.
