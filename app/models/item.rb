@@ -429,6 +429,8 @@ class Item < ApplicationRecord
     species_support_strs = info['species_support'] || []
     self.species_support_ids = species_support_strs.map(&:to_i)
 
+    # NOTE: If some of these fields are missing, it could cause saving the item
+    # to fail, because many of these columns are non-nullable.
     self.name = info['name']
     self.description = info['description']
     self.thumbnail_url = info['thumbnail_url']

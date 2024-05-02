@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_21_033509) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_02_195157) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "species_id", null: false
     t.integer "color_id", null: false
@@ -132,7 +132,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_21_033509) do
     t.column "modeling_status_hint", "enum('done','glitchy')"
     t.boolean "is_manually_nc", default: false, null: false
     t.string "name", null: false
-    t.text "description", size: :medium, default: "", null: false
+    t.text "description", size: :medium, null: false
     t.string "rarity", default: "", null: false
     t.index ["modeling_status_hint", "created_at", "id"], name: "items_modeling_status_hint_and_created_at_and_id"
     t.index ["modeling_status_hint", "created_at"], name: "items_modeling_status_hint_and_created_at"
@@ -149,7 +149,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_21_033509) do
   end
 
   create_table "modeling_logs", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
-    t.datetime "created_at", precision: nil, default: -> { "current_timestamp()" }, null: false
+    t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.text "log_json", size: :long, null: false
     t.string "pet_name", limit: 128, null: false
   end
