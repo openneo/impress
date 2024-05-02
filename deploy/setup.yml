@@ -444,7 +444,7 @@
         weekday: "0" # Sunday
         hour: "1" # 1:15am
         minute: "15" # 1:15am
-        job: "cd /srv/impress/current && bin/rails public_data:commit[scheduled]"
+        job: "bash -c 'source /etc/profile && source ~/.bash_profile && cd /srv/impress/current && bin/rails public_data:commit[scheduled]'"
 
   handlers:
     - name: Reload nginx
