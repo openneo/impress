@@ -56,7 +56,7 @@ namespace :public_data do
 
 		# Link this latest dump as `latest.sql.gz`.
 		latest_path = Rails.configuration.public_data_root / "latest.sql.gz"
-		File.unlink(latest_path) if File.exist?(latest_path)
+		File.unlink(latest_path) if File.symlink?(latest_path)
 		File.symlink(dest_path, latest_path)
 
 		puts "Linked dump to #{latest_path}"
