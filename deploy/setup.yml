@@ -178,9 +178,9 @@
       when: not ruby_dir.stat.exists
 
     - name: Add Ruby 3.3.0 to the global PATH, for developer convenience
-      lineinfile:
-        dest: /etc/profile
-        line: 'PATH="/opt/ruby-3.3.0/bin:$PATH" # Added by impress deploy setup script'
+      copy:
+        dest: /etc/profile.d/ruby_path.sh
+        content: PATH="/opt/ruby-3.3.0/bin:$PATH"
 
     - name: Install system dependencies for impress's Ruby gems
       apt:
