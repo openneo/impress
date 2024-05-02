@@ -30,6 +30,9 @@ namespace :public_data do
 		# Don't lock the database to do it!
 		args << "--single-transaction"
 
+		# Skip dumping tablespaces, so this requires fewer privileges.
+		args << "--no-tablespaces"
+
 		# Dump the public data tables from the primary database.
 		args << config.fetch(:database)
 		args += %w(species colors zones) # manual constants
