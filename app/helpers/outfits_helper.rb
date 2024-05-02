@@ -1,4 +1,9 @@
 module OutfitsHelper
+  LAST_DAY_OF_NEOPASS_ANNOUNCEMENT = Date.parse("2024-05-05")
+  def show_neopass_announcement?
+    Date.today <= LAST_DAY_OF_NEOPASS_ANNOUNCEMENT
+  end
+
   def destination_tag(value)
     hidden_field_tag 'destination', value, :id => nil
   end
