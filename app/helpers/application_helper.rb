@@ -101,7 +101,8 @@ module ApplicationHelper
 
   def impress_2020_meta_tags
     origin = Rails.configuration.impress_2020_origin
-    support_secret = Rails.application.credentials.impress_2020.support_secret
+    support_secret = Rails.application.credentials.dig(
+      :impress_2020, :support_secret)
 
     capture do
       concat tag("meta", name: "impress-2020-origin", content: origin)
