@@ -48,5 +48,6 @@
     "dev": "yarn build:dev --watch",
     "lint": "eslint app/javascript",
     "prepare": "husky install"
-  }
+  },
+  "packageManager": "yarn@4.2.1"
 }
