@@ -43,8 +43,13 @@ export function useSearchResults(
 function buildSearchFilters(query, { speciesId, colorId, altStyleId }) {
   const filters = [];
 
-  if (query.value) {
-    filters.push({ key: "name", value: query.value });
+  // TODO: We're missing quote support, like `background "Dyeworks White"`.
+  //       It might be good to, rather than parse this out here and send it as
+  //       filters, include a text-based part of the query as well, and have
+  //       the server merge them? That'd support text-based `is:nc` etc too.
+  const words = query.value.split(/\s+/);
+  for (const word of words) {
+    filters.push({ key: "name", value: word });
   }
 
   if (query.filterToItemKind === "NC") {
