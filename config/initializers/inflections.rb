@@ -21,4 +21,8 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
 
   # Teach Zeitwerk that `NeoPass` is what to expect in `app/services/neopass.rb`.
   inflect.acronym "NeoPass"
+
+  # Teach Zeitwerk that "NCMall" is what to expect in `app/services/nc_mall.rb`.
+  # (We do this by teaching it the word "NC".)
+  inflect.acronym "NC"
 end
