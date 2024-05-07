@@ -112,6 +112,22 @@ class ItemsController < ApplicationController
     end
   end
 
+  def sources
+    item_ids = params[:ids].split(",")
+    @items = Item.where(id: item_ids).order(:name)
+
+    if @items.empty?
+      render file: "public/404.html", status: :not_found, layout: nil
+      return
+    end
+
+    @nc_items = @items.select(&:nc?)
+    @np_items = @items.select(&:np?)
+    @pb_items = @items.select(&:pb?)
+
+    render layout: "application"
+  end
+
   protected
 
   def assign_closeted!

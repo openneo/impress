@@ -158,6 +158,10 @@ class Item < ApplicationRecord
     I18n.with_locale(:en) { self.description == PAINTBRUSH_SET_DESCRIPTION }
   end
 
+  def np?
+    !nc? && !pb?
+  end
+
   def owned?
     @owned || false
   end

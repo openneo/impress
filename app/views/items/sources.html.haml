@@ -1,0 +1,14 @@
+- title "Item Getting Guide"
+%h1#title Item Getting Guide
+
+- if @nc_items.present?
+	%h2 Neocash items
+	= render @nc_items
+
+- if @np_items.present?
+	%h2 Neopoint items
+	= render @np_items
+
+- if @pb_items.present?
+	%h2 Paintbrush items
+	= render @pb_items
