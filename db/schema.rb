@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_02_195157) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_07_235742) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "species_id", null: false
     t.integer "color_id", null: false
@@ -154,6 +154,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_02_195157) do
     t.string "pet_name", limit: 128, null: false
   end
 
+  create_table "nc_mall_records", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.integer "item_id", null: false
+    t.integer "price", null: false
+    t.integer "discount_price"
+    t.datetime "discount_begins_at"
+    t.datetime "discount_ends_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_nc_mall_records_on_item_id"
+  end
+
   create_table "neopets_connections", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "user_id"
     t.string "neopets_username"
@@ -278,5 +289,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_02_195157) do
 
   add_foreign_key "alt_styles", "colors"
   add_foreign_key "alt_styles", "species"
+  add_foreign_key "nc_mall_records", "items"
   add_foreign_key "outfits", "alt_styles"
 end

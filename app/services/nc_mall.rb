@@ -72,8 +72,8 @@ module NCMall
 
 		{
 			price: discount_price,
-			start: item_info["discountBegin"],
-			end: item_info["discountEnd"],
+			begins_at: item_info["discountBegin"],
+			ends_at: item_info["discountEnd"],
 		}
 	end
 
