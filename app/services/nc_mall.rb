@@ -1,3 +1,4 @@
+require "addressable/template"
 require "async/http/internet/instance"
 
 module NCMall
@@ -8,21 +9,33 @@ module NCMall
 	# Load the NC home page, and return its useful data.
 	HOME_PAGE_URL = "https://ncmall.neopets.com/mall/ajax/home_page.phtml"
 	def self.load_home_page
-		response = Sync do
-			INTERNET.get(HOME_PAGE_URL, [
-				["User-Agent", Rails.configuration.user_agent_for_neopets],
-			])
-		end
+		load_page_by_url HOME_PAGE_URL
+	end
 
-		if response.status != 200
-			raise ResponseNotOK.new(response.status),
-				"expected status 200 but got #{response.status} (#{HOME_PAGE_URL})"
-		end
-
-		parse_nc_page response.body.read
+	# Load the NC Mall page for a specific type and category ID.
+	CATEGORY_PAGE_URL_TEMPLATE = Addressable::Template.new(
+		"https://ncmall.neopets.com/mall/ajax/load_page.phtml?lang=en{&type,cat}"
+	)
+	def self.load_page(type, cat)
+		load_page_by_url CATEGORY_PAGE_URL_TEMPLATE.expand(type:, cat:)
 	end
 
 	private
+
+	def self.load_page_by_url(url)
+		Sync do
+			response = INTERNET.get(url, [
+				["User-Agent", Rails.configuration.user_agent_for_neopets],
+			])
+
+			if response.status != 200
+				raise ResponseNotOK.new(response.status),
+					"expected status 200 but got #{response.status} (#{url})"
+			end
+
+			parse_nc_page response.read
+		end
+	end
 
 	# Given a string of NC page data, parse the useful data out of it!
 	def self.parse_nc_page(nc_page_str)
