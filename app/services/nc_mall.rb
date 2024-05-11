@@ -6,7 +6,7 @@ module NCMall
 	# each request. (This library does that automatically!)
 	INTERNET = Async::HTTP::Internet.instance
 
-	# Load the NC home page, and return its useful data.
+	# Load the NC Mall home page content area, and return its useful data.
 	HOME_PAGE_URL = "https://ncmall.neopets.com/mall/ajax/home_page.phtml"
 	def self.load_home_page
 		load_page_by_url HOME_PAGE_URL
@@ -18,6 +18,30 @@ module NCMall
 	)
 	def self.load_page(type, cat)
 		load_page_by_url CATEGORY_PAGE_URL_TEMPLATE.expand(type:, cat:)
+	end
+
+	# Load the NC Mall root document HTML, and extract the list of links to
+	# other pages ("New", "Popular", etc.)
+	ROOT_DOCUMENT_URL = "https://ncmall.neopets.com/mall/shop.phtml"
+	PAGE_LINK_PATTERN = /load_items_pane\(['"](.+?)['"], ([0-9]+)\).+?>(.+?)</
+	def self.load_page_links
+		Sync do
+			response = INTERNET.get(ROOT_DOCUMENT_URL, [
+				["User-Agent", Rails.configuration.user_agent_for_neopets],
+			])
+
+			if response.status != 200
+				raise ResponseNotOK.new(response.status),
+					"expected status 200 but got #{response.status} (#{url})"
+			end
+
+			# Extract `load_items_pane` calls from the root document's HTML. (We use
+			# a very simplified regex, rather than actually parsing the full HTML!)
+			html = response.read
+			html.scan(PAGE_LINK_PATTERN).
+				map { |type, cat, label| {type:, cat:, label:} }.
+				uniq
+		end
 	end
 
 	private
@@ -50,6 +74,10 @@ module NCMall
 		unless nc_page.has_key? "object_data"
 			raise UnexpectedResponseFormat, "missing field object_data in NC page"
 		end
+
+		# NOTE: When there's no object data, it will be an empty array instead of
+		# an empty hash. Weird API thing to work around!
+		nc_page["object_data"] = {} if nc_page["object_data"] == []
 
 		items = nc_page["object_data"].values.map do |item_info|
 			{
