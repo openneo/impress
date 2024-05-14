@@ -1,84 +1,83 @@
 @import "../../partials/clean/constants"
 
-body.devise-sessions, body.devise-sessions-new
-	#title
+#title
+	text-align: center
+	font-size: 2.5rem
+
+.login-options
+	display: flex
+	margin-block: 3em
+
+	section
+		flex: 1 1 0
+		padding-block: 1em
+		display: flex
+		flex-direction: column
+		justify-content: center
+		align-items: center
+
+		&:not(:last-of-type)
+			border-right: 1px solid $module-border-color
+			margin-right: 1em
+			padding-right: 1em
+
+	.login-option-neopass
 		text-align: center
-		font-size: 2.5rem
 
-	.login-options
-		display: flex
-		margin-block: 3em
-
-		section
-			flex: 1 1 0
-			padding-block: 1em
-			display: flex
-			flex-direction: column
-			justify-content: center
-			align-items: center
-
-			&:not(:last-of-type)
-				border-right: 1px solid $module-border-color
-				margin-right: 1em
-				padding-right: 1em
-
-		.login-option-neopass
-			text-align: center
-
-			header
-				font-weight: bold
-				font-size: 125%
-				margin-bottom: .5em
-
-			.neopass-explanation
-				font-size: 85%
-
-				summary
-					cursor: pointer
-					margin-bottom: 1em
-
-	.login-form
-		margin-bottom: 1em
-
-		.field
-			margin-bottom: .75em
-
-		.input-field label
+		header
 			font-weight: bold
+			font-size: 125%
+			margin-bottom: .5em
 
-		.actions
-			display: flex
-			align-items: center
-			gap: .5em
+		.neopass-explanation
+			font-size: 85%
 
-			.remember-me
-				display: flex
-				align-items: center
-				gap: .25em
-				font-size: 85%
+			summary
+				cursor: pointer
+				margin-bottom: 1em
 
-				input[type=checkbox]
-					height: 1em
-					width: 1em
+.login-form
+	margin-bottom: 1em
 
-	.login-links
-		font-size: 85%
+	.field
+		margin-bottom: .75em
+
+	.input-field label
+		font-weight: bold
+
+	.actions
 		display: flex
+		align-items: center
 		gap: .5em
 
-	.log-in-with-neopass-button
-		background: linear-gradient(#ebb233, #f6e250, #ebb233)
-		color: #111
-		font-size: 1rem
-		text-shadow: none
-		font-family: "Arial Black", sans-serif
-		margin-bottom: 1em
+		.remember-me
+			display: flex
+			align-items: center
+			gap: .25em
+			font-size: 85%
 
-		&:hover
-			color: #111 // override default DTI styles
-			filter: brightness(105%)
+			input[type=checkbox]
+				height: 1em
+				width: 1em
 
-		.neopass-icon
-			vertical-align: middle
-			height: 2em
-			width: 2em
+.login-links
+	font-size: 85%
+	display: flex
+	gap: .5em
+
+.log-in-with-neopass-button
+	background: linear-gradient(#ebb233, #f6e250, #ebb233)
+	color: #111
+	font-size: 1rem
+	text-shadow: none
+	font-family: "Arial Black", sans-serif
+	margin-bottom: 1em
+
+	&:hover
+		color: #111 // override default DTI styles
+		filter: brightness(105%)
+
+	.neopass-icon
+		vertical-align: middle
+		height: 2em
+		width: 2em

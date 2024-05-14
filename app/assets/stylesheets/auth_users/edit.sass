@@ -1,56 +1,55 @@
 @import "../partials/clean/constants"
 
-body.auth_users-edit, body.auth_users-update
-	.settings-form
-		border: 1px solid $module-border-color
-		background: $module-bg-color
-		border-radius: 1em
-		padding: 1em 1.25em
+.settings-form
+	border: 1px solid $module-border-color
+	background: $module-bg-color
+	border-radius: 1em
+	padding: 1em 1.25em
 
-		&:not(:last-of-type)
-			margin-bottom: 2em
+	&:not(:last-of-type)
+		margin-bottom: 2em
 
-		h2
-			font-size: 1.5rem
-			margin-bottom: .25em
+	h2
+		font-size: 1.5rem
+		margin-bottom: .25em
 
-		.hint
-			font-style: italic
-			font-size: .85em
-			opacity: .9
+	.hint
+		font-style: italic
+		font-size: .85em
+		opacity: .9
 
-		fieldset
-			padding-block: .5em
+	fieldset
+		padding-block: .5em
 
-		fieldset:not(:last-of-type)
-			border-bottom: 1px solid $module-border-color
-			margin-bottom: .5em
-
-		.field
-			margin-bottom: 1em
-
-			.field_with_errors
-				display: inline
-
-			label
-				font-weight: bold
-
-		.error-explanation
-			color: $error-color
-			background: $error-bg-color
-			border: 1px solid $error-border-color
-			border-radius: .5em
-			padding: .5em
-			margin-bottom: .5em
-
-			header
-				font-weight: bold
-
-			ul
-				padding-left: 2em
-
-	.neopass-info
+	fieldset:not(:last-of-type)
+		border-bottom: 1px solid $module-border-color
 		margin-bottom: .5em
 
-	.neopass-explanation
-		font-size: .85em
+	.field
+		margin-bottom: 1em
+
+		.field_with_errors
+			display: inline
+
+		label
+			font-weight: bold
+
+	.error-explanation
+		color: $error-color
+		background: $error-bg-color
+		border: 1px solid $error-border-color
+		border-radius: .5em
+		padding: .5em
+		margin-bottom: .5em
+
+		header
+			font-weight: bold
+
+		ul
+			padding-left: 2em
+
+.neopass-info
+	margin-bottom: .5em
+
+.neopass-explanation
+	font-size: .85em
