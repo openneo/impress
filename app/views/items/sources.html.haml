@@ -3,7 +3,16 @@
 
 - if @nc_mall_items.present?
 	%h2 NC Mall items
-	= render @nc_mall_items
+	%p
+		These items are available in the NC Mall right now! You can buy them
+		with #{link_to "Neocash", "https://secure.nc.neopets.com/get-neocash"},
+		a special currency you can purchase directly from Neopets or redeem via gift cards.
+	%ul.nc-mall-items
+		- @nc_mall_items.each do |item|
+			%li
+				= render item
+				%button.add-to-cart{onclick: "alert('Todo!')"}
+					Buy (#{item.current_nc_price} NC)
 
 - if @np_items.present?
 	%h2 Neopoint items
@@ -16,3 +25,6 @@
 - if @other_nc_items.present?
 	%h2 Other NC items
 	= render @other_nc_items
+
+- content_for :stylesheets do
+	= page_stylesheet_link_tag "items/sources"

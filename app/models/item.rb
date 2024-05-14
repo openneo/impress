@@ -175,6 +175,10 @@ class Item < ApplicationRecord
     @wanted || false
   end
 
+  def current_nc_price
+    nc_mall_record.current_price
+  end
+
   def restricted_zones(options={})
     options[:scope] ||= Zone.all
     options[:scope].find(restricted_zone_ids)

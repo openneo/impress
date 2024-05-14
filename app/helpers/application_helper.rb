@@ -175,6 +175,14 @@ module ApplicationHelper
     end
   end
 
+  # Includes a stylesheet designed for this specific page of the app, which
+  # should be removed when navigating to another page. We use Turbo's
+  # `data-turbo-track="dynamic"` option to do this.
+  def page_stylesheet_link_tag(src, options={})
+    options = {data: {"turbo-track": "dynamic"}}.deep_merge(options)
+    stylesheet_link_tag src, options
+  end
+
   def secondary_nav(&block)
     content_for :before_flashes,
       content_tag(:nav, :id => 'secondary-nav', &block)
