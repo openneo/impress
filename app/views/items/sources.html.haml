@@ -1,9 +1,9 @@
 - title "Item Getting Guide"
 %h1#title Item Getting Guide
 
-- if @nc_items.present?
-	%h2 Neocash items
-	= render @nc_items
+- if @nc_mall_items.present?
+	%h2 NC Mall items
+	= render @nc_mall_items
 
 - if @np_items.present?
 	%h2 Neopoint items
@@ -12,3 +12,7 @@
 - if @pb_items.present?
 	%h2 Paintbrush items
 	= render @pb_items
+
+- if @other_nc_items.present?
+	%h2 Other NC items
+	= render @other_nc_items

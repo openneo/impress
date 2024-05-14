@@ -114,14 +114,15 @@ class ItemsController < ApplicationController
 
   def sources
     item_ids = params[:ids].split(",")
-    @items = Item.where(id: item_ids).order(:name)
+    @items = Item.where(id: item_ids).includes(:nc_mall_record).order(:name)
 
     if @items.empty?
       render file: "public/404.html", status: :not_found, layout: nil
       return
     end
 
-    @nc_items = @items.select(&:nc?)
+    @nc_mall_items = @items.select(&:currently_in_mall?)
+    @other_nc_items = @items.select(&:nc?).reject(&:currently_in_mall?)
     @np_items = @items.select(&:np?)
     @pb_items = @items.select(&:pb?)
 

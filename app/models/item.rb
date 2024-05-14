@@ -8,6 +8,7 @@ class Item < ApplicationRecord
 
   has_many :closet_hangers
   has_one :contribution, :as => :contributed, :inverse_of => :contributed
+  has_one :nc_mall_record
   has_many :parent_swf_asset_relationships, :as => :parent
   has_many :swf_assets, :through => :parent_swf_asset_relationships
 
@@ -160,6 +161,10 @@ class Item < ApplicationRecord
 
   def np?
     !nc? && !pb?
+  end
+
+  def currently_in_mall?
+    nc_mall_record.present?
   end
 
   def owned?
