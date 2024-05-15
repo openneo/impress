@@ -3,10 +3,13 @@
 
 - if @nc_mall_items.present?
 	%h2 NC Mall items
-	%p
+	:markdown
 		These items are available in the NC Mall right now! You can buy them
-		with #{link_to "Neocash", "https://secure.nc.neopets.com/get-neocash"},
-		a special currency you can purchase directly from Neopets or redeem via gift cards.
+		with Neocash, a special currency you can [purchase directly][nc]
+		from Neopets or redeem via [gift cards][gc].
+
+		[nc]: https://secure.nc.neopets.com/get-neocash
+		[gc]: https://secure.nc.neopets.com/nickcash-cards
 	%ul.nc-mall-items
 		- @nc_mall_items.each do |item|
 			%li
@@ -16,14 +19,36 @@
 
 - if @np_items.present?
 	%h2 Neopoint items
+	:markdown
+		These items can be purchased with Neopoints. For less-expensive items,
+		check the [Shop Wizard][wiz] first. Otherwise, try the
+		[Trading Post][tp] or [Auction Genie][ag]. Dress to Impress doesn't
+		track Neopoint item prices, but other fansites do!
+
+		[wiz]: https://www.neopets.com/shops/wizard.phtml
+		[tp]: https://www.neopets.com/island/tradingpost.phtml?type=browse
+		[ag]: https://www.neopets.com/genie.phtml
 	= render @np_items
 
 - if @pb_items.present?
 	%h2 Paintbrush items
+	:markdown
+		These items are part of a paintbrush set. Once you paint your pet,
+		these items will be semi-permanently added to your Closet, even if your
+		pet changes color again! You can use this to mix-and-match styles for
+		"cross-paint" outfits.
 	= render @pb_items
 
 - if @other_nc_items.present?
-	%h2 Other NC items
+	%h2 Neocash items (Capsules, Dyeworks, events, retired, etc.)
+	:markdown
+		These items are part of the Neocash economy and can't be purchased with
+		Neopoints. We don't track all the details of how to get these items
+		right now! Sometimes they're available via packs or capsules or events
+		in the [NC Mall][mall]. Sometimes they're retired and can't be
+		purchased at all anymore, and can only be obtained via gifts or trades.
+
+		[mall]: https://ncmall.neopets.com/
 	= render @other_nc_items
 
 - content_for :stylesheets do
