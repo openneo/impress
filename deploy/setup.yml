@@ -437,6 +437,13 @@
         mode: "755"
         state: directory
 
+    - name: Create 10min cron job to run `rails nc_mall:sync`
+      become_user: impress
+      cron:
+        name: "Impress: sync NC Mall data"
+        minute: "*/10"
+        job: "bash -c 'source /etc/profile && source ~/.bash_profile && cd /srv/impress/current && bin/rails nc_mall:sync'"
+
     - name: Create weekly cron job to run `rails public_data:commit`
       become_user: impress
       cron:
