@@ -52,13 +52,21 @@ module ItemsHelper
     content_tag :div, content, :class => 'closeted-icons'
   end
   
+  # NOTE: Changing this requires bumping the cache at `_closet_list.html.haml`!
   def nc_icon
     image_tag 'nc.png', :title => t('items.item.nc.description'),
               :alt => t('items.item.nc.abbr'), :class => 'nc-icon'
   end
 
+  # NOTE: Changing this requires bumping the cache at `_closet_list.html.haml`!
   def nc_icon_for(item)
     nc_icon if item.nc?
+  end
+
+  # NOTE: Changing this requires bumping the cache at `_closet_list.html.haml`!
+  def item_thumbnail_for(item)
+    image_tag item.thumbnail_url, alt: "Thumbnail for #{item.name}",
+      title: item.description, loading: "lazy"
   end
 
   def time_with_only_month_if_old(first_seen_at)

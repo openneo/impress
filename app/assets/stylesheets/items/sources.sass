@@ -1,14 +1,41 @@
-.nc-mall-items
-	list-style: none
-	display: flex
-	flex-wrap: wrap
-	gap: 1em
+@import "../partials/clean/constants"
+@import "../partials/clean/mixins"
 
-	li
-		display: flex
-		flex-direction: column
-		align-items: center
-		width: auto
+.item-list
+	border-collapse: collapse
+	border: 1px solid $soft-border-color
+
+	td, th
+		border-top: 1px solid $soft-border-color
+		border-bottom: 1px solid $soft-border-color
+		padding: .25em
+		vertical-align: middle
+
+		&:first-child
+			padding-left: .5em
+
+		&:last-child
+			padding-right: .5em
+
+	.thumbnail-cell
+		img
+			display: block
+			width: 2.5em
+			height: 2.5em
+
+	.add-to-cart-cell
+		text-align: right
+		padding-left: 1em
+
+	thead
+		background: $module-bg-color
+
+		th
+			text-align: left
+
+		.add-to-cart
+			/* Bootstrap's Purple 600 */
+			+awesome-button-color(#59359a)
 
 	.add-to-cart
 		font-size: 85%

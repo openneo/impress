@@ -10,12 +10,25 @@
 
 		[nc]: https://secure.nc.neopets.com/get-neocash
 		[gc]: https://secure.nc.neopets.com/nickcash-cards
-	%ul.nc-mall-items
-		- @nc_mall_items.each do |item|
-			%li
-				= render item
-				%button.add-to-cart{onclick: "alert('Todo!')"}
-					Buy (#{item.current_nc_price} NC)
+	%table.item-list
+		%thead
+			%tr
+				%td
+				%th
+					Total: #{@nc_mall_items.map(&:current_nc_price).sum} NC
+					(#{pluralize @nc_mall_items.size, "item"})
+						
+					%td.add-to-cart-cell
+						%button.add-to-cart{onclick: "alert('Todo!')"}
+							Buy all in NC Mall
+		%tbody
+			- @nc_mall_items.each do |item|
+				%tr
+					%td.thumbnail-cell= item_thumbnail_for(item)
+					%td= item.name
+					%td.add-to-cart-cell
+						%button.add-to-cart{onclick: "alert('Todo!')"}
+							Buy (#{item.current_nc_price} NC)
 
 - if @np_items.present?
 	%h2 Neopoint items
