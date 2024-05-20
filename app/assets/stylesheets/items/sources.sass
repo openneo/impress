@@ -17,15 +17,15 @@
 		&:last-child
 			padding-right: .5em
 
-	.thumbnail-cell
-		img
-			display: block
-			width: 2.5em
-			height: 2.5em
+	.thumbnail-cell img
+		display: block
+		width: 2.5em
+		height: 2.5em
 
-	.add-to-cart-cell
+	.actions-cell
 		text-align: right
 		padding-left: 1em
+		font-size: 85%
 
 	thead
 		background: $module-bg-color
@@ -33,9 +33,6 @@
 		th
 			text-align: left
 
-		.add-to-cart
+		.actions-cell button
 			/* Bootstrap's Purple 600 */
 			+awesome-button-color(#59359a)
-
-	.add-to-cart
-		font-size: 85%
