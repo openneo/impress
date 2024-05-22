@@ -1,8 +1,6 @@
 require "addressable/template"
 
 module ItemsHelper
-  JNItemsURLFormat = 'https://items.jellyneo.net/search/?name=%s&name_type=3'
-  
   module PetTypeImage
     Format = 'https://pets.neopets.com/cp/%s/%i/%i.png'
 
@@ -82,8 +80,11 @@ module ItemsHelper
     first_seen_at.strftime("%b %Y")
   end
 
+  JN_ITEMS_URL_TEMPLATE = Addressable::Template.new(
+    "https://items.jellyneo.net/search/?name_type=3{&name}"
+  )
   def jn_items_url_for(item)
-    sprintf(JNItemsURLFormat, CGI::escape(item.name))
+    JN_ITEMS_URL_TEMPLATE.expand(name: item.name).to_s
   end
 
   IMPRESS_2020_ITEM_URL_TEMPLATE = Addressable::Template.new(
@@ -93,20 +94,32 @@ module ItemsHelper
     IMPRESS_2020_ITEM_URL_TEMPLATE.expand(id: item.id).to_s
   end
   
+  SHOP_WIZARD_URL_TEMPLATE = Addressable::Template.new(
+    "https://www.neopets.com/market.phtml?type=wizard{&string}"
+  )
   def shop_wizard_url_for(item)
-    "https://www.neopets.com/market.phtml?type=wizard&string=#{CGI::escape item.name}"
+    SHOP_WIZARD_URL_TEMPLATE.expand(string: item.name).to_s
   end
   
+  SUPER_SHOP_WIZARD_URL_TEMPLATE = Addressable::Template.new(
+    "https://www.neopets.com/portal/supershopwiz.phtml{?string}"
+  )
   def super_shop_wizard_url_for(item)
-    "https://www.neopets.com/portal/supershopwiz.phtml?string=#{CGI::escape item.name}"
+    SUPER_SHOP_WIZARD_URL_TEMPLATE.expand(string: item.name).to_s
   end
   
+  TRADING_POST_URL_TEMPLATE = Addressable::Template.new(
+    "https://www.neopets.com/island/tradingpost.phtml?type=browse&criteria=item_exact{&search_string}"
+  )
   def trading_post_url_for(item)
-    "https://www.neopets.com/island/tradingpost.phtml?type=browse&criteria=item_exact&search_string=#{CGI::escape item.name}"
+    TRADING_POST_URL_TEMPLATE.expand(search_string: item.name).to_s
   end
   
+  AUCTION_GENIE_URL_TEMPLATE = Addressable::Template.new(
+    "https://www.neopets.com/genie.phtml?type=process_genie&criteria=exact{&auctiongenie}"
+  )
   def auction_genie_url_for(item)
-    "https://www.neopets.com/genie.phtml?type=process_genie&criteria=exact&auctiongenie=#{CGI::escape item.name}"
+    AUCTION_GENIE_URL_TEMPLATE.expand(auctiongenie: item.name).to_s
   end
   
   def format_contribution_count(count)
