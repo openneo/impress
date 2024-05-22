@@ -41,7 +41,21 @@
 		[wiz]: https://www.neopets.com/shops/wizard.phtml
 		[tp]: https://www.neopets.com/island/tradingpost.phtml?type=browse
 		[ag]: https://www.neopets.com/genie.phtml
-	= render @np_items
+	%table.item-list
+		%thead
+			%td
+			%th{colspan: 2}
+				Total: #{pluralize @np_items.size, "item"}
+		%tbody
+			- @np_items.each do |item|
+				%tr
+					%td.thumbnail-cell= item_thumbnail_for(item)
+					%td= item.name
+					%td.actions-cell
+						= button_link_to "Shops", shop_wizard_url_for(item),
+							target: "_blank", icon: search_icon
+						= button_link_to "Trades", trading_post_url_for(item),
+							target: "_blank", icon: search_icon
 
 - if @pb_items.present?
 	%h2 Paintbrush items

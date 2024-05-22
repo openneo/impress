@@ -21,6 +21,14 @@ module ApplicationHelper
     end
   end
 
+  def button_link_to(content, url, icon: nil, **options)
+    klass = options.fetch(:class, "") + " button"
+    link_to url, class: klass, **options do
+      concat icon
+      concat content
+    end
+  end
+
   def advertise_campaign_progress(campaign, &block)
     if campaign && campaign.advertised?
       campaign_progress(campaign, &block)
@@ -77,7 +85,7 @@ module ApplicationHelper
   EXTERNAL_LINK_SVG_SOURCE = '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><path d="M15 3h6v6"></path><path d="M10 14L21 3"></path></g>'.html_safe
   def external_link_icon
     content_tag :svg, EXTERNAL_LINK_SVG_SOURCE, alt: "(external link)",
-      viewBox: "0 0 24 24", style: "width: 1em; height: 1em"
+      class: "icon", viewBox: "0 0 24 24", style: "width: 1em; height: 1em"
   end
 
   def flashes
@@ -181,6 +189,13 @@ module ApplicationHelper
   def page_stylesheet_link_tag(src, options={})
     options = {data: {"turbo-track": "dynamic"}}.deep_merge(options)
     stylesheet_link_tag src, options
+  end
+
+  # SVG icon source from Chakra UI!
+  SEARCH_SVG_SOURCE = '<path fill="currentColor" d="M23.384,21.619,16.855,15.09a9.284,9.284,0,1,0-1.768,1.768l6.529,6.529a1.266,1.266,0,0,0,1.768,0A1.251,1.251,0,0,0,23.384,21.619ZM2.75,9.5a6.75,6.75,0,1,1,6.75,6.75A6.758,6.758,0,0,1,2.75,9.5Z"></path>'.html_safe
+  def search_icon
+    content_tag :svg, SEARCH_SVG_SOURCE, alt: "Search", class: "icon",
+      viewBox: "0 0 24 24", style: "width: 1em; height: 1em"
   end
 
   def secondary_nav(&block)
