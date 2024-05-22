@@ -24,13 +24,10 @@
 							Buy all in NC Mall
 		%tbody
 			- @nc_mall_items.each do |item|
-				%tr
-					%td.thumbnail-cell= item_thumbnail_for(item)
-					%td= item.name
-					%td.actions-cell
-						%button{onclick: "alert('Todo!')"}
-							= cart_icon alt: ""
-							Buy (#{item.current_nc_price} NC)
+				= render "item_list_row", item: do
+					%button{onclick: "alert('Todo!')"}
+						= cart_icon alt: ""
+						Buy (#{item.current_nc_price} NC)
 
 - if @np_items.present?
 	%h2 Neopoint items
@@ -50,14 +47,11 @@
 				Total: #{pluralize @np_items.size, "item"}
 		%tbody
 			- @np_items.each do |item|
-				%tr
-					%td.thumbnail-cell= item_thumbnail_for(item)
-					%td= item.name
-					%td.actions-cell
-						= button_link_to "Shops", shop_wizard_url_for(item),
-							target: "_blank", icon: search_icon
-						= button_link_to "Trades", trading_post_url_for(item),
-							target: "_blank", icon: search_icon
+				= render "item_list_row", item: do
+					= button_link_to "Shops", shop_wizard_url_for(item),
+						target: "_blank", icon: search_icon
+					= button_link_to "Trades", trading_post_url_for(item),
+						target: "_blank", icon: search_icon
 
 - if @pb_items.present?
 	%h2 Paintbrush items
