@@ -126,6 +126,8 @@ class ItemsController < ApplicationController
     @other_nc_items = @items.select(&:nc?).reject(&:currently_in_mall?)
     @np_items = @items.select(&:np?)
     @pb_items = @items.select(&:pb?)
+    @pb_items_by_color = @pb_items.group_by(&:pb_color).
+      sort_by { |color, items| color.name }.to_h
 
     render layout: "application"
   end

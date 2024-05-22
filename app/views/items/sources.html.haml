@@ -60,25 +60,27 @@
 		these items will be semi-permanently added to your Closet, even if your
 		pet changes color again! You can use this to mix-and-match styles for
 		"cross-paint" outfits.
-	%table.item-list
-		%thead
-			%td
-			%th{colspan: 2}
-				Total: #{pluralize @pb_items.size, "item"}
-		%tbody
-			- @pb_items.each do |item|
-				= render "item_list_row", item: do
-					- if item.pb_item_name.present?
+	- @pb_items_by_color.each do |color, items|
+		%table.item-list
+			%thead
+				%td
+				%th
+					#{color.pb_item_name || color.name.humanize}
+					(#{pluralize items.size, "item"})
+				%td.actions-cell
+					- if color.pb_item_name.present?
 						= button_link_to "Shops",
-							shop_wizard_url_for(item.pb_item_name),
+							shop_wizard_url_for(color.pb_item_name),
 							target: "_blank", icon: search_icon
 						= button_link_to "Trades",
-							trading_post_url_for(item.pb_item_name),
+							trading_post_url_for(color.pb_item_name),
 							target: "_blank", icon: search_icon
 					- else
 						.special-color-explanation
-							No Paint Brush for this color. Get via Lab
-							Ray, morphing potions, etc.
+							Get via Lab Ray, morphing potions, etc.
+			%tbody
+				- items.each do |item|
+					= render "item_list_row", item:
 
 - if @other_nc_items.present?
 	%h2 Neocash items (Capsules, Dyeworks, events, retired, etc.)
