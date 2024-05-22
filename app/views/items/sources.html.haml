@@ -20,6 +20,7 @@
 						
 					%td.actions-cell
 						%button{onclick: "alert('Todo!')"}
+							= cart_icon alt: ""
 							Buy all in NC Mall
 		%tbody
 			- @nc_mall_items.each do |item|
@@ -28,6 +29,7 @@
 					%td= item.name
 					%td.actions-cell
 						%button{onclick: "alert('Todo!')"}
+							= cart_icon alt: ""
 							Buy (#{item.current_nc_price} NC)
 
 - if @np_items.present?
