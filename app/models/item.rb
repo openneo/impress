@@ -176,7 +176,7 @@ class Item < ApplicationRecord
   end
 
   def current_nc_price
-    nc_mall_record.current_price
+    nc_mall_record&.current_price
   end
 
   def restricted_zones(options={})
