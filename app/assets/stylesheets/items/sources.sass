@@ -4,6 +4,8 @@
 .item-list
 	border-collapse: collapse
 	border: 1px solid $soft-border-color
+	width: 60%
+	table-layout: auto
 
 	td, th
 		border-top: 1px solid $soft-border-color
@@ -17,20 +19,24 @@
 		&:last-child
 			padding-right: .5em
 
-	.thumbnail-cell img
-		display: block
+	.thumbnail-cell
 		width: 2.5em
 		height: 2.5em
 
-	.actions-cell
-		text-align: right
-		padding-left: 1em
-		font-size: 85%
+		img
+			display: block
+			width: 100%
+			height: 100%
 
 	.name-cell a
 		text-decoration: none
 		&:hover
 			text-decoration: underline
+
+	.actions-cell
+		text-align: right
+		padding-left: 1em
+		font-size: 85%
 
 	thead
 		background: $module-bg-color
