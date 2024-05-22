@@ -95,7 +95,7 @@ module ItemsHelper
   end
   
   SHOP_WIZARD_URL_TEMPLATE = Addressable::Template.new(
-    "https://www.neopets.com/market.phtml?type=wizard{&string}"
+    "https://www.neopets.com/shops/wizard.phtml{?string}"
   )
   def shop_wizard_url_for(item)
     SHOP_WIZARD_URL_TEMPLATE.expand(string: item.name).to_s
