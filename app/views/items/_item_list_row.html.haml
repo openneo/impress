@@ -1,4 +1,4 @@
 %tr
-	%td.thumbnail-cell= item_thumbnail_for(item)
-	%td= item.name
+	%td.thumbnail-cell= link_to item_thumbnail_for(item), item, target: "_blank"
+	%td.name-cell= link_to item.name, item, target: "_blank"
 	%td.actions-cell= yield
