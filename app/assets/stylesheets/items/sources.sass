@@ -30,13 +30,18 @@
 
 	.name-cell a
 		text-decoration: none
-		&:hover
+		&:hover, &:focus
 			text-decoration: underline
 
 	.actions-cell
 		text-align: right
 		padding-left: 1em
 		font-size: 85%
+
+	tbody
+		tr
+			&:hover, &:focus-within
+				background: rgba($module-bg-color, 0.5)
 
 	thead
 		background: $module-bg-color
