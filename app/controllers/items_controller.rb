@@ -114,7 +114,8 @@ class ItemsController < ApplicationController
 
   def sources
     item_ids = params[:ids].split(",")
-    @items = Item.where(id: item_ids).includes(:nc_mall_record).order(:name)
+    @items = Item.where(id: item_ids).includes(:nc_mall_record).order(:name).
+      limit(50)
 
     if @items.empty?
       render file: "public/404.html", status: :not_found, layout: nil
