@@ -61,14 +61,17 @@
 		pet changes color again! You can use this to mix-and-match styles for
 		"cross-paint" outfits.
 	- @pb_items_by_color.each do |color, items|
-		%table.item-list
+		%table.item-list{"data-group-type": "bundle"}
 			%thead
-				%td
+				%td.thumbnail-cell
+					- if color.pb_item_thumbnail_url?
+						= image_tag color.pb_item_thumbnail_url,
+							alt: "Item thumbnail for #{color.pb_item_name}"
 				%th
 					#{color.pb_item_name || color.name.humanize}
 					(#{pluralize items.size, "item"})
 				%td.actions-cell
-					- if color.pb_item_name.present?
+					- if color.pb_item_name?
 						= button_link_to "Shops",
 							shop_wizard_url_for(color.pb_item_name),
 							target: "_blank", icon: search_icon

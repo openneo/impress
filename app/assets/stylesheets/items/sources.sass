@@ -50,6 +50,9 @@
 		th
 			text-align: left
 
+		.thumbnail-cell img
+			outline: 1px solid $soft-border-color
+
 		.actions-cell button
 			/* Bootstrap's Purple 600 */
 			+awesome-button-color(#59359a)
@@ -57,3 +60,13 @@
 	.special-color-explanation
 		text-wrap: balance
 		font-style: italic
+
+	/* For wearable items that belong to a specific set that all come together,
+	 * like a Paint Brush. */
+	&[data-group-type="bundle"]
+		tbody
+			.thumbnail-cell
+				opacity: 0.65
+
+			tr:hover .thumbnail-cell
+				opacity: 0.85
