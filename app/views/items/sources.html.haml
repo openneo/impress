@@ -54,13 +54,31 @@
 						target: "_blank", icon: search_icon
 
 - if @pb_items.present?
-	%h2 Paintbrush items
+	%h2 Paint Brush items
 	:markdown
-		These items are part of a paintbrush set. Once you paint your pet,
+		These items are part of a paint brush set. Once you paint your pet,
 		these items will be semi-permanently added to your Closet, even if your
 		pet changes color again! You can use this to mix-and-match styles for
 		"cross-paint" outfits.
-	= render @pb_items
+	%table.item-list
+		%thead
+			%td
+			%th{colspan: 2}
+				Total: #{pluralize @pb_items.size, "item"}
+		%tbody
+			- @pb_items.each do |item|
+				= render "item_list_row", item: do
+					- if item.pb_item_name.present?
+						= button_link_to "Shops",
+							shop_wizard_url_for(item.pb_item_name),
+							target: "_blank", icon: search_icon
+						= button_link_to "Trades",
+							trading_post_url_for(item.pb_item_name),
+							target: "_blank", icon: search_icon
+					- else
+						.special-color-explanation
+							No Paint Brush for this color. Get via Lab
+							Ray, morphing potions, etc.
 
 - if @other_nc_items.present?
 	%h2 Neocash items (Capsules, Dyeworks, events, retired, etc.)

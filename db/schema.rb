@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_11_003019) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_22_222040) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "species_id", null: false
     t.integer "color_id", null: false
@@ -76,6 +76,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_11_003019) do
     t.boolean "standard"
     t.boolean "prank", default: false, null: false
     t.string "name", null: false
+    t.string "pb_item_name"
   end
 
   create_table "contributions", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|

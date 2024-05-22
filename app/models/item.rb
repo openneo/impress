@@ -179,6 +179,28 @@ class Item < ApplicationRecord
     nc_mall_record&.current_price
   end
 
+  # If this is a PB item, return the corresponding Color, inferred from the
+  # item name. If it's not a PB item, or we fail to infer, return nil.
+  def pb_color
+    return nil unless pb?
+
+    # NOTE: To handle colors like "Royalboy", where the items aren't consistent
+    # with the color name regarding whether or not there's spaces, we remove
+    # all spaces from the item name and color name when matching. We also
+    # hackily handle the fact that "Elderlyboy" color has items named "Elderly
+    # Male" (and same for Girl/Female) by replacing those words, too. These
+    # hacks could cause false matches in theory, but I'm not aware of any rn!
+    normalized_name = name.downcase.gsub("female", "girl").gsub("male", "boy").
+      gsub(/\s/, "")
+
+    Color.order(:name).
+      find { |c| normalized_name.include?(c.name.downcase.gsub(/\s/, "")) }
+  end
+
+  def pb_item_name
+    pb_color&.pb_item_name
+  end
+
   def restricted_zones(options={})
     options[:scope] ||= Zone.all
     options[:scope].find(restricted_zone_ids)

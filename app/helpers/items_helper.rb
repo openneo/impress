@@ -97,8 +97,9 @@ module ItemsHelper
   SHOP_WIZARD_URL_TEMPLATE = Addressable::Template.new(
     "https://www.neopets.com/shops/wizard.phtml{?string}"
   )
-  def shop_wizard_url_for(item)
-    SHOP_WIZARD_URL_TEMPLATE.expand(string: item.name).to_s
+  def shop_wizard_url_for(item_or_name)
+    item_or_name = item_or_name.name if item_or_name.is_a? Item
+    SHOP_WIZARD_URL_TEMPLATE.expand(string: item_or_name).to_s
   end
   
   SUPER_SHOP_WIZARD_URL_TEMPLATE = Addressable::Template.new(
@@ -111,8 +112,9 @@ module ItemsHelper
   TRADING_POST_URL_TEMPLATE = Addressable::Template.new(
     "https://www.neopets.com/island/tradingpost.phtml?type=browse&criteria=item_exact{&search_string}"
   )
-  def trading_post_url_for(item)
-    TRADING_POST_URL_TEMPLATE.expand(search_string: item.name).to_s
+  def trading_post_url_for(item_or_name)
+    item_or_name = item_or_name.name if item_or_name.is_a? Item
+    TRADING_POST_URL_TEMPLATE.expand(search_string: item_or_name).to_s
   end
   
   AUCTION_GENIE_URL_TEMPLATE = Addressable::Template.new(
