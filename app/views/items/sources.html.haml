@@ -67,6 +67,10 @@
 					- if color.pb_item_thumbnail_url?
 						= image_tag color.pb_item_thumbnail_url,
 							alt: "Item thumbnail for #{color.pb_item_name}"
+					- else
+						= image_tag pet_type_image_url(@pb_color_pet_types[color], size: :face),
+							srcset: ["#{pet_type_image_url(@pb_color_pet_types[color], size: :face_2x)} 2x"],
+							alt: @pb_color_pet_types[color].human_name
 				%th
 					#{color.pb_item_name || color.name.humanize}
 					(#{pluralize items.size, "item"})

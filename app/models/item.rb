@@ -197,6 +197,14 @@ class Item < ApplicationRecord
       find { |c| normalized_name.include?(c.name.downcase.gsub(/\s/, "")) }
   end
 
+  # If this is a PB item, return the corresponding Species, inferred from the
+  # item name. If it's not a PB item, or we fail to infer, return nil.
+  def pb_species
+    return nil unless pb?
+    normalized_name = name.downcase
+    Species.order(:name).find { |s| normalized_name.include?(s.name.downcase) }
+  end
+
   def pb_item_name
     pb_color&.pb_item_name
   end

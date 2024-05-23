@@ -2,21 +2,32 @@ require "addressable/template"
 
 module ItemsHelper
   module PetTypeImage
-    Format = 'https://pets.neopets.com/cp/%s/%i/%i.png'
+    Template = Addressable::Template.new(
+      "https://pets.neopets.com/cp/{hash}/{emotion}/{size}.png"
+    )
 
     Emotions = {
-      :happy => 1,
-      :sad => 2,
-      :angry => 3,
-      :ill => 4
+      happy: 1,
+      sad: 2,
+      angry: 3,
+      ill: 4,
     }
 
     Sizes = {
-      :face => 1,
-      :thumb => 2,
-      :zoom => 3,
-      :full => 4
+      face: 1,
+      thumb: 2,
+      zoom: 3,
+      full: 4,
+      face_2x: 6,
     }
+  end
+
+  def pet_type_image_url(pet_type, emotion: :happy, size: :face)
+    PetTypeImage::Template.expand(
+      hash: pet_type.basic_image_hash || pet_type.image_hash,
+      emotion: PetTypeImage::Emotions[emotion],
+      size: PetTypeImage::Sizes[size],
+    ).to_s
   end
 
   def standard_species_search_links
@@ -157,9 +168,7 @@ module ItemsHelper
   end
 
   def pet_type_image(pet_type, emotion, size)
-    emotion_id = PetTypeImage::Emotions[emotion]
-    size_id = PetTypeImage::Sizes[size]
-    src = sprintf(PetTypeImage::Format, pet_type.basic_image_hash, emotion_id, size_id)
+    src = pet_type_image_url(pet_type, emotion:, size:)
     human_name = pet_type.species.name.humanize
     image_tag(src, :alt => human_name, :title => human_name)
   end
