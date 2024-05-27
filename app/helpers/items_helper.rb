@@ -156,6 +156,17 @@ module ItemsHelper
     "Last updated: #{date_str} (#{time_ago_str} ago)"
   end
 
+  def nc_trade_value_subtitle_for(item)
+    value = item.nc_trade_value
+    return nil if value.nil?
+
+    link_to "Owls listing: #{item.nc_trade_value.value_text}",
+      "https://www.neopets.com/~owls",
+      title: 'Owls keeps track of approximate "capsule" values of NC items ' +
+        "for trading. Items with similar values can often be traded for one " +
+        "another. This is an estimate, not a rule!"
+  end
+
   private
 
   def build_on_pet_types(species, special_color=nil, &block)

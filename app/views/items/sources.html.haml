@@ -106,7 +106,7 @@
 				Total: #{pluralize @other_nc_items.size, "item"}
 		%tbody
 			- @other_nc_items.each do |item|
-				= render "item_list_row", item: do
+				= render "item_list_row", item:, subtitle: nc_trade_value_subtitle_for(item) do
 					= button_link_to "NC Trades",
 						item_trades_path(item, type: "offering"),
 						target: "_blank", icon: search_icon

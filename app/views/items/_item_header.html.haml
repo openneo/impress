@@ -28,7 +28,7 @@
       = link_to t('items.show.resources.jn_items'), jn_items_url_for(item)
       = link_to t('items.show.resources.impress_2020'), impress_2020_url_for(item)
       - if item.nc_trade_value
-        = link_to t('items.show.resources.owls', value: item.nc_trade_value.value_text),
+        = link_to t('items.show.resources.owls', value: item.nc_trade_value_text),
           "https://www.neopets.com/~owls",
           title: nc_trade_value_updated_at_text(item.nc_trade_value)
       - unless item.nc?
