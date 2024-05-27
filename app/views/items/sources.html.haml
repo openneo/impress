@@ -99,7 +99,17 @@
 		purchased at all anymore, and can only be obtained via gifts or trades.
 
 		[mall]: https://ncmall.neopets.com/
-	= render @other_nc_items
+	%table.item-list
+		%thead
+			%td
+			%th{colspan: 2}
+				Total: #{pluralize @other_nc_items.size, "item"}
+		%tbody
+			- @other_nc_items.each do |item|
+				= render "item_list_row", item: do
+					= button_link_to "NC Trades",
+						item_trades_path(item, type: "offering"),
+						target: "_blank", icon: search_icon
 
 - content_for :stylesheets do
 	= page_stylesheet_link_tag "items/sources"
