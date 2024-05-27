@@ -1,3 +1,6 @@
+require "async"
+require "async/barrier"
+
 class Item < ApplicationRecord
   include PrettyParam
   
@@ -114,15 +117,25 @@ class Item < ApplicationRecord
 
   def nc_trade_value
     return nil unless nc?
-    begin
+
+    # Load the trade value, if we haven't already. Note that, because the trade
+    # value may be nil, we also save an explicit boolean for whether we've
+    # already looked it up, rather than checking if the saved value is empty.
+    return @nc_trade_value if @nc_trade_value_loaded
+
+    @nc_trade_value = begin
+      Rails.logger.debug "Item #{id} (#{name}) <lookup>"
       OwlsValueGuide.find_by_name(name)
     rescue OwlsValueGuide::NotFound => error
       Rails.logger.debug("No NC trade value listed for #{name} (#{id})")
-      return nil
+      nil
     rescue OwlsValueGuide::NetworkError => error
       Rails.logger.error("Couldn't load nc_trade_value: #{error.full_message}")
-      return nil
+      nil
     end
+
+    @nc_trade_value_loaded = true
+    @nc_trade_value
   end
   
   # Return an OrderedHash mapping users to the number of times they
@@ -597,6 +610,27 @@ class Item < ApplicationRecord
         end
       end
     end
+  end
+
+  def self.preload_nc_trade_values(items)
+    # Only allow 10 trade values to be loaded at a time.
+    barrier = Async::Barrier.new
+    semaphore = Async::Semaphore.new(10, parent: barrier)
+
+    Sync do
+      # Load all the trade values in concurrent async tasks. (The
+      # `nc_trade_value` caches the value in the Item object.)
+      items.each do |item|
+        semaphore.async { item.nc_trade_value }
+      end
+
+      # Wait until all tasks are done.
+      barrier.wait
+    ensure
+      barrier.stop # If something goes wrong, clean up all tasks.
+    end
+
+    items
   end
 
   def self.collection_from_pet_type_and_registries(pet_type, info_registry, asset_registry, scope=Item.all)

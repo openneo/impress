@@ -128,6 +128,9 @@ class ItemsController < ApplicationController
     @np_items = @items.select(&:np?)
     @pb_items = @items.select(&:pb?)
 
+    # Start loading the NC trade values for the non-Mall NC items.
+    trade_values_task = Async { Item.preload_nc_trade_values(@other_nc_items) }
+
     # Also, PB items have some special handling: we group them by color, then
     # load example pet types for the colors that don't have paint brushes.
     @pb_items_by_color = @pb_items.group_by(&:pb_color).
@@ -143,6 +146,9 @@ class ItemsController < ApplicationController
         .first
       [color, color.example_pet_type(preferred_species: species)]
     end.to_h
+
+    # Finish loading the NC trade values.
+    trade_values_task.wait
 
     render layout: "application"
   end
