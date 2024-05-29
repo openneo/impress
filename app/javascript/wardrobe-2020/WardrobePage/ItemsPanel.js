@@ -31,12 +31,20 @@ import {
   CheckIcon,
   DeleteIcon,
   EditIcon,
+  ExternalLinkIcon,
   QuestionIcon,
   WarningTwoIcon,
 } from "@chakra-ui/icons";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import { useSearchParams } from "react-router-dom";
 
-import { Delay, ErrorMessage, Heading1, Heading2 } from "../util";
+import {
+  Delay,
+  ErrorMessage,
+  Heading1,
+  Heading2,
+  useLocalStorage,
+} from "../util";
 import Item, { ItemListContainer, ItemListSkeleton } from "./Item";
 import { BiRename } from "react-icons/bi";
 import { IoCloudUploadOutline } from "react-icons/io5";
@@ -271,6 +279,45 @@ function ItemZoneGroupSkeleton({ itemCount }) {
 }
 
 /**
+ * GetTheseItemsButton shows the "Get these items!" button, to link to the
+ * Item Getting Guide page for the items in this outfit. If there are no items
+ * being worn, this is disabled.
+ */
+function GetTheseItemsButton({ outfitState }) {
+  const [searchParams] = useSearchParams();
+  const [isVisible, setIsVisible] = useLocalStorage("DTIShowGetTheseItems");
+
+  // Enable this feature by visiting `/outfits/new?features=get-these-items`.
+  React.useEffect(() => {
+    const features = searchParams.get("features") ?? "";
+    if (features.split(",").includes("get-these-items")) {
+      setIsVisible(true);
+    }
+  }, [searchParams, setIsVisible]);
+
+  const itemIds = [...outfitState.wornItemIds].sort();
+  const targetUrl = `/items/sources/${itemIds.join(",")}`;
+  const isDisabled = itemIds.length === 0;
+
+  if (!isVisible) {
+    return null;
+  }
+
+  return (
+    <Button
+      as={isDisabled ? "button" : "a"}
+      href={isDisabled ? undefined : targetUrl}
+      target={isDisabled ? undefined : "_blank"}
+      colorScheme="purple"
+      rightIcon={<ExternalLinkIcon />}
+      isDisabled={isDisabled}
+    >
+      Get these items!
+    </Button>
+  );
+}
+
+/**
  * OutfitSavingIndicator shows a Save button, or the "Saved" or "Saving" state,
  * if the user can save this outfit. If not, this is empty!
  */
@@ -403,6 +450,9 @@ function OutfitHeading({ outfitState, outfitSaving, dispatchToOutfit }) {
             </Box>
           </Box>
           <Box width="4" flex="1 0 auto" />
+          <Box flex="0 0 auto">
+            <GetTheseItemsButton outfitState={outfitState} />
+          </Box>
           <Box flex="0 0 auto">
             <OutfitSavingIndicator outfitSaving={outfitSaving} />
           </Box>
