@@ -309,6 +309,7 @@ function GetTheseItemsButton({ outfitState }) {
       href={isDisabled ? undefined : targetUrl}
       target={isDisabled ? undefined : "_blank"}
       colorScheme="purple"
+      size="sm"
       rightIcon={<ExternalLinkIcon />}
       isDisabled={isDisabled}
     >
@@ -451,10 +452,11 @@ function OutfitHeading({ outfitState, outfitSaving, dispatchToOutfit }) {
           </Box>
           <Box width="4" flex="1 0 auto" />
           <Box flex="0 0 auto">
-            <GetTheseItemsButton outfitState={outfitState} />
-          </Box>
-          <Box flex="0 0 auto">
             <OutfitSavingIndicator outfitSaving={outfitSaving} />
+          </Box>
+          <Box width="2" />
+          <Box flex="0 0 auto">
+            <GetTheseItemsButton outfitState={outfitState} />
           </Box>
           <Box width="2" />
           <Menu placement="bottom-end">
