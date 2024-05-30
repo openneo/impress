@@ -1,3 +1,5 @@
+require "addressable/template"
+
 class AltStyle < ApplicationRecord
   belongs_to :species
   belongs_to :color
@@ -35,11 +37,20 @@ class AltStyle < ApplicationRecord
     "#{series_name} #{color.human_name}"
   end
 
+  THUMBNAIL_URL_TEMPLATE = Addressable::Template.new(
+    "https://images.neopets.com/items/{series}_{color}_{species}.gif"
+  )
+  DEFAULT_THUMBNAIL_URL = "https://images.neopets.com/items/mall_bg_circle.gif"
   def thumbnail_url
-    # HACK: Just assume this is a Nostalgic Alt Style, and that the thumbnail
-    # is named reliably!
-    "https://images.neopets.com/items/nostalgic_" +
-      "#{color.name.gsub(/\s+/, '').downcase}_#{species.name.downcase}.gif"
+    return DEFAULT_THUMBNAIL_URL unless has_real_series_name?
+
+    # HACK: We're assuming this is the format long-term! But if it changes, we
+    # may need to add it as a database field instead.
+    THUMBNAIL_URL_TEMPLATE.expand(
+      series: series_name.gsub(/\s+/, '').downcase,
+      color: color.name.gsub(/\s+/, '').downcase,
+      species: species.name.gsub(/\s+/, '').downcase,
+    ).to_s
   end
 
   def preview_image_url
