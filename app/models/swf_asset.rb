@@ -338,7 +338,7 @@ class SwfAsset < ApplicationRecord
     end
 
     SwfAsset.transaction do
-      swf_assets.each(&:save!)
+      swf_assets.select(&:changed?).each(&:save!)
     end
   end
 
