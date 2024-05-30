@@ -8,6 +8,8 @@ class AltStyle < ApplicationRecord
   has_many :swf_assets, through: :parent_swf_asset_relationships
   has_many :contributions, as: :contributed, inverse_of: :contributed
 
+  validates :body_id, presence: true
+
   scope :matching_name, ->(series_name, color_name, species_name) {
     color = Color.find_by_name!(color_name)
     species = Species.find_by_name!(species_name)
