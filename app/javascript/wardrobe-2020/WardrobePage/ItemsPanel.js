@@ -31,10 +31,10 @@ import {
   CheckIcon,
   DeleteIcon,
   EditIcon,
-  ExternalLinkIcon,
   QuestionIcon,
   WarningTwoIcon,
 } from "@chakra-ui/icons";
+import { FaCartPlus } from "react-icons/fa6";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { useSearchParams } from "react-router-dom";
 
@@ -304,17 +304,24 @@ function GetTheseItemsButton({ outfitState }) {
   }
 
   return (
-    <Button
-      as={isDisabled ? "button" : "a"}
-      href={isDisabled ? undefined : targetUrl}
-      target={isDisabled ? undefined : "_blank"}
-      colorScheme="purple"
-      size="sm"
-      rightIcon={<ExternalLinkIcon />}
-      isDisabled={isDisabled}
+    <Tooltip
+      label="Get these items!"
+      placement="top"
+      background="purple.500"
+      color="white"
     >
-      Get these items!
-    </Button>
+      <IconButton
+        aria-label="Get these items!"
+        as={isDisabled ? "button" : "a"}
+        href={isDisabled ? undefined : targetUrl}
+        target={isDisabled ? undefined : "_blank"}
+        icon={<FaCartPlus />}
+        colorScheme="purple"
+        size="sm"
+        isRound
+        isDisabled={isDisabled}
+      />
+    </Tooltip>
   );
 }
 
@@ -451,21 +458,18 @@ function OutfitHeading({ outfitState, outfitSaving, dispatchToOutfit }) {
             </Box>
           </Box>
           <Box width="4" flex="1 0 auto" />
-          <Box flex="0 0 auto">
-            <OutfitSavingIndicator outfitSaving={outfitSaving} />
-          </Box>
-          <Box width="2" />
-          <Box flex="0 0 auto">
-            <GetTheseItemsButton outfitState={outfitState} />
-          </Box>
-          <Box width="2" />
+          <OutfitSavingIndicator outfitSaving={outfitSaving} />
+          <Box width="3" flex="0 0 auto" />
+          <GetTheseItemsButton outfitState={outfitState} />
+          <Box width="2" flex="0 0 auto" />
           <Menu placement="bottom-end">
             <MenuButton
               as={IconButton}
               variant="ghost"
               icon={<MdMoreVert />}
               aria-label="Outfit menu"
-              borderRadius="full"
+              isRound
+              size="sm"
               fontSize="24px"
               opacity="0.8"
             />
