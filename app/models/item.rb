@@ -60,8 +60,23 @@ class Item < ApplicationRecord
   }
   scope :occupies, ->(zone_label) {
     zone_ids = Zone.matching_label(zone_label).map(&:id)
+
+    # NOTE: In searches, this query performs much better using a subquery
+    # instead of joins! This is because, in the joins case, filtering by an
+    # `swf_assets` field but sorting by an `items` field causes the query
+    # planner to only be able to use an index for *one* of them. In this case,
+    # MySQL can use the `swf_assets`.`zone_id` index to get the item IDs for
+    # the subquery, then use the `items`.`name` index to sort them.
+    i = arel_table
+    psa = ParentSwfAssetRelationship.arel_table
     sa = SwfAsset.arel_table
-    joins(:swf_assets).where(sa[:zone_id].in(zone_ids)).distinct
+    where(
+      ParentSwfAssetRelationship.joins(:swf_asset).
+        where(sa[:zone_id].in(zone_ids)).
+        where(psa[:parent_type].eq("Item")).
+        where(psa[:parent_id].eq(i[:id])).
+        arel.exists
+    )
   }
   scope :not_occupies, ->(zone_label) {
     zone_ids = Zone.matching_label(zone_label).map(&:id)
