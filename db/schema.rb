@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_22_233638) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_03_181855) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "species_id", null: false
     t.integer "color_id", null: false
@@ -140,6 +140,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_22_233638) do
     t.index ["modeling_status_hint", "created_at"], name: "items_modeling_status_hint_and_created_at"
     t.index ["modeling_status_hint", "id"], name: "items_modeling_status_hint_and_id"
     t.index ["modeling_status_hint"], name: "items_modeling_status_hint"
+    t.index ["name"], name: "index_items_on_name"
   end
 
   create_table "login_cookies", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
