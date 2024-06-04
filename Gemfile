@@ -85,8 +85,3 @@ gem "sentry-rails", "~> 5.12"
 
 # For tasks that use shell commands.
 gem "shell", "~> 0.8.1"
-
-# For automated testing.
-group :test do
-	gem 'sqlite3', '~> 1.7'
-end
