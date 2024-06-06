@@ -71,11 +71,14 @@
 						= image_tag pet_type_image_url(@pb_color_pet_types[color], size: :face),
 							srcset: ["#{pet_type_image_url(@pb_color_pet_types[color], size: :face_2x)} 2x"],
 							alt: @pb_color_pet_types[color].human_name
+					- else
+						= image_tag "https://images.neopets.com/items/starter_red_pb.gif",
+							alt: "Item thumbnail for Starter Red Paint Brush"
 				%th
 					- if color
 						#{color.pb_item_name || color.name.humanize}
 					- else
-						??? New color
+						Basic colors
 					(#{pluralize items.size, "item"})
 				%td.actions-cell
 					- if color&.pb_item_name?
@@ -90,7 +93,7 @@
 							Get via Lab Ray, morphing potions, etc.
 					- else
 						.special-color-explanation
-							We don't have info about this color yet.
+							Many colors, like Red, will grant this item.
 			%tbody
 				- items.each do |item|
 					= render "item_list_row", item:
