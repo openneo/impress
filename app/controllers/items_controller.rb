@@ -134,10 +134,10 @@ class ItemsController < ApplicationController
     # Also, PB items have some special handling: we group them by color, then
     # load example pet types for the colors that don't have paint brushes.
     @pb_items_by_color = @pb_items.group_by(&:pb_color).
-      sort_by { |color, items| color.name }.to_h
+      sort_by { |color, items| color&.name }.to_h
 
-    colors_without_thumbnails =
-      @pb_items_by_color.keys.reject(&:pb_item_thumbnail_url?)
+    colors_without_thumbnails = @pb_items_by_color.keys.
+      select(&:present?).reject(&:pb_item_thumbnail_url?)
 
     @pb_color_pet_types = colors_without_thumbnails.map do |color|
       # Infer the ideal species from the first item we can, then try to find a

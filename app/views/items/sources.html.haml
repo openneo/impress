@@ -64,27 +64,33 @@
 		%table.item-list{"data-group-type": "bundle"}
 			%thead
 				%td.thumbnail-cell
-					- if color.pb_item_thumbnail_url?
+					- if color&.pb_item_thumbnail_url?
 						= image_tag color.pb_item_thumbnail_url,
 							alt: "Item thumbnail for #{color.pb_item_name}"
-					- else
+					- elsif color
 						= image_tag pet_type_image_url(@pb_color_pet_types[color], size: :face),
 							srcset: ["#{pet_type_image_url(@pb_color_pet_types[color], size: :face_2x)} 2x"],
 							alt: @pb_color_pet_types[color].human_name
 				%th
-					#{color.pb_item_name || color.name.humanize}
+					- if color
+						#{color.pb_item_name || color.name.humanize}
+					- else
+						??? New color
 					(#{pluralize items.size, "item"})
 				%td.actions-cell
-					- if color.pb_item_name?
+					- if color&.pb_item_name?
 						= button_link_to "Shops",
 							shop_wizard_url_for(color.pb_item_name),
 							target: "_blank", icon: search_icon
 						= button_link_to "Trades",
 							trading_post_url_for(color.pb_item_name),
 							target: "_blank", icon: search_icon
-					- else
+					- elsif color
 						.special-color-explanation
 							Get via Lab Ray, morphing potions, etc.
+					- else
+						.special-color-explanation
+							We don't have info about this color yet.
 			%tbody
 				- items.each do |item|
 					= render "item_list_row", item:
