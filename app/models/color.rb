@@ -21,7 +21,8 @@ class Color < ApplicationRecord
     end
   end
 
-  def example_pet_type(preferred_species: Species.first)
+  def example_pet_type(preferred_species: nil)
+    preferred_species ||= Species.first
     pet_types.order([Arel.sql("species_id = ? DESC"), preferred_species.id],
       "species_id ASC").first
   end
