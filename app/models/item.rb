@@ -208,7 +208,11 @@ class Item < ApplicationRecord
   end
 
   # If this is a PB item, return the corresponding Color, inferred from the
-  # item name. If it's not a PB item, or we fail to infer, return nil.
+  # item name. If it's not a PB item, or we fail to infer a specific color,
+  # return nil. (This is expected to be nil for some PB items, like the "Aisha
+  # Collar", which belong to many colors. It can also be nil for PB items for
+  # new colors we haven't manually added to the database yet, or if a PB item
+  # is named strangely in the future.)
   def pb_color
     return nil unless pb?
 
@@ -226,7 +230,10 @@ class Item < ApplicationRecord
   end
 
   # If this is a PB item, return the corresponding Species, inferred from the
-  # item name. If it's not a PB item, or we fail to infer, return nil.
+  # item name. If it's not a PB item, or we fail to infer a specific species,
+  # return nil. (This is not expected to be nil in general, but could be for PB
+  # items for new species we haven't manually added to the database yet, or if
+  # a PB item is named strangely in the future.)
   def pb_species
     return nil unless pb?
     normalized_name = name.downcase
