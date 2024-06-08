@@ -195,6 +195,26 @@ class Item < ApplicationRecord
     nc_mall_record.present?
   end
 
+  def dyeworks?
+    dyeworks_base_item.present?
+  end
+
+  DYEWORKS_NAME_PATTERN = %r{
+    ^(
+      # Most Dyeworks items have a colon in the name.
+      Dyeworks\s+(?<color>.+?:)\s*(?<base>.+)
+      |
+      # But sometimes they omit it. If so, assume the first word is the color!
+      Dyeworks\s+(?<color>\S+)\s*(?<base>.+)
+    )$
+  }x
+  def dyeworks_base_item
+    name_match = name.match(DYEWORKS_NAME_PATTERN)
+    return nil if name_match.nil?
+
+    Item.find_by_name(name_match["base"])
+  end
+
   def owned?
     @owned || false
   end
