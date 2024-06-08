@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_03_181855) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_08_022149) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "species_id", null: false
     t.integer "color_id", null: false
@@ -136,6 +136,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_03_181855) do
     t.string "name", null: false
     t.text "description", size: :medium, null: false
     t.string "rarity", default: "", null: false
+    t.integer "dyeworks_base_item_id"
+    t.index ["dyeworks_base_item_id"], name: "index_items_on_dyeworks_base_item_id"
     t.index ["modeling_status_hint", "created_at", "id"], name: "items_modeling_status_hint_and_created_at_and_id"
     t.index ["modeling_status_hint", "created_at"], name: "items_modeling_status_hint_and_created_at"
     t.index ["modeling_status_hint", "id"], name: "items_modeling_status_hint_and_id"
@@ -292,6 +294,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_03_181855) do
 
   add_foreign_key "alt_styles", "colors"
   add_foreign_key "alt_styles", "species"
+  add_foreign_key "items", "items", column: "dyeworks_base_item_id"
   add_foreign_key "nc_mall_records", "items"
   add_foreign_key "outfits", "alt_styles"
 end

@@ -14,6 +14,9 @@ class Item < ApplicationRecord
   has_one :nc_mall_record
   has_many :parent_swf_asset_relationships, :as => :parent
   has_many :swf_assets, :through => :parent_swf_asset_relationships
+  belongs_to :dyeworks_base_item, class_name: "Item",
+    default: -> { inferred_dyeworks_base_item }, optional: true
+
 
   attr_writer :current_body_id, :owned, :wanted
 
@@ -208,7 +211,7 @@ class Item < ApplicationRecord
       Dyeworks\s+(?<color>\S+)\s*(?<base>.+)
     )$
   }x
-  def dyeworks_base_item
+  def inferred_dyeworks_base_item
     name_match = name.match(DYEWORKS_NAME_PATTERN)
     return nil if name_match.nil?
 
