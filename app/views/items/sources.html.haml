@@ -174,9 +174,11 @@
 				= render "item_list_row", item: do
 					- content_for :subtitle, flush: true do
 						- if item.nc_trade_value.present?
-							= link_to "Owls listing: #{item.nc_trade_value.value_text}",
-								"https://www.neopets.com/~owls", target: "_blank",
-								title: 'Owls keeps track of approximate "capsule" values of NC items for trading. Items with similar values can often be traded for one another. This is an estimate, not a rule!'
+							= link_to "https://www.neopets.com/~owls",
+								class: "owls-info-link", target: "_blank",
+								title: 'Owls keeps track of approximate "capsule" values of NC items for trading. Items with similar values can often be traded for one another. This is an estimate, not a rule!' do
+								%span.owls-info-label Owls listing:
+								#{item.nc_trade_value.value_text}
 
 					= button_link_to "NC Trades",
 						item_trades_path(item, type: "offering"),
