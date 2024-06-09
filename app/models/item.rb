@@ -203,9 +203,25 @@ class Item < ApplicationRecord
   end
 
   # Whether this is a Dyeworks item whose base item can currently be purchased
-  # in the NC Mall, then dyed via Dyeworks.
-  def dyeworks_active?
+  # in the NC Mall. It may or may not currently be *dyeable* in the NC Mall,
+  # because Dyeworks eligibility is often a limited-time event.
+  def dyeworks_base_buyable?
     dyeworks_base_item.present? && dyeworks_base_item.currently_in_mall?
+  end
+
+  # Whether this is one of the few Dyeworks items that can be dyed in the NC
+  # Mall at any time, rather than as part of a limited-time event. (Owls tracks
+  # this, not us!)
+  def dyeworks_permanent?
+    nc_trade_value.value_text.include?("Permanent Dyeworks")
+  end
+
+  # Whether this is a Dyeworks item whose base item can currently be purchased
+  # in the NC Mall, then dyed via Dyeworks. (Owls tracks this last part!)
+  def dyeworks_buyable?
+    # TODO: Add support for limited-time Dyeworks items. Does Owls offer this
+    # info too? (At time of writing, there are no active Dyeworks events.)
+    dyeworks_base_buyable? && dyeworks_permanent?
   end
 
   DYEWORKS_NAME_PATTERN = %r{

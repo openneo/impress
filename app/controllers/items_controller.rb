@@ -122,14 +122,19 @@ class ItemsController < ApplicationController
       return
     end
 
+    # For Dyeworks items whose base is currently in the NC Mall, preload their
+    # trade values. We'll use this to determine which ones are fully buyable rn
+    # (because Owls tracks this data and we don't).
+    Item.preload_nc_trade_values(@items.select(&:dyeworks_base_buyable?))
+
     # Group the items by category!
     @nc_mall_items = @items.select(&:currently_in_mall?).
-      reject(&:dyeworks_active?)
-    @active_dyeworks_items = @items.select(&:dyeworks_active?)
+      reject(&:dyeworks_buyable?)
+    @buyable_dyeworks_items = @items.select(&:dyeworks_buyable?)
     @np_items = @items.select(&:np?)
     @pb_items = @items.select(&:pb?)
     @other_nc_items = @items.select(&:nc?).reject(&:currently_in_mall?).
-      reject(&:dyeworks_active?)
+      reject(&:dyeworks_buyable?)
 
     # Start loading the NC trade values for the non-Mall NC items.
     trade_values_task = Async { Item.preload_nc_trade_values(@other_nc_items) }
