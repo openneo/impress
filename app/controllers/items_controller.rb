@@ -114,8 +114,8 @@ class ItemsController < ApplicationController
 
   def sources
     item_ids = params[:ids].split(",")
-    @items = Item.where(id: item_ids).includes(:nc_mall_record).order(:name).
-      limit(50)
+    @items = Item.where(id: item_ids).includes(:nc_mall_record).
+      includes(:dyeworks_base_item).order(:name).limit(50)
 
     if @items.empty?
       render file: "public/404.html", status: :not_found, layout: nil
@@ -123,10 +123,13 @@ class ItemsController < ApplicationController
     end
 
     # Group the items by category!
-    @nc_mall_items = @items.select(&:currently_in_mall?)
-    @other_nc_items = @items.select(&:nc?).reject(&:currently_in_mall?)
+    @nc_mall_items = @items.select(&:currently_in_mall?).
+      reject(&:dyeworks_active?)
+    @active_dyeworks_items = @items.select(&:dyeworks_active?)
     @np_items = @items.select(&:np?)
     @pb_items = @items.select(&:pb?)
+    @other_nc_items = @items.select(&:nc?).reject(&:currently_in_mall?).
+      reject(&:dyeworks_active?)
 
     # Start loading the NC trade values for the non-Mall NC items.
     trade_values_task = Async { Item.preload_nc_trade_values(@other_nc_items) }

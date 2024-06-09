@@ -202,6 +202,12 @@ class Item < ApplicationRecord
     dyeworks_base_item.present?
   end
 
+  # Whether this is a Dyeworks item whose base item can currently be purchased
+  # in the NC Mall, then dyed via Dyeworks.
+  def dyeworks_active?
+    dyeworks_base_item.present? && dyeworks_base_item.currently_in_mall?
+  end
+
   DYEWORKS_NAME_PATTERN = %r{
     ^(
       # Most Dyeworks items have a colon in the name.

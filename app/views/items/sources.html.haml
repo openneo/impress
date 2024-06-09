@@ -15,7 +15,7 @@
 			%tr
 				%td
 				%th
-					Total: #{@nc_mall_items.map(&:current_nc_price).sum} NC
+					Total: #{nc_total_for @nc_mall_items} NC
 					(#{pluralize @nc_mall_items.size, "item"})
 						
 					%td.actions-cell
@@ -28,6 +28,47 @@
 					%button{onclick: "alert('Todo!')"}
 						= cart_icon alt: ""
 						Buy (#{item.current_nc_price} NC)
+
+- if @active_dyeworks_items.present?
+	%h2 Dyeworks items
+	:markdown
+		These are recolored "Dyeworks" variants of items. First get the "base"
+		item, then get a Dyeworks Hue Brew Potion, and combine them in the
+		[Dyeworks][dyeworks] section of the NC Mall! Potions can also be bought in
+		bundles of 5 or 10.
+
+		TODO: This is currently incorrect! Dyeworks items can't always be dyed, we
+		need to keep track of which ones actually can be right now!
+
+		[dyeworks]: https://www.neopets.com/mall/dyeworks/
+	%table.item-list
+		%thead
+			%td.thumbnail-cell
+				= image_tag "https://images.neopets.com/items/mall_80x80_cleaning.gif",
+					alt: "Dyeworks Hue Brew Potion"
+			%th
+				Total: #{dyeworks_nc_total_for @active_dyeworks_items} NC
+				= surround "(", ")" do
+					%span.price-breakdown{
+						title: "#{dyeworks_items_nc_total_for(@active_dyeworks_items)} NC"
+					}<
+						#{pluralize @active_dyeworks_items.size, "item"}
+					+
+					%span.price-breakdown{
+						title: dyeworks_potions_nc_summary(@active_dyeworks_items.size)
+					}<
+						#{pluralize @active_dyeworks_items.size, "potion"}
+			%td.actions-cell
+				%button{onclick: "alert('Todo!')"}
+					= cart_icon alt: ""
+					Buy all in NC Mall
+		%tbody
+			- @active_dyeworks_items.each do |item|
+				= render "item_list_row", item:,
+					subtitle: dyeworks_explanation_subtitle_for(item) do
+					%button{onclick: "alert('Todo!')"}
+						= cart_icon alt: ""
+						Buy base (#{item.dyeworks_base_item.current_nc_price} NC)
 
 - if @np_items.present?
 	%h2 Neopoint items
@@ -99,7 +140,7 @@
 					= render "item_list_row", item:
 
 - if @other_nc_items.present?
-	%h2 Neocash items (Capsules, Dyeworks, events, retired, etc.)
+	%h2 Neocash items (Capsules, events, retired, etc.)
 	:markdown
 		These items are part of the Neocash economy and can't be purchased with
 		Neopoints. We don't track all the details of how to get these items

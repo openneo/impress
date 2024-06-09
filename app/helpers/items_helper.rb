@@ -161,10 +161,68 @@ module ItemsHelper
     return nil if value.nil?
 
     link_to "Owls listing: #{item.nc_trade_value.value_text}",
-      "https://www.neopets.com/~owls",
+      "https://www.neopets.com/~owls", target: "_blank",
       title: 'Owls keeps track of approximate "capsule" values of NC items ' +
         "for trading. Items with similar values can often be traded for one " +
         "another. This is an estimate, not a rule!"
+  end
+
+  def dyeworks_explanation_subtitle_for(item)
+    base_item = item.dyeworks_base_item
+    content_tag :span, class: "dyeworks-explanation" do
+      concat link_to(base_item.name, base_item, target: "_blank")
+      concat " + 1 Potion"
+    end
+  end
+
+  def nc_total_for(items)
+    items.map(&:current_nc_price).sum
+  end
+
+  def dyeworks_nc_total_for(items)
+    dyeworks_items_nc_total_for(items) + dyeworks_potions_nc_total(items.size)
+  end
+
+  def dyeworks_items_nc_total_for(items)
+    nc_total_for items.map(&:dyeworks_base_item)
+  end
+
+  def dyeworks_potions_nc_total(num_items)
+    dyeworks_potions_nc_breakdown(num_items)[:nc_total]
+  end
+
+  def dyeworks_potions_nc_summary(num_items)
+    dyeworks_potions_nc_breakdown(num_items)[:summary]
+  end
+
+  def dyeworks_potions_nc_breakdown(num_items)
+    nc_total = 0
+    summaries = []
+
+    # For every 10 potions, buy a 10-Bundle for 900 NC.
+    while num_items >= 10
+      nc_total += 900
+      summaries << "10-Bundle (900 NC)"
+      num_items -= 10
+    end
+
+    # For every remaining 5 potions, buy a 5-Bundle for 500 NC.
+    while num_items >= 5
+      nc_total += 500
+      summaries << "5-Bundle (500 NC)"
+      num_items -= 5
+    end
+
+    # For every remaining potion, buy each directly for 125 NC.
+    if num_items >= 1
+      nc_total += num_items * 125
+      summaries << "#{pluralize num_items, "potion"} (#{num_items * 125} NC)"
+      num_items = 0
+    end
+
+    summary = summaries.join(", ")
+
+    {nc_total:, summary:}
   end
 
   private
