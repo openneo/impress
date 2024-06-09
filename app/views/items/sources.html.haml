@@ -10,6 +10,7 @@
 
 		[nc]: https://secure.nc.neopets.com/get-neocash
 		[gc]: https://secure.nc.neopets.com/nickcash-cards
+
 	%table.item-list
 		%thead
 			%tr
@@ -38,6 +39,7 @@
 		bundles of 5 or 10.
 
 		[dyeworks]: https://www.neopets.com/mall/dyeworks/
+
 	%table.item-list
 		%thead
 			%td.thumbnail-cell
@@ -63,10 +65,12 @@
 			- @buyable_dyeworks_items.each do |item|
 				= render "item_list_row", item: do
 					- base_item = item.dyeworks_base_item
+
 					- content_for :subtitle, flush: true do
 						%span.dyeworks-explanation
 							= link_to base_item.name, base_item, target: "_blank"
 							+ 1 potion
+
 					%button{onclick: "alert('Todo!')"}
 						= cart_icon alt: ""
 						Buy base (#{item.dyeworks_base_item.current_nc_price} NC)
@@ -82,6 +86,7 @@
 		[wiz]: https://www.neopets.com/shops/wizard.phtml
 		[tp]: https://www.neopets.com/island/tradingpost.phtml?type=browse
 		[ag]: https://www.neopets.com/genie.phtml
+
 	%table.item-list
 		%thead
 			%td
@@ -102,6 +107,7 @@
 		these items will be semi-permanently added to your Closet, even if your
 		pet changes color again! You can use this to mix-and-match styles for
 		"cross-paint" outfits.
+
 	- @pb_items_by_color.each do |color, items|
 		%table.item-list{"data-group-type": "bundle"}
 			%thead
@@ -150,6 +156,7 @@
 		purchased at all anymore, and can only be obtained via gifts or trades.
 
 		[mall]: https://ncmall.neopets.com/
+
 	%table.item-list
 		%thead
 			%td
@@ -163,6 +170,7 @@
 							= link_to "Owls listing: #{item.nc_trade_value.value_text}",
 								"https://www.neopets.com/~owls", target: "_blank",
 								title: 'Owls keeps track of approximate "capsule" values of NC items for trading. Items with similar values can often be traded for one another. This is an estimate, not a rule!'
+
 					= button_link_to "NC Trades",
 						item_trades_path(item, type: "offering"),
 						target: "_blank", icon: search_icon
