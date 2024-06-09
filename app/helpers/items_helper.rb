@@ -156,25 +156,6 @@ module ItemsHelper
     "Last updated: #{date_str} (#{time_ago_str} ago)"
   end
 
-  def nc_trade_value_subtitle_for(item)
-    value = item.nc_trade_value
-    return nil if value.nil?
-
-    link_to "Owls listing: #{item.nc_trade_value.value_text}",
-      "https://www.neopets.com/~owls", target: "_blank",
-      title: 'Owls keeps track of approximate "capsule" values of NC items ' +
-        "for trading. Items with similar values can often be traded for one " +
-        "another. This is an estimate, not a rule!"
-  end
-
-  def dyeworks_explanation_subtitle_for(item)
-    base_item = item.dyeworks_base_item
-    content_tag :span, class: "dyeworks-explanation" do
-      concat link_to(base_item.name, base_item, target: "_blank")
-      concat " + 1 Potion"
-    end
-  end
-
   def nc_total_for(items)
     items.map(&:current_nc_price).sum
   end

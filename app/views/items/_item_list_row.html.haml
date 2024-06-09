@@ -1,4 +1,6 @@
-- subtitle = nil unless defined? subtitle
+-# Run the block first, so we can get the subtitle content if provided!
+- content = yield
+- subtitle = yield :subtitle
 
 %tr
 	%td.thumbnail-cell
@@ -8,4 +10,4 @@
 		= link_to item.name, item, target: "_blank"
 		- if subtitle.present?
 			.subtitle= subtitle
-	%td.actions-cell= yield
+	%td.actions-cell= content

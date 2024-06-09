@@ -61,8 +61,12 @@
 					Buy all in NC Mall
 		%tbody
 			- @buyable_dyeworks_items.each do |item|
-				= render "item_list_row", item:,
-					subtitle: dyeworks_explanation_subtitle_for(item) do
+				= render "item_list_row", item: do
+					- base_item = item.dyeworks_base_item
+					- content_for :subtitle, flush: true do
+						%span.dyeworks-explanation
+							= link_to base_item.name, base_item, target: "_blank"
+							+ 1 potion
 					%button{onclick: "alert('Todo!')"}
 						= cart_icon alt: ""
 						Buy base (#{item.dyeworks_base_item.current_nc_price} NC)
@@ -153,7 +157,12 @@
 				Total: #{pluralize @other_nc_items.size, "item"}
 		%tbody
 			- @other_nc_items.each do |item|
-				= render "item_list_row", item:, subtitle: nc_trade_value_subtitle_for(item) do
+				= render "item_list_row", item: do
+					- content_for :subtitle, flush: true do
+						- if item.nc_trade_value.present?
+							= link_to "Owls listing: #{item.nc_trade_value.value_text}",
+								"https://www.neopets.com/~owls", target: "_blank",
+								title: 'Owls keeps track of approximate "capsule" values of NC items for trading. Items with similar values can often be traded for one another. This is an estimate, not a rule!'
 					= button_link_to "NC Trades",
 						item_trades_path(item, type: "offering"),
 						target: "_blank", icon: search_icon
