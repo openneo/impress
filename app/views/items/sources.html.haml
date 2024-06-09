@@ -67,9 +67,16 @@
 					- base_item = item.dyeworks_base_item
 
 					- content_for :subtitle, flush: true do
-						%span.dyeworks-explanation
-							= link_to base_item.name, base_item, target: "_blank"
-							+ 1 potion
+						= link_to base_item.name, base_item, target: "_blank"
+						+ 1 potion
+						- if item.dyeworks_permanent?
+							%span.dyeworks-timeframe{
+								title: "This recipe is NOT currently scheduled to be removed " +
+									"from Dyeworks. It might not stay forever, but it's also " +
+									"not part of a known limited-time event, like most " +
+									"Dyeworks items are."
+							}
+								(Permanent)
 
 					%button{onclick: "alert('Todo!')"}
 						= cart_icon alt: ""
