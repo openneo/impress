@@ -1,4 +1,6 @@
--# Run the block first, so we can get the subtitle content if provided!
+-# Run the block first, so we can get the subtitle content if provided! Clear
+-# out any old values beforehand, too.
+- content_for :subtitle, "", flush: true
 - content = yield
 - subtitle = yield :subtitle
 
