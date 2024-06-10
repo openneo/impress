@@ -156,13 +156,20 @@
 - if @other_nc_items.present?
 	%h2 Neocash items (Capsules, events, retired, etc.)
 	:markdown
-		These items are part of the Neocash economy and can't be purchased with
-		Neopoints. We don't track all the details of how to get these items
-		right now! Sometimes they're available via packs or capsules or events
-		in the [NC Mall][mall]. Sometimes they're retired and can't be
-		purchased at all anymore, and can only be obtained via gifts or trades.
+		These items are part of the Neocash economy, but not directly for sale.
+		Sometimes they're available in the [NC Mall][mall], via special
+		bundles or events. Sometimes they're retired, and can only be obtained via
+		gifts or trades.
 
 		[mall]: https://ncmall.neopets.com/
+		
+	- if @other_nc_items.any?(&:nc_trade_value)
+		:markdown
+			The [Owls Value Guide][owls] often has more details about how to get
+			these items, and how much they're usually worth in the NC Trading
+			community. We've loaded their info here for you, too! Thanks, Owls team!
+
+			[owls]: https://www.neopets.com/~owls
 
 	%table.item-list
 		%thead
@@ -174,11 +181,20 @@
 				= render "item_list_row", item: do
 					- content_for :subtitle, flush: true do
 						- if item.nc_trade_value.present?
-							= link_to "https://www.neopets.com/~owls",
-								class: "owls-info-link", target: "_blank",
-								title: 'Owls keeps track of approximate "capsule" values of NC items for trading. Items with similar values can often be traded for one another. This is an estimate, not a rule!' do
-								%span.owls-info-label Owls listing:
-								#{item.nc_trade_value.value_text}
+							- if nc_trade_value_is_estimate(item.nc_trade_value)
+								= link_to "https://www.neopets.com/~owls",
+									class: "owls-info-link", target: "_blank",
+									title: 'Owls keeps track of approximate "capsule" values of NC items for trading. Items with similar values can often be traded for one another. This is an estimate, not a rule!' do
+									%span.owls-info-label [Owls]
+									Estimated value:
+									= nc_trade_value_estimate_text(item.nc_trade_value)
+							- else
+								= link_to "https://www.neopets.com/~owls",
+									class: "owls-info-link", target: "_blank",
+									title: "Owls keeps track of how to get certain special items, even when there isn't a clear NC trade estimate." do
+									%span.owls-info-label [Owls]
+									Trade info:
+									#{item.nc_trade_value.value_text}
 
 					= button_link_to "NC Trades",
 						item_trades_path(item, type: "offering"),

@@ -156,6 +156,39 @@ module ItemsHelper
     "Last updated: #{date_str} (#{time_ago_str} ago)"
   end
 
+  NC_TRADE_VALUE_ESTIMATE_PATTERN = %r{
+    ^\s*
+    (?:
+      # Case 1: A single number
+      (?<single>[0-9]+)
+      |
+      # Case 2: A range from low to high
+      (?<low>[0-9]+)
+      \p{Dash_Punctuation}
+      (?<high>[0-9]+)
+    )
+    \s*$
+  }x
+  def nc_trade_value_is_estimate(nc_trade_value)
+    nc_trade_value.value_text.match?(NC_TRADE_VALUE_ESTIMATE_PATTERN)
+  end
+
+  # Try to parse the NC trade value's text into something styled a bit more
+  # nicely for our use case.
+  def nc_trade_value_estimate_text(nc_trade_value)
+    match = nc_trade_value.value_text.match(NC_TRADE_VALUE_ESTIMATE_PATTERN)
+    return nc_trade_value if match.nil?
+
+    match => {single:, low:, high:}
+    if single.present?
+      pluralize single.to_i, "capsule"
+    elsif low.present? && high.present?
+      "#{low}–#{high} capsules"
+    else
+      nc_trade_value
+    end
+  end
+
   def nc_total_for(items)
     items.map(&:current_nc_price).sum
   end
