@@ -11,6 +11,10 @@
     # dev_ips
     - files/setup_secrets.yml
   tasks:
+    - name: Set hostname to impress.openneo.net
+      hostname:
+        name: impress.openneo.net
+
     - name: Create SSH folder for logged-in user
       become: no
       file:
