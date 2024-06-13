@@ -196,26 +196,37 @@ function OutfitMovieLayer({
     let lastFpsLoggedAtInMs = performance.now();
     let numFramesSinceLastLogged = 0;
     const intervalId = setInterval(() => {
-      updateStage();
-
-      numFramesSinceLastLogged++;
-
       const now = performance.now();
       const timeSinceLastFpsLoggedAtInMs = now - lastFpsLoggedAtInMs;
       const timeSinceLastFpsLoggedAtInSec = timeSinceLastFpsLoggedAtInMs / 1000;
+      const fps = numFramesSinceLastLogged / timeSinceLastFpsLoggedAtInSec;
+      const roundedFps = Math.round(fps * 100) / 100;
 
-      if (timeSinceLastFpsLoggedAtInSec > 2) {
-        const fps = numFramesSinceLastLogged / timeSinceLastFpsLoggedAtInSec;
-        const roundedFps = Math.round(fps * 100) / 100;
+      // If the page is visible, render the next frame, and track that we did.
+      // And if it's been 2 seconds since the last time we logged the FPS,
+      // compute and log the FPS during those two seconds. (Checking the page
+      // visibility is both an optimization to avoid rendering the movie, but
+      // also makes "low FPS" tracking more accurate: browsers already throttle
+      // intervals when the page is hidden, so a low FPS is *expected*, and
+      // wouldn't indicate a performance problem like a low FPS normally would.)
+      if (!document.hidden) {
+        updateStage();
+        numFramesSinceLastLogged++;
 
-        console.debug(
-          `[OutfitMovieLayer] FPS: ${roundedFps} (Target: ${targetFps}) (${libraryUrl})`,
-        );
+        if (timeSinceLastFpsLoggedAtInSec > 2) {
+          console.debug(
+            `[OutfitMovieLayer] FPS: ${roundedFps} (Target: ${targetFps}) (${libraryUrl})`,
+          );
+          if (onLowFps && fps < 2) {
+            onLowFps(fps);
+          }
 
-        if (onLowFps && fps < 2) {
-          onLowFps(fps);
+          lastFpsLoggedAtInMs = now;
+          numFramesSinceLastLogged = 0;
         }
-
+      } else {
+        // Otherwise, if the page is hidden, keep resetting the FPS tracker
+        // state, to be able to pick up counting fresh once we come back.
         lastFpsLoggedAtInMs = now;
         numFramesSinceLastLogged = 0;
       }
