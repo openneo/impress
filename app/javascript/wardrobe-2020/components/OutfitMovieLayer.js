@@ -224,15 +224,31 @@ function OutfitMovieLayer({
           lastFpsLoggedAtInMs = now;
           numFramesSinceLastLogged = 0;
         }
-      } else {
-        // Otherwise, if the page is hidden, keep resetting the FPS tracker
-        // state, to be able to pick up counting fresh once we come back.
-        lastFpsLoggedAtInMs = now;
-        numFramesSinceLastLogged = 0;
       }
     }, 1000 / targetFps);
 
-    return () => clearInterval(intervalId);
+    const onVisibilityChange = () => {
+      // When the page switches from hidden to visible, reset the FPS counter
+      // state, to start counting from When Visibility Came Back, rather than
+      // from when we last counted, which could be a long time ago.
+      if (!document.hidden) {
+        lastFpsLoggedAtInMs = performance.now();
+        numFramesSinceLastLogged = 0;
+        console.debug(
+          `[OutfitMovieLayer] Resuming now that page is visible (${libraryUrl})`,
+        );
+      } else {
+        console.debug(
+          `[OutfitMovieLayer] Pausing while page is hidden (${libraryUrl})`,
+        );
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    return () => {
+      clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
   }, [libraryUrl, stage, updateStage, movieClip, library, isPaused, onLowFps]);
 
   // This effect keeps the `movieClip` scaled correctly, based on the canvas
