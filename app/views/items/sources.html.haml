@@ -16,13 +16,14 @@
 			%tr
 				%td
 				%th
-					Total: #{nc_total_for @nc_mall_items} NC
-					(#{pluralize @nc_mall_items.size, "item"})
+					Total: #{nc_total_for @nc_mall_items_needed} NC
+					(#{pluralize @nc_mall_items_needed.size, "item"})
 						
 					%td.actions-cell
-						%button{onclick: "alert('Todo!')"}
-							= cart_icon alt: ""
-							Buy all in NC Mall
+						- if @nc_mall_items_needed.present?
+							%button{onclick: "alert('Todo!')"}
+								= cart_icon alt: ""
+								Buy all in NC Mall
 		%tbody
 			- @nc_mall_items.each do |item|
 				= render "item_list_row", item: do
@@ -42,25 +43,27 @@
 
 	%table.item-list
 		%thead
-			%td.thumbnail-cell
-				= image_tag "https://images.neopets.com/items/mall_80x80_cleaning.gif",
-					alt: "Dyeworks Hue Brew Potion"
-			%th
-				Total: #{dyeworks_nc_total_for @buyable_dyeworks_items} NC
-				= surround "(", ")" do
-					%span.price-breakdown{
-						title: "#{dyeworks_items_nc_total_for(@buyable_dyeworks_items)} NC"
-					}<
-						#{pluralize @buyable_dyeworks_items.size, "item"}
-					+
-					%span.price-breakdown{
-						title: dyeworks_potions_nc_summary(@buyable_dyeworks_items.size)
-					}<
-						#{pluralize @buyable_dyeworks_items.size, "potion"}
-			%td.actions-cell
-				%button{onclick: "alert('Todo!')"}
-					= cart_icon alt: ""
-					Buy all in NC Mall
+			%tr
+				%td.thumbnail-cell
+					= image_tag "https://images.neopets.com/items/mall_80x80_cleaning.gif",
+						alt: "Dyeworks Hue Brew Potion"
+				%th
+					Total: #{dyeworks_nc_total_for @buyable_dyeworks_items_needed} NC
+					= surround "(", ")" do
+						%span.price-breakdown{
+							title: "#{dyeworks_items_nc_total_for(@buyable_dyeworks_items_needed)} NC"
+						}<
+							#{pluralize @buyable_dyeworks_items_needed.size, "item"}
+						+
+						%span.price-breakdown{
+							title: dyeworks_potions_nc_summary(@buyable_dyeworks_items_needed.size)
+						}<
+							#{pluralize @buyable_dyeworks_items_needed.size, "potion"}
+				%td.actions-cell
+					- if @buyable_dyeworks_items_needed.present?
+						%button{onclick: "alert('Todo!')"}
+							= cart_icon alt: ""
+							Buy all in NC Mall
 		%tbody
 			- @buyable_dyeworks_items.each do |item|
 				= render "item_list_row", item: do
@@ -96,9 +99,10 @@
 
 	%table.item-list
 		%thead
-			%td
-			%th{colspan: 2}
-				Total: #{pluralize @np_items.size, "item"}
+			%tr
+				%td
+				%th{colspan: 2}
+					Total: #{pluralize @np_items_needed.size, "item"}
 		%tbody
 			- @np_items.each do |item|
 				= render "item_list_row", item: do
@@ -116,39 +120,44 @@
 		"cross-paint" outfits.
 
 	- @pb_items_by_color.each do |color, items|
-		%table.item-list{"data-group-type": "bundle"}
+		- items_needed = @pb_items_needed_by_color[color]
+		%table.item-list{
+			"data-group-type": "bundle",
+			"data-group-owned": items.all?(&:owned?),
+		}
 			%thead
-				%td.thumbnail-cell
-					- if color&.pb_item_thumbnail_url?
-						= image_tag color.pb_item_thumbnail_url,
-							alt: "Item thumbnail for #{color.pb_item_name}"
-					- elsif color
-						= image_tag pet_type_image_url(@pb_color_pet_types[color], size: :face),
-							srcset: ["#{pet_type_image_url(@pb_color_pet_types[color], size: :face_2x)} 2x"],
-							alt: @pb_color_pet_types[color].human_name
-					- else
-						= image_tag "https://images.neopets.com/items/starter_red_pb.gif",
-							alt: "Item thumbnail for Starter Red Paint Brush"
-				%th
-					- if color
-						#{color.pb_item_name || color.name.humanize}
-					- else
-						Basic colors
-					(#{pluralize items.size, "item"})
-				%td.actions-cell
-					- if color&.pb_item_name?
-						= button_link_to "Shops",
-							shop_wizard_url_for(color.pb_item_name),
-							target: "_blank", icon: search_icon
-						= button_link_to "Trades",
-							trading_post_url_for(color.pb_item_name),
-							target: "_blank", icon: search_icon
-					- elsif color
-						.special-color-explanation
-							Get via Lab Ray, morphing potions, etc.
-					- else
-						.special-color-explanation
-							Many colors, like Red, will grant these items.
+				%tr
+					%td.thumbnail-cell
+						- if color&.pb_item_thumbnail_url?
+							= image_tag color.pb_item_thumbnail_url,
+								alt: "Item thumbnail for #{color.pb_item_name}"
+						- elsif color
+							= image_tag pet_type_image_url(@pb_color_pet_types[color], size: :face),
+								srcset: ["#{pet_type_image_url(@pb_color_pet_types[color], size: :face_2x)} 2x"],
+								alt: @pb_color_pet_types[color].human_name
+						- else
+							= image_tag "https://images.neopets.com/items/starter_red_pb.gif",
+								alt: "Item thumbnail for Starter Red Paint Brush"
+					%th
+						- if color
+							#{color.pb_item_name || color.name.humanize}
+						- else
+							Basic colors
+						(#{pluralize items_needed.size, "item"})
+					%td.actions-cell
+						- if color&.pb_item_name?
+							= button_link_to "Shops",
+								shop_wizard_url_for(color.pb_item_name),
+								target: "_blank", icon: search_icon
+							= button_link_to "Trades",
+								trading_post_url_for(color.pb_item_name),
+								target: "_blank", icon: search_icon
+						- elsif color
+							.special-color-explanation
+								Get via Lab Ray, morphing potions, etc.
+						- else
+							.special-color-explanation
+								Many colors, like Red, will grant these items.
 			%tbody
 				- items.each do |item|
 					= render "item_list_row", item:
@@ -175,7 +184,7 @@
 		%thead
 			%td
 			%th{colspan: 2}
-				Total: #{pluralize @other_nc_items.size, "item"}
+				Total: #{pluralize @other_nc_items_needed.size, "item"}
 		%tbody
 			- @other_nc_items.each do |item|
 				= render "item_list_row", item: do

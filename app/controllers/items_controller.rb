@@ -116,6 +116,7 @@ class ItemsController < ApplicationController
     item_ids = params[:ids].split(",")
     @items = Item.where(id: item_ids).includes(:nc_mall_record).
       includes(:dyeworks_base_item).order(:name).limit(50)
+    assign_closeted!
 
     if @items.empty?
       render file: "public/404.html", status: :not_found, layout: nil
@@ -154,6 +155,16 @@ class ItemsController < ApplicationController
         .first
       [color, color.example_pet_type(preferred_species: species)]
     end.to_h
+
+    # Create a second value that only include the items the user *needs*: that
+    # is, that they don't already own.
+    @nc_mall_items_needed = @nc_mall_items.reject(&:owned?)
+    @buyable_dyeworks_items_needed = @buyable_dyeworks_items.reject(&:owned?)
+    @np_items_needed = @np_items.reject(&:owned?)
+    @pb_items_needed = @pb_items.reject(&:owned?)
+    @other_nc_items_needed = @other_nc_items.reject(&:owned?)
+    @pb_items_needed_by_color =
+      @pb_items_by_color.transform_values { |items| items.reject(&:owned?) }
 
     # Finish loading the NC trade values.
     trade_values_task.wait

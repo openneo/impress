@@ -4,12 +4,15 @@
 - content = yield
 - subtitle = yield :subtitle
 
-%tr
+%tr{"data-item-owned": item.owned?}
 	%td.thumbnail-cell
 		= link_to item_thumbnail_for(item), item, target: "_blank",
 		  tabindex: "-1"
 	%td.name-cell
-		= link_to item.name, item, target: "_blank"
+		= link_to item.name, item, target: "_blank", class: "item-name"
+		- if item.owned?
+			%span.owned-explanation
+				(You own this)
 		- if subtitle.present?
 			.subtitle= subtitle
 	%td.actions-cell= content

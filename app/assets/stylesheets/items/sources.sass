@@ -58,9 +58,33 @@
 		.thumbnail-cell img
 			outline: 1px solid $soft-border-color
 
-		.actions-cell button
-			/* Bootstrap's Purple 600 */
-			+awesome-button-color(#59359a)
+		.actions-cell
+			button, a.button
+				/* Bootstrap's Purple 600 */
+				+awesome-button-color(#59359a)
+
+	tr[data-item-owned]
+		color: #aaa
+
+		a:not(.button)
+			color: inherit
+
+		.thumbnail-cell
+			filter: grayscale(1)
+			opacity: .75
+
+		.item-name
+			font-style: italic
+			text-decoration: line-through
+			text-decoration-color: rgba($text-color, 0.35)
+
+		.owned-explanation
+			font-style: italic
+			font-size: 85%
+
+		.actions-cell
+			button, a.button
+				+awesome-button-color(#999)
 
 	.price-breakdown
 		text-decoration-line: underline
@@ -100,3 +124,8 @@
 
 			tr:hover .thumbnail-cell
 				opacity: 0.85
+
+		&[data-group-owned]
+			thead
+				button, a.button
+					+awesome-button-color(#999)
