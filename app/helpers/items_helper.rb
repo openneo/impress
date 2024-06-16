@@ -234,6 +234,7 @@ module ItemsHelper
       num_items = 0
     end
 
+    summaries << "0 NC" if summaries.empty?
     summary = summaries.join(", ")
 
     {nc_total:, summary:}
