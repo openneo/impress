@@ -11,6 +11,7 @@ class AltStyle < ApplicationRecord
   validates :body_id, presence: true
 
   before_create :infer_series_name
+  before_create :infer_thumbnail_url
 
   scope :matching_name, ->(series_name, color_name, species_name) {
     color = Color.find_by_name!(color_name)
@@ -39,22 +40,6 @@ class AltStyle < ApplicationRecord
 
   def adjective_name
     "#{series_name} #{color.human_name}"
-  end
-
-  THUMBNAIL_URL_TEMPLATE = Addressable::Template.new(
-    "https://images.neopets.com/items/{series}_{color}_{species}.gif"
-  )
-  DEFAULT_THUMBNAIL_URL = "https://images.neopets.com/items/mall_bg_circle.gif"
-  def thumbnail_url
-    return DEFAULT_THUMBNAIL_URL unless has_real_series_name?
-
-    # HACK: We're assuming this is the format long-term! But if it changes, we
-    # may need to add it as a database field instead.
-    THUMBNAIL_URL_TEMPLATE.expand(
-      series: series_name.gsub(/\s+/, '').downcase,
-      color: color.name.gsub(/\s+/, '').downcase,
-      species: species.name.gsub(/\s+/, '').downcase,
-    ).to_s
   end
 
   def preview_image_url
@@ -88,6 +73,26 @@ class AltStyle < ApplicationRecord
   def infer_series_name
     if !has_real_series_name? && Date.today <= NOSTALGIC_FINAL_DAY
       self.series_name = "Nostalgic"
+    end
+  end
+
+  # At time of writing, most batches of Alt Styles thumbnails used a simple
+  # pattern for the item thumbnail URL, but that's not always the case anymore.
+  # For now, let's keep using this format as the default value when creating a
+  # new Alt Style, but the database field can be manually overridden as needed!
+  THUMBNAIL_URL_TEMPLATE = Addressable::Template.new(
+    "https://images.neopets.com/items/{series}_{color}_{species}.gif"
+  )
+  DEFAULT_THUMBNAIL_URL = "https://images.neopets.com/items/mall_bg_circle.gif"
+  def infer_thumbnail_url
+    if has_real_series_name?
+      self.thumbnail_url = THUMBNAIL_URL_TEMPLATE.expand(
+        series: series_name.gsub(/\s+/, '').downcase,
+        color: color.name.gsub(/\s+/, '').downcase,
+        species: species.name.gsub(/\s+/, '').downcase,
+      ).to_s
+    else
+      self.thumbnail_url = DEFAULT_THUMBNAIL_URL
     end
   end
 

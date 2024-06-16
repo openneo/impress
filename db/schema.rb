@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_08_022149) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_16_001002) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "species_id", null: false
     t.integer "color_id", null: false
@@ -18,6 +18,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_08_022149) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.string "series_name"
+    t.string "thumbnail_url", null: false
     t.index ["color_id"], name: "index_alt_styles_on_color_id"
     t.index ["species_id"], name: "index_alt_styles_on_species_id"
   end
