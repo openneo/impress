@@ -13,7 +13,7 @@ class ItemsController < ApplicationController
 
       @items = @query.results.paginate(
         page: params[:page], per_page: per_page)
-      assign_closeted!
+      assign_closeted!(@items)
 
       respond_to do |format|
         format.html {
@@ -54,7 +54,7 @@ class ItemsController < ApplicationController
       end
     elsif params.has_key?(:ids) && params[:ids].is_a?(Array)
       @items = Item.find(params[:ids])
-      assign_closeted!
+      assign_closeted!(@items)
       respond_to do |format|
         format.json { render json: @items }
       end
@@ -104,7 +104,7 @@ class ItemsController < ApplicationController
     end
     
     @items = @pet_type.needed_items.order(:name)
-    assign_closeted!
+    assign_closeted!(@items)
     
     respond_to do |format|
       format.html { @pet_name = params[:name] ; render :layout => 'application' }
@@ -113,12 +113,15 @@ class ItemsController < ApplicationController
   end
 
   def sources
+    # Load all the items, then group them by source.
     item_ids = params[:ids].split(",")
-    @items = Item.where(id: item_ids).includes(:nc_mall_record).
+    @all_items = Item.where(id: item_ids).includes(:nc_mall_record).
       includes(:dyeworks_base_item).order(:name).limit(50)
-    assign_closeted!
+    @items = @all_items.group_by(&:source)
 
-    if @items.empty?
+    assign_closeted!(@all_items)
+
+    if @all_items.empty?
       render file: "public/404.html", status: :not_found, layout: nil
       return
     end
@@ -126,23 +129,14 @@ class ItemsController < ApplicationController
     # For Dyeworks items whose base is currently in the NC Mall, preload their
     # trade values. We'll use this to determine which ones are fully buyable rn
     # (because Owls tracks this data and we don't).
-    Item.preload_nc_trade_values(@items.select(&:dyeworks_base_buyable?))
-
-    # Group the items by category!
-    @nc_mall_items = @items.select(&:currently_in_mall?).
-      reject(&:dyeworks_buyable?)
-    @buyable_dyeworks_items = @items.select(&:dyeworks_buyable?)
-    @np_items = @items.select(&:np?)
-    @pb_items = @items.select(&:pb?)
-    @other_nc_items = @items.select(&:nc?).reject(&:currently_in_mall?).
-      reject(&:dyeworks_buyable?)
+    Item.preload_nc_trade_values(@items[:dyeworks])
 
     # Start loading the NC trade values for the non-Mall NC items.
-    trade_values_task = Async { Item.preload_nc_trade_values(@other_nc_items) }
+    trade_values_task = Async { Item.preload_nc_trade_values(@items[:other_nc]) }
 
     # Also, PB items have some special handling: we group them by color, then
     # load example pet types for the colors that don't have paint brushes.
-    @pb_items_by_color = @pb_items.group_by(&:pb_color).
+    @pb_items_by_color = @items[:pb].group_by(&:pb_color).
       sort_by { |color, items| color&.name }.to_h
 
     colors_without_thumbnails = @pb_items_by_color.keys.
@@ -158,11 +152,7 @@ class ItemsController < ApplicationController
 
     # Create a second value that only include the items the user *needs*: that
     # is, that they don't already own.
-    @nc_mall_items_needed = @nc_mall_items.reject(&:owned?)
-    @buyable_dyeworks_items_needed = @buyable_dyeworks_items.reject(&:owned?)
-    @np_items_needed = @np_items.reject(&:owned?)
-    @pb_items_needed = @pb_items.reject(&:owned?)
-    @other_nc_items_needed = @other_nc_items.reject(&:owned?)
+    @items_needed = @items.transform_values { |items| items.reject(&:owned?) }
     @pb_items_needed_by_color =
       @pb_items_by_color.transform_values { |items| items.reject(&:owned?) }
 
@@ -174,8 +164,8 @@ class ItemsController < ApplicationController
 
   protected
 
-  def assign_closeted!
-    current_user.assign_closeted_to_items!(@items) if user_signed_in?
+  def assign_closeted!(items)
+    current_user.assign_closeted_to_items!(items) if user_signed_in?
   end
 
   def load_appearances

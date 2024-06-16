@@ -1,7 +1,7 @@
 - title "Item Getting Guide"
 %h1#title Item Getting Guide
 
-- if @nc_mall_items.present?
+- if @items[:nc_mall].present?
 	%h2 NC Mall items
 	:markdown
 		These items are available in the NC Mall right now! You can buy them
@@ -16,22 +16,22 @@
 			%tr
 				%td
 				%th
-					Total: #{nc_total_for @nc_mall_items_needed} NC
-					(#{pluralize @nc_mall_items_needed.size, "item"})
-						
+					Total: #{nc_total_for @items_needed[:nc_mall]} NC
+					(#{pluralize @items_needed[:nc_mall].size, "item"})
+
 					%td.actions-cell
-						- if @nc_mall_items_needed.present?
+						- if @items_needed[:nc_mall].present?
 							%button{onclick: "alert('Todo!')"}
 								= cart_icon alt: ""
 								Buy all in NC Mall
 		%tbody
-			- @nc_mall_items.each do |item|
+			- @items[:nc_mall].each do |item|
 				= render "item_list_row", item: do
 					%button{onclick: "alert('Todo!')"}
 						= cart_icon alt: ""
 						Buy (#{item.current_nc_price} NC)
 
-- if @buyable_dyeworks_items.present?
+- if @items[:dyeworks].present?
 	%h2 Dyeworks items
 	:markdown
 		These are recolored "Dyeworks" variants of items. First get the "base"
@@ -48,24 +48,24 @@
 					= image_tag "https://images.neopets.com/items/mall_80x80_cleaning.gif",
 						alt: "Dyeworks Hue Brew Potion"
 				%th
-					Total: #{dyeworks_nc_total_for @buyable_dyeworks_items_needed} NC
+					Total: #{dyeworks_nc_total_for @items_needed[:dyeworks]} NC
 					= surround "(", ")" do
 						%span.price-breakdown{
-							title: "#{dyeworks_items_nc_total_for(@buyable_dyeworks_items_needed)} NC"
+							title: "#{dyeworks_items_nc_total_for(@items_needed[:dyeworks])} NC"
 						}<
-							#{pluralize @buyable_dyeworks_items_needed.size, "item"}
+							#{pluralize @items_needed[:dyeworks].size, "item"}
 						+
 						%span.price-breakdown{
-							title: dyeworks_potions_nc_summary(@buyable_dyeworks_items_needed.size)
+							title: dyeworks_potions_nc_summary(@items_needed[:dyeworks].size)
 						}<
-							#{pluralize @buyable_dyeworks_items_needed.size, "potion"}
+							#{pluralize @items_needed[:dyeworks].size, "potion"}
 				%td.actions-cell
-					- if @buyable_dyeworks_items_needed.present?
+					- if @items_needed[:dyeworks].present?
 						%button{onclick: "alert('Todo!')"}
 							= cart_icon alt: ""
 							Buy all in NC Mall
 		%tbody
-			- @buyable_dyeworks_items.each do |item|
+			- @items[:dyeworks].each do |item|
 				= render "item_list_row", item: do
 					- base_item = item.dyeworks_base_item
 
@@ -85,7 +85,7 @@
 						= cart_icon alt: ""
 						Buy base (#{item.dyeworks_base_item.current_nc_price} NC)
 
-- if @np_items.present?
+- if @items[:np].present?
 	%h2 Neopoint items
 	:markdown
 		These items can be purchased with Neopoints. For less-expensive items,
@@ -102,16 +102,16 @@
 			%tr
 				%td
 				%th{colspan: 2}
-					Total: #{pluralize @np_items_needed.size, "item"}
+					Total: #{pluralize @items_needed[:np].size, "item"}
 		%tbody
-			- @np_items.each do |item|
+			- @items[:np].each do |item|
 				= render "item_list_row", item: do
 					= button_link_to "Shops", shop_wizard_url_for(item),
 						target: "_blank", icon: search_icon
 					= button_link_to "Trades", trading_post_url_for(item),
 						target: "_blank", icon: search_icon
 
-- if @pb_items.present?
+- if @pb_items_by_color.present?
 	%h2 Paint Brush items
 	:markdown
 		These items are part of a paint brush set. Once you paint your pet,
@@ -162,7 +162,7 @@
 				- items.each do |item|
 					= render "item_list_row", item:
 
-- if @other_nc_items.present?
+- if @items[:other_nc].present?
 	%h2 Neocash items (Capsules, events, retired, etc.)
 	:markdown
 		These items are part of the Neocash economy, but not directly for sale.
@@ -172,7 +172,7 @@
 
 		[mall]: https://ncmall.neopets.com/
 		
-	- if @other_nc_items.any?(&:nc_trade_value)
+	- if @items[:other_nc].any?(&:nc_trade_value)
 		:markdown
 			The [Owls Value Guide][owls] often has more details about how to get
 			these items, and how much they're usually worth in the NC Trading
@@ -184,9 +184,9 @@
 		%thead
 			%td
 			%th{colspan: 2}
-				Total: #{pluralize @other_nc_items_needed.size, "item"}
+				Total: #{pluralize @items_needed[:other_nc].size, "item"}
 		%tbody
-			- @other_nc_items.each do |item|
+			- @items[:other_nc].each do |item|
 				= render "item_list_row", item: do
 					- content_for :subtitle, flush: true do
 						- if item.nc_trade_value.present?

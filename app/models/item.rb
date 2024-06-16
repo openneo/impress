@@ -240,6 +240,22 @@ class Item < ApplicationRecord
     Item.find_by_name(name_match["base"])
   end
 
+  def source
+    if dyeworks_buyable?
+      :dyeworks
+    elsif currently_in_mall?
+      :nc_mall
+    elsif nc?
+      :other_nc
+    elsif np?
+      :np
+    elsif pb?
+      :pb
+    else
+      raise "Item has no matching source (should not happen?)"
+    end
+  end
+
   def owned?
     @owned || false
   end
