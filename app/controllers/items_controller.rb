@@ -117,7 +117,7 @@ class ItemsController < ApplicationController
     item_ids = params[:ids].split(",")
     @all_items = Item.where(id: item_ids).includes(:nc_mall_record).
       includes(:dyeworks_base_item).order(:name).limit(50)
-    @items = @all_items.group_by(&:source)
+    @items = @all_items.group_by(&:source).tap { |i| i.default = [] }
 
     assign_closeted!(@all_items)
 
