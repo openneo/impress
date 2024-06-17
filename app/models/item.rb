@@ -213,6 +213,7 @@ class Item < ApplicationRecord
   # Mall at any time, rather than as part of a limited-time event. (Owls tracks
   # this, not us!)
   def dyeworks_permanent?
+    return false if nc_trade_value.nil?
     nc_trade_value.value_text.include?("Permanent Dyeworks")
   end
 
