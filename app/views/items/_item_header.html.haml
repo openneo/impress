@@ -9,7 +9,12 @@
     = image_tag item.thumbnail_url, class: 'item-thumbnail'
     %h2.item-name= item.name
     %nav.item-links
-      - if item.nc?
+      - if item.currently_in_mall?
+        = link_to "https://ncmall.neopets.com/", class: "item-kind", data: {type: "nc"},
+          title: "Currently in NC Mall!", target: "_blank" do
+          = cart_icon alt: "Buy"
+          #{item.current_nc_price} NC
+      - elsif item.nc?
         %abbr.item-kind{'data-type' => 'nc', title: t('items.show.item_kinds.nc.description')}
           = t('items.show.item_kinds.nc.label')
       - elsif item.pb?

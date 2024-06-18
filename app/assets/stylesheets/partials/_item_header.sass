@@ -37,10 +37,12 @@
       align-items: center
       gap: 1em
 
+      abbr
+        cursor: help
+
       .item-kind, .first-seen-at
         padding: .25em .5em
         border-radius: .25em
-        cursor: help
 
         text-decoration: none
         font-weight: bold
@@ -48,6 +50,9 @@
 
         background: #E2E8F0
         color: #1A202C
+
+        .icon
+          vertical-align: middle
       
       .item-kind
         // These colors are copied from DTI 2020, for initial consistency!

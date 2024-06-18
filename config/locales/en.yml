@@ -299,7 +299,7 @@ en:
       item_kinds:
         nc:
           label: NC
-          description: Purchaseable with Neocash
+          description: Neocash (but not currently in NC Mall)
         np:
           label: NP
           description: Purchaseable with Neopoints
