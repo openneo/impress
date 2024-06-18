@@ -40,6 +40,10 @@ class Item
       nc_trade_value.value_text.match?(DYEWORKS_LIMITED_PATTERN)
     end
 
+    # Infer what base item this Dyeworks item probably relates to, based on
+    # their names. We only use this when a new item is modeled to initialize
+    # the `dyeworks_base_item` relationship in the database; after that, we
+    # just use whatever the database says. (This allows manual overrides!)
     DYEWORKS_NAME_PATTERN = %r{
       ^(
         # Most Dyeworks items have a colon in the name.
