@@ -5,10 +5,22 @@ class Item
     end
 
     # Whether this is a Dyeworks item whose base item can currently be purchased
+    # in the NC Mall, then dyed via Dyeworks. (Owls tracks this last part!)
+    def dyeworks_buyable?
+      dyeworks_base_buyable? && dyeworks_dyeable?
+    end
+
+    # Whether this is a Dyeworks item whose base item can currently be purchased
     # in the NC Mall. It may or may not currently be *dyeable* in the NC Mall,
     # because Dyeworks eligibility is often a limited-time event.
     def dyeworks_base_buyable?
       dyeworks_base_item.present? && dyeworks_base_item.currently_in_mall?
+    end
+
+    # Whether this is a Dyeworks item that can be dyed in the NC Mall ~right now,
+    # either at any time or as a limited-time event. (Owls tracks this, not us!)
+    def dyeworks_dyeable?
+      dyeworks_permanent? || dyeworks_limited?
     end
 
     # Whether this is one of the few Dyeworks items that can be dyed in the NC
@@ -26,18 +38,6 @@ class Item
     def dyeworks_limited?
       return false if nc_trade_value.nil?
       nc_trade_value.value_text.match?(DYEWORKS_LIMITED_PATTERN)
-    end
-
-    # Whether this is a Dyeworks item that can be dyed in the NC Mall ~right now,
-    # either at any time or as a limited-time event. (Owls tracks this, not us!)
-    def dyeworks_dyeable?
-      dyeworks_permanent? || dyeworks_limited?
-    end
-
-    # Whether this is a Dyeworks item whose base item can currently be purchased
-    # in the NC Mall, then dyed via Dyeworks. (Owls tracks this last part!)
-    def dyeworks_buyable?
-      dyeworks_base_buyable? && dyeworks_dyeable?
     end
 
     DYEWORKS_NAME_PATTERN = %r{
