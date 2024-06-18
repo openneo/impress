@@ -80,6 +80,12 @@
 									"Dyeworks items are."
 							}
 								(Permanent)
+						- elsif item.dyeworks_limited?
+							%span.dyeworks-timeframe{
+								title: "This recipe is part of a limited-time Dyeworks " +
+									"event, and is scheduled to be removed from the NC Mall soon."
+							}
+								(Limited-time)
 
 					%button{onclick: "alert('Todo!')"}
 						= cart_icon alt: ""
