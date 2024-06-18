@@ -14,16 +14,18 @@ class Item
     # Whether this is one of the few Dyeworks items that can be dyed in the NC
     # Mall at any time, rather than as part of a limited-time event. (Owls tracks
     # this, not us!)
+    DYEWORKS_PERMANENT_PATTERN = /Permanent Dyeworks/i
     def dyeworks_permanent?
       return false if nc_trade_value.nil?
-      nc_trade_value.value_text.include?("Permanent Dyeworks")
+      nc_trade_value.value_text.match?(DYEWORKS_PERMANENT_PATTERN)
     end
 
     # Whether this is a Dyeworks item that can be dyed in the NC Mall ~right now,
     # but only as part of a limited-time event. (Owls tracks this, not us!)
+    DYEWORKS_LIMITED_PATTERN = /Limited Dyeworks/i
     def dyeworks_limited?
       return false if nc_trade_value.nil?
-      nc_trade_value.value_text.include?("Limited Dyeworks")
+      nc_trade_value.value_text.match?(DYEWORKS_LIMITED_PATTERN)
     end
 
     # Whether this is a Dyeworks item that can be dyed in the NC Mall ~right now,
