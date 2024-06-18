@@ -80,6 +80,13 @@
 									"Dyeworks items are."
 							}
 								(Permanent)
+						- elsif item.dyeworks_limited_final_date.present?
+							%span.dyeworks-timeframe{
+								title: "This recipe is part of a limited-time Dyeworks " +
+									"event. The last day you can dye this is " +
+									"#{item.dyeworks_limited_final_date.to_fs(:month_and_day)}."
+							}
+								(Thru #{item.dyeworks_limited_final_date.to_fs(:month_and_day)})
 						- elsif item.dyeworks_limited?
 							%span.dyeworks-timeframe{
 								title: "This recipe is part of a limited-time Dyeworks " +
