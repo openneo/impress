@@ -208,6 +208,11 @@ module ItemsHelper
     dyeworks_average_num_potions_for(items) * 125
   end
 
+  def complexity_for(items)
+    max_name_length = items.map(&:name).map(&:length).max
+    max_name_length >= 40 ? "high" : "low"
+  end
+
   def probability(p)
     case p
     when 1

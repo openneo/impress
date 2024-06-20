@@ -11,7 +11,7 @@
 		[nc]: https://secure.nc.neopets.com/get-neocash
 		[gc]: https://secure.nc.neopets.com/nickcash-cards
 
-	%table.item-list
+	%table.item-list{"data-complexity": complexity_for(@items[:nc_mall])}
 		%thead
 			%tr
 				%td
@@ -46,7 +46,7 @@
 
 		[dyeworks]: https://www.neopets.com/mall/dyeworks/
 
-	%table.item-list{"data-complexity": "high"}
+	%table.item-list{"data-complexity": complexity_for(@items[:dyeworks])}
 		%thead
 			%tr
 				%td.thumbnail-cell
@@ -120,7 +120,7 @@
 		[tp]: https://www.neopets.com/island/tradingpost.phtml?type=browse
 		[ag]: https://www.neopets.com/genie.phtml
 
-	%table.item-list
+	%table.item-list{"data-complexity": complexity_for(@items[:np])}
 		%thead
 			%tr
 				%td
@@ -147,6 +147,7 @@
 		%table.item-list{
 			"data-group-type": "bundle",
 			"data-group-owned": items.all?(&:owned?),
+			"data-complexity": complexity_for(items),
 		}
 			%thead
 				%tr
@@ -203,7 +204,7 @@
 
 			[owls]: https://www.neopets.com/~owls
 
-	%table.item-list
+	%table.item-list{"data-complexity": complexity_for(@items[:other_nc])}
 		%thead
 			%td
 			%th.name-cell{colspan: 2}
