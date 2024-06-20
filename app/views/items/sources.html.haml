@@ -49,16 +49,15 @@
 						alt: "Dyeworks Hue Brew Potion"
 				%th
 					Total: #{dyeworks_nc_total_for @items_needed[:dyeworks]} NC
-					= surround "(", ")" do
-						%span.price-breakdown{
-							title: "#{dyeworks_items_nc_total_for(@items_needed[:dyeworks])} NC"
-						}<
-							#{pluralize @items_needed[:dyeworks].size, "item"}
-						+
-						%span.price-breakdown{
-							title: dyeworks_potions_nc_summary(@items_needed[:dyeworks].size)
-						}<
-							#{pluralize @items_needed[:dyeworks].size, "potion"}
+					+
+					%span.price-breakdown{
+						title: "At least #{pluralize @items_needed[:dyeworks].size, 'potion'}, " +
+							"average " + 
+							"#{dyeworks_average_num_potions_for @items_needed[:dyeworks]}, " +
+							"could be more"
+					}
+						?? potions
+						(~#{dyeworks_estimated_potions_cost_for @items_needed[:dyeworks]} NC)
 				%td.actions-cell
 					- if @items_needed[:dyeworks].present?
 						%button{onclick: "alert('Todo!')"}

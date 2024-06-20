@@ -194,50 +194,18 @@ module ItemsHelper
   end
 
   def dyeworks_nc_total_for(items)
-    dyeworks_items_nc_total_for(items) + dyeworks_potions_nc_total(items.size)
-  end
-
-  def dyeworks_items_nc_total_for(items)
     nc_total_for items.map(&:dyeworks_base_item)
   end
 
-  def dyeworks_potions_nc_total(num_items)
-    dyeworks_potions_nc_breakdown(num_items)[:nc_total]
+  def dyeworks_average_num_potions_for(items)
+    # Compute the number of expected potions for each (inverse of the odds),
+    # sum them, then round up.
+    items.map { |i| 1 / i.dyeworks_odds }.sum.ceil
   end
 
-  def dyeworks_potions_nc_summary(num_items)
-    dyeworks_potions_nc_breakdown(num_items)[:summary]
-  end
-
-  def dyeworks_potions_nc_breakdown(num_items)
-    nc_total = 0
-    summaries = []
-
-    # For every 10 potions, buy a 10-Bundle for 900 NC.
-    while num_items >= 10
-      nc_total += 900
-      summaries << "10-Bundle (900 NC)"
-      num_items -= 10
-    end
-
-    # For every remaining 5 potions, buy a 5-Bundle for 500 NC.
-    while num_items >= 5
-      nc_total += 500
-      summaries << "5-Bundle (500 NC)"
-      num_items -= 5
-    end
-
-    # For every remaining potion, buy each directly for 125 NC.
-    if num_items >= 1
-      nc_total += num_items * 125
-      summaries << "#{pluralize num_items, "potion"} (#{num_items * 125} NC)"
-      num_items = 0
-    end
-
-    summaries << "0 NC" if summaries.empty?
-    summary = summaries.join(", ")
-
-    {nc_total:, summary:}
+  def dyeworks_estimated_potions_cost_for(items)
+    # NOTE: You could do bundles too, but let's just keep it simple.
+    dyeworks_average_num_potions_for(items) * 125
   end
 
   def probability(p)
