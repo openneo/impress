@@ -15,7 +15,7 @@
 		%thead
 			%tr
 				%td
-				%th
+				%th.name-cell
 					Total: #{nc_total_for @items_needed[:nc_mall]} NC
 					(#{pluralize @items_needed[:nc_mall].size, "item"})
 
@@ -52,7 +52,7 @@
 				%td.thumbnail-cell
 					= image_tag "https://images.neopets.com/items/mall_80x80_cleaning.gif",
 						alt: "Dyeworks Hue Brew Potion"
-				%th
+				%th.name-cell
 					Total: #{dyeworks_nc_total_for @items_needed[:dyeworks]} NC
 					+
 					%span.price-breakdown{
@@ -124,7 +124,7 @@
 		%thead
 			%tr
 				%td
-				%th{colspan: 2}
+				%th.name-cell{colspan: 2}
 					Total: #{pluralize @items_needed[:np].size, "item"}
 		%tbody
 			- @items[:np].each do |item|
@@ -206,7 +206,7 @@
 	%table.item-list
 		%thead
 			%td
-			%th{colspan: 2}
+			%th.name-cell{colspan: 2}
 				Total: #{pluralize @items_needed[:other_nc].size, "item"}
 		%tbody
 			- @items[:other_nc].each do |item|
