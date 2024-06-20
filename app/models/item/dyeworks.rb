@@ -80,9 +80,15 @@ class Item
 			# NOTE: This could return strange results if the Owls date contains
 			# something surprising! But the heuristic nature helps with e.g.
 			# flexibility if they abbreviate months, so let's lean into `Date.parse`.
-			match => {month:, day:}
-			date = Date.parse("#{month} #{day}, #{Date.today.year}")
-			date += 1.year if date < Date.today - 3.months
+			begin
+				match => {month:, day:}
+				date = Date.parse("#{month} #{day}, #{Date.today.year}")
+				date += 1.year if date < Date.today - 3.months
+			rescue Date::Error
+				Rails.logger.warn "Could not parse Dyeworks final date: " +
+					"#{nc_trade_value.value_text.inspect}"
+				return nil
+			end
 
 			date
 		end
