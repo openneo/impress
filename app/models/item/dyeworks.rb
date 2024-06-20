@@ -70,15 +70,19 @@ class Item
 				match(DYEWORKS_LIMITED_FINAL_DATE_PATTERN)
 			return nil if match.nil?
 
-			# Parse this "<Month> <Day>" date as the *next* such date: parse it as
-			# this year at first, then add a year if it turns out to be in the past.
+			# Parse this "<Month> <Day>" date as the *next* such date, with some
+			# wiggle room for the possibility that it recently passed and Owls hasn't
+			# updated yet: parse it as this year at first, then add a year if that
+			# turns out to be more than 3 months ago. (That way, if it's currently
+			# December 2024, then events ending in Jan will be read as Jan 2025, and
+			# events ending in Nov will be read as Nov 2024.)
 			#
 			# NOTE: This could return strange results if the Owls date contains
 			# something surprising! But the heuristic nature helps with e.g.
 			# flexibility if they abbreviate months, so let's lean into `Date.parse`.
 			match => {month:, day:}
 			date = Date.parse("#{month} #{day}, #{Date.today.year}")
-			date += 1.year if date < Date.today
+			date += 1.year if date < Date.today - 3.months
 
 			date
 		end
