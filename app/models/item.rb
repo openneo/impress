@@ -17,6 +17,8 @@ class Item < ApplicationRecord
   has_many :swf_assets, :through => :parent_swf_asset_relationships
   belongs_to :dyeworks_base_item, class_name: "Item",
     default: -> { inferred_dyeworks_base_item }, optional: true
+  has_many :dyeworks_variants, class_name: "Item",
+    inverse_of: :dyeworks_base_item
 
 
   attr_writer :current_body_id, :owned, :wanted

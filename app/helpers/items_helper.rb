@@ -240,6 +240,17 @@ module ItemsHelper
     {nc_total:, summary:}
   end
 
+  def probability(p)
+    case p
+    when 1
+      "100%"
+    when 0
+      "0%"
+    else
+      "#{p.numerator} in #{p.denominator}"
+    end
+  end
+
   private
 
   def build_on_pet_types(species, special_color=nil, &block)

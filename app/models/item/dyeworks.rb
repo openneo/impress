@@ -83,6 +83,16 @@ class Item
 			date
 		end
 
+		# The probability of getting this item when dyeing the base item.
+		def dyeworks_odds
+			return nil unless dyeworks?
+
+			num_variants = dyeworks_base_item.dyeworks_variants.count
+			raise "Item's Dyeworks base has *no* variants??" if num_variants < 1
+
+			Rational(1, num_variants)
+		end
+
 		# Infer what base item this Dyeworks item probably relates to, based on
 		# their names. We only use this when a new item is modeled to initialize
 		# the `dyeworks_base_item` relationship in the database; after that, we
