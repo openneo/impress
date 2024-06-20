@@ -104,6 +104,10 @@
 						= cart_icon alt: ""
 						Buy base (#{item.dyeworks_base_item.current_nc_price} NC)
 
+					= button_link_to "NC Trades",
+						item_trades_path(item, type: "offering"),
+						target: "_blank", icon: search_icon
+
 - if @items[:np].present?
 	%h2 Neopoint items
 	:markdown
