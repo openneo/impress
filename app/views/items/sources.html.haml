@@ -44,8 +44,8 @@
 
 		If you don't get the color you want, you can use another potion to try
 		again. It's also common for users to exchange the variants they don't want
-		via "NC Trading". (Potions can be bought individually, or in bundles of 5
-		or 10.)
+		via "NC Trading". Potions can be bought individually, or in bundles of 5
+		or 10.
 
 		[dyeworks]: https://www.neopets.com/mall/dyeworks/
 
@@ -62,7 +62,7 @@
 						title: "At least #{pluralize @items_needed[:dyeworks].size, 'potion'}, " +
 							"average " + 
 							"#{dyeworks_average_num_potions_for @items_needed[:dyeworks]}, " +
-							"could be more"
+							"could be more. 125 NC per potion, but cheaper in bundles."
 					}
 						?? potions
 						(~#{dyeworks_estimated_potions_cost_for @items_needed[:dyeworks]} NC)
