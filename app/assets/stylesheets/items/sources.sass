@@ -62,11 +62,6 @@
 		.thumbnail-cell img
 			outline: 1px solid $soft-border-color
 
-		.actions-cell
-			button, a.button
-				/* Bootstrap's Purple 600 */
-				+awesome-button-color(#59359a)
-
 	tr[data-item-owned]
 		color: #aaa
 
@@ -118,6 +113,12 @@
 		.owls-info-label
 			text-decoration-line: underline
 			text-decoration-style: dotted
+
+	.actions-cell
+		button, a.button
+			&[data-action-kind=bulk-nc-mall]
+				/* Bootstrap's Purple 600 */
+				+awesome-button-color(#59359a)
 
 	&[data-complexity="high"]
 		width: 70%

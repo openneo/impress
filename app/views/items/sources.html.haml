@@ -21,7 +21,10 @@
 
 					%td.actions-cell
 						- if @items_needed[:nc_mall].present?
-							%button{onclick: "alert('Todo!')"}
+							%button{
+								onclick: "alert('Todo!')",
+								data: {"action-kind": "bulk-nc-mall"},
+							}
 								= cart_icon alt: ""
 								Buy all in NC Mall
 		%tbody
@@ -65,7 +68,10 @@
 						(~#{dyeworks_estimated_potions_cost_for @items_needed[:dyeworks]} NC)
 				%td.actions-cell
 					- if @items_needed[:dyeworks].present?
-						%button{onclick: "alert('Todo!')"}
+						%button{
+							onclick: "alert('Todo!')",
+							data: {"action-kind": "bulk-nc-mall"},
+						}
 							= cart_icon alt: ""
 							Buy all in NC Mall
 		%tbody
