@@ -77,9 +77,24 @@
 								title: "This recipe is NOT currently scheduled to be removed " +
 									"from Dyeworks. It might not stay forever, but it's also " +
 									"not part of a known limited-time event, like most " +
-									"Dyeworks items are."
+									"Dyeworks items are. (Thanks Owls team!)"
 							}
 								(Permanent)
+						- elsif item.dyeworks_limited_final_date.present?
+							%span.dyeworks-timeframe{
+								title: "This recipe is part of a limited-time Dyeworks " +
+									"event. The last day you can dye this is " +
+									"#{item.dyeworks_limited_final_date.to_fs(:month_and_day)}. " +
+									"(Thanks Owls team!)"
+							}
+								(Thru #{item.dyeworks_limited_final_date.to_fs(:month_and_day)})
+						- elsif item.dyeworks_limited?
+							%span.dyeworks-timeframe{
+								title: "This recipe is part of a limited-time Dyeworks " +
+									"event, and is scheduled to be removed from the NC Mall " + 
+									"soon. (Thanks Owls team!)"
+							}
+								(Limited-time)
 
 					%button{onclick: "alert('Todo!')"}
 						= cart_icon alt: ""

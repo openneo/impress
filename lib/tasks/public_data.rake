@@ -63,7 +63,7 @@ namespace :public_data do
 	end
 
 	desc "Pull and import the latest public data from production (dev only)"
-	task :pull => :environment do
+	task :pull => ["db:abort_if_pending_migrations", :environment] do
 		unless Rails.env.development?
 			raise "Can only pull public data in development mode! This helps us " +
 				"ensure we won't overwrite the production database accidentally."
