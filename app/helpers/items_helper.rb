@@ -157,7 +157,7 @@ module ItemsHelper
   end
 
   NC_TRADE_VALUE_ESTIMATE_PATTERN = %r{
-    ^\s*
+    \A\s*
     (?:
       # Case 1: A single number
       (?<single>[0-9]+)
@@ -167,7 +167,7 @@ module ItemsHelper
       \p{Dash_Punctuation}
       (?<high>[0-9]+)
     )
-    \s*$
+    \s*\z
   }x
   def nc_trade_value_is_estimate(nc_trade_value)
     nc_trade_value.value_text.match?(NC_TRADE_VALUE_ESTIMATE_PATTERN)

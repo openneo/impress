@@ -88,13 +88,13 @@ class Item
 		# the `dyeworks_base_item` relationship in the database; after that, we
 		# just use whatever the database says. (This allows manual overrides!)
 		DYEWORKS_NAME_PATTERN = %r{
-			^(
+			\A(
 				# Most Dyeworks items have a colon in the name.
 				Dyeworks\s+(?<color>.+?:)\s*(?<base>.+)
 				|
 				# But sometimes they omit it. If so, assume the first word is the color!
 				Dyeworks\s+(?<color>\S+)\s*(?<base>.+)
-			)$
+			)\z
 		}x
 		def inferred_dyeworks_base_item
 			name_match = name.match(DYEWORKS_NAME_PATTERN)

@@ -174,7 +174,7 @@ class Outfit < ApplicationRecord
     self.name.strip!
 
     # Get the base name of the provided name, without any "(1)" suffixes.
-    base_name = name.sub(/\s*\([0-9]+\)$/, '')
+    base_name = name.sub(/\s*\([0-9]+\)\z/, '')
 
     # Find the user's other outfits that start with the same base name, and get
     # *their* names, with whitespace stripped.

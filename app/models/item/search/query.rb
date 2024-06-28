@@ -64,7 +64,7 @@ class Item
         when 'fits'
           # First, try the `fits:blue-acara` case.
           # NOTE: This will also work for `fits:"usuki girl-usul"`!
-          match = value.match(/^([^-]+)-([^-]+)$/)
+          match = value.match(/\A([^-]+)-([^-]+)\z/)
           if match.present?
             color_name, species_name = match.captures
             pet_type = load_pet_type_by_name(color_name, species_name)
@@ -74,7 +74,7 @@ class Item
           end
 
           # Next, try the `fits:alt-style-87305` case.
-          match = value.match(/^alt-style-([0-9]+)$/)
+          match = value.match(/\Aalt-style-([0-9]+)\z/)
           if match.present?
             alt_style_id, = match.captures
             alt_style = load_alt_style_by_id(alt_style_id)
@@ -85,7 +85,7 @@ class Item
 
           # Next, try the `fits:nostalgic-faerie-draik` case.
           # NOTE: This will also work for `fits:"nostalgic-usuki girl-usul"`!
-          match = value.match(/^([^-]+)-([^-]+)-([^-]+)$/)
+          match = value.match(/\A([^-]+)-([^-]+)-([^-]+)\z/)
           if match.present?
             series_name, color_name, species_name = match.captures
             alt_style = load_alt_style_by_name(
