@@ -83,15 +83,16 @@ class ItemsController < ApplicationController
           @current_user_quantities = current_user.item_quantities_for(@item)
         end
 
-        @preview_pet_type = PetType.find_by_color_id_and_species_id(
-          Color.find_by_name("Blue"),
-          Species.find_by_name("Acara"),
-        )
+        @selected_preview_pet_type = load_selected_preview_pet_type
+        @preview_pet_type = load_preview_pet_type
+
         @item_layers = @item.appearance_for(
           @preview_pet_type, swf_asset_includes: [:zone]
         ).swf_assets
         @pet_layers = @preview_pet_type.canonical_pet_state.swf_assets.
           includes(:zone)
+
+        @preview_error = validate_preview
       end
 
       format.gif do
@@ -197,6 +198,38 @@ class ItemsController < ApplicationController
         swf_assets = appearances.values.map(&:swf_assets).flatten
         SwfAsset.preload_manifests(swf_assets)
       end
+  end
+
+  def load_selected_preview_pet_type
+    color_id = params.dig(:preview, :color_id)
+    species_id = params.dig(:preview, :species_id)
+
+    return load_default_preview_pet_type if color_id.nil? || species_id.nil?
+
+    PetType.find_or_initialize_by(color_id:, species_id:)
+  end
+
+  def load_preview_pet_type
+    if @selected_preview_pet_type.persisted?
+      @selected_preview_pet_type
+    else
+      load_default_preview_pet_type
+    end
+  end
+
+  def load_default_preview_pet_type
+    PetType.find_by_color_id_and_species_id(
+      Color.find_by_name("Blue"),
+      Species.find_by_name("Acara"),
+    )
+  end
+
+  def validate_preview
+    if @selected_preview_pet_type.new_record?
+      :pet_type_does_not_exist
+    elsif @item_layers.empty?
+      :no_item_data
+    end
   end
   
   def search_error(e)
