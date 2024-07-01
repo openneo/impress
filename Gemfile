@@ -85,3 +85,7 @@ gem "sentry-rails", "~> 5.12"
 
 # For tasks that use shell commands.
 gem "shell", "~> 0.8.1"
+
+# For workspace autocomplete.
+gem "solargraph", "~> 0.50.0", group: :development
+gem "solargraph-rails", "~> 1.1", group: :development
