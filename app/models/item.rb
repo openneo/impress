@@ -555,17 +555,23 @@ class Item < ApplicationRecord
   # instead of like a hash, so you can target its children with things like
   # the `include` option. This feels clunky though, I wish I had something a
   # bit more suited to it!
-  Appearance = Struct.new(:body, :swf_assets) do
+  Appearance = Struct.new(:item, :body, :swf_assets) do
     include ActiveModel::Serializers::JSON
     delegate :present?, :empty?, to: :swf_assets
+
     def attributes
-      {body: body, swf_assets: swf_assets}
+      {item:, body:, swf_assets:}
+    end
+
+    def restricted_zone_ids
+      return [] if empty?
+      ([item] + swf_assets).map(&:restricted_zone_ids).flatten.uniq.sort
     end
   end
   Appearance::Body = Struct.new(:id, :species) do
     include ActiveModel::Serializers::JSON
     def attributes
-      {id: id, species: species}
+      {id:, species:}
     end
   end
 
@@ -582,7 +588,7 @@ class Item < ApplicationRecord
     # If there are no body-specific assets, return one appearance for them all.
     if swf_assets_by_body_id.empty?
       body = Appearance::Body.new(0, nil)
-      return [Appearance.new(body, swf_assets_for_all_bodies)]
+      return [Appearance.new(self, body, swf_assets_for_all_bodies)]
     end
 
     # Otherwise, create an appearance for each real (nonzero) body ID. We don't
@@ -592,22 +598,22 @@ class Item < ApplicationRecord
       swf_assets_for_body = body_specific_assets + swf_assets_for_all_bodies
       species = Species.with_body_id(body_id).first!
       body = Appearance::Body.new(body_id, species)
-      Appearance.new(body, swf_assets_for_body)
+      Appearance.new(self, body, swf_assets_for_body)
     end
   end
 
   def appearance_for(target, ...)
-    Item.appearances_for([id], target, ...)[id]
+    Item.appearances_for([self], target, ...)[id]
   end
 
-  # Given a list of item IDs, return how they look on the given target (either
-  # a pet type or an alt style).
-  def self.appearances_for(item_ids, target, swf_asset_includes: [])
+  # Given a list of items, return how they look on the given target (either a
+  # pet type or an alt style).
+  def self.appearances_for(items, target, swf_asset_includes: [])
     # First, load all the relationships for these items that also fit this
     # body.
     relationships = ParentSwfAssetRelationship.
       includes(swf_asset: swf_asset_includes).
-      where(parent_type: "Item", parent_id: item_ids).
+      where(parent_type: "Item", parent_id: items.map(&:id)).
       where(swf_asset: {body_id: [target.body_id, 0]})
 
     pet_type_body = Appearance::Body.new(target.body_id, target.species)
@@ -618,13 +624,13 @@ class Item < ApplicationRecord
       transform_values { |rels| rels.map(&:swf_asset) }
 
     # Finally, for each item, return an appearance—even if it's empty!
-    item_ids.to_h do |item_id|
-      assets = assets_by_item_id.fetch(item_id, [])
+    items.to_h do |item|
+      assets = assets_by_item_id.fetch(item.id, [])
 
       fits_all_pets = assets.present? && assets.all? { |a| a.body_id == 0 }
       body = fits_all_pets ? all_pets_body : pet_type_body
 
-      [item_id, Appearance.new(body, assets)]
+      [item.id, Appearance.new(item, body, assets)]
     end
   end
 

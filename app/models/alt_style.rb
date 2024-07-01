@@ -49,9 +49,9 @@ class AltStyle < ApplicationRecord
     swf_asset.image_url
   end
 
-  # Given a list of item IDs, return how they look on this alt style.
-  def appearances_for(item_ids, ...)
-    Item.appearances_for(item_ids, self, ...)
+  # Given a list of items, return how they look on this alt style.
+  def appearances_for(items, ...)
+    Item.appearances_for(items, self, ...)
   end
 
   def biology=(biology)

@@ -187,7 +187,7 @@ class ItemsController < ApplicationController
         appearance_params[:color_id], appearance_params[:species_id])
     end
 
-    target.appearances_for(@items.map(&:id), swf_asset_includes: [:zone]).
+    target.appearances_for(@items, swf_asset_includes: [:zone]).
       tap do |appearances|
         # Preload the manifests for these SWF assets concurrently, rather than
         # loading them in sequence when we generate the JSON.
@@ -223,7 +223,7 @@ class ItemsController < ApplicationController
   def validate_preview
     if @selected_preview_pet_type.new_record?
       :pet_type_does_not_exist
-    elsif @preview_outfit.item_appearances.values.any?(&:empty?)
+    elsif @preview_outfit.item_appearances.any?(&:empty?)
       :no_item_data
     end
   end

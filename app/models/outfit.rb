@@ -160,13 +160,73 @@ class Outfit < ApplicationRecord
   end
 
   def item_appearances(...)
-    Item.appearances_for(worn_item_ids, pet_type, ...)
+    Item.appearances_for(worn_items, pet_type, ...).values
   end
 
   def visible_layers
-    pet_layers = pet_state.swf_assets.includes(:zone)
-    item_layers = item_appearances(swf_asset_includes: [:zone]).values.
-      map(&:swf_assets).flatten
+    item_appearances = item_appearances(swf_asset_includes: [:zone])
+
+    pet_layers = pet_state.swf_assets.includes(:zone).to_a
+    item_layers = item_appearances.map(&:swf_assets).flatten
+
+    pet_restricted_zone_ids = pet_layers.map(&:restricted_zone_ids).
+      flatten.to_set
+    item_restricted_zone_ids = item_appearances.
+      map(&:restricted_zone_ids).flatten.to_set
+
+    # When an item restricts a zone, it hides pet layers of the same zone.
+    # We use this to e.g. make a hat hide a hair ruff.
+    #
+    # NOTE: Items' restricted layers also affect what items you can wear at
+    #       the same time. We don't enforce anything about that here, and
+    #       instead assume that the input by this point is valid!
+    pet_layers.reject! { |sa| item_restricted_zone_ids.include?(sa.zone_id) }
+
+    # When a pet appearance restricts a zone, or when the pet is Unconverted,
+    # it makes body-specific items incompatible. We use this to disallow UCs
+    # from wearing certain body-specific Biology Effects, Statics, etc, while
+    # still allowing non-body-specific items in those zones! (I think this
+    # happens for some Invisible pet stuff, too?)
+    #
+    # TODO: We shouldn't be *hiding* these zones, like we do with items; we
+    #       should be doing this way earlier, to prevent the item from even
+    #       showing up even in search results!
+    #
+    # NOTE: This can result in both pet layers and items occupying the same
+    #       zone, like Static, so long as the item isn't body-specific! That's
+    #       correct, and the item layer should be on top! (Here, we implement
+    #       it by placing item layers second in the list, and rely on JS sort
+    #       stability, and *then* rely on the UI to respect that ordering when
+    #       rendering them by depth. Not great! 😅)
+    #
+    # NOTE: We used to also include the pet appearance's *occupied* zones in
+    #       this condition, not just the restricted zones, as a sensible
+    #       defensive default, even though we weren't aware of any relevant
+    #       items. But now we know that actually the "Bruce Brucey B Mouth"
+    #       occupies the real Mouth zone, and still should be visible and
+    #       above pet layers! So, we now only check *restricted* zones.
+    #
+    # NOTE: UCs used to implement their restrictions by listing specific
+    #       zones, but it seems that the logic has changed to just be about
+    #       UC-ness and body-specific-ness, and not necessarily involve the
+    #       set of restricted zones at all. (This matters because e.g. UCs
+    #       shouldn't show _any_ part of the Rainy Day Umbrella, but most UCs
+    #       don't restrict Right-Hand Item (Zone 49).) Still, I'm keeping the
+    #       zone restriction case running too, because I don't think it
+    #       _hurts_ anything, and I'm not confident enough in this conclusion.
+    #
+    # TODO: Do Invisibles follow this new rule like UCs, too? Or do they still
+    #       use zone restrictions?
+    if pet_state.pose === "UNCONVERTED"
+      item_layers.reject! { |sa| sa.body_specific? }
+    else
+      item_layers.reject! { |sa| sa.body_specific? &&
+        pet_restricted_zone_ids.include?(sa.zone_id) }
+    end
+
+    # A pet appearance can also restrict its own zones. The Wraith Uni is an
+    # interesting example: it has a horn, but its zone restrictions hide it!
+    pet_layers.reject! { |sa| pet_restricted_zone_ids.include?(sa.zone_id) }
 
     (pet_layers + item_layers).sort_by(&:depth)
   end

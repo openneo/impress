@@ -124,9 +124,9 @@ class PetType < ApplicationRecord
     }.first
   end
 
-  # Given a list of item IDs, return how they look on this pet type.
-  def appearances_for(item_ids, ...)
-    Item.appearances_for(item_ids, self, ...)
+  # Given a list of items, return how they look on this pet type.
+  def appearances_for(item, ...)
+    Item.appearances_for(item, self, ...)
   end
 
   def self.all_by_ids_or_children(ids, pet_states)
