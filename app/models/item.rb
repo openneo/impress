@@ -595,6 +595,10 @@ class Item < ApplicationRecord
     end
   end
 
+  def appearance_for(target, ...)
+    Item.appearances_for([id], target, ...)[id]
+  end
+
   # Given a list of item IDs, return how they look on the given target (either
   # a pet type or an alt style).
   def self.appearances_for(item_ids, target, swf_asset_includes: [])

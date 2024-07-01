@@ -82,6 +82,16 @@ class ItemsController < ApplicationController
             group_by_owned
           @current_user_quantities = current_user.item_quantities_for(@item)
         end
+
+        @preview_pet_type = PetType.find_by_color_id_and_species_id(
+          Color.find_by_name("Blue"),
+          Species.find_by_name("Acara"),
+        )
+        @item_layers = @item.appearance_for(
+          @preview_pet_type, swf_asset_includes: [:zone]
+        ).swf_assets
+        @pet_layers = @preview_pet_type.canonical_pet_state.swf_assets.
+          includes(:zone)
       end
 
       format.gif do

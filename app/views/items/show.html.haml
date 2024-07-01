@@ -13,7 +13,11 @@
     how we handle zones. Until then, these items will be <em>very</em> buggy,
     sorry!
 
-#outfit-preview-root{'data-item-id': @item.id}
+%outfit-viewer
+  %outfit-pet-appearance
+    = outfit_viewer_layers @pet_layers
+  %outfit-item-appearance
+    = outfit_viewer_layers @item_layers
 
 - unless @contributors_with_counts.empty?
   #item-contributors
