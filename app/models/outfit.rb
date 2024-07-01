@@ -25,7 +25,12 @@ class Outfit < ApplicationRecord
   before_validation :ensure_unique_name, if: :user_id?
 
   attr_reader :biology
-  delegate :color, to: :pet_state
+  delegate :pose, to: :pet_state
+  delegate :pet_type, to: :pet_state
+  delegate :color, to: :pet_type
+  delegate :color_id, to: :pet_type
+  delegate :species, to: :pet_type
+  delegate :species_id, to: :pet_type
 
   scope :wardrobe_order, -> { order('starred DESC', :name) }
   
@@ -107,18 +112,6 @@ class Outfit < ApplicationRecord
     )
   end
 
-  def color_id
-    pet_state.pet_type.color_id
-  end
-
-  def species_id
-    pet_state.pet_type.species_id
-  end
-
-  def pose
-    pet_state.pose
-  end
-
   def biology=(biology)
     @biology = biology.slice(:species_id, :color_id, :pose, :pet_state_id)
 
@@ -164,6 +157,18 @@ class Outfit < ApplicationRecord
       ItemOutfitRelationship.new(item_id: item_id, is_worn: false)
     end
     self.item_outfit_relationships = new_relationships
+  end
+
+  def item_appearances(...)
+    Item.appearances_for(worn_item_ids, pet_type, ...)
+  end
+
+  def visible_layers
+    pet_layers = pet_state.swf_assets.includes(:zone)
+    item_layers = item_appearances(swf_asset_includes: [:zone]).values.
+      map(&:swf_assets).flatten
+
+    (pet_layers + item_layers).sort_by(&:depth)
   end
 
   def ensure_unique_name

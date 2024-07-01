@@ -250,7 +250,7 @@ module ItemsHelper
   end
 
   def outfit_viewer_layer(swf_asset)
-    content_tag "outfit-layer", style: "z-index: #{swf_asset.zone.depth}" do
+    content_tag :div, class: "outfit-layer" do
       image_tag swf_asset.image_url, alt: ""
     end
   end

@@ -84,14 +84,10 @@ class ItemsController < ApplicationController
         end
 
         @selected_preview_pet_type = load_selected_preview_pet_type
-        @preview_pet_type = load_preview_pet_type
-
-        @item_layers = @item.appearance_for(
-          @preview_pet_type, swf_asset_includes: [:zone]
-        ).swf_assets
-        @pet_layers = @preview_pet_type.canonical_pet_state.swf_assets.
-          includes(:zone)
-
+        @preview_outfit = Outfit.new(
+          pet_state: load_preview_pet_type.canonical_pet_state,
+          worn_items: [@item],
+        )
         @preview_error = validate_preview
       end
 
@@ -227,7 +223,7 @@ class ItemsController < ApplicationController
   def validate_preview
     if @selected_preview_pet_type.new_record?
       :pet_type_does_not_exist
-    elsif @item_layers.empty?
+    elsif @preview_outfit.item_appearances.values.any?(&:empty?)
       :no_item_data
     end
   end

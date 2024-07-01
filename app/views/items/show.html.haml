@@ -14,11 +14,8 @@
     sorry!
 
 = turbo_frame_tag "item-preview" do
-  %outfit-viewer
-    %outfit-pet-appearance
-      = outfit_viewer_layers @pet_layers
-    %outfit-item-appearance
-      = outfit_viewer_layers @item_layers
+  .outfit-viewer
+    = outfit_viewer_layers @preview_outfit.visible_layers
 
   = form_for item_path(@item), method: :get, class: "species-color-picker",
     data: {"is-valid": @preview_error.nil?} do |f|
