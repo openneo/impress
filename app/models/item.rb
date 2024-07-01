@@ -34,8 +34,6 @@ class Item < ApplicationRecord
 
   scope :sitemap, -> { order([:id]).limit(49999) }
 
-  scope :with_closet_hangers, -> { joins(:closet_hangers) }
-
   scope :name_includes, ->(value) {
     Item.where("name LIKE ?", "%" + sanitize_sql_like(value) + "%")
   }
