@@ -15,7 +15,6 @@ class SwfAsset < ApplicationRecord
   belongs_to :zone
   has_many :parent_swf_asset_relationships
   has_one :contribution, :as => :contributed, :inverse_of => :contributed
-  has_many :parent_swf_asset_relationships
 
   before_validation :normalize_manifest_url, if: :manifest_url?
 
