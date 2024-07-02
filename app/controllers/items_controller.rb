@@ -214,10 +214,7 @@ class ItemsController < ApplicationController
   end
 
   def load_default_preview_pet_type
-    PetType.find_by_color_id_and_species_id(
-      Color.find_by_name("Blue"),
-      Species.find_by_name("Acara"),
-    )
+    @item.compatible_pet_type
   end
 
   def validate_preview
