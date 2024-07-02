@@ -202,7 +202,12 @@ class ItemsController < ApplicationController
 
     return load_default_preview_pet_type if color_id.nil? || species_id.nil?
 
-    PetType.find_or_initialize_by(color_id:, species_id:)
+    PetType.find_or_initialize_by(color_id:, species_id:).tap do |pet_type|
+      if pet_type.persisted?
+        cookies["preferred-preview-color-id"] = color_id
+        cookies["preferred-preview-species-id"] = species_id
+      end
+    end
   end
 
   def load_preview_pet_type
@@ -214,7 +219,10 @@ class ItemsController < ApplicationController
   end
 
   def load_default_preview_pet_type
-    @item.compatible_pet_type
+    @item.compatible_pet_types.
+      preferring_species(cookies["preferred-preview-species-id"] || "<ignore>").
+      preferring_color(cookies["preferred-preview-color-id"] || "<ignore>").
+      preferring_simple.first
   end
 
   def validate_preview

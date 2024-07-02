@@ -498,15 +498,6 @@ class Item < ApplicationRecord
     PetType.where(body_id: compatible_body_ids)
   end
 
-  # Return a pet type that can wear this item, preferring simple colors and
-  # early-alphabetically species.
-  def compatible_pet_type
-    compatible_pet_types.joins(:color, :species).order(:species_id).
-      merge(Color.order(basic: :desc, standard: :desc, name: :asc)).
-      merge(Species.order(name: :asc)).
-      first
-  end
-
   def handle_assets!
     if @parent_swf_asset_relationships_to_update && @current_body_id
       new_swf_asset_ids = @parent_swf_asset_relationships_to_update.map(&:swf_asset_id)

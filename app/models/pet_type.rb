@@ -16,6 +16,17 @@ class PetType < ApplicationRecord
     species = Species.find_by_name!(species_name)
     where(color_id: color.id, species_id: species.id)
   }
+  scope :preferring_species, ->(species_id) {
+    joins(:species).order([Arel.sql("species_id = ? DESC"), species_id])
+  }
+  scope :preferring_color, ->(color_id) {
+    joins(:color).order([Arel.sql("color_id = ? DESC"), color_id])
+  }
+  scope :preferring_simple, -> {
+    joins(:species, :color).
+      merge(Species.order(name: :asc)).
+      merge(Color.order(basic: :desc, standard: :desc, name: :asc))
+  }
 
   def self.special_color_or_basic(special_color)
     color_ids = special_color ? [special_color.id] : Color.basic.select([:id]).map(&:id)
