@@ -1,0 +1,23 @@
+class OutfitLayer extends HTMLElement {
+	connectedCallback() {
+		setTimeout(() => this.#initializeImage(), 0);
+	}
+
+	#initializeImage() {
+		this.image = this.querySelector("img");
+		if (!this.image) {
+			throw new Error(`<outfit-layer> must contain an <img> tag`);
+		}
+
+		this.image.addEventListener("load", () => this.#setStatus("loaded"));
+		this.image.addEventListener("error", () => this.#setStatus("error"));
+
+		this.#setStatus(this.image.complete ? "loaded" : "loading");
+	}
+
+	#setStatus(newStatus) {
+		this.setAttribute("status", newStatus);
+	}
+}
+
+customElements.define("outfit-layer", OutfitLayer);

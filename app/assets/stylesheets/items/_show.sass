@@ -49,7 +49,7 @@ body.items-show
 
     margin: 0 auto .75em
 
-    .outfit-layer
+    outfit-layer
       display: block
       position: absolute
       inset: 0
@@ -58,7 +58,7 @@ body.items-show
         width: 100%
         height: 100%
 
-    &:has(.outfit-layer[data-status="loading"])
+    &:has(outfit-layer[status="loading"])
       background: gray
 
   .species-color-picker
