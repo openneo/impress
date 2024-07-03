@@ -15,7 +15,9 @@
 
 = turbo_frame_tag "item-preview" do
   .outfit-viewer
-    = outfit_viewer_layers @preview_outfit.visible_layers
+    - @preview_outfit.visible_layers.each do |swf_asset|
+      .outfit-layer
+        = image_tag swf_asset.image_url, alt: ""
 
   = form_for item_path(@item), method: :get, class: "species-color-picker",
     data: {"is-valid": @preview_error.nil?} do |f|
@@ -40,6 +42,6 @@
         %li= link_to(contributor.name, user_contributions_path(contributor)) + format_contribution_count(count)
     %footer= t '.contributors.footer'
 
-- content_for :javascripts_body do
-  = javascript_include_tag 'item-page', defer: true
+- content_for :javascripts do
+  = javascript_include_tag 'item-page', async: true
 

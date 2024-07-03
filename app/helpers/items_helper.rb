@@ -244,15 +244,5 @@ module ItemsHelper
   def item_header_user_lists_form_state
     cookies.fetch("DTIItemPageUserListsFormState", "closed")
   end
-
-  def outfit_viewer_layers(swf_assets)
-    swf_assets.map { |a| outfit_viewer_layer(a) }.join("\n").html_safe
-  end
-
-  def outfit_viewer_layer(swf_asset)
-    content_tag :div, class: "outfit-layer" do
-      image_tag swf_asset.image_url, alt: ""
-    end
-  end
 end
 
