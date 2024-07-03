@@ -16,7 +16,12 @@
 = turbo_frame_tag "item-preview" do
   .outfit-viewer
     - @preview_outfit.visible_layers.each do |swf_asset|
-      %outfit-layer
+      %outfit-layer{
+        data: {
+          "asset-id": swf_asset.id,
+          "zone": swf_asset.zone.label,
+        },
+      }
         = image_tag swf_asset.image_url, alt: ""
 
   = form_for item_path(@item), method: :get, class: "species-color-picker",
