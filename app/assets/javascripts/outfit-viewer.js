@@ -1,4 +1,11 @@
 class OutfitLayer extends HTMLElement {
+	#internals;
+
+	constructor() {
+		super();
+		this.#internals = this.attachInternals();
+	}
+
 	connectedCallback() {
 		setTimeout(() => this.#initializeImage(), 0);
 	}
@@ -16,7 +23,8 @@ class OutfitLayer extends HTMLElement {
 	}
 
 	#setStatus(newStatus) {
-		this.setAttribute("status", newStatus);
+		this.#internals.states.clear();
+		this.#internals.states.add(newStatus);
 	}
 }
 
