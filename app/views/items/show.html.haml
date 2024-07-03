@@ -14,15 +14,7 @@
     sorry!
 
 = turbo_frame_tag "item-preview" do
-  .outfit-viewer
-    - @preview_outfit.visible_layers.each do |swf_asset|
-      %outfit-layer{
-        data: {
-          "asset-id": swf_asset.id,
-          "zone": swf_asset.zone.label,
-        },
-      }
-        = image_tag swf_asset.image_url, alt: ""
+  = render partial: "outfit_viewer", locals: {outfit: @preview_outfit}
 
   = form_for item_path(@item), method: :get, class: "species-color-picker",
     data: {"is-valid": @preview_error.nil?} do |f|

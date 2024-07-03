@@ -1,0 +1,9 @@
+.outfit-viewer
+  - outfit.visible_layers.each do |swf_asset|
+    %outfit-layer{
+      data: {
+        "asset-id": swf_asset.id,
+        "zone": swf_asset.zone.label,
+      },
+    }
+      = image_tag swf_asset.image_url, alt: ""
