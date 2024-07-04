@@ -6,4 +6,7 @@
         "zone": swf_asset.zone.label,
       },
     }
-      = image_tag swf_asset.image_url, alt: ""
+      - if swf_asset.canvas_movie?
+        %iframe{src: swf_asset_path(swf_asset) + "?playing"}
+      - else
+        = image_tag swf_asset.image_url, alt: ""

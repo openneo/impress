@@ -54,12 +54,15 @@ body.items-show
       position: absolute
       inset: 0
 
-      img
+      img, iframe
         width: 100%
         height: 100%
 
     &:has(outfit-layer:state(loading))
       background: gray
+
+    &:has(outfit-layer:state(error))
+      border-color: $error-border-color
 
   .species-color-picker
     .error-icon
@@ -70,4 +73,3 @@ body.items-show
       select
         border-color: $error-border-color
         color: $error-color
-

@@ -7,19 +7,47 @@ class OutfitLayer extends HTMLElement {
 	}
 
 	connectedCallback() {
-		setTimeout(() => this.#initializeImage(), 0);
+		setTimeout(() => this.#connectToChildren(), 0);
 	}
 
-	#initializeImage() {
-		this.image = this.querySelector("img");
-		if (!this.image) {
-			throw new Error(`<outfit-layer> must contain an <img> tag`);
+	disconnectedCallback() {
+		window.removeEventListener("message", this.#onMessage);
+	}
+
+	#connectToChildren() {
+		const image = this.querySelector("img");
+		const iframe = this.querySelector("iframe");
+
+		if (image) {
+			image.addEventListener("load", () => this.#setStatus("loaded"));
+			image.addEventListener("error", () => this.#setStatus("error"));
+			this.#setStatus(image.complete ? "loaded" : "loading");
+		} else if (iframe) {
+			this.iframe = iframe;
+			window.addEventListener("message", (m) => this.#onMessage(m));
+			this.#setStatus("loading");
+		} else {
+			throw new Error(
+				`<outfit-layer> must contain an <img> or <iframe> tag`,
+			);
+		}
+	}
+
+	#onMessage({ source, data }) {
+		if (source !== this.iframe.contentWindow) {
+			return;
 		}
 
-		this.image.addEventListener("load", () => this.#setStatus("loaded"));
-		this.image.addEventListener("error", () => this.#setStatus("error"));
-
-		this.#setStatus(this.image.complete ? "loaded" : "loading");
+		if (
+			data.type === "status" &&
+			["loaded", "error"].includes(data.status)
+		) {
+			this.#setStatus(data.status);
+		} else {
+			throw new Error(
+				`<outfit-layer> got unexpected message: ${JSON.stringify(data)}`,
+			);
+		}
 	}
 
 	#setStatus(newStatus) {

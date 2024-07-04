@@ -301,15 +301,24 @@ window.addEventListener("message", ({ data }) => {
 	}
 });
 
-startMovie().catch((error) => {
-	console.error(logPrefix, error);
+startMovie()
+	.then(() => {
+		parent.postMessage(
+			{ type: "status", status: "loaded" },
+			document.location.origin,
+		);
+	})
+	.catch((error) => {
+		console.error(logPrefix, error);
 
-	loadingStatus = "error";
-	canvas.setAttribute("data-status", "error");
-	canvas.setAttribute("data-error-message", error.message);
+		loadingStatus = "error";
+		parent.postMessage(
+			{ type: "status", status: "error" },
+			document.location.origin,
+		);
 
-	// If loading the movie fails, show the fallback image instead, by moving
-	// it out of the canvas content and into the body.
-	document.body.appendChild(document.getElementById("fallback"));
-	console.warn("Showing fallback image instead.");
-});
+		// If loading the movie fails, show the fallback image instead, by moving
+		// it out of the canvas content and into the body.
+		document.body.appendChild(document.getElementById("fallback"));
+		console.warn("Showing fallback image instead.");
+	});
