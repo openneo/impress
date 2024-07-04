@@ -57,3 +57,33 @@ class OutfitLayer extends HTMLElement {
 }
 
 customElements.define("outfit-layer", OutfitLayer);
+
+// Morph turbo-frames on this page, to reuse asset nodes when we want to—very
+// important for movies!—but ensure that it *doesn't* do its usual behavior of
+// aggressively reusing existing <outfit-layer> nodes for entirely different
+// assets. (It's a lot clearer for managing the loading state, and not showing
+// old incorrect layers!) (We also tried using `id` to enforce this… no luck.)
+addEventListener("turbo:before-frame-render", (event) => {
+	if (typeof Idiomorph !== "undefined") {
+		event.detail.render = (currentElement, newElement) => {
+			Idiomorph.morph(currentElement, newElement.innerHTML, {
+				morphStyle: "innerHTML",
+				callbacks: {
+					beforeNodeMorphed: (currentNode, newNode) => {
+						// If Idiomorph wants to transform an <outfit-layer> to
+						// have a different data-asset-id attribute, we replace
+						// the node ourselves and abort the morph.
+						if (
+							newNode.tagName === "OUTFIT-LAYER" &&
+							newNode.getAttribute("data-asset-id") !==
+								currentNode.getAttribute("data-asset-id")
+						) {
+							currentNode.replaceWith(newNode);
+							return false;
+						}
+					},
+				},
+			});
+		};
+	}
+});
