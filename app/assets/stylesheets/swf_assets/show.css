@@ -1,0 +1,8 @@
+#asset-canvas,
+#fallback {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: min(100vw, 100vh);
+	height: min(100vw, 100vh);
+}

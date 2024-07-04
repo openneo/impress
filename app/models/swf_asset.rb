@@ -140,7 +140,10 @@ class SwfAsset < ApplicationRecord
         # assets in the same manifest, and earlier ones are broken and later
         # ones are fixed. I don't know the logic exactly, but that's what we've
         # seen!
-        { js: assets_by_ext[:js].last }
+        {
+          js: assets_by_ext[:js].last,
+          sprites: assets_by_ext.fetch(:png, []),
+        }
       else
         # Otherwise, return the first PNG and the first SVG. (Unlike the JS
         # case, it's important to choose the *first* PNG, because sometimes
@@ -185,8 +188,21 @@ class SwfAsset < ApplicationRecord
     nil
   end
 
+  def canvas_movie?
+    canvas_movie_library_url.present?
+  end
+
+  def canvas_movie_library_url
+    manifest_asset_urls[:js]
+  end
+
+  def canvas_movie_sprite_urls
+    return [] unless canvas_movie?
+    manifest_asset_urls[:sprites]
+  end
+
   def canvas_movie_image_url
-    return nil unless manifest_asset_urls[:js]
+    return nil unless canvas_movie?
 
     CANVAS_MOVIE_IMAGE_URL_TEMPLATE.expand(
       libraryUrl: manifest_asset_urls[:js],
