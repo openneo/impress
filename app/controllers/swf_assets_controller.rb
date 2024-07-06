@@ -15,7 +15,7 @@ class SwfAssetsController < ApplicationController
 			)
 		}
 
-		policy.script_src_elem -> {
+		policy.script_src -> {
 			src_list(
 				helpers.javascript_url("lib/easeljs.min"),
 				helpers.javascript_url("lib/tweenjs.min"),
@@ -24,7 +24,7 @@ class SwfAssetsController < ApplicationController
 			)
 		}
 
-		policy.style_src_elem -> {
+		policy.style_src -> {
 			src_list(
 				helpers.stylesheet_url("swf_assets/show"),
 			)
