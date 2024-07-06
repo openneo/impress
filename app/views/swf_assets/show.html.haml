@@ -7,13 +7,13 @@
       Embed for Asset ##{@swf_asset.id} | #{t "app_name"}
     %link{href: image_path("favicon.png"), rel: "icon"}
 
+    -# Load the stylesheet first, because displaying things correctly is the
+    -# actual most essential thing.
+    = stylesheet_link_tag "swf_assets/show", debug: false
+
     -# NOTE: For all these assets, the Content-Security-Policy doesn't account
     -# for asset debug mode, so let's just opt out of it with `debug: false`!
     - if @swf_asset.canvas_movie?
-      -# Load the stylesheet first, because displaying things correctly is the
-      -# actual most essential thing.
-      = stylesheet_link_tag "swf_assets/show", debug: false
-
       -# This is optional, but preloading the sprites can help us from having
       -# to wait on all the other JS to load and set up before we start!
       - @swf_asset.canvas_movie_sprite_urls.each do |sprite_url|
@@ -33,4 +33,4 @@
         -# the browser won't bother to load it if it's not used.
         = image_tag @swf_asset.image_url, id: "fallback", alt: "", loading: "lazy"
     - else
-      = image_tag @swf_asset.image_url, alt: ""
+      = image_tag @swf_asset.image_url, alt: "", id: "asset-image"
