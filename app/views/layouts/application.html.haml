@@ -13,7 +13,6 @@
     %link{href: image_path('favicon.png'), rel: 'icon'}
     = yield :stylesheets
     = stylesheet_link_tag "application"
-    = render 'analytics'
     = yield :meta
     = open_graph_tags
     = csrf_meta_tag
@@ -24,6 +23,7 @@
     = javascript_include_tag 'application', defer: true
     = yield :javascripts
     = yield :head
+    = render 'analytics'
   %body{:class => body_class}
     #container
       = yield :before_title
