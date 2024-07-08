@@ -1,4 +1,5 @@
 .outfit-viewer
+  = render partial: "hanger_spinner"
   - outfit.visible_layers.each do |swf_asset|
     %outfit-layer{
       data: {
