@@ -4,6 +4,15 @@ class OutfitLayer extends HTMLElement {
 	constructor() {
 		super();
 		this.#internals = this.attachInternals();
+
+		// An <outfit-layer> starts in the loading state, and then might very
+		// quickly decide it's not after `#connectToChildren`. This is to prevent a
+		// flash of *non*-loading state, when a new layer loads in. (e.g. In the
+		// time between our parent <turbo-frame> loading, which shows the loading
+		// spinner; and us being marked `:state(loading)`, which shows the loading
+		// spinner; we don't want the loading spinner to do its usual *immediate*
+		// total fade-out; then have to fade back in again, on the usual delay.)
+		this.#setStatus("loading");
 	}
 
 	connectedCallback() {
@@ -27,9 +36,7 @@ class OutfitLayer extends HTMLElement {
 			window.addEventListener("message", (m) => this.#onMessage(m));
 			this.#setStatus("loading");
 		} else {
-			throw new Error(
-				`<outfit-layer> must contain an <img> or <iframe> tag`,
-			);
+			throw new Error(`<outfit-layer> must contain an <img> or <iframe> tag`);
 		}
 	}
 
@@ -38,10 +45,7 @@ class OutfitLayer extends HTMLElement {
 			return;
 		}
 
-		if (
-			data.type === "status" &&
-			["loaded", "error"].includes(data.status)
-		) {
+		if (data.type === "status" && ["loaded", "error"].includes(data.status)) {
 			this.#setStatus(data.status);
 		} else {
 			throw new Error(
