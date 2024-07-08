@@ -290,6 +290,28 @@ function hasAnimations(createjsNode) {
 	);
 }
 
+function sendStatus() {
+	if (loadingStatus === "loading") {
+		sendMessage({ type: "status", status: "loading" });
+	} else if (loadingStatus === "loaded") {
+		sendMessage({
+			type: "status",
+			status: "loaded",
+			hasAnimations: hasAnimations(movieClip),
+		});
+	} else if (loadingStatus === "error") {
+		sendMessage({ type: "status", status: "error" });
+	} else {
+		throw new Error(
+			`unexpected loadingStatus ${JSON.stringify(loadingStatus)}`,
+		);
+	}
+}
+
+function sendMessage(message) {
+	parent.postMessage(message, document.location.origin);
+}
+
 window.addEventListener("resize", () => {
 	updateCanvasDimensions();
 
@@ -310,6 +332,8 @@ window.addEventListener("message", ({ data }) => {
 		play();
 	} else if (data.type === "pause") {
 		pause();
+	} else if (data.type === "requestStatus") {
+		sendStatus();
 	} else {
 		throw new Error(`unexpected message: ${JSON.stringify(data)}`);
 	}
@@ -317,23 +341,13 @@ window.addEventListener("message", ({ data }) => {
 
 startMovie()
 	.then(() => {
-		parent.postMessage(
-			{
-				type: "status",
-				status: "loaded",
-				hasAnimations: hasAnimations(movieClip),
-			},
-			document.location.origin,
-		);
+		sendStatus();
 	})
 	.catch((error) => {
 		console.error(logPrefix, error);
 
 		loadingStatus = "error";
-		parent.postMessage(
-			{ type: "status", status: "error" },
-			document.location.origin,
-		);
+		sendStatus();
 
 		// If loading the movie fails, show the fallback image instead, by moving
 		// it out of the canvas content and into the body.

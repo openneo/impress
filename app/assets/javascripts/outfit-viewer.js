@@ -71,11 +71,11 @@ class OutfitLayer extends HTMLElement {
 	}
 
 	play() {
-		this.#forwardIsPlaying(true);
+		this.#sendMessageToIframe({ type: "play" });
 	}
 
 	pause() {
-		this.#forwardIsPlaying(false);
+		this.#sendMessageToIframe({ type: "pause" });
 	}
 
 	#connectToChildren() {
@@ -83,14 +83,23 @@ class OutfitLayer extends HTMLElement {
 		const iframe = this.querySelector("iframe");
 
 		if (image) {
+			// Initialize status based on the image's current `complete` attribute,
+			// then wait for load/error events to update it further if needed.
+			this.#setStatus(image.complete ? "loaded" : "loading");
 			image.addEventListener("load", () => this.#setStatus("loaded"));
 			image.addEventListener("error", () => this.#setStatus("error"));
-			this.#setStatus(image.complete ? "loaded" : "loading");
 		} else if (iframe) {
 			this.iframe = iframe;
+
+			// Initialize status to `loading`, and asynchronously request a status
+			// message from the iframe if it managed to load before this triggers
+			// (impressive, but I think I've seen it happen!). Then, wait for
+			// messages or error events from the iframe to update status further if
+			// needed.
+			this.#setStatus("loading");
+			this.#sendMessageToIframe({ type: "requestStatus" });
 			window.addEventListener("message", (m) => this.#onMessage(m));
 			this.iframe.addEventListener("error", () => this.#setStatus("error"));
-			this.#setStatus("loading");
 		} else {
 			throw new Error(`<outfit-layer> must contain an <img> or <iframe> tag`);
 		}
@@ -134,15 +143,13 @@ class OutfitLayer extends HTMLElement {
 		}
 	}
 
-	#forwardIsPlaying(isPlaying) {
-		if (this.iframe == null) {
+	#sendMessageToIframe(message) {
+		if (this.iframe?.contentWindow == null) {
 			return;
 		}
 
-		this.iframe.contentWindow.postMessage(
-			{ type: isPlaying ? "play" : "pause" },
-			"*", // The frame is sandboxed (origin == null), so send to Any origin.
-		);
+		// The frame is sandboxed (origin == null), so send to Any origin.
+		this.iframe.contentWindow.postMessage(message, "*");
 	}
 }
 
