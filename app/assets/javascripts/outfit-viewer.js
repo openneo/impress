@@ -34,6 +34,7 @@ class OutfitLayer extends HTMLElement {
 		} else if (iframe) {
 			this.iframe = iframe;
 			window.addEventListener("message", (m) => this.#onMessage(m));
+			this.iframe.addEventListener("error", () => this.#setStatus("error"));
 			this.#setStatus("loading");
 		} else {
 			throw new Error(`<outfit-layer> must contain an <img> or <iframe> tag`);
