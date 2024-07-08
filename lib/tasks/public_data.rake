@@ -74,6 +74,7 @@ namespace :public_data do
 		# The connection details for our database!
 		config = ApplicationRecord.connection_db_config.configuration_hash
 		args << "--host=#{config[:host]}" if config[:host]
+		args << "--ssl=false" # SSL is the default for recent MariaDB; override!
 		args << "--user=#{config[:username]}" if config[:username]
 		args << "--password=#{config[:password]}" if config[:password]
 		args << "--database=#{config.fetch(:database)}"
