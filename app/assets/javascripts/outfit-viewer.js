@@ -4,7 +4,6 @@ class OutfitViewer extends HTMLElement {
 	constructor() {
 		super();
 		this.#internals = this.attachInternals();
-		this.#setIsPlaying(false);
 	}
 
 	connectedCallback() {
@@ -18,28 +17,35 @@ class OutfitViewer extends HTMLElement {
 		this.#setIsPlaying(playPauseToggle.checked);
 		playPauseToggle.addEventListener("change", () => {
 			this.#setIsPlaying(playPauseToggle.checked);
+			this.#setIsPlayingCookie(playPauseToggle.checked);
 		});
 	}
 
 	#setIsPlaying(isPlaying) {
 		// TODO: Listen for changes to the child list, and add `playing` when new
 		// nodes arrive, if playing.
+		const thirtyDays = 60 * 60 * 24 * 30;
 		if (isPlaying) {
 			this.#internals.states.add("playing");
-			for (const child of this.children) {
-				child.setAttribute("playing", "");
+			for (const layer of this.querySelectorAll("outfit-layer")) {
+				layer.play();
 			}
 		} else {
 			this.#internals.states.delete("playing");
-			for (const child of this.children) {
-				child.removeAttribute("playing");
+			for (const layer of this.querySelectorAll("outfit-layer")) {
+				layer.pause();
 			}
 		}
+	}
+
+	#setIsPlayingCookie(isPlaying) {
+		const thirtyDays = 60 * 60 * 24 * 30;
+		const value = isPlaying ? "true" : "false";
+		document.cookie = `DTIOutfitViewerIsPlaying=${value};max-age=${thirtyDays}`;
 	}
 }
 
 class OutfitLayer extends HTMLElement {
-	static observedAttributes = ["playing"];
 	#internals;
 
 	constructor() {
@@ -64,11 +70,12 @@ class OutfitLayer extends HTMLElement {
 		window.removeEventListener("message", this.#onMessage);
 	}
 
-	attributeChangedCallback(name, oldValue, newValue) {
-		if (name === "playing") {
-			const isPlaying = newValue != null;
-			this.#forwardIsPlaying(isPlaying);
-		}
+	play() {
+		this.#forwardIsPlaying(true);
+	}
+
+	pause() {
+		this.#forwardIsPlaying(false);
 	}
 
 	#connectToChildren() {

@@ -224,6 +224,10 @@ module ItemsHelper
     end
   end
 
+  def outfit_viewer_is_playing
+    cookies["DTIOutfitViewerIsPlaying"] == "true"
+  end
+
   private
 
   def build_on_pet_types(species, special_color=nil, &block)

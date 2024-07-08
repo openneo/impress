@@ -2,7 +2,10 @@
   .loading-indicator= render partial: "hanger_spinner"
 
   %label.play-pause-button
-    %input.play-pause-toggle{type: "checkbox"}
+    %input.play-pause-toggle{
+      type: "checkbox",
+      checked: outfit_viewer_is_playing,
+    }
     Play/pause
 
   - outfit.visible_layers.each do |swf_asset|
@@ -13,6 +16,6 @@
       },
     }
       - if swf_asset.canvas_movie?
-        %iframe{src: swf_asset_path(swf_asset)}
+        %iframe{src: swf_asset_path(swf_asset, playing: outfit_viewer_is_playing ? true : nil)}
       - else
         = image_tag swf_asset.image_url, alt: ""
