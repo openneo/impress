@@ -1,4 +1,45 @@
+class OutfitViewer extends HTMLElement {
+	#internals;
+
+	constructor() {
+		super();
+		this.#internals = this.attachInternals();
+		this.#setIsPlaying(false);
+	}
+
+	connectedCallback() {
+		setTimeout(() => this.#connectToChildren(), 0);
+	}
+
+	#connectToChildren() {
+		const playPauseToggle = document.querySelector(".play-pause-toggle");
+
+		// Read our initial playing state from the toggle, and subscribe to changes.
+		this.#setIsPlaying(playPauseToggle.checked);
+		playPauseToggle.addEventListener("change", () => {
+			this.#setIsPlaying(playPauseToggle.checked);
+		});
+	}
+
+	#setIsPlaying(isPlaying) {
+		// TODO: Listen for changes to the child list, and add `playing` when new
+		// nodes arrive, if playing.
+		if (isPlaying) {
+			this.#internals.states.add("playing");
+			for (const child of this.children) {
+				child.setAttribute("playing", "");
+			}
+		} else {
+			this.#internals.states.delete("playing");
+			for (const child of this.children) {
+				child.removeAttribute("playing");
+			}
+		}
+	}
+}
+
 class OutfitLayer extends HTMLElement {
+	static observedAttributes = ["playing"];
 	#internals;
 
 	constructor() {
@@ -21,6 +62,13 @@ class OutfitLayer extends HTMLElement {
 
 	disconnectedCallback() {
 		window.removeEventListener("message", this.#onMessage);
+	}
+
+	attributeChangedCallback(name, oldValue, newValue) {
+		if (name === "playing") {
+			const isPlaying = newValue != null;
+			this.#forwardIsPlaying(isPlaying);
+		}
 	}
 
 	#connectToChildren() {
@@ -46,8 +94,17 @@ class OutfitLayer extends HTMLElement {
 			return;
 		}
 
-		if (data.type === "status" && ["loaded", "error"].includes(data.status)) {
-			this.#setStatus(data.status);
+		if (data.type === "status") {
+			if (data.status === "loaded") {
+				this.#setStatus("loaded");
+				this.#setHasAnimations(data.hasAnimations);
+			} else if (data.status === "error") {
+				this.#setStatus("error");
+			} else {
+				throw new Error(
+					`<outfit-layer> got unexpected status: ${JSON.stringify(data.status)}`,
+				);
+			}
 		} else {
 			throw new Error(
 				`<outfit-layer> got unexpected message: ${JSON.stringify(data)}`,
@@ -56,11 +113,33 @@ class OutfitLayer extends HTMLElement {
 	}
 
 	#setStatus(newStatus) {
-		this.#internals.states.clear();
+		this.#internals.states.delete("loading");
+		this.#internals.states.delete("loaded");
+		this.#internals.states.delete("error");
 		this.#internals.states.add(newStatus);
+	}
+
+	#setHasAnimations(hasAnimations) {
+		if (hasAnimations) {
+			this.#internals.states.add("has-animations");
+		} else {
+			this.#internals.states.delete("has-animations");
+		}
+	}
+
+	#forwardIsPlaying(isPlaying) {
+		if (this.iframe == null) {
+			return;
+		}
+
+		this.iframe.contentWindow.postMessage(
+			{ type: isPlaying ? "play" : "pause" },
+			"*", // The frame is sandboxed (origin == null), so send to Any origin.
+		);
 	}
 }
 
+customElements.define("outfit-viewer", OutfitViewer);
 customElements.define("outfit-layer", OutfitLayer);
 
 // Morph turbo-frames on this page, to reuse asset nodes when we want to—very

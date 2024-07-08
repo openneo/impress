@@ -237,9 +237,7 @@ function onAnimationFrame() {
 
 	if (msSinceLastLog >= 5000) {
 		const fps = numFramesSinceLastLog / (msSinceLastLog / 1000);
-		console.debug(
-			`${logPrefix} FPS: ${fps.toFixed(2)} (Target: ${targetFps})`,
-		);
+		console.debug(`${logPrefix} FPS: ${fps.toFixed(2)} (Target: ${targetFps})`);
 		lastLogTime = document.timeline.currentTime;
 		numFramesSinceLastLog = 0;
 	}
@@ -276,6 +274,22 @@ function getInitialPlayingStatus() {
 	}
 }
 
+/**
+ * Recursively scans the given MovieClip (or child createjs node), to see if
+ * there are any animated areas.
+ */
+function hasAnimations(createjsNode) {
+	return (
+		// Some nodes have simple animation frames.
+		createjsNode.totalFrames > 1 ||
+		// Tweens are a form of animation that can happen separately from frames.
+		// They expect timer ticks to happen, and they change the scene accordingly.
+		createjsNode?.timeline?.tweens?.length >= 1 ||
+		// And some nodes have _children_ that are animated.
+		(createjsNode.children || []).some(hasAnimations)
+	);
+}
+
 window.addEventListener("resize", () => {
 	updateCanvasDimensions();
 
@@ -304,7 +318,11 @@ window.addEventListener("message", ({ data }) => {
 startMovie()
 	.then(() => {
 		parent.postMessage(
-			{ type: "status", status: "loaded" },
+			{
+				type: "status",
+				status: "loaded",
+				hasAnimations: hasAnimations(movieClip),
+			},
 			document.location.origin,
 		);
 	})

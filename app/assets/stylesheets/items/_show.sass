@@ -38,7 +38,7 @@ body.items-show
     height: 16px
     width: 16px
 
-  .outfit-viewer
+  outfit-viewer
     display: block
     position: relative
     width: 300px
@@ -59,7 +59,7 @@ body.items-show
 
     .loading-indicator
       position: absolute
-      z-index: 999
+      z-index: 1000
       bottom: 0px
       right: 4px
       padding: 8px
@@ -67,6 +67,17 @@ body.items-show
 
       opacity: 0
       transition: opacity .5s
+
+    .play-pause-button
+      position: absolute
+      z-index: 1001
+      left: 8px
+      bottom: 8px
+      display: none
+
+    &:has(outfit-layer:state(has-animations))
+      .play-pause-button
+        display: block
 
   .error-indicator
     font-size: 85%
@@ -79,14 +90,14 @@ body.items-show
   // apply the delay here, because fading *out* on load should be instant.)
   // We are loading when the <turbo-frame> is busy, or when at least one layer
   // is loading.
-  #item-preview[busy] .outfit-viewer, .outfit-viewer:has(outfit-layer:state(loading))
+  #item-preview[busy] outfit-viewer, outfit-viewer:has(outfit-layer:state(loading))
     cursor: wait
     .loading-indicator
       opacity: 1
       transition-delay: 2s
 
   #item-preview:has(outfit-layer:state(error))
-    .outfit-viewer
+    outfit-viewer
       border: 2px solid red
     .error-indicator
       display: block
