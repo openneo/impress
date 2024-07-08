@@ -39,14 +39,13 @@ body.items-show
     width: 16px
 
   .outfit-viewer
-    position: relative
     display: block
+    position: relative
     width: 300px
     height: 300px
     border: 1px solid $module-border-color
     border-radius: 1em
     overflow: hidden
-
     margin: 0 auto .75em
 
     outfit-layer
@@ -69,25 +68,28 @@ body.items-show
       opacity: 0
       transition: opacity .5s
 
-    // When loading, fade in the loading spinner after a brief delay. (We only
-    // apply the delay here, because fading *out* on load should be instant.)
-    &:has(outfit-layer:state(loading))
-      cursor: wait
-      .loading-indicator
-        opacity: 1
-        transition-delay: 2s
+  .error-indicator
+    font-size: 85%
+    color: $error-color
+    margin-top: .25em
+    margin-bottom: .5em
+    display: none
 
-    &:has(outfit-layer:state(error))
-      border-color: $error-border-color
-
-  // We also show the loading spinner when the item preview Turbo frame is
-  // loading in new data for us.
-  turbo-frame#item-preview[busy]
-    .outfit-viewer
-      cursor: wait
+  // When loading, fade in the loading spinner after a brief delay. (We only
+  // apply the delay here, because fading *out* on load should be instant.)
+  // We are loading when the <turbo-frame> is busy, or when at least one layer
+  // is loading.
+  #item-preview[busy] .outfit-viewer, .outfit-viewer:has(outfit-layer:state(loading))
+    cursor: wait
     .loading-indicator
       opacity: 1
       transition-delay: 2s
+
+  #item-preview:has(outfit-layer:state(error))
+    .outfit-viewer
+      border: 2px solid red
+    .error-indicator
+      display: block
 
   .species-color-picker
     .error-icon
