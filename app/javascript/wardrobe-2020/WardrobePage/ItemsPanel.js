@@ -34,7 +34,7 @@ import {
   QuestionIcon,
   WarningTwoIcon,
 } from "@chakra-ui/icons";
-import { FaCartPlus } from "react-icons/fa6";
+import { IoBagCheck } from "react-icons/io5";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { useSearchParams } from "react-router-dom";
 
@@ -315,7 +315,7 @@ function GetTheseItemsButton({ outfitState }) {
         as={isDisabled ? "button" : "a"}
         href={isDisabled ? undefined : targetUrl}
         target={isDisabled ? undefined : "_blank"}
-        icon={<FaCartPlus />}
+        icon={<IoBagCheck />}
         colorScheme="purple"
         size="sm"
         isRound
