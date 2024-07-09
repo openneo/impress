@@ -48,6 +48,11 @@ body.items-show
     overflow: hidden
     margin: 0 auto .75em
 
+    // There's no useful text in here, but double-clicking the play/pause
+    // button can cause a weird selection state. Disable text selection.
+    user-select: none
+    -webkit-user-select: none
+
     outfit-layer
       display: block
       position: absolute
