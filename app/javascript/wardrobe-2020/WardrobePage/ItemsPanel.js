@@ -34,17 +34,10 @@ import {
   QuestionIcon,
   WarningTwoIcon,
 } from "@chakra-ui/icons";
-import { FaCartPlus } from "react-icons/fa6";
+import { IoBagCheck } from "react-icons/io5";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { useSearchParams } from "react-router-dom";
 
-import {
-  Delay,
-  ErrorMessage,
-  Heading1,
-  Heading2,
-  useLocalStorage,
-} from "../util";
+import { Delay, ErrorMessage, Heading1, Heading2 } from "../util";
 import Item, { ItemListContainer, ItemListSkeleton } from "./Item";
 import { BiRename } from "react-icons/bi";
 import { IoCloudUploadOutline } from "react-icons/io5";
@@ -279,43 +272,34 @@ function ItemZoneGroupSkeleton({ itemCount }) {
 }
 
 /**
- * GetTheseItemsButton shows the "Get these items!" button, to link to the
- * Item Getting Guide page for the items in this outfit. If there are no items
- * being worn, this is disabled.
+ * ShoppingListButton shows the "Shopping list" button, to link to the Shopping=
+ * List page for the items in this outfit. If there are no items being worn,
+ * this is disabled.
  */
-function GetTheseItemsButton({ outfitState }) {
-  const [searchParams] = useSearchParams();
-  const [isVisible, setIsVisible] = useLocalStorage("DTIShowGetTheseItems");
-
-  // Enable this feature by visiting `/outfits/new?features=get-these-items`.
-  React.useEffect(() => {
-    const features = searchParams.get("features") ?? "";
-    if (features.split(",").includes("get-these-items")) {
-      setIsVisible(true);
-    }
-  }, [searchParams, setIsVisible]);
-
+function ShoppingListButton({ outfitState }) {
   const itemIds = [...outfitState.wornItemIds].sort();
-  const targetUrl = `/items/sources/${itemIds.join(",")}`;
   const isDisabled = itemIds.length === 0;
 
-  if (!isVisible) {
-    return null;
+  let targetUrl = `/items/sources/${itemIds.join(",")}`;
+  if (outfitState.name != null && outfitState.name.trim().length > 0) {
+    const params = new URLSearchParams();
+    params.append("for", outfitState.name);
+    targetUrl += "?" + params.toString();
   }
 
   return (
     <Tooltip
-      label="Get these items!"
+      label="Shopping list"
       placement="top"
       background="purple.500"
       color="white"
     >
       <IconButton
-        aria-label="Get these items!"
+        aria-label="Shopping list"
         as={isDisabled ? "button" : "a"}
         href={isDisabled ? undefined : targetUrl}
         target={isDisabled ? undefined : "_blank"}
-        icon={<FaCartPlus />}
+        icon={<IoBagCheck />}
         colorScheme="purple"
         size="sm"
         isRound
@@ -460,7 +444,7 @@ function OutfitHeading({ outfitState, outfitSaving, dispatchToOutfit }) {
           <Box width="4" flex="1 0 auto" />
           <OutfitSavingIndicator outfitSaving={outfitSaving} />
           <Box width="3" flex="0 0 auto" />
-          <GetTheseItemsButton outfitState={outfitState} />
+          <ShoppingListButton outfitState={outfitState} />
           <Box width="2" flex="0 0 auto" />
           <Menu placement="bottom-end">
             <MenuButton

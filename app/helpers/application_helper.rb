@@ -21,12 +21,24 @@ module ApplicationHelper
     end
   end
 
-  def button_link_to(content, url, icon: nil, **options)
+  def button_link_to(content_or_url, url = nil, icon: nil, **options)
+    if url.present?
+      content = content_or_url
+      url = url
+    else
+      content = nil
+      url = content_or_url
+    end
+
     klass = options.fetch(:class, "") + " button"
     link_to url, class: klass, **options do
       concat icon
       concat " "
-      concat content
+      if block_given?
+        yield
+      else
+        concat content
+      end
     end
   end
 
