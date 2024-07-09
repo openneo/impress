@@ -74,10 +74,48 @@ body.items-show
       left: 8px
       bottom: 8px
       display: none
+      align-items: center
+      justify-content: center
+      color: white
+      background: rgba(0, 0, 0, 0.64)
+      width: 2.5em
+      height: 2.5em
+      border-radius: 100%
+      border: 2px solid transparent
+      transition: all .25s
+
+      .playing-label, .paused-label
+        display: none
+        width: 1em
+        height: 1em
+
+      .play-pause-toggle
+        // Visually hidden
+        clip: rect(0 0 0 0)
+        clip-path: inset(50%)
+        height: 1px
+        overflow: hidden
+        position: absolute
+        white-space: nowrap
+        width: 1px
+
+        &:checked ~ .playing-label
+          display: block
+
+        &:not(:checked) ~ .paused-label
+          display: block
+
+      &:hover, &:has(.play-pause-toggle:focus)
+        border: 2px solid $module-border-color
+        background: $module-bg-color
+        color: $text-color
+
+      &:active
+        transform: translateY(2px)
 
     &:has(outfit-layer:state(has-animations))
       .play-pause-button
-        display: block
+        display: flex
 
   .error-indicator
     font-size: 85%
