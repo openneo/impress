@@ -279,11 +279,11 @@ function ItemZoneGroupSkeleton({ itemCount }) {
 }
 
 /**
- * GetTheseItemsButton shows the "Get these items!" button, to link to the
- * Shopping List page for the items in this outfit. If there are no items being
- * worn, this is disabled.
+ * ShoppingListButton shows the "Shopping list" button, to link to the Shopping=
+ * List page for the items in this outfit. If there are no items being worn,
+ * this is disabled.
  */
-function GetTheseItemsButton({ outfitState }) {
+function ShoppingListButton({ outfitState }) {
   const [searchParams] = useSearchParams();
   const [isVisible, setIsVisible] = useLocalStorage("DTIShowGetTheseItems");
 
@@ -466,7 +466,7 @@ function OutfitHeading({ outfitState, outfitSaving, dispatchToOutfit }) {
           <Box width="4" flex="1 0 auto" />
           <OutfitSavingIndicator outfitSaving={outfitSaving} />
           <Box width="3" flex="0 0 auto" />
-          <GetTheseItemsButton outfitState={outfitState} />
+          <ShoppingListButton outfitState={outfitState} />
           <Box width="2" flex="0 0 auto" />
           <Menu placement="bottom-end">
             <MenuButton
