@@ -280,8 +280,8 @@ function ItemZoneGroupSkeleton({ itemCount }) {
 
 /**
  * GetTheseItemsButton shows the "Get these items!" button, to link to the
- * Item Getting Guide page for the items in this outfit. If there are no items
- * being worn, this is disabled.
+ * Shopping List page for the items in this outfit. If there are no items being
+ * worn, this is disabled.
  */
 function GetTheseItemsButton({ outfitState }) {
   const [searchParams] = useSearchParams();
@@ -305,13 +305,13 @@ function GetTheseItemsButton({ outfitState }) {
 
   return (
     <Tooltip
-      label="Get these items!"
+      label="Shopping list"
       placement="top"
       background="purple.500"
       color="white"
     >
       <IconButton
-        aria-label="Get these items!"
+        aria-label="Shopping list"
         as={isDisabled ? "button" : "a"}
         href={isDisabled ? undefined : targetUrl}
         target={isDisabled ? undefined : "_blank"}
