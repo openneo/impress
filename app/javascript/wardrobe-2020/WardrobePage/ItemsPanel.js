@@ -36,15 +36,8 @@ import {
 } from "@chakra-ui/icons";
 import { IoBagCheck } from "react-icons/io5";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { useSearchParams } from "react-router-dom";
 
-import {
-  Delay,
-  ErrorMessage,
-  Heading1,
-  Heading2,
-  useLocalStorage,
-} from "../util";
+import { Delay, ErrorMessage, Heading1, Heading2 } from "../util";
 import Item, { ItemListContainer, ItemListSkeleton } from "./Item";
 import { BiRename } from "react-icons/bi";
 import { IoCloudUploadOutline } from "react-icons/io5";
@@ -284,21 +277,6 @@ function ItemZoneGroupSkeleton({ itemCount }) {
  * this is disabled.
  */
 function ShoppingListButton({ outfitState }) {
-  const [searchParams] = useSearchParams();
-  const [isVisible, setIsVisible] = useLocalStorage("DTIShowGetTheseItems");
-
-  // Enable this feature by visiting `/outfits/new?features=get-these-items`.
-  React.useEffect(() => {
-    const features = searchParams.get("features") ?? "";
-    if (features.split(",").includes("get-these-items")) {
-      setIsVisible(true);
-    }
-  }, [searchParams, setIsVisible]);
-
-  if (!isVisible) {
-    return null;
-  }
-
   const itemIds = [...outfitState.wornItemIds].sort();
   const isDisabled = itemIds.length === 0;
 
