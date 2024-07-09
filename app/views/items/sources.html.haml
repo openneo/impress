@@ -27,16 +27,16 @@
 
 					%td.actions-cell
 						- if @items_needed[:nc_mall].present?
-							%button{
-								onclick: "alert('Todo!')",
-								data: {"action-kind": "bulk-nc-mall"},
-							}
+							= button_link_to "https://ncmall.neopets.com/",
+							  target: "_blank",
+							  data: {"action-kind": "bulk-nc-mall"} do
 								= cart_icon alt: ""
 								Buy all in NC Mall
 		%tbody
 			- @items[:nc_mall].each do |item|
 				= render "item_list_row", item: do
-					%button{onclick: "alert('Todo!')"}
+					= button_link_to "https://ncmall.neopets.com/",
+					  target: "_blank" do
 						= cart_icon alt: ""
 						Buy (#{item.current_nc_price} NC)
 
@@ -74,10 +74,9 @@
 						(~#{dyeworks_estimated_potions_cost_for @items_needed[:dyeworks]} NC)
 				%td.actions-cell
 					- if @items_needed[:dyeworks].present?
-						%button{
-							onclick: "alert('Todo!')",
-							data: {"action-kind": "bulk-nc-mall"},
-						}
+						= button_link_to "https://ncmall.neopets.com/",
+						  target: "_blank",
+						  data: {"action-kind": "bulk-nc-mall"} do
 							= cart_icon alt: ""
 							Buy all in NC Mall
 		%tbody
@@ -112,7 +111,8 @@
 								}
 									(Limited-time)
 
-					%button{onclick: "alert('Todo!')"}
+					= button_link_to "https://ncmall.neopets.com/",
+					  target: "_blank" do
 						= cart_icon alt: ""
 						Buy base (#{item.dyeworks_base_item.current_nc_price} NC)
 
