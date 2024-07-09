@@ -53,6 +53,12 @@ body.items-show
       position: absolute
       inset: 0
 
+      // We disable pointer-events most importantly for the iframes, which
+      // will ignore our `cursor: wait` and show a plain cursor for the
+      // inside of its own document. But also, the context menus for these
+      // elements are kinda actively misleading, too!
+      pointer-events: none
+
       img, iframe
         width: 100%
         height: 100%
