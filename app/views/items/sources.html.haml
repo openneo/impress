@@ -1,5 +1,7 @@
-- title "Shopping List"
-%h1#title Shopping List
+- page_title = params[:for] ? "Shopping List for \"#{params[:for]}\"" : "Shopping List"
+
+- title page_title
+%h1#title= page_title
 
 :markdown
 	Here's a custom shopping list for exactly the items in your outfit!

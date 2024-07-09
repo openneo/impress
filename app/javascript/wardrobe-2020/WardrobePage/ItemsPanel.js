@@ -295,12 +295,18 @@ function GetTheseItemsButton({ outfitState }) {
     }
   }, [searchParams, setIsVisible]);
 
-  const itemIds = [...outfitState.wornItemIds].sort();
-  const targetUrl = `/items/sources/${itemIds.join(",")}`;
-  const isDisabled = itemIds.length === 0;
-
   if (!isVisible) {
     return null;
+  }
+
+  const itemIds = [...outfitState.wornItemIds].sort();
+  const isDisabled = itemIds.length === 0;
+
+  let targetUrl = `/items/sources/${itemIds.join(",")}`;
+  if (outfitState.name != null && outfitState.name.trim().length > 0) {
+    const params = new URLSearchParams();
+    params.append("for", outfitState.name);
+    targetUrl += "?" + params.toString();
   }
 
   return (
