@@ -38,7 +38,6 @@
           title: nc_trade_value_updated_at_text(item.nc_trade_value)
       - unless item.nc?
         = link_to t('items.show.resources.shop_wizard'), shop_wizard_url_for(item)
-        = link_to t('items.show.resources.super_shop_wizard'), super_shop_wizard_url_for(item)
         = link_to t('items.show.resources.trading_post'), trading_post_url_for(item)
         = link_to t('items.show.resources.auction_genie'), auction_genie_url_for(item)
 

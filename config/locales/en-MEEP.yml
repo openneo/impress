@@ -267,7 +267,6 @@ en-MEEP:
       resources:
         jn_items: JN Meepits
         shop_wizard: Meep Wizard
-        super_shop_wizard: Meeper Wizard
         trading_post: Treeps
         auction_genie: Aucteeps
       closet_hangers:
