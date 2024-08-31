@@ -1,5 +1,14 @@
 var DEBUG = document.location.search.substr(0, 6) == "?debug";
 
+function petThumbnailUrl(pet_name) {
+  // if first character is "@", use the hash url
+  if (pet_name[0] == "@") {
+    return "https://pets.neopets.com/cp/" + pet_name.substr(1) + "/1/1.png";
+  }
+
+  return "https://pets.neopets.com/cpn/" + pet_name + "/1/1.png";
+}
+
 /* Needed items form */
 (function () {
   var UI = {};
@@ -65,10 +74,6 @@ var DEBUG = document.location.search.substr(0, 6) == "?debug";
     loadItems(data.query);
   }
 
-  function petThumbnailUrl(pet_name) {
-    return "https://pets.neopets.com/cpn/" + pet_name + "/1/1.png";
-  }
-
   /* Items */
 
   function loadItems(query) {
@@ -127,7 +132,7 @@ var DEBUG = document.location.search.substr(0, 6) == "?debug";
 
     function Pet(name) {
       var el = $("#bulk-pets-submission-template")
-        .tmpl({ pet_name: name })
+        .tmpl({ pet_name: name, pet_thumbnail: petThumbnailUrl(name) })
         .appendTo(queue_el);
 
       this.load = function () {
