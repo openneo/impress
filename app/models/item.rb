@@ -25,8 +25,6 @@ class Item < ApplicationRecord
 
   NCRarities = [0, 500]
   PAINTBRUSH_SET_DESCRIPTION = 'This item is part of a deluxe paint brush set!'
-  SPECIAL_COLOR_DESCRIPTION_REGEX =
-    /This item is only wearable by [a-zA-Z]+ painted ([a-zA-Z]+)\.|WARNING: This [a-zA-Z]+ can be worn by ([a-zA-Z]+) [a-zA-Z]+ ONLY!|If your Neopet is not painted ([a-zA-Z]+), it will not be able to wear this item\./
 
   scope :newest, -> {
     order(arel_table[:created_at].desc) if arel_table[:created_at]
@@ -291,55 +289,6 @@ class Item < ApplicationRecord
   def affected_zones
     restricted_zones + occupied_zones
   end
-
-  def special_color
-    @special_color ||= determine_special_color
-  end
-
-  def special_color_id
-    special_color.try(:id)
-  end
-
-  protected
-  def determine_special_color
-    I18n.with_locale(I18n.default_locale) do
-      # Rather than go find the special description in all locales, let's just
-      # run this logic in English.
-      if description.include?(PAINTBRUSH_SET_DESCRIPTION)
-        name_words = name.downcase.split
-        Color.nonstandard.each do |color|
-          return color if name_words.include?(color.name)
-        end
-      end
-
-      match = description.match(SPECIAL_COLOR_DESCRIPTION_REGEX)
-      if match
-        # Since there are multiple formats in the one regex, there are multiple
-        # possible color name captures. So, take the first non-nil capture.
-        color = match.captures.detect(&:present?)
-        return Color.find_by_name(color.downcase)
-      end
-
-      # HACK: this should probably be a flag on the record instead of
-      #     being hardcoded :P
-      if [71893, 76192, 76202, 77367, 77368, 77369, 77370].include?(id)
-        return Color.find_by_name('baby')
-      end
-
-      if [76198].include?(id)
-        return Color.find_by_name('mutant')
-      end
-
-      if [75372].include?(id)
-        return Color.find_by_name('maraquan')
-      end
-
-      if manual_special_color_id?
-        return Color.find(manual_special_color_id)
-      end
-    end
-  end
-  public
 
   def species_support_ids
     @species_support_ids_array ||= read_attribute('species_support_ids').split(',').map(&:to_i) rescue nil
