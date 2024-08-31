@@ -283,23 +283,9 @@ class Item < ApplicationRecord
     occupied_zones.map(&:id)
   end
 
-  def occupied_zones(options={})
-    options[:scope] ||= Zone.all
-    all_body_ids = []
-    zone_body_ids = {}
-    selected_assets = swf_assets.each do |swf_asset|
-      zone_body_ids[swf_asset.zone_id] ||= []
-      body_ids = zone_body_ids[swf_asset.zone_id]
-      body_ids << swf_asset.body_id unless body_ids.include?(swf_asset.body_id)
-      all_body_ids << swf_asset.body_id unless all_body_ids.include?(swf_asset.body_id)
-    end
-    zones = options[:scope].find(zone_body_ids.keys)
-    zones_by_id = zones.inject({}) { |h, z| h[z.id] = z; h }
-    total_body_ids = all_body_ids.size
-    zone_body_ids.each do |zone_id, body_ids|
-      zones_by_id[zone_id].sometimes = true if body_ids.size < total_body_ids
-    end
-    zones
+  def occupied_zones
+    zone_ids = swf_assets.map(&:zone_id).uniq
+    Zone.find(zone_ids)
   end
 
   def affected_zones
