@@ -33,6 +33,25 @@
         "id", "human_name", @selected_preview_pet_type.species_id)
     = submit_tag "Go", name: nil
 
+  .item-zones-info
+    %section
+      %h3 Occupies
+      - if @item.occupied_zones.present?
+        %ul
+          - @item.occupied_zones.sort_by(&:label).each do |zone|
+            %li= zone.label
+      - else
+        %span.no-zones (None)
+
+    %section
+      %h3 Restricts
+      - if @item.restricted_zones.present?
+        %ul
+          - @item.restricted_zones.sort_by(&:label).each do |zone|
+            %li= zone.label
+      - else
+        %span.no-zones (None)
+
 - unless @contributors_with_counts.empty?
   #item-contributors
     %header #{t '.contributors.header'}:

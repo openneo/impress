@@ -160,3 +160,26 @@ body.items-show
       select
         border-color: $error-border-color
         color: $error-color
+
+  .item-zones-info
+    margin-top: .5em
+
+    h3
+      display: inline
+      font: inherit
+      font-weight: bold
+      &:after
+        content: ": "
+
+    ul
+      list-style-type: none
+      display: inline
+
+      li
+        display: inline
+        &:not(:last-of-type):after
+          content: ", "
+
+    .no-zones
+      font-style: italic
+      opacity: .85

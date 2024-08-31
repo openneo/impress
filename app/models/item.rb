@@ -287,7 +287,7 @@ class Item < ApplicationRecord
     options[:scope] ||= Zone.all
     all_body_ids = []
     zone_body_ids = {}
-    selected_assets = swf_assets.select('body_id, zone_id').each do |swf_asset|
+    selected_assets = swf_assets.each do |swf_asset|
       zone_body_ids[swf_asset.zone_id] ||= []
       body_ids = zone_body_ids[swf_asset.zone_id]
       body_ids << swf_asset.body_id unless body_ids.include?(swf_asset.body_id)
