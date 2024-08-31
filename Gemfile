@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '3.3.0'
+ruby '3.3.4'
 
 gem 'rails', '~> 7.1', '>= 7.1.3.4'
 
@@ -57,7 +57,7 @@ gem 'letter_opener', '~> 1.8', '>= 1.8.1', group: :development
 gem 'parallel', '~> 1.23'
 
 # For miscellaneous HTTP requests.
-gem "httparty", "~> 0.21.0"
+gem "httparty", "~> 0.22.0"
 gem "addressable", "~> 2.8"
 
 # For advanced batching of many HTTP requests.

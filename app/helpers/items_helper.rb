@@ -112,14 +112,7 @@ module ItemsHelper
     item_or_name = item_or_name.name if item_or_name.is_a? Item
     SHOP_WIZARD_URL_TEMPLATE.expand(string: item_or_name).to_s
   end
-  
-  SUPER_SHOP_WIZARD_URL_TEMPLATE = Addressable::Template.new(
-    "https://www.neopets.com/portal/supershopwiz.phtml{?string}"
-  )
-  def super_shop_wizard_url_for(item)
-    SUPER_SHOP_WIZARD_URL_TEMPLATE.expand(string: item.name).to_s
-  end
-  
+
   TRADING_POST_URL_TEMPLATE = Addressable::Template.new(
     "https://www.neopets.com/island/tradingpost.phtml?type=browse&criteria=item_exact{&search_string}"
   )

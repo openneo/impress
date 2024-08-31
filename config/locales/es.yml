@@ -211,7 +211,6 @@ es:
       resources:
         jn_items: Objetos de JN
         shop_wizard: Asistente de Tiendas
-        super_shop_wizard: Super Asistente de Tiendas
         trading_post: Quiosco del trueque
         auction_genie: Subastas
       closet_hangers:
