@@ -11,23 +11,18 @@ class PetType < ApplicationRecord
 
   BasicHashes = YAML::load_file(Rails.root.join('config', 'basic_type_hashes.yml'))
   
+  scope :basic, -> { joins(:color).merge(Color.basic) }
   scope :matching_name, ->(color_name, species_name) {
     color = Color.find_by_name!(color_name)
     species = Species.find_by_name!(species_name)
     where(color_id: color.id, species_id: species.id)
   }
 
-  def self.special_color_or_basic(special_color)
-    color_ids = special_color ? [special_color.id] : Color.basic.select([:id]).map(&:id)
-    where(color_id: color_ids)
-  end
-
   def self.random_basic_per_species(species_ids)
     random_pet_types = []
-    # TODO: omg so lame :P
-    standards = special_color_or_basic(nil).group_by(&:species_id)
+    basics_by_species_id = basic.group_by(&:species_id)
     species_ids.each do |species_id|
-      pet_types = standards[species_id]
+      pet_types = basics_by_species_id[species_id]
       random_pet_types << pet_types[rand(pet_types.size)] if pet_types
     end
     random_pet_types
