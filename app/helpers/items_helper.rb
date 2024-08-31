@@ -31,11 +31,12 @@ module ItemsHelper
   end
 
   def standard_species_search_links
-    build_on_pet_types(Species.alphabetical) do |pet_type|
+    all_species = Species.alphabetical.map(&:id)
+    PetType.random_basic_per_species(all_species).map do |pet_type|
       image = pet_type_image(pet_type, :happy, :zoom)
       query = "species:#{pet_type.species.name}"
       link_to(image, items_path(:q => query))
-    end
+    end.join.html_safe
   end
   
   def closet_list_verb(owned)
@@ -222,15 +223,6 @@ module ItemsHelper
   end
 
   private
-
-  def build_on_pet_types(species, special_color=nil, &block)
-    species_ids = species.map(&:id)
-    pet_types = special_color ?
-      PetType.where(:color_id => special_color.id, :species_id => species_ids).
-        order(:species_id) :
-      PetType.random_basic_per_species(species.map(&:id))
-    pet_types.map(&block).join.html_safe
-  end
 
   def pet_type_image(pet_type, emotion, size)
     src = pet_type_image_url(pet_type, emotion:, size:)
