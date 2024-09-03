@@ -161,6 +161,18 @@ body.items-show
         border-color: $error-border-color
         color: $error-color
 
+  .species-face-picker
+    input[type=radio]
+      position: absolute
+      left: -10000px
+      top: auto
+      width: 1px
+      height: 1px
+      overflow: hidden
+
+      &:not(:checked) + img
+        opacity: .5
+
   .item-zones-info
     margin-top: .5em
 
