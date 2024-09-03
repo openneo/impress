@@ -89,6 +89,10 @@ class ItemsController < ApplicationController
           worn_items: [@item],
         )
         @preview_error = validate_preview
+
+        @all_appearances = @item.appearances
+        @appearances_by_occupied_zone = @item.appearances_by_occupied_zone.
+          sort_by { |z, a| z.label }
       end
 
       format.gif do

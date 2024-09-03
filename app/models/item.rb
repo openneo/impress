@@ -276,7 +276,7 @@ class Item < ApplicationRecord
     end
     @restricted_zone_ids
   end
-  
+
   def occupied_zone_ids
     occupied_zones.map(&:id)
   end
@@ -502,9 +502,14 @@ class Item < ApplicationRecord
   Appearance = Struct.new(:item, :body, :swf_assets) do
     include ActiveModel::Serializers::JSON
     delegate :present?, :empty?, to: :swf_assets
+    delegate :species, to: :body
 
     def attributes
       {item:, body:, swf_assets:}
+    end
+
+    def occupied_zone_ids
+      swf_assets.map(&:zone_id).uniq.sort
     end
 
     def restricted_zone_ids
@@ -548,6 +553,22 @@ class Item < ApplicationRecord
 
   def appearance_for(target, ...)
     Item.appearances_for([self], target, ...)[id]
+  end
+
+  def appearances_by_occupied_zone_id
+    {}.tap do |h|
+      appearances.each do |appearance|
+        appearance.occupied_zone_ids.each do |zone_id|
+          h[zone_id] ||= []
+          h[zone_id] << appearance
+        end
+      end
+    end
+  end
+
+  def appearances_by_occupied_zone
+    zones_by_id = occupied_zones.to_h { |z| [z.id, z] }
+    appearances_by_occupied_zone_id.transform_keys { |zid| zones_by_id[zid] }
   end
 
   # Given a list of items, return how they look on the given target (either a

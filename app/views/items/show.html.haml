@@ -36,10 +36,16 @@
   .item-zones-info
     %section
       %h3 Occupies
-      - if @item.occupied_zones.present?
+      - if @appearances_by_occupied_zone.present?
         %ul
-          - @item.occupied_zones.sort_by(&:label).each do |zone|
-            %li= zone.label
+          - @appearances_by_occupied_zone.each do |zone, appearances_in_zone|
+            %li
+              = zone.label
+              - if item_zone_partial_fit? appearances_in_zone, @all_appearances
+                %span.zone-species-info{
+                  title: item_zone_species_list(appearances_in_zone)
+                }
+                  (#{appearances_in_zone.size} species)
       - else
         %span.no-zones (None)
 

@@ -222,6 +222,14 @@ module ItemsHelper
     cookies["DTIOutfitViewerIsPlaying"] == "true"
   end
 
+  def item_zone_partial_fit?(appearances_in_zone, all_appearances)
+    appearances_in_zone.size < all_appearances.size
+  end
+
+  def item_zone_species_list(appearances_in_zone)
+    appearances_in_zone.map(&:species).uniq.map(&:human_name).sort.join(", ")
+  end
+
   private
 
   def pet_type_image(pet_type, emotion, size)
