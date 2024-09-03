@@ -34,11 +34,18 @@
     = submit_tag "Go", name: nil
 
   %form.species-face-picker
-    - @preview_pet_type_options.each do |pet_type|
-      %label
-        = radio_button_tag "species_face_id", pet_type.species_id,
-          checked: pet_type == @preview_outfit.pet_type
-        = pet_type_image pet_type, :happy, :face
+    %noscript
+      This fancy species picker requires Javascript, but you can still use the
+      dropdowns instead!
+    .species-face-picker-options{
+      "inert": true, # waits for JS to remove
+      "aria-hidden": true, # waits for JS to remove
+    }
+      - @preview_pet_type_options.each do |pet_type|
+        %label
+          = radio_button_tag "species_face_id", pet_type.species_id,
+            checked: pet_type == @preview_outfit.pet_type
+          = pet_type_image pet_type, :happy, :face
 
   .item-zones-info
     %section

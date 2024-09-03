@@ -13,3 +13,9 @@ document.addEventListener("click", (e) => {
         console.error("Couldn't update species picker: ", error);
     }
 });
+
+// Now that the face picker is ready to go, mark it as usable.
+for (const options of document.querySelectorAll(".species-face-picker-options")) {
+    options.removeAttribute("inert");
+    options.removeAttribute("aria-hidden");
+}

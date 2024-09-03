@@ -162,6 +162,8 @@ body.items-show
         color: $error-color
 
   .species-face-picker
+    position: relative
+
     input[type=radio]
       position: absolute
       left: -10000px
@@ -172,6 +174,20 @@ body.items-show
 
       &:not(:checked) + img
         opacity: .5
+
+    noscript
+      position: absolute
+      inset: 0
+      background: rgba(white, .75)
+      z-index: 1
+
+      display: flex
+      align-items: center
+      justify-content: center
+      text-align: center
+
+    &:has(.species-face-picker-options[inert])
+      cursor: wait
 
   .item-zones-info
     margin-top: .5em
