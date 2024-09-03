@@ -502,7 +502,7 @@ class Item < ApplicationRecord
   Appearance = Struct.new(:item, :body, :swf_assets) do
     include ActiveModel::Serializers::JSON
     delegate :present?, :empty?, to: :swf_assets
-    delegate :species, to: :body
+    delegate :species, :fits?, to: :body
 
     def attributes
       {item:, body:, swf_assets:}
@@ -521,6 +521,14 @@ class Item < ApplicationRecord
     include ActiveModel::Serializers::JSON
     def attributes
       {id:, species:}
+    end
+
+    def fits_all?
+      id == 0
+    end
+
+    def fits?(target)
+      fits_all? || target.body_id == id
     end
   end
 

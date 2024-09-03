@@ -175,6 +175,12 @@ body.items-show
       &:not(:checked) + img
         opacity: .5
 
+      &:disabled + img
+        filter: grayscale(1)
+
+    label:has(input[type=radio]:disabled)
+      cursor: not-allowed
+
     noscript
       position: absolute
       inset: 0

@@ -44,8 +44,11 @@
       - @preview_pet_type_options.each do |pet_type|
         %label
           = radio_button_tag "species_face_id", pet_type.species_id,
-            checked: pet_type == @preview_outfit.pet_type
-          = pet_type_image pet_type, :happy, :face
+            checked: pet_type == @preview_outfit.pet_type,
+            disabled: !item_fits?(pet_type, @all_appearances)
+          = pet_type_image pet_type,
+            item_fits?(pet_type, @all_appearances) ? :happy : :sad,
+            :face
 
   .item-zones-info
     %section

@@ -222,6 +222,10 @@ module ItemsHelper
     cookies["DTIOutfitViewerIsPlaying"] == "true"
   end
 
+  def item_fits?(pet_type, all_appearances)
+    all_appearances.any? { |a| a.fits? pet_type }
+  end
+
   def item_zone_partial_fit?(appearances_in_zone, all_appearances)
     appearances_in_zone.size < all_appearances.size
   end
