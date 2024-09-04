@@ -165,9 +165,41 @@ body.items-show
     display: block
     position: relative
 
+    species-face-picker-options
+      display: flex
+      flex-wrap: wrap
+
     img
       width: 50px
       height: 50px
+      transition: all 0.2s
+
+      // Calm down the default color, just a smidge! There's a lot of color
+      // on this page already, y'know?
+      opacity: .9
+      filter: saturate(90%)
+
+    label
+      display: flex
+      overflow: hidden
+      transition: all 0.2s
+      position: relative
+      line-height: 1
+
+      // NOTE: The box-shadows here were copy-pasted from Impress 2020, which uses
+      //       Chakra UI's styling system to generate them! (The colors are from their
+      //       color palette, too.)
+      &:has(input:checked)
+        border-radius: 6px
+        z-index: 1
+        background: #9AE6B4
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),0 10px 10px -5px rgba(0, 0, 0, 0.04), #2F855A 0 0 2px 2px
+        transform: scale(1.1)
+
+      &:has(input:focus)
+        background: #BEE3F8
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),0 10px 10px -5px rgba(0, 0, 0, 0.04), #4299e1 0 0 0 3px
+        transform: scale(1.2)
 
     input[type=radio]
       position: absolute
@@ -177,11 +209,13 @@ body.items-show
       height: 1px
       overflow: hidden
 
-      &:not(:checked) + img
-        opacity: .5
+      &:checked + img
+        opacity: 1
+        filter: saturate(110%)
 
       &:disabled + img
-        filter: grayscale(1)
+        opacity: .6
+        filter: saturate(0%)
 
     label:has(input[type=radio]:disabled)
       cursor: not-allowed
