@@ -42,12 +42,14 @@
       "aria-hidden": true, # waits for JS to remove
     }
       - @preview_pet_type_options.each do |pet_type|
-        %label
+        %label{
+          title: species_face_tooltip(pet_type, @item),
+        }
           = radio_button_tag "species_face_id", pet_type.species_id,
             checked: pet_type == @preview_outfit.pet_type,
-            disabled: !item_fits?(pet_type, @all_appearances)
+            disabled: !item_fits?(@item, pet_type)
           = pet_type_image pet_type,
-            item_fits?(pet_type, @all_appearances) ? :happy : :sad,
+            item_fits?(@item, pet_type) ? :happy : :sad,
             :face
 
   .item-zones-info

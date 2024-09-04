@@ -502,7 +502,7 @@ class Item < ApplicationRecord
   Appearance = Struct.new(:item, :body, :swf_assets) do
     include ActiveModel::Serializers::JSON
     delegate :present?, :empty?, to: :swf_assets
-    delegate :species, :fits?, to: :body
+    delegate :species, :fits?, :fits_all?, to: :body
 
     def attributes
       {item:, body:, swf_assets:}
