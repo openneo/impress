@@ -246,7 +246,11 @@ module ItemsHelper
 
   def pet_type_image(pet_type, emotion, size, **options)
     src = pet_type_image_url(pet_type, emotion:, size:)
-    image_tag(src, **options)
+    srcset = if size == :face
+      [[pet_type_image_url(pet_type, emotion:, size: :face_2x), "2x"]]
+    end
+
+    image_tag(src, srcset:, **options)
   end
 
   def item_header_user_lists_form_state
