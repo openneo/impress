@@ -161,7 +161,8 @@ body.items-show
         border-color: $error-border-color
         color: $error-color
 
-  .species-face-picker
+  species-face-picker
+    display: block
     position: relative
 
     input[type=radio]
@@ -186,13 +187,14 @@ body.items-show
       inset: 0
       background: rgba(white, .75)
       z-index: 1
+      cursor: auto
 
       display: flex
       align-items: center
       justify-content: center
       text-align: center
 
-    &:has(.species-face-picker-options[inert])
+    &:has(species-face-picker-options[inert])
       cursor: wait
 
   .item-zones-info

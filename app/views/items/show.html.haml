@@ -33,12 +33,12 @@
         "id", "human_name", @selected_preview_pet_type.species_id)
     = submit_tag "Go", name: nil
 
-  %form.species-face-picker
+  %species-face-picker
     %noscript
       This fancy species picker requires Javascript, but you can still use the
       dropdowns instead!
-    .species-face-picker-options{
-      "inert": true, # waits for JS to remove
+    %species-face-picker-options{
+      inert: true, # waits for JS to remove
       "aria-hidden": true, # waits for JS to remove
     }
       - @preview_pet_type_options.each do |pet_type|
