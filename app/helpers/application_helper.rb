@@ -1,6 +1,6 @@
 module ApplicationHelper
   include FragmentLocalization
-  
+
   def absolute_url(path_or_url)
     if path_or_url.include?('://') # already an absolute URL
       path_or_url
@@ -229,6 +229,15 @@ module ApplicationHelper
 
   def hide_title_header
     @hide_title_header = true
+  end
+
+  def use_responsive_design
+    @use_responsive_design = true
+    add_body_class "use-responsive-design"
+  end
+
+  def use_responsive_design?
+    @use_responsive_design || false
   end
 
   def signed_in_meta_tag
