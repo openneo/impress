@@ -46,7 +46,7 @@ body.items-show
     border: 1px solid $module-border-color
     border-radius: 1em
     overflow: hidden
-    margin: 0 auto .75em
+    margin: 0 auto
 
     // There's no useful text in here, but double-clicking the play/pause
     // button can cause a weird selection state. Disable text selection.
@@ -162,12 +162,11 @@ body.items-show
         color: $error-color
 
   species-face-picker
-    margin-top: 1em
-
     display: block
     position: relative
     max-height: 200px // 4 rows of 50px images, and padding will offer a hint of below
     padding: 10px // leave enough room for the zoomed-in selected face
+    margin-top: -10px
     overflow: auto
 
     species-face-picker-options
@@ -242,8 +241,6 @@ body.items-show
       cursor: wait
 
   .item-zones-info
-    margin-top: .5em
-
     h3
       display: inline
       font: inherit
@@ -267,3 +264,29 @@ body.items-show
     .zone-species-info
       font-style: italic
       text-decoration: underline dotted
+
+  #item-preview
+    display: flex
+    flex-direction: column
+    gap: .75em
+
+    @media (min-width: 600px)
+      display: grid
+      grid-template-areas: "viewer faces" "picker zones"
+      gap: .5em
+
+      outfit-viewer
+        grid-area: viewer
+        width: 350px
+        height: 350px
+
+      .species-color-picker
+        grid-area: picker
+
+      species-face-picker
+        grid-area: faces
+        max-height: 350px
+        margin: -10px
+
+      .item-zones-info
+        grid-area: zones
