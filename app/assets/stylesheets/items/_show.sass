@@ -162,11 +162,17 @@ body.items-show
         color: $error-color
 
   species-face-picker
+    margin-top: 1em
+
     display: block
     position: relative
+    max-height: 200px // 4 rows of 50px images, and padding will offer a hint of below
+    padding: 10px // leave enough room for the zoomed-in selected face
+    overflow: auto
 
     species-face-picker-options
       display: flex
+      justify-content: center
       flex-wrap: wrap
 
     img
