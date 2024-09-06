@@ -21,6 +21,10 @@ class OutfitViewer extends HTMLElement {
 			this.#setIsPlaying(playPauseToggle.checked);
 			this.#setIsPlayingCookie(playPauseToggle.checked);
 		});
+
+		// Tell the CSS our first frame has rendered, which we use for loading
+		// state transitions.
+		this.#internals.states.add("after-first-frame");
 	}
 
 	#setIsPlaying(isPlaying) {
