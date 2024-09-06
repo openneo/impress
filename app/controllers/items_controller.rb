@@ -95,7 +95,7 @@ class ItemsController < ApplicationController
           sort_by { |z, a| z.label }
 
         @preview_pet_type_options = PetType.where(color: @preview_outfit.color).
-          joins(:species).merge(Species.alphabetical)
+          includes(:species).merge(Species.alphabetical)
       end
 
       format.gif do
