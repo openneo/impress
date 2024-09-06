@@ -151,15 +151,30 @@ body.items-show
     .error-indicator
       display: block
 
-  .species-color-picker
+  species-color-picker
     .error-icon
       cursor: help
       margin-right: .25em
 
-    &[data-is-valid="false"]
+    form[data-is-valid="false"]
       select
         border-color: $error-border-color
         color: $error-color
+
+    // If JS is enabled, but auto-loading isn't ready yet (script loading or
+    // failed?), hide the submit button for .75sec, to give it time to load.
+    @media (scripting: enabled)
+      input[type=submit]
+        position: absolute
+        margin-left: .5em
+        opacity: 0
+        animation: fade-in .25s forwards
+        animation-delay: .75s
+
+    // Once the auto-loading behavior is ready, remove the submit button.
+    &:state(auto-loading)
+      input[type=submit]
+        display: none
 
   species-face-picker
     display: block
@@ -280,7 +295,7 @@ body.items-show
         width: 350px
         height: 350px
 
-      .species-color-picker
+      species-color-picker
         grid-area: picker
 
       species-face-picker
@@ -290,3 +305,9 @@ body.items-show
 
       .item-zones-info
         grid-area: zones
+
+@keyframes fade-in
+  from
+    opacity: 0
+  to
+    opacity: 1

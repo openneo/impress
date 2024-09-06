@@ -3,16 +3,35 @@ document.addEventListener("change", (e) => {
     if (!e.target.matches("species-face-picker")) return;
 
     try {
-        const mainPicker = document.querySelector("#item-preview .species-color-picker");
+        const mainPickerForm = document.querySelector(
+            "#item-preview species-color-picker form");
         const mainSpeciesField =
-            mainPicker.querySelector("[name='preview[species_id]']");
+            mainPickerForm.querySelector("[name='preview[species_id]']");
         mainSpeciesField.value = e.target.value;
-        mainPicker.requestSubmit(); // `submit` doesn't get captured by Turbo!
+        mainPickerForm.requestSubmit(); // `submit` doesn't get captured by Turbo!
     } catch (error) {
-        e.preventDefault();
         console.error("Couldn't update species picker: ", error);
     }
 });
+
+class SpeciesColorPicker extends HTMLElement {
+    #internals;
+
+    constructor() {
+        super();
+        this.#internals = this.attachInternals();
+    }
+
+    connectedCallback() {
+        // Listen for changes to auto-submit the form, then tell CSS about it!
+        this.addEventListener("change", this.#handleChange);
+        this.#internals.states.add("auto-loading");
+    }
+
+    #handleChange(e) {
+        this.querySelector("form").requestSubmit();
+    }
+}
 
 class SpeciesFacePicker extends HTMLElement {
     connectedCallback() {
@@ -52,5 +71,6 @@ class SpeciesFacePickerOptions extends HTMLElement {
     }
 }
 
+customElements.define("species-color-picker", SpeciesColorPicker);
 customElements.define("species-face-picker", SpeciesFacePicker);
 customElements.define("species-face-picker-options", SpeciesFacePickerOptions);

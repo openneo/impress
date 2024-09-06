@@ -19,20 +19,20 @@
   .error-indicator
     💥 We couldn't load all of this outfit. Try again?
 
-  = form_for item_path(@item), method: :get, class: "species-color-picker",
-    data: {"is-valid": @preview_error.nil?} do |f|
-    - if @preview_error == :pet_type_does_not_exist
-      %span.error-icon{title: "We haven't seen this kind of pet before."} ⚠️
-    - elsif @preview_error == :no_item_data
-      %span.error-icon{title: "We haven't seen this item on this pet before."} ⚠️
+  %species-color-picker
+    = form_for item_path(@item), method: :get, data: {"is-valid": @preview_error.nil?} do |f|
+      - if @preview_error == :pet_type_does_not_exist
+        %span.error-icon{title: "We haven't seen this kind of pet before."} ⚠️
+      - elsif @preview_error == :no_item_data
+        %span.error-icon{title: "We haven't seen this item on this pet before."} ⚠️
 
-    = select_tag "preview[color_id]",
-      options_from_collection_for_select(Color.funny.alphabetical,
-        "id", "human_name", @selected_preview_pet_type.color_id)
-    = select_tag "preview[species_id]",
-      options_from_collection_for_select(Species.alphabetical,
-        "id", "human_name", @selected_preview_pet_type.species_id)
-    = submit_tag "Go", name: nil
+      = select_tag "preview[color_id]",
+        options_from_collection_for_select(Color.funny.alphabetical,
+          "id", "human_name", @selected_preview_pet_type.color_id)
+      = select_tag "preview[species_id]",
+        options_from_collection_for_select(Species.alphabetical,
+          "id", "human_name", @selected_preview_pet_type.species_id)
+      = submit_tag "Go", name: nil
 
   %species-face-picker
     %noscript
