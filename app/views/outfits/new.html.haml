@@ -4,26 +4,27 @@
 
 %p#pet-not-found.alert= t 'pets.load.not_found'
 
-- if show_neopass_announcement?
-  %section.neopass-announcement
-    = image_tag "about/neopass-survey.png", width: 70, height: 70,
-      srcset: {"about/neopass-survey@2x.png": "2x"},
+- if show_announcement?
+  %section.announcement
+    = image_tag "about/announcement.png", width: 70, height: 70,
+      srcset: {"about/announcement@2x.png": "2x"},
       class: "neopass-thumbnail"
-    .neopass-content
+    .content
       %p
         %strong
-          💭 Thank you for sending us your NeoPass feedback!
+          = link_to "We've updated the item page!",
+                    item_path("37002-Floating-Negg-Faerie-Doll")
+        It should load faster, work better on phones, and be more reliable—no
+        more "failed to fetch"! Please try it out and let us know if it does
+        anything weird!!
 
-      %p
-        We're working with TNT now to build new integrations, based on what you
-        told us! We're glad
-        = link_to "log in with NeoPass", about_neopass_path
-        is working well, and we're excited to do the next part! More info soon!
-
-      %p
-        Thanks again to everyone for helping us out! We're grateful, as always 💖
+      %p{style: "font-style: italic; opacity: .85; font-size: 85%"}
+        By the way, our integration work with TNT is on pause while they focus
+        on the
+        = link_to "~Void Within plot~!", "https://www.neopets.com/tvw/",
+                  target: "_blank", style: "color: purple; font-weight: bold"
         %br
-        %em —Matchu
+        We'll start it back up closer to the new year.
 
 #outfit-forms
   - localized_cache :action_suffix => 'outfit_forms_intro' do
