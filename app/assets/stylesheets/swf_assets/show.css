@@ -4,6 +4,9 @@
 	position: absolute;
 	left: 0;
 	top: 0;
-	width: min(100vw, 100vh);
-	height: min(100vw, 100vh);
+
+	/* HACK: `calc` isn't needed, but works around a bug in our asset pipeline,
+	 * where libsass is trying to preprocess it. (We're not SASS tho?) */
+	width: calc(min(100vw, 100vh));
+	height: calc(min(100vw, 100vh));
 }
