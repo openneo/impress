@@ -1,0 +1,24 @@
+%outfit-viewer
+  .loading-indicator= render partial: "hanger_spinner"
+
+  %label.play-pause-button{title: "Pause/play animations"}
+    %input.play-pause-toggle{
+      type: "checkbox",
+      checked: outfit_viewer_is_playing,
+    }
+    %svg.playing-label{viewBox: "0 0 24 24", "aria-hidden": "true", "aria-label": "Pause"}
+      %path{fill: "currentColor", d: "M6 19h4V5H6v14zm8-14v14h4V5h-4z"}
+    %svg.paused-label{viewBox: "0 0 24 24", "aria-hidden": "true", "aria-label": "Play"}
+      %path{fill: "currentColor", d: "M8 5v14l11-7z"}
+
+  - outfit.visible_layers.each do |swf_asset|
+    %outfit-layer{
+      data: {
+        "asset-id": swf_asset.id,
+        "zone": swf_asset.zone.label,
+      },
+    }
+      - if swf_asset.canvas_movie?
+        %iframe{src: swf_asset_path(swf_asset, playing: outfit_viewer_is_playing ? true : nil)}
+      - else
+        = image_tag swf_asset.image_url, alt: ""

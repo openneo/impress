@@ -1,0 +1,64 @@
+.hanger-spinner {
+	height: 32px;
+	width: 32px;
+
+	@media (prefers-reduced-motion: no-preference) {
+		animation: 1.2s infinite hanger-spinner-swing;
+		transform-origin: top center;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		animation: 1.6s infinite hanger-spinner-fade-pulse;
+	}
+}
+
+/*
+	Adapted from animate.css "swing". We spend 75% of the time swinging,
+	then 25% of the time pausing before the next loop.
+
+	We use this animation for folks who are okay with dizzy-ish motion.
+	For reduced motion, we use a pulse-fade instead.
+*/
+@keyframes hanger-spinner-swing {
+	15% {
+		transform: rotate3d(0, 0, 1, 15deg);
+	}
+
+	30% {
+		transform: rotate3d(0, 0, 1, -10deg);
+	}
+
+	45% {
+		transform: rotate3d(0, 0, 1, 5deg);
+	}
+
+	60% {
+		transform: rotate3d(0, 0, 1, -5deg);
+	}
+
+	75% {
+		transform: rotate3d(0, 0, 1, 0deg);
+	}
+
+	100% {
+		transform: rotate3d(0, 0, 1, 0deg);
+	}
+}
+
+/*
+	A homebrew fade-pulse animation. We use this for folks who don't
+	like motion. It's an important accessibility thing!
+*/
+@keyframes hanger-spinner-fade-pulse {
+	0% {
+		opacity: 0.2;
+	}
+
+	50% {
+		opacity: 1;
+	}
+
+	100% {
+		opacity: 0.2;
+	}
+}

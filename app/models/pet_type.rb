@@ -17,6 +17,17 @@ class PetType < ApplicationRecord
     species = Species.find_by_name!(species_name)
     where(color_id: color.id, species_id: species.id)
   }
+  scope :preferring_species, ->(species_id) {
+    joins(:species).order([Arel.sql("species_id = ? DESC"), species_id])
+  }
+  scope :preferring_color, ->(color_id) {
+    joins(:color).order([Arel.sql("color_id = ? DESC"), color_id])
+  }
+  scope :preferring_simple, -> {
+    joins(:species, :color).
+      merge(Species.order(name: :asc)).
+      merge(Color.order(basic: :desc, standard: :desc, name: :asc))
+  }
 
   def self.random_basic_per_species(species_ids)
     random_pet_types = []
@@ -119,9 +130,9 @@ class PetType < ApplicationRecord
     }.first
   end
 
-  # Given a list of item IDs, return how they look on this pet type.
-  def appearances_for(item_ids, ...)
-    Item.appearances_for(item_ids, self, ...)
+  # Given a list of items, return how they look on this pet type.
+  def appearances_for(item, ...)
+    Item.appearances_for(item, self, ...)
   end
 
   def self.all_by_ids_or_children(ids, pet_states)

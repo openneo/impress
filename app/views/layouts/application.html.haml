@@ -13,6 +13,8 @@
     %link{href: image_path('favicon.png'), rel: 'icon'}
     = yield :stylesheets
     = stylesheet_link_tag "application"
+    - if use_responsive_design?
+      %meta{name: "viewport", content: "width=device-width, initial-scale=1"}
     = yield :meta
     = open_graph_tags
     = csrf_meta_tag

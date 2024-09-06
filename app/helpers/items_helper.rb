@@ -33,7 +33,9 @@ module ItemsHelper
   def standard_species_search_links
     all_species = Species.alphabetical.map(&:id)
     PetType.random_basic_per_species(all_species).map do |pet_type|
-      image = pet_type_image(pet_type, :happy, :zoom)
+      human_name = pet_type.species.human_name
+      image = pet_type_image pet_type, :happy, :zoom,
+                             alt: human_name, title: human_name
       query = "species:#{pet_type.species.name}"
       link_to(image, items_path(:q => query))
     end.join.html_safe
@@ -218,12 +220,37 @@ module ItemsHelper
     end
   end
 
-  private
+  def outfit_viewer_is_playing
+    cookies["DTIOutfitViewerIsPlaying"] == "true"
+  end
 
-  def pet_type_image(pet_type, emotion, size)
+  def item_fits?(item, pet_type)
+    item.appearances.any? { |a| a.fits? pet_type }
+  end
+
+  def species_face_tooltip(pet_type, item)
+    if item_fits?(item, pet_type)
+      "#{pet_type.species.human_name}"
+    else
+      "#{pet_type.species.human_name}: No data yet"
+    end
+  end
+
+  def item_zone_partial_fit?(appearances_in_zone, all_appearances)
+    appearances_in_zone.size < all_appearances.size
+  end
+
+  def item_zone_species_list(appearances_in_zone)
+    appearances_in_zone.map(&:species).uniq.map(&:human_name).sort.join(", ")
+  end
+
+  def pet_type_image(pet_type, emotion, size, **options)
     src = pet_type_image_url(pet_type, emotion:, size:)
-    human_name = pet_type.species.name.humanize
-    image_tag(src, :alt => human_name, :title => human_name)
+    srcset = if size == :face
+      [[pet_type_image_url(pet_type, emotion:, size: :face_2x), "2x"]]
+    end
+
+    image_tag(src, srcset:, **options)
   end
 
   def item_header_user_lists_form_state

@@ -1,5 +1,6 @@
 - title @item.name
 - canonical_path @item
+- use_responsive_design
 
 = render partial: "item_header",
   locals: {item: @item, trades: @trades, current_subpage: "preview",
@@ -13,7 +14,96 @@
     how we handle zones. Until then, these items will be <em>very</em> buggy,
     sorry!
 
-#outfit-preview-root{'data-item-id': @item.id}
+= turbo_frame_tag "item-preview" do
+  = render partial: "outfit_viewer", locals: {outfit: @preview_outfit}
+  .error-indicator
+    💥 We couldn't load all of this outfit. Try again?
+
+  %species-color-picker
+    = form_for item_path(@item), method: :get, data: {"is-valid": @preview_error.nil?} do |f|
+      - if @preview_error == :pet_type_does_not_exist
+        %span.error-icon{title: "We haven't seen this kind of pet before."} ⚠️
+      - elsif @preview_error == :no_item_data
+        %span.error-icon{title: "We haven't seen this item on this pet before."} ⚠️
+
+      = select_tag "preview[color_id]",
+        options_from_collection_for_select(Color.funny.alphabetical,
+          "id", "human_name", @selected_preview_pet_type.color_id)
+      = select_tag "preview[species_id]",
+        options_from_collection_for_select(Species.alphabetical,
+          "id", "human_name", @selected_preview_pet_type.species_id)
+      = submit_tag "Go", name: nil
+
+  %species-face-picker
+    %noscript
+      This fancy species picker requires Javascript, but you can still use the
+      dropdowns instead!
+    %species-face-picker-options{
+      inert: true, # waits for JS to remove
+      "aria-hidden": true, # waits for JS to remove
+    }
+      - @preview_pet_type_options.each do |pet_type|
+        %label{
+          title: species_face_tooltip(pet_type, @item),
+        }
+          = radio_button_tag "species_face_id", pet_type.species_id,
+            checked: pet_type == @preview_outfit.pet_type,
+            disabled: !item_fits?(@item, pet_type)
+          = pet_type_image pet_type,
+            item_fits?(@item, pet_type) ? :happy : :sad,
+            :face
+
+  .item-preview-meta-info
+    .item-zones-info
+      %section
+        %h3 Occupies
+        - if @appearances_by_occupied_zone.present?
+          %ul
+            - @appearances_by_occupied_zone.each do |zone, appearances_in_zone|
+              %li
+                = zone.label
+                - if item_zone_partial_fit? appearances_in_zone, @all_appearances
+                  %span.zone-species-info{
+                    title: item_zone_species_list(appearances_in_zone)
+                  }
+                    (#{appearances_in_zone.size} species)
+        - else
+          %span.no-zones (None)
+
+      %section
+        %h3 Restricts
+        - if @item.restricted_zones.present?
+          %ul
+            - @item.restricted_zones.sort_by(&:label).each do |zone|
+              %li= zone.label
+        - else
+          %span.no-zones (None)
+
+    %div
+      - if @selected_item_appearance.html5?
+        .item-html5-info{
+          "data-status": "converted",
+          "aria-label": "HTML5 supported!",
+          title: "This item is converted to HTML5, and ready to use on Neopets.com!",
+        }
+          %svg{viewBox: "0 0 24 24"}
+            %path{fill: "currentColor", d: "M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z"}
+          %svg{viewBox: "0 0 36 36"}
+            %path{fill: "currentColor", d: "M16.389 14.489c.744-.155 1.551-.31 2.326-.31 3.752 0 6.418 2.977 6.418 6.604 0 5.178-2.851 8.589-8.216 8.589-2.201 0-6.821-1.427-6.821-4.155 0-1.147.961-2.107 2.108-2.107 1.24 0 2.729 1.984 4.806 1.984 2.17 0 3.288-2.109 3.288-4.062 0-1.86-1.055-3.131-2.977-3.131-1.799 0-2.078 1.023-3.659 1.023-1.209 0-1.829-.93-1.829-1.457 0-.403.062-.713.093-1.054l.774-6.544c.341-2.418.93-2.945 2.418-2.945h7.472c1.428 0 2.264.837 2.264 1.953 0 2.14-1.611 2.326-2.17 2.326h-5.829l-.466 3.286z"}
+      - else
+        .item-html5-info{
+          "data-status": "unconverted",
+          "aria-label": "HTML5 not supported",
+          title: "This item isn't converted to HTML5 yet, so it might not appear in " +
+                "Neopets.com customization yet. Once it's ready, it could look a " +
+                "bit different than our temporary preview here. It might even be " +
+                "animated!"
+        }
+          %svg{viewBox: "0 0 24 24"}
+            %path{fill: "currentColor", d: "M23.119,20,13.772,2.15h0a2,2,0,0,0-3.543,0L.881,20a2,2,0,0,0,1.772,2.928H21.347A2,2,0,0,0,23.119,20ZM11,8.423a1,1,0,0,1,2,0v6a1,1,0,1,1-2,0Zm1.05,11.51h-.028a1.528,1.528,0,0,1-1.522-1.47,1.476,1.476,0,0,1,1.448-1.53h.028A1.527,1.527,0,0,1,13.5,18.4,1.475,1.475,0,0,1,12.05,19.933Z"}
+          %svg{viewBox: "0 0 36 36"}
+            %path{fill: "currentColor", d: "M16.389 14.489c.744-.155 1.551-.31 2.326-.31 3.752 0 6.418 2.977 6.418 6.604 0 5.178-2.851 8.589-8.216 8.589-2.201 0-6.821-1.427-6.821-4.155 0-1.147.961-2.107 2.108-2.107 1.24 0 2.729 1.984 4.806 1.984 2.17 0 3.288-2.109 3.288-4.062 0-1.86-1.055-3.131-2.977-3.131-1.799 0-2.078 1.023-3.659 1.023-1.209 0-1.829-.93-1.829-1.457 0-.403.062-.713.093-1.054l.774-6.544c.341-2.418.93-2.945 2.418-2.945h7.472c1.428 0 2.264.837 2.264 1.953 0 2.14-1.611 2.326-2.17 2.326h-5.829l-.466 3.286z"}
+            %path{fill: "#DD2E44", opacity: "0.75", d: "M18 0C8.059 0 0 8.059 0 18s8.059 18 18 18 18-8.059 18-18S27.941 0 18 0zm13 18c0 2.565-.753 4.95-2.035 6.965L11.036 7.036C13.05 5.753 15.435 5 18 5c7.18 0 13 5.821 13 13zM5 18c0-2.565.753-4.95 2.036-6.964l17.929 17.929C22.95 30.247 20.565 31 18 31c-7.179 0-13-5.82-13-13z"}
 
 - unless @contributors_with_counts.empty?
   #item-contributors
@@ -23,6 +113,10 @@
         %li= link_to(contributor.name, user_contributions_path(contributor)) + format_contribution_count(count)
     %footer= t '.contributors.footer'
 
-- content_for :javascripts_body do
-  = javascript_include_tag 'item-page', defer: true
+- content_for :stylesheets do
+  = stylesheet_link_tag "application/hanger-spinner"
 
+- content_for :javascripts do
+  = javascript_include_tag "lib/idiomorph", async: true
+  = javascript_include_tag "outfit-viewer", async: true
+  = javascript_include_tag "items/show", async: true

@@ -1,0 +1,36 @@
+!!! 5
+%html
+  %head
+    %meta{charset: "utf-8"}
+    %meta{name: "viewport", content: "width=device-width, initial-scale=1"}
+    %title
+      Embed for Asset ##{@swf_asset.id} | #{t "app_name"}
+    %link{href: image_path("favicon.png"), rel: "icon"}
+
+    -# Load the stylesheet first, because displaying things correctly is the
+    -# actual most essential thing.
+    = stylesheet_link_tag "swf_assets/show", debug: false
+
+    -# NOTE: For all these assets, the Content-Security-Policy doesn't account
+    -# for asset debug mode, so let's just opt out of it with `debug: false`!
+    - if @swf_asset.canvas_movie?
+      -# This is optional, but preloading the sprites can help us from having
+      -# to wait on all the other JS to load and set up before we start!
+      - @swf_asset.canvas_movie_sprite_urls.each do |sprite_url|
+        %link{rel: "preload", href: sprite_url, as: "image", crossorigin: "anonymous"}
+
+      -# Load the scripts: EaselJS libs first, then the asset's "library" file,
+      -# then our page script that starts the movie.
+      = javascript_include_tag "lib/easeljs.min", defer: true, debug: false
+      = javascript_include_tag "lib/tweenjs.min", defer: true, debug: false
+      = javascript_include_tag @swf_asset.canvas_movie_library_url, defer: true,
+        id: "canvas-movie-library"
+      = javascript_include_tag "swf_assets/show", defer: true, debug: false
+  %body
+    - if @swf_asset.canvas_movie?
+      %canvas#asset-canvas
+        -# Show a fallback image, for users with JS disabled. Lazy-load it, so
+        -# the browser won't bother to load it if it's not used.
+        = image_tag @swf_asset.image_url, id: "fallback", alt: "", loading: "lazy"
+    - else
+      = image_tag @swf_asset.image_url, alt: "", id: "asset-image"

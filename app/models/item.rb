@@ -276,28 +276,14 @@ class Item < ApplicationRecord
     end
     @restricted_zone_ids
   end
-  
+
   def occupied_zone_ids
     occupied_zones.map(&:id)
   end
 
-  def occupied_zones(options={})
-    options[:scope] ||= Zone.all
-    all_body_ids = []
-    zone_body_ids = {}
-    selected_assets = swf_assets.select('body_id, zone_id').each do |swf_asset|
-      zone_body_ids[swf_asset.zone_id] ||= []
-      body_ids = zone_body_ids[swf_asset.zone_id]
-      body_ids << swf_asset.body_id unless body_ids.include?(swf_asset.body_id)
-      all_body_ids << swf_asset.body_id unless all_body_ids.include?(swf_asset.body_id)
-    end
-    zones = options[:scope].find(zone_body_ids.keys)
-    zones_by_id = zones.inject({}) { |h, z| h[z.id] = z; h }
-    total_body_ids = all_body_ids.size
-    zone_body_ids.each do |zone_id, body_ids|
-      zones_by_id[zone_id].sometimes = true if body_ids.size < total_body_ids
-    end
-    zones
+  def occupied_zones
+    zone_ids = swf_assets.map(&:zone_id).uniq
+    Zone.find(zone_ids)
   end
 
   def affected_zones
@@ -438,6 +424,15 @@ class Item < ApplicationRecord
     }.merge(options))
   end
 
+  def compatible_body_ids
+    swf_assets.map(&:body_id).uniq
+  end
+
+  def compatible_pet_types
+    return PetType.all if compatible_body_ids.include?(0)
+    PetType.where(body_id: compatible_body_ids)
+  end
+
   def handle_assets!
     if @parent_swf_asset_relationships_to_update && @current_body_id
       new_swf_asset_ids = @parent_swf_asset_relationships_to_update.map(&:swf_asset_id)
@@ -504,20 +499,48 @@ class Item < ApplicationRecord
   # instead of like a hash, so you can target its children with things like
   # the `include` option. This feels clunky though, I wish I had something a
   # bit more suited to it!
-  Appearance = Struct.new(:body, :swf_assets) do
+  Appearance = Struct.new(:item, :body, :swf_assets) do
     include ActiveModel::Serializers::JSON
+    delegate :present?, :empty?, to: :swf_assets
+    delegate :species, :fits?, :fits_all?, to: :body
+
     def attributes
-      {body: body, swf_assets: swf_assets}
+      {item:, body:, swf_assets:}
+    end
+
+    def html5?
+      swf_assets.all?(&:html5?)
+    end
+
+    def occupied_zone_ids
+      swf_assets.map(&:zone_id).uniq.sort
+    end
+
+    def restricted_zone_ids
+      return [] if empty?
+      ([item] + swf_assets).map(&:restricted_zone_ids).flatten.uniq.sort
     end
   end
   Appearance::Body = Struct.new(:id, :species) do
     include ActiveModel::Serializers::JSON
     def attributes
-      {id: id, species: species}
+      {id:, species:}
+    end
+
+    def fits_all?
+      id == 0
+    end
+
+    def fits?(target)
+      fits_all? || target.body_id == id
     end
   end
 
   def appearances
+    @appearances ||= build_appearances
+  end
+
+  def build_appearances
     all_swf_assets = swf_assets.to_a
 
     # If there are no assets yet, there are no appearances.
@@ -530,28 +553,48 @@ class Item < ApplicationRecord
     # If there are no body-specific assets, return one appearance for them all.
     if swf_assets_by_body_id.empty?
       body = Appearance::Body.new(0, nil)
-      return [Appearance.new(body, swf_assets_for_all_bodies)]
+      return [Appearance.new(self, body, swf_assets_for_all_bodies)]
     end
 
     # Otherwise, create an appearance for each real (nonzero) body ID. We don't
     # generally expect body_id = 0 and body_id != 0 to mix, but if they do,
     # uhh, let's merge the body_id = 0 ones in?
+    species_by_body_id = Species.with_body_ids(swf_assets_by_body_id.keys)
     swf_assets_by_body_id.map do |body_id, body_specific_assets|
       swf_assets_for_body = body_specific_assets + swf_assets_for_all_bodies
-      species = Species.with_body_id(body_id).first!
-      body = Appearance::Body.new(body_id, species)
-      Appearance.new(body, swf_assets_for_body)
+      body = Appearance::Body.new(body_id, species_by_body_id[body_id])
+      Appearance.new(self, body, swf_assets_for_body)
     end
   end
 
-  # Given a list of item IDs, return how they look on the given target (either
-  # a pet type or an alt style).
-  def self.appearances_for(item_ids, target, swf_asset_includes: [])
+  def appearance_for(target, ...)
+    Item.appearances_for([self], target, ...)[id]
+  end
+
+  def appearances_by_occupied_zone_id
+    {}.tap do |h|
+      appearances.each do |appearance|
+        appearance.occupied_zone_ids.each do |zone_id|
+          h[zone_id] ||= []
+          h[zone_id] << appearance
+        end
+      end
+    end
+  end
+
+  def appearances_by_occupied_zone
+    zones_by_id = occupied_zones.to_h { |z| [z.id, z] }
+    appearances_by_occupied_zone_id.transform_keys { |zid| zones_by_id[zid] }
+  end
+
+  # Given a list of items, return how they look on the given target (either a
+  # pet type or an alt style).
+  def self.appearances_for(items, target, swf_asset_includes: [])
     # First, load all the relationships for these items that also fit this
     # body.
     relationships = ParentSwfAssetRelationship.
       includes(swf_asset: swf_asset_includes).
-      where(parent_type: "Item", parent_id: item_ids).
+      where(parent_type: "Item", parent_id: items.map(&:id)).
       where(swf_asset: {body_id: [target.body_id, 0]})
 
     pet_type_body = Appearance::Body.new(target.body_id, target.species)
@@ -562,13 +605,13 @@ class Item < ApplicationRecord
       transform_values { |rels| rels.map(&:swf_asset) }
 
     # Finally, for each item, return an appearance—even if it's empty!
-    item_ids.to_h do |item_id|
-      assets = assets_by_item_id.fetch(item_id, [])
+    items.to_h do |item|
+      assets = assets_by_item_id.fetch(item.id, [])
 
       fits_all_pets = assets.present? && assets.all? { |a| a.body_id == 0 }
       body = fits_all_pets ? all_pets_body : pet_type_body
 
-      [item_id, Appearance.new(body, assets)]
+      [item.id, Appearance.new(item, body, assets)]
     end
   end
 

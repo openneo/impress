@@ -82,6 +82,21 @@ class ItemsController < ApplicationController
             group_by_owned
           @current_user_quantities = current_user.item_quantities_for(@item)
         end
+
+        @selected_preview_pet_type = load_selected_preview_pet_type
+        @preview_outfit = Outfit.new(
+          pet_state: load_preview_pet_type.canonical_pet_state,
+          worn_items: [@item],
+        )
+        @preview_error = validate_preview
+
+        @all_appearances = @item.appearances
+        @appearances_by_occupied_zone = @item.appearances_by_occupied_zone.
+          sort_by { |z, a| z.label }
+        @selected_item_appearance = @preview_outfit.item_appearances.first
+
+        @preview_pet_type_options = PetType.where(color: @preview_outfit.color).
+          includes(:species).merge(Species.alphabetical)
       end
 
       format.gif do
@@ -180,13 +195,50 @@ class ItemsController < ApplicationController
         appearance_params[:color_id], appearance_params[:species_id])
     end
 
-    target.appearances_for(@items.map(&:id), swf_asset_includes: [:zone]).
+    target.appearances_for(@items, swf_asset_includes: [:zone]).
       tap do |appearances|
         # Preload the manifests for these SWF assets concurrently, rather than
         # loading them in sequence when we generate the JSON.
         swf_assets = appearances.values.map(&:swf_assets).flatten
         SwfAsset.preload_manifests(swf_assets)
       end
+  end
+
+  def load_selected_preview_pet_type
+    color_id = params.dig(:preview, :color_id)
+    species_id = params.dig(:preview, :species_id)
+
+    return load_default_preview_pet_type if color_id.nil? || species_id.nil?
+
+    PetType.find_or_initialize_by(color_id:, species_id:).tap do |pet_type|
+      if pet_type.persisted?
+        cookies["preferred-preview-color-id"] = color_id
+        cookies["preferred-preview-species-id"] = species_id
+      end
+    end
+  end
+
+  def load_preview_pet_type
+    if @selected_preview_pet_type.persisted?
+      @selected_preview_pet_type
+    else
+      load_default_preview_pet_type
+    end
+  end
+
+  def load_default_preview_pet_type
+    @item.compatible_pet_types.
+      preferring_species(cookies["preferred-preview-species-id"] || "<ignore>").
+      preferring_color(cookies["preferred-preview-color-id"] || "<ignore>").
+      preferring_simple.first
+  end
+
+  def validate_preview
+    if @selected_preview_pet_type.new_record?
+      :pet_type_does_not_exist
+    elsif @preview_outfit.item_appearances.any?(&:empty?)
+      :no_item_data
+    end
   end
   
   def search_error(e)
