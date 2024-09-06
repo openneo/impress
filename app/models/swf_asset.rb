@@ -236,6 +236,17 @@ class SwfAsset < ApplicationRecord
     self[:known_glitches] = new_known_glitches
   end
 
+  def html5?
+    # NOTE: This is slightly different than how Impress 2020 reasons about
+    #       this; it checks for an SVG or canvas movie. I *think* we did
+    #       this just to keep the API simpler, and this check is more
+    #       correct? But I do wonder if any assets have a manifest but are
+    #       arguably "not converted" because the manifest is just so bad.
+    # NOTE: Just checking `manifest_url` isn't enough, because there *are*
+    #       assets with a `manifest_url` saved but it 404s.
+    manifest.present?
+  end
+
   def restricted_zone_ids
     [].tap do |ids|
       zones_restrict.chars.each_with_index do |bit, index|

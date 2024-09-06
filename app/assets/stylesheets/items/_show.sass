@@ -255,6 +255,12 @@ body.items-show
     &:has(species-face-picker-options[inert])
       cursor: wait
 
+  .item-preview-meta-info
+    display: grid
+    grid-template-columns: 1fr auto
+    gap: .5em
+    align-items: center
+
   .item-zones-info
     h3
       display: inline
@@ -280,6 +286,37 @@ body.items-show
       font-style: italic
       text-decoration: underline dotted
 
+  // Many of these styles copied from Impress 2020 and its Chakra UI styles!
+  .item-html5-info
+    display: flex
+    align-items: center
+    border: 1px solid
+    border-radius: .375em
+    padding: 4px 8px
+    min-height: 30px
+    box-sizing: border-box
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px
+
+    &[data-status=converted]
+      background: $module-bg-color
+      color: $text-color
+
+      svg:nth-of-type(2)
+        margin-right: -4px // spacing hacks!
+
+    &[data-status=unconverted]
+      background: $warning-bg-color
+      color: #975A16
+      gap: .25em // spacing hacks!
+
+    svg:first-of-type
+      width: 12px
+      height: 12px
+
+    svg:nth-of-type(2)
+      width: 20px
+      height: 20px
+
   #item-preview
     display: flex
     flex-direction: column
@@ -287,7 +324,7 @@ body.items-show
 
     @media (min-width: 600px)
       display: grid
-      grid-template-areas: "viewer faces" "picker zones"
+      grid-template-areas: "viewer faces" "picker meta"
       gap: .5em
 
       outfit-viewer
@@ -303,8 +340,8 @@ body.items-show
         max-height: 350px
         margin: -10px
 
-      .item-zones-info
-        grid-area: zones
+      .item-preview-meta-info
+        grid-area: meta
 
 @keyframes fade-in
   from

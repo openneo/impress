@@ -508,6 +508,10 @@ class Item < ApplicationRecord
       {item:, body:, swf_assets:}
     end
 
+    def html5?
+      swf_assets.all?(&:html5?)
+    end
+
     def occupied_zone_ids
       swf_assets.map(&:zone_id).uniq.sort
     end

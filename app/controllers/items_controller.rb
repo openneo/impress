@@ -93,6 +93,7 @@ class ItemsController < ApplicationController
         @all_appearances = @item.appearances
         @appearances_by_occupied_zone = @item.appearances_by_occupied_zone.
           sort_by { |z, a| z.label }
+        @selected_item_appearance = @preview_outfit.item_appearances.first
 
         @preview_pet_type_options = PetType.where(color: @preview_outfit.color).
           includes(:species).merge(Species.alphabetical)
