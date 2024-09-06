@@ -38,6 +38,9 @@ body.items-show
     height: 16px
     width: 16px
 
+  .preview-area
+    margin: 0 auto
+
   outfit-viewer
     display: block
     position: relative
@@ -46,7 +49,6 @@ body.items-show
     border: 1px solid $module-border-color
     border-radius: 1em
     overflow: hidden
-    margin: 0 auto
 
     // There's no useful text in here, but double-clicking the play/pause
     // button can cause a weird selection state. Disable text selection.
@@ -336,10 +338,11 @@ body.items-show
       grid-template-areas: "viewer faces" "picker meta"
       gap: .5em
 
-      outfit-viewer
+      .preview-area
         grid-area: viewer
-        width: 350px
-        height: 350px
+        outfit-viewer
+          width: 350px
+          height: 350px
 
       species-color-picker
         grid-area: picker

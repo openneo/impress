@@ -15,9 +15,10 @@
     sorry!
 
 = turbo_frame_tag "item-preview" do
-  = render partial: "outfit_viewer", locals: {outfit: @preview_outfit}
-  .error-indicator
-    💥 We couldn't load all of this outfit. Try again?
+  .preview-area
+    = render partial: "outfit_viewer", locals: {outfit: @preview_outfit}
+    .error-indicator
+      💥 We couldn't load all of this outfit. Try again?
 
   %species-color-picker
     = form_for item_path(@item), method: :get, data: {"is-valid": @preview_error.nil?} do |f|
