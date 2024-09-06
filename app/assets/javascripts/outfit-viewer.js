@@ -165,9 +165,12 @@ class OutfitLayer extends HTMLElement {
 
 	#sendMessageToIframe(message) {
 		// If we have no frame or it hasn't loaded, ignore this message.
-		if (this.iframe?.contentWindow == null) {
+		if (this.iframe == null) {
+			return;
+		}
+		if (this.iframe.contentWindow == null) {
 			console.debug(
-				`Ignoring message, frame not loaded: `,
+				`Ignoring message, frame not loaded yet: `,
 				this.iframe,
 				message,
 			);
