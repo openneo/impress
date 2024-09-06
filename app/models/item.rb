@@ -555,10 +555,10 @@ class Item < ApplicationRecord
     # Otherwise, create an appearance for each real (nonzero) body ID. We don't
     # generally expect body_id = 0 and body_id != 0 to mix, but if they do,
     # uhh, let's merge the body_id = 0 ones in?
+    species_by_body_id = Species.with_body_ids(swf_assets_by_body_id.keys)
     swf_assets_by_body_id.map do |body_id, body_specific_assets|
       swf_assets_for_body = body_specific_assets + swf_assets_for_all_bodies
-      species = Species.with_body_id(body_id).first!
-      body = Appearance::Body.new(body_id, species)
+      body = Appearance::Body.new(body_id, species_by_body_id[body_id])
       Appearance.new(self, body, swf_assets_for_body)
     end
   end
