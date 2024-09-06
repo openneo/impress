@@ -533,6 +533,10 @@ class Item < ApplicationRecord
   end
 
   def appearances
+    @appearances ||= build_appearances
+  end
+
+  def build_appearances
     all_swf_assets = swf_assets.to_a
 
     # If there are no assets yet, there are no appearances.
