@@ -124,8 +124,8 @@ class PetType < ApplicationRecord
         pet_state.mood_id.present? ? -1 : 1, # Prefer mood is labeled
         pet_state.mood_id, # Prefer mood is happy, then sad, then sick
         gender == preferred_gender ? -1 : 1, # Prefer our "random" gender
-        -pet_state.id, # Prefer newer pet states
         !pet_state.glitched? ? -1 : 1, # Prefer is not glitched
+        -pet_state.id, # Prefer newer pet states
       ]
     }.first
   end
