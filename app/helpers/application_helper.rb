@@ -101,6 +101,12 @@ module ApplicationHelper
     "matchu@openneo.net"
   end
 
+  EDIT_ICON_SVG_SOURCE = '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></g>'.html_safe
+  def edit_icon(alt: "Edit")
+    content_tag :svg, EDIT_ICON_SVG_SOURCE, alt:, class: "icon",
+      viewBox: "0 0 24 24", style: "width: 1em; height: 1em"
+  end
+
   # SVG icon source from Chakra UI!
   EXTERNAL_LINK_SVG_SOURCE = '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><path d="M15 3h6v6"></path><path d="M10 14L21 3"></path></g>'.html_safe
   def external_link_icon

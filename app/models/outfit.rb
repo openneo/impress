@@ -1,8 +1,14 @@
 class Outfit < ApplicationRecord
   has_many :item_outfit_relationships, :dependent => :destroy
+
   has_many :worn_item_outfit_relationships, -> { where(is_worn: true) },
     class_name: 'ItemOutfitRelationship'
   has_many :worn_items, through: :worn_item_outfit_relationships, source: :item
+
+  has_many :closeted_item_outfit_relationships, -> { where(is_worn: false) },
+    class_name: 'ItemOutfitRelationship'
+  has_many :closeted_items, through: :closeted_item_outfit_relationships,
+                            source: :item
 
   belongs_to :alt_style, optional: true
   belongs_to :pet_state, optional: true # We validate presence below!
@@ -229,6 +235,18 @@ class Outfit < ApplicationRecord
     pet_layers.reject! { |sa| pet_restricted_zone_ids.include?(sa.zone_id) }
 
     (pet_layers + item_layers).sort_by(&:depth)
+  end
+
+  def wardrobe_params
+    {
+      name: name,
+      color: color_id,
+      species: species_id,
+      pose: pose,
+      state: pet_state_id,
+      objects: worn_item_ids,
+      closet: closeted_item_ids,
+    }
   end
 
   def ensure_unique_name

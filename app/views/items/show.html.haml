@@ -19,6 +19,10 @@
     = render partial: "outfit_viewer", locals: {outfit: @preview_outfit}
     .error-indicator
       💥 We couldn't load all of this outfit. Try again?
+    = link_to wardrobe_path(params: @preview_outfit.wardrobe_params),
+              class: "customize-more", target: "_blank",
+              title: "Customize more", "aria-label": "Customize more" do
+      = edit_icon
 
   %species-color-picker
     = form_for item_path(@item), method: :get, data: {"is-valid": @preview_error.nil?} do |f|
