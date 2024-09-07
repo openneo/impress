@@ -107,9 +107,11 @@ class PetType < ApplicationRecord
 
   def canonical_pet_state
     # For consistency (randomness is always scary!), we use the PetType ID to
-    # determine which gender to prefer. That way, it'll be stable, but we'll
-    # still get the *vibes* of uniform randomness.
-    preferred_gender = id % 2 == 0 ? :fem : :masc
+    # determine which gender to prefer, if it's not built into the color. That
+    # way, it'll be stable, but we'll still get the *vibes* of randomness.
+    preferred_gender = color.default_gender_presentation ||
+      (id % 2 == 0 ? :fem : :masc)
+    puts preferred_gender
 
     # NOTE: If this were only being called on one pet type at a time, it would
     # be more efficient to send this as a single query with an `order` part and

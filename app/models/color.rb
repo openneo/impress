@@ -35,6 +35,16 @@ class Color < ApplicationRecord
     end
   end
 
+  def default_gender_presentation
+    if name.downcase.ends_with? "boy"
+      :masc
+    elsif name.downcase.ends_with? "girl"
+      :fem
+    else
+      nil
+    end
+  end
+
   def self.pranks_funny?
     now = Time.now.in_time_zone('Pacific Time (US & Canada)')
     now.month == 4 && now.day == 1
