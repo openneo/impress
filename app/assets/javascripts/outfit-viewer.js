@@ -112,9 +112,7 @@ class OutfitLayer extends HTMLElement {
 				this.#setStatus("error"),
 			);
 		} else {
-			throw new Error(
-				`<outfit-layer> must contain an <img> or <iframe> tag`,
-			);
+			console.warn(`<outfit-layer> contained no image or iframe: `, this);
 		}
 	}
 
