@@ -25,39 +25,40 @@ module NCMall
 	ROOT_DOCUMENT_URL = "https://ncmall.neopets.com/mall/shop.phtml"
 	PAGE_LINK_PATTERN = /load_items_pane\(['"](.+?)['"], ([0-9]+)\).+?>(.+?)</
 	def self.load_page_links
-		Sync do
-			response = INTERNET.get(ROOT_DOCUMENT_URL, [
+		html = Sync do
+			INTERNET.get(ROOT_DOCUMENT_URL, [
 				["User-Agent", Rails.configuration.user_agent_for_neopets],
-			])
+			]) do |response|
+				if response.status != 200
+					raise ResponseNotOK.new(response.status),
+						"expected status 200 but got #{response.status} (#{url})"
+				end
 
-			if response.status != 200
-				raise ResponseNotOK.new(response.status),
-					"expected status 200 but got #{response.status} (#{url})"
+				response.read
 			end
-
-			# Extract `load_items_pane` calls from the root document's HTML. (We use
-			# a very simplified regex, rather than actually parsing the full HTML!)
-			html = response.read
-			html.scan(PAGE_LINK_PATTERN).
-				map { |type, cat, label| {type:, cat:, label:} }.
-				uniq
 		end
+
+		# Extract `load_items_pane` calls from the root document's HTML. (We use
+		# a very simplified regex, rather than actually parsing the full HTML!)
+		html.scan(PAGE_LINK_PATTERN).
+			map { |type, cat, label| {type:, cat:, label:} }.
+			uniq
 	end
 
 	private
 
 	def self.load_page_by_url(url)
 		Sync do
-			response = INTERNET.get(url, [
+			INTERNET.get(url, [
 				["User-Agent", Rails.configuration.user_agent_for_neopets],
-			])
+			]) do |response|
+				if response.status != 200
+					raise ResponseNotOK.new(response.status),
+						"expected status 200 but got #{response.status} (#{url})"
+				end
 
-			if response.status != 200
-				raise ResponseNotOK.new(response.status),
-					"expected status 200 but got #{response.status} (#{url})"
+				parse_nc_page response.read
 			end
-
-			parse_nc_page response.read
 		end
 	end
 

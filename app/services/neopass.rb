@@ -31,19 +31,19 @@ module NeoPass
 
 	LINKAGE_URL = "https://oidc.neopets.com/linkage/all"
 	def self.load_linkages(access_token)
-		response = Sync do
-			response = INTERNET.get(LINKAGE_URL, [
+		linkages_str = Sync do
+			INTERNET.get(LINKAGE_URL, [
 				["User-Agent", Rails.configuration.user_agent_for_neopets],
 				["Authorization", "Bearer #{access_token}"],
-			])
-		end
+			]) do |response|
+				if response.status != 200
+					raise ResponseNotOK.new(response.status),
+						"expected status 200 but got #{response.status} (#{LINKAGE_URL})"
+				end
 
-		if response.status != 200
-			raise ResponseNotOK.new(response.status),
-				"expected status 200 but got #{response.status} (#{LINKAGE_URL})"
+				response.read
+			end
 		end
-
-		linkages_str = response.body.read
 
 		begin
 			linkages = JSON.parse(linkages_str)

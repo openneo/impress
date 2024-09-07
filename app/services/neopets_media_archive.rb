@@ -72,14 +72,15 @@ module NeopetsMediaArchive
     # We use this in the `swf_assets:manifests:load` task to perform many
     # requests in parallel!
     Sync do
-      response = INTERNET.get(uri, [
+      INTERNET.get(uri, [
         ["User-Agent", Rails.configuration.user_agent_for_neopets],
-      ])
-      if response.status != 200
-        raise ResponseNotOK.new(response.status),
-          "expected status 200 but got #{response.status} (#{uri})"
+      ]) do |response|
+        if response.status != 200
+          raise ResponseNotOK.new(response.status),
+            "expected status 200 but got #{response.status} (#{uri})"
+        end
+        response.read
       end
-      response.body.read
     end
   end
 

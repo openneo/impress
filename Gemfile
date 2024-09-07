@@ -4,7 +4,7 @@ ruby '3.3.4'
 gem 'rails', '~> 7.1', '>= 7.1.3.4'
 
 # The HTTP server running the Rails instance.
-gem 'falcon', '~> 0.43.0'
+gem 'falcon', '~> 0.48.0'
 
 # Our database is MySQL, in both development and production.
 gem 'mysql2', '~> 0.5.5'
@@ -61,8 +61,8 @@ gem "httparty", "~> 0.22.0"
 gem "addressable", "~> 2.8"
 
 # For advanced batching of many HTTP requests.
-gem "async", "~> 2.6", require: false
-gem "async-http", "~> 0.61.0", require: false
+gem "async", "~> 2.17", require: false
+gem "async-http", "~> 0.75.0", require: false
 gem "thread-local", "~> 1.1", require: false
 
 # For debugging.
