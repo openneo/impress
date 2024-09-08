@@ -4,14 +4,24 @@ document.addEventListener("change", (e) => {
 
     try {
         const mainPickerForm = document.querySelector(
-            "#item-preview species-color-picker form");
-        const mainSpeciesField =
-            mainPickerForm.querySelector("[name='preview[species_id]']");
+            "#item-preview species-color-picker form",
+        );
+        const mainSpeciesField = mainPickerForm.querySelector(
+            "[name='preview[species_id]']",
+        );
         mainSpeciesField.value = e.target.value;
         mainPickerForm.requestSubmit(); // `submit` doesn't get captured by Turbo!
     } catch (error) {
         console.error("Couldn't update species picker: ", error);
     }
+});
+
+// If the preview frame fails to load, try a full pageload.
+document.addEventListener("turbo:frame-missing", (e) => {
+    if (!e.target.matches("#item-preview")) return;
+
+    e.detail.visit(e.detail.response.url);
+    e.preventDefault();
 });
 
 class SpeciesColorPicker extends HTMLElement {
@@ -44,7 +54,7 @@ class SpeciesFacePicker extends HTMLElement {
 
     #handleClick(e) {
         if (e.target.matches("input[type=radio]")) {
-            this.dispatchEvent(new Event("change", {bubbles: true}));
+            this.dispatchEvent(new Event("change", { bubbles: true }));
         }
     }
 }
