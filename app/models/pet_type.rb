@@ -111,7 +111,6 @@ class PetType < ApplicationRecord
     # way, it'll be stable, but we'll still get the *vibes* of randomness.
     preferred_gender = color.default_gender_presentation ||
       (id % 2 == 0 ? :fem : :masc)
-    puts preferred_gender
 
     # NOTE: If this were only being called on one pet type at a time, it would
     # be more efficient to send this as a single query with an `order` part and
