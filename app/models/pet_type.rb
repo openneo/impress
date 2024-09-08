@@ -122,10 +122,15 @@ class PetType < ApplicationRecord
     pet_states.sort_by { |pet_state|
       gender = pet_state.female? ? :fem : :masc
       [
+        # We prefer labeled pet states first, because states no one has seen or
+        # validated are such a wildcard! Then we prefer unglitched, then we
+        # prefer maximally happy. (Correct sad is better than glitched happy!)
+        # Then we pick our arbitrary-ish gender, then we pick the latest if all
+        # else failed and it's an unlabeled free-for-all.
         pet_state.mood_id.present? ? -1 : 1, # Prefer mood is labeled
+        !pet_state.glitched? ? -1 : 1, # Prefer is not glitched
         pet_state.mood_id, # Prefer mood is happy, then sad, then sick
         gender == preferred_gender ? -1 : 1, # Prefer our "random" gender
-        !pet_state.glitched? ? -1 : 1, # Prefer is not glitched
         -pet_state.id, # Prefer newer pet states
       ]
     }.first
