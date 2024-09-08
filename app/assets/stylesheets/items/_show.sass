@@ -207,15 +207,16 @@ body.items-show
   species-face-picker
     display: block
     position: relative
-    max-height: 200px // 4 rows of 50px images, and padding will offer a hint of below
-    padding: 10px // leave enough room for the zoomed-in selected face
-    margin-top: -10px
-    overflow: auto
+    top: -10px
 
     species-face-picker-options
       display: flex
       justify-content: center
       flex-wrap: wrap
+      isolation: isolate // avoid z-index conflicts between pets and noscript
+      overflow: auto
+      max-height: 200px // 4 rows of 50px images, and padding will offer a hint of below
+      padding: 10px // leave enough room for the zoomed-in selected face
 
     img
       width: 50px
@@ -271,7 +272,8 @@ body.items-show
     noscript
       position: absolute
       inset: 0
-      background: rgba(white, .75)
+      padding: 1em
+      background: rgba(white, .8)
       z-index: 1
       cursor: auto
 
@@ -366,8 +368,8 @@ body.items-show
 
       species-face-picker
         grid-area: faces
-        max-height: 350px
-        margin: -10px
+        species-face-picker-options
+          max-height: 340px
 
       .item-preview-meta-info
         grid-area: meta
