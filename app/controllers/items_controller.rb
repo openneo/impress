@@ -28,6 +28,12 @@ class ItemsController < ApplicationController
           render json: {
             items: @items.as_json(
               methods: [:nc?, :pb?, :owned?, :wanted?],
+              include: {
+                restricted_zones: {
+                  only: [:id, :depth, :label],
+                  methods: [:is_commonly_used_by_items],
+                },
+              },
             ),
             appearances: load_appearances.as_json(
               include: {

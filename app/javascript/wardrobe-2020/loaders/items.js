@@ -201,10 +201,10 @@ function normalizeItemSearchAppearance(data, item) {
 		__typename: "ItemAppearance",
 		id: `item-${item.id}-body-${data.body.id}`,
 		layers: data.swf_assets.map(normalizeSwfAssetToLayer),
-		restrictedZones: data.swf_assets
-			.map((a) => a.restricted_zones)
-			.flat()
-			.map(normalizeZone),
+		restrictedZones: [
+			...item.restricted_zones,
+			...data.swf_assets.map((a) => a.restricted_zones).flat(),
+		].map(normalizeZone),
 	};
 }
 
