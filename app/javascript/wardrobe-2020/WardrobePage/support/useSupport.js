@@ -23,11 +23,11 @@ import { getSupportSecret } from "../../impress-2020-config";
  * the server checks the provided secret for each Support request.
  */
 function useSupport() {
-  const supportSecret = getSupportSecret();
+	const supportSecret = getSupportSecret();
 
-  const isSupportUser = supportSecret != null;
+	const isSupportUser = supportSecret != null;
 
-  return { isSupportUser, supportSecret };
+	return { isSupportUser, supportSecret };
 }
 
 export default useSupport;

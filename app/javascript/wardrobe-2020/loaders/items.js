@@ -13,9 +13,7 @@ export function useItemAppearances(id, options = {}) {
 }
 
 async function loadItemAppearancesData(id) {
-	const res = await fetch(
-		`/items/${encodeURIComponent(id)}/appearances.json`,
-	);
+	const res = await fetch(`/items/${encodeURIComponent(id)}/appearances.json`);
 
 	if (!res.ok) {
 		throw new Error(

@@ -11,43 +11,43 @@ import { loadable, MajorErrorMessage, TestErrorSender } from "../util";
 const OutfitControls = loadable(() => import("./OutfitControls"));
 
 function WardrobePreviewAndControls({
-  isLoading,
-  outfitState,
-  dispatchToOutfit,
+	isLoading,
+	outfitState,
+	dispatchToOutfit,
 }) {
-  // Whether the current outfit preview has animations. Determines whether we
-  // show the play/pause button.
-  const [hasAnimations, setHasAnimations] = React.useState(false);
+	// Whether the current outfit preview has animations. Determines whether we
+	// show the play/pause button.
+	const [hasAnimations, setHasAnimations] = React.useState(false);
 
-  const { appearance, preview } = useOutfitPreview({
-    isLoading: isLoading,
-    speciesId: outfitState.speciesId,
-    colorId: outfitState.colorId,
-    pose: outfitState.pose,
-    altStyleId: outfitState.altStyleId,
-    appearanceId: outfitState.appearanceId,
-    wornItemIds: outfitState.wornItemIds,
-    onChangeHasAnimations: setHasAnimations,
-    placeholder: <OutfitThumbnailIfCached outfitId={outfitState.id} />,
-    "data-test-id": "wardrobe-outfit-preview",
-  });
+	const { appearance, preview } = useOutfitPreview({
+		isLoading: isLoading,
+		speciesId: outfitState.speciesId,
+		colorId: outfitState.colorId,
+		pose: outfitState.pose,
+		altStyleId: outfitState.altStyleId,
+		appearanceId: outfitState.appearanceId,
+		wornItemIds: outfitState.wornItemIds,
+		onChangeHasAnimations: setHasAnimations,
+		placeholder: <OutfitThumbnailIfCached outfitId={outfitState.id} />,
+		"data-test-id": "wardrobe-outfit-preview",
+	});
 
-  return (
-    <Sentry.ErrorBoundary fallback={MajorErrorMessage}>
-      <TestErrorSender />
-      <Center position="absolute" top="0" bottom="0" left="0" right="0">
-        <DarkMode>{preview}</DarkMode>
-      </Center>
-      <Box position="absolute" top="0" bottom="0" left="0" right="0">
-        <OutfitControls
-          outfitState={outfitState}
-          dispatchToOutfit={dispatchToOutfit}
-          showAnimationControls={hasAnimations}
-          appearance={appearance}
-        />
-      </Box>
-    </Sentry.ErrorBoundary>
-  );
+	return (
+		<Sentry.ErrorBoundary fallback={MajorErrorMessage}>
+			<TestErrorSender />
+			<Center position="absolute" top="0" bottom="0" left="0" right="0">
+				<DarkMode>{preview}</DarkMode>
+			</Center>
+			<Box position="absolute" top="0" bottom="0" left="0" right="0">
+				<OutfitControls
+					outfitState={outfitState}
+					dispatchToOutfit={dispatchToOutfit}
+					showAnimationControls={hasAnimations}
+					appearance={appearance}
+				/>
+			</Box>
+		</Sentry.ErrorBoundary>
+	);
 }
 
 /**
@@ -61,40 +61,40 @@ function WardrobePreviewAndControls({
  * like usual!
  */
 function OutfitThumbnailIfCached({ outfitId }) {
-  const { data } = useQuery(
-    gql`
-      query OutfitThumbnailIfCached($outfitId: ID!) {
-        outfit(id: $outfitId) {
-          id
-          updatedAt
-        }
-      }
-    `,
-    {
-      variables: {
-        outfitId,
-      },
-      skip: outfitId == null,
-      fetchPolicy: "cache-only",
-      onError: (e) => console.error(e),
-    },
-  );
+	const { data } = useQuery(
+		gql`
+			query OutfitThumbnailIfCached($outfitId: ID!) {
+				outfit(id: $outfitId) {
+					id
+					updatedAt
+				}
+			}
+		`,
+		{
+			variables: {
+				outfitId,
+			},
+			skip: outfitId == null,
+			fetchPolicy: "cache-only",
+			onError: (e) => console.error(e),
+		},
+	);
 
-  if (!data?.outfit) {
-    return null;
-  }
+	if (!data?.outfit) {
+		return null;
+	}
 
-  return (
-    <OutfitThumbnail
-      outfitId={data.outfit.id}
-      updatedAt={data.outfit.updatedAt}
-      alt=""
-      objectFit="contain"
-      width="100%"
-      height="100%"
-      filter="blur(2px)"
-    />
-  );
+	return (
+		<OutfitThumbnail
+			outfitId={data.outfit.id}
+			updatedAt={data.outfit.updatedAt}
+			alt=""
+			objectFit="contain"
+			width="100%"
+			height="100%"
+			filter="blur(2px)"
+		/>
+	);
 }
 
 export default WardrobePreviewAndControls;

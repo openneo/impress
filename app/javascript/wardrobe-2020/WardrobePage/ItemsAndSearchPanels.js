@@ -21,72 +21,72 @@ import { MajorErrorMessage, TestErrorSender, useLocalStorage } from "../util";
  * state and refs.
  */
 function ItemsAndSearchPanels({
-  loading,
-  searchQuery,
-  onChangeSearchQuery,
-  outfitState,
-  outfitSaving,
-  dispatchToOutfit,
+	loading,
+	searchQuery,
+	onChangeSearchQuery,
+	outfitState,
+	outfitSaving,
+	dispatchToOutfit,
 }) {
-  const scrollContainerRef = React.useRef();
-  const searchQueryRef = React.useRef();
-  const firstSearchResultRef = React.useRef();
+	const scrollContainerRef = React.useRef();
+	const searchQueryRef = React.useRef();
+	const firstSearchResultRef = React.useRef();
 
-  const hasRoomForSearchFooter = useBreakpointValue({ base: false, md: true });
-  const [canUseSearchFooter] = useLocalStorage(
-    "DTIFeatureFlagCanUseSearchFooter",
-    false,
-  );
-  const isShowingSearchFooter = canUseSearchFooter && hasRoomForSearchFooter;
+	const hasRoomForSearchFooter = useBreakpointValue({ base: false, md: true });
+	const [canUseSearchFooter] = useLocalStorage(
+		"DTIFeatureFlagCanUseSearchFooter",
+		false,
+	);
+	const isShowingSearchFooter = canUseSearchFooter && hasRoomForSearchFooter;
 
-  return (
-    <Sentry.ErrorBoundary fallback={MajorErrorMessage}>
-      <TestErrorSender />
-      <Flex direction="column" height="100%">
-        {isShowingSearchFooter && <Box height="2" />}
-        {!isShowingSearchFooter && (
-          <Box paddingX="5" paddingTop="3" paddingBottom="2" boxShadow="sm">
-            <SearchToolbar
-              query={searchQuery}
-              searchQueryRef={searchQueryRef}
-              firstSearchResultRef={firstSearchResultRef}
-              onChange={onChangeSearchQuery}
-            />
-          </Box>
-        )}
-        {!isShowingSearchFooter && !searchQueryIsEmpty(searchQuery) ? (
-          <Box
-            key="search-panel"
-            flex="1 0 0"
-            position="relative"
-            overflowY="scroll"
-            ref={scrollContainerRef}
-            data-test-id="search-panel-scroll-container"
-          >
-            <SearchPanel
-              query={searchQuery}
-              outfitState={outfitState}
-              dispatchToOutfit={dispatchToOutfit}
-              scrollContainerRef={scrollContainerRef}
-              searchQueryRef={searchQueryRef}
-              firstSearchResultRef={firstSearchResultRef}
-            />
-          </Box>
-        ) : (
-          <Box position="relative" overflow="auto" key="items-panel">
-            <Box px="4" py="2">
-              <ItemsPanel
-                loading={loading}
-                outfitState={outfitState}
-                outfitSaving={outfitSaving}
-                dispatchToOutfit={dispatchToOutfit}
-              />
-            </Box>
-          </Box>
-        )}
-      </Flex>
-    </Sentry.ErrorBoundary>
-  );
+	return (
+		<Sentry.ErrorBoundary fallback={MajorErrorMessage}>
+			<TestErrorSender />
+			<Flex direction="column" height="100%">
+				{isShowingSearchFooter && <Box height="2" />}
+				{!isShowingSearchFooter && (
+					<Box paddingX="5" paddingTop="3" paddingBottom="2" boxShadow="sm">
+						<SearchToolbar
+							query={searchQuery}
+							searchQueryRef={searchQueryRef}
+							firstSearchResultRef={firstSearchResultRef}
+							onChange={onChangeSearchQuery}
+						/>
+					</Box>
+				)}
+				{!isShowingSearchFooter && !searchQueryIsEmpty(searchQuery) ? (
+					<Box
+						key="search-panel"
+						flex="1 0 0"
+						position="relative"
+						overflowY="scroll"
+						ref={scrollContainerRef}
+						data-test-id="search-panel-scroll-container"
+					>
+						<SearchPanel
+							query={searchQuery}
+							outfitState={outfitState}
+							dispatchToOutfit={dispatchToOutfit}
+							scrollContainerRef={scrollContainerRef}
+							searchQueryRef={searchQueryRef}
+							firstSearchResultRef={firstSearchResultRef}
+						/>
+					</Box>
+				) : (
+					<Box position="relative" overflow="auto" key="items-panel">
+						<Box px="4" py="2">
+							<ItemsPanel
+								loading={loading}
+								outfitState={outfitState}
+								outfitSaving={outfitSaving}
+								dispatchToOutfit={dispatchToOutfit}
+							/>
+						</Box>
+					</Box>
+				)}
+			</Flex>
+		</Sentry.ErrorBoundary>
+	);
 }
 
 export default ItemsAndSearchPanels;

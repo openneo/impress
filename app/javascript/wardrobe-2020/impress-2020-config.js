@@ -11,7 +11,7 @@ export function getSupportSecret() {
 
 function readOrigin() {
 	const node = document.querySelector("meta[name=impress-2020-origin]");
-	return node?.content || "https://impress-2020.openneo.net"
+	return node?.content || "https://impress-2020.openneo.net";
 }
 
 function readSupportSecret() {

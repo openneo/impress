@@ -1,31 +1,31 @@
 import React from "react";
 import { ClassNames } from "@emotion/react";
 import {
-  Box,
-  Flex,
-  IconButton,
-  Skeleton,
-  Tooltip,
-  useColorModeValue,
-  useTheme,
+	Box,
+	Flex,
+	IconButton,
+	Skeleton,
+	Tooltip,
+	useColorModeValue,
+	useTheme,
 } from "@chakra-ui/react";
 import { EditIcon, DeleteIcon, InfoIcon } from "@chakra-ui/icons";
 import { loadable } from "../util";
 
 import {
-  ItemCardContent,
-  ItemBadgeList,
-  ItemKindBadge,
-  MaybeAnimatedBadge,
-  YouOwnThisBadge,
-  YouWantThisBadge,
-  getZoneBadges,
+	ItemCardContent,
+	ItemBadgeList,
+	ItemKindBadge,
+	MaybeAnimatedBadge,
+	YouOwnThisBadge,
+	YouWantThisBadge,
+	getZoneBadges,
 } from "../components/ItemCard";
 import SupportOnly from "./support/SupportOnly";
 import useSupport from "./support/useSupport";
 
-const LoadableItemSupportDrawer = loadable(() =>
-  import("./support/ItemSupportDrawer"),
+const LoadableItemSupportDrawer = loadable(
+	() => import("./support/ItemSupportDrawer"),
 );
 
 /**
@@ -48,79 +48,79 @@ const LoadableItemSupportDrawer = loadable(() =>
  *       devices.
  */
 function Item({
-  item,
-  itemNameId,
-  isWorn,
-  isInOutfit,
-  onRemove,
-  isDisabled = false,
+	item,
+	itemNameId,
+	isWorn,
+	isInOutfit,
+	onRemove,
+	isDisabled = false,
 }) {
-  const [supportDrawerIsOpen, setSupportDrawerIsOpen] = React.useState(false);
+	const [supportDrawerIsOpen, setSupportDrawerIsOpen] = React.useState(false);
 
-  return (
-    <>
-      <ItemContainer isDisabled={isDisabled}>
-        <Box flex="1 1 0" minWidth="0">
-          <ItemCardContent
-            item={item}
-            badges={<ItemBadges item={item} />}
-            itemNameId={itemNameId}
-            isWorn={isWorn}
-            isDiabled={isDisabled}
-            focusSelector={containerHasFocus}
-          />
-        </Box>
-        <Box flex="0 0 auto" marginTop="5px">
-          {isInOutfit && (
-            <ItemActionButton
-              icon={<DeleteIcon />}
-              label="Remove"
-              onClick={(e) => {
-                onRemove(item.id);
-                e.preventDefault();
-              }}
-            />
-          )}
-          <SupportOnly>
-            <ItemActionButton
-              icon={<EditIcon />}
-              label="Support"
-              onClick={(e) => {
-                setSupportDrawerIsOpen(true);
-                e.preventDefault();
-              }}
-            />
-          </SupportOnly>
-          <ItemActionButton
-            icon={<InfoIcon />}
-            label="More info"
-            to={`/items/${item.id}`}
-            target="_blank"
-          />
-        </Box>
-      </ItemContainer>
-      <SupportOnly>
-        <LoadableItemSupportDrawer
-          item={item}
-          isOpen={supportDrawerIsOpen}
-          onClose={() => setSupportDrawerIsOpen(false)}
-        />
-      </SupportOnly>
-    </>
-  );
+	return (
+		<>
+			<ItemContainer isDisabled={isDisabled}>
+				<Box flex="1 1 0" minWidth="0">
+					<ItemCardContent
+						item={item}
+						badges={<ItemBadges item={item} />}
+						itemNameId={itemNameId}
+						isWorn={isWorn}
+						isDiabled={isDisabled}
+						focusSelector={containerHasFocus}
+					/>
+				</Box>
+				<Box flex="0 0 auto" marginTop="5px">
+					{isInOutfit && (
+						<ItemActionButton
+							icon={<DeleteIcon />}
+							label="Remove"
+							onClick={(e) => {
+								onRemove(item.id);
+								e.preventDefault();
+							}}
+						/>
+					)}
+					<SupportOnly>
+						<ItemActionButton
+							icon={<EditIcon />}
+							label="Support"
+							onClick={(e) => {
+								setSupportDrawerIsOpen(true);
+								e.preventDefault();
+							}}
+						/>
+					</SupportOnly>
+					<ItemActionButton
+						icon={<InfoIcon />}
+						label="More info"
+						to={`/items/${item.id}`}
+						target="_blank"
+					/>
+				</Box>
+			</ItemContainer>
+			<SupportOnly>
+				<LoadableItemSupportDrawer
+					item={item}
+					isOpen={supportDrawerIsOpen}
+					onClose={() => setSupportDrawerIsOpen(false)}
+				/>
+			</SupportOnly>
+		</>
+	);
 }
 
 /**
  * ItemSkeleton is a placeholder for when an Item is loading.
  */
 function ItemSkeleton() {
-  return (
-    <ItemContainer isDisabled>
-      <Skeleton width="50px" height="50px" />
-      <Box width="3" />
-      <Skeleton height="1.5rem" width="12rem" alignSelf="center" />
-    </ItemContainer>
-  );
+	return (
+		<ItemContainer isDisabled>
+			<Skeleton width="50px" height="50px" />
+			<Box width="3" />
+			<Skeleton height="1.5rem" width="12rem" alignSelf="center" />
+		</ItemContainer>
+	);
 }
 
 /**
@@ -131,152 +131,152 @@ function ItemSkeleton() {
  * .item-container parent!
  */
 function ItemContainer({ children, isDisabled = false }) {
-  const theme = useTheme();
+	const theme = useTheme();
 
-  const focusBackgroundColor = useColorModeValue(
-    theme.colors.gray["100"],
-    theme.colors.gray["700"],
-  );
+	const focusBackgroundColor = useColorModeValue(
+		theme.colors.gray["100"],
+		theme.colors.gray["700"],
+	);
 
-  const activeBorderColor = useColorModeValue(
-    theme.colors.green["400"],
-    theme.colors.green["500"],
-  );
+	const activeBorderColor = useColorModeValue(
+		theme.colors.green["400"],
+		theme.colors.green["500"],
+	);
 
-  const focusCheckedBorderColor = useColorModeValue(
-    theme.colors.green["800"],
-    theme.colors.green["300"],
-  );
+	const focusCheckedBorderColor = useColorModeValue(
+		theme.colors.green["800"],
+		theme.colors.green["300"],
+	);
 
-  return (
-    <ClassNames>
-      {({ css, cx }) => (
-        <Box
-          p="1"
-          my="1"
-          borderRadius="lg"
-          d="flex"
-          cursor={isDisabled ? undefined : "pointer"}
-          border="1px"
-          borderColor="transparent"
-          className={cx([
-            "item-container",
-            !isDisabled &&
-              css`
-                &:hover,
-                input:focus + & {
-                  background-color: ${focusBackgroundColor};
-                }
+	return (
+		<ClassNames>
+			{({ css, cx }) => (
+				<Box
+					p="1"
+					my="1"
+					borderRadius="lg"
+					d="flex"
+					cursor={isDisabled ? undefined : "pointer"}
+					border="1px"
+					borderColor="transparent"
+					className={cx([
+						"item-container",
+						!isDisabled &&
+							css`
+								&:hover,
+								input:focus + & {
+									background-color: ${focusBackgroundColor};
+								}
 
-                input:active + & {
-                  border-color: ${activeBorderColor};
-                }
+								input:active + & {
+									border-color: ${activeBorderColor};
+								}
 
-                input:checked:focus + & {
-                  border-color: ${focusCheckedBorderColor};
-                }
-              `,
-          ])}
-        >
-          {children}
-        </Box>
-      )}
-    </ClassNames>
-  );
+								input:checked:focus + & {
+									border-color: ${focusCheckedBorderColor};
+								}
+							`,
+					])}
+				>
+					{children}
+				</Box>
+			)}
+		</ClassNames>
+	);
 }
 
 function ItemBadges({ item }) {
-  const { isSupportUser } = useSupport();
-  const occupiedZones = item.appearanceOn.layers.map((l) => l.zone);
-  const restrictedZones = item.appearanceOn.restrictedZones.filter(
-    (z) => z.isCommonlyUsedByItems,
-  );
-  const isMaybeAnimated = item.appearanceOn.layers.some(
-    (l) => l.canvasMovieLibraryUrl,
-  );
+	const { isSupportUser } = useSupport();
+	const occupiedZones = item.appearanceOn.layers.map((l) => l.zone);
+	const restrictedZones = item.appearanceOn.restrictedZones.filter(
+		(z) => z.isCommonlyUsedByItems,
+	);
+	const isMaybeAnimated = item.appearanceOn.layers.some(
+		(l) => l.canvasMovieLibraryUrl,
+	);
 
-  return (
-    <ItemBadgeList>
-      <ItemKindBadge isNc={item.isNc} isPb={item.isPb} />
-      {
-        // This badge is unreliable, but it's helpful for looking for animated
-        // items to test, so we show it only to support. We use this form
-        // instead of <SupportOnly />, to avoid adding extra badge list spacing
-        // on the additional empty child.
-        isMaybeAnimated && isSupportUser && <MaybeAnimatedBadge />
-      }
-      {getZoneBadges(occupiedZones, { variant: "occupies" })}
-      {getZoneBadges(restrictedZones, { variant: "restricts" })}
-      {item.currentUserOwnsThis && <YouOwnThisBadge variant="medium" />}
-      {item.currentUserWantsThis && <YouWantThisBadge variant="medium" />}
-    </ItemBadgeList>
-  );
+	return (
+		<ItemBadgeList>
+			<ItemKindBadge isNc={item.isNc} isPb={item.isPb} />
+			{
+				// This badge is unreliable, but it's helpful for looking for animated
+				// items to test, so we show it only to support. We use this form
+				// instead of <SupportOnly />, to avoid adding extra badge list spacing
+				// on the additional empty child.
+				isMaybeAnimated && isSupportUser && <MaybeAnimatedBadge />
+			}
+			{getZoneBadges(occupiedZones, { variant: "occupies" })}
+			{getZoneBadges(restrictedZones, { variant: "restricts" })}
+			{item.currentUserOwnsThis && <YouOwnThisBadge variant="medium" />}
+			{item.currentUserWantsThis && <YouWantThisBadge variant="medium" />}
+		</ItemBadgeList>
+	);
 }
 
 /**
  * ItemActionButton is one of a list of actions a user can take for this item.
  */
 function ItemActionButton({ icon, label, to, onClick, ...props }) {
-  const theme = useTheme();
+	const theme = useTheme();
 
-  const focusBackgroundColor = useColorModeValue(
-    theme.colors.gray["300"],
-    theme.colors.gray["800"],
-  );
-  const focusColor = useColorModeValue(
-    theme.colors.gray["700"],
-    theme.colors.gray["200"],
-  );
+	const focusBackgroundColor = useColorModeValue(
+		theme.colors.gray["300"],
+		theme.colors.gray["800"],
+	);
+	const focusColor = useColorModeValue(
+		theme.colors.gray["700"],
+		theme.colors.gray["200"],
+	);
 
-  return (
-    <ClassNames>
-      {({ css }) => (
-        <Tooltip label={label} placement="top">
-          <LinkOrButton
-            {...props}
-            component={IconButton}
-            href={to}
-            icon={icon}
-            aria-label={label}
-            variant="ghost"
-            color="gray.400"
-            onClick={onClick}
-            className={css`
-              opacity: 0;
-              transition: all 0.2s;
+	return (
+		<ClassNames>
+			{({ css }) => (
+				<Tooltip label={label} placement="top">
+					<LinkOrButton
+						{...props}
+						component={IconButton}
+						href={to}
+						icon={icon}
+						aria-label={label}
+						variant="ghost"
+						color="gray.400"
+						onClick={onClick}
+						className={css`
+							opacity: 0;
+							transition: all 0.2s;
 
-              ${containerHasFocus} {
-                opacity: 1;
-              }
+							${containerHasFocus} {
+								opacity: 1;
+							}
 
-              &:focus,
-              &:hover {
-                opacity: 1;
-                background-color: ${focusBackgroundColor};
-                color: ${focusColor};
-              }
+							&:focus,
+							&:hover {
+								opacity: 1;
+								background-color: ${focusBackgroundColor};
+								color: ${focusColor};
+							}
 
-              /* On touch devices, always show the buttons! This avoids having to
+							/* On touch devices, always show the buttons! This avoids having to
            * tap to reveal them (which toggles the item), or worse,
            * accidentally tapping a hidden button without realizing! */
-              @media (hover: none) {
-                opacity: 1;
-              }
-            `}
-          />
-        </Tooltip>
-      )}
-    </ClassNames>
-  );
+							@media (hover: none) {
+								opacity: 1;
+							}
+						`}
+					/>
+				</Tooltip>
+			)}
+		</ClassNames>
+	);
 }
 
 function LinkOrButton({ href, component, ...props }) {
-  const ButtonComponent = component;
-  if (href != null) {
-    return <ButtonComponent as="a" href={href} {...props} />;
-  } else {
-    return <ButtonComponent {...props} />;
-  }
+	const ButtonComponent = component;
+	if (href != null) {
+		return <ButtonComponent as="a" href={href} {...props} />;
+	} else {
+		return <ButtonComponent {...props} />;
+	}
 }
 
 /**
@@ -284,11 +284,11 @@ function LinkOrButton({ href, component, ...props }) {
  * components in this to ensure a consistent list layout.
  */
 export function ItemListContainer({ children, ...props }) {
-  return (
-    <Flex direction="column" {...props}>
-      {children}
-    </Flex>
-  );
+	return (
+		<Flex direction="column" {...props}>
+			{children}
+		</Flex>
+	);
 }
 
 /**
@@ -296,13 +296,13 @@ export function ItemListContainer({ children, ...props }) {
  * Items are loading.
  */
 export function ItemListSkeleton({ count, ...props }) {
-  return (
-    <ItemListContainer {...props}>
-      {Array.from({ length: count }).map((_, i) => (
-        <ItemSkeleton key={i} />
-      ))}
-    </ItemListContainer>
-  );
+	return (
+		<ItemListContainer {...props}>
+			{Array.from({ length: count }).map((_, i) => (
+				<ItemSkeleton key={i} />
+			))}
+		</ItemListContainer>
+	);
 }
 
 /**
@@ -311,6 +311,6 @@ export function ItemListSkeleton({ count, ...props }) {
  * focused.
  */
 const containerHasFocus =
-  ".item-container:hover &, input:focus + .item-container &";
+	".item-container:hover &, input:focus + .item-container &";
 
 export default React.memo(Item);

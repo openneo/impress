@@ -7,8 +7,8 @@ const rootNode = document.querySelector("#wardrobe-2020-root");
 // TODO: Use the new React 18 APIs instead!
 // eslint-disable-next-line react/no-deprecated
 ReactDOM.render(
-  <AppProvider>
-    <WardrobePage />
-  </AppProvider>,
-  rootNode,
+	<AppProvider>
+		<WardrobePage />
+	</AppProvider>,
+	rootNode,
 );

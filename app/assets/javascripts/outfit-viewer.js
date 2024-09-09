@@ -108,9 +108,7 @@ class OutfitLayer extends HTMLElement {
 			this.#setStatus("loading");
 			this.#sendMessageToIframe({ type: "requestStatus" });
 			window.addEventListener("message", (m) => this.#onMessage(m));
-			this.iframe.addEventListener("error", () =>
-				this.#setStatus("error"),
-			);
+			this.iframe.addEventListener("error", () => this.#setStatus("error"));
 		} else {
 			console.warn(`<outfit-layer> contained no image or iframe: `, this);
 		}
@@ -137,8 +135,7 @@ class OutfitLayer extends HTMLElement {
 			}
 		} else {
 			throw new Error(
-				`<outfit-layer> got unexpected message: ` +
-					JSON.stringify(data),
+				`<outfit-layer> got unexpected message: ` + JSON.stringify(data),
 			);
 		}
 	}

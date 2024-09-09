@@ -12,584 +12,584 @@ enableMapSet();
 export const OutfitStateContext = React.createContext(null);
 
 function useOutfitState() {
-  const apolloClient = useApolloClient();
-  const navigate = useNavigate();
+	const apolloClient = useApolloClient();
+	const navigate = useNavigate();
 
-  const urlOutfitState = useParseOutfitUrl();
-  const [localOutfitState, dispatchToOutfit] = React.useReducer(
-    outfitStateReducer(apolloClient),
-    urlOutfitState,
-  );
+	const urlOutfitState = useParseOutfitUrl();
+	const [localOutfitState, dispatchToOutfit] = React.useReducer(
+		outfitStateReducer(apolloClient),
+		urlOutfitState,
+	);
 
-  // If there's an outfit ID (i.e. we're on /outfits/:id), load basic data
-  // about the outfit. We'll use it to initialize the local state.
-  const {
-    isLoading: outfitLoading,
-    error: outfitError,
-    data: outfitData,
-    status: outfitStatus,
-  } = useSavedOutfit(urlOutfitState.id, { enabled: urlOutfitState.id != null });
+	// If there's an outfit ID (i.e. we're on /outfits/:id), load basic data
+	// about the outfit. We'll use it to initialize the local state.
+	const {
+		isLoading: outfitLoading,
+		error: outfitError,
+		data: outfitData,
+		status: outfitStatus,
+	} = useSavedOutfit(urlOutfitState.id, { enabled: urlOutfitState.id != null });
 
-  const creator = outfitData?.creator;
-  const updatedAt = outfitData?.updatedAt;
+	const creator = outfitData?.creator;
+	const updatedAt = outfitData?.updatedAt;
 
-  // We memoize this to make `outfitStateWithoutExtras` an even more reliable
-  // stable object!
-  const savedOutfitState = React.useMemo(
-    () => getOutfitStateFromOutfitData(outfitData),
-    [outfitData],
-  );
+	// We memoize this to make `outfitStateWithoutExtras` an even more reliable
+	// stable object!
+	const savedOutfitState = React.useMemo(
+		() => getOutfitStateFromOutfitData(outfitData),
+		[outfitData],
+	);
 
-  // When the saved outfit data comes in for the first time, we reset the local
-  // outfit state to match. (We don't reset it on subsequent outfit data
-  // updates, e.g. when an outfit saves and the response comes back from the
-  // server, because then we could be in a loop of replacing the local state
-  // with the persisted state if the user makes changes in the meantime!)
-  //
-  // HACK: I feel like not having species/color is one of the best ways to tell
-  // if we're replacing an incomplete outfit state… but it feels a bit fragile
-  // and not-quite-what-we-mean.
-  //
-  // TODO: I forget the details of why we have both resetting the local state,
-  // and a thing where we fallback between the different kinds of outfit state.
-  // Probably something about SSR when we were on Next.js? Could be simplified?
-  React.useEffect(() => {
-    if (
-      outfitStatus === "success" &&
-      localOutfitState.speciesId == null &&
-      localOutfitState.colorId == null
-    ) {
-      dispatchToOutfit({
-        type: "resetToSavedOutfitData",
-        savedOutfitData: outfitData,
-      });
-    }
-  }, [outfitStatus, outfitData, localOutfitState]);
+	// When the saved outfit data comes in for the first time, we reset the local
+	// outfit state to match. (We don't reset it on subsequent outfit data
+	// updates, e.g. when an outfit saves and the response comes back from the
+	// server, because then we could be in a loop of replacing the local state
+	// with the persisted state if the user makes changes in the meantime!)
+	//
+	// HACK: I feel like not having species/color is one of the best ways to tell
+	// if we're replacing an incomplete outfit state… but it feels a bit fragile
+	// and not-quite-what-we-mean.
+	//
+	// TODO: I forget the details of why we have both resetting the local state,
+	// and a thing where we fallback between the different kinds of outfit state.
+	// Probably something about SSR when we were on Next.js? Could be simplified?
+	React.useEffect(() => {
+		if (
+			outfitStatus === "success" &&
+			localOutfitState.speciesId == null &&
+			localOutfitState.colorId == null
+		) {
+			dispatchToOutfit({
+				type: "resetToSavedOutfitData",
+				savedOutfitData: outfitData,
+			});
+		}
+	}, [outfitStatus, outfitData, localOutfitState]);
 
-  // Choose which customization state to use. We want it to match the outfit in
-  // the URL immediately, without having to wait for any effects, to avoid race
-  // conditions!
-  //
-  // The reducer is generally the main source of truth for live changes!
-  //
-  // But if:
-  //   - it's not initialized yet (e.g. the first frame of navigating to an
-  //     outfit from Your Outfits), or
-  //   - it's for a different outfit than the URL says (e.g. clicking Back
-  //     or Forward to switch between saved outfits),
-  //
-  // Then use saved outfit data or the URL query string instead, because that's
-  // a better representation of the outfit in the URL. (If the saved outfit
-  // data isn't loaded yet, then this will be a customization state with
-  // partial data, and that's okay.)
-  console.debug(
-    `[useOutfitState] Outfit states:\n- Local: %o\n- Saved: %o\n- URL: %o`,
-    localOutfitState,
-    savedOutfitState,
-    urlOutfitState,
-  );
-  let outfitState;
-  if (
-    urlOutfitState.id === localOutfitState.id &&
-    localOutfitState.speciesId != null &&
-    localOutfitState.colorId != null
-  ) {
-    // Use the reducer state: they're both for the same saved outfit, or both
-    // for an unsaved outfit (null === null). But we don't use it when it's
-    // *only* got the ID, and no other fields yet.
-    console.debug(
-      "[useOutfitState] Choosing local outfit state",
-      localOutfitState,
-    );
-    outfitState = localOutfitState;
-  } else if (urlOutfitState.id && urlOutfitState.id === savedOutfitState.id) {
-    // Use the saved outfit state: it's for the saved outfit the URL points to.
-    console.debug(
-      "[useOutfitState] Choosing saved outfit state",
-      savedOutfitState,
-    );
-    outfitState = savedOutfitState;
-  } else {
-    // Use the URL state: it's more up-to-date than any of the others. (Worst
-    // case, it's empty except for ID, which is fine while the saved outfit
-    // data loads!)
-    console.debug(
-      "[useOutfitState] Choosing URL outfit state",
-      urlOutfitState,
-      savedOutfitState,
-    );
-    outfitState = urlOutfitState;
-  }
+	// Choose which customization state to use. We want it to match the outfit in
+	// the URL immediately, without having to wait for any effects, to avoid race
+	// conditions!
+	//
+	// The reducer is generally the main source of truth for live changes!
+	//
+	// But if:
+	//   - it's not initialized yet (e.g. the first frame of navigating to an
+	//     outfit from Your Outfits), or
+	//   - it's for a different outfit than the URL says (e.g. clicking Back
+	//     or Forward to switch between saved outfits),
+	//
+	// Then use saved outfit data or the URL query string instead, because that's
+	// a better representation of the outfit in the URL. (If the saved outfit
+	// data isn't loaded yet, then this will be a customization state with
+	// partial data, and that's okay.)
+	console.debug(
+		`[useOutfitState] Outfit states:\n- Local: %o\n- Saved: %o\n- URL: %o`,
+		localOutfitState,
+		savedOutfitState,
+		urlOutfitState,
+	);
+	let outfitState;
+	if (
+		urlOutfitState.id === localOutfitState.id &&
+		localOutfitState.speciesId != null &&
+		localOutfitState.colorId != null
+	) {
+		// Use the reducer state: they're both for the same saved outfit, or both
+		// for an unsaved outfit (null === null). But we don't use it when it's
+		// *only* got the ID, and no other fields yet.
+		console.debug(
+			"[useOutfitState] Choosing local outfit state",
+			localOutfitState,
+		);
+		outfitState = localOutfitState;
+	} else if (urlOutfitState.id && urlOutfitState.id === savedOutfitState.id) {
+		// Use the saved outfit state: it's for the saved outfit the URL points to.
+		console.debug(
+			"[useOutfitState] Choosing saved outfit state",
+			savedOutfitState,
+		);
+		outfitState = savedOutfitState;
+	} else {
+		// Use the URL state: it's more up-to-date than any of the others. (Worst
+		// case, it's empty except for ID, which is fine while the saved outfit
+		// data loads!)
+		console.debug(
+			"[useOutfitState] Choosing URL outfit state",
+			urlOutfitState,
+			savedOutfitState,
+		);
+		outfitState = urlOutfitState;
+	}
 
-  // When unpacking the customization state, we call `Array.from` on our item
-  // IDs. It's more convenient to manage them as a Set in state, but most
-  // callers will find it more convenient to access them as arrays! e.g. for
-  // `.map()`.
-  const { id, name, speciesId, colorId, pose, altStyleId, appearanceId } =
-    outfitState;
-  const wornItemIds = Array.from(outfitState.wornItemIds);
-  const closetedItemIds = Array.from(outfitState.closetedItemIds);
-  const allItemIds = [...wornItemIds, ...closetedItemIds];
+	// When unpacking the customization state, we call `Array.from` on our item
+	// IDs. It's more convenient to manage them as a Set in state, but most
+	// callers will find it more convenient to access them as arrays! e.g. for
+	// `.map()`.
+	const { id, name, speciesId, colorId, pose, altStyleId, appearanceId } =
+		outfitState;
+	const wornItemIds = Array.from(outfitState.wornItemIds);
+	const closetedItemIds = Array.from(outfitState.closetedItemIds);
+	const allItemIds = [...wornItemIds, ...closetedItemIds];
 
-  const {
-    loading: itemsLoading,
-    error: itemsError,
-    data: itemsData,
-  } = useQuery(
-    gql`
-      query OutfitStateItems(
-        $allItemIds: [ID!]!
-        $speciesId: ID!
-        $colorId: ID!
-        $altStyleId: ID
-      ) {
-        items(ids: $allItemIds) {
-          # TODO: De-dupe this from SearchPanel?
-          id
-          name
-          thumbnailUrl
-          isNc
-          isPb
-          currentUserOwnsThis
-          currentUserWantsThis
+	const {
+		loading: itemsLoading,
+		error: itemsError,
+		data: itemsData,
+	} = useQuery(
+		gql`
+			query OutfitStateItems(
+				$allItemIds: [ID!]!
+				$speciesId: ID!
+				$colorId: ID!
+				$altStyleId: ID
+			) {
+				items(ids: $allItemIds) {
+					# TODO: De-dupe this from SearchPanel?
+					id
+					name
+					thumbnailUrl
+					isNc
+					isPb
+					currentUserOwnsThis
+					currentUserWantsThis
 
-          appearanceOn(
-            speciesId: $speciesId
-            colorId: $colorId
-            altStyleId: $altStyleId
-          ) {
-            # This enables us to quickly show the item when the user clicks it!
-            ...ItemAppearanceForOutfitPreview
+					appearanceOn(
+						speciesId: $speciesId
+						colorId: $colorId
+						altStyleId: $altStyleId
+					) {
+						# This enables us to quickly show the item when the user clicks it!
+						...ItemAppearanceForOutfitPreview
 
-            # This is used to group items by zone, and to detect conflicts when
-            # wearing a new item.
-            layers {
-              zone {
-                id
-                label
-              }
-            }
-            restrictedZones {
-              id
-              label
-              isCommonlyUsedByItems
-            }
-          }
-        }
+						# This is used to group items by zone, and to detect conflicts when
+						# wearing a new item.
+						layers {
+							zone {
+								id
+								label
+							}
+						}
+						restrictedZones {
+							id
+							label
+							isCommonlyUsedByItems
+						}
+					}
+				}
 
-        # NOTE: We skip this query if items is empty for perf reasons. If
-        #       you're adding more fields, consider changing that condition!
-      }
-      ${itemAppearanceFragment}
-    `,
-    {
-      variables: { allItemIds, speciesId, colorId, altStyleId },
-      context: { sendAuth: true },
-      // Skip if this outfit has no items, as an optimization; or if we don't
-      // have the species/color ID loaded yet because we're waiting on the
-      // saved outfit to load.
-      skip: allItemIds.length === 0 || speciesId == null || colorId == null,
-    },
-  );
+				# NOTE: We skip this query if items is empty for perf reasons. If
+				#       you're adding more fields, consider changing that condition!
+			}
+			${itemAppearanceFragment}
+		`,
+		{
+			variables: { allItemIds, speciesId, colorId, altStyleId },
+			context: { sendAuth: true },
+			// Skip if this outfit has no items, as an optimization; or if we don't
+			// have the species/color ID loaded yet because we're waiting on the
+			// saved outfit to load.
+			skip: allItemIds.length === 0 || speciesId == null || colorId == null,
+		},
+	);
 
-  const resultItems = itemsData?.items || [];
+	const resultItems = itemsData?.items || [];
 
-  // Okay, time for some big perf hacks! Lower down in the app, we use
-  // React.memo to avoid re-rendering Item components if the items haven't
-  // updated. In simpler cases, we just make the component take the individual
-  // item fields as props... but items are complex and that makes it annoying
-  // :p Instead, we do these tricks to reuse physical item objects if they're
-  // still deep-equal to the previous version. This is because React.memo uses
-  // object identity to compare its props, so now when it checks whether
-  // `oldItem === newItem`, the answer will be `true`, unless the item really
-  // _did_ change!
-  const [cachedItemObjects, setCachedItemObjects] = React.useState([]);
-  let items = resultItems.map((item) => {
-    const cachedItemObject = cachedItemObjects.find((i) => i.id === item.id);
-    if (
-      cachedItemObject &&
-      JSON.stringify(cachedItemObject) === JSON.stringify(item)
-    ) {
-      return cachedItemObject;
-    }
-    return item;
-  });
-  if (
-    items.length === cachedItemObjects.length &&
-    items.every((_, index) => items[index] === cachedItemObjects[index])
-  ) {
-    // Even reuse the entire array if none of the items changed!
-    items = cachedItemObjects;
-  }
-  React.useEffect(() => {
-    setCachedItemObjects(items);
-  }, [items, setCachedItemObjects]);
+	// Okay, time for some big perf hacks! Lower down in the app, we use
+	// React.memo to avoid re-rendering Item components if the items haven't
+	// updated. In simpler cases, we just make the component take the individual
+	// item fields as props... but items are complex and that makes it annoying
+	// :p Instead, we do these tricks to reuse physical item objects if they're
+	// still deep-equal to the previous version. This is because React.memo uses
+	// object identity to compare its props, so now when it checks whether
+	// `oldItem === newItem`, the answer will be `true`, unless the item really
+	// _did_ change!
+	const [cachedItemObjects, setCachedItemObjects] = React.useState([]);
+	let items = resultItems.map((item) => {
+		const cachedItemObject = cachedItemObjects.find((i) => i.id === item.id);
+		if (
+			cachedItemObject &&
+			JSON.stringify(cachedItemObject) === JSON.stringify(item)
+		) {
+			return cachedItemObject;
+		}
+		return item;
+	});
+	if (
+		items.length === cachedItemObjects.length &&
+		items.every((_, index) => items[index] === cachedItemObjects[index])
+	) {
+		// Even reuse the entire array if none of the items changed!
+		items = cachedItemObjects;
+	}
+	React.useEffect(() => {
+		setCachedItemObjects(items);
+	}, [items, setCachedItemObjects]);
 
-  const itemsById = {};
-  for (const item of items) {
-    itemsById[item.id] = item;
-  }
+	const itemsById = {};
+	for (const item of items) {
+		itemsById[item.id] = item;
+	}
 
-  const zonesAndItems = getZonesAndItems(
-    itemsById,
-    wornItemIds,
-    closetedItemIds,
-  );
-  const incompatibleItems = items
-    .filter((i) => i.appearanceOn.layers.length === 0)
-    .sort((a, b) => a.name.localeCompare(b.name));
+	const zonesAndItems = getZonesAndItems(
+		itemsById,
+		wornItemIds,
+		closetedItemIds,
+	);
+	const incompatibleItems = items
+		.filter((i) => i.appearanceOn.layers.length === 0)
+		.sort((a, b) => a.name.localeCompare(b.name));
 
-  const url = buildOutfitUrl(outfitState);
+	const url = buildOutfitUrl(outfitState);
 
-  const outfitStateWithExtras = {
-    id,
-    creator,
-    updatedAt,
-    zonesAndItems,
-    incompatibleItems,
-    name,
-    wornItemIds,
-    closetedItemIds,
-    allItemIds,
-    speciesId,
-    colorId,
-    pose,
-    altStyleId,
-    appearanceId,
-    url,
+	const outfitStateWithExtras = {
+		id,
+		creator,
+		updatedAt,
+		zonesAndItems,
+		incompatibleItems,
+		name,
+		wornItemIds,
+		closetedItemIds,
+		allItemIds,
+		speciesId,
+		colorId,
+		pose,
+		altStyleId,
+		appearanceId,
+		url,
 
-    // We use this plain outfit state objects in `useOutfitSaving`! Unlike the
-    // full `outfitState` object, which we rebuild each render,
-    // `outfitStateWithoutExtras` will mostly only change when there is an
-    // actual change to outfit state.
-    outfitStateWithoutExtras: outfitState,
-    savedOutfitState,
-  };
+		// We use this plain outfit state objects in `useOutfitSaving`! Unlike the
+		// full `outfitState` object, which we rebuild each render,
+		// `outfitStateWithoutExtras` will mostly only change when there is an
+		// actual change to outfit state.
+		outfitStateWithoutExtras: outfitState,
+		savedOutfitState,
+	};
 
-  // Keep the URL up-to-date.
-  const path = buildOutfitPath(outfitState);
-  React.useEffect(() => {
-    console.debug(`[useOutfitState] Navigating to latest outfit path:`, path);
-    navigate(path, { replace: true });
-  }, [path, navigate]);
+	// Keep the URL up-to-date.
+	const path = buildOutfitPath(outfitState);
+	React.useEffect(() => {
+		console.debug(`[useOutfitState] Navigating to latest outfit path:`, path);
+		navigate(path, { replace: true });
+	}, [path, navigate]);
 
-  return {
-    loading: outfitLoading || itemsLoading,
-    error: outfitError || itemsError,
-    outfitState: outfitStateWithExtras,
-    dispatchToOutfit,
-  };
+	return {
+		loading: outfitLoading || itemsLoading,
+		error: outfitError || itemsError,
+		outfitState: outfitStateWithExtras,
+		dispatchToOutfit,
+	};
 }
 
 const outfitStateReducer = (apolloClient) => (baseState, action) => {
-  console.info("[useOutfitState] Action:", action);
-  switch (action.type) {
-    case "rename":
-      return produce(baseState, (state) => {
-        state.name = action.outfitName;
-      });
-    case "setSpeciesAndColor":
-      return produce(baseState, (state) => {
-        state.speciesId = action.speciesId;
-        state.colorId = action.colorId;
-        state.pose = action.pose;
-        state.altStyleId = null;
-        state.appearanceId = null;
-      });
-    case "wearItem":
-      return produce(baseState, (state) => {
-        const { wornItemIds, closetedItemIds } = state;
-        const { itemId, itemIdsToReconsider = [] } = action;
+	console.info("[useOutfitState] Action:", action);
+	switch (action.type) {
+		case "rename":
+			return produce(baseState, (state) => {
+				state.name = action.outfitName;
+			});
+		case "setSpeciesAndColor":
+			return produce(baseState, (state) => {
+				state.speciesId = action.speciesId;
+				state.colorId = action.colorId;
+				state.pose = action.pose;
+				state.altStyleId = null;
+				state.appearanceId = null;
+			});
+		case "wearItem":
+			return produce(baseState, (state) => {
+				const { wornItemIds, closetedItemIds } = state;
+				const { itemId, itemIdsToReconsider = [] } = action;
 
-        // Move conflicting items to the closet.
-        //
-        // We do this by looking them up in the Apollo Cache, which is going to
-        // include the relevant item data because the `useOutfitState` hook
-        // queries for it!
-        //
-        // (It could be possible to mess up the timing by taking an action
-        // while worn items are still partially loading, but I think it would
-        // require a pretty weird action sequence to make that happen... like,
-        // doing a search and it loads before the worn item data does? Anyway,
-        // Apollo will throw in that case, which should just essentially reject
-        // the action.)
-        let conflictingIds;
-        try {
-          conflictingIds = findItemConflicts(itemId, state, apolloClient);
-        } catch (e) {
-          console.error(e);
-          return;
-        }
-        for (const conflictingId of conflictingIds) {
-          wornItemIds.delete(conflictingId);
-          closetedItemIds.add(conflictingId);
-        }
+				// Move conflicting items to the closet.
+				//
+				// We do this by looking them up in the Apollo Cache, which is going to
+				// include the relevant item data because the `useOutfitState` hook
+				// queries for it!
+				//
+				// (It could be possible to mess up the timing by taking an action
+				// while worn items are still partially loading, but I think it would
+				// require a pretty weird action sequence to make that happen... like,
+				// doing a search and it loads before the worn item data does? Anyway,
+				// Apollo will throw in that case, which should just essentially reject
+				// the action.)
+				let conflictingIds;
+				try {
+					conflictingIds = findItemConflicts(itemId, state, apolloClient);
+				} catch (e) {
+					console.error(e);
+					return;
+				}
+				for (const conflictingId of conflictingIds) {
+					wornItemIds.delete(conflictingId);
+					closetedItemIds.add(conflictingId);
+				}
 
-        // Move this item from the closet to the worn set.
-        closetedItemIds.delete(itemId);
-        wornItemIds.add(itemId);
+				// Move this item from the closet to the worn set.
+				closetedItemIds.delete(itemId);
+				wornItemIds.add(itemId);
 
-        reconsiderItems(itemIdsToReconsider, state, apolloClient);
-      });
-    case "unwearItem":
-      return produce(baseState, (state) => {
-        const { wornItemIds, closetedItemIds } = state;
-        const { itemId, itemIdsToReconsider = [] } = action;
+				reconsiderItems(itemIdsToReconsider, state, apolloClient);
+			});
+		case "unwearItem":
+			return produce(baseState, (state) => {
+				const { wornItemIds, closetedItemIds } = state;
+				const { itemId, itemIdsToReconsider = [] } = action;
 
-        // Move this item from the worn set to the closet.
-        wornItemIds.delete(itemId);
-        closetedItemIds.add(itemId);
+				// Move this item from the worn set to the closet.
+				wornItemIds.delete(itemId);
+				closetedItemIds.add(itemId);
 
-        reconsiderItems(
-          // Don't include the unworn item in items to reconsider!
-          itemIdsToReconsider.filter((x) => x !== itemId),
-          state,
-          apolloClient,
-        );
-      });
-    case "removeItem":
-      return produce(baseState, (state) => {
-        const { wornItemIds, closetedItemIds } = state;
-        const { itemId, itemIdsToReconsider = [] } = action;
+				reconsiderItems(
+					// Don't include the unworn item in items to reconsider!
+					itemIdsToReconsider.filter((x) => x !== itemId),
+					state,
+					apolloClient,
+				);
+			});
+		case "removeItem":
+			return produce(baseState, (state) => {
+				const { wornItemIds, closetedItemIds } = state;
+				const { itemId, itemIdsToReconsider = [] } = action;
 
-        // Remove this item from both the worn set and the closet.
-        wornItemIds.delete(itemId);
-        closetedItemIds.delete(itemId);
+				// Remove this item from both the worn set and the closet.
+				wornItemIds.delete(itemId);
+				closetedItemIds.delete(itemId);
 
-        reconsiderItems(
-          // Don't include the removed item in items to reconsider!
-          itemIdsToReconsider.filter((x) => x !== itemId),
-          state,
-          apolloClient,
-        );
-      });
-    case "setPose":
-      return produce(baseState, (state) => {
-        state.pose = action.pose;
-        // Usually only the `pose` is specified, but `PosePickerSupport` can
-        // also specify a corresponding `appearanceId`, to get even more
-        // particular about which version of the pose to show if more than one.
-        state.appearanceId = action.appearanceId || null;
-      });
-    case "setStyle":
-      return produce(baseState, (state) => {
-        state.altStyleId = action.altStyleId;
-      });
-    case "resetToSavedOutfitData":
-      return getOutfitStateFromOutfitData(action.savedOutfitData);
-    case "handleOutfitSaveResponse":
-      return produce(baseState, (state) => {
-        const { outfitData } = action;
+				reconsiderItems(
+					// Don't include the removed item in items to reconsider!
+					itemIdsToReconsider.filter((x) => x !== itemId),
+					state,
+					apolloClient,
+				);
+			});
+		case "setPose":
+			return produce(baseState, (state) => {
+				state.pose = action.pose;
+				// Usually only the `pose` is specified, but `PosePickerSupport` can
+				// also specify a corresponding `appearanceId`, to get even more
+				// particular about which version of the pose to show if more than one.
+				state.appearanceId = action.appearanceId || null;
+			});
+		case "setStyle":
+			return produce(baseState, (state) => {
+				state.altStyleId = action.altStyleId;
+			});
+		case "resetToSavedOutfitData":
+			return getOutfitStateFromOutfitData(action.savedOutfitData);
+		case "handleOutfitSaveResponse":
+			return produce(baseState, (state) => {
+				const { outfitData } = action;
 
-        // If this is a save result for a different outfit, ignore it.
-        if (state.id != null && outfitData.id != state.id) {
-          return;
-        }
+				// If this is a save result for a different outfit, ignore it.
+				if (state.id != null && outfitData.id != state.id) {
+					return;
+				}
 
-        // Otherwise, update the local outfit to match the fields the server
-        // controls: it chooses the ID for new outfits, and it can choose a
-        // different name if ours was already in use.
-        state.id = outfitData.id;
-        state.name = outfitData.name;
+				// Otherwise, update the local outfit to match the fields the server
+				// controls: it chooses the ID for new outfits, and it can choose a
+				// different name if ours was already in use.
+				state.id = outfitData.id;
+				state.name = outfitData.name;
 
-        // The server also tries to lock the outfit to a specific appearanceId
-        // for the given species/color/pose. Accept that change too—but only if
-        // we haven't already changed species/color/pose since then!
-        if (
-          state.speciesId == outfitData.speciesId &&
-          state.colorId == outfitData.colorId &&
-          state.pose == outfitData.pose
-        ) {
-          state.appearanceId = outfitData.appearanceId;
-        }
-      });
-    default:
-      throw new Error(`unexpected action ${JSON.stringify(action)}`);
-  }
+				// The server also tries to lock the outfit to a specific appearanceId
+				// for the given species/color/pose. Accept that change too—but only if
+				// we haven't already changed species/color/pose since then!
+				if (
+					state.speciesId == outfitData.speciesId &&
+					state.colorId == outfitData.colorId &&
+					state.pose == outfitData.pose
+				) {
+					state.appearanceId = outfitData.appearanceId;
+				}
+			});
+		default:
+			throw new Error(`unexpected action ${JSON.stringify(action)}`);
+	}
 };
 
 const EMPTY_CUSTOMIZATION_STATE = {
-  id: null,
-  name: null,
-  speciesId: null,
-  colorId: null,
-  pose: null,
-  appearanceId: null,
-  wornItemIds: [],
-  closetedItemIds: [],
+	id: null,
+	name: null,
+	speciesId: null,
+	colorId: null,
+	pose: null,
+	appearanceId: null,
+	wornItemIds: [],
+	closetedItemIds: [],
 };
 
 function useParseOutfitUrl() {
-  // Get params from both the `?a=1` and `#a=1` parts of the URL, because DTI
-  // has historically used both!
-  const location = useLocation();
-  const [justSearchParams] = useSearchParams();
-  const hashParams = new URLSearchParams(location.hash.slice(1));
+	// Get params from both the `?a=1` and `#a=1` parts of the URL, because DTI
+	// has historically used both!
+	const location = useLocation();
+	const [justSearchParams] = useSearchParams();
+	const hashParams = new URLSearchParams(location.hash.slice(1));
 
-  // Merge them into one URLSearchParams object.
-  const mergedParams = new URLSearchParams();
-  for (const [key, value] of justSearchParams) {
-    mergedParams.append(key, value);
-  }
-  for (const [key, value] of hashParams) {
-    mergedParams.append(key, value);
-  }
+	// Merge them into one URLSearchParams object.
+	const mergedParams = new URLSearchParams();
+	for (const [key, value] of justSearchParams) {
+		mergedParams.append(key, value);
+	}
+	for (const [key, value] of hashParams) {
+		mergedParams.append(key, value);
+	}
 
-  // We memoize this to make `outfitStateWithoutExtras` an even more reliable
-  // stable object!
-  const memoizedOutfitState = React.useMemo(
-    () => readOutfitStateFromSearchParams(location.pathname, mergedParams),
-    // TODO: This hook is reliable as-is, I think… but is there a simpler way
-    // to make it obvious that it is?
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [location.pathname, mergedParams.toString()],
-  );
+	// We memoize this to make `outfitStateWithoutExtras` an even more reliable
+	// stable object!
+	const memoizedOutfitState = React.useMemo(
+		() => readOutfitStateFromSearchParams(location.pathname, mergedParams),
+		// TODO: This hook is reliable as-is, I think… but is there a simpler way
+		// to make it obvious that it is?
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[location.pathname, mergedParams.toString()],
+	);
 
-  return memoizedOutfitState;
+	return memoizedOutfitState;
 }
 
 function readOutfitStateFromSearchParams(pathname, searchParams) {
-  // For the /outfits/:id page, ignore the query string, and just wait for the
-  // outfit data to load in!
-  const pathnameMatch = pathname.match(/^\/outfits\/([0-9]+)/);
-  if (pathnameMatch) {
-    return {
-      ...EMPTY_CUSTOMIZATION_STATE,
-      id: pathnameMatch[1],
-    };
-  }
+	// For the /outfits/:id page, ignore the query string, and just wait for the
+	// outfit data to load in!
+	const pathnameMatch = pathname.match(/^\/outfits\/([0-9]+)/);
+	if (pathnameMatch) {
+		return {
+			...EMPTY_CUSTOMIZATION_STATE,
+			id: pathnameMatch[1],
+		};
+	}
 
-  // Otherwise, parse the query string, and fill in default values for anything
-  // not specified.
-  return {
-    id: searchParams.get("outfit"),
-    name: searchParams.get("name"),
-    speciesId: searchParams.get("species") || "1",
-    colorId: searchParams.get("color") || "8",
-    pose: searchParams.get("pose") || "HAPPY_FEM",
-    altStyleId: searchParams.get("style") || null,
-    appearanceId: searchParams.get("state") || null,
-    wornItemIds: new Set(searchParams.getAll("objects[]")),
-    closetedItemIds: new Set(searchParams.getAll("closet[]")),
-  };
+	// Otherwise, parse the query string, and fill in default values for anything
+	// not specified.
+	return {
+		id: searchParams.get("outfit"),
+		name: searchParams.get("name"),
+		speciesId: searchParams.get("species") || "1",
+		colorId: searchParams.get("color") || "8",
+		pose: searchParams.get("pose") || "HAPPY_FEM",
+		altStyleId: searchParams.get("style") || null,
+		appearanceId: searchParams.get("state") || null,
+		wornItemIds: new Set(searchParams.getAll("objects[]")),
+		closetedItemIds: new Set(searchParams.getAll("closet[]")),
+	};
 }
 
 function getOutfitStateFromOutfitData(outfit) {
-  if (!outfit) {
-    return EMPTY_CUSTOMIZATION_STATE;
-  }
+	if (!outfit) {
+		return EMPTY_CUSTOMIZATION_STATE;
+	}
 
-  return {
-    id: outfit.id,
-    name: outfit.name,
-    speciesId: outfit.speciesId,
-    colorId: outfit.colorId,
-    pose: outfit.pose,
-    appearanceId: outfit.appearanceId,
-    altStyleId: outfit.altStyleId,
-    wornItemIds: new Set(outfit.wornItemIds),
-    closetedItemIds: new Set(outfit.closetedItemIds),
-  };
+	return {
+		id: outfit.id,
+		name: outfit.name,
+		speciesId: outfit.speciesId,
+		colorId: outfit.colorId,
+		pose: outfit.pose,
+		appearanceId: outfit.appearanceId,
+		altStyleId: outfit.altStyleId,
+		wornItemIds: new Set(outfit.wornItemIds),
+		closetedItemIds: new Set(outfit.closetedItemIds),
+	};
 }
 
 function findItemConflicts(itemIdToAdd, state, apolloClient) {
-  const { wornItemIds, speciesId, colorId, altStyleId } = state;
+	const { wornItemIds, speciesId, colorId, altStyleId } = state;
 
-  const itemIds = [itemIdToAdd, ...wornItemIds];
-  const data = apolloClient.readQuery({
-    query: gql`
-      query OutfitStateItemConflicts(
-        $itemIds: [ID!]!
-        $speciesId: ID!
-        $colorId: ID!
-        $altStyleId: ID
-      ) {
-        items(ids: $itemIds) {
-          id
-          appearanceOn(
-            speciesId: $speciesId
-            colorId: $colorId
-            altStyleId: $altStyleId
-          ) {
-            layers {
-              zone {
-                id
-              }
-            }
+	const itemIds = [itemIdToAdd, ...wornItemIds];
+	const data = apolloClient.readQuery({
+		query: gql`
+			query OutfitStateItemConflicts(
+				$itemIds: [ID!]!
+				$speciesId: ID!
+				$colorId: ID!
+				$altStyleId: ID
+			) {
+				items(ids: $itemIds) {
+					id
+					appearanceOn(
+						speciesId: $speciesId
+						colorId: $colorId
+						altStyleId: $altStyleId
+					) {
+						layers {
+							zone {
+								id
+							}
+						}
 
-            restrictedZones {
-              id
-            }
-          }
-        }
-      }
-    `,
-    variables: {
-      itemIds,
-      speciesId,
-      colorId,
-      altStyleId,
-    },
-  });
-  if (data == null) {
-    throw new Error(
-      `[findItemConflicts] Cache lookup failed for: ` +
-        `items=${itemIds.join(",")}, speciesId=${speciesId}, ` +
-        `colorId=${colorId}, altStyleId=${altStyleId}`,
-    );
-  }
+						restrictedZones {
+							id
+						}
+					}
+				}
+			}
+		`,
+		variables: {
+			itemIds,
+			speciesId,
+			colorId,
+			altStyleId,
+		},
+	});
+	if (data == null) {
+		throw new Error(
+			`[findItemConflicts] Cache lookup failed for: ` +
+				`items=${itemIds.join(",")}, speciesId=${speciesId}, ` +
+				`colorId=${colorId}, altStyleId=${altStyleId}`,
+		);
+	}
 
-  const { items } = data;
-  const itemToAdd = items.find((i) => i.id === itemIdToAdd);
-  if (!itemToAdd.appearanceOn) {
-    return [];
-  }
-  const wornItems = Array.from(wornItemIds).map((id) =>
-    items.find((i) => i.id === id),
-  );
+	const { items } = data;
+	const itemToAdd = items.find((i) => i.id === itemIdToAdd);
+	if (!itemToAdd.appearanceOn) {
+		return [];
+	}
+	const wornItems = Array.from(wornItemIds).map((id) =>
+		items.find((i) => i.id === id),
+	);
 
-  const itemToAddZoneSets = getItemZones(itemToAdd);
+	const itemToAddZoneSets = getItemZones(itemToAdd);
 
-  const conflictingIds = [];
-  for (const wornItem of wornItems) {
-    if (!wornItem.appearanceOn) {
-      continue;
-    }
+	const conflictingIds = [];
+	for (const wornItem of wornItems) {
+		if (!wornItem.appearanceOn) {
+			continue;
+		}
 
-    const wornItemZoneSets = getItemZones(wornItem);
+		const wornItemZoneSets = getItemZones(wornItem);
 
-    const itemsConflict =
-      setsIntersect(
-        itemToAddZoneSets.occupies,
-        wornItemZoneSets.occupiesOrRestricts,
-      ) ||
-      setsIntersect(
-        wornItemZoneSets.occupies,
-        itemToAddZoneSets.occupiesOrRestricts,
-      );
+		const itemsConflict =
+			setsIntersect(
+				itemToAddZoneSets.occupies,
+				wornItemZoneSets.occupiesOrRestricts,
+			) ||
+			setsIntersect(
+				wornItemZoneSets.occupies,
+				itemToAddZoneSets.occupiesOrRestricts,
+			);
 
-    if (itemsConflict) {
-      conflictingIds.push(wornItem.id);
-    }
-  }
+		if (itemsConflict) {
+			conflictingIds.push(wornItem.id);
+		}
+	}
 
-  return conflictingIds;
+	return conflictingIds;
 }
 
 function getItemZones(item) {
-  const occupies = new Set(item.appearanceOn.layers.map((l) => l.zone.id));
-  const restricts = new Set(item.appearanceOn.restrictedZones.map((z) => z.id));
-  const occupiesOrRestricts = new Set([...occupies, ...restricts]);
-  return { occupies, occupiesOrRestricts };
+	const occupies = new Set(item.appearanceOn.layers.map((l) => l.zone.id));
+	const restricts = new Set(item.appearanceOn.restrictedZones.map((z) => z.id));
+	const occupiesOrRestricts = new Set([...occupies, ...restricts]);
+	return { occupies, occupiesOrRestricts };
 }
 
 function setsIntersect(a, b) {
-  for (const el of a) {
-    if (b.has(el)) {
-      return true;
-    }
-  }
-  return false;
+	for (const el of a) {
+		if (b.has(el)) {
+			return true;
+		}
+	}
+	return false;
 }
 
 /**
@@ -602,180 +602,180 @@ function setsIntersect(a, b) {
  * immer block, in which case mutation is the simplest API!
  */
 function reconsiderItems(itemIdsToReconsider, state, apolloClient) {
-  for (const itemIdToReconsider of itemIdsToReconsider) {
-    const conflictingIds = findItemConflicts(
-      itemIdToReconsider,
-      state,
-      apolloClient,
-    );
-    if (conflictingIds.length === 0) {
-      state.wornItemIds.add(itemIdToReconsider);
-    }
-  }
+	for (const itemIdToReconsider of itemIdsToReconsider) {
+		const conflictingIds = findItemConflicts(
+			itemIdToReconsider,
+			state,
+			apolloClient,
+		);
+		if (conflictingIds.length === 0) {
+			state.wornItemIds.add(itemIdToReconsider);
+		}
+	}
 }
 
 // TODO: Get this out of here, tbh...
 function getZonesAndItems(itemsById, wornItemIds, closetedItemIds) {
-  const wornItems = wornItemIds.map((id) => itemsById[id]).filter((i) => i);
-  const closetedItems = closetedItemIds
-    .map((id) => itemsById[id])
-    .filter((i) => i);
+	const wornItems = wornItemIds.map((id) => itemsById[id]).filter((i) => i);
+	const closetedItems = closetedItemIds
+		.map((id) => itemsById[id])
+		.filter((i) => i);
 
-  // Loop over all the items, grouping them by zone, and also gathering all the
-  // zone metadata.
-  const allItems = [...wornItems, ...closetedItems];
-  const itemsByZone = new Map();
-  const zonesById = new Map();
-  for (const item of allItems) {
-    if (!item.appearanceOn) {
-      continue;
-    }
+	// Loop over all the items, grouping them by zone, and also gathering all the
+	// zone metadata.
+	const allItems = [...wornItems, ...closetedItems];
+	const itemsByZone = new Map();
+	const zonesById = new Map();
+	for (const item of allItems) {
+		if (!item.appearanceOn) {
+			continue;
+		}
 
-    for (const layer of item.appearanceOn.layers) {
-      const zoneId = layer.zone.id;
-      zonesById.set(zoneId, layer.zone);
+		for (const layer of item.appearanceOn.layers) {
+			const zoneId = layer.zone.id;
+			zonesById.set(zoneId, layer.zone);
 
-      if (!itemsByZone.has(zoneId)) {
-        itemsByZone.set(zoneId, []);
-      }
-      itemsByZone.get(zoneId).push(item);
-    }
-  }
+			if (!itemsByZone.has(zoneId)) {
+				itemsByZone.set(zoneId, []);
+			}
+			itemsByZone.get(zoneId).push(item);
+		}
+	}
 
-  // Convert `itemsByZone` into an array of item groups.
-  let zonesAndItems = Array.from(itemsByZone.entries()).map(
-    ([zoneId, items]) => ({
-      zoneId,
-      zoneLabel: zonesById.get(zoneId).label,
-      items: [...items].sort((a, b) => a.name.localeCompare(b.name)),
-    }),
-  );
+	// Convert `itemsByZone` into an array of item groups.
+	let zonesAndItems = Array.from(itemsByZone.entries()).map(
+		([zoneId, items]) => ({
+			zoneId,
+			zoneLabel: zonesById.get(zoneId).label,
+			items: [...items].sort((a, b) => a.name.localeCompare(b.name)),
+		}),
+	);
 
-  // Sort groups by the zone label's alphabetically, and tiebreak by the zone
-  // ID. (That way, "Markings (#6)" sorts before "Markings (#16)".) We do this
-  // before the data simplification step, because it's useful to have
-  // consistent ordering for the algorithm that might choose to skip zones!
-  zonesAndItems.sort((a, b) => {
-    if (a.zoneLabel !== b.zoneLabel) {
-      return a.zoneLabel.localeCompare(b.zoneLabel);
-    } else {
-      return a.zoneId - b.zoneId;
-    }
-  });
+	// Sort groups by the zone label's alphabetically, and tiebreak by the zone
+	// ID. (That way, "Markings (#6)" sorts before "Markings (#16)".) We do this
+	// before the data simplification step, because it's useful to have
+	// consistent ordering for the algorithm that might choose to skip zones!
+	zonesAndItems.sort((a, b) => {
+		if (a.zoneLabel !== b.zoneLabel) {
+			return a.zoneLabel.localeCompare(b.zoneLabel);
+		} else {
+			return a.zoneId - b.zoneId;
+		}
+	});
 
-  // Data simplification step! Try to remove zone groups that aren't helpful.
-  const groupsWithConflicts = zonesAndItems.filter(
-    ({ items }) => items.length > 1,
-  );
-  const itemIdsWithConflicts = new Set(
-    groupsWithConflicts
-      .map(({ items }) => items)
-      .flat()
-      .map((item) => item.id),
-  );
-  const itemIdsWeHaveSeen = new Set();
-  zonesAndItems = zonesAndItems.filter(({ items }) => {
-    // We need all groups with more than one item. If there's only one, we get
-    // to think harder :)
-    if (items.length > 1) {
-      items.forEach((item) => itemIdsWeHaveSeen.add(item.id));
-      return true;
-    }
+	// Data simplification step! Try to remove zone groups that aren't helpful.
+	const groupsWithConflicts = zonesAndItems.filter(
+		({ items }) => items.length > 1,
+	);
+	const itemIdsWithConflicts = new Set(
+		groupsWithConflicts
+			.map(({ items }) => items)
+			.flat()
+			.map((item) => item.id),
+	);
+	const itemIdsWeHaveSeen = new Set();
+	zonesAndItems = zonesAndItems.filter(({ items }) => {
+		// We need all groups with more than one item. If there's only one, we get
+		// to think harder :)
+		if (items.length > 1) {
+			items.forEach((item) => itemIdsWeHaveSeen.add(item.id));
+			return true;
+		}
 
-    const item = items[0];
+		const item = items[0];
 
-    // Has the item been seen a group we kept, or an upcoming group with
-    // multiple conflicting items? If so, skip this group. If not, keep it.
-    if (itemIdsWeHaveSeen.has(item.id) || itemIdsWithConflicts.has(item.id)) {
-      return false;
-    } else {
-      itemIdsWeHaveSeen.add(item.id);
-      return true;
-    }
-  });
+		// Has the item been seen a group we kept, or an upcoming group with
+		// multiple conflicting items? If so, skip this group. If not, keep it.
+		if (itemIdsWeHaveSeen.has(item.id) || itemIdsWithConflicts.has(item.id)) {
+			return false;
+		} else {
+			itemIdsWeHaveSeen.add(item.id);
+			return true;
+		}
+	});
 
-  // Finally, for groups with the same label, append the ID number.
-  //
-  // First, loop over the groups, to count how many times each zone label is
-  // used. Then, loop over them again, appending the ID number if count > 1.
-  const labelCounts = new Map();
-  for (const itemZoneGroup of zonesAndItems) {
-    const { zoneLabel } = itemZoneGroup;
+	// Finally, for groups with the same label, append the ID number.
+	//
+	// First, loop over the groups, to count how many times each zone label is
+	// used. Then, loop over them again, appending the ID number if count > 1.
+	const labelCounts = new Map();
+	for (const itemZoneGroup of zonesAndItems) {
+		const { zoneLabel } = itemZoneGroup;
 
-    const count = labelCounts.get(zoneLabel) ?? 0;
-    labelCounts.set(zoneLabel, count + 1);
-  }
-  for (const itemZoneGroup of zonesAndItems) {
-    const { zoneId, zoneLabel } = itemZoneGroup;
+		const count = labelCounts.get(zoneLabel) ?? 0;
+		labelCounts.set(zoneLabel, count + 1);
+	}
+	for (const itemZoneGroup of zonesAndItems) {
+		const { zoneId, zoneLabel } = itemZoneGroup;
 
-    if (labelCounts.get(zoneLabel) > 1) {
-      itemZoneGroup.zoneLabel += ` (#${zoneId})`;
-    }
-  }
+		if (labelCounts.get(zoneLabel) > 1) {
+			itemZoneGroup.zoneLabel += ` (#${zoneId})`;
+		}
+	}
 
-  return zonesAndItems;
+	return zonesAndItems;
 }
 
 function buildOutfitPath(outfitState, { withoutOutfitId = false } = {}) {
-  const { id } = outfitState;
+	const { id } = outfitState;
 
-  if (id && !withoutOutfitId) {
-    return `/outfits/${id}`;
-  }
+	if (id && !withoutOutfitId) {
+		return `/outfits/${id}`;
+	}
 
-  return "/outfits/new?" + buildOutfitQueryString(outfitState);
+	return "/outfits/new?" + buildOutfitQueryString(outfitState);
 }
 
 export function buildOutfitUrl(outfitState, options = {}) {
-  const origin =
-    typeof window !== "undefined"
-      ? window.location.origin
-      : "https://impress.openneo.net";
+	const origin =
+		typeof window !== "undefined"
+			? window.location.origin
+			: "https://impress.openneo.net";
 
-  return origin + buildOutfitPath(outfitState, options);
+	return origin + buildOutfitPath(outfitState, options);
 }
 
 function buildOutfitQueryString(outfitState) {
-  const {
-    name,
-    speciesId,
-    colorId,
-    pose,
-    altStyleId,
-    appearanceId,
-    wornItemIds,
-    closetedItemIds,
-  } = outfitState;
+	const {
+		name,
+		speciesId,
+		colorId,
+		pose,
+		altStyleId,
+		appearanceId,
+		wornItemIds,
+		closetedItemIds,
+	} = outfitState;
 
-  const params = new URLSearchParams({
-    name: name || "",
-    species: speciesId || "",
-    color: colorId || "",
-    pose: pose || "",
-  });
-  if (altStyleId != null) {
-    params.append("style", altStyleId);
-  }
-  if (appearanceId != null) {
-    // `state` is an old name for compatibility with old-style DTI URLs. It
-    // refers to "PetState", the database table name for pet appearances.
-    params.append("state", appearanceId);
-  }
-  for (const itemId of wornItemIds) {
-    params.append("objects[]", itemId);
-  }
-  for (const itemId of closetedItemIds) {
-    params.append("closet[]", itemId);
-  }
+	const params = new URLSearchParams({
+		name: name || "",
+		species: speciesId || "",
+		color: colorId || "",
+		pose: pose || "",
+	});
+	if (altStyleId != null) {
+		params.append("style", altStyleId);
+	}
+	if (appearanceId != null) {
+		// `state` is an old name for compatibility with old-style DTI URLs. It
+		// refers to "PetState", the database table name for pet appearances.
+		params.append("state", appearanceId);
+	}
+	for (const itemId of wornItemIds) {
+		params.append("objects[]", itemId);
+	}
+	for (const itemId of closetedItemIds) {
+		params.append("closet[]", itemId);
+	}
 
-  return params.toString();
+	return params.toString();
 }
 
 /**
  * Whether the two given outfit states represent identical customizations.
  */
 export function outfitStatesAreEqual(a, b) {
-  return buildOutfitQueryString(a) === buildOutfitQueryString(b);
+	return buildOutfitQueryString(a) === buildOutfitQueryString(b);
 }
 
 export default useOutfitState;

@@ -6,34 +6,34 @@ import { Box } from "@chakra-ui/react";
  * and their values.
  */
 function Metadata({ children, ...props }) {
-  return (
-    <Box
-      as="dl"
-      display="grid"
-      gridTemplateColumns="max-content auto"
-      gridRowGap="1"
-      gridColumnGap="2"
-      {...props}
-    >
-      {children}
-    </Box>
-  );
+	return (
+		<Box
+			as="dl"
+			display="grid"
+			gridTemplateColumns="max-content auto"
+			gridRowGap="1"
+			gridColumnGap="2"
+			{...props}
+		>
+			{children}
+		</Box>
+	);
 }
 
 function MetadataLabel({ children, ...props }) {
-  return (
-    <Box as="dt" gridColumn="1" fontWeight="bold" {...props}>
-      {children}
-    </Box>
-  );
+	return (
+		<Box as="dt" gridColumn="1" fontWeight="bold" {...props}>
+			{children}
+		</Box>
+	);
 }
 
 function MetadataValue({ children, ...props }) {
-  return (
-    <Box as="dd" gridColumn="2" {...props}>
-      {children}
-    </Box>
-  );
+	return (
+		<Box as="dd" gridColumn="2" {...props}>
+			{children}
+		</Box>
+	);
 }
 
 export default Metadata;

@@ -12,8 +12,8 @@ import useSupport from "./useSupport";
  * the server checks the provided secret for each Support request.
  */
 function SupportOnly({ children }) {
-  const { isSupportUser } = useSupport();
-  return isSupportUser ? children : null;
+	const { isSupportUser } = useSupport();
+	return isSupportUser ? children : null;
 }
 
 export default SupportOnly;
