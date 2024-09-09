@@ -22,6 +22,9 @@
     = link_to wardrobe_path(params: @preview_outfit.wardrobe_params),
               class: "customize-more", target: "_blank",
               title: "Customize more", "aria-label": "Customize more" do
+      %measured-container.customize-more-label
+        %measured-content
+          Customize more
       = edit_icon
 
   %species-color-picker

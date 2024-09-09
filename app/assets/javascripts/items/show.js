@@ -81,6 +81,25 @@ class SpeciesFacePickerOptions extends HTMLElement {
     }
 }
 
+class MeasuredContent extends HTMLElement {
+    connectedCallback() {
+        setTimeout(() => this.#measure(), 0);
+    }
+
+    #measure() {
+        // Find our `<measured-container>` parent, and set our natural width
+        // as `var(--natural-width)` in the context of its CSS styles.
+        const container = this.closest("measured-container");
+        if (container == null) {
+            throw new Error(
+                `<measured-content> must be in a <measured-container>`,
+            );
+        }
+        container.style.setProperty("--natural-width", this.offsetWidth + "px");
+    }
+}
+
 customElements.define("species-color-picker", SpeciesColorPicker);
 customElements.define("species-face-picker", SpeciesFacePicker);
 customElements.define("species-face-picker-options", SpeciesFacePickerOptions);
+customElements.define("measured-content", MeasuredContent);

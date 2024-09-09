@@ -55,11 +55,24 @@ body.items-show
       text-decoration: none
 
       background: #EDF2F7
-      padding: .75em
+      padding-inline: .75em
       border-radius: .375em
       min-height: 2rem
       min-width: 2rem
       box-sizing: border-box
+
+      .customize-more-label
+        width: 0
+        overflow: hidden
+        transition: width .25s
+        white-space: nowrap
+
+        measured-content
+          padding-right: .5em
+
+      &:hover, &:focus
+        .customize-more-label
+          width: var(--natural-width)
 
   outfit-viewer
     display: block
