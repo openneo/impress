@@ -66,6 +66,7 @@ body.items-show
         overflow: hidden
         transition: width .25s
         white-space: nowrap
+        --natural-width: auto
 
         measured-content
           padding-right: .5em
@@ -75,9 +76,7 @@ body.items-show
         // what it is in px, we can use that for a smooth transition. If not,
         // okay, we just pop out to `auto`, which CSS can't make smooth.
         .customize-more-label
-          width: auto
-          &[style*="--natural-width"]
-            width: var(--natural-width)
+          width: var(--natural-width)
 
   outfit-viewer
     display: block
