@@ -3,6 +3,9 @@
 @import "../partials/item_header"
 
 body.items-show
+  #container
+    width: 900px // A bit more generous to the preview area!
+
   .item-header
     +item-header
 
@@ -207,7 +210,7 @@ body.items-show
   species-face-picker
     display: block
     position: relative
-    top: -10px
+    margin-top: -10px
 
     species-face-picker-options
       display: flex
@@ -219,8 +222,8 @@ body.items-show
       padding: 10px // leave enough room for the zoomed-in selected face
 
     img
-      width: 50px
-      height: 50px
+      width: 54px
+      height: 54px
       transition: all 0.2s
 
       // Calm down the default color, just a smidge! There's a lot of color
@@ -352,7 +355,7 @@ body.items-show
     flex-direction: column
     gap: .75em
 
-    @media (min-width: 600px)
+    @media (min-width: 700px)
       display: grid
       grid-template-areas: "viewer faces" "picker meta"
       gap: .5em
@@ -360,8 +363,8 @@ body.items-show
       .preview-area
         grid-area: viewer
         outfit-viewer
-          width: 350px
-          height: 350px
+          width: 380px
+          height: 380px
 
       species-color-picker
         grid-area: picker
@@ -369,7 +372,7 @@ body.items-show
       species-face-picker
         grid-area: faces
         species-face-picker-options
-          max-height: 340px
+          max-height: 370px
 
       .item-preview-meta-info
         grid-area: meta
