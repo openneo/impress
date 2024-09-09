@@ -71,8 +71,13 @@ body.items-show
           padding-right: .5em
 
       &:hover, &:focus
+        // Expand the label to its natural width. If the JS ran to tell us
+        // what it is in px, we can use that for a smooth transition. If not,
+        // okay, we just pop out to `auto`, which CSS can't make smooth.
         .customize-more-label
-          width: var(--natural-width)
+          width: auto
+          &[style*="--natural-width"]
+            width: var(--natural-width)
 
   outfit-viewer
     display: block
