@@ -20,8 +20,7 @@
     .error-indicator
       💥 We couldn't load all of this outfit. Try again?
     = link_to wardrobe_path(params: @preview_outfit.wardrobe_params),
-              class: "customize-more", target: "_blank",
-              title: "Customize more", "aria-label": "Customize more" do
+              class: "customize-more", target: "_blank" do
       %measured-container.customize-more-label
         %measured-content
           Customize more
