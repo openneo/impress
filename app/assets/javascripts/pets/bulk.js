@@ -1,5 +1,3 @@
-var DEBUG = document.location.search.substr(0, 6) == "?debug";
-
 /* Bulk pets form */
 (function () {
 	var form = $("#bulk-pets-form"),
