@@ -14,7 +14,7 @@ class PetsController < ApplicationController
     
     respond_to do |format|
       format.html do
-        path = destination + @pet.wardrobe_query
+        path = destination + "?" + @pet.wardrobe_query
         redirect_to path
       end
       
@@ -38,9 +38,9 @@ class PetsController < ApplicationController
   
   def destination
     case (params[:destination] || params[:origin])
-      when 'wardrobe'     then wardrobe_path     + '?'
-      when 'needed_items' then needed_items_path + '?'
-      else                     root_path         + '#'
+      when 'wardrobe'     then wardrobe_path
+      when 'needed_items' then needed_items_path
+      else                     root_path
     end
   end
   
