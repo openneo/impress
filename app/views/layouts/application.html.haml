@@ -11,8 +11,8 @@
       - else
         #{t 'app_name'}: #{t '.title_tagline'}
     %link{href: image_path('favicon.png'), rel: 'icon'}
-    = yield :stylesheets
     = stylesheet_link_tag "application"
+    = yield :stylesheets
     - if use_responsive_design?
       %meta{name: "viewport", content: "width=device-width, initial-scale=1"}
     = yield :meta
