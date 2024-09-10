@@ -14,3 +14,6 @@
     = link_to 'What do I own?', 'https://www.neopets.com/closet.phtml',
       :class => 'button', :target => '_blank'
 = render @items
+
+- content_for :stylesheets do
+  = page_stylesheet_link_tag "layouts/items"

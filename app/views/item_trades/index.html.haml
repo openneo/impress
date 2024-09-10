@@ -34,3 +34,7 @@
 								class: "not-in-a-list"
 - else
 	%p= t(".no_trades_yet")
+
+- content_for :stylesheets do
+	= page_stylesheet_link_tag "layouts/items"
+	= page_stylesheet_link_tag "item_trades/index"

@@ -37,3 +37,6 @@
       %h2= t '.species_search.header'
       = standard_species_search_links
 
+- content_for :stylesheets do
+  = page_stylesheet_link_tag "layouts/items"
+  = page_stylesheet_link_tag "items/index"

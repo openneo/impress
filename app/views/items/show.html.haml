@@ -122,6 +122,8 @@
 
 - content_for :stylesheets do
   = stylesheet_link_tag "application/hanger-spinner"
+  = page_stylesheet_link_tag "layouts/items"
+  = page_stylesheet_link_tag "items/show"
 
 - content_for :javascripts do
   = javascript_include_tag "lib/idiomorph", async: true

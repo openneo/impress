@@ -1,0 +1,400 @@
+@import "../partials/clean/constants"
+@import "../partials/clean/mixins"
+@import "../partials/item_header"
+
+#container
+  width: 900px // A bit more generous to the preview area!
+
+.item-header
+  +item-header
+
+#item-contributors
+  +subtle-banner
+  clear: both
+  margin:
+    bottom: 0
+    top: 2em
+
+  header
+    display: inline
+    font-weight: bold
+    margin-right: .25em
+
+  footer
+    display: inline
+
+  ul
+    display: inline
+    list-style: none
+
+    li
+      display: inline
+
+      &::after
+        content: ", "
+
+      &:last-child::after
+        content: "."
+
+.nc-icon
+  height: 16px
+  width: 16px
+
+.preview-area
+  margin: 0 auto
+  position: relative
+
+  .customize-more
+    position: absolute
+    top: 1em
+    right: 1em
+
+    display: flex
+    align-items: center
+    text-decoration: none
+
+    background: #EDF2F7
+    padding-inline: .75em
+    border-radius: .375em
+    min-height: 2rem
+    min-width: 2rem
+    box-sizing: border-box
+
+    .customize-more-label
+      width: 0
+      overflow: hidden
+      transition: width .25s
+      white-space: nowrap
+      --natural-width: auto
+
+      measured-content
+        padding-right: .5em
+
+    &:hover, &:focus
+      // Expand the label to its natural width. If the JS ran to tell us
+      // what it is in px, we can use that for a smooth transition. If not,
+      // okay, we just pop out to `auto`, which CSS can't make smooth.
+      .customize-more-label
+        width: var(--natural-width)
+
+outfit-viewer
+  display: block
+  position: relative
+  width: 300px
+  height: 300px
+  border: 1px solid $module-border-color
+  border-radius: 1em
+  overflow: hidden
+
+  // There's no useful text in here, but double-clicking the play/pause
+  // button can cause a weird selection state. Disable text selection.
+  user-select: none
+  -webkit-user-select: none
+
+  outfit-layer
+    display: block
+    position: absolute
+    inset: 0
+
+    // We disable pointer-events most importantly for the iframes, which
+    // will ignore our `cursor: wait` and show a plain cursor for the
+    // inside of its own document. But also, the context menus for these
+    // elements are kinda actively misleading, too!
+    pointer-events: none
+
+    img, iframe
+      width: 100%
+      height: 100%
+
+  .loading-indicator
+    position: absolute
+    z-index: 1000
+    bottom: 0px
+    right: 4px
+    padding: 8px
+    background: radial-gradient(circle closest-side, white 45%, #ffffff00)
+
+    opacity: 0
+    transition: opacity .5s
+
+  .play-pause-button
+    position: absolute
+    z-index: 1001
+    left: 8px
+    bottom: 8px
+    display: none
+    align-items: center
+    justify-content: center
+    color: white
+    background: rgba(0, 0, 0, 0.64)
+    width: 2.5em
+    height: 2.5em
+    border-radius: 100%
+    border: 2px solid transparent
+    transition: all .25s
+
+    .playing-label, .paused-label
+      display: none
+      width: 1em
+      height: 1em
+
+    .play-pause-toggle
+      // Visually hidden
+      clip: rect(0 0 0 0)
+      clip-path: inset(50%)
+      height: 1px
+      overflow: hidden
+      position: absolute
+      white-space: nowrap
+      width: 1px
+
+      &:checked ~ .playing-label
+        display: block
+
+      &:not(:checked) ~ .paused-label
+        display: block
+
+    &:hover, &:has(.play-pause-toggle:focus)
+      border: 2px solid $module-border-color
+      background: $module-bg-color
+      color: $text-color
+
+    &:has(.play-pause-toggle:active)
+      transform: translateY(2px)
+
+  &:has(outfit-layer:state(has-animations))
+    .play-pause-button
+      display: flex
+
+.error-indicator
+  font-size: 85%
+  color: $error-color
+  margin-top: .25em
+  margin-bottom: .5em
+  display: none
+
+// When loading, fade in the loading spinner after a brief delay. We are
+// loading when the <turbo-frame> is busy, or when at least one layer
+// is loading.
+//
+// We only apply the delay here, not on the base styles, because fading
+// *out* on load should be instant. We also wait for the outfit-viewer to
+// execute a `setTimeout(0)`, to make sure we always *start* in the
+// non-loading state. This is because it's sometimes possible for the page to
+// start with the web component already in `state(loading)`, and we need to
+// make sure we *start* in *non-loading* state for the transition delay to
+// happen. (This can happen when you Turbo-navigate between multiple items.)
+#item-preview[busy] outfit-viewer, outfit-viewer:has(outfit-layer:state(loading))
+  cursor: wait
+
+  &:state(after-first-frame)
+    .loading-indicator
+      opacity: 1
+      transition-delay: 2s
+
+#item-preview:has(outfit-layer:state(error))
+  outfit-viewer
+    border: 2px solid red
+  .error-indicator
+    display: block
+
+species-color-picker
+  .error-icon
+    cursor: help
+    margin-right: .25em
+
+  form[data-is-valid="false"]
+    select
+      border-color: $error-border-color
+      color: $error-color
+
+  // If JS is enabled, but auto-loading isn't ready yet (script loading or
+  // failed?), hide the submit button for .75sec, to give it time to load.
+  @media (scripting: enabled)
+    input[type=submit]
+      position: absolute
+      margin-left: .5em
+      opacity: 0
+      animation: fade-in .25s forwards
+      animation-delay: .75s
+
+  // Once the auto-loading behavior is ready, remove the submit button.
+  &:state(auto-loading)
+    input[type=submit]
+      display: none
+
+species-face-picker
+  display: block
+  position: relative
+  margin-top: -10px
+
+  species-face-picker-options
+    display: flex
+    justify-content: center
+    flex-wrap: wrap
+    isolation: isolate // avoid z-index conflicts between pets and noscript
+    overflow: auto
+    max-height: 200px // 4 rows of 50px images, and padding will offer a hint of below
+    padding: 10px // leave enough room for the zoomed-in selected face
+
+  img
+    width: 54px
+    height: 54px
+    transition: all 0.2s
+
+    // Calm down the default color, just a smidge! There's a lot of color
+    // on this page already, y'know?
+    opacity: .9
+    filter: saturate(90%)
+
+  label
+    display: flex
+    overflow: hidden
+    transition: all 0.2s
+    position: relative
+    line-height: 1
+
+    // NOTE: The box-shadows here were copy-pasted from Impress 2020, which uses
+    //       Chakra UI's styling system to generate them! (The colors are from their
+    //       color palette, too.)
+    &:has(input:checked)
+      border-radius: 6px
+      z-index: 1
+      background: #9AE6B4
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),0 10px 10px -5px rgba(0, 0, 0, 0.04), #2F855A 0 0 2px 2px
+      transform: scale(1.1)
+
+    &:has(input:focus)
+      background: #BEE3F8
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),0 10px 10px -5px rgba(0, 0, 0, 0.04), #4299e1 0 0 0 3px
+      transform: scale(1.2)
+
+  input[type=radio]
+    position: absolute
+    left: -10000px
+    top: auto
+    width: 1px
+    height: 1px
+    overflow: hidden
+
+    &:checked + img
+      opacity: 1
+      filter: saturate(110%)
+
+    &:disabled + img
+      opacity: .6
+      filter: saturate(0%)
+
+  label:has(input[type=radio]:disabled)
+    cursor: not-allowed
+
+  noscript
+    position: absolute
+    inset: 0
+    padding: 1em
+    background: rgba(white, .8)
+    z-index: 1
+    cursor: auto
+
+    display: flex
+    align-items: center
+    justify-content: center
+    text-align: center
+
+  &:has(species-face-picker-options[inert])
+    cursor: wait
+
+.item-preview-meta-info
+  display: grid
+  grid-template-columns: 1fr auto
+  gap: .5em
+  align-items: center
+
+.item-zones-info
+  h3
+    display: inline
+    font: inherit
+    font-weight: bold
+    &:after
+      content: ": "
+
+  ul
+    list-style-type: none
+    display: inline
+
+    li
+      display: inline
+      &:not(:last-of-type):after
+        content: ", "
+
+  .no-zones
+    font-style: italic
+    opacity: .85
+
+  .zone-species-info
+    font-style: italic
+    text-decoration: underline dotted
+
+// Many of these styles copied from Impress 2020 and its Chakra UI styles!
+.item-html5-info
+  display: flex
+  align-items: center
+  border: 1px solid
+  border-radius: .375em
+  padding: 4px 8px
+  min-height: 30px
+  box-sizing: border-box
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px
+
+  &[data-status=converted]
+    background: $module-bg-color
+    color: $text-color
+
+    svg:nth-of-type(2)
+      margin-right: -4px // spacing hacks!
+
+  &[data-status=unconverted]
+    background: $warning-bg-color
+    color: #975A16
+    gap: .25em // spacing hacks!
+
+  svg:first-of-type
+    width: 12px
+    height: 12px
+
+  svg:nth-of-type(2)
+    width: 20px
+    height: 20px
+
+#item-preview
+  display: flex
+  flex-direction: column
+  gap: .75em
+
+  @media (min-width: 700px)
+    display: grid
+    grid-template-areas: "viewer faces" "picker meta"
+    gap: .5em
+
+    .preview-area
+      grid-area: viewer
+      outfit-viewer
+        width: 380px
+        height: 380px
+
+    species-color-picker
+      grid-area: picker
+
+    species-face-picker
+      grid-area: faces
+      species-face-picker-options
+        max-height: 380px
+
+    .item-preview-meta-info
+      grid-area: meta
+
+@keyframes fade-in
+  from
+    opacity: 0
+  to
+    opacity: 1

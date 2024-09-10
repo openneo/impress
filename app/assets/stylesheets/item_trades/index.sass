@@ -1,0 +1,28 @@
+@import "../partials/item_header"
+
+.item-header
+	+item-header
+
+.item-subpage-title
+	text-align: left
+	margin-bottom: .5em
+
+.trades-table
+	text-align: left
+	width: 100%
+	table-layout: fixed
+
+	th, td
+		&:nth-child(1), &:nth-child(2)
+			width: 15ch
+			overflow: hidden
+			text-overflow: ellipsis
+
+	.trade-list-names
+		list-style: none
+
+		li
+			display: inline
+
+			&:not(:last-child)::after
+				content: ", "
