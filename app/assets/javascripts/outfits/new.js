@@ -69,21 +69,6 @@
 		},
 	};
 
-	function loadNotable() {
-		// TODO: add HTTPS to notables
-		// $.getJSON('https://notables.openneo.net/api/1/days/ago/1?callback=?', function (response) {
-		//   var notables = response.notables;
-		//   var i = Math.floor(Math.random() * notables.length);
-		//   Preview.Job.fallback = new Preview.Job.Name(notables[i].petName);
-		//   if(!Preview.Job.current) {
-		//     Preview.Job.fallback.setAsCurrent();
-		//   }
-		// });
-		if (!Preview.Job.current) {
-			Preview.Job.fallback.setAsCurrent();
-		}
-	}
-
 	function loadFeature() {
 		$.getJSON("/donations/features", function (features) {
 			if (features.length > 0) {
@@ -92,8 +77,6 @@
 				if (!Preview.Job.current) {
 					Preview.Job.fallback.setAsCurrent();
 				}
-			} else {
-				loadNotable();
 			}
 		});
 	}
@@ -106,16 +89,7 @@
 		job.loading = false;
 
 		function getImageSrc() {
-			if (key.substr(0, 3) === "a:-") {
-				// lol lazy code for prank image :P
-				// TODO: HTTPS?
-				return (
-					"https://swfimages.impress.openneo.net" +
-					"/biology/000/000/0-2/" +
-					key.substr(2) +
-					"/300x300.png"
-				);
-			} else if (base === "cp" || base === "cpn") {
+			if (base === "cp" || base === "cpn") {
 				return petImage(base + "/" + key, quality);
 			} else if (base === "url") {
 				return key;
