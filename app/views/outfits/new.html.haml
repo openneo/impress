@@ -51,41 +51,39 @@
         = t('.submit.secondary')
 
 %ul#sections
-  - localized_cache :action_suffix => 'your_items_module' do
-    %li#your-items-module
-      = link_to image_tag('your_items.png'), your_items_path
-      %h3= link_to t('your_items'), your_items_path
-      %div
-        %h4= t '.your_items.tagline'
-        %p= t '.your_items.description'
-        = form_tag users_path, :method => 'get' do
-          = text_field_tag 'name', '', :type => 'search',
-            :placeholder => t('.your_items.user_search.placeholder')
-          = submit_tag t('.your_items.user_search.submit')
+  %li
+    %h3= link_to t('your_items'), your_items_path
+    = link_to image_tag('your_items.png'), your_items_path
+    .section-info
+      %strong= t '.your_items.tagline'
+      %p= t '.your_items.description'
+    = form_tag users_path, :method => 'get' do
+      = text_field_tag 'name', '', :type => 'search',
+        :placeholder => t('.your_items.user_search.placeholder')
+      = submit_tag t('.your_items.user_search.submit')
 
-  - localized_cache :action_suffix => 'infinite_closet_module' do
-    %li
-      = link_to image_tag('items.png'), items_path
-      %h3= link_to t('infinite_closet'), items_path
-      %div
-        %h4= t '.infinite_closet.tagline'
-        %p= t '.infinite_closet.description'
-        = form_tag items_path, :method => 'get' do
-          = text_field_tag 'q', '', :type => 'search',
-            :placeholder => t('.infinite_closet.item_search.placeholder')
-          = submit_tag t('.infinite_closet.item_search.submit')
+  %li
+    %h3= link_to t('infinite_closet'), items_path
+    = link_to image_tag('items.png'), items_path
+    .section-info
+      %strong= t '.infinite_closet.tagline'
+      %p= t '.infinite_closet.description'
+    = form_tag items_path, :method => 'get' do
+      = text_field_tag 'q', '', :type => 'search',
+        :placeholder => t('.infinite_closet.item_search.placeholder')
+      = submit_tag t('.infinite_closet.item_search.submit')
     
   %li
+    %h3= link_to t('modeling_hub'), bulk_pets_path
     = link_to bulk_pets_path do
       = image_tag 'https://images.neopets.com/items/mall_ac_garland_spotlight.gif'
-    %h3= link_to t('modeling_hub'), bulk_pets_path
-    %div
-      %h4= t '.modeling_hub.tagline'
+    .section-info
+      %strong= t '.modeling_hub.tagline'
       %p= t '.modeling_hub.description'
-      = form_tag load_pet_path, method: 'POST' do
-        = pet_name_tag placeholder: t('.modeling_hub.load_pet.placeholder'),
-          required: true
-        = submit_tag t('.modeling_hub.load_pet.submit')
+    = form_tag load_pet_path, method: 'POST' do
+      = pet_name_tag placeholder: t('.modeling_hub.load_pet.placeholder'),
+        required: true
+      = submit_tag t('.modeling_hub.load_pet.submit')
 
 - if @latest_contribution  # will be nil for a fresh copy of the site ;P
   #latest-contribution

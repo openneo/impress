@@ -115,48 +115,57 @@ body.outfits-new
       float: right
       font-size: 87.5%
       margin-top: 1em
-  $section-count: 3
-  $section-border-width: 1px
-  $section-padding: 0.5em
-  $section-width: 100% / $section-count
-  // (A - (B-1)*C) / B
   #sections
-    +clearfix
-    display: table
+    display: grid
+    grid-template-columns: 1fr 1fr 1fr
     list-style: none
     margin-top: 1em
-    h3
-      margin-bottom: .25em
     li
-      border-left:
-        color: $module-border-color
-        style: solid
-        width: $section-border-width
-      display: table-cell
-      padding: $section-padding
-      position: relative
-      width: $section-width
-      &:first-child
-        border-left: 0
+      display: grid
+      grid-template-areas: "header image" "info image" "form form"
+      grid-template-rows: auto auto auto
+      row-gap: .5em
+      padding: 0.5em
+      &:not(:first-child)
+        border-left: 1px solid $module-border-color
+    h3
+      grid-area: header
+      margin-bottom: 0
     div
+      grid-area: info
       color: $soft-text-color
       font-size: 75%
       margin-left: 1em
       z-index: 2
-    h4, input
+    strong
       font-size: 116%
-    h4, input[type=text]
-      color: inherit
-    h4 a
-      background: #ffffc0
+    a:has(img)
+      grid-area: image
     img
-      +opacity(0.75)
+      opacity: 0.75
       float: right
       margin-left: .5em
       &:hover
-        +opacity(1)
+        opacity: 1
     p
+      line-height: 1.5
       min-height: 4.5em
+      margin-bottom: 0
+    form
+      grid-area: form
+      display: flex
+      align-items: center
+      gap: .5em
+      font-size: .85em
+      margin-left: 1em
+      margin-right: .5em
+
+      input[type=text], input[type=search]
+        // TODO: It doesn't make sense to me that this is the right style? I
+        // expected `flex: 1 0 0` to be right, but that grew *too* large, and
+        // forced the sections to grow wider too. I also tried `flex: 0 1 100%`,
+        // which I would have *thought* is the same as this, but isn't! Idk!
+        width: 100%
 
   #whats-new
     margin-bottom: 1em
