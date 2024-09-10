@@ -498,7 +498,6 @@ es:
     default_human_name: (una especie nueva)
   pets:
     bulk:
-      header: Hacer que desfilen varios pets a la vez
       explanation: "¿Tienes muchos pets para que desfilen?
 
         Escribe o pega una lista de pets, recuerda añadir un nombre por línea :P ¡Muchas gracias por tu ayuda!"

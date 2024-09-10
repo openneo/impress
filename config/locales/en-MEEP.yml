@@ -630,7 +630,6 @@ en-MEEP:
 
   pets:
     bulk:
-      header: Meep pets in bulk
       explanation:
         Got a lot of pets to meep? Just keep meeping them into the box below,
         or even meep in a whole list of names, one name per line. Thanks for

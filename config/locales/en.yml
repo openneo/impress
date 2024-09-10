@@ -751,7 +751,6 @@ en:
 
   pets:
     bulk:
-      header: Model pets in bulk
       explanation:
         Got a lot of pets to model? Just keep typing them into the box below,
         or even paste in a whole list of names, one name per line. We'll

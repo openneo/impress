@@ -2,8 +2,6 @@
 
 = form_tag load_pet_path, :id => 'bulk-pets-form' do
   - localized_cache :action_suffix => 'bulk_pets_content' do
-    %h3= t '.header'
-    
     %p= t '.explanation'
     
     = origin_tag bulk_pets_path

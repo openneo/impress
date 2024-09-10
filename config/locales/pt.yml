@@ -494,7 +494,6 @@ pt:
     default_human_name: (uma nova espécie)
   pets:
     bulk:
-      header: Modele pets em massa
       explanation: Tem um monte de pets para modelar? Basta digitar seus nomes na caixa abaixo, ou até mesmo colar toda uma lista de nomes, um nome por linha. Obrigado por sua ajuda!
       submit: Carregar pet
       add: Adicionar
