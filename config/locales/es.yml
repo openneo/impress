@@ -498,24 +498,16 @@ es:
     default_human_name: (una especie nueva)
   pets:
     bulk:
-      needed_items:
-        header: ¿Quieres contribuir en la página?
-        explanation: ¡Escribe el nombre de tu pet aquí abajo y te diremos qué objetos nos hace falta junto a esa especie de pet para actualizar la base de datos! ¡Gracias por tu ayuda!
-        submit: Enviar
-        pet_header: Objetos que tu pet %{pet_name} puede posar
-        reload: Actualizar
-        item_owned: Tú tienes este objeto
-      bulk_pets:
-        header: Hacer que desfilen varios pets a la vez
-        explanation: "¿Tienes muchos pets para que desfilen?
+      header: Hacer que desfilen varios pets a la vez
+      explanation: "¿Tienes muchos pets para que desfilen?
 
-          Escribe o pega una lista de pets, recuerda añadir un nombre por línea :P ¡Muchas gracias por tu ayuda!"
-        submit: Cargar pet
-        add: Añadir
-        clear: Limpiar
-        waiting: Esperando…
-        loading: Cargando…
-        submission_success: "%{points} puntos"
+        Escribe o pega una lista de pets, recuerda añadir un nombre por línea :P ¡Muchas gracias por tu ayuda!"
+      submit: Cargar pet
+      add: Añadir
+      clear: Limpiar
+      waiting: Esperando…
+      loading: Cargando…
+      submission_success: "%{points} puntos"
     load:
       not_found: No hemos podido encontrar a un pet con ese nombre. ¿Lo has escrito correctamente?
       asset_download_error: Hemos encontrado el pet que intentas vestir, pero no hemos podido descargar las imágenes que lo asocian. Posiblemente Neopets está caído. ¡Por favor inténtalo de nuevo más tarde!

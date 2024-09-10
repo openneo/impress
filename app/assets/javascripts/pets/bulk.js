@@ -1,116 +1,5 @@
 var DEBUG = document.location.search.substr(0, 6) == "?debug";
 
-function petThumbnailUrl(pet_name) {
-	// if first character is "@", use the hash url
-	if (pet_name[0] == "@") {
-		return "https://pets.neopets.com/cp/" + pet_name.substr(1) + "/1/1.png";
-	}
-
-	return "https://pets.neopets.com/cpn/" + pet_name + "/1/1.png";
-}
-
-/* Needed items form */
-(function () {
-	var UI = {};
-	UI.form = $("#needed-items-form");
-	UI.alert = $("#needed-items-alert");
-	UI.pet_name_field = $("#needed-items-pet-name-field");
-	UI.pet_thumbnail = $("#needed-items-pet-thumbnail");
-	UI.pet_header = $("#needed-items-pet-header");
-	UI.reload = $("#needed-items-reload");
-	UI.pet_items = $("#needed-items-pet-items");
-	UI.item_template = $("#item-template");
-
-	var current_request = { abort: function () {} };
-	function sendRequest(options) {
-		current_request = $.ajax(options);
-	}
-
-	function cancelRequest() {
-		if (DEBUG) console.log("Canceling request", current_request);
-		current_request.abort();
-	}
-
-	/* Pet */
-
-	var last_successful_pet_name = null;
-
-	function loadPet(pet_name) {
-		// If there is a request in progress, kill it. Our new pet request takes
-		// priority, and, if I submit a name while the previous name is loading, I
-		// don't want to process both responses.
-		cancelRequest();
-
-		sendRequest({
-			url: UI.form.attr("action") + ".json",
-			dataType: "json",
-			data: { name: pet_name },
-			error: petError,
-			success: function (data) {
-				petSuccess(data, pet_name);
-			},
-			complete: petComplete,
-		});
-
-		UI.form.removeClass("failed").addClass("loading-pet");
-	}
-
-	function petComplete() {
-		UI.form.removeClass("loading-pet");
-	}
-
-	function petError(xhr) {
-		UI.alert.text(xhr.responseText);
-		UI.form.addClass("failed");
-	}
-
-	function petSuccess(data, pet_name) {
-		last_successful_pet_name = pet_name;
-		UI.pet_thumbnail.attr("src", petThumbnailUrl(pet_name));
-		UI.pet_header.empty();
-		$("#needed-items-pet-header-template")
-			.tmpl({ pet_name: pet_name })
-			.appendTo(UI.pet_header);
-		loadItems(data.query);
-	}
-
-	/* Items */
-
-	function loadItems(query) {
-		UI.form.addClass("loading-items");
-		sendRequest({
-			url: "/items/needed.json",
-			dataType: "json",
-			data: query,
-			success: itemsSuccess,
-		});
-	}
-
-	function itemsSuccess(items) {
-		if (DEBUG) {
-			// The dev server is missing lots of data, so sends me 2000+ needed
-			// items. We don't need that many for styling, so limit it to 100 to make
-			// my browser happier.
-			items = items.slice(0, 100);
-		}
-
-		UI.pet_items.empty();
-		UI.item_template.tmpl(items).appendTo(UI.pet_items);
-
-		UI.form.removeClass("loading-items").addClass("loaded");
-	}
-
-	UI.form.submit(function (e) {
-		e.preventDefault();
-		loadPet(UI.pet_name_field.val());
-	});
-
-	UI.reload.click(function (e) {
-		e.preventDefault();
-		loadPet(last_successful_pet_name);
-	});
-})();
-
 /* Bulk pets form */
 (function () {
 	var form = $("#bulk-pets-form"),
@@ -121,6 +10,15 @@ function petThumbnailUrl(pet_name) {
 		bulk_load_queue;
 
 	$(document.body).addClass("js");
+
+	function petThumbnailUrl(pet_name) {
+		// if first character is "@", use the hash url
+		if (pet_name[0] == "@") {
+			return "https://pets.neopets.com/cp/" + pet_name.substr(1) + "/1/1.png";
+		}
+
+		return "https://pets.neopets.com/cpn/" + pet_name + "/1/1.png";
+	}
 
 	bulk_load_queue = new (function BulkLoadQueue() {
 		var RECENTLY_SENT_INTERVAL_IN_SECONDS = 30;

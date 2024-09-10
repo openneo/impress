@@ -494,22 +494,14 @@ pt:
     default_human_name: (uma nova espécie)
   pets:
     bulk:
-      needed_items:
-        header: Procurando maneiras de ajudar?
-        explanation: Digite o nome do seu pet e nós diremos quais itens você pode modelar. Obrigado pela ajuda
-        submit: Enviar
-        pet_header: Itens que %{pet_name} pode modelar
-        reload: Recarregar
-        item_owned: Você possui este item
-      bulk_pets:
-        header: Modele pets em massa
-        explanation: Tem um monte de pets para modelar? Basta digitar seus nomes na caixa abaixo, ou até mesmo colar toda uma lista de nomes, um nome por linha. Obrigado por sua ajuda!
-        submit: Carregar pet
-        add: Adicionar
-        clear: Limpar
-        waiting: Esperando…
-        loading: Carregando…
-        submission_success: "%{points} pontos"
+      header: Modele pets em massa
+      explanation: Tem um monte de pets para modelar? Basta digitar seus nomes na caixa abaixo, ou até mesmo colar toda uma lista de nomes, um nome por linha. Obrigado por sua ajuda!
+      submit: Carregar pet
+      add: Adicionar
+      clear: Limpar
+      waiting: Esperando…
+      loading: Carregando…
+      submission_success: "%{points} pontos"
     load:
       not_found: Não foi possível achar um pet com esse nome. Está escrito corretamente?
       asset_download_error: Nós achamos o pet e o que ele está vestindo, mas não foi possível baixar os dados. Talvez Neopets esteja fora do ar. Por favor tente mais tarde!

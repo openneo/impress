@@ -79,27 +79,6 @@ class PetType < ApplicationRecord
                    species_human_name: possibly_new_species.human_name)
   end
 
-  def needed_items
-    # If I need this item on a pet type, that means that we've already seen it
-    # and it's body-specific. So, there's a body-specific asset for the item,
-    # but no asset that fits this pet type.
-    i = Item.arel_table
-    psa = ParentSwfAssetRelationship.arel_table
-    sa = SwfAsset.arel_table
-
-    Item.where('(' + ParentSwfAssetRelationship.select('count(DISTINCT body_id)').joins(:swf_asset).
-               where(
-                 psa[:parent_id].eq(i[:id]).and(
-                 psa[:parent_type].eq('Item').and(
-                 sa[:body_id].not_eq(self.body_id)))
-               ).to_sql + ') > 1').
-         where(ParentSwfAssetRelationship.joins(:swf_asset).where(
-                 psa[:parent_id].eq(i[:id]).and(
-                 psa[:parent_type].eq('Item').and(
-                 sa[:body_id].in([self.body_id, 0])))
-               ).exists.not)
-  end
-
   def add_pet_state_from_biology!(biology)
     pet_state = PetState.from_pet_type_and_biology_info(self, biology)
     pet_state

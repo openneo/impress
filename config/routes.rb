@@ -26,7 +26,6 @@ OpenneoImpressItems::Application.routes.draw do
     resources :appearances, controller: 'item_appearances', only: [:index]
 
     collection do
-      get :needed
       get "sources/:ids", action: :sources
     end
   end

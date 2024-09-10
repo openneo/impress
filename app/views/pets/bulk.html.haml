@@ -1,42 +1,20 @@
 - title t('modeling_hub')
 
-= form_tag load_pet_path, :id => 'needed-items-form' do
-  - localized_cache :action_suffix => 'needed_items_content' do
-    %h3= t '.needed_items.header'
-    
-    %p= t '.needed_items.explanation'
-    
-    = origin_tag bulk_pets_path
-    = destination_tag 'needed_items'
-    
-    %input#needed-items-pet-name-field{:type => "text", :name => "name"}/
-    %input{:type => "submit", :value => t('.needed_items.submit')}/
-    
-    #needed-items-alert.alert
-    
-    #needed-items-pet.script-only
-      %h4
-        %img#needed-items-pet-thumbnail.inline-image
-        %span#needed-items-pet-header
-        %button#needed-items-reload= t '.needed_items.reload'
-      
-      %ul#needed-items-pet-items
-
 = form_tag load_pet_path, :id => 'bulk-pets-form' do
   - localized_cache :action_suffix => 'bulk_pets_content' do
-    %h3= t '.bulk_pets.header'
+    %h3= t '.header'
     
-    %p= t '.bulk_pets.explanation'
+    %p= t '.explanation'
     
     = origin_tag bulk_pets_path
    
     %div.noscript
       %input{:name => "name", :type => "text"}/
-      %input{:type => "submit", :value => t('.bulk_pets.submit')}/
+      %input{:type => "submit", :value => t('.submit')}/
     %div.script-only
       %textarea
-      %button#bulk-pets-form-add{:type => "button"}= t '.bulk_pets.add'
-      %button#bulk-pets-form-clear{:type => "button"}= t '.bulk_pets.clear'
+      %button#bulk-pets-form-add{:type => "button"}= t '.add'
+      %button#bulk-pets-form-clear{:type => "button"}= t '.clear'
       %ul
 
 - localized_cache :action_suffix => 'templates' do
@@ -70,12 +48,12 @@
     %li.waiting
       %img{:src => '${pet_thumbnail}'}
       %span.name ${pet_name}
-      %span.waiting-message= t '.bulk_pets.waiting'
-      %span.loading-message= t '.bulk_pets.loading'
+      %span.waiting-message= t '.waiting'
+      %span.loading-message= t '.loading'
       %span.response
     
   %script#bulk-pets-submission-success-template{:type => 'text/x-jquery/tmpl'}
-    = t '.bulk_pets.submission_success', :points => '${points}'
+    = t '.submission_success', :points => '${points}'
 
 - content_for :javascripts do
   = include_javascript_libraries :jquery, :jquery_tmpl

@@ -112,27 +112,6 @@ class ItemsController < ApplicationController
     end
   end
 
-  def needed
-    if params[:color] && params[:species]
-      @pet_type = PetType.find_by_color_id_and_species_id(
-        params[:color],
-        params[:species]
-      )
-    end
-    
-    unless @pet_type
-      raise ActiveRecord::RecordNotFound, 'Pet type not found'
-    end
-    
-    @items = @pet_type.needed_items.order(:name)
-    assign_closeted!(@items)
-    
-    respond_to do |format|
-      format.html { @pet_name = params[:name] ; render :layout => 'application' }
-      format.json { render :json => @items }
-    end
-  end
-
   def sources
     # Load all the items, then group them by source.
     item_ids = params[:ids].split(",")

@@ -630,27 +630,17 @@ en-MEEP:
 
   pets:
     bulk:
-      needed_items:
-        header: Looking for ways to contreepute?
-        explanation:
-          Meep your pet's name below and we'll tell you what items you can
-          meep. Thanks for your meep!
-        submit: Meep
-        pet_header: Items %{pet_name} can meep
-        reload: Remeep
-        item_owned: You own this meepit
-      bulk_pets:
-        header: Meep pets in bulk
-        explanation:
-          Got a lot of pets to meep? Just keep meeping them into the box below,
-          or even meep in a whole list of names, one name per line. Thanks for
-          your meep!
-        submit: Meep pet
-        add: Meep
-        clear: Cleer
-        waiting: Weeting…
-        loading: Leeding…
-        submission_success: "%{points} peeps"
+      header: Meep pets in bulk
+      explanation:
+        Got a lot of pets to meep? Just keep meeping them into the box below,
+        or even meep in a whole list of names, one name per line. Thanks for
+        your meep!
+      submit: Meep pet
+      add: Meep
+      clear: Cleer
+      waiting: Weeting…
+      loading: Leeding…
+      submission_success: "%{points} peeps"
 
     load:
       not_found: We couldn't meep a pet by that name. Is it meeped correctly?
