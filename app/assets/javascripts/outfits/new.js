@@ -6,12 +6,9 @@
 	var PetQuery = {},
 		query_string = document.location.hash || document.location.search;
 
-	$.each(query_string.substr(1).split("&"), function () {
-		var split_piece = this.split("=");
-		if (split_piece.length == 2) {
-			PetQuery[split_piece[0]] = split_piece[1];
-		}
-	});
+	for (const [key, value] of new URLSearchParams(query_string).entries()) {
+		PetQuery[key] = value;
+	}
 
 	if (PetQuery.name) {
 		if (PetQuery.species && PetQuery.color) {
@@ -122,7 +119,13 @@
 
 	Preview.Job.Name = function (name) {
 		this.name = name;
-		Preview.Job.apply(this, [name, "cpn"]);
+		if (name.startsWith("@")) {
+			// This is an image hash "pet name".
+			Preview.Job.apply(this, [name.substr(1), "cp"]);
+		} else {
+			// This is a normal pet name.
+			Preview.Job.apply(this, [name, "cpn"]);
+		}
 
 		this.visit = function () {
 			$(".main-pet-name").val(this.name).closest("form").submit();
