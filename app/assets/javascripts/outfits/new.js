@@ -12,10 +12,14 @@
 
 	if (PetQuery.name) {
 		if (PetQuery.species && PetQuery.color) {
+			var image_url = petImage("cpn/" + PetQuery.name, 1);
+			if (PetQuery.name.startsWith("@")) {
+				image_url = petImage("cp/" + PetQuery.name.substr(1), 1);
+			}
 			$("#pet-query-notice-template")
 				.tmpl({
 					pet_name: PetQuery.name,
-					pet_image_url: petImage("cpn/" + PetQuery.name, 1),
+					pet_image_url: image_url,
 				})
 				.prependTo("#container");
 		}
