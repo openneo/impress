@@ -67,7 +67,7 @@
         - if @appearances_by_occupied_zone.present?
           %ul
             - @appearances_by_occupied_zone.each do |zone, appearances_in_zone|
-              %li
+              %li<
                 = zone.label
                 - if item_zone_partial_fit? appearances_in_zone, @all_appearances
                   %span.zone-species-info{
