@@ -12,6 +12,13 @@ class SwfAssetsController < ApplicationController
 				helpers.image_url("favicon.png"),
 				@swf_asset.image_url,
 				*@swf_asset.canvas_movie_sprite_urls,
+
+				# For images, `images.neopets.com` is a generally safe host to load
+				# from (shouldn't be a vulnerable site or exfiltration vector), and
+				# doing this can help make this header a *lot* shorter, which helps
+				# our nginx reverse proxy (and probably some clients) handle it. (For
+				# example, see asset `667993` for "Engulfed in Flames Effect".)
+				hosts: ["https://images.neopets.com"],
 			)
 		}
 
@@ -38,7 +45,14 @@ class SwfAssetsController < ApplicationController
 
 	private
 
-	def src_list(*urls)
-		urls.filter(&:present?).map { |url| url.sub(/\?.*\z/, "") }.join(" ")
+	def src_list(*urls, hosts: [])
+		urls.
+			# Ignore any `nil`s that might arise
+			filter(&:present?).
+			# Remove query strings from URLs (they're invalid in CSPs)
+			map { |url| url.sub(/\?.*\z/, "") }.
+			# For the given `hosts`, remove all their specific URLs, and just list
+			# the host itself.
+			reject { |url| hosts.any? { |h| url.start_with? h } } + hosts
 	end
 end
