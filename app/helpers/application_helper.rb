@@ -161,7 +161,7 @@ module ApplicationHelper
   
   def locale_options
     current_locale_is_public = false
-    options = I18n.public_locales.map do |available_locale|
+    options = I18n.available_locales.map do |available_locale|
       current_locale_is_public = true if I18n.locale == available_locale
       # Include fallbacks data on the tag. Right now it's used in blog
       # localization, but may conceivably be used for something else later.

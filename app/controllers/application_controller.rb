@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
     return params[:locale] if valid_locale?(params[:locale])
     return cookies[:locale] if valid_locale?(cookies[:locale])
     Rails.logger.debug "Preferred languages: #{http_accept_language.user_preferred_languages}"
-    http_accept_language.language_region_compatible_from(I18n.public_locales.map(&:to_s)) ||
+    http_accept_language.language_region_compatible_from(I18n.available_locales.map(&:to_s)) ||
       I18n.default_locale
   end
   
@@ -76,7 +76,7 @@ class ApplicationController < ActionController::Base
   end
   
   def valid_locale?(locale)
-    locale && I18n.usable_locales.include?(locale.to_sym)
+    locale && I18n.available_locales.include?(locale.to_sym)
   end
 
   def configure_permitted_parameters
