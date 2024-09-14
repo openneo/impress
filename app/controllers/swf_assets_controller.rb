@@ -24,8 +24,8 @@ class SwfAssetsController < ApplicationController
 
 		policy.script_src -> {
 			src_list(
-				helpers.javascript_url("lib/easeljs.min"),
-				helpers.javascript_url("lib/tweenjs.min"),
+				helpers.javascript_url("easeljs.min"),
+				helpers.javascript_url("tweenjs.min"),
 				helpers.javascript_url("swf_assets/show"),
 				@swf_asset.canvas_movie_library_url,
 			)
