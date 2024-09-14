@@ -243,8 +243,14 @@ class Item < ApplicationRecord
     normalized_name = name.downcase.gsub("female", "girl").gsub("male", "boy").
       gsub(/\s/, "")
 
-    Color.order(:name).
-      find { |c| normalized_name.include?(c.name.downcase.gsub(/\s/, "")) }
+    # For each color, normalize its name, look for it in the item name, and
+    # return the matching color that appears earliest. (This is important for
+    # items that contain multiple color names, like the "Royal Girl Elephante
+    # Gold Bracelets".)
+    Color.all.to_h { |c| [c, c.name.downcase.gsub(/\s/, "")] }.
+      transform_values { |n| normalized_name.index(n) }.
+      filter { |c, n| n.present? }.
+      min_by { |c, i| i }&.first
   end
 
   # If this is a PB item, return the corresponding Species, inferred from the
