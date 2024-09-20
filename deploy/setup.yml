@@ -6,6 +6,7 @@
   vars:
     email_address: "emi@matchu.dev" # TODO: Extract this to personal config?
     impress_hostname: impress.openneo.net
+    ruby_version: "3.3.5"
   vars_files:
     # mysql_root_password, mysql_user_password, mysql_user_password_2020,
     # dev_ips
@@ -170,21 +171,21 @@
       git:
         repo: https://github.com/rbenv/ruby-build.git
         dest: /opt/ruby-build
-        version: d22fa95a6e4c77945304c16ebe0d9513fec98cfb
+        version: v20240917
 
-    - name: Check if Ruby 3.3.4 is already installed
+    - name: Check if Ruby {{ ruby_version }} is already installed
       stat:
-        path: /opt/ruby-3.3.4
+        path: /opt/ruby-{{ ruby_version }}
       register: ruby_dir
 
-    - name: Install Ruby 3.3.4
-      command: "/opt/ruby-build/bin/ruby-build 3.3.4 /opt/ruby-3.3.4"
+    - name: Install Ruby {{ ruby_version }}
+      command: "/opt/ruby-build/bin/ruby-build {{ ruby_version }} /opt/ruby-{{ ruby_version }}"
       when: not ruby_dir.stat.exists
 
-    - name: Add Ruby 3.3.4 to the global PATH, for developer convenience
+    - name: Add Ruby {{ ruby_version }} to the global PATH, for developer convenience
       copy:
         dest: /etc/profile.d/ruby_path.sh
-        content: PATH="/opt/ruby-3.3.4/bin:$PATH"
+        content: PATH="/opt/ruby-{{ ruby_version }}/bin:$PATH"
 
     - name: Install system dependencies for impress's Ruby gems
       apt:
@@ -248,14 +249,14 @@
       become_user: impress
       command:
         chdir: /srv/impress/versions/initial-placeholder
-        cmd: /opt/ruby-3.3.4/bin/bundle config set --local deployment true
+        cmd: /opt/ruby-{{ ruby_version }}/bin/bundle config set --local deployment true
       when: not current_app_version.stat.exists
 
     - name: Install the placeholder app's dependencies
       become_user: impress
       command:
         chdir: /srv/impress/versions/initial-placeholder
-        cmd: /opt/ruby-3.3.4/bin/bundle install
+        cmd: /opt/ruby-{{ ruby_version }}/bin/bundle install
       when: not current_app_version.stat.exists
 
     - name: Set the placeholder app as the current version
@@ -287,8 +288,8 @@
         state: directory
 
     - name: Create service file for impress
-      copy:
-        src: files/impress.service
+      template:
+        src: files/impress.service.j2
         dest: /etc/systemd/system/impress.service
       notify:
         - Reload systemctl
