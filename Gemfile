@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '3.3.5'
 
-gem 'rails', '~> 7.1', '>= 7.1.3.4'
+gem 'rails', '~> 7.2', '>= 7.2.1'
 
 # The HTTP server running the Rails instance.
 gem 'falcon', '~> 0.48.0'
