@@ -9,8 +9,6 @@ class PetType < ApplicationRecord
   has_many :pet_states
   has_many :pets
 
-  BasicHashes = YAML::load_file(Rails.root.join('config', 'basic_type_hashes.yml'))
-  
   scope :basic, -> { joins(:color).merge(Color.basic) }
   scope :matching_name, ->(color_name, species_name) {
     color = Color.find_by_name!(color_name)
@@ -52,17 +50,7 @@ class PetType < ApplicationRecord
     # Otherwise, refer to the fallback YAML file (though, if we have our
     # basic image hashes set correctly, the fallbacks should just be an old
     # subset of the basic image hashes in the database.)
-    basic_image_hash || self['image_hash'] || fallback_image_hash
-  end
-
-  def fallback_image_hash
-    I18n.with_locale(I18n.default_locale) do
-      if species && color && BasicHashes[species.name] && BasicHashes[species.name][color.name]
-        BasicHashes[species.name][color.name]
-      else
-        return 'deadbeef'
-      end
-    end
+    basic_image_hash || self['image_hash'] || 'deadbeef'
   end
 
   def possibly_new_color
