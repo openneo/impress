@@ -1,57 +1,55 @@
 - title t('modeling_hub')
 
 = form_tag load_pet_path, :id => 'bulk-pets-form' do
-  - localized_cache :action_suffix => 'bulk_pets_content' do
-    %p= t '.explanation'
-    
-    = origin_tag bulk_pets_path
-   
-    %div.noscript
-      %input{:name => "name", :type => "text"}/
-      %input{:type => "submit", :value => t('.submit')}/
-    %div.script-only
-      %textarea
-      %button#bulk-pets-form-add{:type => "button"}= t '.add'
-      %button#bulk-pets-form-clear{:type => "button"}= t '.clear'
-      %ul
+  %p= t '.explanation'
 
-- localized_cache :action_suffix => 'templates' do
-  %script#item-template{:type => 'text/x-jquery-tmpl'}
-    %li{:class => 'object{{if owned}} owned{{/if}}'}
-      = link_to item_path(':id').sub(':id', '${id}') do
-        %img{:src => '${thumbnail_url}', :alt => '${description}', :title => '${description}'}
-        %span.name ${name}
-    
-      {{if nc}}
-      = nc_icon
-      {{/if}}
-      
-      .closeted-icons
-        {{if owned}}
-        = owned_icon
-        {{/if}}
-        
-        {{if wanted}}
-        = wanted_icon
-        {{/if}}
-      
+  = origin_tag bulk_pets_path
+
+  %div.noscript
+    %input{:name => "name", :type => "text"}/
+    %input{:type => "submit", :value => t('.submit')}/
+  %div.script-only
+    %textarea
+    %button#bulk-pets-form-add{:type => "button"}= t '.add'
+    %button#bulk-pets-form-clear{:type => "button"}= t '.clear'
+    %ul
+
+%script#item-template{:type => 'text/x-jquery-tmpl'}
+  %li{:class => 'object{{if owned}} owned{{/if}}'}
+    = link_to item_path(':id').sub(':id', '${id}') do
+      %img{:src => '${thumbnail_url}', :alt => '${description}', :title => '${description}'}
+      %span.name ${name}
+
+    {{if nc}}
+    = nc_icon
+    {{/if}}
+
+    .closeted-icons
       {{if owned}}
-      %span.object-owned= t '.needed_items.item_owned'
+      = owned_icon
       {{/if}}
-  
-  %script#needed-items-pet-header-template{:type => 'text/x-jquery/tmpl'}
-    = t '.needed_items.pet_header', :pet_name => '${pet_name}'
-  
-  %script#bulk-pets-submission-template{:type => 'text/x-jquery/tmpl'}
-    %li.waiting
-      %img{:src => '${pet_thumbnail}'}
-      %span.name ${pet_name}
-      %span.waiting-message= t '.waiting'
-      %span.loading-message= t '.loading'
-      %span.response
-    
-  %script#bulk-pets-submission-success-template{:type => 'text/x-jquery/tmpl'}
-    = t '.submission_success', :points => '${points}'
+
+      {{if wanted}}
+      = wanted_icon
+      {{/if}}
+
+    {{if owned}}
+    %span.object-owned= t '.needed_items.item_owned'
+    {{/if}}
+
+%script#needed-items-pet-header-template{:type => 'text/x-jquery/tmpl'}
+  = t '.needed_items.pet_header', :pet_name => '${pet_name}'
+
+%script#bulk-pets-submission-template{:type => 'text/x-jquery/tmpl'}
+  %li.waiting
+    %img{:src => '${pet_thumbnail}'}
+    %span.name ${pet_name}
+    %span.waiting-message= t '.waiting'
+    %span.loading-message= t '.loading'
+    %span.response
+
+%script#bulk-pets-submission-success-template{:type => 'text/x-jquery/tmpl'}
+  = t '.submission_success', :points => '${points}'
 
 - content_for :javascripts do
   = include_javascript_libraries :jquery, :jquery_tmpl

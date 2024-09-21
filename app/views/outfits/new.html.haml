@@ -22,12 +22,11 @@
         DTI here for a long time to come!
 
 #outfit-forms
-  - localized_cache :action_suffix => 'outfit_forms_intro' do
-    #pet-preview
-      = image_tag 'default_preview.png', :alt => ''
-      %span
-    %h1= t 'app_name'
-    %h2= t '.tagline'
+  #pet-preview
+    = image_tag 'default_preview.png', :alt => ''
+    %span
+  %h1= t 'app_name'
+  %h2= t '.tagline'
 
   = form_tag load_pet_path, method: 'POST', class: 'primary load-pet-to-wardrobe' do
     = hidden_field_tag 'destination', 'wardrobe'
@@ -109,19 +108,17 @@
             = image_tag item.thumbnail_url
             = nc_icon_for(item)
 
+%script#pet-query-notice-template{:type => 'text/x-jquery-tmpl'}
+  .notice
+    %img.inline-image{:src => '${pet_image_url}'}
+    = t '.pet_query.notice_html', :pet_name => '${pet_name}'
 
-- localized_cache :action_suffix => 'templates' do
-  %script#pet-query-notice-template{:type => 'text/x-jquery-tmpl'}
-    .notice
-      %img.inline-image{:src => '${pet_image_url}'}
-      = t '.pet_query.notice_html', :pet_name => '${pet_name}'
-  
-  %script#preview-pet-type-not-found-template{:type => 'text/x-jquery-tmpl'}
-    = t '.preview.pet_type_not_found', :color_name => '${color_name}',
-        :species_name => '${species_name}'
-  
-  %script#preview-pet-not-found-template{:type => 'text/x-jquery-tmpl'}
-    = t '.preview.pet_not_found'
+%script#preview-pet-type-not-found-template{:type => 'text/x-jquery-tmpl'}
+  = t '.preview.pet_type_not_found', :color_name => '${color_name}',
+      :species_name => '${species_name}'
+
+%script#preview-pet-not-found-template{:type => 'text/x-jquery-tmpl'}
+  = t '.preview.pet_not_found'
 
 - content_for :javascripts do
   = include_javascript_libraries :jquery, :jquery_tmpl

@@ -9,24 +9,23 @@
     = will_paginate @items
 - else
   #search-info
-    - localized_cache :action_suffix => 'search_help' do
-      #search-help
-        %h2= t '.search_help_header'
-        %dl
-          %dt= t '.examples.basic.query'
-          %dd= t '.examples.basic.description'
-          %dt= t '.examples.user_items.query'
-          %dd
-            = twl '.examples.user_items.description',
-              :user_items_link_url => your_items_path
-          %dt= t '.examples.nc.query'
-          %dd= t '.examples.nc.description'
-          %dt= t '.examples.pb.query'
-          %dd= t '.examples.pb.description'
-          %dt= t '.examples.species.query'
-          %dd= t '.examples.species.description'
-          %dt= t '.examples.type.query'
-          %dd= t '.examples.type.description'
+    #search-help
+      %h2= t '.search_help_header'
+      %dl
+        %dt= t '.examples.basic.query'
+        %dd= t '.examples.basic.description'
+        %dt= t '.examples.user_items.query'
+        %dd
+          = twl '.examples.user_items.description',
+            :user_items_link_url => your_items_path
+        %dt= t '.examples.nc.query'
+        %dd= t '.examples.nc.description'
+        %dt= t '.examples.pb.query'
+        %dd= t '.examples.pb.description'
+        %dt= t '.examples.species.query'
+        %dd= t '.examples.species.description'
+        %dt= t '.examples.type.query'
+        %dd= t '.examples.type.description'
 
     #search-new-items
       %h2= t '.newest_items.header'
