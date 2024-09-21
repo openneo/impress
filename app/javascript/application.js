@@ -1,5 +1,6 @@
 import "@hotwired/turbo-rails";
 
-document.getElementById("locale").addEventListener("change", function () {
+document.addEventListener("change", (e) => {
+	if (!e.target.matches("#locale")) return;
 	document.getElementById("locale-form").submit();
 });
