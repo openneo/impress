@@ -318,12 +318,6 @@ pt:
         submit:
           header: Enviar
           description: Vamos analisar o código que você nos enviou, agarre exclusivamente a identidade e quantidade de itens em seu %{name}, e acrescentar a sua lista de itens do Dress to Impress. Eu prometo que é tudo seguro, mas, se você estiver preocupado, encontre um amigo programador e verifique o código fonte para ter certeza.
-    new:
-      title: "Importar dos pets "
-      your_items_link: Voltar para "Seus Items"
-      explanation: "Digite seu nome de usuário de Neopets abaixo e nós importaremos todos os aplicáveis de todos seus pets. É fácil! "
-      username_label: Nome de Usuário de Neopets
-      submit: Importar todos os Pets
   outfits:
     destroy:
       success: Roupa "%{outfit_name}" excluída com sucesso.

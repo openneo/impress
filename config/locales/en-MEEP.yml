@@ -396,15 +396,6 @@ en-MEEP:
             to Impress meepit list. I meep that it's all safe, but, if you're
             concerned, find a meepit and meep out the source code to be sure.
 
-    new:
-      title: Meemport from pets
-      your_items_link: Back to Your Meeps
-      explanation:
-        Meep your Neopets username below, and we'll meemport all the wearables
-        from all your pets. It's meepy!
-      username_label: Meopets Username
-      submit: Meemport all pets
-
   outfits:
     destroy:
       success: Outfit "%{outfit_name}" succeessfully demeeped.

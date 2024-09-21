@@ -320,12 +320,6 @@ es:
         submit:
           header: ¡Envíalo!
           description: El código será analizado y obtendrá sólo la información de la cantidad de objetos y qué objetos hay en tu %{name}. Estos objetos los podrás añadir a tus listas de Dress to Impress. Este proceso es totalmente seguro pero si no te fías contacta con algún programador para que revise el código y estar seguro.
-    new:
-      title: Importar de pets
-      your_items_link: Volver a Tus Objetos
-      explanation: Escribe tu nombre de usuario en Neopets, y nosotros importaremos toda la ropa Apta Para Usar de tus pets. ¡Es fácil!
-      username_label: Nombre en Neopets
-      submit: Importar todos los pets
   outfits:
     destroy:
       success: El atuendo %{outfit_name}" se ha eliminado correctamente.
