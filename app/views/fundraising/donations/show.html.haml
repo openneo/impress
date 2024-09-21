@@ -42,10 +42,7 @@
   = f.submit 'Save donation details'
 
 - content_for :javascripts do
-  = include_javascript_libraries :jquery
-
-- content_for :javascripts_body do
-  = javascript_include_tag 'fundraising/donations/show', defer: true
+  = javascript_include_tag 'jquery', 'fundraising/donations/show', defer: true
 
 - content_for :stylesheets do
   = page_stylesheet_link_tag 'fundraising/donations/show'

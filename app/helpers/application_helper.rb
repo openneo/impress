@@ -148,17 +148,6 @@ module ApplicationHelper
     end
   end
 
-  JAVASCRIPT_LIBRARIES = {
-    :jquery => 'https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js',
-    :jquery_tmpl => 'https://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js',
-  }
-
-  def include_javascript_libraries(*library_names)
-    raw(library_names.inject('') do |html, name|
-      html + javascript_include_tag(JAVASCRIPT_LIBRARIES[name], defer: true)
-    end)
-  end
-  
   def locale_options
     current_locale_is_public = false
     options = I18n.available_locales.map do |available_locale|
