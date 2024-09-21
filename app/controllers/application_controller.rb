@@ -2,12 +2,10 @@ require 'async'
 require 'async/container'
 
 class ApplicationController < ActionController::Base
-  include FragmentLocalization
-  
   protect_from_forgery
 
   helper_method :current_user, :user_signed_in?
-  
+
   before_action :set_locale
 
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -45,7 +43,7 @@ class ApplicationController < ActionController::Base
   def user_signed_in?
     auth_user_signed_in?
   end
-  
+
   def infer_locale
     return params[:locale] if valid_locale?(params[:locale])
     return cookies[:locale] if valid_locale?(cookies[:locale])
@@ -53,7 +51,7 @@ class ApplicationController < ActionController::Base
     http_accept_language.language_region_compatible_from(I18n.available_locales.map(&:to_s)) ||
       I18n.default_locale
   end
-  
+
   def not_found(record_name='record')
     raise ActionController::RoutingError.new("#{record_name} not found")
   end

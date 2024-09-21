@@ -31,7 +31,7 @@
       %h2= t '.newest_items.header'
       = render @newest_items
 
-  - localized_cache :action_suffix => 'species_search_links' do
+  - cache "items/index species_search_links locale=#{I18n.locale}" do
     #species-search-links
       %h2= t '.species_search.header'
       = standard_species_search_links

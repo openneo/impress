@@ -1,6 +1,4 @@
 module ApplicationHelper
-  include FragmentLocalization
-
   def absolute_url(path_or_url)
     if path_or_url.include?('://') # already an absolute URL
       path_or_url
@@ -164,13 +162,6 @@ module ApplicationHelper
     end
     
     options
-  end
-  
-  def localized_cache(key={}, &block)
-    localized_key = localize_fragment_key(key, locale)
-    # TODO: The digest feature is handy, but it's not compatible with how we
-    # check for fragments existence in the controller, so skip it for now.
-    cache(localized_key, skip_digest: true, &block)
   end
 
   def auth_user_sign_in_path_with_return_to
