@@ -33,7 +33,7 @@ en:
       footer:
         source_code: Source Code
         terms: Terms of Use (updated %{date})
-        about_neopass: About NeoPass
+        blog: Blog
         contact: Contact
         email: Questions, comments, bugs
         copyright: Images © 1999–%{year} World of Neopets, Inc. All Rights Reserved.

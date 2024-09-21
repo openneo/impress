@@ -95,7 +95,8 @@ OpenneoImpressItems::Application.routes.draw do
   get '/terms', to: "about#terms", as: :terms
   get '/privacy',
     to: redirect(Rails.configuration.impress_2020_origin + "/privacy")
-  get '/about/neopass', to: 'about#neopass'
+  get '/about/neopass',
+      to: redirect('https://blog.openneo.net/2024/03/13/neopass-for-dti.html')
 
   # Other useful lil things!
   get '/sitemap.xml' => 'sitemap#index', :as => :sitemap, :format => :xml
