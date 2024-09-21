@@ -1,5 +1,5 @@
 module OutfitsHelper
-  LAST_DAY_OF_ANNOUNCEMENT = Date.parse("2024-09-13")
+  LAST_DAY_OF_ANNOUNCEMENT = Date.parse("2024-09-27")
   def show_announcement?
     Date.today <= LAST_DAY_OF_ANNOUNCEMENT
   end
