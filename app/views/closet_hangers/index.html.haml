@@ -152,8 +152,7 @@
 
 - content_for :javascripts do
   = include_javascript_libraries :jquery, :jquery_tmpl
-  = javascript_include_tag 'ajax_auth', 'jquery.ui', 'jquery.jgrowl',
-    defer: true
+  = javascript_include_tag 'jquery.ui', 'jquery.jgrowl', defer: true
 
 - content_for :javascripts_body do
   = javascript_include_tag 'closet_hangers/index', defer: true

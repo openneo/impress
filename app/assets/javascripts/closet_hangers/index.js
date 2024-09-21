@@ -1,4 +1,11 @@
 (function () {
+	function addCSRFToken(xhr) {
+		const token = document
+			.querySelector('meta[name="csrf-token"]')
+			?.getAttribute("content");
+		xhr.setRequestHeader("X-CSRF-Token", token);
+	}
+
 	var hangersInitCallbacks = [];
 
 	function onHangersInit(callback) {
@@ -285,6 +292,7 @@
 				type: "post",
 				data: data,
 				dataType: "json",
+				beforeSend: addCSRFToken,
 				complete: function (data) {
 					if (quantityEl.val() == 0) {
 						objectRemoved(objectWrapper);
@@ -389,6 +397,7 @@
 				type: "post",
 				data: data,
 				dataType: "json",
+				beforeSend: addCSRFToken,
 				complete: function () {
 					button.val("Remove");
 				},
@@ -465,6 +474,7 @@
 			url: form.attr("action"),
 			type: form.attr("method"),
 			data: data,
+			beforeSend: addCSRFToken,
 			success: function (html) {
 				var doc = $(html);
 				hangersEl.html(doc.find("#closet-hangers").html());
@@ -501,6 +511,7 @@
 			url: form.attr("action") + ".json?" + $.param({ ids: hangerIds }),
 			type: "delete",
 			dataType: "json",
+			beforeSend: addCSRFToken,
 			success: function () {
 				objectRemoved(hangerEls);
 			},
@@ -567,6 +578,7 @@
 						closet_hanger: closetHanger,
 						return_to: window.location.pathname + window.location.search,
 					},
+					beforeSend: addCSRFToken,
 					complete: function () {
 						itemsSearchField.removeClass("loading");
 					},
@@ -711,6 +723,7 @@
 			type: "post",
 			data: data,
 			dataType: "json",
+			beforeSend: addCSRFToken,
 			complete: function () {
 				contactForm.enableForms();
 			},
@@ -731,6 +744,7 @@
 					type: "POST",
 					data: { neopets_connection: { neopets_username: newUsername } },
 					dataType: "json",
+					beforeSend: addCSRFToken,
 					success: function (connection) {
 						var newOption = $("<option/>", {
 							text: newUsername,

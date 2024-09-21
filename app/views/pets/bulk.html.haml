@@ -53,7 +53,6 @@
 
 - content_for :javascripts do
   = include_javascript_libraries :jquery, :jquery_tmpl
-  = javascript_include_tag 'ajax_auth', defer: true
 
 - content_for :javascripts_body do
   = javascript_include_tag 'pets/bulk', defer: true

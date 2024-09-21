@@ -37,6 +37,12 @@
 				pets.shift();
 				loading = true;
 				$.ajax({
+					beforeSend: (xhr) => {
+						const token = document
+							.querySelector('meta[name="csrf-token"]')
+							?.getAttribute("content");
+						xhr.setRequestHeader("X-CSRF-Token", token);
+					},
 					complete: function (data) {
 						loading = false;
 						loadNextIfReady();
