@@ -178,19 +178,17 @@ outfit-viewer
 // is loading.
 //
 // We only apply the delay here, not on the base styles, because fading
-// *out* on load should be instant. We also wait for the outfit-viewer to
-// execute a `setTimeout(0)`, to make sure we always *start* in the
-// non-loading state. This is because it's sometimes possible for the page to
-// start with the web component already in `state(loading)`, and we need to
-// make sure we *start* in *non-loading* state for the transition delay to
-// happen. (This can happen when you Turbo-navigate between multiple items.)
+// *out* on load should be instant.
 #item-preview[busy] outfit-viewer, outfit-viewer:has(outfit-layer:state(loading))
   cursor: wait
 
-  &:state(after-first-frame)
-    .loading-indicator
-      opacity: 1
-      transition-delay: 2s
+  .loading-indicator
+    opacity: 1
+    transition-delay: 2s
+
+    // If the outfit *starts* in loading state, still delay the fade-in.
+    @starting-style
+      opacity: 0
 
 #item-preview:has(outfit-layer:state(error))
   outfit-viewer
