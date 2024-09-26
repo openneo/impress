@@ -1,5 +1,5 @@
 - contributed = contribution.contributed
-= content_tag_for :li, contribution do
+%li
   %span.point-value= contribution.point_value
   = t 'contributions.contribution.description_html',
       :user_link => link_to(contribution.user.name,

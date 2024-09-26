@@ -68,9 +68,6 @@ gem "thread-local", "~> 1.1", require: false
 # For debugging.
 gem 'web-console', '~> 4.2', group: :development
 
-# TODO: Review our use of content_tag_for etc and uninstall this!
-gem 'record_tag_helper', '~> 1.0', '>= 1.0.1'
-
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '~> 1.16', require: false
 
