@@ -1,0 +1,11 @@
+- title "#{@pet_type.human_name}"
+
+%dl
+    %dt Happy
+    %dd= pet_type_image @pet_type, :happy, :full
+    %dt Sad
+    %dd= pet_type_image @pet_type, :sad, :full
+    %dt Angry
+    %dd= pet_type_image @pet_type, :angry, :full
+    %dt Ill
+    %dd= pet_type_image @pet_type, :ill, :full

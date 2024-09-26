@@ -14,19 +14,30 @@ module ItemsHelper
     }
 
     Sizes = {
-      face: 1,
-      thumb: 2,
-      zoom: 3,
-      full: 4,
-      face_2x: 6,
+      face:     1, # 50x50
+      face_3x:  6, # 150x150
+
+      thumb:    2, # 150x150
+      full:     4, # 300x300
+      large:    5, # 500x500
+      xlarge:   7, # 640x640
+
+      zoom:     3, # 80x80
+      autocrop: 9, # <varies>
+    }
+
+    SizeUpgrades = {
+      face: :face_3x,
+      thumb: :full,
+      full: :xlarge,
     }
   end
 
   def pet_type_image_url(pet_type, emotion: :happy, size: :face)
     PetTypeImage::Template.expand(
       hash: pet_type.basic_image_hash || pet_type.image_hash,
-      emotion: PetTypeImage::Emotions[emotion],
-      size: PetTypeImage::Sizes[size],
+      emotion: PetTypeImage::Emotions.fetch(emotion),
+      size: PetTypeImage::Sizes.fetch(size),
     ).to_s
   end
 
@@ -246,8 +257,10 @@ module ItemsHelper
 
   def pet_type_image(pet_type, emotion, size, **options)
     src = pet_type_image_url(pet_type, emotion:, size:)
-    srcset = if size == :face
-      [[pet_type_image_url(pet_type, emotion:, size: :face_2x), "2x"]]
+
+    size_2x = PetTypeImage::SizeUpgrades[size]
+    srcset = if size_2x
+      [[pet_type_image_url(pet_type, emotion:, size: size_2x), "2x"]]
     end
 
     image_tag(src, srcset:, **options)
