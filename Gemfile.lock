@@ -367,8 +367,6 @@ GEM
       execjs
       railties (>= 3.2)
       tilt
-    record_tag_helper (1.0.1)
-      actionview (>= 5)
     regexp_parser (2.9.2)
     reline (0.5.10)
       io-console (~> 0.5)
@@ -520,7 +518,6 @@ DEPENDENCIES
   rails-i18n (~> 7.0, >= 7.0.7)
   rdiscount (~> 2.2, >= 2.2.7.1)
   react-rails (~> 2.7, >= 2.7.1)
-  record_tag_helper (~> 1.0, >= 1.0.1)
   sanitize (~> 6.0, >= 6.0.2)
   sass-rails (~> 6.0)
   sentry-rails (~> 5.12)
