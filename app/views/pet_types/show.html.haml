@@ -1,18 +1,19 @@
 - title "#{@pet_type.human_name}"
 - use_responsive_design
 
-%ul
+%ul.pet-states
 	= render @pet_states[:canonical]
 
 - if @pet_states[:other].present?
 	%details
 		%summary Other
-		%ul
+		%ul.pet-states
 			= render @pet_states[:other]
 
 - content_for :stylesheets do
 	= stylesheet_link_tag "application/hanger-spinner"
 	= stylesheet_link_tag "application/outfit-viewer"
+	= stylesheet_link_tag "pet_types/show"
 
 - content_for :javascripts do
 	= javascript_include_tag "outfit-viewer", async: true
