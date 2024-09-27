@@ -1,0 +1,6 @@
+%li
+	= outfit_viewer pet_state:
+	= pose_name pet_state.pose
+	(#{pet_state.id})
+	- if pet_state.glitched?
+		👾

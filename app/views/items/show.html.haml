@@ -16,7 +16,7 @@
 
 = turbo_frame_tag "item-preview" do
   .preview-area
-    = render partial: "outfit_viewer", locals: {outfit: @preview_outfit}
+    = outfit_viewer @preview_outfit
     .error-indicator
       💥 We couldn't load all of this outfit. Try again?
     = link_to wardrobe_path(params: @preview_outfit.wardrobe_params),
@@ -122,6 +122,8 @@
 
 - content_for :stylesheets do
   = stylesheet_link_tag "application/hanger-spinner"
+  -# This is imported into items/show directly, to gain access to its mixins.
+  -# = stylesheet_link_tag "application/outfit-viewer"
   = page_stylesheet_link_tag "layouts/items"
   = page_stylesheet_link_tag "items/show"
 

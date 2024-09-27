@@ -69,5 +69,17 @@ module OutfitsHelper
     options = {:spellcheck => false, :id => nil}.merge(options)
     text_field_tag 'name', nil, options
   end
+
+  def outfit_viewer(outfit_or_options)
+    outfit = if outfit_or_options.is_a? Hash
+      Outfit.new(outfit_or_options)
+    elsif outfit_or_options.is_a? Outfit
+      outfit_or_options
+    else
+      raise TypeError, "must be an outfit or hash of options to create one"
+    end
+
+    render partial: "outfit_viewer", locals: {outfit:}
+  end
 end
 

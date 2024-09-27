@@ -3,7 +3,9 @@ class PetTypesController < ApplicationController
 		@pet_type = find_pet_type
 
 		respond_to do |format|
-			format.html { render }
+			format.html do
+				@pet_states = group_pet_states @pet_type.pet_states
+			end
 			format.json { render json: @pet_type }
 		end
 	end
@@ -24,5 +26,25 @@ class PetTypesController < ApplicationController
 		else
 			raise "expected params: species_id and color_id, or name"
 		end
+	end
+
+	# The `canonical` pet states are the main ones we want to show: the most
+	# canonical state for each pose. The `other` pet states are, the others!
+	#
+	# We put *all* the UNKNOWN pet states into `other`, unless it is the only
+	# pose available, in which case one will be in `canonical`.
+	def group_pet_states(pet_states)
+		pose_groups = pet_states.emotion_order.group_by(&:pose)
+		unknowns = if pose_groups.keys != ["UNKNOWN"]
+			pose_groups.delete("UNKNOWN") { [] }
+		else
+			[]
+		end
+
+		canonical = pose_groups.values.map(&:first).sort_by(&:pose)
+		posed_others = pose_groups.values.map { |l| l.drop(1) }.flatten(1)
+		other = (posed_others + unknowns).sort_by(&:pose)
+
+		{canonical:, other:}
 	end
 end

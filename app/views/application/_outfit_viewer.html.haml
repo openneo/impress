@@ -21,6 +21,6 @@
       - if swf_asset.canvas_movie?
         %iframe{src: swf_asset_path(swf_asset, playing: outfit_viewer_is_playing ? true : nil)}
       - elsif swf_asset.image_url.present?
-        = image_tag swf_asset.image_url, alt: ""
+        = image_tag swf_asset.image_url, alt: "", loading: "lazy"
       - else
         / No movie or image available for SWF asset: #{swf_asset.url}
