@@ -110,12 +110,16 @@ class PetState < ApplicationRecord
   def swf_asset_ids=(ids)
     self['swf_asset_ids'] = ids
   end
-  
+
   def handle_assets!
     @parent_swf_asset_relationships_to_update.each do |rel|
       rel.swf_asset.save!
       rel.save!
     end
+  end
+
+  def to_param
+    "#{id}-#{pose.split('_').map(&:capitalize).join('-')}"
   end
 
   def self.from_pet_type_and_biology_info(pet_type, info)

@@ -1,5 +1,6 @@
 %li
-	= outfit_viewer pet_state:
-	%span.name= pose_name pet_state.pose
-	- if pet_state.glitched?
-		%span.glitched{title: "Glitched"} 👾
+	= link_to [pet_state.pet_type, pet_state] do
+		= outfit_viewer pet_state:
+		%span.name= pose_name pet_state.pose
+		- if pet_state.glitched?
+			%span.glitched{title: "Glitched"} 👾

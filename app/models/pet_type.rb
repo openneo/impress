@@ -15,6 +15,10 @@ class PetType < ApplicationRecord
     species = Species.find_by_name!(species_name)
     where(color_id: color.id, species_id: species.id)
   }
+  scope :matching_name_param, ->(name_param) {
+    color_name, _, species_name = name_param.rpartition("-")
+    matching_name(color_name, species_name)
+  }
   scope :preferring_species, ->(species_id) {
     joins(:species).order([Arel.sql("species_id = ? DESC"), species_id])
   }
@@ -106,6 +110,10 @@ class PetType < ApplicationRecord
   # Given a list of items, return how they look on this pet type.
   def appearances_for(item, ...)
     Item.appearances_for(item, self, ...)
+  end
+
+  def to_param
+    "#{color.human_name}-#{species.human_name}"
   end
 
   def self.all_by_ids_or_children(ids, pet_states)

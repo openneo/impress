@@ -1,0 +1,36 @@
+- title "#{@pet_type.human_name}: #{pose_name @pet_state.pose} [\##{@pet_state.id}]"
+- use_responsive_design
+
+= outfit_viewer pet_state: @pet_state
+
+%dl
+	%dt{title: "Pose usually affects just the eyes and mouth. Neopets " +
+			   "genders these as Male/Female, but I don't like those " +
+	           "terms for like… it's just eyelashes! Sheesh!"}
+		Pose
+	%dd
+		= pose_name @pet_state.pose
+		- if @pet_state.pose == "UNCONVERTED"
+			(Retired, replaced by #{link_to "Alt Styles", alt_styles_path})
+
+	%dt{title: "This is our own internal ID number, nothing to do with " +
+	           "Neopets's official data."}
+		DTI ID
+	%dd= @pet_state.id
+
+	%dt{title: "When we notice a form looks wrong, we mark it Glitched, to " +
+	           "tell our systems to prefer other forms for this pose instead."}
+		Glitched?
+	%dd
+		- if @pet_state.glitched?
+			👾 Yes, it's bad news bonko'd
+		- else
+			✅ Not marked as Glitched
+
+- content_for :stylesheets do
+	= stylesheet_link_tag "application/hanger-spinner"
+	= stylesheet_link_tag "application/outfit-viewer"
+	= stylesheet_link_tag "pet_states/show"
+
+- content_for :javascripts do
+	= javascript_include_tag "outfit-viewer", async: true
