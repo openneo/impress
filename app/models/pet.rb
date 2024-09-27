@@ -168,7 +168,7 @@ class Pet < ApplicationRecord
   # Return the response body as a `HashWithIndifferentAccess`.
   def self.send_amfphp_request(request, timeout: 10)
     begin
-      response = request.post(timeout: timeout, headers: {
+      response_data = request.post(timeout: timeout, headers: {
         "User-Agent" => Rails.configuration.user_agent_for_neopets,
       })
     rescue RocketAMFExtensions::RemoteGateway::AMFError => e
@@ -177,7 +177,7 @@ class Pet < ApplicationRecord
       raise DownloadError, e.message, e.backtrace
     end
 
-    HashWithIndifferentAccess.new(response.messages[0].data.body)
+    HashWithIndifferentAccess.new(response_data)
   end
 end
 
