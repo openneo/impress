@@ -2,4 +2,4 @@
 	= outfit_viewer pet_state:
 	%span.name= pose_name pet_state.pose
 	- if pet_state.glitched?
-		👾
+		%span.glitched{title: "Glitched"} 👾
