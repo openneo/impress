@@ -31,19 +31,21 @@ class PetTypesController < ApplicationController
 	# The `canonical` pet states are the main ones we want to show: the most
 	# canonical state for each pose. The `other` pet states are, the others!
 	#
-	# We put *all* the UNKNOWN pet states into `other`, unless it is the only
-	# pose available, in which case one will be in `canonical`.
+	# If no main poses are available, then we just make all the poses
+	# "canonical", and show the whole mish-mash!
+	MAIN_POSES = %w(HAPPY_FEM HAPPY_MASC SAD_FEM SAD_MASC SICK_FEM SICK_MASC)
 	def group_pet_states(pet_states)
 		pose_groups = pet_states.emotion_order.group_by(&:pose)
-		unknowns = if pose_groups.keys != ["UNKNOWN"]
-			pose_groups.delete("UNKNOWN") { [] }
-		else
-			[]
+		main_groups = pose_groups.select { |k| MAIN_POSES.include?(k) }.values
+		other_groups = pose_groups.reject { |k| MAIN_POSES.include?(k) }.values
+
+		if main_groups.empty?
+			return {canonical: other_groups.flatten(1).sort_by(&:pose), other: []}
 		end
 
-		canonical = pose_groups.values.map(&:first).sort_by(&:pose)
-		posed_others = pose_groups.values.map { |l| l.drop(1) }.flatten(1)
-		other = (posed_others + unknowns).sort_by(&:pose)
+		canonical = main_groups.map(&:first).sort_by(&:pose)
+		main_others = main_groups.map { |l| l.drop(1) }.flatten(1)
+		other = (main_others + other_groups.flatten(1)).sort_by(&:pose)
 
 		{canonical:, other:}
 	end
