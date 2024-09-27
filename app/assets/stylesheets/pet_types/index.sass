@@ -1,6 +1,4 @@
-@import "../partials/clean/constants"
-
-.pet-states
+.pet-types
 	list-style-type: none
 	display: flex
 	flex-wrap: wrap
@@ -8,18 +6,18 @@
 	gap: .5em
 
 	> li
-		width: 200px
+		width: 150px
 		max-width: calc(50% - .25em)
 		min-width: 150px
 		box-sizing: border-box
 		text-align: center
 
-		a
-			display: block
-			border-radius: 1em
-			padding: .5em
+	a
+		display: block
+		border-radius: 1em
+		padding: .5em
 
-	outfit-viewer
+	img
 		width: 100%
 		height: auto
 		aspect-ratio: 1 / 1
@@ -31,6 +29,4 @@
 		background: white
 		padding: .25em .5em
 		border-radius: .5em
-
-	.glitched
-		cursor: help
+		margin: 0 auto
