@@ -215,7 +215,8 @@ class ItemsController < ApplicationController
     @item.compatible_pet_types.
       preferring_species(cookies["preferred-preview-species-id"] || "<ignore>").
       preferring_color(cookies["preferred-preview-color-id"] || "<ignore>").
-      preferring_simple.first
+      preferring_simple.first ||
+      PetType.matching_name("Blue", "Acara").first!
   end
 
   def validate_preview

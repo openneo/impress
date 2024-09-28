@@ -21,8 +21,11 @@ class ApplicationController < ActionController::Base
 
   class AccessDenied < StandardError; end
   rescue_from AccessDenied, with: :on_access_denied
+
   rescue_from Async::Stop, Async::Container::Terminate,
     with: :on_request_stopped
+
+  rescue_from ActiveRecord::ConnectionTimeoutError, with: :on_db_timeout
 
   def authenticate_user!
     redirect_to(new_auth_user_session_path) unless user_signed_in?
@@ -63,6 +66,11 @@ class ApplicationController < ActionController::Base
   def on_request_stopped
     render file: 'public/stopped.html', layout: false,
       status: :internal_server_error
+  end
+
+  def on_db_timeout
+    render file: 'public/503.html', layout: false,
+      status: :service_unavailable
   end
 
   def redirect_back!(default=:back)

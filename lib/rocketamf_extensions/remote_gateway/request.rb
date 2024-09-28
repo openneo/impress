@@ -54,7 +54,25 @@ module RocketAMFExtensions
           raise RocketAMF::AMFError.new(first_message_data)
         end
         
-        result
+        # HACK: It seems to me that these messages come back with Windows-1250
+        # (or similar) encoding on the strings? I'm basing this on the
+        # Patchwork Staff item, whose description arrives as:
+        #
+        # "That staff is cute, but dont use it as a walking stick \x96 I " +
+        # "dont think it will hold you up!"
+        #
+        # And the `\x96` is meant to represent an endash, which it doesn't in
+        # UTF-8 or in most extended ASCII encodings, but *does* in Windows's
+        # specific extended ASCII.
+        #
+        # Idk if this is something to do with the AMFPHP spec or how the AMFPHP
+        # server code they use serializes strings (I couldn't find any
+        # reference to it?), or just their internal database encoding being
+        # passed along as-is, or what? But this seems to be the most correct
+        # interpretation I know how to do, so, let's do it!
+        result.messages[0].data.body.tap do |body|
+          reencode_strings! body, "Windows-1250", "UTF-8"
+        end
       end
       
       private
@@ -84,6 +102,16 @@ module RocketAMFExtensions
           return http.request(req)
         rescue Exception => e
           raise ConnectionError, e.message
+        end
+      end
+
+      def reencode_strings!(target, from, to)
+        if target.is_a? String
+          target.force_encoding(from).encode!(to)
+        elsif target.is_a? Array
+          target.each { |x| reencode_strings!(x, from, to) }
+        elsif target.is_a? Hash
+          target.values.each { |x| reencode_strings!(x, from, to) }
         end
       end
     end
