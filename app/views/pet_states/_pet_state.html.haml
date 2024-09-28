@@ -1,5 +1,5 @@
 %li
-	= link_to [pet_state.pet_type, pet_state] do
+	= link_to useful_pet_state_path(pet_state.pet_type, pet_state) do
 		= outfit_viewer pet_state:
 		.name= pose_name pet_state.pose
 		- if pet_state.glitched?
