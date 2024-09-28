@@ -47,7 +47,7 @@ class OutfitsController < ApplicationController
   end
 
   def new
-    @colors = Color.funny.alphabetical
+    @colors = Color.alphabetical
     @species = Species.alphabetical
 
     # HACK: Skip this in development, because it's slow!

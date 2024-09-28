@@ -36,7 +36,8 @@ en:
         blog: Blog
         contact: Contact
         email: Questions, comments, bugs
-        copyright: Images © 1999–%{year} World of Neopets, Inc. All Rights Reserved.
+        copyright:
+          Images © 1999–%{year} World of Neopets, Inc. All Rights Reserved.
           Used With Permission
 
     items:
@@ -167,8 +168,7 @@ en:
       submit: Save
       edit: Edit
       delete: Delete
-      delete_confirmation:
-        Are you sure you want to delete "%{list_name}"?
+      delete_confirmation: Are you sure you want to delete "%{list_name}"?
         If you do, we'll delete all the items in it, too.
       remove_all:
         confirm: "Remove all items from this list?"
@@ -215,7 +215,6 @@ en:
 
   colors:
     default_human_name: (a new color)
-    prank_suffix: (fake)
 
   contributions:
     contributed_description:
