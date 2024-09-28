@@ -7,7 +7,7 @@
 	%li
 		= link_to @pet_type.color.human_name,
 		          pet_types_path(color: @pet_type.color.human_name)
-	%li{"data-joined-with-prev": true}
+	%li{"data-relation-to-prev": "sibling"}
 		= link_to @pet_type.species.human_name,
 		          pet_types_path(species: @pet_type.species.human_name)
 	%li
