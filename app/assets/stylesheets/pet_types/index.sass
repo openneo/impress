@@ -1,3 +1,5 @@
+@import "../partials/clean/constants"
+
 .pet-types
 	list-style-type: none
 	display: flex
@@ -16,17 +18,22 @@
 		display: block
 		border-radius: 1em
 		padding: .5em
+		text-decoration: none
+		background: white
+		&:hover
+			outline: 1px solid $module-border-color
+			background: $module-bg-color
 
 	img
 		width: 100%
 		height: auto
 		aspect-ratio: 1 / 1
-		position: relative
-		z-index: -1
 		margin-bottom: -1em
 
 	.name
-		background: white
+		background: inherit
 		padding: .25em .5em
 		border-radius: .5em
 		margin: 0 auto
+		position: relative
+		z-index: 1
