@@ -76,11 +76,20 @@ module NCMall
 			raise UnexpectedResponseFormat, "missing field object_data in NC page"
 		end
 
+		object_data = nc_page["object_data"]
+
 		# NOTE: When there's no object data, it will be an empty array instead of
 		# an empty hash. Weird API thing to work around!
-		nc_page["object_data"] = {} if nc_page["object_data"] == []
+		object_data = {} if object_data == []
 
-		items = nc_page["object_data"].values.map do |item_info|
+		# Only the items in the `render` list are actually listed as directly for
+		# sale in the shop. `object_data` might contain other items that provide
+		# supporting information about them, but aren't actually for sale.
+		visible_object_data = (nc_page["render"] || []).
+			map { |id| object_data[id.to_s] }.
+			filter(&:present?)
+
+		items = visible_object_data.map do |item_info|
 			{
 				id: item_info["id"],
 				name: item_info["name"],
