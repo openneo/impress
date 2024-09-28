@@ -1,10 +1,12 @@
 - title "Rainbow Pool"
 - use_responsive_design
 
-= form_with method: :get do |form|
-    = form.select :color, @color_names, selected: @selected_color&.human_name, include_blank: "Color…"
-    = form.select :species, @species_names, selected: @selected_species&.human_name, include_blank: "Species…"
-    = form.submit "Filter"
+= form_with method: :get, class: "pet-filters" do |form|
+    %fieldset
+        %legend Filter by:
+        = form.select :color, @color_names, selected: @selected_color&.human_name, include_blank: "Color…"
+        = form.select :species, @species_names, selected: @selected_species&.human_name, include_blank: "Species…"
+        = form.submit "Go"
 
 = will_paginate @pet_types
 
