@@ -27,16 +27,24 @@
 				- @pet_state.errors.each do |error|
 					%li= error.full_message
 	%dl
-		%dt= f.label :pose
-		%dd= f.select :pose, pose_options
-		%dt= f.label :glitched, "Glitched?"
-		%dd= f.select :glitched, [["✅ Not marked as Glitched", false],
+		%dt Pose
+		%dd
+			%ul.pose-options
+				- pose_options.each do |pose|
+					%li
+						%label
+							= f.radio_button :pose, pose
+							= pose_name pose
+		%dt Glitched?
+		%dd
+			= f.select :glitched, [["✅ Not marked as Glitched", false],
 			["👾 Yes, it's bad news bonko'd", true]]
 	= f.submit "Save"
 
 - content_for :stylesheets do
 	= stylesheet_link_tag "application/breadcrumbs"
 	= stylesheet_link_tag "application/outfit-viewer"
+	= page_stylesheet_link_tag "pet_states/edit"
 
 - content_for :javascripts do
 	= javascript_include_tag "outfit-viewer"

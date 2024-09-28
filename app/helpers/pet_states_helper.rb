@@ -20,9 +20,17 @@ module PetStatesHelper
 		end
 	end
 
-	POSE_OPTIONS = %w(UNKNOWN HAPPY_FEM HAPPY_MASC SAD_FEM SAD_MASC SICK_FEM
-	                  SICK_MASC UNCONVERTED)
+	POSE_OPTIONS = %w(HAPPY_FEM SAD_FEM SICK_FEM HAPPY_MASC SAD_MASC SICK_MASC
+	                  UNCONVERTED UNKNOWN)
 	def pose_options
-		POSE_OPTIONS.map { |p| [pose_name(p), p] }
+		POSE_OPTIONS
+	end
+
+	def useful_pet_state_path(...)
+		if support_staff?
+			edit_pet_type_pet_state_path(...)
+		else
+			pet_type_pet_state_path(...)
+		end
 	end
 end

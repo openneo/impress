@@ -1,0 +1,25 @@
+@import "../partials/clean/constants"
+
+outfit-viewer
+	margin: 0 auto
+
+.pose-options
+	list-style-type: none
+	display: grid
+	grid-template-columns: 1fr 1fr 1fr
+	gap: .25em
+
+	label
+		display: flex
+		align-items: center
+		gap: .5em
+		padding: .5em 1em
+		border: 1px solid $soft-border-color
+		border-radius: 1em
+
+		input
+			margin: 0
+
+		&:has(:checked)
+			background: $module-bg-color
+			border-color: $module-border-color
