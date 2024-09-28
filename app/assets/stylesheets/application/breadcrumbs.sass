@@ -1,0 +1,18 @@
+.breadcrumbs
+	list-style-type: none
+	display: flex
+	flex-direction: row
+	margin-block: .5em
+	font-size: .85em
+
+	li
+		display: flex
+
+	li:not(:first-child)
+		&::before
+			margin-inline: .35em
+			content: "→"
+
+		&[data-joined-with-prev]
+			&::before
+				content: "+"

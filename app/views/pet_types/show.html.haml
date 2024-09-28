@@ -1,6 +1,18 @@
 - title "#{@pet_type.human_name}"
 - use_responsive_design
 
+%ol.breadcrumbs
+	%li
+		= link_to "Rainbow Pool", pet_types_path
+	%li
+		= link_to @pet_type.color.human_name,
+		          pet_types_path(color: @pet_type.color.human_name)
+	%li{"data-joined-with-prev": true}
+		= link_to @pet_type.species.human_name,
+		          pet_types_path(species: @pet_type.species.human_name)
+	%li
+		Forms
+
 %ul.pet-states
 	= render @pet_states[:canonical]
 
@@ -11,6 +23,7 @@
 			= render @pet_states[:other]
 
 - content_for :stylesheets do
+	= stylesheet_link_tag "application/breadcrumbs"
 	= stylesheet_link_tag "application/hanger-spinner"
 	= stylesheet_link_tag "application/outfit-viewer"
 	= stylesheet_link_tag "pet_types/show"
