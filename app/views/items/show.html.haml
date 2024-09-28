@@ -34,7 +34,7 @@
         %span.error-icon{title: "We haven't seen this item on this pet before."} ⚠️
 
       = select_tag "preview[color_id]",
-        options_from_collection_for_select(Color.funny.alphabetical,
+        options_from_collection_for_select(Color.alphabetical,
           "id", "human_name", @selected_preview_pet_type.color_id)
       = select_tag "preview[species_id]",
         options_from_collection_for_select(Species.alphabetical,
