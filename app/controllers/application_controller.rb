@@ -110,5 +110,11 @@ class ApplicationController < ActionController::Base
     Rails.logger.debug "Using return_to path: #{return_to.inspect}"
     return_to || root_path
   end
+
+  def support_staff_only
+    unless current_user&.support_staff?
+      raise AccessDenied, "Support staff only"
+    end
+  end
 end
 

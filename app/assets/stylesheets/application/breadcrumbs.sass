@@ -1,3 +1,6 @@
+#title:has(+ .breadcrumbs)
+	margin-bottom: .125em
+
 .breadcrumbs
 	list-style-type: none
 	display: flex
@@ -13,6 +16,8 @@
 			margin-inline: .35em
 			content: "→"
 
-		&[data-joined-with-prev]
-			&::before
-				content: "+"
+		&[data-relation-to-prev=sibling]::before
+			content: "+"
+
+		&[data-relation-to-prev=menu]::before
+			content: "-"

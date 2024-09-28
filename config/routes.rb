@@ -39,7 +39,7 @@ OpenneoImpressItems::Application.routes.draw do
   resources :swf_assets, path: 'swf-assets', only: [:show]
   resources :pet_types, path: 'rainbow-pool', param: "name",
             only: [:index, :show] do
-    resources :pet_states, only: [:show], path: "forms"
+    resources :pet_states, only: [:show, :edit, :update], path: "appearances"
   end
 
   # Loading and modeling pets!

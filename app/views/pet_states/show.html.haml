@@ -7,13 +7,16 @@
 	%li
 		= link_to @pet_type.color.human_name,
 		          pet_types_path(color: @pet_type.color.human_name)
-	%li{"data-joined-with-prev": true}
+	%li{"data-relation-to-prev": "sibling"}
 		= link_to @pet_type.species.human_name,
 		          pet_types_path(species: @pet_type.species.human_name)
 	%li
-		= link_to "Forms", @pet_type
+		= link_to "Appearances", @pet_type
 	%li
-		Form ##{@pet_state.id}
+		\##{@pet_state.id}
+	- if support_staff?
+		%li{"data-relation-to-prev": "menu"}
+			= link_to "Edit", edit_pet_type_pet_state_path(@pet_type, @pet_state)
 
 = outfit_viewer pet_state: @pet_state
 
@@ -45,7 +48,7 @@
 	= stylesheet_link_tag "application/breadcrumbs"
 	= stylesheet_link_tag "application/hanger-spinner"
 	= stylesheet_link_tag "application/outfit-viewer"
-	= stylesheet_link_tag "pet_states/show"
+	= page_stylesheet_link_tag "pet_states/show"
 
 - content_for :javascripts do
 	= javascript_include_tag "outfit-viewer", async: true

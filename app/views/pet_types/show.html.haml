@@ -11,7 +11,7 @@
 		= link_to @pet_type.species.human_name,
 		          pet_types_path(species: @pet_type.species.human_name)
 	%li
-		Forms
+		Appearances
 
 %ul.pet-states
 	= render @pet_states[:canonical]
@@ -26,7 +26,7 @@
 	= stylesheet_link_tag "application/breadcrumbs"
 	= stylesheet_link_tag "application/hanger-spinner"
 	= stylesheet_link_tag "application/outfit-viewer"
-	= stylesheet_link_tag "pet_types/show"
+	= page_stylesheet_link_tag "pet_types/show"
 
 - content_for :javascripts do
 	= javascript_include_tag "outfit-viewer", async: true

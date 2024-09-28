@@ -16,7 +16,13 @@ module PetStatesHelper
 		when "UNCONVERTED"
 			"Unconverted"
 		else
-			"(Unknown)"
+			"Not labeled yet"
 		end
+	end
+
+	POSE_OPTIONS = %w(UNKNOWN HAPPY_FEM HAPPY_MASC SAD_FEM SAD_MASC SICK_FEM
+	                  SICK_MASC UNCONVERTED)
+	def pose_options
+		POSE_OPTIONS.map { |p| [pose_name(p), p] }
 	end
 end

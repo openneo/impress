@@ -71,6 +71,28 @@ class PetState < ApplicationRecord
     end
   end
 
+  # TODO: More and more, wanting to refactor poses…
+  def pose=(pose)
+    case pose
+    when "UNKNOWN"
+      label_pose nil, nil, unconverted: nil, labeled: false
+    when "HAPPY_MASC"
+      label_pose 1, false
+    when "HAPPY_FEM"
+      label_pose 1, true
+    when "SAD_MASC"
+      label_pose 2, false
+    when "SAD_FEM"
+      label_pose 2, true
+    when "SICK_MASC"
+      label_pose 4, false
+    when "SICK_FEM"
+      label_pose 4, true
+    when "UNCONVERTED"
+      label_pose nil, nil, unconverted: true
+    end
+  end
+
   def reassign_children_to!(main_pet_state)
     self.contributions.each do |contribution|
       contribution.contributed = main_pet_state
@@ -174,6 +196,16 @@ class PetState < ApplicationRecord
     end
     pet_state.parent_swf_asset_relationships_to_update = relationships
     pet_state
+  end
+
+  private
+
+  # A helper for the `pose=` method.
+  def label_pose(mood_id, female, unconverted: false, labeled: true)
+    self.labeled = labeled
+    self.mood_id = mood_id
+    self.female = female
+    self.unconverted = unconverted
   end
 end
 
