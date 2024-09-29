@@ -70,9 +70,10 @@
               %li<
                 = zone.label
                 - if item_zone_partial_fit? appearances_in_zone, @all_appearances
+                  = " "
                   %span.zone-species-info{
                     title: item_zone_species_list(appearances_in_zone)
-                  }
+                  }<
                     (#{appearances_in_zone.size} species)
         - else
           %span.no-zones (None)
