@@ -81,23 +81,35 @@ class SpeciesFacePickerOptions extends HTMLElement {
 	}
 }
 
-class MeasuredContent extends HTMLElement {
+// TODO: If it ever gets wide support, remove this in favor of the CSS rule
+//       `interpolate-size: allow-keywords`, to animate directly from `auto`.
+//       https://drafts.csswg.org/css-values-5/#valdef-interpolate-size-allow-keywords
+class MeasuredContainer extends HTMLElement {
+	static observedAttributes = ["style"];
+
 	connectedCallback() {
 		setTimeout(() => this.#measure(), 0);
 	}
 
-	#measure() {
-		// Find our `<measured-container>` parent, and set our natural width
-		// as `var(--natural-width)` in the context of its CSS styles.
-		const container = this.closest("measured-container");
-		if (container == null) {
-			throw new Error(`<measured-content> must be in a <measured-container>`);
+	attributeChangedCallback() {
+		// When `--natural-width` gets morphed away by Turbo, measure it again!
+		if (this.style.getPropertyValue("--natural-width") === "") {
+			this.#measure();
 		}
-		container.style.setProperty("--natural-width", this.offsetWidth + "px");
+	}
+
+	#measure() {
+		// Find our `<measured-content>` child, and set our natural width as
+		// `var(--natural-width)` in the context of our CSS styles.
+		const content = this.querySelector("measured-content");
+		if (content == null) {
+			throw new Error(`<measured-container> must contain a <measured-content>`);
+		}
+		this.style.setProperty("--natural-width", content.offsetWidth + "px");
 	}
 }
 
 customElements.define("species-color-picker", SpeciesColorPicker);
 customElements.define("species-face-picker", SpeciesFacePicker);
 customElements.define("species-face-picker-options", SpeciesFacePickerOptions);
-customElements.define("measured-content", MeasuredContent);
+customElements.define("measured-container", MeasuredContainer);
