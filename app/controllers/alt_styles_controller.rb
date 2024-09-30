@@ -3,10 +3,11 @@ class AltStylesController < ApplicationController
 		@alt_styles = AltStyle.includes(:species, :color, :swf_assets).
 			order(:species_id, :color_id)
 
-		if params[:species_id]
-			@species = Species.find(params[:species_id])
-			@alt_styles = @alt_styles.merge(@species.alt_styles)
-		end
+		@color = find_color
+		@species = find_species
+
+		@alt_styles.merge!(@color.alt_styles) if @color
+		@alt_styles.merge!(@species.alt_styles) if @species
 
 		# We're going to link to the HTML5 image URL, so make sure we have all the
 		# manifests ready!
@@ -28,6 +29,22 @@ class AltStylesController < ApplicationController
 					methods: [:series_name, :adjective_name, :thumbnail_url],
 				)
 			}
+		end
+	end
+
+	protected
+
+	def find_color
+		if params[:color]
+			Color.find_by(name: params[:color])
+		end
+	end
+
+	def find_species
+		if params[:species_id]
+			Species.find_by(id: params[:species_id])
+		elsif params[:species]
+			Species.find_by(name: params[:species])
 		end
 	end
 end

@@ -1,4 +1,5 @@
 - title "Styling Studio"
+- use_responsive_design
 
 %p
 	Here's all the new NC Pet Styles we have! They're available in the app too,
@@ -13,6 +14,18 @@
 	wearable items, there's not a great way for us to get style tokens onto
 	tradelists… this may change someday, but probably not soon, sorry!
 
+= form_with url: alt_styles_path, method: :get, class: "filters" do |f|
+	%fieldset
+		%legend Filter by:
+		= f.select :color, Color.order(:name).map(&:human_name),
+		           selected: @color&.human_name, include_blank: "Color…"
+		= f.select :species, Species.order(:name).map(&:human_name),
+		           selected: @species&.human_name, include_blank: "Species…"
+		= f.submit "Go"
+
 - @alt_styles.group_by(&:species).each do |species, species_styles|
 	%h2.alt-styles-header= species.human_name
 	%ul.alt-styles-list= render partial: "alt_style", collection: species_styles
+
+- content_for :stylesheets do
+	= page_stylesheet_link_tag "alt_styles/index"
