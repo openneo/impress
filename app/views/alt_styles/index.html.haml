@@ -26,7 +26,8 @@
 
 - @alt_styles.group_by(&:species).each do |species, species_styles|
 	%h2.alt-styles-header= species.human_name
-	%ul.alt-styles-list= render partial: "alt_style", collection: species_styles
+	%ul.rainbow-pool-list
+		= render partial: "alt_style", collection: species_styles
 
 - content_for :stylesheets do
 	= stylesheet_link_tag "application/rainbow-pool"

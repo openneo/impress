@@ -1,4 +1,4 @@
-%li.alt-style
+%li
 	= link_to alt_style.preview_image_url do
-		= image_tag alt_style.thumbnail_url, class: 'alt-style-thumbnail'
-		.alt-style-name= alt_style.name
+		= image_tag alt_style.preview_image_url, class: "preview", loading: "lazy"
+		.name= alt_style.name
