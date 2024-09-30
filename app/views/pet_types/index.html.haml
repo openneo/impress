@@ -1,7 +1,7 @@
 - title "Rainbow Pool"
 - use_responsive_design
 
-= form_with method: :get, class: "pet-filters" do |form|
+= form_with method: :get, class: "rainbow-pool-filters" do |form|
     %fieldset
         %legend Filter by:
         = form.select :color, @color_names, selected: @selected_color&.human_name, include_blank: "Color…"
@@ -15,4 +15,5 @@
 = will_paginate @pet_types
 
 - content_for :stylesheets do
+    = stylesheet_link_tag "application/rainbow-pool"
     = page_stylesheet_link_tag "pet_types/index"

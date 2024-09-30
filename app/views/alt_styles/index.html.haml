@@ -14,7 +14,8 @@
 	wearable items, there's not a great way for us to get style tokens onto
 	tradelists… this may change someday, but probably not soon, sorry!
 
-= form_with url: alt_styles_path, method: :get, class: "filters" do |f|
+= form_with url: alt_styles_path, method: :get,
+            class: "rainbow-pool-filters" do |f|
 	%fieldset
 		%legend Filter by:
 		= f.select :color, Color.order(:name).map(&:human_name),
@@ -28,4 +29,5 @@
 	%ul.alt-styles-list= render partial: "alt_style", collection: species_styles
 
 - content_for :stylesheets do
+	= stylesheet_link_tag "application/rainbow-pool"
 	= page_stylesheet_link_tag "alt_styles/index"
