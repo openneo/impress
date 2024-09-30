@@ -1,4 +1,5 @@
-%outfit-viewer
+- html_options = {} unless defined? html_options
+= content_tag "outfit-viewer", **html_options do
   .loading-indicator= render partial: "hanger_spinner"
 
   %label.play-pause-button{title: "Pause/play animations"}

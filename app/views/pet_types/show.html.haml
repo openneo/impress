@@ -13,7 +13,7 @@
 	%li
 		Appearances
 
-%ul.pet-states
+%ul.rainbow-pool-list
 	= render @pet_states[:canonical]
 
 - if @pet_states[:other].present?
@@ -26,6 +26,7 @@
 	= stylesheet_link_tag "application/breadcrumbs"
 	= stylesheet_link_tag "application/hanger-spinner"
 	= stylesheet_link_tag "application/outfit-viewer"
+	= stylesheet_link_tag "application/rainbow-pool"
 	= page_stylesheet_link_tag "pet_types/show"
 
 - content_for :javascripts do

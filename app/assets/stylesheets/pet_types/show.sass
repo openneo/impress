@@ -1,43 +1,7 @@
 @import "../partials/clean/constants"
 
-.pet-states
-	list-style-type: none
-	display: flex
-	flex-wrap: wrap
-	justify-content: center
-	gap: .5em
-
-	> li
-		width: 200px
-		max-width: calc(50% - .25em)
-		min-width: 150px
-		box-sizing: border-box
-		text-align: center
-
-		a
-			display: block
-			border-radius: 1em
-			padding: .5em
-			background: white
-			text-decoration: none
-			&:hover
-				outline: 1px solid $module-border-color
-				background: $module-bg-color
-
-	outfit-viewer
-		width: 100%
-		height: auto
-		aspect-ratio: 1 / 1
-		position: relative
-		z-index: 0
-		margin-bottom: -1em
-
-	.name
-		background: inherit
-		padding: .25em .5em
-		border-radius: .5em
-		position: relative
-		z-index: 1
+.rainbow-pool-list
+	--preview-base-width: 200px
 
 	.glitched
 		cursor: help

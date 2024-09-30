@@ -1,6 +1,6 @@
 %li
 	= link_to useful_pet_state_path(pet_state.pet_type, pet_state) do
-		= outfit_viewer pet_state:
+		= outfit_viewer pet_state:, class: "preview"
 		.name= pose_name pet_state.pose
 		- if pet_state.glitched?
 			%span.glitched{title: "Glitched"} 👾

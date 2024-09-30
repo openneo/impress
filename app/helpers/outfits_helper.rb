@@ -70,16 +70,11 @@ module OutfitsHelper
     text_field_tag 'name', nil, options
   end
 
-  def outfit_viewer(outfit_or_options)
-    outfit = if outfit_or_options.is_a? Hash
-      Outfit.new(outfit_or_options)
-    elsif outfit_or_options.is_a? Outfit
-      outfit_or_options
-    else
-      raise TypeError, "must be an outfit or hash of options to create one"
-    end
+  def outfit_viewer(outfit=nil, pet_state: nil, **html_options)
+    outfit = Outfit.new(pet_state:) if outfit.nil? && pet_state.present?
+    raise "outfit_viewer must have outfit or pet state" if outfit.nil?
 
-    render partial: "outfit_viewer", locals: {outfit:}
+    render partial: "outfit_viewer", locals: {outfit:, html_options:}
   end
 end
 
