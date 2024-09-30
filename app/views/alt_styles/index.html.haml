@@ -18,9 +18,9 @@
             class: "rainbow-pool-filters" do |f|
 	%fieldset
 		%legend Filter by:
-		= f.select :color, Color.order(:name).map(&:human_name),
+		= f.select :color, @all_color_names,
 		           selected: @color&.human_name, include_blank: "Color…"
-		= f.select :species, Species.order(:name).map(&:human_name),
+		= f.select :species, @all_species_names,
 		           selected: @species&.human_name, include_blank: "Species…"
 		= f.submit "Go"
 

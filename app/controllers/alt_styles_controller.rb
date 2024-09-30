@@ -1,15 +1,22 @@
 class AltStylesController < ApplicationController
 	def index
-		@alt_styles = AltStyle.includes(:species, :color, :swf_assets).
+		@all_alt_styles = AltStyle.includes(:species, :color).
 			order(:species_id, :color_id)
+
+		@all_colors = @all_alt_styles.map(&:color).uniq.sort_by(&:name)
+		@all_species = @all_alt_styles.map(&:species).uniq.sort_by(&:name)
+
+		@all_color_names = @all_colors.map(&:human_name)
+		@all_species_names = @all_species.map(&:human_name)
 
 		@color = find_color
 		@species = find_species
 
+		@alt_styles = @all_alt_styles.includes(:swf_assets)
 		@alt_styles.merge!(@color.alt_styles) if @color
 		@alt_styles.merge!(@species.alt_styles) if @species
 
-		# We're going to link to the HTML5 image URL, so make sure we have all the
+		# We're using the HTML5 image for our preview, so make sure we have all the
 		# manifests ready!
 		SwfAsset.preload_manifests @alt_styles.map(&:swf_assets).flatten
 
