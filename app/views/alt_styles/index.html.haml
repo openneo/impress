@@ -18,6 +18,8 @@
             class: "rainbow-pool-filters" do |f|
 	%fieldset
 		%legend Filter by:
+		= f.select :series, @all_series_names,
+		           selected: @series_name, include_blank: "Style…"
 		= f.select :color, @all_color_names,
 		           selected: @color&.human_name, include_blank: "Color…"
 		= f.select :species, @all_species_names,

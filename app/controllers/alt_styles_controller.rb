@@ -8,13 +8,16 @@ class AltStylesController < ApplicationController
 		@all_colors = @all_alt_styles.map(&:color).uniq.sort_by(&:name)
 		@all_species = @all_alt_styles.map(&:species).uniq.sort_by(&:name)
 
+		@all_series_names = @all_alt_styles.map(&:series_name).uniq.sort
 		@all_color_names = @all_colors.map(&:human_name)
 		@all_species_names = @all_species.map(&:human_name)
 
+		@series_name = params[:series]
 		@color = find_color
 		@species = find_species
 
 		@alt_styles = @all_alt_styles.includes(:swf_assets)
+		@alt_styles.where!(series_name: @series_name) if @series_name.present?
 		@alt_styles.merge!(@color.alt_styles) if @color
 		@alt_styles.merge!(@species.alt_styles) if @species
 
