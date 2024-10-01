@@ -1,4 +1,6 @@
 %li
 	= link_to view_or_edit_alt_style_url(alt_style) do
 		= image_tag alt_style.preview_image_url, class: "preview", loading: "lazy"
-		.name= alt_style.name
+		.name
+			%span= alt_style.series_name
+			%span= alt_style.pet_name

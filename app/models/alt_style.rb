@@ -24,10 +24,12 @@ class AltStyle < ApplicationRecord
     order("DATE(created_at) DESC")
   }
 
-  def name
+  def pet_name
     I18n.translate('pet_types.human_name', color_human_name: color.human_name,
                    species_human_name: species.human_name)
   end
+
+  alias_method :name, :pet_name
 
   # If the series_name hasn't yet been set manually by support staff, show the
   # string "<New?>" instead. But it won't be searchable by that string—that is,
