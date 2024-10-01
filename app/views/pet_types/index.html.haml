@@ -6,7 +6,7 @@
         %legend Filter by:
         = form.select :color, @color_names, selected: @selected_color&.human_name, include_blank: "Color…"
         = form.select :species, @species_names, selected: @selected_species&.human_name, include_blank: "Species…"
-        = form.submit "Go"
+        = form.submit "Go", name: nil
 
 = will_paginate @pet_types, class: "rainbow-pool-pagination"
 

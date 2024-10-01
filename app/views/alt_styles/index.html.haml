@@ -24,7 +24,7 @@
 		           selected: @color&.human_name, include_blank: "Color…"
 		= f.select :species, @all_species_names,
 		           selected: @species&.human_name, include_blank: "Species…"
-		= f.submit "Go"
+		= f.submit "Go", name: nil
 
 = will_paginate @alt_styles, class: "rainbow-pool-pagination"
 
