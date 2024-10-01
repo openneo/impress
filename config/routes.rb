@@ -35,7 +35,7 @@ OpenneoImpressItems::Application.routes.draw do
     end
     resources :alt_styles, path: 'alt-styles', only: [:index]
   end
-  resources :alt_styles, path: 'alt-styles', only: [:index]
+  resources :alt_styles, path: 'alt-styles', only: [:index, :edit, :update]
   resources :swf_assets, path: 'swf-assets', only: [:show]
   resources :pet_types, path: 'rainbow-pool', param: "name",
             only: [:index, :show] do

@@ -1,0 +1,43 @@
+.alt-style-preview
+	width: 300px
+	height: 300px
+	margin: 0 auto
+
+.alt-style-form
+	display: flex
+	flex-direction: column
+	gap: 1em
+	align-items: flex-start
+
+	fieldset
+		width: 100%
+		display: grid
+		grid-template-columns: auto 1fr
+		align-items: center
+		gap: 1em
+
+		> *:nth-child(2n)
+			width: 40rch
+			max-width: 100%
+			box-sizing: border-box
+
+	input[type=url]
+		font-size: .85em
+
+	label
+		font-weight: bold
+
+	.thumbnail-field
+		display: flex
+		align-items: center
+		gap: .25em
+
+		img
+			width: 40px
+			height: 40px
+
+		input
+			flex: 1 0 20ch
+
+	.field_with_errors
+		display: contents

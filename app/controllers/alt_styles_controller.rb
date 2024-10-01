@@ -1,4 +1,6 @@
 class AltStylesController < ApplicationController
+	before_action :support_staff_only, except: [:index]
+
 	def index
 		@all_alt_styles = AltStyle.includes(:species, :color).
 			order(:species_id, :color_id)
@@ -39,7 +41,26 @@ class AltStylesController < ApplicationController
 		end
 	end
 
+	def edit
+		@alt_style = AltStyle.find params[:id]
+	end
+
+	def update
+		@alt_style = AltStyle.find params[:id]
+
+		if @alt_style.update(alt_style_params)
+			flash[:notice] = "\"#{@alt_style.full_name}\" successfully saved!"
+			redirect_to alt_styles_path
+		else
+			render action: :edit, status: :bad_request
+		end
+	end
+
 	protected
+
+	def alt_style_params
+		params.require(:alt_style).permit(:series_name, :thumbnail_url)
+	end
 
 	def find_color
 		if params[:color]

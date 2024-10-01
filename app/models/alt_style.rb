@@ -9,6 +9,8 @@ class AltStyle < ApplicationRecord
   has_many :contributions, as: :contributed, inverse_of: :contributed
 
   validates :body_id, presence: true
+  validates :series_name, presence: true, allow_nil: true
+  validates :thumbnail_url, presence: true
 
   before_create :infer_series_name
   before_create :infer_thumbnail_url
@@ -40,6 +42,10 @@ class AltStyle < ApplicationRecord
 
   def adjective_name
     "#{series_name} #{color.human_name}"
+  end
+
+  def full_name
+    "#{series_name} #{name}"
   end
 
   def preview_image_url
