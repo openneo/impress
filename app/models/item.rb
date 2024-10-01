@@ -296,6 +296,12 @@ class Item < ApplicationRecord
     restricted_zones + occupied_zones
   end
 
+  def update_cached_fields
+    self.cached_occupied_zone_ids = occupied_zone_ids.sort.join(",")
+    self.cached_compatible_body_ids = compatible_body_ids.sort.join(",")
+    self.save!
+  end
+
   def species_support_ids
     @species_support_ids_array ||= read_attribute('species_support_ids').split(',').map(&:to_i) rescue nil
   end
@@ -305,7 +311,7 @@ class Item < ApplicationRecord
     replacement = replacement.join(',') if replacement.is_a?(Array)
     write_attribute('species_support_ids', replacement)
   end
-  
+
   def support_species?(species)
     species_support_ids.blank? || species_support_ids.include?(species.id)
   end

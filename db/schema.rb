@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_09_28_022359) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_01_052510) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "species_id", null: false
     t.integer "color_id", null: false
@@ -137,6 +137,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_28_022359) do
     t.text "description", size: :medium, null: false
     t.string "rarity", default: "", null: false
     t.integer "dyeworks_base_item_id"
+    t.string "cached_occupied_zone_ids", default: "", null: false
+    t.text "cached_compatible_body_ids", default: "", null: false
     t.index ["dyeworks_base_item_id"], name: "index_items_on_dyeworks_base_item_id"
     t.index ["modeling_status_hint", "created_at", "id"], name: "items_modeling_status_hint_and_created_at_and_id"
     t.index ["modeling_status_hint", "created_at"], name: "items_modeling_status_hint_and_created_at"
@@ -154,7 +156,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_28_022359) do
   end
 
   create_table "modeling_logs", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
-    t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "created_at", precision: nil, default: -> { "current_timestamp()" }, null: false
     t.text "log_json", size: :long, null: false
     t.string "pet_name", limit: 128, null: false
   end
