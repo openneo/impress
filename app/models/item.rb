@@ -11,10 +11,10 @@ class Item < ApplicationRecord
   SwfAssetType = 'object'
 
   has_many :closet_hangers
-  has_one :contribution, :as => :contributed, :inverse_of => :contributed
+  has_one :contribution, as: :contributed, inverse_of: :contributed
   has_one :nc_mall_record
-  has_many :parent_swf_asset_relationships, :as => :parent
-  has_many :swf_assets, :through => :parent_swf_asset_relationships
+  has_many :parent_swf_asset_relationships, as: :parent
+  has_many :swf_assets, through: :parent_swf_asset_relationships
   belongs_to :dyeworks_base_item, class_name: "Item",
     default: -> { inferred_dyeworks_base_item }, optional: true
   has_many :dyeworks_variants, class_name: "Item",
@@ -61,38 +61,18 @@ class Item < ApplicationRecord
       '%' + sanitize_sql_like(PAINTBRUSH_SET_DESCRIPTION) + '%')
   }
   scope :occupies, ->(zone_label) {
-    zone_ids = Zone.matching_label(zone_label).map(&:id)
-
-    # NOTE: In searches, this query performs much better using a subquery
-    # instead of joins! This is because, in the joins case, filtering by an
-    # `swf_assets` field but sorting by an `items` field causes the query
-    # planner to only be able to use an index for *one* of them. In this case,
-    # MySQL can use the `swf_assets`.`zone_id` index to get the item IDs for
-    # the subquery, then use the `items`.`name` index to sort them.
-    i = arel_table
-    psa = ParentSwfAssetRelationship.arel_table
-    sa = SwfAsset.arel_table
-    where(
-      ParentSwfAssetRelationship.joins(:swf_asset).
-        where(sa[:zone_id].in(zone_ids)).
-        where(psa[:parent_type].eq("Item")).
-        where(psa[:parent_id].eq(i[:id])).
-        arel.exists
-    )
+    Zone.matching_label(zone_label).
+      map { |z| occupies_zone_id(z.id) }.reduce(none, &:or)
   }
   scope :not_occupies, ->(zone_label) {
-    zone_ids = Zone.matching_label(zone_label).map(&:id)
-    i = Item.arel_table
-    sa = SwfAsset.arel_table
-    # Querying for "has NO swf_assets matching these zone IDs" is trickier than
-    # the positive case! To do it, we GROUP_CONCAT the zone_ids together for
-    # each item, then use FIND_IN_SET to search the result for each zone ID,
-    # and assert that it must not find a match. (This is uhh, not exactly fast,
-    # so it helps to have other tighter conditions applied first!)
-    # TODO: I feel like this could also be solved with a LEFT JOIN, idk if that
-    # performs any better? In Rails 5+ `left_outer_joins` is built in so!
-    condition = zone_ids.map { 'FIND_IN_SET(?, GROUP_CONCAT(zone_id)) = 0' }.join(' AND ')
-    joins(:swf_assets).group(i[:id]).having(condition, *zone_ids).distinct
+    Zone.matching_label(zone_label).
+      map { |z| not_occupies_zone_id(z.id) }.reduce(all, &:and)
+  }
+  scope :occupies_zone_id, ->(zone_id) {
+    where("FIND_IN_SET(?, cached_occupied_zone_ids) > 0", zone_id)
+  }
+  scope :not_occupies_zone_id, ->(zone_id) {
+    where.not("FIND_IN_SET(?, cached_occupied_zone_ids) > 0", zone_id)
   }
   scope :restricts, ->(zone_label) {
     zone_ids = Zone.matching_label(zone_label).map(&:id)
@@ -105,31 +85,12 @@ class Item < ApplicationRecord
     where("NOT (#{condition})", *zone_ids)
   }
   scope :fits, ->(body_id) {
-    joins(:swf_assets).where(swf_assets: {body_id: [body_id, 0]}).distinct
+    where("FIND_IN_SET(?, cached_compatible_body_ids) > 0", body_id).
+      or(where("FIND_IN_SET('0', cached_compatible_body_ids) > 0"))
   }
   scope :not_fits, ->(body_id) {
-    i = Item.arel_table
-    sa = SwfAsset.arel_table
-    # Querying for "has NO swf_assets matching these body IDs" is trickier than
-    # the positive case! To do it, we GROUP_CONCAT the body_ids together for
-    # each item, then use FIND_IN_SET to search the result for the body ID,
-    # and assert that it must not find a match. (This is uhh, not exactly fast,
-    # so it helps to have other tighter conditions applied first!)
-    #
-    # TODO: I feel like this could also be solved with a LEFT JOIN, idk if that
-    # performs any better? In Rails 5+ `left_outer_joins` is built in so!
-    #
-    # NOTE: The `fits` and `not_fits` counts don't perfectly add up to the
-    # total number of items, 5 items aren't accounted for? I'm not going to
-    # bother looking into this, but one thing I notice is items with no assets
-    # somehow would not match either scope in this impl (but LEFT JOIN would!)
-    joins(:swf_assets).group(i[:id]).
-      having(
-        "FIND_IN_SET(?, GROUP_CONCAT(body_id)) = 0 AND " +
-        "FIND_IN_SET(0, GROUP_CONCAT(body_id)) = 0",
-        body_id
-      ).
-      distinct
+    where.not("FIND_IN_SET(?, cached_compatible_body_ids) > 0", body_id).
+      and(where.not("FIND_IN_SET('0', cached_compatible_body_ids) > 0"))
   }
 
   def nc_trade_value
