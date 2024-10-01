@@ -8,12 +8,11 @@
         = form.select :species, @species_names, selected: @selected_species&.human_name, include_blank: "Species…"
         = form.submit "Go"
 
-= will_paginate @pet_types
+= will_paginate @pet_types, class: "rainbow-pool-pagination"
 
 %ui.rainbow-pool-list= render @pet_types
 
-= will_paginate @pet_types
+= will_paginate @pet_types, class: "rainbow-pool-pagination"
 
 - content_for :stylesheets do
     = stylesheet_link_tag "application/rainbow-pool"
-    = page_stylesheet_link_tag "pet_types/index"

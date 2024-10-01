@@ -20,6 +20,9 @@ class AltStyle < ApplicationRecord
     species = Species.find_by_name!(species_name)
     where(series_name:, color_id: color.id, species_id: species.id)
   }
+  scope :by_creation_date, -> {
+    order("DATE(created_at) DESC")
+  }
 
   def name
     I18n.translate('pet_types.human_name', color_human_name: color.human_name,

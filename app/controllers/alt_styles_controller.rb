@@ -2,8 +2,7 @@ class AltStylesController < ApplicationController
 	before_action :support_staff_only, except: [:index]
 
 	def index
-		@all_alt_styles = AltStyle.includes(:species, :color).
-			order(:species_id, :color_id)
+		@all_alt_styles = AltStyle.includes(:species, :color)
 
 		@all_colors = @all_alt_styles.map(&:color).uniq.sort_by(&:name)
 		@all_species = @all_alt_styles.map(&:species).uniq.sort_by(&:name)
@@ -16,7 +15,9 @@ class AltStylesController < ApplicationController
 		@color = find_color
 		@species = find_species
 
-		@alt_styles = @all_alt_styles.includes(:swf_assets)
+		@alt_styles = @all_alt_styles.includes(:swf_assets).
+			by_creation_date.order(:color_id, :species_id, :series_name).
+			paginate(page: params[:page], per_page: 30)
 		@alt_styles.where!(series_name: @series_name) if @series_name.present?
 		@alt_styles.merge!(@color.alt_styles) if @color
 		@alt_styles.merge!(@species.alt_styles) if @species
