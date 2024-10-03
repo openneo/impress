@@ -50,7 +50,6 @@ class OutfitsController < ApplicationController
     @colors = Color.alphabetical
     @species = Species.alphabetical
 
-    # HACK: Skip this in development, because it's slow!
     newest_items = Item.newest.
       select(:id, :name, :updated_at, :thumbnail_url, :rarity_index,
              :is_manually_nc, :cached_compatible_body_ids)
