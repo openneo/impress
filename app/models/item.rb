@@ -294,10 +294,16 @@ class Item < ApplicationRecord
       # color. (We de-dupe standard colors into the key "standard", but it's
       # still possible that a body might appear multiple times in this list,
       # e.g. the Maraquan Mynci's body matches the standard Mynci body.)
+      #
+      # TODO: I feel like the more robust way to do this would be to flatten to
+      #       whatever matches the colors labeled "basic", rather than
+      #       "standard", because that's a much more reliable label in our data.
+      #       But that's not as easy to formulate a query about; moving on!
       compatible_pairs = compatible_pet_types.joins(:color).distinct.
         pluck(Arel.sql('IF(colors.standard, "standard", colors.id)'), :body_id)
 
       # Look for colors that have compatible bodies that no other colors have.
+      # We do this by doing the converse: look for bodies with only one color.
       # (This helps us e.g. ignore the Maraquan Mynci throwing things off!)
       compatible_color_ids_by_body_id = {}.tap do |h|
         compatible_pairs.each do |(color_id, body_id)|
@@ -312,7 +318,11 @@ class Item < ApplicationRecord
       # matching pet types, and get their distinct body IDs.
       conditions = modelable_color_ids.map do |color_id|
         if color_id == "standard"
-          PetType.where(color: {standard: true})
+          # Perhaps surprisingly, we filter to basic rather than standard
+          # colors here, to reduce the risk of getting unexpected bodies swept
+          # up in the mix. (e.g. the Chia is sometimes weird on
+          # otherwise-standard colors)
+          PetType.where(color: {basic: true})
         else
           PetType.where(color_id:)
         end
