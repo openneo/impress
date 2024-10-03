@@ -262,7 +262,7 @@ class Item < ApplicationRecord
 
   def update_cached_fields
     self.cached_occupied_zone_ids = occupied_zone_ids
-    self.cached_compatible_body_ids = compatible_body_ids
+    self.cached_compatible_body_ids = compatible_body_ids(use_cached: false)
     self.save!
   end
 
@@ -376,7 +376,9 @@ class Item < ApplicationRecord
     }.merge(options))
   end
 
-  def compatible_body_ids
+  def compatible_body_ids(use_cached: true)
+    return cached_compatible_body_ids if use_cached
+
     swf_assets.map(&:body_id).uniq
   end
 
