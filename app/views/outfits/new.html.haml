@@ -6,20 +6,24 @@
 
 - if show_announcement?
   %section.announcement
-    = image_tag "about/announcement-broom.png", width: 70, height: 70,
-      srcset: {"about/announcement-broom@2x.png": "2x"},
-      class: "neopass-thumbnail"
+    = image_tag "about/announcement.png", width: 70, height: 70,
+      srcset: {"about/announcement@2x.png": "2x"}
     .content
       %p
         %strong
-          = link_to "State of DTI: 2024!",
-                    "https://blog.openneo.net/2024/09/20/state-of-dti-2024.html"
-        Here's what we've been up to this year! We talk a bit about the
-        cleanups, the partnerships, and the future!
+          = link_to "This week in DTI: Performance upgrades!",
+                    "https://blog.openneo.net/2024/10/03/perf-upgrades.html"
+        If you saw the site stutter, whoops, you weren't imagining it! We've
+        dug into our past and made three changes to speed up the site for
+        everyone, whew!
       %p
-        The themes are stability, simplicity, and sustainability. We've been
-        online for 15 years now, and we're gonna keep doing our best to keep
-        DTI here for a long time to come!
+        Also, in case you can help:
+        = succeed "," do
+          = link_to "I'm job-hunting right now",
+                    "https://blog.openneo.net/2024/10/03/perf-upgrades.html#job-hunting"
+        looking for
+        full-time software roles!
+        %em (You gotta ask, right?)
 
 #outfit-forms
   #pet-preview
