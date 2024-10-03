@@ -10,6 +10,9 @@ class Item < ApplicationRecord
 
   SwfAssetType = 'object'
 
+  serialize :cached_compatible_body_ids, coder: Serializers::IntegerSet
+  serialize :cached_occupied_zone_ids, coder: Serializers::IntegerSet
+
   has_many :closet_hangers
   has_one :contribution, as: :contributed, inverse_of: :contributed
   has_one :nc_mall_record
@@ -258,8 +261,8 @@ class Item < ApplicationRecord
   end
 
   def update_cached_fields
-    self.cached_occupied_zone_ids = occupied_zone_ids.sort.join(",")
-    self.cached_compatible_body_ids = compatible_body_ids.sort.join(",")
+    self.cached_occupied_zone_ids = occupied_zone_ids
+    self.cached_compatible_body_ids = compatible_body_ids
     self.save!
   end
 
