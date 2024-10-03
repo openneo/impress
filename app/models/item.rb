@@ -290,27 +290,35 @@ class Item < ApplicationRecord
       # our prediction, though we'll revise it if we see another body ID.
       compatible_body_ids
     else
-      # If an item is worn by more than one body, then it must be wearable by
-      # all bodies of the same color. (To my knowledge, anyway. I'm not aware
-      # of any exceptions.) So, let's find those bodies by first finding those
-      # colors.
-      basic_body_ids = PetType.basic_body_ids
-      basic_compatible_body_ids, nonbasic_compatible_body_ids =
-        compatible_body_ids.partition { |bi| basic_body_ids.include?(bi) }
+      # First, find our compatible pet types, then pair each body ID with its
+      # color. (We de-dupe standard colors into the key "standard", but it's
+      # still possible that a body might appear multiple times in this list,
+      # e.g. the Maraquan Mynci's body matches the standard Mynci body.)
+      compatible_pairs = compatible_pet_types.joins(:color).distinct.
+        pluck(Arel.sql('IF(colors.standard, "standard", colors.id)'), :body_id)
 
-      output = []
-      if basic_compatible_body_ids.present?
-        output += basic_body_ids
+      # Look for colors that have compatible bodies that no other colors have.
+      # (This helps us e.g. ignore the Maraquan Mynci throwing things off!)
+      compatible_color_ids_by_body_id = {}.tap do |h|
+        compatible_pairs.each do |(color_id, body_id)|
+          h[body_id] ||= []
+          h[body_id] << color_id
+        end
       end
-      if nonbasic_compatible_body_ids.present?
-        nonbasic_modeled_color_ids = PetType.select('DISTINCT color_id').
-          where(body_id: nonbasic_compatible_body_ids).
-          map(&:color_id)
-        output += PetType.select('DISTINCT body_id').
-          where(color_id: nonbasic_modeled_color_ids).
-          map(&:body_id)
+      modelable_color_ids = compatible_color_ids_by_body_id.
+        filter { |k, v| v.size == 1 }.values.map(&:first).uniq
+
+      # Get all body IDs for the colors we decided are modelable: look up all
+      # matching pet types, and get their distinct body IDs.
+      conditions = modelable_color_ids.map do |color_id|
+        if color_id == "standard"
+          PetType.where(color: {standard: true})
+        else
+          PetType.where(color_id:)
+        end
       end
-      output
+      predicted_pet_types = conditions.inject(PetType.none, &:or).joins(:color)
+      predicted_pet_types.distinct.pluck(:body_id).sort
     end
   end
 
