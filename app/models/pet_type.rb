@@ -116,6 +116,10 @@ class PetType < ApplicationRecord
     "#{color.human_name}-#{species.human_name}"
   end
 
+  def self.basic_body_ids
+    PetType.basic.distinct.pluck(:body_id)
+  end
+
   def self.all_by_ids_or_children(ids, pet_states)
     pet_states_by_pet_type_id = {}
     pet_states.each do |pet_state|

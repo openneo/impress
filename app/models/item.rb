@@ -294,7 +294,7 @@ class Item < ApplicationRecord
       # all bodies of the same color. (To my knowledge, anyway. I'm not aware
       # of any exceptions.) So, let's find those bodies by first finding those
       # colors.
-      basic_body_ids = PetType.basic.distinct.pluck(:body_id)
+      basic_body_ids = PetType.basic_body_ids
       basic_compatible_body_ids, nonbasic_compatible_body_ids =
         compatible_body_ids.partition { |bi| basic_body_ids.include?(bi) }
 
@@ -335,9 +335,8 @@ class Item < ApplicationRecord
   end
 
   def predicted_missing_nonstandard_body_pet_types
-    PetType.joins(:color).
-            where(body_id: predicted_missing_body_ids - basic_body_ids,
-                  colors: {standard: false})
+    body_ids = predicted_missing_body_ids - PetType.basic_body_ids
+    PetType.joins(:color).where(body_id: body_ids, colors: {standard: false})
   end
 
   def predicted_missing_nonstandard_body_ids_by_species_by_color
