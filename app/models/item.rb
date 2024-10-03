@@ -273,58 +273,35 @@ class Item < ApplicationRecord
     write_attribute('species_support_ids', replacement)
   end
 
-  def support_species?(species)
-    species_support_ids.blank? || species_support_ids.include?(species.id)
-  end
-
-  def modeled_body_ids
-    @modeled_body_ids ||= swf_assets.select('DISTINCT body_id').map(&:body_id)
-  end
-
-  def modeled_color_ids
-    # Might be empty if modeled_body_ids is 0. But it's currently not called
-    # in that scenario, so, whatever.
-    @modeled_color_ids ||= PetType.select('DISTINCT color_id').
-                                   where(body_id: modeled_body_ids).
-                                   map(&:color_id)
-  end
-
-  def basic_body_ids
-    @basic_body_ids ||= begin
-      basic_color_ids ||= Color.select([:id]).basic.map(&:id)
-      PetType.select('DISTINCT body_id').
-        where(color_id: basic_color_ids).map(&:body_id)
-    end
-  end
-
   def predicted_body_ids
-    @predicted_body_ids ||= if modeled_body_ids.include?(0)
+    @predicted_body_ids ||= if compatible_body_ids.include?(0)
       # Oh, look, it's already known to fit everybody! Sweet. We're done. (This
       # isn't folded into the case below, in case this item somehow got a
       # body-specific and non-body-specific asset. In all the cases I've seen
       # it, that indicates a glitched item, but this method chooses to reflect
       # behavior elsewhere in the app by saying that we can put this item on
       # anybody. (Heh. Any body.))
-      modeled_body_ids
-    elsif modeled_body_ids.size == 1
+      compatible_body_ids
+    elsif compatible_body_ids.size == 1
       # This might just be a species-specific item. Let's be conservative in
       # our prediction, though we'll revise it if we see another body ID.
-      modeled_body_ids
+      compatible_body_ids
     else
       # If an item is worn by more than one body, then it must be wearable by
       # all bodies of the same color. (To my knowledge, anyway. I'm not aware
       # of any exceptions.) So, let's find those bodies by first finding those
       # colors.
-      basic_modeled_body_ids, nonbasic_modeled_body_ids = modeled_body_ids.
-        partition { |bi| basic_body_ids.include?(bi) }
+      basic_body_ids = PetType.basic.distinct.pluck(:body_id)
+      basic_compatible_body_ids, nonbasic_compatible_body_ids =
+        compatible_body_ids.partition { |bi| basic_body_ids.include?(bi) }
 
       output = []
-      if basic_modeled_body_ids.present?
+      if basic_compatible_body_ids.present?
         output += basic_body_ids
       end
-      if nonbasic_modeled_body_ids.present?
+      if nonbasic_compatible_body_ids.present?
         nonbasic_modeled_color_ids = PetType.select('DISTINCT color_id').
-          where(body_id: nonbasic_modeled_body_ids).
+          where(body_id: nonbasic_compatible_body_ids).
           map(&:color_id)
         output += PetType.select('DISTINCT body_id').
           where(color_id: nonbasic_modeled_color_ids).
@@ -335,7 +312,7 @@ class Item < ApplicationRecord
   end
 
   def predicted_missing_body_ids
-    @predicted_missing_body_ids ||= predicted_body_ids - modeled_body_ids
+    @predicted_missing_body_ids ||= predicted_body_ids - compatible_body_ids
   end
 
   def predicted_missing_standard_body_ids_by_species_id
@@ -387,7 +364,7 @@ class Item < ApplicationRecord
   end
 
   def predicted_modeled_ratio
-    modeled_body_ids.size.to_f / predicted_body_ids.size
+    compatible_body_ids.size.to_f / predicted_body_ids.size
   end
 
   def as_json(options={})
