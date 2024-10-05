@@ -13,7 +13,7 @@ class PetTypesController < ApplicationController
 		end
 
 		@pet_types = PetType.
-			includes(:color, :species).
+			includes(:color, :species, :pet_states).
 			order(created_at: :desc).
 			paginate(page: params[:page], per_page: 30)
 
@@ -59,11 +59,12 @@ class PetTypesController < ApplicationController
 	#
 	# If no main poses are available, then we just make all the poses
 	# "canonical", and show the whole mish-mash!
-	MAIN_POSES = %w(HAPPY_FEM HAPPY_MASC SAD_FEM SAD_MASC SICK_FEM SICK_MASC)
 	def group_pet_states(pet_states)
 		pose_groups = pet_states.emotion_order.group_by(&:pose)
-		main_groups = pose_groups.select { |k| MAIN_POSES.include?(k) }.values
-		other_groups = pose_groups.reject { |k| MAIN_POSES.include?(k) }.values
+		main_groups =
+			pose_groups.select { |k| PetState::MAIN_POSES.include?(k) }.values
+		other_groups =
+			pose_groups.reject { |k| PetState::MAIN_POSES.include?(k) }.values
 
 		if main_groups.empty?
 			return {canonical: other_groups.flatten(1).sort_by(&:pose), other: []}

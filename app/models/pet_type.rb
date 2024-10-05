@@ -116,6 +116,23 @@ class PetType < ApplicationRecord
     "#{color.human_name}-#{species.human_name}"
   end
 
+  def fully_labeled?
+    num_missing_poses == 0
+  end
+
+  def num_poses
+    all_poses = pet_states.map(&:pose)
+    PetState::MAIN_POSES.count { |pose| all_poses.include? pose }
+  end
+
+  def num_missing_poses
+    PetState::MAIN_POSES.count - num_poses
+  end
+
+  def num_unlabeled_states
+    pet_states.count { |ps| ps.pose == "UNKNOWN" }
+  end
+
   def self.basic_body_ids
     PetType.basic.distinct.pluck(:body_id)
   end

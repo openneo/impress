@@ -1,5 +1,7 @@
 class PetState < ApplicationRecord
   SwfAssetType = 'biology'
+
+  MAIN_POSES = %w(HAPPY_FEM HAPPY_MASC SAD_FEM SAD_MASC SICK_FEM SICK_MASC)
   
   has_many :contributions, :as => :contributed,
     :inverse_of => :contributed # in case of duplicates being merged
