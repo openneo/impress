@@ -2,8 +2,6 @@ require 'addressable/template'
 require 'async'
 require 'async/barrier'
 require 'async/semaphore'
-require 'fileutils'
-require 'uri'
 
 class SwfAsset < ApplicationRecord
   # We use the `type` column to mean something other than what Rails means!
@@ -373,6 +371,4 @@ class SwfAsset < ApplicationRecord
     # linked to it, meaning that it's probably wearable by all bodies.
     self.body_id = 0 if !@body_id_overridden && (!self.body_specific? || (!self.new_record? && self.body_id_changed?))
   end
-
-  class DownloadError < Exception;end
 end

@@ -114,8 +114,7 @@ pt:
       submit: Salvar
       edit: Editar
       delete: Excluir
-      delete_confirmation:
-        Você tem certeza que deseja excluir "%{list_name}"?
+      delete_confirmation: Você tem certeza que deseja excluir "%{list_name}"?
       empty: Esta lista está vazia.
     edit:
       title: Editando lista "%{list_name}"
@@ -497,7 +496,6 @@ pt:
       submission_success: "%{points} pontos"
     load:
       not_found: Não foi possível achar um pet com esse nome. Está escrito corretamente?
-      asset_download_error: Nós achamos o pet e o que ele está vestindo, mas não foi possível baixar os dados. Talvez Neopets esteja fora do ar. Por favor tente mais tarde!
       pet_download_error: Nós não conseguimos conectar ao Neopets para achar o pet. Talvez eles estejam fora do ar. Por favor tente mais tarde!
   users:
     index:

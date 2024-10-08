@@ -1,6 +1,5 @@
 class PetsController < ApplicationController
   rescue_from Pet::PetNotFound, with: :pet_not_found
-  rescue_from PetType::DownloadError, SwfAsset::DownloadError, with: :asset_download_error
   rescue_from Pet::DownloadError, with: :pet_download_error
   rescue_from Pet::UnexpectedDataFormat, with: :unexpected_data_format
 
@@ -46,12 +45,6 @@ class PetsController < ApplicationController
   def pet_not_found
     pet_load_error :long_message => t('pets.load.not_found'),
                    :status => :not_found
-  end
-  
-  def asset_download_error(e)
-    Rails.logger.warn e.message
-    pet_load_error :long_message => t('pets.load.asset_download_error'),
-                   :status => :gateway_timeout
   end
   
   def pet_download_error(e)

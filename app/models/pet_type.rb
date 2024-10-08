@@ -157,6 +157,5 @@ class PetType < ApplicationRecord
     end
   end
 
-  class DownloadError < Exception;end
 end
 

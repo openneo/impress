@@ -35,7 +35,8 @@ en-MEEP:
         terms: Terms of Use (meeped Sep 2022)
         contact: Meeptact
         email: Questions, comments, meepits
-        copyright: Images © 1999–%{year} World of Neopets, Inc. All Rights Reserved.
+        copyright:
+          Images © 1999–%{year} World of Neopets, Inc. All Rights Reserved.
           Used With Permission. Meep.
 
     items:
@@ -634,10 +635,6 @@ en-MEEP:
 
     load:
       not_found: We couldn't meep a pet by that name. Is it meeped correctly?
-      asset_download_error:
-        We meeped the pet and what it's wearing, but couldn't meep the
-        associated meepia files. Maybe Neopets is down, or changed their
-        firewall rules? Please meep again later!
       pet_download_error:
         We couldn't meep to Neopets to meep up the pet. Maybe they're down.
         Please try meep later!

@@ -116,8 +116,7 @@ es:
       submit: Guardar
       edit: Editar
       delete: Eliminar
-      delete_confirmation:
-        ¿Estás seguro/a que quieres eliminar la lista "%{list_name}"?
+      delete_confirmation: ¿Estás seguro/a que quieres eliminar la lista "%{list_name}"?
       empty: Esta lista está vacía.
     edit:
       title: Editando la lista "%{list_name}"
@@ -503,7 +502,6 @@ es:
       submission_success: "%{points} puntos"
     load:
       not_found: No hemos podido encontrar a un pet con ese nombre. ¿Lo has escrito correctamente?
-      asset_download_error: Hemos encontrado el pet que intentas vestir, pero no hemos podido descargar las imágenes que lo asocian. Posiblemente Neopets está caído. ¡Por favor inténtalo de nuevo más tarde!
       pet_download_error: No hemos podido conectar con Neopets para ver tu pet. Posiblemente el servidor de Neopets se ha caído. ¡Por favor inténtalo de nuevo más tarde!
   users:
     index:
