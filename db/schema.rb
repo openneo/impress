@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_03_004726) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_08_004715) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "species_id", null: false
     t.integer "color_id", null: false
@@ -219,6 +219,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_004726) do
     t.boolean "labeled", default: false, null: false
     t.boolean "glitched", default: false, null: false
     t.string "artist_neopets_username"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["pet_type_id"], name: "pet_states_pet_type_id"
   end
 
