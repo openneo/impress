@@ -12,7 +12,7 @@ class PetState < ApplicationRecord
 
   belongs_to :pet_type
 
-  delegate :color, to: :pet_type
+  delegate :species_id, :species, :color_id, :color, to: :pet_type
 
   alias_method :swf_asset_ids_from_association, :swf_asset_ids
   
@@ -208,6 +208,24 @@ class PetState < ApplicationRecord
     self.mood_id = mood_id
     self.female = female
     self.unconverted = unconverted
+  end
+
+  def self.last_updated_key
+    PetState.maximum(:id)
+  end
+
+  def self.all_supported_poses
+    Rails.cache.fetch("PetState.all_supported_poses #{last_updated_key}") do
+      {}.tap do |h|
+        includes(:pet_type).find_each do |pet_state|
+          h[pet_state.species_id] ||= {}
+          h[pet_state.species_id][pet_state.color_id] ||= []
+          h[pet_state.species_id][pet_state.color_id] << pet_state.pose
+        end
+
+        h.values.map(&:values).flatten(1).each(&:uniq!).each(&:sort!)
+      end
+    end
   end
 end
 

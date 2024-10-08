@@ -1,27 +1,41 @@
 class PetTypesController < ApplicationController
 	def index
-		@species_names = Species.order(:name).map(&:human_name)
-		@color_names = Color.order(:name).map(&:human_name)
+		respond_to do |format|
+			format.html {
+				@species_names = Species.order(:name).map(&:human_name)
+				@color_names = Color.order(:name).map(&:human_name)
 
-		if params[:species].present?
-			@selected_species = Species.find_by!(name: params[:species])
-			@selected_species_name = @selected_species.human_name
-		end
-		if params[:color].present?
-			@selected_color = Color.find_by!(name: params[:color])
-			@selected_color_name = @selected_color.human_name
-		end
+				if params[:species].present?
+					@selected_species = Species.find_by!(name: params[:species])
+					@selected_species_name = @selected_species.human_name
+				end
+				if params[:color].present?
+					@selected_color = Color.find_by!(name: params[:color])
+					@selected_color_name = @selected_color.human_name
+				end
 
-		@pet_types = PetType.
-			includes(:color, :species, :pet_states).
-			order(created_at: :desc).
-			paginate(page: params[:page], per_page: 30)
+				@pet_types = PetType.
+					includes(:color, :species, :pet_states).
+					order(created_at: :desc).
+					paginate(page: params[:page], per_page: 30)
 
-		if @selected_species
-			@pet_types = @pet_types.where(species_id: @selected_species)
-		end
-		if @selected_color
-			@pet_types = @pet_types.where(color_id: @selected_color)
+				if @selected_species
+					@pet_types = @pet_types.where(species_id: @selected_species)
+				end
+				if @selected_color
+					@pet_types = @pet_types.where(color_id: @selected_color)
+				end
+			}
+
+			format.json {
+				if stale?(etag: PetState.last_updated_key)
+					render json: {
+						species: Species.order(:name).all,
+						colors: Color.order(:name).all,
+						supported_poses: PetState.all_supported_poses,
+					}
+				end
+			}
 		end
 	end
 

@@ -156,6 +156,5 @@ class PetType < ApplicationRecord
       end
     end
   end
-
 end
 
