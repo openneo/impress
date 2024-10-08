@@ -211,7 +211,7 @@ class PetState < ApplicationRecord
   end
 
   def self.last_updated_key
-    PetState.maximum(:id)
+    PetState.maximum(:updated_at)
   end
 
   def self.all_supported_poses
