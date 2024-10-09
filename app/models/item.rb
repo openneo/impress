@@ -291,43 +291,41 @@ class Item < ApplicationRecord
       compatible_body_ids
     else
       # First, find our compatible pet types, then pair each body ID with its
-      # color. (We de-dupe standard colors into the key "standard", but it's
-      # still possible that a body might appear multiple times in this list,
-      # e.g. the Maraquan Mynci's body matches the standard Mynci body.)
-      #
-      # TODO: I feel like the more robust way to do this would be to flatten to
-      #       whatever matches the colors labeled "basic", rather than
-      #       "standard", because that's a much more reliable label in our data.
-      #       But that's not as easy to formulate a query about; moving on!
-      compatible_pairs = compatible_pet_types.joins(:color).distinct.
-        pluck(Arel.sql('IF(colors.standard, "standard", colors.id)'), :body_id)
+      # color. (As an optimization, we omit standard colors, other than the
+      # basic colors. We also flatten the basic colors into the single color
+      # ID "basic", so we can treat them specially.)
+      compatible_pairs = compatible_pet_types.joins(:color).
+        merge(Color.nonstandard.or(Color.basic)).
+        distinct.pluck(
+          Arel.sql("IF(colors.basic, 'basic', colors.id)"), :body_id)
 
-      # Look for colors that have compatible bodies that no other colors have.
-      # We do this by doing the converse: look for bodies with only one color.
-      # (This helps us e.g. ignore the Maraquan Mynci throwing things off!)
+      # Group colors by body, to help us find bodies unique to certain colors.
       compatible_color_ids_by_body_id = {}.tap do |h|
         compatible_pairs.each do |(color_id, body_id)|
           h[body_id] ||= []
           h[body_id] << color_id
         end
       end
-      modelable_color_ids = compatible_color_ids_by_body_id.
-        filter { |k, v| v.size == 1 }.values.map(&:first).uniq
 
-      # Get all body IDs for the colors we decided are modelable: look up all
-      # matching pet types, and get their distinct body IDs.
-      conditions = modelable_color_ids.map do |color_id|
-        if color_id == "standard"
-          # Perhaps surprisingly, we filter to basic rather than standard
-          # colors here, to reduce the risk of getting unexpected bodies swept
-          # up in the mix. (e.g. the Chia is sometimes weird on
-          # otherwise-standard colors)
-          PetType.where(color: {basic: true})
-        else
-          PetType.where(color_id:)
-        end
-      end
-      predicted_pet_types = conditions.inject(PetType.none, &:or).joins(:color)
+      # Find non-basic colors with at least one unique compatible body. (This
+      # means we'll ignore e.g. the Maraquan Mynci, which has the same body as
+      # the Blue Mynci, as not indicating Maraquan compatibility in general.)
+      modelable_color_ids =
+        compatible_color_ids_by_body_id.
+          filter { |k, v| v.size == 1 && v.first != "basic" }.
+          values.map(&:first).uniq
+
+      # We can model on basic pets (perhaps in addition to the above) if we
+      # find at least one compatible basic body that doesn't *also* fit any of
+      # the modelable colors we identified above.
+      basic_is_modelable =
+        compatible_color_ids_by_body_id.values.
+          any? { |v| v.include?("basic") && (v & modelable_color_ids).empty? }
+
+      # Get all body IDs for the colors we decided are modelable.
+      predicted_pet_types =
+        (basic_is_modelable ? PetType.basic : PetType.none).
+          or(PetType.where(color_id: modelable_color_ids))
       predicted_pet_types.distinct.pluck(:body_id).sort
     end
   end
