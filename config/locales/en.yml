@@ -4,6 +4,7 @@ en:
   your_items: Your Items
   infinite_closet: Infinite Closet
   modeling_hub: Modeling Hub
+  rainbow_pool: Rainbow Pool
   locale_name: English
 
   activerecord:
@@ -32,7 +33,7 @@ en:
 
       footer:
         source_code: Source Code
-        terms: Terms of Use (updated %{date})
+        terms: Terms of Use (%{date})
         blog: Blog
         contact: Contact
         email: Questions, comments, bugs
@@ -677,14 +678,15 @@ en:
         item_search:
           placeholder: find an item…
           submit: search
-      modeling_hub:
-        tagline: Found something?
+      rainbow_pool:
+        tagline: Explore your options!
         description:
-          Enter a pet's name here and we'll keep a copy of what it's wearing.
-          Thanks so much!
-        load_pet:
-          placeholder: model a pet…
-          submit: submit
+          Browse the colors you can paint your pets, and the "style" options
+          from the NC Mall!
+        filters:
+          species: Species…
+          color: Color…
+          submit: Go
       latest_contribution:
         header: Contributions
         description_html: "%{user_link} showed us %{contributed_description}.

@@ -72,16 +72,18 @@
       = submit_tag t('.infinite_closet.item_search.submit')
     
   %li
-    %h3= link_to t('modeling_hub'), bulk_pets_path
+    %h3= link_to t('rainbow_pool'), pet_types_path
     = link_to bulk_pets_path do
-      = image_tag 'https://images.neopets.com/items/mall_ac_garland_spotlight.gif'
+      = image_tag 'rainbow_pool.png'
     .section-info
-      %strong= t '.modeling_hub.tagline'
-      %p= t '.modeling_hub.description'
-    = form_tag load_pet_path, method: 'POST' do
-      = pet_name_tag placeholder: t('.modeling_hub.load_pet.placeholder'),
-        required: true
-      = submit_tag t('.modeling_hub.load_pet.submit')
+      %strong= t('.rainbow_pool.tagline')
+      %p= t('.rainbow_pool.description')
+    = form_with url: pet_types_path, method: 'GET' do |form|
+      = form.select :color, @colors.map(&:human_name),
+                    include_blank: t('.rainbow_pool.filters.color')
+      = form.select :species, @species.map(&:human_name),
+                    include_blank: t('.rainbow_pool.filters.species')
+      = form.submit t('.rainbow_pool.filters.submit'), name: nil
 
 - if @latest_contribution  # will be nil for a fresh copy of the site ;P
   #latest-contribution

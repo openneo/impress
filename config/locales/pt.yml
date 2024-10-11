@@ -448,12 +448,6 @@ pt:
         item_search:
           placeholder: Procurar um item…
           submit: Vai!
-      modeling_hub:
-        tagline: Encontrou alguma coisa?
-        description: Digite o nome do pet aqui e nós vamos copiar o que ele está vestindo. Muito Obrigado.
-        load_pet:
-          placeholder: modele um pet…
-          submit: Enviar
       latest_contribution:
         header: Contribuições
         description_html: "%{user_link} nos mostrou %{contributed_description}. Obrigado, %{user_link}!"

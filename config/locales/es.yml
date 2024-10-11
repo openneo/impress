@@ -452,12 +452,6 @@ es:
         item_search:
           placeholder: buscar un objeto...
           submit: buscar
-      modeling_hub:
-        tagline: ¿Has encontrado algo?
-        description: Si no encuentras un objeto y sabes de un pet que lo lleve ¡Escribe su nombre aquí!
-        load_pet:
-          placeholder: desfilar con un pet...
-          submit: enviar
       latest_contribution:
         header: Contribuciones
         description_html: "%{user_link} nos ha mostrado %{contributed_description}. ¡Muchas gracias, %{user_link}!"
