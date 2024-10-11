@@ -5,18 +5,21 @@
 	%li= link_to "Rainbow Pool", pet_types_path
 	%li Pet Styles
 
-%p
-	Here's all the new NC Pet Styles we have! They're available in the app too,
-	by opening the emotion picker and clicking the "Styles" tab.
+:markdown
+	Pet Styles drastically change the appearance of your pet! They're [available
+	in the NC Mall][1], or via "NC Trading". They're generally reminiscent of
+	classic Neopets designs from long ago.
 
-%p
+	Pet Styles only fit pets of the same species—but the *color* of the pet
+	doesn't matter! A Blue Acara can wear the "Nostalgic Faerie Acara" Pet Style.
+
+	Only some items fit pets wearing Pet Styles: mostly Backgrounds, Foregrounds,
+	and other items that aren't designed to fit a specific body shape.
+
 	If you have an Pet Style we don't, please model it by entering your pet's
 	name on the homepage! Thank you! 💖
 
-%p
-	Also, heads-up: Because our system can only collect "item data" for normal
-	wearable items, there's not a great way for us to get style tokens onto
-	tradelists… this may change someday, but probably not soon, sorry!
+	[1]: https://www.neopets.com/mall/stylingstudio/
 
 = form_with url: alt_styles_path, method: :get,
             class: "rainbow-pool-filters" do |f|
