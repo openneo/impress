@@ -13,17 +13,23 @@ class PetTypesController < ApplicationController
 					@selected_color = Color.find_by!(name: params[:color])
 					@selected_color_name = @selected_color.human_name
 				end
+				@selected_order =
+					if @selected_species.present? || @selected_color.present?
+						:alphabetical
+					else
+						:newest
+					end
 
 				@pet_types = PetType.
 					includes(:color, :species, :pet_states).
-					order(created_at: :desc).
 					paginate(page: params[:page], per_page: 30)
 
-				if @selected_species
-					@pet_types = @pet_types.where(species_id: @selected_species)
-				end
-				if @selected_color
-					@pet_types = @pet_types.where(color_id: @selected_color)
+				@pet_types.where!(species_id: @selected_species) if @selected_species
+				@pet_types.where!(color_id: @selected_color) if @selected_color
+				if @selected_order == :newest
+					@pet_types.order!(created_at: :desc)
+				elsif @selected_order == :alphabetical
+					@pet_types.merge!(Color.alphabetical).merge!(Species.alphabetical)
 				end
 
 				if @selected_species && @selected_color && @pet_types.size == 1
