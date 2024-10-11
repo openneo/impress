@@ -3,7 +3,6 @@
 		= pet_type_image pet_type, :happy, :thumb, class: "preview"
 		.name= pet_type.human_name
 		.info
-			%p Added #{time_with_only_month_if_old pet_type.created_at}
 			- if support_staff?
 				%p
 					- if pet_type.num_unlabeled_states > 0
@@ -15,3 +14,8 @@
 						- else
 							= moon_progress pet_type.num_poses, pet_type.num_poses + pet_type.num_missing_poses
 							#{pet_type.num_poses}/#{pet_type.num_poses + pet_type.num_missing_poses}
+			%p
+				Added
+				= time_tag pet_type.created_at,
+					title: pet_type.created_at.to_formatted_s(:long_nst) do
+					= time_with_only_month_if_old pet_type.created_at
