@@ -25,6 +25,10 @@ class PetTypesController < ApplicationController
 				if @selected_color
 					@pet_types = @pet_types.where(color_id: @selected_color)
 				end
+
+				if @selected_species && @selected_color && @pet_types.size == 1
+					redirect_to @pet_types.first
+				end
 			}
 
 			format.json {
