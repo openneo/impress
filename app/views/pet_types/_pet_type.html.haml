@@ -1,15 +1,17 @@
 %li
-    = link_to pet_type do
-        = pet_type_image pet_type, :happy, :thumb, class: "preview"
-        .name= pet_type.human_name
-        - if support_staff?
-            .info
-                - if pet_type.num_unlabeled_states > 0
-                    %span{title: "Unlabeled states"}
-                        ❓️ #{pet_type.num_unlabeled_states} +
-                %span{title: "Labeled main poses"}
-                    - if pet_type.fully_labeled?
-                        ✅ #{pet_type.num_poses}/#{pet_type.num_poses}
-                    - else
-                        = moon_progress pet_type.num_poses, pet_type.num_poses + pet_type.num_missing_poses
-                        #{pet_type.num_poses}/#{pet_type.num_poses + pet_type.num_missing_poses}
+	= link_to pet_type do
+		= pet_type_image pet_type, :happy, :thumb, class: "preview"
+		.name= pet_type.human_name
+		.info
+			%p Added #{time_with_only_month_if_old pet_type.created_at}
+			- if support_staff?
+				%p
+					- if pet_type.num_unlabeled_states > 0
+						%span{title: "Unlabeled states"}
+							❓️ #{pet_type.num_unlabeled_states} +
+					%span{title: "Labeled main poses"}
+						- if pet_type.fully_labeled?
+							✅ #{pet_type.num_poses}/#{pet_type.num_poses}
+						- else
+							= moon_progress pet_type.num_poses, pet_type.num_poses + pet_type.num_missing_poses
+							#{pet_type.num_poses}/#{pet_type.num_poses + pet_type.num_missing_poses}
