@@ -1,5 +1,9 @@
-- title "Styling Studio"
+- title "NC Pet Styles"
 - use_responsive_design
+
+%ul.breadcrumbs
+	%li= link_to "Rainbow Pool", pet_types_path
+	%li Pet Styles
 
 %p
 	Here's all the new NC Pet Styles we have! They're available in the app too,
@@ -33,5 +37,6 @@
 = will_paginate @alt_styles, class: "rainbow-pool-pagination"
 
 - content_for :stylesheets do
+	= stylesheet_link_tag "application/breadcrumbs"
 	= stylesheet_link_tag "application/rainbow-pool"
 	= page_stylesheet_link_tag "alt_styles/index"
