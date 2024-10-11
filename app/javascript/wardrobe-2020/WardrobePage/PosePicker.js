@@ -777,8 +777,13 @@ function StyleExplanation() {
 			opacity="0.7"
 			marginTop="2"
 		>
-			<Box as="a" href="/alt-styles" target="_blank" textDecoration="underline">
-				Alt Styles
+			<Box
+				as="a"
+				href="/rainbow-pool/styles"
+				target="_blank"
+				textDecoration="underline"
+			>
+				Pet Styles
 			</Box>{" "}
 			are NC items that override the pet's appearance via the{" "}
 			<Box
@@ -789,7 +794,7 @@ function StyleExplanation() {
 			>
 				Styling Chamber
 			</Box>
-			. Not all items fit Alt Style pets. The pet's color doesn't have to match.
+			. Not all items fit all Pet Styles. The pet's color doesn't have to match.
 		</Box>
 	);
 }
