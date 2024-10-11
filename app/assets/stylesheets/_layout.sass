@@ -83,6 +83,15 @@ input[type=text], input[type=password], input[type=search], input[type=number], 
   &:focus, &:active
     color: inherit
 
+select:has(option[value='']:checked)
+  color: #666
+
+option[value='']
+  color: #666
+
+option:not([value=''])
+  color: $text-color
+
 textarea
   font: inherit
 
