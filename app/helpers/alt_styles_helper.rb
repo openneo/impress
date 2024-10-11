@@ -3,7 +3,11 @@ module AltStylesHelper
 		if support_staff?
 			edit_alt_style_path alt_style
 		else
-			alt_style.preview_image_url
+			wardrobe_path(
+				species: alt_style.species_id,
+				color: alt_style.color_id,
+				style: alt_style.id,
+			)
 		end
 	end
 end
