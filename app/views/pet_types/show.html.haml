@@ -13,14 +13,37 @@
 	%li
 		Appearances
 
+%p
+	These are the various appearances we've seen for this pet! We've hand-labeled
+	them by their emotion and their gender expression, as best we can.
+
+%p
+	If you've seen another kind of #{@pet_type.human_name}, you can enter its
+	name on the homepage to show us! Thank you 💖
+
+- if @pet_states[:canonical].any?(&:glitched?)
+	%p
+		Some of these appearances are marked as "glitched", but it's still the
+		best sample we have. If someone models an unglitched alternative for us,
+		we'll use that instead!
+
 %ul.rainbow-pool-list
 	= render @pet_states[:canonical]
 
 - if @pet_states[:other].present?
-	%details
-		%summary Other
-		%ul.rainbow-pool-list
-			= render @pet_states[:other]
+	%h3 Other appearances
+
+	%p
+		These are some other appearances we've seen over time!
+		- if @pet_states[:other].any?(&:labeled?)
+			The labeled appearances here don't appear in the outfit editor by
+			default anymore, because they've been replaced by better alternatives.
+		- unless @pet_states[:other].all?(&:labeled?)
+			The unlabeled appearances here <em>might</em> be what we show in the
+			outfit editor later, once we have the chance to label them.
+
+%ul.rainbow-pool-list
+	= render @pet_states[:other]
 
 - content_for :stylesheets do
 	= stylesheet_link_tag "application/breadcrumbs"
