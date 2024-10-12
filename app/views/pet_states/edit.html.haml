@@ -13,9 +13,7 @@
 	%li
 		= link_to "Appearances", @pet_type
 	%li
-		= link_to "\##{@pet_state.id}", [@pet_type, @pet_state]
-	%li
-		Edit
+		\##{@pet_state.id}
 
 = outfit_viewer pet_state: @pet_state
 

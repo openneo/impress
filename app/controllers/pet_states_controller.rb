@@ -1,9 +1,6 @@
 class PetStatesController < ApplicationController
 	before_action :find_pet_state
-	before_action :support_staff_only, except: [:show]
-
-	def show
-	end
+	before_action :support_staff_only
 
 	def edit
 	end

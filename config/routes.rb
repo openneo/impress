@@ -42,7 +42,7 @@ OpenneoImpressItems::Application.routes.draw do
   end
   resources :pet_types, path: 'rainbow-pool', param: "name",
             only: [:index, :show] do
-    resources :pet_states, only: [:show, :edit, :update], path: "appearances"
+    resources :pet_states, only: [:edit, :update], path: "appearances"
   end
 
   # Loading and modeling pets!
