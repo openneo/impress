@@ -26,11 +26,16 @@ module PetStatesHelper
 		POSE_OPTIONS
 	end
 
-	def useful_pet_state_path(...)
+	def useful_pet_state_path(pet_type, pet_state)
 		if support_staff?
-			edit_pet_type_pet_state_path(...)
+			edit_pet_type_pet_state_path(pet_type, pet_state)
 		else
-			pet_type_pet_state_path(...)
+			wardrobe_path(
+				color: pet_type.color_id,
+				species: pet_type.species_id,
+				pose: pet_state.pose,
+				state: pet_state.id,
+			)
 		end
 	end
 end
