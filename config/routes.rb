@@ -44,6 +44,7 @@ OpenneoImpressItems::Application.routes.draw do
             only: [:index, :show] do
     resources :pet_states, only: [:edit, :update], path: "appearances"
   end
+  get '/alt-styles', to: redirect('/rainbow-pool/styles')
 
   # Loading and modeling pets!
   post '/pets/load' => 'pets#load', :as => :load_pet
