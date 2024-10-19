@@ -63,7 +63,7 @@ class AltStylesController < ApplicationController
 	protected
 
 	def alt_style_params
-		params.require(:alt_style).permit(:series_name, :thumbnail_url)
+		params.require(:alt_style).permit(:real_series_name, :thumbnail_url)
 	end
 
 	def find_color

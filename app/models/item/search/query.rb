@@ -367,7 +367,7 @@ class Item
         # If the real series name has been set in the database by support
         # staff, use that for the canonical filter text for this alt style.
         # Otherwise, represent this alt style by ID.
-        if alt_style.has_real_series_name?
+        if alt_style.real_series_name?
           series_name = alt_style.series_name.downcase
           color_name = alt_style.color.name.downcase
           species_name = alt_style.species.name.downcase

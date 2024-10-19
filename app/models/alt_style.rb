@@ -35,13 +35,21 @@ class AltStyle < ApplicationRecord
   # `fits:<New?>-faerie-draik` intentionally will not work, and the canonical
   # filter name will be `fits:alt-style-IDNUMBER`, instead.
   def series_name
-    self[:series_name] || "<New?>"
+    real_series_name || "<New?>"
+  end
+
+  def real_series_name=(new_series_name)
+    self[:series_name] = new_series_name
+  end
+
+  def real_series_name
+    self[:series_name]
   end
 
   # You can use this to check whether `series_name` is returning the actual
   # value or its placeholder value.
-  def has_real_series_name?
-    self[:series_name].present?
+  def real_series_name?
+    real_series_name.present?
   end
 
   def adjective_name
