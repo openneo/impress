@@ -78,6 +78,7 @@ class Pet < ApplicationRecord
       pose: self.pet_state.pose,
       state: self.pet_state.id,
       objects: self.items.map(&:id),
+      style: self.alt_style ? self.alt_style.id : nil,
     }.to_query
   end
 
