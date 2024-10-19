@@ -90,7 +90,7 @@ class AltStyle < ApplicationRecord
   )
   DEFAULT_THUMBNAIL_URL = "https://images.neopets.com/items/mall_bg_circle.gif"
   def infer_thumbnail_url
-    if has_real_series_name?
+    if real_series_name?
       self.thumbnail_url = THUMBNAIL_URL_TEMPLATE.expand(
         series: series_name.gsub(/\s+/, '').downcase,
         color: color.name.gsub(/\s+/, '').downcase,
