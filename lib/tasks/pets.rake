@@ -1,7 +1,7 @@
 namespace :pets do
 	desc "Load a pet's viewer data"
 	task :load, [:name] => [:environment] do |task, args|
-		pp Pet.fetch_viewer_data(args[:name])
+		pp Neopets::CustomPets.fetch_viewer_data(args[:name])
 	end
 
 	desc "Find pets that were, last we saw, of the given color and species"
@@ -10,7 +10,7 @@ namespace :pets do
 			pt = PetType.matching_name(args.color_name, args.species_name).first!
 		rescue ActiveRecord::RecordNotFound
 			abort "Could not find pet type for " +
-                  "#{args.color_name} #{args.species_name}"
+			      "#{args.color_name} #{args.species_name}"
 		end
 
 		limit = ENV.fetch("LIMIT", 10)
