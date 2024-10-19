@@ -1,8 +1,9 @@
 require 'rocketamf_extensions/remote_gateway'
 
 module Neopets::CustomPets
-	NEOPETS_URL_ORIGIN = ENV['NEOPETS_URL_ORIGIN'] || 'https://www.neopets.com'
-	GATEWAY_URL = NEOPETS_URL_ORIGIN + '/amfphp/gateway.php'
+	GATEWAY_URL =
+		Addressable::URI.parse(Rails.configuration.neopets_origin) +
+		'/amfphp/gateway.php'
 	GATEWAY = RocketAMFExtensions::RemoteGateway.new(GATEWAY_URL)
 	CUSTOM_PET_SERVICE = GATEWAY.service('CustomPetService')
 	PET_SERVICE = GATEWAY.service('PetService')

@@ -72,6 +72,12 @@ module OpenneoImpressItems
     # version number, etc. So let's only send this to Neopets systems, where it
     # should hopefully be clear who we are from context!
     config.user_agent_for_neopets = "Dress to Impress"
+
+    # Use the usual Neopets.com, unless we have an override. (At times, we've
+    # used this in collaboration with TNT to address the server directly,
+    # instead of through the CDN.)
+    config.neopets_origin =
+      ENV.fetch('NEOPETS_URL_ORIGIN', 'https://www.neopets.com')
   end
 end
 
