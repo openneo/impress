@@ -4,7 +4,7 @@ class AltStyle < ApplicationRecord
   belongs_to :species
   belongs_to :color
 
-  has_many :parent_swf_asset_relationships, as: :parent
+  has_many :parent_swf_asset_relationships, as: :parent, dependent: :destroy
   has_many :swf_assets, through: :parent_swf_asset_relationships
   has_many :contributions, as: :contributed, inverse_of: :contributed
 
