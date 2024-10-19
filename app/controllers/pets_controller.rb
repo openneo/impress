@@ -1,13 +1,13 @@
 class PetsController < ApplicationController
-  rescue_from Pet::PetNotFound, with: :pet_not_found
-  rescue_from Pet::DownloadError, with: :pet_download_error
+  rescue_from Neopets::CustomPets::PetNotFound, with: :pet_not_found
+  rescue_from Neopets::CustomPets::DownloadError, with: :pet_download_error
   rescue_from Pet::UnexpectedDataFormat, with: :unexpected_data_format
 
   def load
     # Uncomment this to temporarily disable modeling for most users.
     # return modeling_disabled unless user_signed_in? && current_user.admin?
 
-    raise Pet::PetNotFound unless params[:name]
+    raise Neopets::CustomPets::PetNotFound unless params[:name]
     @pet = Pet.load(params[:name])
     points = contribute(current_user, @pet)
     

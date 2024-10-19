@@ -45,7 +45,7 @@ module Neopets::CustomPets
 
 		private
 
-		# Send an AMFPHP request, re-raising errors as `Pet::DownloadError`.
+		# Send an AMFPHP request, re-raising errors as `DownloadError`.
 		# Return the response body as a `HashWithIndifferentAccess`.
 		def send_amfphp_request(request, timeout: 10)
 			begin
@@ -61,4 +61,7 @@ module Neopets::CustomPets
 			HashWithIndifferentAccess.new(response_data)
 		end
 	end
+
+	class PetNotFound < RuntimeError;end
+	class DownloadError < RuntimeError;end
 end

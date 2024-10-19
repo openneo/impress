@@ -114,5 +114,7 @@ class Pet < ApplicationRecord
     pet.load!(**options)
     pet
   end
+
+  class UnexpectedDataFormat < RuntimeError;end
 end
 
