@@ -12,8 +12,8 @@ class AltStyle < ApplicationRecord
   validates :series_name, presence: true, allow_nil: true
   validates :thumbnail_url, presence: true
 
-  before_create :infer_series_name
-  before_create :infer_thumbnail_url
+  before_validation :infer_series_name, unless: :has_real_series_name?
+  before_validation :infer_thumbnail_url, unless: :thumbnail_url?
 
   scope :matching_name, ->(series_name, color_name, species_name) {
     color = Color.find_by_name!(color_name)
@@ -82,7 +82,7 @@ class AltStyle < ApplicationRecord
   # embarrassing.
   NOSTALGIC_FINAL_DAY = Date.new(2024, 12, 31)
   def infer_series_name
-    if !has_real_series_name? && Date.today <= NOSTALGIC_FINAL_DAY
+    if Date.today <= NOSTALGIC_FINAL_DAY
       self.series_name = "Nostalgic"
     end
   end
