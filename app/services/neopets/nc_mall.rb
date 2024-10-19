@@ -1,7 +1,7 @@
 require "addressable/template"
 require "async/http/internet/instance"
 
-module NCMall
+module Neopets::NCMall
 	# Share a pool of persistent connections, rather than reconnecting on
 	# each request. (This library does that automatically!)
 	INTERNET = Async::HTTP::Internet.instance

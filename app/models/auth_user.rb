@@ -161,7 +161,7 @@ class AuthUser < AuthRecord
         # means we can wrap it in a `with_timeout` block!)
         neopets_username = Sync do |task|
           task.with_timeout(5) do
-            NeoPass.load_main_neopets_username(auth.credentials.token)
+            Neopets::NeoPass.load_main_neopets_username(auth.credentials.token)
           end
         rescue Async::TimeoutError
           nil # If the request times out, just move on!

@@ -2,7 +2,7 @@ require "async/http/internet/instance"
 
 # While most of our NeoPass logic is built into Devise -> OmniAuth -> OIDC
 # OmniAuth plugin, NeoPass also offers some supplemental APIs that we use here.
-module NeoPass
+module Neopets::NeoPass
 	# Share a pool of persistent connections, rather than reconnecting on
 	# each request. (This library does that automatically!)
 	INTERNET = Async::HTTP::Internet.instance

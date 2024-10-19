@@ -77,17 +77,17 @@ end
 def load_all_nc_mall_pages
 	Sync do
 		# First, start loading the homepage.
-		homepage_task = Async { NCMall.load_home_page }
+		homepage_task = Async { Neopets::NCMall.load_home_page }
 
 		# Next, load the page links for different categories etc.
-		links = NCMall.load_page_links
+		links = Neopets::NCMall.load_page_links
 
 		# Next, load the linked pages, 10 at a time.
 		barrier = Async::Barrier.new
 		semaphore = Async::Semaphore.new(10, parent: barrier)
 		begin
 			linked_page_tasks = links.map do |link|
-				semaphore.async { NCMall.load_page link[:type], link[:cat] }
+				semaphore.async { Neopets::NCMall.load_page link[:type], link[:cat] }
 			end
 			barrier.wait # Load all the pages.
 		ensure

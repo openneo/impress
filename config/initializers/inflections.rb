@@ -19,10 +19,10 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   # Teach Zeitwerk that `RocketAMF` is what to expect in `lib/rocketamf`.
   inflect.acronym "RocketAMF"
 
-  # Teach Zeitwerk that `NeoPass` is what to expect in `app/services/neopass.rb`.
+  # Teach Zeitwerk that `NeoPass` is what to expect in `neopass.rb`.
   inflect.acronym "NeoPass"
 
-  # Teach Zeitwerk that "NCMall" is what to expect in `app/services/nc_mall.rb`.
+  # Teach Zeitwerk that "NCMall" is what to expect in `nc_mall.rb`.
   # (We do this by teaching it the word "NC".)
   inflect.acronym "NC"
 end
