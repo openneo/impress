@@ -1,5 +1,4 @@
 require 'rocketamf_extensions/remote_gateway'
-require 'ostruct'
 
 class Pet < ApplicationRecord
   NEOPETS_URL_ORIGIN = ENV['NEOPETS_URL_ORIGIN'] || 'https://www.neopets.com'
