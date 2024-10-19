@@ -12,7 +12,6 @@ class AltStyle < ApplicationRecord
   validates :series_name, presence: true, allow_nil: true
   validates :thumbnail_url, presence: true
 
-  before_validation :infer_series_name, unless: :has_real_series_name?
   before_validation :infer_thumbnail_url, unless: :thumbnail_url?
 
   scope :matching_name, ->(series_name, color_name, species_name) {
@@ -71,19 +70,6 @@ class AltStyle < ApplicationRecord
     # more clueless back when I wrote it, lol 😅
     self.swf_assets = biology.values.map do |asset_data|
       SwfAsset.from_biology_data(self.body_id, asset_data)
-    end
-  end
-
-  # Until the end of 2024, assume new alt styles are from the "Nostalgic"
-  # series. That way, we can stop having to manually label them all as they
-  # come out and get modeled (TNT is prolific rn!), but we aren't gonna get too
-  # greedy and forget about this and use Nostalgic for some far-future thing,
-  # in ways that will certainly be fixable but would also be confusing and
-  # embarrassing.
-  NOSTALGIC_FINAL_DAY = Date.new(2024, 12, 31)
-  def infer_series_name
-    if Date.today <= NOSTALGIC_FINAL_DAY
-      self.series_name = "Nostalgic"
     end
   end
 
