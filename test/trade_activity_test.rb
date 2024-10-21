@@ -203,12 +203,6 @@ class TradeActivityTest < ActiveSupport::TestCase
 
 	setup do
 		freeze_time # to compare timestamps accurately
-
-		Item.create!(
-			thumbnail_url: "https://images.neopets.com/foo.png",
-			zones_restrict: "",
-			price: 123,
-		)
 	end
 
 	private
