@@ -4,6 +4,7 @@ log/*.log
 tmp/**/*
 .env
 .env.*
+/spec/examples.txt
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
