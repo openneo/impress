@@ -117,7 +117,7 @@ class Item
 			)\z
 		}x
 		def inferred_dyeworks_base_item
-			name_match = name.match(DYEWORKS_NAME_PATTERN)
+			name_match = (name || "").match(DYEWORKS_NAME_PATTERN)
 			return nil if name_match.nil?
 
 			Item.find_by_name(name_match["base"])

@@ -23,6 +23,8 @@ class Item < ApplicationRecord
   has_many :dyeworks_variants, class_name: "Item",
     inverse_of: :dyeworks_base_item
 
+  validates_presence_of :name, :description, :thumbnail_url, :rarity, :price,
+    :zones_restrict
 
   attr_writer :current_body_id, :owned, :wanted
 
