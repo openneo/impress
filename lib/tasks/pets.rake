@@ -1,7 +1,8 @@
 namespace :pets do
 	desc "Load a pet's viewer data"
 	task :load, [:name] => [:environment] do |task, args|
-		pp Neopets::CustomPets.fetch_viewer_data(args[:name])
+		viewer_data = Neopets::CustomPets.fetch_viewer_data(args[:name])
+		puts JSON.pretty_generate(viewer_data)
 	end
 
 	desc "Find pets that were, last we saw, of the given color and species"
