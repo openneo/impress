@@ -11,6 +11,6 @@ module Neopets::CustomPets
   end
 
   def self.fetch_image_hash(pet_name, ...)
-    "mock-image-hash:#{pet_name}"
+    "m:#{pet_name}"[0, 8] # A mock hash, like `m:thyass` for "thyassa".
   end
 end

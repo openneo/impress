@@ -1,0 +1,282 @@
+music:
+  id: 1
+  depth: 1
+  type_id: 4
+  label: Music
+  plain_label: music
+soundeffects:
+  id: 2
+  depth: 2
+  type_id: 4
+  label: Sound Effects
+  plain_label: soundeffects
+background:
+  id: 3
+  depth: 3
+  type_id: 3
+  label: Background
+  plain_label: background
+biologyeffects:
+  id: 4
+  depth: 6
+  type_id: 1
+  label: Biology Effects
+  plain_label: biologyeffects
+hindbiology:
+  id: 5
+  depth: 7
+  type_id: 1
+  label: Hind Biology
+  plain_label: hindbiology
+markings:
+  id: 31
+  depth: 35
+  type_id: 2
+  label: Markings
+  plain_label: markings
+hinddisease:
+  id: 7
+  depth: 9
+  type_id: 1
+  label: Hind Disease
+  plain_label: hinddisease
+hindcover:
+  id: 8
+  depth: 10
+  type_id: 2
+  label: Hind Cover
+  plain_label: hindcover
+hindtransientbiology:
+  id: 9
+  depth: 11
+  type_id: 1
+  label: Hind Transient Biology
+  plain_label: hindtransientbiology
+hinddrippings:
+  id: 10
+  depth: 12
+  type_id: 1
+  label: Hind Drippings
+  plain_label: hinddrippings
+backpack:
+  id: 11
+  depth: 13
+  type_id: 2
+  label: Backpack
+  plain_label: backpack
+wingstransientbiology:
+  id: 12
+  depth: 14
+  type_id: 1
+  label: Wings Transient Biology
+  plain_label: wingstransientbiology
+wings:
+  id: 13
+  depth: 15
+  type_id: 2
+  label: Wings
+  plain_label: wings
+hairback:
+  id: 14
+  depth: 17
+  type_id: 1
+  label: Hair Back
+  plain_label: hairback
+body:
+  id: 15
+  depth: 18
+  type_id: 1
+  label: Body
+  plain_label: body
+bodydisease:
+  id: 17
+  depth: 20
+  type_id: 1
+  label: Body Disease
+  plain_label: bodydisease
+feettransientbiology:
+  id: 18
+  depth: 21
+  type_id: 1
+  label: Feet Transient Biology
+  plain_label: feettransientbiology
+shoes:
+  id: 19
+  depth: 22
+  type_id: 2
+  label: Shoes
+  plain_label: shoes
+lowerbodytransientbiology:
+  id: 20
+  depth: 23
+  type_id: 1
+  label: Lower-body Transient Biology
+  plain_label: lowerbodytransientbiology
+trousers:
+  id: 21
+  depth: 24
+  type_id: 2
+  label: Trousers
+  plain_label: trousers
+upperbodytransientbiology:
+  id: 22
+  depth: 25
+  type_id: 1
+  label: Upper-body Transient Biology
+  plain_label: upperbodytransientbiology
+shirtdress:
+  id: 23
+  depth: 26
+  type_id: 2
+  label: Shirt/Dress
+  plain_label: shirtdress
+necklace:
+  id: 24
+  depth: 28
+  type_id: 2
+  label: Necklace
+  plain_label: necklace
+gloves:
+  id: 25
+  depth: 29
+  type_id: 2
+  label: Gloves
+  plain_label: gloves
+jacket:
+  id: 26
+  depth: 30
+  type_id: 2
+  label: Jacket
+  plain_label: jacket
+collar:
+  id: 27
+  depth: 31
+  type_id: 2
+  label: Collar
+  plain_label: collar
+bodydrippings:
+  id: 28
+  depth: 32
+  type_id: 1
+  label: Body Drippings
+  plain_label: bodydrippings
+ruff:
+  id: 29
+  depth: 33
+  type_id: 1
+  label: Ruff
+  plain_label: ruff
+head:
+  id: 30
+  depth: 34
+  type_id: 1
+  label: Head
+  plain_label: head
+headdisease:
+  id: 32
+  depth: 36
+  type_id: 1
+  label: Head Disease
+  plain_label: headdisease
+eyes:
+  id: 33
+  depth: 37
+  type_id: 1
+  label: Eyes
+  plain_label: eyes
+mouth:
+  id: 34
+  depth: 38
+  type_id: 1
+  label: Mouth
+  plain_label: mouth
+glasses:
+  id: 35
+  depth: 41
+  type_id: 2
+  label: Glasses
+  plain_label: glasses
+earrings:
+  id: 41
+  depth: 45
+  type_id: 2
+  label: Earrings
+  plain_label: earrings
+hairfront:
+  id: 37
+  depth: 40
+  type_id: 1
+  label: Hair Front
+  plain_label: hairfront
+headtransientbiology:
+  id: 38
+  depth: 42
+  type_id: 1
+  label: Head Transient Biology
+  plain_label: headtransientbiology
+headdrippings:
+  id: 39
+  depth: 43
+  type_id: 1
+  label: Head Drippings
+  plain_label: headdrippings
+hat:
+  id: 50
+  depth: 16
+  type_id: 2
+  label: Hat
+  plain_label: hat
+righthanditem:
+  id: 49
+  depth: 5
+  type_id: 2
+  label: Right-hand Item
+  plain_label: righthanditem
+lefthanditem:
+  id: 43
+  depth: 47
+  type_id: 2
+  label: Left-hand Item
+  plain_label: lefthanditem
+higherforegrounditem:
+  id: 44
+  depth: 49
+  type_id: 3
+  label: Higher Foreground Item
+  plain_label: higherforegrounditem
+lowerforegrounditem:
+  id: 45
+  depth: 50
+  type_id: 3
+  label: Lower Foreground Item
+  plain_label: lowerforegrounditem
+static:
+  id: 46
+  depth: 48
+  type_id: 2
+  label: Static
+  plain_label: static
+thoughtbubble:
+  id: 47
+  depth: 51
+  type_id: 3
+  label: Thought Bubble
+  plain_label: thoughtbubble
+backgrounditem:
+  id: 48
+  depth: 4
+  type_id: 3
+  label: Background Item
+  plain_label: backgrounditem
+belt:
+  id: 51
+  depth: 27
+  type_id: 2
+  label: Belt
+  plain_label: belt
+foreground:
+  id: 52
+  depth: 52
+  type_id: 3
+  label: Foreground
+  plain_label: foreground
