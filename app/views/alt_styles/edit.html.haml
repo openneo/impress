@@ -28,7 +28,12 @@
 			- if @alt_style.thumbnail_url?
 				= image_tag @alt_style.thumbnail_url
 			= f.url_field :thumbnail_url
-	= f.submit "Save changes"
+	.actions
+		= f.submit "Save changes"
+		%label{title: "If checked, takes you to the next unlabeled pet style, if any. Useful for labeling in bulk!"}
+			= check_box_tag "next", "unlabeled-style",
+				checked: params[:next] == "unlabeled-style"
+			Then: Go to unlabeled style
 
 - content_for :stylesheets do
 	= stylesheet_link_tag "application/breadcrumbs"

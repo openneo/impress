@@ -54,7 +54,7 @@ class AltStylesController < ApplicationController
 
 		if @alt_style.update(alt_style_params)
 			flash[:notice] = "\"#{@alt_style.full_name}\" successfully saved!"
-			redirect_to alt_styles_path
+			redirect_to destination_after_save
 		else
 			render action: :edit, status: :bad_request
 		end
@@ -77,6 +77,23 @@ class AltStylesController < ApplicationController
 			Species.find_by(id: params[:species_id])
 		elsif params[:species]
 			Species.find_by(name: params[:species])
+		end
+	end
+
+	def destination_after_save
+		if params[:next] == "unlabeled-style"
+			next_unlabeled_style_path
+		else
+			alt_styles_path
+		end
+	end
+
+	def next_unlabeled_style_path
+		unlabeled_style = AltStyle.unlabeled.newest.first
+		if unlabeled_style
+			edit_alt_style_path(unlabeled_style, next: "unlabeled-style")
+		else
+			alt_styles_path
 		end
 	end
 end
