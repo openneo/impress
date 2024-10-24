@@ -7,31 +7,35 @@ RSpec.describe Pet, type: :model do
 
   context "#load" do
     context "for thyassa, the Purple Chia" do
-      subject { Pet.load "thyassa" }
+      subject(:pet) { Pet.load "thyassa" }
 
       it "is named thyassa" do
-        expect(subject.name).to eq("thyassa")
+        expect(pet.name).to eq("thyassa")
+      end
+
+      it "has no items" do
+        expect(pet.items).to be_empty
       end
 
       it "has a new Purple Chia pet type" do
-        expect(subject.pet_type.new_record?).to be true
-        expect(subject.pet_type.color).to eq Color.find_by_name!("purple")
-        expect(subject.pet_type.species).to eq Species.find_by_name!("chia")
-        expect(subject.pet_type.body_id).to eq 212
-        expect(subject.pet_type.image_hash).to eq "m:thyass"
+        expect(pet.pet_type.new_record?).to be true
+        expect(pet.pet_type.color).to eq Color.find_by_name!("purple")
+        expect(pet.pet_type.species).to eq Species.find_by_name!("chia")
+        expect(pet.pet_type.body_id).to eq 212
+        expect(pet.pet_type.image_hash).to eq "m:thyass"
       end
 
       it "has a new unlabeled Purple Chia pet state" do
-        expect(subject.pet_state.new_record?).to be true
-        expect(subject.pet_state.color).to eq Color.find_by_name!("purple")
-        expect(subject.pet_state.species).to eq Species.find_by_name!("chia")
-        expect(subject.pet_state.pose).to eq "UNKNOWN"
+        expect(pet.pet_state.new_record?).to be true
+        expect(pet.pet_state.color).to eq Color.find_by_name!("purple")
+        expect(pet.pet_state.species).to eq Species.find_by_name!("chia")
+        expect(pet.pet_state.pose).to eq "UNKNOWN"
       end
 
       it "has new assets for the biology layers" do
-        subject.save! # TODO: I wish this were set up before saving.
+        pet.save! # TODO: I wish this were set up before saving.
 
-        expect(subject.pet_state.swf_assets).to contain_exactly(
+        expect(pet.pet_state.swf_assets).to contain_exactly(
           a_record_matching(
             type: "biology",
             remote_id: 10083,
@@ -65,6 +69,39 @@ RSpec.describe Pet, type: :model do
             zones_restrict: "0000000000000000000000000000000000000000000000000000",
           )
         )
+      end
+
+      it "saves the pet type when saved" do
+        expect { pet.save! }.to change { pet.pet_type.persisted? }.from(false).to(true)
+      end
+
+      it "saves the pet state when saved" do
+        expect { pet.save! }.to change { pet.pet_state.persisted? }.from(false).to(true)
+      end
+
+      context "when modeled a second time" do
+        before { pet.save! }
+        subject!(:new_pet) { Pet.load("thyassa") }
+
+        describe "its pet type" do
+          subject(:pet_type) { new_pet.pet_type }
+
+          it("already exists") { should be_persisted }
+          it("is the same as before") { should eq pet.pet_type }
+          it "is not changed when saving the pet" do
+            expect { new_pet.save! }.not_to change { pet_type.attributes }
+          end
+        end
+
+        describe "its pet state" do
+          subject(:pet_state) { new_pet.pet_state }
+
+          it("already exists") { should be_persisted }
+          it("is the same as before") { should eq pet.pet_state }
+          it "is not changed when saving the pet" do
+            expect { new_pet.save! }.not_to change { pet_state.attributes }
+          end
+        end
       end
     end
   end
