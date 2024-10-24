@@ -37,43 +37,54 @@ RSpec.describe Pet, type: :model do
           expect { pet.save! }.to change { pet_state.persisted? }.from(false).to(true)
         end
 
-        it "has new biology assets" do
-          pet.save! # TODO: I wish this were set up before saving.
+        describe "its biology assets" do
+          subject(:biology_assets) { pet_state.swf_assets }
+          let(:asset_ids) { biology_assets.map(&:remote_id) }
 
-          expect(pet_state.swf_assets).to contain_exactly(
-            a_record_matching(
-              type: "biology",
-              remote_id: 10083,
-              zone_id: 37,
-              url: "https://images.neopets.com/cp/bio/swf/000/000/010/10083_8a1111a13f.swf",
-              manifest_url: "https://images.neopets.com/cp/bio/data/000/000/010/10083_8a1111a13f/manifest.json",
-              zones_restrict: "0000000000000000000000000000000000000000000000000000",
-            ),
-            a_record_matching(
-              type: "biology",
-              remote_id: 11613,
-              zone_id: 15,
-              url: "https://images.neopets.com/cp/bio/swf/000/000/011/11613_f7d8d377ab.swf",
-              manifest_url: "https://images.neopets.com/cp/bio/data/000/000/011/11613_f7d8d377ab/manifest.json",
-              zones_restrict: "0000000000000000000000000000000000000000000000000000",
-            ),
-            a_record_matching(
-              type: "biology",
-              remote_id: 14187,
-              zone_id: 34,
-              url: "https://images.neopets.com/cp/bio/swf/000/000/014/14187_0e65c2082f.swf",
-              manifest_url: "https://images.neopets.com/cp/bio/data/000/000/014/14187_0e65c2082f/manifest.json",
-              zones_restrict: "0000000000000000000000000000000000000000000000000000",
-            ),
-            a_record_matching(
-              type: "biology",
-              remote_id: 14189,
-              zone_id: 33,
-              url: "https://images.neopets.com/cp/bio/swf/000/000/014/14189_102e4991e9.swf",
-              manifest_url: "https://images.neopets.com/cp/bio/data/000/000/014/14189_102e4991e9/manifest.json",
-              zones_restrict: "0000000000000000000000000000000000000000000000000000",
+          it("are all new") { expect(biology_assets.all?(&:new_record?)).to be true }
+          it("match the expected IDs") do
+            pet.save! # TODO: I wish this were set up before saving.
+
+            expect(asset_ids).to contain_exactly(10083, 11613, 14187, 14189)
+          end
+          it("have the expected asset metadata") do
+            pet.save! # TODO: I wish this were set up before saving.
+
+            expect(pet_state.swf_assets).to contain_exactly(
+              a_record_matching(
+                type: "biology",
+                remote_id: 10083,
+                zone_id: 37,
+                url: "https://images.neopets.com/cp/bio/swf/000/000/010/10083_8a1111a13f.swf",
+                manifest_url: "https://images.neopets.com/cp/bio/data/000/000/010/10083_8a1111a13f/manifest.json",
+                zones_restrict: "0000000000000000000000000000000000000000000000000000",
+              ),
+              a_record_matching(
+                type: "biology",
+                remote_id: 11613,
+                zone_id: 15,
+                url: "https://images.neopets.com/cp/bio/swf/000/000/011/11613_f7d8d377ab.swf",
+                manifest_url: "https://images.neopets.com/cp/bio/data/000/000/011/11613_f7d8d377ab/manifest.json",
+                zones_restrict: "0000000000000000000000000000000000000000000000000000",
+              ),
+              a_record_matching(
+                type: "biology",
+                remote_id: 14187,
+                zone_id: 34,
+                url: "https://images.neopets.com/cp/bio/swf/000/000/014/14187_0e65c2082f.swf",
+                manifest_url: "https://images.neopets.com/cp/bio/data/000/000/014/14187_0e65c2082f/manifest.json",
+                zones_restrict: "0000000000000000000000000000000000000000000000000000",
+              ),
+              a_record_matching(
+                type: "biology",
+                remote_id: 14189,
+                zone_id: 33,
+                url: "https://images.neopets.com/cp/bio/swf/000/000/014/14189_102e4991e9.swf",
+                manifest_url: "https://images.neopets.com/cp/bio/data/000/000/014/14189_102e4991e9/manifest.json",
+                zones_restrict: "0000000000000000000000000000000000000000000000000000",
+              )
             )
-          )
+          end
         end
       end
 
@@ -114,11 +125,67 @@ RSpec.describe Pet, type: :model do
         subject(:biology_assets) { pet.pet_state.swf_assets }
         let(:asset_ids) { biology_assets.map(&:remote_id) }
 
-        it("are all new") { expect(biology_assets.all?(&:new_record?)).to be true }
+        it("are all new") { expect(biology_assets.map(&:new_record?)).to all be(true) }
         it("match the expected IDs") do
           pet.save! # TODO: I wish this were set up before saving.
 
           expect(asset_ids).to contain_exactly(331, 332, 333, 23760, 23411)
+        end
+      end
+
+      describe "its items" do
+        subject(:items) { pet.items }
+
+        it("are all new") { expect(items.map(&:new_record?)).to all be(true) }
+        it("are saved when saving the pet") do
+          expect { pet.save! }.to change { items.map(&:persisted?) }.
+            from(all(be(false))).to(all(be(true)))
+        end
+        it("have the expected item metadata") do
+          should contain_exactly(
+            a_record_matching(
+              id: 39552,
+              name: "Springy Eye Glasses",
+              description: "Hey, keep your eyes in your head!",
+              thumbnail_url: "https://images.neopets.com/items/mall_springyeyeglasses.gif",
+              category: "Clothes",
+              type: "Clothes",
+              rarity: "Artifact",
+              rarity_index: 500,
+              price: 0,
+              weight_lbs: 1,
+              species_support_ids: "3",
+              zones_restrict: "0000000000000000000000000000000000000000000000000000",
+            ),
+            a_record_matching(
+              id: 53874,
+              name: "404 Shirt",
+              description: "When Neopets is down, the shirt comes on!",
+              thumbnail_url: "https://images.neopets.com/items/clo_404_shirt.gif",
+              category: "Clothes",
+              type: "Clothes",
+              rarity: "Rare",
+              rarity_index: 88,
+              price: 1701,
+              weight_lbs: 1,
+              species_support_ids: "3",
+              zones_restrict: "0000000000000000000000000000000000000000000000000000",
+            ),
+            a_record_matching(
+              id: 71706,
+              name: "On the Roof Background",
+              description: "Who is that on the roof?! Could it be...?",
+              thumbnail_url: "https://images.neopets.com/items/gif_roof_onthe_fg.gif",
+              category: "Special",
+              type: "Mystical Surroundings",
+              rarity: "Special",
+              rarity_index: 101,
+              price: 0,
+              weight_lbs: 1,
+              species_support_ids: "",
+              zones_restrict: "0000000000000000000000000000000000000000000000000000",
+            ),
+          )
         end
       end
     end
