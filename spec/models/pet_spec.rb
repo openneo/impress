@@ -5,7 +5,7 @@ require_relative '../support/matchers/a_record_matching'
 RSpec.describe Pet, type: :model do
   fixtures :colors, :species, :zones
 
-  context "#load" do
+  context ".load" do
     context "for thyassa, the Purple Chia" do
       subject(:pet) { Pet.load "thyassa" }
 
@@ -99,6 +99,26 @@ RSpec.describe Pet, type: :model do
           it "is not changed when saving the pet" do
             expect { new_pet.save! }.not_to change { pet_state.attributes }
           end
+        end
+      end
+    end
+
+    context "for matts_bat, a pet with basic items" do
+      subject(:pet) { Pet.load("matts_bat") }
+
+      # We do simpler checks for biology, and trust the Thyassa case to cover it.
+      it("is named matts_bat") { expect(pet.name).to eq "matts_bat" }
+      it("is a Striped Blumaroo") { expect(pet.pet_type.human_name).to eq "Striped Blumaroo" }
+
+      describe "its biology assets" do
+        subject(:biology_assets) { pet.pet_state.swf_assets }
+        let(:asset_ids) { biology_assets.map(&:remote_id) }
+
+        it("are all new") { expect(biology_assets.all?(&:new_record?)).to be true }
+        it("match the expected IDs") do
+          pet.save! # TODO: I wish this were set up before saving.
+
+          expect(asset_ids).to contain_exactly(331, 332, 333, 23760, 23411)
         end
       end
     end
