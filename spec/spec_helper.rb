@@ -11,6 +11,11 @@ RSpec.configure do |config|
     # ...rather than:
     #     # => "be bigger than 2"
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
+
+    # Some of our SWF assets are long, and we want all of it when diffing!
+    # Here, I picked a large number, to approximate "any length" but not
+    # actually allow infinity.
+    expectations.max_formatted_output_length = 3000
   end
 
   # rspec-mocks config goes here. You can use an alternate test double
