@@ -20,10 +20,7 @@ RSpec.describe Pet, type: :model do
         it("is a Chia") { expect(pet_type.species).to eq Species.find_by_name!("chia") }
         it("has the standard Chia body") { expect(pet_type.body_id).to eq 212 }
         it("uses the pet's image hash") { expect(pet_type.image_hash).to eq "m:thyass" }
-
-        it("is saved when saving the pet") do
-          expect { pet.save! }.to change { pet_type.persisted? }.from(false).to(true)
-        end
+        it("is saved when saving the pet") { pet.save!; should be_persisted }
       end
 
       describe "its pet state" do
@@ -32,16 +29,13 @@ RSpec.describe Pet, type: :model do
         it("is new and unsaved") { should be_new_record }
         it("belongs to the pet's pet type") { expect(pet_state.pet_type).to eq pet.pet_type }
         it("isn't labeled yet") { expect(pet_state.pose).to eq "UNKNOWN" }
-
-        it "is saved when saving the pet" do
-          expect { pet.save! }.to change { pet_state.persisted? }.from(false).to(true)
-        end
+        it("is saved when saving the pet") { pet.save!; should be_persisted }
 
         describe "its biology assets" do
           subject(:biology_assets) { pet_state.swf_assets }
           let(:asset_ids) { biology_assets.map(&:remote_id) }
 
-          it("are all new") { expect(biology_assets.all?(&:new_record?)).to be true }
+          it("are all new") { should all be_new_record }
           it("match the expected IDs") do
             pet.save! # TODO: I wish this were set up before saving.
 
@@ -125,7 +119,7 @@ RSpec.describe Pet, type: :model do
         subject(:biology_assets) { pet.pet_state.swf_assets }
         let(:asset_ids) { biology_assets.map(&:remote_id) }
 
-        it("are all new") { expect(biology_assets.map(&:new_record?)).to all be(true) }
+        it("are all new") { should all be_new_record }
         it("match the expected IDs") do
           pet.save! # TODO: I wish this were set up before saving.
 
@@ -136,11 +130,8 @@ RSpec.describe Pet, type: :model do
       describe "its items" do
         subject(:items) { pet.items }
 
-        it("are all new") { expect(items.map(&:new_record?)).to all be(true) }
-        it("are saved when saving the pet") do
-          expect { pet.save! }.to change { items.map(&:persisted?) }.
-            from(all(be(false))).to(all(be(true)))
-        end
+        it("are all new") { should all be_new_record }
+        it("are saved when saving the pet") { pet.save! ; should all be_persisted }
         it("have the expected item metadata") do
           should contain_exactly(
             a_record_matching(
