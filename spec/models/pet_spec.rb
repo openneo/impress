@@ -109,6 +109,16 @@ RSpec.describe Pet, type: :model do
             expect { new_pet.save! }.not_to change { pet_state.attributes }
           end
         end
+
+        describe "its biology assets" do
+          subject(:biology_assets) { new_pet.pet_state.swf_assets }
+
+          they("already exist") { should all be_persisted }
+          they("are the same as before") { should eq pet.pet_state.swf_assets }
+          they("are not changed when saving the pet") do
+            expect { new_pet.save! }.not_to change { biology_assets.map(&:attributes) }
+          end
+        end
       end
     end
 
@@ -244,6 +254,61 @@ RSpec.describe Pet, type: :model do
               )
             ),
           )
+        end
+      end
+
+      context "when modeled a second time" do
+        before { pet.save! }
+        subject!(:new_pet) { Pet.load("matts_bat") }
+
+        describe "its pet type" do
+          subject(:pet_type) { new_pet.pet_type }
+
+          it("already exists") { should be_persisted }
+          it("is the same as before") { should eq pet.pet_type }
+          it "is not changed when saving the pet" do
+            expect { new_pet.save! }.not_to change { pet_type.attributes }
+          end
+        end
+
+        describe "its pet state" do
+          subject(:pet_state) { new_pet.pet_state }
+
+          it("already exists") { should be_persisted }
+          it("is the same as before") { should eq pet.pet_state }
+          it "is not changed when saving the pet" do
+            expect { new_pet.save! }.not_to change { pet_state.attributes }
+          end
+        end
+
+        describe "its biology assets" do
+          subject(:biology_assets) { new_pet.pet_state.swf_assets }
+
+          they("already exist") { should all be_persisted }
+          they("are the same as before") { should eq pet.pet_state.swf_assets }
+          they("are not changed when saving the pet") do
+            expect { new_pet.save! }.not_to change { biology_assets.map(&:attributes) }
+          end
+        end
+
+        describe "its items" do
+          subject(:items) { new_pet.items }
+
+          they("already exist") { should all be_persisted }
+          they("are the same as before") { should eq pet.items }
+          they("are not changed when saving the pet") do
+            expect { new_pet.save! }.not_to change { items.map(&:attributes) }
+          end
+        end
+
+        describe "its item assets" do
+          subject(:item_assets) { new_pet.items.map(&:swf_assets).flatten(1) }
+
+          they("already exist") { should all be_persisted }
+          they("are the same as before") { should eq pet.items.map(&:swf_assets).flatten(1) }
+          they("are not changed when saving the pet") do
+            expect { new_pet.save! }.not_to change { item_assets.map(&:attributes) }
+          end
         end
       end
     end
