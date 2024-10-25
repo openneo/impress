@@ -46,6 +46,7 @@ RSpec.describe Pet, type: :model do
           it("match the expected IDs") do
             expect(asset_ids).to contain_exactly(10083, 11613, 14187, 14189)
           end
+          it("are saved when saving the pet") { pet.save!; should all be_persisted }
           it("have the expected asset metadata") do
             expect(pet_state.swf_assets).to contain_exactly(
               a_record_matching(
@@ -133,12 +134,17 @@ RSpec.describe Pet, type: :model do
         it("match the expected IDs") do
           expect(asset_ids).to contain_exactly(331, 332, 333, 23760, 23411)
         end
+        it("are saved when saving the pet") { pet.save!; should all be_persisted }
       end
 
       describe "its items" do
         subject(:items) { pet.items }
+        let(:item_ids) { items.map(&:id) }
 
         it("are all new") { should all be_new_record }
+        it("match the expected IDs") do
+          expect(item_ids).to contain_exactly(39552, 53874, 71706)
+        end
         it("are saved when saving the pet") { pet.save! ; should all be_persisted }
         it("have the expected item metadata") do
           should contain_exactly(
@@ -183,6 +189,59 @@ RSpec.describe Pet, type: :model do
               weight_lbs: 1,
               species_support_ids: "",
               zones_restrict: "0000000000000000000000000000000000000000000000000000",
+            ),
+          )
+        end
+      end
+
+      context "its item assets" do
+        # TODO: I wish item assets were set up before saving.
+        # Once we change this, we can un-mark some tests as pending.
+        before { pet.save! }
+
+        let(:assets_by_item) { pet.items.to_h { |item| [item.id, item.swf_assets.to_a] } }
+        subject(:item_assets) { assets_by_item.values.flatten(1) }
+        let(:asset_ids) { item_assets.map(&:remote_id) }
+
+        it("are all new") do
+          pending("Currently, pets must be saved before assets are assigned.")
+          should all be_new_record
+        end
+        it("match the expected IDs") do
+          expect(asset_ids).to contain_exactly(16933, 108567, 410722)
+        end
+        it("are saved when saving the pet") { pet.save! ; should all be_persisted }
+        it("match the expected metadata") do
+          expect(assets_by_item).to match(
+            39552 => a_collection_containing_exactly(
+              a_record_matching(
+                type: "object",
+                remote_id: 16933,
+                zone_id: 35,
+                url: "https://images.neopets.com/cp/items/swf/000/000/016/16933_0833353c4f.swf",
+                manifest_url: "https://images.neopets.com/cp/items/data/000/000/016/16933_0833353c4f/manifest.json?v=1706",
+                zones_restrict: "",
+              )
+            ),
+            53874 => a_collection_containing_exactly(
+              a_record_matching(
+                type: "object",
+                remote_id: 108567,
+                zone_id: 23,
+                url: "https://images.neopets.com/cp/items/swf/000/000/108/108567_ee88141325.swf",
+                manifest_url: "https://images.neopets.com/cp/items/data/000/000/108/108567_ee88141325/manifest.json?v=1706",
+                zones_restrict: "",
+              )
+            ),
+            71706 => a_collection_containing_exactly(
+              a_record_matching(
+                type: "object",
+                remote_id: 410722,
+                zone_id: 3,
+                url: "https://images.neopets.com/cp/items/swf/000/000/410/410722_3bcd2f5e11.swf",
+                manifest_url: "https://images.neopets.com/cp/items/data/000/000/410/410722_3bcd2f5e11/manifest.json?v=1706",
+                zones_restrict: "",
+              )
             ),
           )
         end
