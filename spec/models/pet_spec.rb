@@ -32,18 +32,21 @@ RSpec.describe Pet, type: :model do
         it("is saved when saving the pet") { pet.save!; should be_persisted }
 
         describe "its biology assets" do
+          # TODO: I wish biology assets were set up before saving.
+          # Once we change this, we can un-mark some tests as pending.
+          before { pet.save! }
+
           subject(:biology_assets) { pet_state.swf_assets }
           let(:asset_ids) { biology_assets.map(&:remote_id) }
 
-          it("are all new") { should all be_new_record }
+          it("are all new") do
+            pending("Currently, pets must be saved before assets are assigned.")
+            should all be_new_record
+          end
           it("match the expected IDs") do
-            pet.save! # TODO: I wish this were set up before saving.
-
             expect(asset_ids).to contain_exactly(10083, 11613, 14187, 14189)
           end
           it("have the expected asset metadata") do
-            pet.save! # TODO: I wish this were set up before saving.
-
             expect(pet_state.swf_assets).to contain_exactly(
               a_record_matching(
                 type: "biology",
@@ -116,13 +119,18 @@ RSpec.describe Pet, type: :model do
       it("is a Striped Blumaroo") { expect(pet.pet_type.human_name).to eq "Striped Blumaroo" }
 
       describe "its biology assets" do
+        # TODO: I wish biology assets were set up before saving.
+        # Once we change this, we can un-mark some tests as pending.
+        before { pet.save! }
+
         subject(:biology_assets) { pet.pet_state.swf_assets }
         let(:asset_ids) { biology_assets.map(&:remote_id) }
 
-        it("are all new") { should all be_new_record }
+        it("are all new") do
+          pending("Currently, pets must be saved before assets are assigned.")
+          should all be_new_record
+        end
         it("match the expected IDs") do
-          pet.save! # TODO: I wish this were set up before saving.
-
           expect(asset_ids).to contain_exactly(331, 332, 333, 23760, 23411)
         end
       end
