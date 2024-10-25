@@ -1,0 +1,57 @@
+{
+	"custom_pet": {
+		"name": "Blue_Jetsam",
+		"owner": "puff_p0wer",
+		"slot": 1.0,
+		"scale": 0.5,
+		"muted": false,
+		"body_id": 147.0,
+		"species_id": 20.0,
+		"color_id": 8.0,
+		"alt_style": false,
+		"alt_color": 8.0,
+		"style_closet_id": null,
+		"biology_by_zone": {
+			"5": {
+				"part_id": 4875.0,
+				"zone_id": 5.0,
+				"asset_url": "https://images.neopets.com/cp/bio/swf/000/000/004/4875_e67d21406c.swf",
+				"manifest": "https://images.neopets.com/cp/bio/data/000/000/004/4875_e67d21406c/manifest.json",
+				"zones_restrict": "0000000000000000000000000000000000000000000000000000"
+			},
+			"30": {
+				"part_id": 4873.0,
+				"zone_id": 30.0,
+				"asset_url": "https://images.neopets.com/cp/bio/swf/000/000/004/4873_bf5b8873c3.swf",
+				"manifest": "https://images.neopets.com/cp/bio/data/000/000/004/4873_bf5b8873c3/manifest.json",
+				"zones_restrict": "0000000000000000000000000000000000000000000000000000"
+			},
+			"15": {
+				"part_id": 4874.0,
+				"zone_id": 15.0,
+				"asset_url": "https://images.neopets.com/cp/bio/swf/000/000/004/4874_86483dd3a2.swf",
+				"manifest": "https://images.neopets.com/cp/bio/data/000/000/004/4874_86483dd3a2/manifest.json",
+				"zones_restrict": "0000000000000000000000000000000000000000000000000000"
+			},
+			"34": {
+				"part_id": 16312.0,
+				"zone_id": 34.0,
+				"asset_url": "https://images.neopets.com/cp/bio/swf/000/000/016/16312_d6ecd5c181.swf",
+				"manifest": "https://images.neopets.com/cp/bio/data/000/000/016/16312_d6ecd5c181/manifest.json",
+				"zones_restrict": "0000000000000000000000000000000000000000000000000000"
+			},
+			"33": {
+				"part_id": 16311.0,
+				"zone_id": 33.0,
+				"asset_url": "https://images.neopets.com/cp/bio/swf/000/000/016/16311_aec9557cea.swf",
+				"manifest": "https://images.neopets.com/cp/bio/data/000/000/016/16311_aec9557cea/manifest.json",
+				"zones_restrict": "0000000000000000000000000000000000000000000000000000"
+			}
+		},
+		"equipped_by_zone": [],
+		"original_biology": []
+	},
+	"closet_items": [],
+	"object_info_registry": [],
+	"object_asset_registry": []
+}

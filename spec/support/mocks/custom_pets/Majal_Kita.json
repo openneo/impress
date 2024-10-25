@@ -1,0 +1,187 @@
+{
+	"dti_comment": "I modded this to be a Blue Jetsam based underneath the alt style! The actual Majal_Kita is a Robot in both base color and alt style color.",
+	"custom_pet": {
+		"name": "Majal_Kita",
+		"owner": "featheralley",
+		"slot": 1.0,
+		"scale": 0.5,
+		"muted": false,
+		"body_id": 378.0,
+		"species_id": 20.0,
+		"color_id": 8.0,
+		"alt_style": 87458.0,
+		"alt_color": 62.0,
+		"style_closet_id": "55239",
+		"biology_by_zone": {
+			"15": {
+				"part_id": 56223.0,
+				"zone_id": 15.0,
+				"asset_url": "https://images.neopets.com/cp/bio/swf/000/000/056/56223_dc26edc764.swf",
+				"manifest": "https://images.neopets.com/cp/bio/data/000/000/056/56223_dc26edc764/manifest.json",
+				"zones_restrict": "0000000000000000000000000000000000000000000000000000"
+			}
+		},
+		"equipped_by_zone": {
+			"45": {
+				"asset_id": 119596.0,
+				"zone_id": 45.0,
+				"closet_obj_id": 32579616.0
+			},
+			"48": {
+				"asset_id": 128775.0,
+				"zone_id": 48.0,
+				"closet_obj_id": 32579617.0
+			},
+			"3": {
+				"asset_id": 250486.0,
+				"zone_id": 3.0,
+				"closet_obj_id": 32579618.0
+			}
+		},
+		"original_biology": {
+			"5": {
+				"part_id": 6008.0,
+				"zone_id": 5.0,
+				"asset_url": "https://images.neopets.com/cp/bio/swf/000/000/006/6008_ed1bc71474.swf",
+				"manifest": "https://images.neopets.com/cp/bio/data/000/000/006/6008_ed1bc71474/manifest.json",
+				"zones_restrict": "0000000000000000000000000000000000000000000000000000"
+			},
+			"30": {
+				"part_id": 6006.0,
+				"zone_id": 30.0,
+				"asset_url": "https://images.neopets.com/cp/bio/swf/000/000/006/6006_b2df8bb735.swf",
+				"manifest": "https://images.neopets.com/cp/bio/data/000/000/006/6006_b2df8bb735/manifest.json",
+				"zones_restrict": "0000000000000000000000000000000000000000000000000000"
+			},
+			"34": {
+				"part_id": 6012.0,
+				"zone_id": 34.0,
+				"asset_url": "https://images.neopets.com/cp/bio/swf/000/000/006/6012_b6dd5d9b68.swf",
+				"manifest": "https://images.neopets.com/cp/bio/data/000/000/006/6012_b6dd5d9b68/manifest.json",
+				"zones_restrict": "0000000000000000000000000000000000000000000000000000"
+			},
+			"15": {
+				"part_id": 6007.0,
+				"zone_id": 15.0,
+				"asset_url": "https://images.neopets.com/cp/bio/swf/000/000/006/6007_bed0d7a0ee.swf",
+				"manifest": "https://images.neopets.com/cp/bio/data/000/000/006/6007_bed0d7a0ee/manifest.json",
+				"zones_restrict": "0000000000000000000000000000000000000000000000000000"
+			},
+			"33": {
+				"part_id": 17800.0,
+				"zone_id": 33.0,
+				"asset_url": "https://images.neopets.com/cp/bio/swf/000/000/017/17800_4de8bb58c5.swf",
+				"manifest": "https://images.neopets.com/cp/bio/data/000/000/017/17800_4de8bb58c5/manifest.json",
+				"zones_restrict": "0000000000000000000000000000000000000000000000000000"
+			}
+		}
+	},
+	"closet_items": {
+		"32579616": {
+			"closet_obj_id": 32579616.0,
+			"obj_info_id": 54794.0,
+			"applied_to": "Majal_Kita",
+			"is_wishlist": false,
+			"expiration": "N/A"
+		},
+		"32579617": {
+			"closet_obj_id": 32579617.0,
+			"obj_info_id": 55779.0,
+			"applied_to": "Majal_Kita",
+			"is_wishlist": false,
+			"expiration": "N/A"
+		},
+		"32579618": {
+			"closet_obj_id": 32579618.0,
+			"obj_info_id": 65557.0,
+			"applied_to": "Majal_Kita",
+			"is_wishlist": false,
+			"expiration": "N/A"
+		}
+	},
+	"object_info_registry": {
+		"54794": {
+			"obj_info_id": 54794.0,
+			"assets_by_zone": {
+				"45": 119596.0
+			},
+			"zones_restrict": "0000000000000000000000000000000000000000000000000000",
+			"is_compatible": true,
+			"is_paid": false,
+			"thumbnail_url": "https://images.neopets.com/items/gif_petpetcannonballcan.gif",
+			"name": "Petpet Cannonball Cannon",
+			"description": "We hope you dont use this cannon to shoot Petpets out of! This prize was awarded by AAA for beating his Daily Dare score in Y13.",
+			"category": "Gift",
+			"type": "Gift",
+			"rarity": "Special",
+			"rarity_index": 101.0,
+			"price": 0.0,
+			"weight_lbs": 1.0,
+			"species_support": [],
+			"converted": true
+		},
+		"55779": {
+			"obj_info_id": 55779.0,
+			"assets_by_zone": {
+				"48": 128775.0
+			},
+			"zones_restrict": "0000000000000000000000000000000000000000000000000000",
+			"is_compatible": true,
+			"is_paid": true,
+			"thumbnail_url": "https://images.neopets.com/items/mall_garland_sheilds_weapons.gif",
+			"name": "Shields and Weapons Garland",
+			"description": "My, thats a rather heavily defended decoration, isnt it?",
+			"category": "Special",
+			"type": "Special",
+			"rarity": "Artifact",
+			"rarity_index": 500.0,
+			"price": 0.0,
+			"weight_lbs": 1.0,
+			"species_support": [],
+			"converted": true
+		},
+		"65557": {
+			"obj_info_id": 65557.0,
+			"assets_by_zone": {
+				"3": 250486.0
+			},
+			"zones_restrict": "0000000000000000000000000000000000000000000000000000",
+			"is_compatible": true,
+			"is_paid": true,
+			"thumbnail_url": "https://images.neopets.com/items/mall_bg_prebattle.gif",
+			"name": "Approaching Battle Background",
+			"description": "Better stock up on supplies before they arrive!",
+			"category": "Special",
+			"type": "Special",
+			"rarity": "Artifact",
+			"rarity_index": 500.0,
+			"price": 0.0,
+			"weight_lbs": 1.0,
+			"species_support": [],
+			"converted": true
+		}
+	},
+	"object_asset_registry": {
+		"119596": {
+			"asset_id": 119596.0,
+			"zone_id": 45.0,
+			"asset_url": "https://images.neopets.com/cp/items/swf/000/000/119/119596_b51cbb59b8.swf",
+			"obj_info_id": 54794.0,
+			"manifest": "https://images.neopets.com/cp/items/data/000/000/119/119596_b51cbb59b8/manifest.json?v=1706"
+		},
+		"128775": {
+			"asset_id": 128775.0,
+			"zone_id": 48.0,
+			"asset_url": "https://images.neopets.com/cp/items/swf/000/000/128/128775_a89be479b6.swf",
+			"obj_info_id": 55779.0,
+			"manifest": "https://images.neopets.com/cp/items/data/000/000/128/128775_a89be479b6/manifest.json?v=1706"
+		},
+		"250486": {
+			"asset_id": 250486.0,
+			"zone_id": 3.0,
+			"asset_url": "https://images.neopets.com/cp/items/swf/000/000/250/250486_348279370a.swf",
+			"obj_info_id": 65557.0,
+			"manifest": "https://images.neopets.com/cp/items/data/000/000/250/250486_348279370a/manifest.json?v=1706"
+		}
+	}
+}

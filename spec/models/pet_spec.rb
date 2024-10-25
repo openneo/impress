@@ -390,5 +390,20 @@ RSpec.describe Pet, type: :model do
         end
       end
     end
+
+    context "for Majal_Kita, the Nostalgic Robot Jetsam (modded to be Blue as its base)" do
+      it("fails to load without an existing Blue Jetsam, " +
+         "because the biology data is incomplete") do
+        expect { Pet.load("Majal_Kita") }.to raise_error(Pet::UnexpectedDataFormat)
+      end
+
+      context "with a Blue Jetsam already modeled" do
+        before { Pet.load("Blue_Jetsam").save! }
+
+        it("loads without raising an error") do
+          expect { Pet.load("Majal_Kita") }.not_to raise_error
+        end
+      end
+    end
   end
 end
