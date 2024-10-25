@@ -120,6 +120,84 @@ RSpec.describe Pet, type: :model do
           end
         end
       end
+
+      context "when modeled again, but happy" do
+        before { pet.save! }
+        subject(:new_pet) { Pet.load("thyassa:happy") }
+
+        describe "its pet type" do
+          subject(:pet_type) { new_pet.pet_type }
+
+          it("already exists") { should be_persisted }
+          it("is the same as before") { should eq pet.pet_type }
+          it "is not changed when saving the pet" do
+            expect { new_pet.save! }.not_to change { pet_type.attributes }
+          end
+        end
+
+        describe "its pet state" do
+          subject(:pet_state) { new_pet.pet_state }
+
+          it("is new and unsaved") { should be_new_record }
+          it("belongs to the same pet type") { expect(pet_state.pet_type).to eq pet.pet_type }
+          it("isn't labeled yet") { expect(pet_state.pose).to eq "UNKNOWN" }
+          it("is saved when saving the pet") { new_pet.save!; should be_persisted }
+
+          describe "its biology assets" do
+            # TODO: I wish biology assets were set up before saving.
+            # Once we change this, we can un-mark some tests as pending.
+            before { new_pet.save! }
+
+            subject(:biology_assets) { pet_state.swf_assets }
+            let(:asset_ids) { biology_assets.map(&:remote_id) }
+
+            they("are partially new, partially existing") do
+              pending("Currently, pets must be saved before assets are assigned.")
+              fail # TODO: Write this test once we have the ability to see it pass!
+            end
+            they("match the expected IDs") do
+              expect(asset_ids).to contain_exactly(10083, 11613, 10448, 10451)
+            end
+            they("are saved when saving the pet") { new_pet.save!; should all be_persisted }
+            they("have the expected asset metadata") do
+              expect(pet_state.swf_assets).to contain_exactly(
+                a_record_matching(
+                  type: "biology",
+                  remote_id: 10083,
+                  zone_id: 37,
+                  url: "https://images.neopets.com/cp/bio/swf/000/000/010/10083_8a1111a13f.swf",
+                  manifest_url: "https://images.neopets.com/cp/bio/data/000/000/010/10083_8a1111a13f/manifest.json",
+                  zones_restrict: "0000000000000000000000000000000000000000000000000000",
+                ),
+                a_record_matching(
+                  type: "biology",
+                  remote_id: 11613,
+                  zone_id: 15,
+                  url: "https://images.neopets.com/cp/bio/swf/000/000/011/11613_f7d8d377ab.swf",
+                  manifest_url: "https://images.neopets.com/cp/bio/data/000/000/011/11613_f7d8d377ab/manifest.json",
+                  zones_restrict: "0000000000000000000000000000000000000000000000000000",
+                ),
+                a_record_matching(
+                  type: "biology",
+                  remote_id: 10448,
+                  zone_id: 34,
+                  url: "https://images.neopets.com/cp/bio/swf/000/000/010/10448_0b238e79e2.swf",
+                  manifest_url: "https://images.neopets.com/cp/bio/data/000/000/010/10448_0b238e79e2/manifest.json",
+                  zones_restrict: "0000000000000000000000000000000000000000000000000000",
+                ),
+                a_record_matching(
+                  type: "biology",
+                  remote_id: 10451,
+                  zone_id: 33,
+                  url: "https://images.neopets.com/cp/bio/swf/000/000/010/10451_cd4a8a8e47.swf",
+                  manifest_url: "https://images.neopets.com/cp/bio/data/000/000/010/10451_cd4a8a8e47/manifest.json",
+                  zones_restrict: "0000000000000000000000000000000000000000000000000000",
+                )
+              )
+            end
+          end
+        end
+      end
     end
 
     context "for matts_bat, a pet with basic items" do
