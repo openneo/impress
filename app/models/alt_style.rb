@@ -22,6 +22,8 @@ class AltStyle < ApplicationRecord
   scope :by_creation_date, -> {
     order("DATE(created_at) DESC")
   }
+  scope :unlabeled, -> { where(series_name: nil) }
+  scope :newest, -> { order(created_at: :desc) }
 
   def pet_name
     I18n.translate('pet_types.human_name', color_human_name: color.human_name,

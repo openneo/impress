@@ -4,3 +4,9 @@
 		.name
 			%span= alt_style.series_name
 			%span= alt_style.pet_name
+		.info
+			%p
+				Added
+				= time_tag alt_style.created_at,
+					title: alt_style.created_at.to_formatted_s(:long_nst) do
+					= time_with_only_month_if_old alt_style.created_at
