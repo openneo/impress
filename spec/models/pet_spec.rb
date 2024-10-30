@@ -399,9 +399,40 @@ RSpec.describe Pet, type: :model do
 
       context "with a Blue Jetsam already modeled" do
         before { Pet.load("Blue_Jetsam").save! }
+        subject(:pet) { Pet.load("Majal_Kita") }
 
         it("loads without raising an error") do
           expect { Pet.load("Majal_Kita") }.not_to raise_error
+        end
+
+        describe "its alt style" do
+          subject(:alt_style) { pet.alt_style }
+
+          it("is new and unsaved") { should be_new_record }
+          it("has the unique ID 87458") { expect(alt_style.id).to eq 87458 }
+          it("is Robot") { expect(alt_style.color).to eq Color.find_by_name!("Robot") }
+          it("is a Jetsam") { expect(alt_style.species).to eq Species.find_by_name!("Jetsam") }
+          it("has unique body ID 378") { expect(alt_style.body_id).to eq 378 }
+          it("has no series name yet") { expect(alt_style.real_series_name?).to be false }
+          it("has no thumbnail yet") { expect(alt_style.thumbnail_url?).to be false }
+          it("is saved when saving the pet") { pet.save!; should be_persisted }
+        end
+
+        # TODO: Alt style assets!
+
+        context "when modeled a second time" do
+          before { pet.save! }
+          subject(:new_pet) { Pet.load("Majal_Kita") }
+
+          describe "its alt style" do
+            subject(:alt_style) { new_pet.alt_style }
+
+            it("already exists") { should be_persisted }
+            it("is the same as before") { should eq pet.alt_style }
+            it "is not changed when saving the pet" do
+              expect { new_pet.save! }.not_to change { alt_style.attributes }
+            end
+          end
         end
       end
     end

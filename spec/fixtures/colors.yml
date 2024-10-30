@@ -1,6 +1,9 @@
 purple:
   id: 57
   name: purple
+robot:
+  id: 62
+  name: robot
 striped:
   id: 77
   name: striped
