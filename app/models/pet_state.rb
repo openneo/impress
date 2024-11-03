@@ -9,6 +9,8 @@ class PetState < ApplicationRecord
   has_many :parent_swf_asset_relationships, :as => :parent
   has_many :swf_assets, :through => :parent_swf_asset_relationships
 
+  serialize :swf_asset_ids, coder: Serializers::IntegerSet, type: Array
+
   belongs_to :pet_type
 
   delegate :species_id, :species, :color_id, :color, to: :pet_type
@@ -92,24 +94,16 @@ class PetState < ApplicationRecord
     end
   end
 
-  def sort_swf_asset_ids!
-    self.swf_asset_ids = swf_asset_ids_array.sort.join(',')
-  end
-
-  def swf_asset_ids
-    self['swf_asset_ids']
-  end
-
-  def swf_asset_ids_array
-    swf_asset_ids.split(',').map(&:to_i)
-  end
-
-  def swf_asset_ids=(ids)
-    self['swf_asset_ids'] = ids
-  end
-
   def to_param
     "#{id}-#{pose.split('_').map(&:capitalize).join('-')}"
+  end
+
+  # Because our column is named `swf_asset_ids`, we need to ensure writes to
+  # it go to the attribute, and not the thing ActiveRecord does of finding the
+  # relevant `swf_assets`.
+  # TODO: Consider renaming the column to `cached_swf_asset_ids`?
+  def swf_asset_ids=(new_swf_asset_ids)
+    write_attribute(:swf_asset_ids, new_swf_asset_ids)
   end
 
   private
