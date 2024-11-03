@@ -100,22 +100,9 @@ class Pet < ApplicationRecord
 
     def pet_state
       @pet_state ||= begin
-        # Choose the right biology, depending on if there's an alt style.
-        pet_state_biology = @custom_pet[:alt_style].present? ?
-          @custom_pet[:original_biology] :
-          @custom_pet[:biology_by_zone]
-        raise UnexpectedDataFormat if pet_state_biology.empty?
-
-        # Then, set up the biology assets.
-        body_id = @custom_pet[:body_id].to_i
-        swf_assets = pet_state_biology.values.map do |biology_data|
-          SwfAsset.from_biology_data(body_id, biology_data)
-        end
-        swf_asset_ids = swf_assets.map(&:remote_id).sort.join(",")
-
-        # Then, set up the pet state, using these biology assets.
+        swf_asset_ids = biology_assets.map(&:remote_id).sort.join(",")
         pet_type.pet_states.find_or_initialize_by(swf_asset_ids:).tap do |pet_state|
-          pet_state.swf_assets = swf_assets
+          pet_state.swf_assets = biology_assets
         end
       end
     end
@@ -143,6 +130,20 @@ class Pet < ApplicationRecord
       @items ||= Item.collection_from_pet_type_and_registries(
         pet_type, @object_info_registry, @object_asset_registry
       )
+    end
+
+    private
+
+    def biology_assets
+      @biology_assets ||= begin
+        biology = @custom_pet[:alt_style].present? ?
+          @custom_pet[:original_biology] :
+          @custom_pet[:biology_by_zone]
+        raise UnexpectedDataFormat if biology.empty?
+
+        body_id = @custom_pet[:body_id].to_i
+        biology.values.map { |b| SwfAsset.from_biology_data(body_id, b) }
+      end
     end
   end
 end
