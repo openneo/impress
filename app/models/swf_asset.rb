@@ -320,14 +320,6 @@ class SwfAsset < ApplicationRecord
     swf_asset
   end
 
-  def self.from_wardrobe_link_params(ids)
-    where((
-      arel_table[:remote_id].in(ids[:biology]).and(arel_table[:type].eq('biology'))
-    ).or(
-      arel_table[:remote_id].in(ids[:object]).and(arel_table[:type].eq('object'))
-    ))
-  end
-
   # Given a list of SWF assets, ensure all of their manifests are loaded, with
   # fast concurrent execution!
   def self.preload_manifests(swf_assets)
