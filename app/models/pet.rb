@@ -3,10 +3,6 @@ class Pet < ApplicationRecord
 
   attr_reader :items, :pet_state, :alt_style
 
-  scope :with_pet_type_color_ids, ->(color_ids) {
-    joins(:pet_type).where(PetType.arel_table[:id].in(color_ids))
-  }
-
   def load!(timeout: nil)
     viewer_data = Neopets::CustomPets.fetch_viewer_data(name, timeout:)
     use_viewer_data(viewer_data)
