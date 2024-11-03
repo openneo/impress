@@ -103,7 +103,7 @@ class Pet < ApplicationRecord
 
     def pet_state
       @pet_state ||= begin
-        swf_asset_ids = biology_assets.map(&:remote_id).sort.join(",")
+        swf_asset_ids = biology_assets.map(&:remote_id)
         pet_type.pet_states.find_or_initialize_by(swf_asset_ids:).tap do |pet_state|
           pet_state.swf_assets = biology_assets
         end
