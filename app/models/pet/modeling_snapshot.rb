@@ -63,12 +63,10 @@ class Pet::ModelingSnapshot
   end
 
   def items
-    @items ||= begin
-      @object_info_registry.map do |id, item_data|
-        Item.find_or_initialize_by(id:).tap do |item|
-          item.add_origin_registry_info item_data
-          item.swf_assets = item_assets_for id
-        end
+    @items ||= @object_info_registry.map do |id, item_data|
+      Item.find_or_initialize_by(id:).tap do |item|
+        item.add_origin_registry_info item_data
+        item.swf_assets = item_assets_for id
       end
     end
   end
@@ -98,7 +96,7 @@ class Pet::ModelingSnapshot
 
   def alt_style_assets
     raise Pet::UnexpectedDataFormat if @custom_pet[:biology_by_zone].empty?
-    assets_from_biology(@custom_pet[:biology_by_zone])
+    @alt_style_assets ||= assets_from_biology(@custom_pet[:biology_by_zone])
   end
 
   def assets_from_biology(biology)
