@@ -48,7 +48,7 @@ RSpec.describe Pet, type: :model do
           end
           they("are saved when saving the pet") { pet.save!; should all be_persisted }
           they("have the expected asset metadata") do
-            expect(pet_state.swf_assets).to contain_exactly(
+            should contain_exactly(
               a_record_matching(
                 type: "biology",
                 remote_id: 10083,
@@ -160,7 +160,7 @@ RSpec.describe Pet, type: :model do
             end
             they("are saved when saving the pet") { new_pet.save!; should all be_persisted }
             they("have the expected asset metadata") do
-              expect(pet_state.swf_assets).to contain_exactly(
+              should contain_exactly(
                 a_record_matching(
                   type: "biology",
                   remote_id: 10083,
@@ -416,9 +416,30 @@ RSpec.describe Pet, type: :model do
           it("has no series name yet") { expect(alt_style.real_series_name?).to be false }
           it("has no thumbnail yet") { expect(alt_style.thumbnail_url?).to be false }
           it("is saved when saving the pet") { pet.save!; should be_persisted }
-        end
 
-        # TODO: Alt style assets!
+          describe "its assets" do
+            subject(:assets) { alt_style.swf_assets }
+            let(:asset_ids) { assets.map(&:remote_id) }
+
+            they("are all new") { should all be_new_record }
+            they("match the expected IDs") do
+              expect(asset_ids).to contain_exactly(56223)
+            end
+            they("are saved when saving the pet") { pet.save!; should all be_persisted }
+            they("have the expected asset metadata") do
+              should contain_exactly(
+                a_record_matching(
+                  type: "biology",
+                  remote_id: 56223,
+                  zone_id: 15,
+                  url: "https://images.neopets.com/cp/bio/swf/000/000/056/56223_dc26edc764.swf",
+                  manifest_url: "https://images.neopets.com/cp/bio/data/000/000/056/56223_dc26edc764/manifest.json",
+                  zones_restrict: "0000000000000000000000000000000000000000000000000000",
+                )
+              )
+            end
+          end
+        end
 
         context "when modeled a second time" do
           before { pet.save! }
@@ -431,6 +452,16 @@ RSpec.describe Pet, type: :model do
             it("is the same as before") { should eq pet.alt_style }
             it "is not changed when saving the pet" do
               expect { new_pet.save! }.not_to change { alt_style.attributes }
+            end
+
+            describe "its assets" do
+              subject(:assets) { alt_style.swf_assets }
+
+              they("already exist") { should all be_persisted }
+              they("are the same as before") { should eq pet.alt_style.swf_assets }
+              they("are not changed when saving the pet") do
+                expect { new_pet.save! }.not_to change { assets.map(&:attributes) }
+              end
             end
           end
         end
