@@ -92,30 +92,6 @@ class PetState < ApplicationRecord
     end
   end
 
-  def reassign_children_to!(main_pet_state)
-    self.contributions.each do |contribution|
-      contribution.contributed = main_pet_state
-      contribution.save
-    end
-    self.outfits.each do |outfit|
-      outfit.pet_state = main_pet_state
-      outfit.save
-    end
-    ParentSwfAssetRelationship.where(ParentSwfAssetRelationship.arel_table[:parent_id].eq(self.id)).delete_all
-  end
-
-  def reassign_duplicates!
-    raise "This may only be applied to pet states that represent many duplicate entries" unless duplicate_ids
-    pet_states = duplicate_ids.split(',').map do |id|
-      PetState.find(id.to_i)
-    end
-    main_pet_state = pet_states.shift
-    pet_states.each do |pet_state|
-      pet_state.reassign_children_to!(main_pet_state)
-      pet_state.destroy
-    end
-  end
-
   def sort_swf_asset_ids!
     self.swf_asset_ids = swf_asset_ids_array.sort.join(',')
   end
