@@ -32,17 +32,10 @@ RSpec.describe Pet, type: :model do
         it("is saved when saving the pet") { pet.save!; should be_persisted }
 
         describe "its biology assets" do
-          # TODO: I wish biology assets were set up before saving.
-          # Once we change this, we can un-mark some tests as pending.
-          before { pet.save! }
-
           subject(:biology_assets) { pet_state.swf_assets }
           let(:asset_ids) { biology_assets.map(&:remote_id) }
 
-          they("are all new") do
-            pending("Currently, pets must be saved before assets are assigned.")
-            should all be_new_record
-          end
+          they("are all new") { should all be_new_record }
           they("match the expected IDs") do
             expect(asset_ids).to contain_exactly(10083, 11613, 14187, 14189)
           end
@@ -144,16 +137,18 @@ RSpec.describe Pet, type: :model do
           it("is saved when saving the pet") { new_pet.save!; should be_persisted }
 
           describe "its biology assets" do
-            # TODO: I wish biology assets were set up before saving.
-            # Once we change this, we can un-mark some tests as pending.
-            before { new_pet.save! }
-
             subject(:biology_assets) { pet_state.swf_assets }
             let(:asset_ids) { biology_assets.map(&:remote_id) }
+            let(:persisted_asset_ids) {
+              biology_assets.select(&:persisted?).map(&:remote_id)
+            }
+            let(:new_asset_ids) {
+              biology_assets.select(&:new_record?).map(&:remote_id)
+            }
 
             they("are partially new, partially existing") do
-              pending("Currently, pets must be saved before assets are assigned.")
-              fail # TODO: Write this test once we have the ability to see it pass!
+              expect(persisted_asset_ids).to contain_exactly(10083, 11613)
+              expect(new_asset_ids).to contain_exactly(10448, 10451)
             end
             they("match the expected IDs") do
               expect(asset_ids).to contain_exactly(10083, 11613, 10448, 10451)
@@ -208,17 +203,10 @@ RSpec.describe Pet, type: :model do
       it("is a Striped Blumaroo") { expect(pet.pet_type.human_name).to eq "Striped Blumaroo" }
 
       describe "its biology assets" do
-        # TODO: I wish biology assets were set up before saving.
-        # Once we change this, we can un-mark some tests as pending.
-        before { pet.save! }
-
         subject(:biology_assets) { pet.pet_state.swf_assets }
         let(:asset_ids) { biology_assets.map(&:remote_id) }
 
-        they("are all new") do
-          pending("Currently, pets must be saved before assets are assigned.")
-          should all be_new_record
-        end
+        they("are all new") { should all be_new_record }
         they("match the expected IDs") do
           expect(asset_ids).to contain_exactly(331, 332, 333, 23760, 23411)
         end
