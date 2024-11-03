@@ -7,14 +7,14 @@ class Pet < ApplicationRecord
     raise ModelingDisabled unless Rails.configuration.modeling_enabled
 
     viewer_data_hash = Neopets::CustomPets.fetch_viewer_data(name, timeout:)
-    use_viewer_data(ViewerData.new(viewer_data_hash))
+    use_modeling_snapshot(ModelingSnapshot.new(viewer_data_hash))
   end
 
-  def use_viewer_data(viewer_data)
-    self.pet_type = viewer_data.pet_type
-    @pet_state = viewer_data.pet_state
-    @alt_style = viewer_data.alt_style
-    @items = viewer_data.items
+  def use_modeling_snapshot(snapshot)
+    self.pet_type = snapshot.pet_type
+    @pet_state = snapshot.pet_state
+    @alt_style = snapshot.alt_style
+    @items = snapshot.items
   end
 
   def wardrobe_query
@@ -62,97 +62,4 @@ class Pet < ApplicationRecord
 
   class UnexpectedDataFormat < RuntimeError;end
   class ModelingDisabled < RuntimeError;end
-
-  # A representation of a Neopets::CustomPets viewer data response, translated
-  # to DTI's database models!
-  class ViewerData
-    def initialize(viewer_data_hash)
-      @custom_pet = viewer_data_hash[:custom_pet]
-      @object_info_registry = viewer_data_hash[:object_info_registry]
-      @object_asset_registry = viewer_data_hash[:object_asset_registry]
-    end
-
-    def pet_type
-      @pet_type ||= begin
-        raise UnexpectedDataFormat unless @custom_pet[:species_id]
-        raise UnexpectedDataFormat unless @custom_pet[:color_id]
-        raise UnexpectedDataFormat unless @custom_pet[:body_id]
-
-        @custom_pet => {species_id:, color_id:}
-        PetType.find_or_initialize_by(species_id:, color_id:).tap do |pet_type|
-          # Apply the pet's body ID to the pet type, unless it's wearing an alt
-          # style, in which case ignore it, because it's the *alt style*'s body ID.
-          # (This can theoretically cause a problem saving a new pet type when
-          # there's an alt style too!)
-          pet_type.body_id = @custom_pet[:body_id] unless @custom_pet[:alt_style]
-          if pet_type.body_id.nil?
-            raise UnexpectedDataFormat,
-              "can't process alt style on first occurrence of pet type"
-          end
-
-          # Try using this pet for the pet type's thumbnail, but don't worry
-          # if it fails.
-          begin
-            pet_type.consider_pet_image(@custom_pet[:name])
-          rescue => error
-            Rails.logger.warn "Failed to load pet image: #{error.full_message}"
-          end
-        end
-      end
-    end
-
-    def pet_state
-      @pet_state ||= begin
-        swf_asset_ids = biology_assets.map(&:remote_id)
-        pet_type.pet_states.find_or_initialize_by(swf_asset_ids:).tap do |pet_state|
-          pet_state.swf_assets = biology_assets
-        end
-      end
-    end
-
-    def alt_style
-      @alt_style ||= begin
-        return nil unless @custom_pet[:alt_style]
-        raise UnexpectedDataFormat unless @custom_pet[:alt_color]
-
-        id = @custom_pet[:alt_style].to_i
-        AltStyle.find_or_initialize_by(id:).tap do |alt_style|
-          alt_style.assign_attributes(
-            color_id: @custom_pet[:alt_color].to_i,
-            species_id: @custom_pet[:species_id].to_i,
-            body_id: @custom_pet[:body_id].to_i,
-            swf_assets: alt_style_assets,
-          )
-        end
-      end
-    end
-
-    def items
-      @items ||= Item.collection_from_pet_type_and_registries(
-        pet_type, @object_info_registry, @object_asset_registry
-      )
-    end
-
-    private
-
-    def biology_assets
-      @biology_assets ||= begin
-        biology = @custom_pet[:alt_style].present? ?
-          @custom_pet[:original_biology] :
-          @custom_pet[:biology_by_zone]
-        assets_from_biology(biology)
-      end
-    end
-
-    def alt_style_assets
-      raise UnexpectedDataFormat if @custom_pet[:biology_by_zone].empty?
-      assets_from_biology(@custom_pet[:biology_by_zone])
-    end
-
-    def assets_from_biology(biology)
-      raise UnexpectedDataFormat if biology.empty?
-      body_id = @custom_pet[:body_id].to_i
-      biology.values.map { |b| SwfAsset.from_biology_data(body_id, b) }
-    end
-  end
 end
