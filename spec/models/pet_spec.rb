@@ -271,18 +271,11 @@ RSpec.describe Pet, type: :model do
       end
 
       context "its item assets" do
-        # TODO: I wish item assets were set up before saving.
-        # Once we change this, we can un-mark some tests as pending.
-        before { pet.save! }
-
         let(:assets_by_item) { pet.items.to_h { |item| [item.id, item.swf_assets.to_a] } }
         subject(:item_assets) { assets_by_item.values.flatten(1) }
         let(:asset_ids) { item_assets.map(&:remote_id) }
 
-        they("are all new") do
-          pending("Currently, pets must be saved before assets are assigned.")
-          should all be_new_record
-        end
+        they("are all new") { should all be_new_record }
         they("match the expected IDs") do
           expect(asset_ids).to contain_exactly(16933, 108567, 410722)
         end

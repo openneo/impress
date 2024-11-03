@@ -39,17 +39,8 @@ class Pet < ApplicationRecord
   before_validation do
     pet_type.save!
     @pet_state.save! if @pet_state
-
-    if @items
-      @items.each do |item|
-        item.save! if item.changed?
-        item.handle_assets!
-      end
-    end
-
-    if @alt_style
-      @alt_style.save!
-    end
+    @alt_style.save! if @alt_style
+    (@items || []).each(&:save!)
   end
 
   def self.load(name, **options)
@@ -125,9 +116,14 @@ class Pet < ApplicationRecord
     end
 
     def items
-      @items ||= Item.collection_from_pet_type_and_registries(
-        pet_type, @object_info_registry, @object_asset_registry
-      )
+      @items ||= begin
+        @object_info_registry.map do |id, item_data|
+          Item.find_or_initialize_by(id:).tap do |item|
+            item.add_origin_registry_info item_data
+            item.swf_assets = item_assets_for id
+          end
+        end
+      end
     end
 
     private
@@ -138,6 +134,18 @@ class Pet < ApplicationRecord
           @custom_pet[:original_biology] :
           @custom_pet[:biology_by_zone]
         assets_from_biology(biology)
+      end
+    end
+
+    def item_assets_for(item_id)
+      all_infos = @object_asset_registry.values
+      infos = all_infos.select { |a| a[:obj_info_id].to_i == item_id.to_i }
+      infos.map do |asset_data|
+        remote_id = asset_data[:asset_id].to_i
+        SwfAsset.find_or_initialize_by(type: "object", remote_id:).tap do |swf_asset|
+          swf_asset.origin_pet_type = pet_type
+          swf_asset.origin_object_data = asset_data
+        end
       end
     end
 
