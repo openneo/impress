@@ -110,9 +110,7 @@ class Pet < ApplicationRecord
     def alt_style
       @alt_style ||= begin
         return nil unless @custom_pet[:alt_style]
-
         raise UnexpectedDataFormat unless @custom_pet[:alt_color]
-        raise UnexpectedDataFormat if @custom_pet[:biology_by_zone].empty?
 
         id = @custom_pet[:alt_style].to_i
         AltStyle.find_or_initialize_by(id:).tap do |alt_style|
@@ -120,7 +118,7 @@ class Pet < ApplicationRecord
             color_id: @custom_pet[:alt_color].to_i,
             species_id: @custom_pet[:species_id].to_i,
             body_id: @custom_pet[:body_id].to_i,
-            biology: @custom_pet[:biology_by_zone],
+            swf_assets: alt_style_assets,
           )
         end
       end
@@ -139,11 +137,19 @@ class Pet < ApplicationRecord
         biology = @custom_pet[:alt_style].present? ?
           @custom_pet[:original_biology] :
           @custom_pet[:biology_by_zone]
-        raise UnexpectedDataFormat if biology.empty?
-
-        body_id = @custom_pet[:body_id].to_i
-        biology.values.map { |b| SwfAsset.from_biology_data(body_id, b) }
+        assets_from_biology(biology)
       end
+    end
+
+    def alt_style_assets
+      raise UnexpectedDataFormat if @custom_pet[:biology_by_zone].empty?
+      assets_from_biology(@custom_pet[:biology_by_zone])
+    end
+
+    def assets_from_biology(biology)
+      raise UnexpectedDataFormat if biology.empty?
+      body_id = @custom_pet[:body_id].to_i
+      biology.values.map { |b| SwfAsset.from_biology_data(body_id, b) }
     end
   end
 end
