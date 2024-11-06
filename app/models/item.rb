@@ -26,8 +26,6 @@ class Item < ApplicationRecord
   validates_presence_of :name, :description, :thumbnail_url, :rarity, :price,
     :zones_restrict
 
-  before_validation :update_cached_fields
-
   attr_writer :current_body_id, :owned, :wanted
 
   NCRarities = [0, 500]
@@ -267,11 +265,7 @@ class Item < ApplicationRecord
   def update_cached_fields
     self.cached_occupied_zone_ids = occupied_zone_ids
     self.cached_compatible_body_ids = compatible_body_ids(use_cached: false)
-  end
-
-  def update_cached_fields!
-    update_cached_fields
-    save!
+    self.save!
   end
 
   def species_support_ids
@@ -410,6 +404,33 @@ class Item < ApplicationRecord
     return PetType.all if compatible_body_ids.include?(0)
     PetType.where(body_id: compatible_body_ids)
   end
+
+  def handle_assets!
+    if @parent_swf_asset_relationships_to_update && @current_body_id
+      new_swf_asset_ids = @parent_swf_asset_relationships_to_update.map(&:swf_asset_id)
+      rels = ParentSwfAssetRelationship.arel_table
+      swf_assets = SwfAsset.arel_table
+      
+      # If a relationship used to bind an item and asset for this body type,
+      # but doesn't in this sample, the two have been unbound. Delete the
+      # relationship.
+      ids_to_delete = self.parent_swf_asset_relationships.
+        select(rels[:id]).
+        joins(:swf_asset).
+        where(rels[:swf_asset_id].not_in(new_swf_asset_ids)).
+        where(swf_assets[:body_id].in([@current_body_id, 0])).
+        map(&:id)
+      
+      unless ids_to_delete.empty?
+        ParentSwfAssetRelationship.where(:id => ids_to_delete).delete_all
+      end
+      
+      @parent_swf_asset_relationships_to_update.each do |rel|
+        rel.save!
+        rel.swf_asset.save!
+      end
+    end
+  end
   
   def body_specific?
     # If there are species support IDs (it's not empty), the item is
@@ -417,7 +438,7 @@ class Item < ApplicationRecord
     explicitly_body_specific? || !species_support_ids.empty?
   end
 
-  def add_origin_registry_info(info)
+  def add_origin_registry_info(info, locale)
     # bear in mind that numbers from registries are floats
     species_support_strs = info['species_support'] || []
     self.species_support_ids = species_support_strs.map(&:to_i)
@@ -434,6 +455,16 @@ class Item < ApplicationRecord
     self.price = info['price'].to_i
     self.weight_lbs = info['weight_lbs'].to_i
     self.zones_restrict = info['zones_restrict']
+  end
+
+  def pending_swf_assets
+    @parent_swf_asset_relationships_to_update.inject([]) do |all_swf_assets, relationship|
+      all_swf_assets << relationship.swf_asset
+    end
+  end
+
+  def parent_swf_asset_relationships_to_update=(rels)
+    @parent_swf_asset_relationships_to_update = rels
   end
 
   # NOTE: Adding the JSON serializer makes `as_json` treat this like a model
@@ -606,5 +637,91 @@ class Item < ApplicationRecord
     end
 
     items
+  end
+
+  def self.collection_from_pet_type_and_registries(pet_type, info_registry, asset_registry, scope=Item.all)
+    # bear in mind that registries are arrays with many nil elements,
+    # due to how the parser works
+
+    # Collect existing items
+    items = {}
+    item_ids = []
+    info_registry.each do |item_id, info|
+      if info && info[:is_compatible]
+        item_ids << item_id.to_i
+      end
+    end
+
+    # Collect existing relationships
+    existing_relationships_by_item_id_and_swf_asset_id = {}
+    existing_items = scope.where(id: item_ids).
+      includes(:parent_swf_asset_relationships)
+    existing_items.each do |item|
+      items[item.id] = item
+      relationships_by_swf_asset_id = {}
+      item.parent_swf_asset_relationships.each do |relationship|
+        relationships_by_swf_asset_id[relationship.swf_asset_id] = relationship
+      end
+      existing_relationships_by_item_id_and_swf_asset_id[item.id] =
+        relationships_by_swf_asset_id
+    end
+
+    # Collect existing assets
+    swf_asset_ids = []
+    asset_registry.each do |asset_id, asset_data|
+      swf_asset_ids << asset_id.to_i if asset_data
+    end
+    existing_swf_assets = SwfAsset.object_assets.includes(:zone).
+      where(remote_id: swf_asset_ids)
+    existing_swf_assets_by_remote_id = {}
+    existing_swf_assets.each do |swf_asset|
+      existing_swf_assets_by_remote_id[swf_asset.remote_id] = swf_asset
+    end
+
+    # With each asset in the registry,
+    relationships_by_item_id = {}
+    asset_registry.each do |asset_id, asset_data|
+      if asset_data
+        # Build and update the item
+        item_id = asset_data[:obj_info_id].to_i
+        next unless item_ids.include?(item_id) # skip incompatible (Uni Bug)
+        item = items[item_id]
+        unless item
+          item = Item.new
+          item.id = item_id
+          items[item_id] = item
+        end
+        item.add_origin_registry_info info_registry[item.id.to_s], I18n.default_locale
+        item.current_body_id = pet_type.body_id
+
+        # Build and update the SWF
+        swf_asset_remote_id = asset_data[:asset_id].to_i
+        swf_asset = existing_swf_assets_by_remote_id[swf_asset_remote_id]
+        unless swf_asset
+          swf_asset = SwfAsset.new
+          swf_asset.remote_id = swf_asset_remote_id
+        end
+        swf_asset.origin_object_data = asset_data
+        swf_asset.origin_pet_type = pet_type
+        swf_asset.item = item
+
+        # Build and update the relationship
+        relationship = existing_relationships_by_item_id_and_swf_asset_id[item.id][swf_asset.id] rescue nil
+        unless relationship
+          relationship = ParentSwfAssetRelationship.new
+          relationship.parent = item
+        end
+        relationship.swf_asset = swf_asset
+        relationships_by_item_id[item_id] ||= []
+        relationships_by_item_id[item_id] << relationship
+      end
+    end
+
+    # Set up the relationships to be updated on item save
+    relationships_by_item_id.each do |item_id, relationships|
+      items[item_id].parent_swf_asset_relationships_to_update = relationships
+    end
+
+    items.values
   end
 end

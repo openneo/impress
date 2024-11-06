@@ -6,16 +6,17 @@ class PetState < ApplicationRecord
   has_many :contributions, :as => :contributed,
     :inverse_of => :contributed # in case of duplicates being merged
   has_many :outfits
-  has_many :parent_swf_asset_relationships, :as => :parent
+  has_many :parent_swf_asset_relationships, :as => :parent,
+    :autosave => false
   has_many :swf_assets, :through => :parent_swf_asset_relationships
-
-  serialize :swf_asset_ids, coder: Serializers::IntegerSet, type: Array
 
   belongs_to :pet_type
 
   delegate :species_id, :species, :color_id, :color, to: :pet_type
 
   alias_method :swf_asset_ids_from_association, :swf_asset_ids
+  
+  attr_writer :parent_swf_asset_relationships_to_update
 
   # A simple ordering that tries to bring reliable pet states to the front.
   scope :emotion_order, -> {
@@ -94,16 +95,85 @@ class PetState < ApplicationRecord
     end
   end
 
+  def sort_swf_asset_ids!
+    self.swf_asset_ids = swf_asset_ids_array.sort.join(',')
+  end
+
+  def swf_asset_ids
+    self['swf_asset_ids']
+  end
+
+  def swf_asset_ids_array
+    swf_asset_ids.split(',').map(&:to_i)
+  end
+
+  def swf_asset_ids=(ids)
+    self['swf_asset_ids'] = ids
+  end
+
+  def handle_assets!
+    @parent_swf_asset_relationships_to_update.each do |rel|
+      rel.swf_asset.save!
+      rel.save!
+    end
+  end
+
   def to_param
     "#{id}-#{pose.split('_').map(&:capitalize).join('-')}"
   end
 
-  # Because our column is named `swf_asset_ids`, we need to ensure writes to
-  # it go to the attribute, and not the thing ActiveRecord does of finding the
-  # relevant `swf_assets`.
-  # TODO: Consider renaming the column to `cached_swf_asset_ids`?
-  def swf_asset_ids=(new_swf_asset_ids)
-    write_attribute(:swf_asset_ids, new_swf_asset_ids)
+  def self.from_pet_type_and_biology_info(pet_type, info)
+    swf_asset_ids = []
+    info.each do |zone_id, asset_info|
+      if zone_id.present? && asset_info
+        swf_asset_ids << asset_info[:part_id].to_i
+      end
+    end
+    swf_asset_ids_str = swf_asset_ids.sort.join(',')
+    if pet_type.new_record?
+      pet_state = self.new :swf_asset_ids => swf_asset_ids_str
+    else
+      pet_state = self.find_or_initialize_by(
+        pet_type_id: pet_type.id,
+        swf_asset_ids: swf_asset_ids_str
+      )
+    end
+    existing_swf_assets = SwfAsset.biology_assets.includes(:zone).
+      where(remote_id: swf_asset_ids)
+    existing_swf_assets_by_id = {}
+    existing_swf_assets.each do |swf_asset|
+      existing_swf_assets_by_id[swf_asset.remote_id] = swf_asset
+    end
+    existing_relationships_by_swf_asset_id = {}
+    unless pet_state.new_record?
+      pet_state.parent_swf_asset_relationships.each do |relationship|
+        existing_relationships_by_swf_asset_id[relationship.swf_asset_id] = relationship
+      end
+    end
+    pet_state.pet_type = pet_type # save the second case from having to look it up by ID
+    relationships = []
+    info.each do |zone_id, asset_info|
+      if zone_id.present? && asset_info
+        swf_asset_id = asset_info[:part_id].to_i
+        swf_asset = existing_swf_assets_by_id[swf_asset_id]
+        unless swf_asset
+          swf_asset = SwfAsset.new
+          swf_asset.remote_id = swf_asset_id
+        end
+        swf_asset.origin_biology_data = asset_info
+        swf_asset.origin_pet_type = pet_type
+        relationship = existing_relationships_by_swf_asset_id[swf_asset.id]
+        unless relationship
+          relationship ||= ParentSwfAssetRelationship.new
+          relationship.parent = pet_state
+          relationship.swf_asset_id = swf_asset.id
+        end
+        relationship.swf_asset = swf_asset
+        relationships << relationship
+      end
+    end
+    pet_state.parent_swf_asset_relationships_to_update = relationships
+    pet_state
   end
 
   private

@@ -103,10 +103,6 @@ Rails.application.configure do
   # Allow connections on Vagrant's private network.
   config.web_console.permissions = '10.0.2.2'
 
-  # Allow pets to model new data. (If modeling is ever broken, disable this in
-  # production while we fix it!)
-  config.modeling_enabled = true
-
   # Use a local copy of Impress 2020, presumably running on port 4000. (Can
   # override this with the IMPRESS_2020_ORIGIN environment variable!)
   config.impress_2020_origin = ENV.fetch("IMPRESS_2020_ORIGIN",

@@ -57,14 +57,6 @@ class PetType < ApplicationRecord
     basic_image_hash || self['image_hash'] || 'deadbeef'
   end
 
-  def consider_pet_image(pet_name)
-    # If we already have a basic image hash, don't worry about it!
-    return if basic_image_hash?
-
-    # Otherwise, use this as the new image hash for this pet type.
-    self.image_hash = Neopets::CustomPets.fetch_image_hash(pet_name)
-  end
-
   def possibly_new_color
     self.color || Color.new(id: self.color_id)
   end
@@ -77,6 +69,11 @@ class PetType < ApplicationRecord
     I18n.translate('pet_types.human_name',
                    color_human_name: possibly_new_color.human_name,
                    species_human_name: possibly_new_species.human_name)
+  end
+
+  def add_pet_state_from_biology!(biology)
+    pet_state = PetState.from_pet_type_and_biology_info(self, biology)
+    pet_state
   end
 
   def canonical_pet_state
