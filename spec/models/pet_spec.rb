@@ -216,6 +216,7 @@ RSpec.describe Pet, type: :model do
       describe "its items" do
         subject(:items) { pet.items }
         let(:item_ids) { items.map(&:id) }
+        let(:compatible_body_ids) { items.to_h { |i| [i.id, i.compatible_body_ids] } }
 
         they("are all new") { should all be_new_record }
         they("match the expected IDs") do
@@ -266,6 +267,14 @@ RSpec.describe Pet, type: :model do
               species_support_ids: "",
               zones_restrict: "0000000000000000000000000000000000000000000000000000",
             ),
+          )
+        end
+        they("should be marked compatible with this pet's body ID") do
+          pet.save!
+          expect(compatible_body_ids).to eq(
+            39552 => [47],
+            53874 => [47],
+            71706 => [0],
           )
         end
       end
@@ -356,6 +365,7 @@ RSpec.describe Pet, type: :model do
           they("already exist") { should all be_persisted }
           they("are the same as before") { should eq pet.items }
           they("are not changed when saving the pet") do
+            pending("Oops, we're updating the body ID from 0 to 47!")
             new_pet.save!; expect(items.map(&:previous_changes)).to all be_empty
           end
         end

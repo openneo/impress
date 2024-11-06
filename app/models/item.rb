@@ -26,6 +26,8 @@ class Item < ApplicationRecord
   validates_presence_of :name, :description, :thumbnail_url, :rarity, :price,
     :zones_restrict
 
+  before_validation :update_cached_fields
+
   attr_writer :current_body_id, :owned, :wanted
 
   NCRarities = [0, 500]
@@ -265,7 +267,11 @@ class Item < ApplicationRecord
   def update_cached_fields
     self.cached_occupied_zone_ids = occupied_zone_ids
     self.cached_compatible_body_ids = compatible_body_ids(use_cached: false)
-    self.save!
+  end
+
+  def update_cached_fields!
+    update_cached_fields
+    save!
   end
 
   def species_support_ids
