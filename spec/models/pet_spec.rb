@@ -89,7 +89,7 @@ RSpec.describe Pet, type: :model do
           it("already exists") { should be_persisted }
           it("is the same as before") { should eq pet.pet_type }
           it "is not changed when saving the pet" do
-            expect { new_pet.save! }.not_to change { pet_type.attributes }
+            new_pet.save!; expect(pet_type.previous_changes).to be_empty
           end
         end
 
@@ -99,7 +99,7 @@ RSpec.describe Pet, type: :model do
           it("already exists") { should be_persisted }
           it("is the same as before") { should eq pet.pet_state }
           it "is not changed when saving the pet" do
-            expect { new_pet.save! }.not_to change { pet_state.attributes }
+            new_pet.save!; expect(pet_state.previous_changes).to be_empty
           end
         end
 
@@ -109,7 +109,7 @@ RSpec.describe Pet, type: :model do
           they("already exist") { should all be_persisted }
           they("are the same as before") { should eq pet.pet_state.swf_assets }
           they("are not changed when saving the pet") do
-            expect { new_pet.save! }.not_to change { biology_assets.map(&:attributes) }
+            new_pet.save!; expect(biology_assets.map(&:previous_changes)).to all be_empty
           end
         end
       end
@@ -124,7 +124,7 @@ RSpec.describe Pet, type: :model do
           it("already exists") { should be_persisted }
           it("is the same as before") { should eq pet.pet_type }
           it "is not changed when saving the pet" do
-            expect { new_pet.save! }.not_to change { pet_type.attributes }
+            new_pet.save!; expect(pet_type.previous_changes).to be_empty
           end
         end
 
@@ -326,7 +326,7 @@ RSpec.describe Pet, type: :model do
           it("already exists") { should be_persisted }
           it("is the same as before") { should eq pet.pet_type }
           it "is not changed when saving the pet" do
-            expect { new_pet.save! }.not_to change { pet_type.attributes }
+            new_pet.save!; expect(pet_type.previous_changes).to be_empty
           end
         end
 
@@ -336,7 +336,7 @@ RSpec.describe Pet, type: :model do
           it("already exists") { should be_persisted }
           it("is the same as before") { should eq pet.pet_state }
           it "is not changed when saving the pet" do
-            expect { new_pet.save! }.not_to change { pet_state.attributes }
+            new_pet.save!; expect(pet_state.previous_changes).to be_empty
           end
         end
 
@@ -346,7 +346,7 @@ RSpec.describe Pet, type: :model do
           they("already exist") { should all be_persisted }
           they("are the same as before") { should eq pet.pet_state.swf_assets }
           they("are not changed when saving the pet") do
-            expect { new_pet.save! }.not_to change { biology_assets.map(&:attributes) }
+            new_pet.save!; expect(biology_assets.map(&:previous_changes)).to all be_empty
           end
         end
 
@@ -356,7 +356,7 @@ RSpec.describe Pet, type: :model do
           they("already exist") { should all be_persisted }
           they("are the same as before") { should eq pet.items }
           they("are not changed when saving the pet") do
-            expect { new_pet.save! }.not_to change { items.map(&:attributes) }
+            new_pet.save!; expect(items.map(&:previous_changes)).to all be_empty
           end
         end
 
@@ -366,7 +366,7 @@ RSpec.describe Pet, type: :model do
           they("already exist") { should all be_persisted }
           they("are the same as before") { should eq pet.items.map(&:swf_assets).flatten(1) }
           they("are not changed when saving the pet") do
-            expect { new_pet.save! }.not_to change { item_assets.map(&:attributes) }
+            new_pet.save!; expect(item_assets.map(&:previous_changes)).to all be_empty
           end
         end
       end
@@ -432,7 +432,7 @@ RSpec.describe Pet, type: :model do
             it("already exists") { should be_persisted }
             it("is the same as before") { should eq pet.alt_style }
             it "is not changed when saving the pet" do
-              expect { new_pet.save! }.not_to change { alt_style.attributes }
+              new_pet.save!; expect(alt_style.previous_changes).to be_empty
             end
 
             describe "its assets" do
@@ -441,7 +441,7 @@ RSpec.describe Pet, type: :model do
               they("already exist") { should all be_persisted }
               they("are the same as before") { should eq pet.alt_style.swf_assets }
               they("are not changed when saving the pet") do
-                expect { new_pet.save! }.not_to change { assets.map(&:attributes) }
+                new_pet.save!; expect(assets.map(&:previous_changes)).to all be_empty
               end
             end
           end
