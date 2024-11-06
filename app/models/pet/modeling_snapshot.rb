@@ -86,11 +86,7 @@ class Pet::ModelingSnapshot
     all_infos = @object_asset_registry.values
     infos = all_infos.select { |a| a[:obj_info_id].to_i == item_id.to_i }
     infos.map do |asset_data|
-      remote_id = asset_data[:asset_id].to_i
-      SwfAsset.find_or_initialize_by(type: "object", remote_id:).tap do |swf_asset|
-        swf_asset.origin_pet_type = pet_type
-        swf_asset.origin_object_data = asset_data
-      end
+      SwfAsset.from_object_data(@custom_pet[:body_id], asset_data)
     end
   end
 

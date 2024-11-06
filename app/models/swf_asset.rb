@@ -276,26 +276,25 @@ class SwfAsset < ApplicationRecord
     return items.any? { |i| i.body_specific? }
   end
 
-  def origin_pet_type=(pet_type)
-    self.body_id = pet_type.body_id
-  end
-
-  def origin_biology_data=(data)
-    Rails.logger.debug("my biology data is: #{data.inspect}")
-    self.type = 'biology'
-    self.zone_id = data[:zone_id].to_i
-    self.url = data[:asset_url]
-    self.zones_restrict = data[:zones_restrict]
-    self.manifest_url = data[:manifest]
-  end
-
-  def origin_object_data=(data)
-    Rails.logger.debug("my object data is: #{data.inspect}")
-    self.type = 'object'
-    self.zone_id = data[:zone_id].to_i
-    self.url = data[:asset_url]
-    self.zones_restrict = ""
-    self.manifest_url = data[:manifest]
+  def add_compatible_body_id(new_body_id)
+    if !body_specific?
+      # If this asset is already known to not be body-specific (e.g. by its
+      # zone), use 0 as our body ID.
+      self.body_id = 0
+    elsif body_id.nil?
+      # If this asset has not body ID yet, assume this is it. (It's possible it
+      # might also fit other pet bodies, which we'll discover soon enough!)
+      self.body_id = new_body_id
+    elsif body_id != new_body_id
+      # If this asset already has a body ID, but this one is different, assume
+      # it actually fits all bodies, and use 0. (Note that we're talking about
+      # *asset* compatibility here, not *item* compatibility. Seeing the same
+      # *asset* on two bodies is a pretty sure sign it fits them all!)
+      self.body_id = 0
+    else
+      # Otherwise, we already have a body ID, and it matches the incoming one.
+      # No change!
+    end
   end
 
   def normalize_manifest_url
@@ -304,20 +303,32 @@ class SwfAsset < ApplicationRecord
     self.manifest_url = parsed_manifest_url.to_s
   end
 
-  # To manually change the body ID without triggering the usual change to 0,
-  # use this override method. (This is intended for use from the console.)
-  def override_body_id(new_body_id)
-    @body_id_overridden = true
-    self.body_id = new_body_id
+  def self.from_biology_data(body_id, data)
+    type = "biology"
+    remote_id = data[:part_id].to_i
+    SwfAsset.find_or_initialize_by(type:, remote_id:).tap do |swf_asset|
+      swf_asset.assign_attributes(
+        body_id:,
+        zone_id: data[:zone_id].to_i,
+        url: data[:asset_url],
+        manifest_url: data[:manifest],
+        zones_restrict: data[:zones_restrict],
+      )
+    end
   end
 
-  def self.from_biology_data(body_id, data)
-    remote_id = data[:part_id].to_i
-    swf_asset = SwfAsset.find_or_initialize_by type: 'biology',
-      remote_id: remote_id
-    swf_asset.body_id = body_id
-    swf_asset.origin_biology_data = data
-    swf_asset
+  def self.from_object_data(body_id, data)
+    type = "object"
+    remote_id = data[:asset_id].to_i
+    SwfAsset.find_or_initialize_by(type:, remote_id:).tap do |swf_asset|
+      swf_asset.assign_attributes(
+        zone_id: data[:zone_id].to_i,
+        url: data[:asset_url],
+        manifest_url: data[:manifest],
+        zones_restrict: "",
+      )
+      swf_asset.add_compatible_body_id(body_id)
+    end
   end
 
   # Given a list of SWF assets, ensure all of their manifests are loaded, with
@@ -356,11 +367,5 @@ class SwfAsset < ApplicationRecord
     SwfAsset.transaction do
       swf_assets.select(&:changed?).each(&:save!)
     end
-  end
-
-  before_save do
-    # If an asset body ID changes, that means more than one body ID has been
-    # linked to it, meaning that it's probably wearable by all bodies.
-    self.body_id = 0 if !@body_id_overridden && (!self.body_specific? || (!self.new_record? && self.body_id_changed?))
   end
 end

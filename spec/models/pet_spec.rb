@@ -365,7 +365,6 @@ RSpec.describe Pet, type: :model do
           they("already exist") { should all be_persisted }
           they("are the same as before") { should eq pet.items }
           they("are not changed when saving the pet") do
-            pending("Oops, we're updating the body ID from 0 to 47!")
             new_pet.save!; expect(items.map(&:previous_changes)).to all be_empty
           end
         end
