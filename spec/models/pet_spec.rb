@@ -379,6 +379,26 @@ RSpec.describe Pet, type: :model do
           end
         end
       end
+
+      context "when modeled a second time, but as a Blue Acara" do
+        before { pet.save! }
+        subject(:new_pet) { Pet.load("matts_bat:acara") }
+
+        describe "its items" do
+          subject(:items) { new_pet.items }
+          let(:compatible_body_ids) { items.to_h { |i| [i.id, i.compatible_body_ids] } }
+
+          they("should be marked compatible with both pets' body IDs") do
+            pending("Whuh oh, we're currently replacing the assets altogether!")
+            new_pet.save!
+            expect(compatible_body_ids).to eq(
+              39552 => [47, 93],
+              53874 => [47, 93],
+              71706 => [0],
+            )
+          end
+        end
+      end
     end
 
     context "for Majal_Kita, the Nostalgic Robot Jetsam (modded to be Blue as its base)" do

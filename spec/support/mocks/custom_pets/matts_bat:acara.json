@@ -1,0 +1,194 @@
+{
+  "dti_comment": "This is matts_bat, hand-modified to be a Blue Acara wearing the same items.",
+  "custom_pet": {
+    "name": "matts_bat",
+    "owner": "matchu1993",
+    "slot": 1.0,
+    "scale": 0.5,
+    "muted": true,
+    "body_id": 93.0,
+    "species_id": 1.0,
+    "color_id": 8.0,
+    "alt_style": false,
+    "alt_color": 8.0,
+    "style_closet_id": null,
+    "biology_by_zone": {
+      "30": {
+        "part_id": 32185.0,
+        "zone_id": 30.0,
+        "asset_url": "https://images.neopets.com/cp/bio/swf/000/000/032/32185_dc8f076ae3.swf",
+        "manifest": "https://images.neopets.com/cp/bio/data/000/000/032/32185_dc8f076ae3/manifest.json",
+        "zones_restrict": "0000000000000000000000000000000000000000000000000000"
+      },
+      "15": {
+        "part_id": 2425.0,
+        "zone_id": 15.0,
+        "asset_url": "https://images.neopets.com/cp/bio/swf/000/000/002/2425_501f596cef.swf",
+        "manifest": "https://images.neopets.com/cp/bio/data/000/000/002/2425_501f596cef/manifest.json",
+        "zones_restrict": "0000000000000000000000000000000000000000000000000000"
+      },
+      "5": {
+        "part_id": 2426.0,
+        "zone_id": 5.0,
+        "asset_url": "https://images.neopets.com/cp/bio/swf/000/000/002/2426_898928db88.swf",
+        "manifest": "https://images.neopets.com/cp/bio/data/000/000/002/2426_898928db88/manifest.json",
+        "zones_restrict": "0000000000000000000000000000000000000000000000000000"
+      },
+      "38": {
+        "part_id": 2427.0,
+        "zone_id": 38.0,
+        "asset_url": "https://images.neopets.com/cp/bio/swf/000/000/002/2427_f12853f18a.swf",
+        "manifest": "https://images.neopets.com/cp/bio/data/000/000/002/2427_f12853f18a/manifest.json",
+        "zones_restrict": "0000000000000000000000000000000000000000000000000000"
+      },
+      "34": {
+        "part_id": 19157.0,
+        "zone_id": 34.0,
+        "asset_url": "https://images.neopets.com/cp/bio/swf/000/000/019/19157_f2e42f30e9.swf",
+        "manifest": "https://images.neopets.com/cp/bio/data/000/000/019/19157_f2e42f30e9/manifest.json",
+        "zones_restrict": "0000000000000000000000000000000000000000000000000000"
+      },
+      "33": {
+        "part_id": 18945.0,
+        "zone_id": 33.0,
+        "asset_url": "https://images.neopets.com/cp/bio/swf/000/000/018/18945_45623865d6.swf",
+        "manifest": "https://images.neopets.com/cp/bio/data/000/000/018/18945_45623865d6/manifest.json",
+        "zones_restrict": "0000000000000000000000000000000000000000000000000000"
+      }
+    },
+    "equipped_by_zone": {
+      "35": {
+        "asset_id": 16931.0,
+        "zone_id": 35.0,
+        "closet_obj_id": 2549145.0
+      },
+      "23": {
+        "asset_id": 108565.0,
+        "zone_id": 23.0,
+        "closet_obj_id": 16955628.0
+      },
+      "3": {
+        "asset_id": 410722.0,
+        "zone_id": 3.0,
+        "closet_obj_id": 17147987.0
+      }
+    },
+    "original_biology": [
+
+    ]
+  },
+  "closet_items": {
+    "2549145": {
+      "closet_obj_id": 2549145.0,
+      "obj_info_id": 39552.0,
+      "applied_to": "matts_bat",
+      "is_wishlist": false,
+      "expiration": "N/A"
+    },
+    "16955628": {
+      "closet_obj_id": 16955628.0,
+      "obj_info_id": 53874.0,
+      "applied_to": "matts_bat",
+      "is_wishlist": false,
+      "expiration": "N/A"
+    },
+    "17147987": {
+      "closet_obj_id": 17147987.0,
+      "obj_info_id": 71706.0,
+      "applied_to": "matts_bat",
+      "is_wishlist": false,
+      "expiration": "N/A"
+    }
+  },
+  "object_info_registry": {
+    "39552": {
+      "obj_info_id": 39552.0,
+      "assets_by_zone": {
+        "35": 16931.0
+      },
+      "zones_restrict": "0000000000000000000000000000000000000000000000000000",
+      "is_compatible": true,
+      "is_paid": true,
+      "thumbnail_url": "https://images.neopets.com/items/mall_springyeyeglasses.gif",
+      "name": "Springy Eye Glasses",
+      "description": "Hey, keep your eyes in your head!",
+      "category": "Clothes",
+      "type": "Clothes",
+      "rarity": "Artifact",
+      "rarity_index": 500.0,
+      "price": 0.0,
+      "weight_lbs": 1.0,
+      "species_support": [
+        3.0
+      ],
+      "converted": true
+    },
+    "53874": {
+      "obj_info_id": 53874.0,
+      "assets_by_zone": {
+        "23": 108565.0
+      },
+      "zones_restrict": "0000000000000000000000000000000000000000000000000000",
+      "is_compatible": true,
+      "is_paid": false,
+      "thumbnail_url": "https://images.neopets.com/items/clo_404_shirt.gif",
+      "name": "404 Shirt",
+      "description": "When Neopets is down, the shirt comes on!",
+      "category": "Clothes",
+      "type": "Clothes",
+      "rarity": "Rare",
+      "rarity_index": 88.0,
+      "price": 1701.0,
+      "weight_lbs": 1.0,
+      "species_support": [
+        3.0
+      ],
+      "converted": true
+    },
+    "71706": {
+      "obj_info_id": 71706.0,
+      "assets_by_zone": {
+        "3": 410722.0
+      },
+      "zones_restrict": "0000000000000000000000000000000000000000000000000000",
+      "is_compatible": true,
+      "is_paid": false,
+      "thumbnail_url": "https://images.neopets.com/items/gif_roof_onthe_fg.gif",
+      "name": "On the Roof Background",
+      "description": "Who is that on the roof?! Could it be...?",
+      "category": "Special",
+      "type": "Mystical Surroundings",
+      "rarity": "Special",
+      "rarity_index": 101.0,
+      "price": 0.0,
+      "weight_lbs": 1.0,
+      "species_support": [
+
+      ],
+      "converted": true
+    }
+  },
+  "object_asset_registry": {
+    "16931": {
+      "asset_id": 16931.0,
+      "zone_id": 35.0,
+      "asset_url": "https://images.neopets.com/cp/items/swf/000/000/016/16931_aa01126387.swf",
+      "obj_info_id": 39552.0,
+      "manifest": "https://images.neopets.com/cp/items/data/000/000/016/16931_aa01126387/manifest.json?v=1706"
+    },
+    "108565": {
+      "asset_id": 108565.0,
+      "zone_id": 23.0,
+      "asset_url": "https://images.neopets.com/cp/items/swf/000/000/108/108565_80d238dbaf.swf",
+      "obj_info_id": 53874.0,
+      "manifest": "https://images.neopets.com/cp/items/data/000/000/108/108565_80d238dbaf/manifest.json?v=1706"
+    },
+    "410722": {
+      "asset_id": 410722.0,
+      "zone_id": 3.0,
+      "asset_url": "https://images.neopets.com/cp/items/swf/000/000/410/410722_3bcd2f5e11.swf",
+      "obj_info_id": 71706.0,
+      "manifest": "https://images.neopets.com/cp/items/data/000/000/410/410722_3bcd2f5e11/manifest.json?v=1706"
+    }
+  }
+}
