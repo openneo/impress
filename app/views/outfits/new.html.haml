@@ -6,18 +6,18 @@
 
 - if show_announcement?
   %section.announcement
-    = image_tag "about/announcement.png", width: 70, height: 70,
-      srcset: {"about/announcement@2x.png": "2x"}
+    = image_tag "/images/error-grundo.png", width: 70, height: 70,
+      srcset: {"/images/error-grundo.png": "2x"}
     .content
       %p
         %strong
-          🎃
-          = link_to "New pet styles are out today!", alt_styles_path
-        If you've seen one we don't have yet, please model it by entering the
-        pet's name in the box below. Thank you!!
+          Modeling is down, and some items are broken!
+        For the first time in One Million Years, we made some changes to our
+        modeling code—and it looks like we goofed it, and some items are losing
+        data!
       %p
-        By the way, we had a bug where modeling new styles wasn't working for a
-        little while. Fixed now! 🤞
+        We've turned off modeling while we work to restore a backup, and then
+        we'll fix the mistake and turn it back on. Sorry about this!
 
 #outfit-forms
   #pet-preview
