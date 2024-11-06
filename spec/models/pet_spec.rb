@@ -448,5 +448,13 @@ RSpec.describe Pet, type: :model do
         end
       end
     end
+
+    context "when modeling is disabled" do
+      before { allow(Rails.configuration).to receive(:modeling_enabled) { false } }
+
+      it("raises an error") do
+        expect { Pet.load("matts_bat") }.to raise_error(Pet::ModelingDisabled)
+      end
+    end
   end
 end
