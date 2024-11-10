@@ -4,6 +4,8 @@ class Pet < ApplicationRecord
   attr_reader :items, :pet_state, :alt_style
 
   def load!(timeout: nil)
+    raise ModelingDisabled unless Rails.configuration.modeling_enabled
+
     viewer_data_hash = Neopets::CustomPets.fetch_viewer_data(name, timeout:)
     use_viewer_data(ViewerData.new(viewer_data_hash))
   end
@@ -59,6 +61,7 @@ class Pet < ApplicationRecord
   end
 
   class UnexpectedDataFormat < RuntimeError;end
+  class ModelingDisabled < RuntimeError;end
 
   # A representation of a Neopets::CustomPets viewer data response, translated
   # to DTI's database models!
@@ -153,4 +156,3 @@ class Pet < ApplicationRecord
     end
   end
 end
-
