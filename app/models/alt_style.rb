@@ -74,15 +74,6 @@ class AltStyle < ApplicationRecord
     Item.appearances_for(items, self, ...)
   end
 
-  def biology=(biology)
-    # TODO: This is very similar to what `PetState` does, but like… much much
-    # more compact? Idk if I'm missing something, or if I was just that much
-    # more clueless back when I wrote it, lol 😅
-    self.swf_assets = biology.values.map do |asset_data|
-      SwfAsset.from_biology_data(self.body_id, asset_data)
-    end
-  end
-
   # At time of writing, most batches of Alt Styles thumbnails used a simple
   # pattern for the item thumbnail URL, but that's not always the case anymore.
   # For now, let's keep using this format as the default value when creating a

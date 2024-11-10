@@ -4,66 +4,15 @@ class Pet < ApplicationRecord
   attr_reader :items, :pet_state, :alt_style
 
   def load!(timeout: nil)
-    viewer_data = Neopets::CustomPets.fetch_viewer_data(name, timeout:)
-    use_viewer_data(viewer_data)
+    viewer_data_hash = Neopets::CustomPets.fetch_viewer_data(name, timeout:)
+    use_viewer_data(ViewerData.new(viewer_data_hash))
   end
 
   def use_viewer_data(viewer_data)
-    pet_data = viewer_data[:custom_pet]
-
-    raise UnexpectedDataFormat unless pet_data[:species_id]
-    raise UnexpectedDataFormat unless pet_data[:color_id]
-    raise UnexpectedDataFormat unless pet_data[:body_id]
-
-    has_alt_style = pet_data[:alt_style].present?
-
-    self.pet_type = PetType.find_or_initialize_by(
-      species_id: pet_data[:species_id].to_i,
-      color_id: pet_data[:color_id].to_i
-    )
-
-    begin
-      new_image_hash = Neopets::CustomPets.fetch_image_hash(self.name)
-    rescue => error
-      Rails.logger.warn "Failed to load image hash: #{error.full_message}"
-    end
-    self.pet_type.image_hash = new_image_hash if new_image_hash.present?
-
-    # With an alt style, `body_id` in the biology data refers to the body ID of
-    # the *alt* style, not the usual pet type. (We have `original_biology` for
-    # *some* of the pet type's situation, but not it's body ID!)
-    #
-    # So, in the alt style case, don't update `body_id` - but if this is our
-    # first time seeing this pet type and it doesn't *have* a `body_id` yet,
-    # let's not be creating it without one. We'll need to model it without the
-    # alt style first. (I don't bother with a clear error message though 😅)
-    self.pet_type.body_id = pet_data[:body_id] unless has_alt_style
-    if self.pet_type.body_id.nil?
-      raise UnexpectedDataFormat,
-        "can't process alt style on first occurrence of pet type"
-    end
-
-    pet_state_biology = has_alt_style ? pet_data[:original_biology] :
-      pet_data[:biology_by_zone]
-    raise UnexpectedDataFormat if pet_state_biology.empty?
-    pet_state_biology[0] = nil # remove effects if present
-    @pet_state = self.pet_type.add_pet_state_from_biology! pet_state_biology
-
-    if has_alt_style
-      raise UnexpectedDataFormat unless pet_data[:alt_color]
-      raise UnexpectedDataFormat if pet_data[:biology_by_zone].empty?
-
-      @alt_style = AltStyle.find_or_initialize_by(id: pet_data[:alt_style].to_i)
-      @alt_style.assign_attributes(
-        color_id: pet_data[:alt_color].to_i,
-        species_id: pet_data[:species_id].to_i,
-        body_id: pet_data[:body_id].to_i,
-        biology: pet_data[:biology_by_zone],
-      )
-    end
-
-    @items = Item.collection_from_pet_type_and_registries(self.pet_type,
-      viewer_data[:object_info_registry], viewer_data[:object_asset_registry])
+    self.pet_type = viewer_data.pet_type
+    @pet_state = viewer_data.pet_state
+    @alt_style = viewer_data.alt_style
+    @items = viewer_data.items
   end
 
   def wardrobe_query
@@ -89,11 +38,8 @@ class Pet < ApplicationRecord
 
   before_validation do
     pet_type.save!
-    if @pet_state
-      @pet_state.save!
-      @pet_state.handle_assets!
-    end
-    
+    @pet_state.save! if @pet_state
+
     if @items
       @items.each do |item|
         item.save! if item.changed?
@@ -113,5 +59,98 @@ class Pet < ApplicationRecord
   end
 
   class UnexpectedDataFormat < RuntimeError;end
+
+  # A representation of a Neopets::CustomPets viewer data response, translated
+  # to DTI's database models!
+  class ViewerData
+    def initialize(viewer_data_hash)
+      @custom_pet = viewer_data_hash[:custom_pet]
+      @object_info_registry = viewer_data_hash[:object_info_registry]
+      @object_asset_registry = viewer_data_hash[:object_asset_registry]
+    end
+
+    def pet_type
+      @pet_type ||= begin
+        raise UnexpectedDataFormat unless @custom_pet[:species_id]
+        raise UnexpectedDataFormat unless @custom_pet[:color_id]
+        raise UnexpectedDataFormat unless @custom_pet[:body_id]
+
+        @custom_pet => {species_id:, color_id:}
+        PetType.find_or_initialize_by(species_id:, color_id:).tap do |pet_type|
+          # Apply the pet's body ID to the pet type, unless it's wearing an alt
+          # style, in which case ignore it, because it's the *alt style*'s body ID.
+          # (This can theoretically cause a problem saving a new pet type when
+          # there's an alt style too!)
+          pet_type.body_id = @custom_pet[:body_id] unless @custom_pet[:alt_style]
+          if pet_type.body_id.nil?
+            raise UnexpectedDataFormat,
+              "can't process alt style on first occurrence of pet type"
+          end
+
+          # Try using this pet for the pet type's thumbnail, but don't worry
+          # if it fails.
+          begin
+            pet_type.consider_pet_image(@custom_pet[:name])
+          rescue => error
+            Rails.logger.warn "Failed to load pet image: #{error.full_message}"
+          end
+        end
+      end
+    end
+
+    def pet_state
+      @pet_state ||= begin
+        swf_asset_ids = biology_assets.map(&:remote_id).sort.join(",")
+        pet_type.pet_states.find_or_initialize_by(swf_asset_ids:).tap do |pet_state|
+          pet_state.swf_assets = biology_assets
+        end
+      end
+    end
+
+    def alt_style
+      @alt_style ||= begin
+        return nil unless @custom_pet[:alt_style]
+        raise UnexpectedDataFormat unless @custom_pet[:alt_color]
+
+        id = @custom_pet[:alt_style].to_i
+        AltStyle.find_or_initialize_by(id:).tap do |alt_style|
+          alt_style.assign_attributes(
+            color_id: @custom_pet[:alt_color].to_i,
+            species_id: @custom_pet[:species_id].to_i,
+            body_id: @custom_pet[:body_id].to_i,
+            swf_assets: alt_style_assets,
+          )
+        end
+      end
+    end
+
+    def items
+      @items ||= Item.collection_from_pet_type_and_registries(
+        pet_type, @object_info_registry, @object_asset_registry
+      )
+    end
+
+    private
+
+    def biology_assets
+      @biology_assets ||= begin
+        biology = @custom_pet[:alt_style].present? ?
+          @custom_pet[:original_biology] :
+          @custom_pet[:biology_by_zone]
+        assets_from_biology(biology)
+      end
+    end
+
+    def alt_style_assets
+      raise UnexpectedDataFormat if @custom_pet[:biology_by_zone].empty?
+      assets_from_biology(@custom_pet[:biology_by_zone])
+    end
+
+    def assets_from_biology(biology)
+      raise UnexpectedDataFormat if biology.empty?
+      body_id = @custom_pet[:body_id].to_i
+      biology.values.map { |b| SwfAsset.from_biology_data(body_id, b) }
+    end
+  end
 end
 

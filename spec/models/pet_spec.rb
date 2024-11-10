@@ -36,7 +36,7 @@ RSpec.describe Pet, type: :model do
           let(:asset_ids) { biology_assets.map(&:remote_id) }
 
           they("are all new") { should all be_new_record }
-          pending("match the expected IDs (before saving)") do
+          they("match the expected IDs (before saving)") do
             expect(asset_ids).to contain_exactly(10083, 11613, 14187, 14189)
           end
           they("match the expected IDs (after saving)") do
@@ -44,7 +44,7 @@ RSpec.describe Pet, type: :model do
             expect(asset_ids).to contain_exactly(10083, 11613, 14187, 14189)
           end
           they("are saved when saving the pet") { pet.save!; should all be_persisted }
-          pending("have the expected asset metadata (before saving)") do
+          they("have the expected asset metadata (before saving)") do
             should contain_exactly(
               a_record_matching(
                 type: "biology",
@@ -187,11 +187,11 @@ RSpec.describe Pet, type: :model do
               biology_assets.select(&:new_record?).map(&:remote_id)
             }
 
-            pending("are partially new, partially existing") do
+            they("are partially new, partially existing") do
               expect(persisted_asset_ids).to contain_exactly(10083, 11613)
               expect(new_asset_ids).to contain_exactly(10448, 10451)
             end
-            pending("match the expected IDs (before saving)") do
+            they("match the expected IDs (before saving)") do
               expect(asset_ids).to contain_exactly(10083, 11613, 10448, 10451)
             end
             they("match the expected IDs (after saving)") do
@@ -199,7 +199,7 @@ RSpec.describe Pet, type: :model do
               expect(asset_ids).to contain_exactly(10083, 11613, 10448, 10451)
             end
             they("are saved when saving the pet") { new_pet.save!; should all be_persisted }
-            pending("have the expected asset metadata (before saving)") do
+            they("have the expected asset metadata (before saving)") do
               should contain_exactly(
                 a_record_matching(
                   type: "biology",
@@ -289,7 +289,7 @@ RSpec.describe Pet, type: :model do
         let(:asset_ids) { biology_assets.map(&:remote_id) }
 
         they("are all new") { should all be_new_record }
-        pending("match the expected IDs (before saving)") do
+        they("match the expected IDs (before saving)") do
           expect(asset_ids).to contain_exactly(331, 332, 333, 23760, 23411)
         end
         they("match the expected IDs (after saving)") do
