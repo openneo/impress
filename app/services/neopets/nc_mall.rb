@@ -45,6 +45,34 @@ module Neopets::NCMall
 			uniq
 	end
 
+	STYLING_STUDIO_URL = "https://www.neopets.com/np-templates/ajax/stylingstudio/studio.php"
+	def self.load_styles(species_id:, neologin:)
+		Sync do
+			INTERNET.post(
+				STYLING_STUDIO_URL,
+				headers: [
+					["User-Agent", Rails.configuration.user_agent_for_neopets],
+					["Content-Type", "application/x-www-form-urlencoded"],
+					["Cookie", "neologin=#{neologin}"],
+					["X-Requested-With", "XMLHttpRequest"],
+				],
+				body: {tab: 1, mode: "getStyles", species: species_id}.to_query,
+			) do |response|
+				if response.status != 200
+					raise ResponseNotOK.new(response.status),
+						"expected status 200 but got #{response.status} (#{STYLING_STUDIO_URL})"
+				end
+
+				begin
+					data = JSON.parse(response.read).deep_symbolize_keys
+					data.fetch(:styles).values
+				rescue JSON::ParserError, KeyError
+					raise UnexpectedResponseFormat
+				end
+			end
+		end
+	end
+
 	private
 
 	def self.load_page_by_url(url)

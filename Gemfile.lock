@@ -128,6 +128,9 @@ GEM
       fiber-annotation
       fiber-local (~> 1.1)
       json
+    crack (1.0.0)
+      bigdecimal
+      rexml
     crass (1.0.6)
     csv (3.3.0)
     date (3.3.4)
@@ -182,6 +185,7 @@ GEM
       temple (>= 0.8.2)
       thor
       tilt
+    hashdiff (1.1.2)
     hashie (5.0.0)
     http_accept_language (2.1.1)
     httparty (0.22.0)
@@ -496,6 +500,10 @@ GEM
       activesupport
       faraday (~> 2.0)
       faraday-follow_redirects
+    webmock (3.24.0)
+      addressable (>= 2.8.0)
+      crack (>= 0.3.2)
+      hashdiff (>= 0.4.0, < 2.0.0)
     webrick (1.8.2)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
@@ -549,6 +557,7 @@ DEPENDENCIES
   thread-local (~> 1.1)
   turbo-rails (~> 2.0)
   web-console (~> 4.2)
+  webmock (~> 3.24)
   will_paginate (~> 4.0)
 
 RUBY VERSION
