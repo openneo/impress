@@ -94,6 +94,10 @@ class AltStyle < ApplicationRecord
     end
   end
 
+  def real_thumbnail_url?
+    thumbnail_url != DEFAULT_THUMBNAIL_URL
+  end
+
   # For convenience in the console!
   def self.find_by_name(color_name, species_name)
     color = Color.find_by_name(color_name)
