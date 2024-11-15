@@ -22,7 +22,7 @@
 					%li= error.full_message
 	%fieldset
 		= f.label :real_series_name, "Series"
-		= f.text_field :real_series_name
+		= f.text_field :real_series_name, autofocus: !@alt_style.real_series_name?
 		= f.label :thumbnail_url, "Thumbnail"
 		.thumbnail-field
 			- if @alt_style.thumbnail_url?
