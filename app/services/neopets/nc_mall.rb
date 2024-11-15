@@ -65,7 +65,10 @@ module Neopets::NCMall
 
 				begin
 					data = JSON.parse(response.read).deep_symbolize_keys
-					data.fetch(:styles).values
+
+					# HACK: styles is a hash, unless it's empty, in which case it's an
+					#       array? Weird. Normalize this by converting to hash.
+					data.fetch(:styles).to_h.values
 				rescue JSON::ParserError, KeyError
 					raise UnexpectedResponseFormat
 				end

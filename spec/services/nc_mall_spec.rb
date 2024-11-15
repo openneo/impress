@@ -55,6 +55,15 @@ RSpec.describe Neopets::NCMall, type: :model do
 			)
 		end
 
+		it "handles the NC Mall's odd API behavior for zero styles" do
+			stub_styles_request.to_return(
+				# You'd think styles would be `{}` in this case, but it's `[]`. Huh!
+				body: '{"success":true,"styles":[]}',
+			)
+
+			expect(styles).to be_empty
+		end
+
 		it "raises an error if the request returns a non-200 status" do
 			stub_styles_request.to_return(status: 400)
 
