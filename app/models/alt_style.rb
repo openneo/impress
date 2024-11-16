@@ -62,11 +62,10 @@ class AltStyle < ApplicationRecord
     "#{series_name} #{name}"
   end
 
+  EMPTY_IMAGE_URL = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
   def preview_image_url
-    swf_asset = swf_assets.first
-    return nil if swf_asset.nil?
-
-    swf_asset.image_url
+    # Use the image URL for the first asset. Or, fall back to an empty image.
+    swf_assets.first&.image_url || EMPTY_IMAGE_URL
   end
 
   # Given a list of items, return how they look on this alt style.
