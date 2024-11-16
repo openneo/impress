@@ -21,6 +21,10 @@ class Color < ApplicationRecord
     end
   end
 
+  def to_param
+    name? ? human_name : id.to_s
+  end
+
   def example_pet_type(preferred_species: nil)
     preferred_species ||= Species.first
     pet_types.order([Arel.sql("species_id = ? DESC"), preferred_species.id],
@@ -35,5 +39,9 @@ class Color < ApplicationRecord
     else
       nil
     end
+  end
+
+  def self.param_to_id(param)
+    param.match?(/\A\d+\Z/) ? param.to_i : find_by_name!(param).id
   end
 end

@@ -15,10 +15,6 @@ class PetType < ApplicationRecord
     species = Species.find_by_name!(species_name)
     where(color_id: color.id, species_id: species.id)
   }
-  scope :matching_name_param, ->(name_param) {
-    color_name, _, species_name = name_param.rpartition("-")
-    matching_name(color_name, species_name)
-  }
   scope :preferring_species, ->(species_id) {
     joins(:species).order([Arel.sql("species_id = ? DESC"), species_id])
   }
@@ -116,7 +112,7 @@ class PetType < ApplicationRecord
   end
 
   def to_param
-    "#{color.human_name}-#{species.human_name}"
+    "#{possibly_new_color.to_param}-#{possibly_new_species.to_param}"
   end
 
   def fully_labeled?
@@ -134,6 +130,15 @@ class PetType < ApplicationRecord
 
   def num_unlabeled_states
     pet_states.count { |ps| ps.pose == "UNKNOWN" }
+  end
+
+  def self.find_by_param!(param)
+    raise ActiveRecord::RecordNotFound unless param.include?("-")
+    color_param, _, species_param = param.rpartition("-")
+    where(
+      color_id: Color.param_to_id(color_param),
+      species_id: Species.param_to_id(species_param),
+    ).first!
   end
 
   def self.basic_body_ids

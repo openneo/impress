@@ -1,0 +1,19 @@
+blue_acara:
+  color_id: 8
+  species_id: 1
+  body_id: 123
+
+newcolor_acara:
+  color_id: 123
+  species_id: 1
+  body_id: 123
+
+blue_newspecies:
+  color_id: 8
+  species_id: 456
+  body_id: 123
+
+newcolor_newspecies:
+  color_id: 123
+  species_id: 456
+  body_id: 123

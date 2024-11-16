@@ -16,6 +16,10 @@ class Species < ApplicationRecord
     end
   end
 
+  def to_param
+    name? ? human_name : id.to_s
+  end
+
   # Given a list of body IDs, return a hash from body ID to Species.
   # (We assume that each body ID belongs to just one species; if not, which
   # species we return for that body ID is undefined.)
@@ -25,5 +29,9 @@ class Species < ApplicationRecord
     species_by_id = Species.where(id: species_ids_by_body_id.values).
       to_h { |s| [s.id, s] }
     species_ids_by_body_id.transform_values { |id| species_by_id[id] }
+  end
+
+  def self.param_to_id(param)
+    param.match?(/\A\d+\Z/) ? param.to_i : find_by_name!(param).id
   end
 end

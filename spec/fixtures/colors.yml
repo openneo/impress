@@ -10,3 +10,6 @@ robot:
 striped:
   id: 77
   name: striped
+swamp_gas:
+  id: 93
+  name: "swamp gas"

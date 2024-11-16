@@ -5,11 +5,11 @@
 	%li
 		= link_to "Rainbow Pool", pet_types_path
 	%li
-		= link_to @pet_type.color.human_name,
-		          pet_types_path(color: @pet_type.color.human_name)
+		= link_to @pet_type.possibly_new_color.human_name,
+		          pet_types_path(color: @pet_type.possibly_new_color.human_name)
 	%li{"data-relation-to-prev": "sibling"}
-		= link_to @pet_type.species.human_name,
-		          pet_types_path(species: @pet_type.species.human_name)
+		= link_to @pet_type.possibly_new_species.human_name,
+		          pet_types_path(species: @pet_type.possibly_new_species.human_name)
 	%li
 		= link_to "Appearances", @pet_type
 	%li

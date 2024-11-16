@@ -70,9 +70,7 @@ class PetTypesController < ApplicationController
 				color_id: params[:color_id],
 			)
 		elsif params[:name]
-			color_name, _, species_name = params[:name].rpartition("-")
-			raise ActiveRecord::RecordNotFound if species_name.blank?
-			PetType.matching_name(color_name, species_name).first!
+			PetType.find_by_param!(params[:name])
 		else
 			raise "expected params: species_id and color_id, or name"
 		end
