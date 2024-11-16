@@ -229,7 +229,7 @@ en:
         swf_asset_html: "%{item_description} on a new body type"
         pet_type_html: "%{pet_type_description} for the first time"
         pet_state_html: "a new pose for %{pet_type_description}"
-        alt_style_html: "a new Alt Style of the %{alt_style_name}"
+        alt_style_html: "a new NC Style of the %{alt_style_name}"
 
     contribution:
       description_html: "%{user_link} showed us %{contributed_description}"
