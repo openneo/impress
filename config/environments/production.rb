@@ -124,7 +124,7 @@ Rails.application.configure do
 
   # Allow pets to model new data. (If modeling is ever broken, disable this
   # here while we fix it!)
-  config.modeling_enabled = false
+  config.modeling_enabled = true
 
   # Use the live copy of Impress 2020. (Can override this with the
   # IMPRESS_2020_ORIGIN environment variable!)
