@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_11_16_031655) do
+ActiveRecord::Schema[7.2].define(version: 2024_11_16_041926) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "species_id", null: false
     t.integer "color_id", null: false
@@ -196,8 +196,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_16_031655) do
   end
 
   create_table "parents_swf_assets", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
-    t.integer "parent_id", limit: 3, null: false
-    t.integer "swf_asset_id", limit: 3, null: false
+    t.integer "parent_id", null: false
+    t.integer "swf_asset_id", null: false
     t.string "parent_type", limit: 8, null: false
     t.index ["parent_id", "parent_type"], name: "index_parents_swf_assets_on_parent_id_and_parent_type"
     t.index ["parent_id", "swf_asset_id"], name: "unique_parents_swf_assets", unique: true
@@ -211,7 +211,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_16_031655) do
   end
 
   create_table "pet_states", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
-    t.integer "pet_type_id", limit: 3, null: false
+    t.integer "pet_type_id", null: false
     t.text "swf_asset_ids", size: :medium, null: false
     t.boolean "female"
     t.integer "mood_id"
@@ -240,7 +240,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_16_031655) do
 
   create_table "pets", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.string "name", limit: 20, null: false
-    t.integer "pet_type_id", limit: 3, null: false
+    t.integer "pet_type_id", null: false
     t.index ["name"], name: "pets_name", unique: true
     t.index ["pet_type_id"], name: "pets_pet_type_id"
   end
@@ -253,7 +253,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_16_031655) do
     t.string "type", limit: 7, null: false
     t.integer "remote_id", limit: 3, null: false
     t.text "url", size: :long, null: false
-    t.integer "zone_id", limit: 1, null: false
+    t.integer "zone_id", null: false
     t.text "zones_restrict", size: :medium, null: false
     t.datetime "created_at", precision: nil, null: false
     t.integer "body_id", limit: 2, null: false
