@@ -3,9 +3,7 @@ require "async/http/internet/instance"
 
 namespace "neopets:import" do
 	desc "Import all basic image hashes from the Rainbow Pool, onto PetTypes"
-	task :rainbow_pool => :environment do
-		neologin = STDIN.getpass("Neologin cookie: ")
-
+	task :rainbow_pool => ["neopets:import:neologin", :environment] do
 		puts "Importing from Rainbow Pool…"
 
 		all_pet_types = PetType.all.to_a
@@ -18,7 +16,7 @@ namespace "neopets:import" do
 		Species.order(:name).each do |species|
 			begin
 				hashes_by_color_name = RainbowPool.load_hashes_for_species(
-					species.id, neologin)
+					species.id, Neologin.cookie)
 			rescue => error
 				puts "Failed to load #{species.name} page, skipping: #{error.message}"
 				next

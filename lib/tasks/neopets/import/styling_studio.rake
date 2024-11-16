@@ -1,8 +1,6 @@
 namespace "neopets:import" do
 	desc "Import alt style info from the NC Styling Studio"
-	task :styling_studio => :environment do
-		neologin = STDIN.getpass("Neologin cookie: ")
-
+	task :styling_studio => ["neopets:import:neologin", :environment] do
 		puts "Importing from Styling Studio…"
 
 		all_species = Species.order(:name).to_a
@@ -21,7 +19,7 @@ namespace "neopets:import" do
 					begin
 						styles_by_species_id[species.id] = Neopets::NCMall.load_styles(
 							species_id: species.id,
-							neologin:,
+							neologin: Neologin.cookie,
 						)
 					rescue => error
 						puts "\n⚠️  Error loading for #{species.human_name}, skipping: #{error.message}"
