@@ -1,10 +1,12 @@
 require "addressable/template"
 require "async/http/internet/instance"
 
-namespace :rainbow_pool do
+namespace "neopets:import" do
 	desc "Import all basic image hashes from the Rainbow Pool, onto PetTypes"
-	task :import => :environment do
+	task :rainbow_pool => :environment do
 		neologin = STDIN.getpass("Neologin cookie: ")
+
+		puts "Importing from Rainbow Pool…"
 
 		all_pet_types = PetType.all.to_a
 		all_pet_types_by_species_id_and_color_id = all_pet_types.

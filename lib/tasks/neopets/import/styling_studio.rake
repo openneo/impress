@@ -1,7 +1,9 @@
-namespace :alt_styles do
-	desc "Import alt style info from the NC Mall"
-	task :import => :environment do
+namespace "neopets:import" do
+	desc "Import alt style info from the NC Styling Studio"
+	task :styling_studio => :environment do
 		neologin = STDIN.getpass("Neologin cookie: ")
+
+		puts "Importing from Styling Studio…"
 
 		all_species = Species.order(:name).to_a
 

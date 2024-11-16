@@ -1,8 +1,10 @@
-namespace :nc_mall do
+namespace "neopets:import" do
 	desc "Sync our NCMallRecord table with the live NC Mall"
-	task :sync => :environment do
+	task :nc_mall => :environment do
 		# Log to STDOUT.
 		Rails.logger = Logger.new(STDOUT)
+
+		puts "Importing from NC Mall…"
 
 		# First, load all records of what's being sold in the live NC Mall. We load
 		# the homepage and all pages linked from the main document, and extract the
