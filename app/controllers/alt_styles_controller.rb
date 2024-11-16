@@ -15,9 +15,7 @@ class AltStylesController < ApplicationController
 		@color = find_color
 		@species = find_species
 
-		@alt_styles = @all_alt_styles.includes(:swf_assets).
-			by_creation_date.order(:color_id, :species_id, :series_name).
-			paginate(page: params[:page], per_page: 30)
+		@alt_styles = @all_alt_styles.includes(:swf_assets)
 		@alt_styles.where!(series_name: @series_name) if @series_name.present?
 		@alt_styles.merge!(@color.alt_styles) if @color
 		@alt_styles.merge!(@species.alt_styles) if @species
@@ -27,9 +25,16 @@ class AltStylesController < ApplicationController
 		SwfAsset.preload_manifests @alt_styles.map(&:swf_assets).flatten
 
 		respond_to do |format|
-			format.html { render }
+			format.html {
+				@alt_styles = @alt_styles.
+					by_creation_date.order(:color_id, :species_id, :series_name).
+					paginate(page: params[:page], per_page: 30)
+				render
+			}
 			format.json {
-				render json: @alt_styles.includes(swf_assets: [:zone]).as_json(
+				@alt_styles = @alt_styles.includes(swf_assets: [:zone]).
+					sort_by(&:full_name)
+				render json: @alt_styles.as_json(
 					only: [:id, :species_id, :color_id, :body_id, :series_name,
 								 :adjective_name, :thumbnail_url],
 					include: {
