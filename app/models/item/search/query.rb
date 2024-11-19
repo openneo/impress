@@ -132,6 +132,8 @@ class Item
             is_positive ? Filter.is_np : Filter.is_not_np
           when 'pb'
             is_positive ? Filter.is_pb : Filter.is_not_pb
+          when 'modeled'
+            is_positive ? Filter.is_modeled : Filter.is_not_modeled
           else
             raise_search_error "not_found.label", label: "is:#{value}"
           end
@@ -344,6 +346,14 @@ class Item
 
       def self.is_not_pb
         self.new Item.is_not_pb, '-is:pb'
+      end
+
+      def self.is_modeled
+        self.new Item.is_modeled, 'is:modeled'
+      end
+
+      def self.is_not_modeled
+        self.new Item.is_not_modeled, '-is:modeled'
       end
 
       private
