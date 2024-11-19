@@ -1,5 +1,5 @@
-require 'rails_helper'
 require 'webmock/rspec'
+require_relative '../rails_helper'
 
 RSpec.describe Neopets::NCMall, type: :model do
 	describe ".load_styles" do

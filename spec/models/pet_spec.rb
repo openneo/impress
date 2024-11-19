@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative '../rails_helper'
 require_relative '../support/mocks/custom_pets'
 require_relative '../support/matchers/a_record_matching'
 

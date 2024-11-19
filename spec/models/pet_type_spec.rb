@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative '../rails_helper'
 
 RSpec.describe PetType do
 	fixtures :colors, :species, :pet_types

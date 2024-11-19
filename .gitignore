@@ -5,6 +5,7 @@ tmp/**/*
 .env
 .env.*
 /spec/examples.txt
+/.yardoc
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
