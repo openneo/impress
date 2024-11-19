@@ -31,8 +31,8 @@ RSpec.describe Item do
 
 		def build_item_asset(zone, body_id:)
 			@remote_id = (@remote_id || 0) + 1
-			@url = "https://images.neopets.example/#{@remote_id}.swf"
-			SwfAsset.new(type: "object", remote_id: @remote_id, url: @url,
+			url = "https://images.neopets.example/#{@remote_id}.swf"
+			SwfAsset.new(type: "object", remote_id: @remote_id, url:,
 			             zones_restrict: "", zone:, body_id:)
 		end
 
