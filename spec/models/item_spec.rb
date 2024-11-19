@@ -36,10 +36,33 @@ RSpec.describe Item do
 			             zones_restrict: "", zone:, body_id:)
 		end
 
+		shared_examples "a fully-modeled item" do
+			it("is considered fully modeled") { should be_predicted_fully_modeled }
+			it("predicts no more compatible bodies") do
+				expect(item.predicted_missing_body_ids).to be_empty
+			end
+			pending("appears in Item.is_modeled") do
+				expect(Item.is_modeled.find(item.id)).to be_present
+			end
+			pending("does not appear in Item.is_not_modeled") do
+				expect(Item.is_not_modeled.find(item.id)).to be_nil
+			end
+		end
+
+		shared_examples "a not-fully-modeled item" do
+			it("is not fully modeled") { should_not be_predicted_fully_modeled }
+			pending("does not appear in Item.is_modeled") do
+				expect(Item.is_modeled.find(item.id)).to be_nil
+			end
+			pending("appears in in Item.is_not_modeled") do
+				expect(Item.is_not_modeled.find(item.id)).to be_present
+			end
+		end
+
 		describe "an item without any modeling data" do
 			subject(:item) { items(:straw_hat) }
 
-			it("is not fully modeled") { should_not be_predicted_fully_modeled }
+			it_behaves_like "a not-fully-modeled item"
 			it("has no compatible body IDs") do
 				expect(item.compatible_body_ids).to be_empty
 			end
@@ -55,12 +78,9 @@ RSpec.describe Item do
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 1)
 			end
 
-			it("is considered fully modeled") { should be_predicted_fully_modeled }
+			it_behaves_like "a fully-modeled item"
 			it("has one compatible body ID") do
 				expect(item.compatible_body_ids).to contain_exactly(1)
-			end
-			it("predicts no more compatible bodies") do
-				expect(item.predicted_missing_body_ids).to be_empty
 			end
 		end
 
@@ -75,7 +95,7 @@ RSpec.describe Item do
 				item.update_cached_fields
 			end
 
-			it("is not fully modeled") { should_not be_predicted_fully_modeled }
+			it_behaves_like "a not-fully-modeled item"
 			it("has two compatible body IDs") do
 				expect(item.compatible_body_ids).to contain_exactly(1, 2)
 			end
@@ -97,12 +117,9 @@ RSpec.describe Item do
 				item.update_cached_fields
 			end
 
-			it("is fully modeled") { should be_predicted_fully_modeled }
+			it_behaves_like "a fully-modeled item"
 			it("is compatible with all standard body IDs") do
 				expect(item.compatible_body_ids).to contain_exactly(1, 2, 3, 4)
-			end
-			it("predicts no more compatible bodies") do
-				expect(item.predicted_missing_body_ids).to be_empty
 			end
 		end
 
@@ -113,12 +130,9 @@ RSpec.describe Item do
 				item.swf_assets << build_item_asset(zones(:background), body_id: 0)
 			end
 
-			it("is fully modeled") { should be_predicted_fully_modeled }
+			it_behaves_like "a fully-modeled item"
 			it("is compatible with all bodies (body ID = 0)") do
 				expect(item.compatible_body_ids).to contain_exactly(0)
-			end
-			it("predicts no more compatible bodies") do
-				expect(item.predicted_missing_body_ids).to be_empty
 			end
 		end
 
@@ -129,12 +143,9 @@ RSpec.describe Item do
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 11)
 			end
 
-			it("is considered fully modeled") { should be_predicted_fully_modeled }
+			it_behaves_like "a fully-modeled item"
 			it("has one compatible body ID") do
 				expect(item.compatible_body_ids).to contain_exactly(11)
-			end
-			it("predicts no more compatible bodies") do
-				expect(item.predicted_missing_body_ids).to be_empty
 			end
 		end
 
@@ -149,7 +160,7 @@ RSpec.describe Item do
 				item.update_cached_fields
 			end
 
-			it("is not fully modeled") { should_not be_predicted_fully_modeled }
+			it_behaves_like "a not-fully-modeled item"
 			it("has two compatible body IDs") do
 				expect(item.compatible_body_ids).to contain_exactly(11, 12)
 			end
@@ -171,12 +182,9 @@ RSpec.describe Item do
 				item.update_cached_fields
 			end
 
-			it("is fully modeled") { should be_predicted_fully_modeled }
+			it_behaves_like "a fully-modeled item"
 			it("is compatible with all Maraquan body IDs") do
 				expect(item.compatible_body_ids).to contain_exactly(11, 12, 13, 4)
-			end
-			it("predicts no more compatible bodies") do
-				expect(item.predicted_missing_body_ids).to be_empty
 			end
 		end
 	end
