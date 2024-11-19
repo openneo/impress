@@ -263,6 +263,10 @@ class Item < ApplicationRecord
   end
 
   def update_cached_fields
+    # Reload our associations, so they include any new records.
+    swf_assets.reload
+
+    # Then, compute and save our cached fields.
     self.cached_occupied_zone_ids = occupied_zone_ids
     self.cached_compatible_body_ids = compatible_body_ids(use_cached: false)
     self.save!

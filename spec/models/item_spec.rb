@@ -90,9 +90,6 @@ RSpec.describe Item do
 			before do
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 1)
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 2)
-				# HACK: I don't understand why the first asset is triggering the hooks
-				#       for cached fields, but the second isn't? Idk, force an update.
-				item.update_cached_fields
 			end
 
 			it_behaves_like "a not-fully-modeled item"
@@ -112,9 +109,6 @@ RSpec.describe Item do
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 2)
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 3)
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 4)
-				# HACK: I don't understand why the first asset is triggering the hooks
-				#       for cached fields, but the second isn't? Idk, force an update.
-				item.update_cached_fields
 			end
 
 			it_behaves_like "a fully-modeled item"
@@ -155,9 +149,6 @@ RSpec.describe Item do
 			before do
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 11)
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 12)
-				# HACK: I don't understand why the first asset is triggering the hooks
-				#       for cached fields, but the second isn't? Idk, force an update.
-				item.update_cached_fields
 			end
 
 			it_behaves_like "a not-fully-modeled item"
@@ -177,9 +168,6 @@ RSpec.describe Item do
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 12)
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 13)
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 4)
-				# HACK: I don't understand why the first asset is triggering the hooks
-				#       for cached fields, but the second isn't? Idk, force an update.
-				item.update_cached_fields
 			end
 
 			it_behaves_like "a fully-modeled item"
