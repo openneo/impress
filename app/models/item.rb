@@ -65,6 +65,12 @@ class Item < ApplicationRecord
     where('description NOT LIKE ?',
       '%' + sanitize_sql_like(PAINTBRUSH_SET_DESCRIPTION) + '%')
   }
+  scope :is_modeled, -> {
+    where(cached_predicted_fully_modeled: true)
+  }
+  scope :is_not_modeled, -> {
+    where(cached_predicted_fully_modeled: false)
+  }
   scope :occupies, ->(zone_label) {
     Zone.matching_label(zone_label).
       map { |z| occupies_zone_id(z.id) }.reduce(none, &:or)
@@ -263,12 +269,19 @@ class Item < ApplicationRecord
   end
 
   def update_cached_fields
-    # Reload our associations, so they include any new records.
+    # First, clear out some cached instance variables we use for performance,
+    # to ensure we recompute the latest values.
+    @predicted_body_ids = nil
+    @predicted_missing_body_ids = nil
+
+    # We also need to reload our associations, so they include any new records.
     swf_assets.reload
 
-    # Then, compute and save our cached fields.
+    # Finally, compute and save our cached fields.
     self.cached_occupied_zone_ids = occupied_zone_ids
     self.cached_compatible_body_ids = compatible_body_ids(use_cached: false)
+    self.cached_predicted_fully_modeled =
+      predicted_fully_modeled?(use_cached: false)
     self.save!
   end
 
@@ -387,7 +400,8 @@ class Item < ApplicationRecord
     body_ids_by_species_by_color
   end
 
-  def predicted_fully_modeled?
+  def predicted_fully_modeled?(use_cached: true)
+    return cached_predicted_fully_modeled? if use_cached
     predicted_missing_body_ids.empty?
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_11_16_041926) do
+ActiveRecord::Schema[7.2].define(version: 2024_11_19_214543) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "species_id", null: false
     t.integer "color_id", null: false
@@ -139,6 +139,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_16_041926) do
     t.integer "dyeworks_base_item_id"
     t.string "cached_occupied_zone_ids", default: ""
     t.text "cached_compatible_body_ids", default: ""
+    t.boolean "cached_predicted_fully_modeled", default: false, null: false
     t.index ["dyeworks_base_item_id"], name: "index_items_on_dyeworks_base_item_id"
     t.index ["modeling_status_hint", "created_at", "id"], name: "items_modeling_status_hint_and_created_at_and_id"
     t.index ["modeling_status_hint", "created_at"], name: "items_modeling_status_hint_and_created_at"

@@ -41,21 +41,21 @@ RSpec.describe Item do
 			it("predicts no more compatible bodies") do
 				expect(item.predicted_missing_body_ids).to be_empty
 			end
-			pending("appears in Item.is_modeled") do
-				expect(Item.is_modeled.find(item.id)).to be_present
+			it("appears in Item.is_modeled") do
+				expect(Item.is_modeled.find_by_id(item.id)).to be_present
 			end
-			pending("does not appear in Item.is_not_modeled") do
-				expect(Item.is_not_modeled.find(item.id)).to be_nil
+			it("does not appear in Item.is_not_modeled") do
+				expect(Item.is_not_modeled.find_by_id(item.id)).to be_nil
 			end
 		end
 
 		shared_examples "a not-fully-modeled item" do
 			it("is not fully modeled") { should_not be_predicted_fully_modeled }
-			pending("does not appear in Item.is_modeled") do
-				expect(Item.is_modeled.find(item.id)).to be_nil
+			it("does not appear in Item.is_modeled") do
+				expect(Item.is_modeled.find_by_id(item.id)).to be_nil
 			end
-			pending("appears in in Item.is_not_modeled") do
-				expect(Item.is_not_modeled.find(item.id)).to be_present
+			it("appears in Item.is_not_modeled") do
+				expect(Item.is_not_modeled.find_by_id(item.id)).to be_present
 			end
 		end
 
