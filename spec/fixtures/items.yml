@@ -1,0 +1,14 @@
+straw_hat:
+  id: 58
+  name: Straw Hat
+  description: "This straw hat will keep the sun out of your pets eyes in
+    bright sunlight."
+  thumbnail_url: https://images.neopets.com/items/straw-hat.gif
+  type: Clothes
+  category: Clothes
+  rarity: Very Rare
+  rarity_index: 90
+  price: 376
+  weight_lbs: 1
+  zones_restrict: 0000000000000000000000000001000000001010000000000000
+  species_support_ids: "35"

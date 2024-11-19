@@ -1,9 +1,18 @@
 blue:
   id: 8
   name: blue
+  basic: true
+green:
+  id: 34
+  name: green
+  basic: true
 purple:
   id: 57
   name: purple
+red:
+  id: 61
+  name: red
+  basic: true
 robot:
   id: 62
   name: robot
