@@ -291,6 +291,10 @@ class Item < ApplicationRecord
       # This might just be a species-specific item. Let's be conservative in
       # our prediction, though we'll revise it if we see another body ID.
       compatible_body_ids
+    elsif compatible_body_ids.size == 0
+      # If somehow we have this item, but not any modeling data for it (weird!),
+      # consider it to fit all standard pet types until shown otherwise.
+      PetType.basic.distinct.pluck(:body_id).sort
     else
       # First, find our compatible pet types, then pair each body ID with its
       # color. (As an optimization, we omit standard colors, other than the

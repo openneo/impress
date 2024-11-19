@@ -29,11 +29,11 @@ RSpec.describe Item do
 		describe "an item without any modeling data" do
 			subject(:item) { items(:straw_hat) }
 
-			pending("is not fully modeled") { should_not be_predicted_fully_modeled }
+			it("is not fully modeled") { should_not be_predicted_fully_modeled }
 			it("has no compatible body IDs") do
 				expect(item.compatible_body_ids).to be_empty
 			end
-			pending("predicts all standard bodies are compatible") do
+			it("predicts all standard bodies are compatible") do
 				expect(item.predicted_missing_body_ids).to contain_exactly(1, 2, 3)
 			end
 		end
