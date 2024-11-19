@@ -89,5 +89,7 @@ RSpec.describe Item do
 				expect(item.predicted_missing_body_ids).to be_empty
 			end
 		end
+
+		pending("Don't forget special colors!") { fail }
 	end
 end
