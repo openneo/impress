@@ -6,6 +6,10 @@ green:
   id: 34
   name: green
   basic: true
+maraquan:
+  id: 44
+  name: maraquan
+  standard: false
 purple:
   id: 57
   name: purple

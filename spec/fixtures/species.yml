@@ -7,6 +7,9 @@ blumaroo:
 chia:
   id: 7
   name: chia
+mynci:
+  id: 35
+  name: mynci
 jetsam:
   id: 20
   name: jetsam

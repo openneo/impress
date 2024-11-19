@@ -7,12 +7,22 @@ RSpec.describe Item do
 		# Rather than using fixtures of real-world data, we create very specific
 		# pet types, to be able to create small encapsulated test cases where there
 		# are only a few bodies.
+		#
+		# We create some basic color pet types, and some Maraquan pet types—and,
+		# just like irl, the Maraquan Mynci has the same body as the basic Mynci.
 		before do
 			PetType.destroy_all # Make sure no leftovers from e.g. PetType's spec!
+
 			build_pt(colors(:blue),  species(:acara),    body_id: 1).save!
 			build_pt(colors(:red),   species(:acara),    body_id: 1).save!
-			build_pt(colors(:green), species(:blumaroo), body_id: 2).save!
-			build_pt(colors(:red),   species(:chia),     body_id: 3).save!
+			build_pt(colors(:blue),  species(:blumaroo), body_id: 2).save!
+			build_pt(colors(:green), species(:chia),     body_id: 3).save!
+			build_pt(colors(:red),   species(:mynci),    body_id: 4).save!
+
+			build_pt(colors(:maraquan),  species(:acara),    body_id: 11).save!
+			build_pt(colors(:maraquan),  species(:blumaroo), body_id: 12).save!
+			build_pt(colors(:maraquan),  species(:chia),     body_id: 13).save!
+			build_pt(colors(:maraquan),  species(:mynci),    body_id: 4).save!
 		end
 
 		def build_pt(color, species, body_id:)
@@ -34,7 +44,7 @@ RSpec.describe Item do
 				expect(item.compatible_body_ids).to be_empty
 			end
 			it("predicts all standard bodies are compatible") do
-				expect(item.predicted_missing_body_ids).to contain_exactly(1, 2, 3)
+				expect(item.predicted_missing_body_ids).to contain_exactly(1, 2, 3, 4)
 			end
 		end
 
@@ -70,7 +80,29 @@ RSpec.describe Item do
 				expect(item.compatible_body_ids).to contain_exactly(1, 2)
 			end
 			it("predicts remaining standard bodies are compatible") do
-				expect(item.predicted_missing_body_ids).to contain_exactly(3)
+				expect(item.predicted_missing_body_ids).to contain_exactly(3, 4)
+			end
+		end
+
+		describe "an item with all standard species modeled" do
+			subject(:item) { items(:straw_hat) }
+
+			before do
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 1)
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 2)
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 3)
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 4)
+				# HACK: I don't understand why the first asset is triggering the hooks
+				#       for cached fields, but the second isn't? Idk, force an update.
+				item.update_cached_fields
+			end
+
+			it("is fully modeled") { should be_predicted_fully_modeled }
+			it("is compatible with all standard body IDs") do
+				expect(item.compatible_body_ids).to contain_exactly(1, 2, 3, 4)
+			end
+			it("predicts no more compatible bodies") do
+				expect(item.predicted_missing_body_ids).to be_empty
 			end
 		end
 
@@ -90,6 +122,62 @@ RSpec.describe Item do
 			end
 		end
 
-		pending("Don't forget special colors!") { fail }
+		describe "an item with one Maraquan pet modeled" do
+			subject(:item) { items(:straw_hat) }
+
+			before do
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 11)
+			end
+
+			it("is considered fully modeled") { should be_predicted_fully_modeled }
+			it("has one compatible body ID") do
+				expect(item.compatible_body_ids).to contain_exactly(11)
+			end
+			it("predicts no more compatible bodies") do
+				expect(item.predicted_missing_body_ids).to be_empty
+			end
+		end
+
+		describe "an item with two Maraquan pets modeled" do
+			subject(:item) { items(:straw_hat) }
+
+			before do
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 11)
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 12)
+				# HACK: I don't understand why the first asset is triggering the hooks
+				#       for cached fields, but the second isn't? Idk, force an update.
+				item.update_cached_fields
+			end
+
+			it("is not fully modeled") { should_not be_predicted_fully_modeled }
+			it("has two compatible body IDs") do
+				expect(item.compatible_body_ids).to contain_exactly(11, 12)
+			end
+			it("predicts remaining Maraquan body IDs are compatible") do
+				expect(item.predicted_missing_body_ids).to contain_exactly(13, 4)
+			end
+		end
+
+		describe "an item with all Maraquan species modeled" do
+			subject(:item) { items(:straw_hat) }
+
+			before do
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 11)
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 12)
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 13)
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 4)
+				# HACK: I don't understand why the first asset is triggering the hooks
+				#       for cached fields, but the second isn't? Idk, force an update.
+				item.update_cached_fields
+			end
+
+			it("is fully modeled") { should be_predicted_fully_modeled }
+			it("is compatible with all Maraquan body IDs") do
+				expect(item.compatible_body_ids).to contain_exactly(11, 12, 13, 4)
+			end
+			it("predicts no more compatible bodies") do
+				expect(item.predicted_missing_body_ids).to be_empty
+			end
+		end
 	end
 end
