@@ -231,5 +231,46 @@ RSpec.describe Item do
 				expect(item.compatible_body_ids).to contain_exactly(1, 2, 3, 4)
 			end
 		end
+
+		describe "an item without any modeling data, but hinted as done" do
+			subject(:item) { items(:birthday_bg) }
+
+			before { item.update!(modeling_status_hint: :done) }
+
+			it_behaves_like "a fully-modeled item"
+			it("has no compatible body IDs") do
+				expect(item.compatible_body_ids).to be_empty
+			end
+		end
+
+		describe "an item with two species modeled, but hinted as done" do
+			subject(:item) { items(:birthday_bg) }
+
+			before do
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 1)
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 2)
+				item.update!(modeling_status_hint: :done)
+			end
+
+			it_behaves_like "a fully-modeled item"
+			it("has two compatible body IDs") do
+				expect(item.compatible_body_ids).to contain_exactly(1, 2)
+			end
+		end
+
+		describe "an item with two species modeled, but hinted as glitchy" do
+			subject(:item) { items(:birthday_bg) }
+
+			before do
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 1)
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 2)
+				item.update!(modeling_status_hint: :glitchy)
+			end
+
+			it_behaves_like "a fully-modeled item"
+			it("has two compatible body IDs") do
+				expect(item.compatible_body_ids).to contain_exactly(1, 2)
+			end
+		end
 	end
 end

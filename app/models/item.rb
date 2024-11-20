@@ -31,6 +31,9 @@ class Item < ApplicationRecord
   validates :description, :thumbnail_url, :rarity, :price, :zones_restrict,
     exclusion: {in: [nil], message: "must be specified"}
 
+  after_save :update_cached_fields,
+    if: :modeling_status_hint_previously_changed?
+
   attr_writer :current_body_id, :owned, :wanted
 
   NCRarities = [0, 500]
@@ -300,8 +303,16 @@ class Item < ApplicationRecord
     write_attribute('species_support_ids', replacement)
   end
 
+  def modeling_hinted_done?
+    modeling_status_hint == "done" || modeling_status_hint == "glitchy"
+  end
+
   def predicted_body_ids
-    @predicted_body_ids ||= if compatible_body_ids.include?(0)
+    @predicted_body_ids ||= if modeling_hinted_done?
+      # If we've manually set this item to no longer report as needing modeling,
+      # predict that the current bodies are all of the compatible bodies.
+      compatible_body_ids
+    elsif compatible_body_ids.include?(0)
       # Oh, look, it's already known to fit everybody! Sweet. We're done. (This
       # isn't folded into the case below, in case this item somehow got a
       # body-specific and non-body-specific asset. In all the cases I've seen
