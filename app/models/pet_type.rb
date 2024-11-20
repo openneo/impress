@@ -26,6 +26,10 @@ class PetType < ApplicationRecord
       merge(Species.order(name: :asc)).
       merge(Color.order(basic: :desc, standard: :desc, name: :asc))
   }
+  scope :released_before, ->(time) {
+    # We use DTI's creation timestamp as an estimate of when it was released.
+    where('created_at <= ?', time)
+  }
 
   def self.random_basic_per_species(species_ids)
     random_pet_types = []

@@ -10,14 +10,21 @@ RSpec.describe Item do
 		#
 		# We create some basic color pet types, and some Maraquan pet types—and,
 		# just like irl, the Maraquan Mynci has the same body as the basic Mynci.
+		#
+		# These pet types default to an early creation date of 2005, except the
+		# Vandagyre, which was released in 2014.
 		before do
 			PetType.destroy_all # Make sure no leftovers from e.g. PetType's spec!
 
-			build_pt(colors(:blue),  species(:acara),    body_id: 1).save!
-			build_pt(colors(:red),   species(:acara),    body_id: 1).save!
-			build_pt(colors(:blue),  species(:blumaroo), body_id: 2).save!
-			build_pt(colors(:green), species(:chia),     body_id: 3).save!
-			build_pt(colors(:red),   species(:mynci),    body_id: 4).save!
+			build_pt(colors(:blue),  species(:acara),     body_id: 1).save!
+			build_pt(colors(:red),   species(:acara),     body_id: 1).save!
+			build_pt(colors(:blue),  species(:blumaroo),  body_id: 2).save!
+			build_pt(colors(:green), species(:chia),      body_id: 3).save!
+			build_pt(colors(:red),   species(:mynci),     body_id: 4).save!
+			build_pt(colors(:blue),  species(:vandagyre), body_id: 5).tap do |pt|
+				pt.created_at = Date.new(2014, 11, 14)
+				pt.save!
+			end
 
 			build_pt(colors(:maraquan),  species(:acara),    body_id: 11).save!
 			build_pt(colors(:maraquan),  species(:blumaroo), body_id: 12).save!
@@ -26,7 +33,7 @@ RSpec.describe Item do
 		end
 
 		def build_pt(color, species, body_id:)
-			PetType.new(color:, species:, body_id:)
+			PetType.new(color:, species:, body_id:, created_at: Time.new(2005))
 		end
 
 		def build_item_asset(zone, body_id:)
@@ -60,19 +67,20 @@ RSpec.describe Item do
 		end
 
 		describe "an item without any modeling data" do
-			subject(:item) { items(:straw_hat) }
+			subject(:item) { items(:birthday_bg) }
 
 			it_behaves_like "a not-fully-modeled item"
 			it("has no compatible body IDs") do
 				expect(item.compatible_body_ids).to be_empty
 			end
 			it("predicts all standard bodies are compatible") do
-				expect(item.predicted_missing_body_ids).to contain_exactly(1, 2, 3, 4)
+				expect(item.predicted_missing_body_ids).to contain_exactly(
+					1, 2, 3, 4, 5)
 			end
 		end
 
 		describe "an item with one species modeled" do
-			subject(:item) { items(:straw_hat) }
+			subject(:item) { items(:birthday_bg) }
 
 			before do
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 1)
@@ -85,7 +93,7 @@ RSpec.describe Item do
 		end
 
 		describe "an item with two species modeled" do
-			subject(:item) { items(:straw_hat) }
+			subject(:item) { items(:birthday_bg) }
 
 			before do
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 1)
@@ -97,28 +105,29 @@ RSpec.describe Item do
 				expect(item.compatible_body_ids).to contain_exactly(1, 2)
 			end
 			it("predicts remaining standard bodies are compatible") do
-				expect(item.predicted_missing_body_ids).to contain_exactly(3, 4)
+				expect(item.predicted_missing_body_ids).to contain_exactly(3, 4, 5)
 			end
 		end
 
 		describe "an item with all standard species modeled" do
-			subject(:item) { items(:straw_hat) }
+			subject(:item) { items(:birthday_bg) }
 
 			before do
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 1)
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 2)
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 3)
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 4)
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 5)
 			end
 
 			it_behaves_like "a fully-modeled item"
 			it("is compatible with all standard body IDs") do
-				expect(item.compatible_body_ids).to contain_exactly(1, 2, 3, 4)
+				expect(item.compatible_body_ids).to contain_exactly(1, 2, 3, 4, 5)
 			end
 		end
 
 		describe "an item that fits all pets the same" do
-			subject(:item) { items(:straw_hat) }
+			subject(:item) { items(:birthday_bg) }
 
 			before do
 				item.swf_assets << build_item_asset(zones(:background), body_id: 0)
@@ -131,7 +140,7 @@ RSpec.describe Item do
 		end
 
 		describe "an item with one Maraquan pet modeled" do
-			subject(:item) { items(:straw_hat) }
+			subject(:item) { items(:birthday_bg) }
 
 			before do
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 11)
@@ -144,7 +153,7 @@ RSpec.describe Item do
 		end
 
 		describe "an item with two Maraquan pets modeled" do
-			subject(:item) { items(:straw_hat) }
+			subject(:item) { items(:birthday_bg) }
 
 			before do
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 11)
@@ -161,7 +170,7 @@ RSpec.describe Item do
 		end
 
 		describe "an item with all Maraquan species modeled" do
-			subject(:item) { items(:straw_hat) }
+			subject(:item) { items(:birthday_bg) }
 
 			before do
 				item.swf_assets << build_item_asset(zones(:wings), body_id: 11)
@@ -173,6 +182,53 @@ RSpec.describe Item do
 			it_behaves_like "a fully-modeled item"
 			it("is compatible with all Maraquan body IDs") do
 				expect(item.compatible_body_ids).to contain_exactly(11, 12, 13, 4)
+			end
+		end
+
+		describe "a pre-Vandagyre item without any modeling data" do
+			subject(:item) { items(:straw_hat) }
+
+			it_behaves_like "a not-fully-modeled item"
+			it("has no compatible body IDs") do
+				expect(item.compatible_body_ids).to be_empty
+			end
+			it("predicts all standard bodies except Vandagyre are compatible") do
+				expect(item.predicted_missing_body_ids).to contain_exactly(1, 2, 3, 4)
+			end
+		end
+
+		# Skipping "pre-Vanda with one species modeled", because it's identical.
+
+		describe "a pre-Vandagyre item with two species modeled" do
+			subject(:item) { items(:straw_hat) }
+
+			before do
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 1)
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 2)
+			end
+
+			it_behaves_like "a not-fully-modeled item"
+			it("has two compatible body IDs") do
+				expect(item.compatible_body_ids).to contain_exactly(1, 2)
+			end
+			it("predicts remaining standard bodies (sans Vandagyre) are compatible") do
+				expect(item.predicted_missing_body_ids).to contain_exactly(3, 4)
+			end
+		end
+
+		describe "a pre-Vandagyre item with all other standard species modeled" do
+			subject(:item) { items(:straw_hat) }
+
+			before do
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 1)
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 2)
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 3)
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 4)
+			end
+
+			it_behaves_like "a fully-modeled item"
+			it("is compatible with all non-Vandagyre standard body IDs") do
+				expect(item.compatible_body_ids).to contain_exactly(1, 2, 3, 4)
 			end
 		end
 	end

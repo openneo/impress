@@ -311,7 +311,8 @@ class Item < ApplicationRecord
     elsif compatible_body_ids.size == 0
       # If somehow we have this item, but not any modeling data for it (weird!),
       # consider it to fit all standard pet types until shown otherwise.
-      PetType.basic.distinct.pluck(:body_id).sort
+      PetType.basic.released_before(released_at_estimate).
+        distinct.pluck(:body_id).sort
     else
       # First, find our compatible pet types, then pair each body ID with its
       # color. (As an optimization, we omit standard colors, other than the
@@ -345,10 +346,17 @@ class Item < ApplicationRecord
         compatible_color_ids_by_body_id.values.
           any? { |v| v.include?("basic") && (v & modelable_color_ids).empty? }
 
-      # Get all body IDs for the colors we decided are modelable.
+      # Filter to pet types that match the colors that seem compatible.
       predicted_pet_types =
         (basic_is_modelable ? PetType.basic : PetType.none).
           or(PetType.where(color_id: modelable_color_ids))
+
+      # Only include species that were released when this item was. If we don't
+      # know our creation date (we don't have it for some old records), assume
+      # it's pretty old.
+      predicted_pet_types.merge! PetType.released_before(released_at_estimate)
+
+      # Get all body IDs for the pet types we decided are modelable.
       predicted_pet_types.distinct.pluck(:body_id).sort
     end
   end
@@ -407,6 +415,12 @@ class Item < ApplicationRecord
 
   def predicted_modeled_ratio
     compatible_body_ids.size.to_f / predicted_body_ids.size
+  end
+
+  # We estimate the item's release time as either when we first saw it, or 2010
+  # if it's so old that we don't have a record.
+  def released_at_estimate
+    created_at || Time.new(2010)
   end
 
   def as_json(options={})

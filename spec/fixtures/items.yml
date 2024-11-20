@@ -10,5 +10,21 @@ straw_hat:
   rarity_index: 90
   price: 376
   weight_lbs: 1
-  zones_restrict: 0000000000000000000000000001000000001010000000000000
+  zones_restrict: "0000000000000000000000000001000000001010000000000000"
   species_support_ids: "35"
+  created_at: "2011-03-28T14:33:36-07:00"
+
+birthday_bg:
+  id: 89876
+  name: Birthday Bash Background
+  description: This place is all set for a brilliant birthday bash!
+  thumbnail_url: https://images.neopets.com/items/9a4gd6g6c0.gif
+  type: none
+  category: None
+  rarity: Special
+  rarity_index: 101
+  price: 0
+  weight_lbs: 1
+  zones_restrict: "0000000000000000000000000000000000000000000000000000"
+  species_support_ids: ""
+  created_at: "2024-11-15T18:15:22-08:00"
