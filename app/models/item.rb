@@ -23,8 +23,13 @@ class Item < ApplicationRecord
   has_many :dyeworks_variants, class_name: "Item",
     inverse_of: :dyeworks_base_item
 
-  validates_presence_of :name, :description, :thumbnail_url, :rarity, :price,
-    :zones_restrict
+  # We require a name field. A number of other fields must be *specified*: they
+  # can't be nil, to help ensure we aren't forgetting any fields when importing
+  # items. But sometimes they happen to be blank (e.g. when TNT leaves an item
+  # description empty, oops), in which case we want to accept that reality!
+  validates_presence_of :name
+  validates :description, :thumbnail_url, :rarity, :price, :zones_restrict,
+    exclusion: {in: [nil], message: "must be specified"}
 
   attr_writer :current_body_id, :owned, :wanted
 
