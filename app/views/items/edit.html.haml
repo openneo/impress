@@ -4,7 +4,7 @@
 %h1#title Editing "#{@item.name}"
 
 :markdown
-	Heads up: the modeling process controls many of these fields by default! If
+	Heads up: the modeling process controls some of these fields by default! If
 	you change something, but it doesn't match what we're seeing on Neopets.com,
 	it will probably be reverted automatically when someone models it.
 
@@ -44,6 +44,14 @@
 			%label{title: "Use this when e.g. this fits the Blue Vandagyre even though it's a Maraquan item.\nBehaves identically to Done, but helps us remember why we did this!"}
 				= f.radio_button :modeling_status_hint, "glitchy"
 				Glitchy: Neopets.com has <em>too many</em> models
+		.field-name Body fit
+		.radio-field
+			%label{title: "When an asset in a zone like Background is modeled, assume it fits all pets the same, and assign it body ID \#0.\nOtherwise, assume it fits only the kind of pet it was modeled on."}
+				= f.radio_button :explicitly_body_specific, false
+				Automatic: Some zones fit all species
+			%label{title: "Use this when an item uses a generally-universal zone like Static, but is body-specific regardless. \"Encased in Ice\" is one example.\nThis prevents these uncommon items from breaking every time they're modeled."}
+				= f.radio_button :explicitly_body_specific, true
+				Body-specific: Fits all species differently
 	.actions
 		= f.submit "Save changes"
 
