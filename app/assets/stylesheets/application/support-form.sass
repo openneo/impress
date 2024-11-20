@@ -19,8 +19,10 @@
 		input[type=url]
 			font-size: .85em
 
-		label
+		> label, .field-name
 			font-weight: bold
+			&:has(+ .radio-field)
+				align-self: start
 
 	.thumbnail-field
 		display: flex
@@ -33,6 +35,11 @@
 
 		input
 			flex: 1 0 20ch
+
+	.radio-field
+		display: flex
+		flex-direction: column
+		gap: .25em
 
 	.field_with_errors
 		display: contents

@@ -1,0 +1,43 @@
+- title "Editing \"#{@item.name}\""
+- use_responsive_design
+
+%h1#title Editing "#{@item.name}"
+
+:markdown
+	Heads up: the modeling process controls many of these fields by default! If
+	you change something, but it doesn't match what we're seeing on Neopets.com,
+	it will probably be reverted automatically when someone models it.
+
+= form_with model: @item, class: "support-form" do |f|
+	- if @item.errors.any?
+		%p
+			Could not save:
+			%ul.errors
+				- @item.errors.each do |error|
+					%li= error.full_message
+	%fieldset
+		= f.label :name
+		= f.text_field :name
+		= f.label :thumbnail_url, "Thumbnail"
+		.thumbnail-field
+			- if @item.thumbnail_url?
+				= image_tag @item.thumbnail_url
+			= f.url_field :thumbnail_url
+		= f.label :description
+		= f.text_field :description
+		.field-name Modeling status
+		.radio-field
+			%label{title: "If we fit two or more species of a standard color, assume we also fit the other standard-color pets that were released at the time.\nRepeat for special colors like Baby and Maraquan."}
+				= f.radio_button :modeling_status_hint, ""
+				Automatic: Fits 2+ species &rarr; Should fit all
+			%label{title: "Use this when e.g. there simply is no Acara version of the item."}
+				= f.radio_button :modeling_status_hint, "done"
+				Done: Neopets.com is missing some models
+			%label{title: "Use this when e.g. this fits the Blue Vandagyre even though it's a Maraquan item.\nBehaves identically to Done, but helps us remember why we did this!"}
+				= f.radio_button :modeling_status_hint, "glitchy"
+				Glitchy: Neopets.com has <em>too many</em> models
+	.actions
+		= f.submit "Save changes"
+
+- content_for :stylesheets do
+	= page_stylesheet_link_tag "application/support-form"

@@ -1,5 +1,6 @@
 class ItemsController < ApplicationController
   before_action :set_query
+  before_action :support_staff_only, except: [:index, :show, :sources]
   rescue_from Item::Search::Error, :with => :search_error
 
   def index
@@ -112,6 +113,21 @@ class ItemsController < ApplicationController
     end
   end
 
+  def edit
+    @item = Item.find params[:id]
+    render layout: "application"
+  end
+
+  def update
+    @item = Item.find params[:id]
+    if @item.update(item_params)
+      flash[:notice] = "\"#{@item.name}\" successfully saved!"
+      redirect_to @item
+    else
+      render action: "edit", layout: "application"
+    end
+  end
+
   def sources
     # Load all the items, then group them by source.
     item_ids = params[:ids].split(",")
@@ -163,6 +179,14 @@ class ItemsController < ApplicationController
   end
 
   protected
+
+  def item_params
+    params.require(:item).permit(
+      :name, :thumbnail_url, :description, :modeling_status_hint
+    ).tap do |p|
+      p[:modeling_status_hint] = nil if p[:modeling_status_hint] == ""
+    end
+  end
 
   def assign_closeted!(items)
     current_user.assign_closeted_to_items!(items) if user_signed_in?

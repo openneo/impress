@@ -46,6 +46,8 @@
         = link_to t('items.show.closet_hangers.button'),
           user_closet_hangers_path(current_user),
           class: 'user-lists-form-opener'
+        - if support_staff?
+          = link_to "Edit", edit_item_path(item)
 
   - if user_signed_in?
     = form_tag update_quantities_user_item_closet_hangers_path(user_id: current_user, item_id: item), method: :put, class: 'user-lists-form', hidden: item_header_user_lists_form_state != "open" do

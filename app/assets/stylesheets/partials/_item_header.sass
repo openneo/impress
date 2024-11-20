@@ -67,14 +67,21 @@
           background: #FEEBC8
           color: #7B341E
 
+    .support-form
+      grid-area: support
+      font-size: 85%
+      text-align: left
+
     .user-lists-info
       grid-area: lists
       font-size: 85%
       text-align: left
 
-      .user-lists-form-opener
-        &::after
-          content: " ›"
+      display: flex
+      gap: 1em
+
+      a::after
+        content: " ›"
 
   .user-lists-form
     background: $background-color

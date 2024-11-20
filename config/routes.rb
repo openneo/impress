@@ -19,7 +19,7 @@ OpenneoImpressItems::Application.routes.draw do
   get '/users/current-user/outfits', to: redirect('/your-outfits')
 
   # Our customization data! Both the item pages, and JSON API endpoints.
-  resources :items, :only => [:index, :show] do
+  resources :items, only: [:index, :show, :edit, :update] do
     resources :trades, path: 'trades/:type', controller: 'item_trades',
       only: [:index], constraints: {type: /offering|seeking/}
 
