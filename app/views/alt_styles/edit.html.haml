@@ -13,7 +13,7 @@
 
 = image_tag @alt_style.preview_image_url, class: "alt-style-preview"
 
-= form_with model: @alt_style, class: "alt-style-form" do |f|
+= form_with model: @alt_style, class: "support-form" do |f|
 	- if @alt_style.errors.any?
 		%p
 			Could not save:
@@ -36,5 +36,5 @@
 			Then: Go to unlabeled style
 
 - content_for :stylesheets do
-	= stylesheet_link_tag "application/breadcrumbs"
+	= stylesheet_link_tag "application/breadcrumbs", "application/support-form"
 	= page_stylesheet_link_tag "alt_styles/edit"
