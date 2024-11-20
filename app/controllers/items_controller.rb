@@ -182,7 +182,8 @@ class ItemsController < ApplicationController
 
   def item_params
     params.require(:item).permit(
-      :name, :thumbnail_url, :description, :modeling_status_hint
+      :name, :thumbnail_url, :description, :modeling_status_hint,
+      :is_manually_nc
     ).tap do |p|
       p[:modeling_status_hint] = nil if p[:modeling_status_hint] == ""
     end

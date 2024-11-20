@@ -25,6 +25,14 @@
 			= f.url_field :thumbnail_url
 		= f.label :description
 		= f.text_field :description
+		.field-name Item kind
+		.radio-field
+			%label{title: "NC items generally have a rarity value of 500.\nPaintbrush items generally contain a special message in the description."}
+				= f.radio_button :is_manually_nc, false
+				Automatic: Based on rarity and description
+			%label{title: "Use this when Neopets releases an NC item, but labels the rarity as something other than 500, usually by mistake."}
+				= f.radio_button :is_manually_nc, true
+				Manually NC: From the NC Mall, but not r500
 		.field-name Modeling status
 		.radio-field
 			%label{title: "If we fit two or more species of a standard color, assume we also fit the other standard-color pets that were released at the time.\nRepeat for special colors like Baby and Maraquan."}
