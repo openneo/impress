@@ -50,11 +50,7 @@ class OutfitsController < ApplicationController
     @colors = Color.alphabetical
     @species = Species.alphabetical
 
-    newest_items = Item.newest.
-      select(:id, :name, :created_at, :updated_at, :thumbnail_url,
-             :rarity_index, :is_manually_nc, :cached_compatible_body_ids,
-             :cached_predicted_fully_modeled)
-      .limit(18)
+    newest_items = Item.newest.limit(18)
     @newest_modeled_items, @newest_unmodeled_items =
       newest_items.partition(&:predicted_fully_modeled?)
 
