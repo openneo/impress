@@ -1,7 +1,7 @@
 module SupportFormHelper
 	class SupportFormBuilder < ActionView::Helpers::FormBuilder
 		attr_reader :template
-		delegate :concat, :content_tag, to: :template, private: true
+		delegate :concat, :content_tag, :image_tag, to: :template, private: true
 
 		def fields(&block)
 			content_tag(:ul, class: "fields", &block)
@@ -29,6 +29,14 @@ module SupportFormHelper
 
 		def radio_grid_fieldset(*args, &block)
 			radio_fieldset(*args, "data-type": "radio-grid", &block)
+		end
+
+		def thumbnail_input(method)
+			url = object.send(method)
+			content_tag(:div, class: "thumbnail-input") do
+				concat image_tag(url, alt: "Thumbnail") if url.present?
+				concat url_field(method)
+			end
 		end
 	end
 

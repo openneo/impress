@@ -23,10 +23,7 @@
 
 		= f.field do
 			= f.label :thumbnail_url, "Thumbnail"
-			.thumbnail-input
-				- if @item.thumbnail_url?
-					= image_tag @item.thumbnail_url
-				= f.url_field :thumbnail_url
+			= f.thumbnail_input :thumbnail_url
 
 		= f.field do
 			= f.label :description
