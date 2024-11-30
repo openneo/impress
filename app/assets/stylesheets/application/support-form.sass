@@ -19,9 +19,17 @@
 			gap: .25em
 			max-width: 60ch
 
-			> label
+			> label, > .field_with_errors label
 				display: block
 				font-weight: bold
+
+			.field_with_errors
+				> label
+					color: $error-color
+
+				input[type=text], input[type=url]
+					border-color: $error-border-color
+					color: $error-color
 
 			&[data-type=radio]
 				ul
