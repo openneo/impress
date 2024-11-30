@@ -17,31 +17,35 @@
 
 = outfit_viewer pet_state: @pet_state
 
-= form_with model: [@pet_type, @pet_state] do |f|
+= form_with model: [@pet_type, @pet_state], class: "support-form" do |f|
 	- if @pet_state.errors.any?
 		%p
 			Could not save:
 			%ul.errors
 				- @pet_state.errors.each do |error|
 					%li= error.full_message
-	%dl
-		%dt Pose
-		%dd
-			%ul.pose-options
-				- pose_options.each do |pose|
-					%li
-						%label
-							= f.radio_button :pose, pose
-							= pose_name pose
-		%dt Glitched?
-		%dd
+	%ul.fields
+		%li{"data-type": "radio-grid"}
+			%fieldset
+				%legend Pose
+				%ul
+					- pose_options.each do |pose|
+						%li
+							%label
+								= f.radio_button :pose, pose
+								= pose_name pose
+		%li
+			= f.label :glitched, "Gliched?"
 			= f.select :glitched, [["✅ Not marked as Glitched", false],
-			["👾 Yes, it's bad news bonko'd", true]]
-	= f.submit "Save"
+				["👾 Yes, it's bad news bonko'd", true]]
+	
+	.actions
+		= f.submit "Save changes"
 
 - content_for :stylesheets do
 	= stylesheet_link_tag "application/breadcrumbs"
 	= stylesheet_link_tag "application/outfit-viewer"
+	= stylesheet_link_tag "application/support-form"
 	= page_stylesheet_link_tag "pet_states/edit"
 
 - content_for :javascripts do
