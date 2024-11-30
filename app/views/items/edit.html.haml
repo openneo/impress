@@ -8,56 +8,57 @@
 	you change something, but it doesn't match what we're seeing on Neopets.com,
 	it will probably be reverted automatically when someone models it.
 
-= form_with model: @item, class: "support-form" do |f|
+= support_form_with model: @item, class: "support-form" do |f|
 	- if @item.errors.any?
 		%p
 			Could not save:
 			%ul.errors
 				- @item.errors.each do |error|
 					%li= error.full_message
-	%ul.fields
-		%li
+
+	= f.fields do
+		= f.field do
 			= f.label :name
 			= f.text_field :name
-		%li
+
+		= f.field do
 			= f.label :thumbnail_url, "Thumbnail"
 			.thumbnail-input
 				- if @item.thumbnail_url?
 					= image_tag @item.thumbnail_url
 				= f.url_field :thumbnail_url
-		%li
+
+		= f.field do
 			= f.label :description
 			= f.text_field :description
-		%li
-			%fieldset{"data-type": "radio"}
-				%legend Item kind
-				%label{title: "NC items generally have a rarity value of 500.\nPaintbrush items generally contain a special message in the description."}
-					= f.radio_button :is_manually_nc, false
-					Automatic: Based on rarity and description
-				%label{title: "Use this when Neopets releases an NC item, but labels the rarity as something other than 500, usually by mistake."}
-					= f.radio_button :is_manually_nc, true
-					Manually NC: From the NC Mall, but not r500
-		%li
-			%fieldset{"data-type": "radio"}
-				%legend Modeling status
-				%label{title: "If we fit two or more species of a standard color, assume we also fit the other standard-color pets that were released at the time.\nRepeat for special colors like Baby and Maraquan."}
-					= f.radio_button :modeling_status_hint, ""
-					Automatic: Fits 2+ species &rarr; Should fit all
-				%label{title: "Use this when e.g. there simply is no Acara version of the item."}
-					= f.radio_button :modeling_status_hint, "done"
-					Done: Neopets.com is missing some models
-				%label{title: "Use this when e.g. this fits the Blue Vandagyre even though it's a Maraquan item.\nBehaves identically to Done, but helps us remember why we did this!"}
-					= f.radio_button :modeling_status_hint, "glitchy"
-					Glitchy: Neopets.com has <em>too many</em> models
-		%li
-			%fieldset{"data-type": "radio"}
-				%legend Body fit
-				%label{title: "When an asset in a zone like Background is modeled, assume it fits all pets the same, and assign it body ID \#0.\nOtherwise, assume it fits only the kind of pet it was modeled on."}
-					= f.radio_button :explicitly_body_specific, false
-					Automatic: Some zones fit all species
-				%label{title: "Use this when an item uses a generally-universal zone like Static, but is body-specific regardless. \"Encased in Ice\" is one example.\nThis prevents these uncommon items from breaking every time they're modeled."}
-					= f.radio_button :explicitly_body_specific, true
-					Body-specific: Fits all species differently
+
+		= f.radio_fieldset "Item kind" do
+			= f.radio_field title: "NC items generally have a rarity value of 500.\nPaintbrush items generally contain a special message in the description." do
+				= f.radio_button :is_manually_nc, false
+				Automatic: Based on rarity and description
+			= f.radio_field title: "Use this when Neopets releases an NC item, but labels the rarity as something other than 500, usually by mistake." do
+				= f.radio_button :is_manually_nc, true
+				Manually NC: From the NC Mall, but not r500
+
+		= f.radio_fieldset "Modeling status" do
+			= f.radio_field title: "If we fit two or more species of a standard color, assume we also fit the other standard-color pets that were released at the time.\nRepeat for special colors like Baby and Maraquan." do
+				= f.radio_button :modeling_status_hint, ""
+				Automatic: Fits 2+ species &rarr; Should fit all
+			= f.radio_field title: "Use this when e.g. there simply is no Acara version of the item." do
+				= f.radio_button :modeling_status_hint, "done"
+				Done: Neopets.com is missing some models
+			= f.radio_field title: "Use this when e.g. this fits the Blue Vandagyre even though it's a Maraquan item.\nBehaves identically to Done, but helps us remember why we did this!" do
+				= f.radio_button :modeling_status_hint, "glitchy"
+				Glitchy: Neopets.com has <em>too many</em> models
+
+		= f.radio_fieldset "Body fit" do
+			= f.radio_field title: "When an asset in a zone like Background is modeled, assume it fits all pets the same, and assign it body ID \#0.\nOtherwise, assume it fits only the kind of pet it was modeled on." do
+				= f.radio_button :explicitly_body_specific, false
+				Automatic: Some zones fit all species
+			= f.radio_field title: "Use this when an item uses a generally-universal zone like Static, but is body-specific regardless. \"Encased in Ice\" is one example.\nThis prevents these uncommon items from breaking every time they're modeled." do
+				= f.radio_button :explicitly_body_specific, true
+				Body-specific: Fits all species differently
+
 	.actions
 		= f.submit "Save changes"
 

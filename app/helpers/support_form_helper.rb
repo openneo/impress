@@ -1,0 +1,42 @@
+module SupportFormHelper
+	class SupportFormBuilder < ActionView::Helpers::FormBuilder
+		attr_reader :template
+		delegate :concat, :content_tag, to: :template, private: true
+
+		def fields(&block)
+			content_tag(:ul, class: "fields", &block)
+		end
+
+		def field(**kwargs, &block)
+			content_tag(:li, **kwargs, &block)
+		end
+
+		def radio_fieldset(legend, **kwargs, &block)
+			kwargs.reverse_merge!("data-type": "radio")
+			field(**kwargs) do
+				content_tag(:fieldset) do
+					concat content_tag(:legend, legend)
+					concat content_tag(:ul, &block)
+				end
+			end
+		end
+
+		def radio_field(**kwargs, &block)
+			content_tag(:li) do
+				content_tag(:label, **kwargs, &block)
+			end
+		end
+
+		def radio_grid_fieldset(*args, &block)
+			radio_fieldset(*args, "data-type": "radio-grid", &block)
+		end
+	end
+
+	def support_form_with(**kwargs, &block)
+		kwargs.merge!(
+			builder: SupportFormBuilder,
+			class: ["support-form", kwargs[:class]],
+		)
+		form_with(**kwargs, &block)
+	end
+end
