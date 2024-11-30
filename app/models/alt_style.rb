@@ -37,7 +37,7 @@ class AltStyle < ApplicationRecord
   # `fits:<New?>-faerie-draik` intentionally will not work, and the canonical
   # filter name will be `fits:alt-style-IDNUMBER`, instead.
   def series_name
-    real_series_name || "<New?>"
+    real_series_name || AltStyle.placeholder_name
   end
 
   def real_series_name=(new_series_name)
@@ -95,6 +95,10 @@ class AltStyle < ApplicationRecord
 
   def real_thumbnail_url?
     thumbnail_url != DEFAULT_THUMBNAIL_URL
+  end
+
+  def self.placeholder_name
+    "<New?>"
   end
 
   # For convenience in the console!

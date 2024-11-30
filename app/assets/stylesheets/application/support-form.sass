@@ -4,27 +4,29 @@
 	gap: 1em
 	align-items: flex-start
 
-	fieldset
+	.fields
+		list-style-type: none
+		display: flex
+		flex-direction: column
+		gap: .75em
 		width: 100%
-		display: grid
-		grid-template-columns: auto 1fr
-		align-items: center
-		gap: 1em
 
-		> *:nth-child(2n)
-			width: 40rch
-			max-width: 100%
-			box-sizing: border-box
+		li
+			display: flex
+			flex-direction: column
+			gap: .25em
+			max-width: 60ch
 
-		input[type=url]
-			font-size: .85em
+			> label
+				display: block
+				font-weight: bold
 
-		> label, .field-name
-			font-weight: bold
-			&:has(+ .radio-field)
-				align-self: start
+	input[type=text], input[type=url]
+		width: 100%
+		min-width: 10ch
+		box-sizing: border-box
 
-	.thumbnail-field
+	.thumbnail-input
 		display: flex
 		align-items: center
 		gap: .25em
@@ -33,13 +35,13 @@
 			width: 40px
 			height: 40px
 
-		input
-			flex: 1 0 20ch
-
-	.radio-field
+	fieldset[data-type=radio]
 		display: flex
 		flex-direction: column
 		gap: .25em
+
+		legend
+			font-weight: bold
 
 	.field_with_errors
 		display: contents

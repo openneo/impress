@@ -20,14 +20,17 @@
 			%ul.errors
 				- @alt_style.errors.each do |error|
 					%li= error.full_message
-	%fieldset
-		= f.label :real_series_name, "Series"
-		= f.text_field :real_series_name, autofocus: !@alt_style.real_series_name?
-		= f.label :thumbnail_url, "Thumbnail"
-		.thumbnail-field
-			- if @alt_style.thumbnail_url?
-				= image_tag @alt_style.thumbnail_url
-			= f.url_field :thumbnail_url
+	%ul.fields
+		%li
+			= f.label :real_series_name, "Series"
+			= f.text_field :real_series_name, autofocus: !@alt_style.real_series_name?,
+				placeholder: AltStyle.placeholder_name
+		%li
+			= f.label :thumbnail_url, "Thumbnail"
+			.thumbnail-input
+				- if @alt_style.thumbnail_url?
+					= image_tag @alt_style.thumbnail_url
+				= f.url_field :thumbnail_url
 	.actions
 		= f.submit "Save changes"
 		%label{title: "If checked, takes you to the next unlabeled pet style, if any. Useful for labeling in bulk!"}
