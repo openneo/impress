@@ -9,12 +9,7 @@
 	it will probably be reverted automatically when someone models it.
 
 = support_form_with model: @item, class: "support-form" do |f|
-	- if @item.errors.any?
-		%p
-			Could not save:
-			%ul.errors
-				- @item.errors.each do |error|
-					%li= error.full_message
+	= f.errors
 
 	= f.fields do
 		= f.field do

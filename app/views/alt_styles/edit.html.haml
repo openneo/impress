@@ -14,12 +14,7 @@
 = image_tag @alt_style.preview_image_url, class: "alt-style-preview"
 
 = support_form_with model: @alt_style, class: "support-form" do |f|
-	- if @alt_style.errors.any?
-		%p
-			Could not save:
-			%ul.errors
-				- @alt_style.errors.each do |error|
-					%li= error.full_message
+	= f.errors
 
 	= f.fields do
 		= f.field do

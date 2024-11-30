@@ -18,12 +18,7 @@
 = outfit_viewer pet_state: @pet_state
 
 = support_form_with model: [@pet_type, @pet_state] do |f|
-	- if @pet_state.errors.any?
-		%p
-			Could not save:
-			%ul.errors
-				- @pet_state.errors.each do |error|
-					%li= error.full_message
+	= f.errors
 
 	= f.fields do
 		= f.radio_grid_fieldset "Pose" do

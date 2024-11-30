@@ -3,6 +3,21 @@ module SupportFormHelper
 		attr_reader :template
 		delegate :concat, :content_tag, :image_tag, to: :template, private: true
 
+		def errors
+			return nil if object.errors.empty?
+
+			error_list = content_tag(:ul) do
+				object.errors.each do |error|
+					concat content_tag(:li, error.full_message)
+				end
+			end
+
+			content_tag(:p) do
+				concat "Could not save:"
+				concat error_list
+			end
+		end
+
 		def fields(&block)
 			content_tag(:ul, class: "fields", &block)
 		end
