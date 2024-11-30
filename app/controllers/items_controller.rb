@@ -124,7 +124,7 @@ class ItemsController < ApplicationController
       flash[:notice] = "\"#{@item.name}\" successfully saved!"
       redirect_to @item
     else
-      render action: "edit", layout: "application"
+      render action: "edit", layout: "application", status: :bad_request
     end
   end
 
