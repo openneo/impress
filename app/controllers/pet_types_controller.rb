@@ -35,6 +35,16 @@ class PetTypesController < ApplicationController
 				if @selected_species && @selected_color && @pet_types.size == 1
 					redirect_to @pet_types.first
 				end
+
+				if support_staff?
+					@counts = {
+						total: PetState.count,
+						glitched: PetState.glitched.count,
+						needs_labeling: PetState.needs_labeling.count,
+						usable: PetState.usable.count,
+					}
+					@unlabeled_appearance = PetState.next_unlabeled_appearance
+				end
 			}
 
 			format.json {

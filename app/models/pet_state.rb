@@ -17,10 +17,13 @@ class PetState < ApplicationRecord
 
   alias_method :swf_asset_ids_from_association, :swf_asset_ids
 
+  scope :glitched, -> { where(glitched: true) }
+  scope :needs_labeling, -> { unlabeled.where(glitched: false) }
+  scope :unlabeled, -> { with_pose("UNKNOWN") }
+  scope :usable, -> { where(labeled: true, glitched: false) }
+
   scope :newest, -> { order(created_at: :desc) }
   scope :newest_pet_type, -> { joins(:pet_type).merge(PetType.newest) }
-  scope :unlabeled, -> { with_pose("UNKNOWN") }
-  scope :needs_labeling, -> { unlabeled.where(glitched: false) }
 
   # A simple ordering that tries to bring reliable pet states to the front.
   scope :emotion_order, -> {
@@ -137,6 +140,13 @@ class PetState < ApplicationRecord
         h.values.map(&:values).flatten(1).each(&:uniq!).each(&:sort!)
       end
     end
+  end
+
+  def self.next_unlabeled_appearance
+    # Rather than just getting the newest unlabeled pet state, prioritize the
+    # newest *pet type*. This better matches the user's perception of what the
+    # newest state is, because the Rainbow Pool UI is grouped by pet type!
+    needs_labeling.newest_pet_type.newest.first
   end
 end
 

@@ -10,6 +10,18 @@
 
 	[1]: #{alt_styles_path}
 
+- if support_staff?
+	%p
+		%strong 💡 Support summary:
+		✅ #{number_with_delimiter @counts[:usable]} usable
+		+ 👾 #{number_with_delimiter @counts[:glitched]} glitched
+		- if @unlabeled_appearance
+			+ ❓️
+			= link_to "#{number_with_delimiter @counts[:needs_labeling]} unknown",
+				edit_pet_type_pet_state_path(@unlabeled_appearance.pet_type,
+					@unlabeled_appearance, next: "unlabeled-appearance")
+		\= #{number_with_delimiter @counts[:total]} total
+
 = form_with method: :get, class: "rainbow-pool-filters" do |form|
 	%fieldset
 		%legend Filter by:
