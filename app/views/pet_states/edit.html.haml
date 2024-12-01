@@ -34,6 +34,9 @@
 	
 	= f.actions do
 		= f.submit "Save changes"
+		= f.go_to_next_field title: "If checked, takes you to the first unlabeled appearance in the database, if any. Useful for labeling in bulk!" do
+			= f.go_to_next_check_box "unlabeled-appearance"
+			Then: Go to unlabeled appearance
 
 - content_for :stylesheets do
 	= stylesheet_link_tag "application/breadcrumbs"

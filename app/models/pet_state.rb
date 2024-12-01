@@ -17,6 +17,10 @@ class PetState < ApplicationRecord
 
   alias_method :swf_asset_ids_from_association, :swf_asset_ids
 
+  scope :newest, -> { order(created_at: :desc) }
+  scope :newest_pet_type, -> { joins(:pet_type).merge(PetType.newest) }
+  scope :unlabeled, -> { with_pose("UNKNOWN") }
+
   # A simple ordering that tries to bring reliable pet states to the front.
   scope :emotion_order, -> {
     order(Arel.sql(

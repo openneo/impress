@@ -15,6 +15,7 @@ class PetType < ApplicationRecord
     species = Species.find_by_name!(species_name)
     where(color_id: color.id, species_id: species.id)
   }
+  scope :newest, -> { order(created_at: :desc) }
   scope :preferring_species, ->(species_id) {
     joins(:species).order([Arel.sql("species_id = ? DESC"), species_id])
   }
