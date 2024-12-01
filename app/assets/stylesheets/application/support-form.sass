@@ -44,6 +44,10 @@
 					grid-template-columns: repeat(var(--num-columns, 1), 1fr)
 					gap: .25em
 
+				li
+					display: flex
+					align-items: stretch // Give the bubbles equal heights!
+
 				label
 					display: flex
 					align-items: center
@@ -51,6 +55,7 @@
 					padding: .5em 1em
 					border: 1px solid $soft-border-color
 					border-radius: 1em
+					flex: 1 1 auto
 
 					input
 						margin: 0
