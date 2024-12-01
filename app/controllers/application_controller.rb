@@ -4,7 +4,7 @@ require 'async/container'
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
-  helper_method :current_user, :user_signed_in?
+  helper_method :current_user, :support_staff?, :user_signed_in?
 
   before_action :set_locale
 
@@ -111,10 +111,12 @@ class ApplicationController < ActionController::Base
     return_to || root_path
   end
 
+  def support_staff?
+    current_user&.support_staff?
+  end
+
   def support_staff_only
-    unless current_user&.support_staff?
-      raise AccessDenied, "Support staff only"
-    end
+    raise AccessDenied, "Support staff only" unless support_staff?
   end
 end
 

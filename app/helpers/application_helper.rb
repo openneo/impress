@@ -127,10 +127,6 @@ module ApplicationHelper
     !@hide_home_link
   end
 
-  def support_staff?
-    user_signed_in? && current_user.support_staff?
-  end
-
   def impress_2020_meta_tags
     origin = Rails.configuration.impress_2020_origin
     support_secret = Rails.application.credentials.dig(
