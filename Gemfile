@@ -66,7 +66,10 @@ gem "async-http", "~> 0.75.0", require: false
 gem "thread-local", "~> 1.1", require: false
 
 # For debugging.
-gem 'web-console', '~> 4.2', group: :development
+group :development do
+	gem 'debug', '~> 1.9.2'
+	gem 'web-console', '~> 4.2'
+end
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '~> 1.16', require: false
