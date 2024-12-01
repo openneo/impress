@@ -1,7 +1,8 @@
 module SupportFormHelper
 	class SupportFormBuilder < ActionView::Helpers::FormBuilder
 		attr_reader :template
-		delegate :capture, :content_tag, :render, to: :template, private: true
+		delegate :capture, :check_box_tag, :content_tag, :params, :render,
+			to: :template, private: true
 
 		def errors
 			render partial: "application/support_form/errors", locals: {form: self}
@@ -37,6 +38,14 @@ module SupportFormHelper
 
 		def actions(&block)
 			content_tag(:section, class: "actions", &block)
+		end
+
+		def go_to_next_field(**options, &block)
+			content_tag(:label, class: "go-to-next", **options, &block)
+		end
+
+		def go_to_next_check_box(value)
+			check_box_tag "next", value, checked: params[:next] == value
 		end
 	end
 

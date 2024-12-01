@@ -28,9 +28,8 @@
 
 	= f.actions do
 		= f.submit "Save changes"
-		%label{title: "If checked, takes you to the next unlabeled pet style, if any. Useful for labeling in bulk!"}
-			= check_box_tag "next", "unlabeled-style",
-				checked: params[:next] == "unlabeled-style"
+		= f.go_to_next_field title: "If checked, takes you to the next unlabeled pet style, if any. Useful for labeling in bulk!" do
+			= f.go_to_next_check_box "unlabeled-style"
 			Then: Go to unlabeled style
 
 - content_for :stylesheets do
