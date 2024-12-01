@@ -1,0 +1,7 @@
+- if form.object.errors.any?
+	%section.errors
+		Could not save:
+
+		%ul
+			- form.object.errors.each do |error|
+				%li= error.full_message

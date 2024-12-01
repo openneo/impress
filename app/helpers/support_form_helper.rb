@@ -1,44 +1,28 @@
 module SupportFormHelper
 	class SupportFormBuilder < ActionView::Helpers::FormBuilder
 		attr_reader :template
-		delegate :concat, :content_tag, :image_tag, to: :template, private: true
+		delegate :capture, :content_tag, :render, to: :template, private: true
 
 		def errors
-			return nil if object.errors.empty?
-
-			error_list = content_tag(:ul) do
-				object.errors.each do |error|
-					concat content_tag(:li, error.full_message)
-				end
-			end
-
-			content_tag(:p) do
-				concat "Could not save:"
-				concat error_list
-			end
+			render partial: "application/support_form/errors", locals: {form: self}
 		end
 
 		def fields(&block)
 			content_tag(:ul, class: "fields", &block)
 		end
 
-		def field(**kwargs, &block)
-			content_tag(:li, **kwargs, &block)
+		def field(**options, &block)
+			content_tag(:li, **options, &block)
 		end
 
-		def radio_fieldset(legend, **kwargs, &block)
-			kwargs.reverse_merge!("data-type": "radio")
-			field(**kwargs) do
-				content_tag(:fieldset) do
-					concat content_tag(:legend, legend)
-					concat content_tag(:ul, &block)
-				end
-			end
+		def radio_fieldset(legend, **options, &block)
+			render partial: "application/support_form/radio_fieldset",
+				locals: {form: self, legend:, options:, content: capture(&block)}
 		end
 
-		def radio_field(**kwargs, &block)
+		def radio_field(**options, &block)
 			content_tag(:li) do
-				content_tag(:label, **kwargs, &block)
+				content_tag(:label, **options, &block)
 			end
 		end
 
@@ -47,19 +31,16 @@ module SupportFormHelper
 		end
 
 		def thumbnail_input(method)
-			url = object.send(method)
-			content_tag(:div, class: "thumbnail-input") do
-				concat image_tag(url, alt: "Thumbnail") if url.present?
-				concat url_field(method)
-			end
+			render partial: "application/support_form/thumbnail_input",
+				locals: {form: self, method:}
 		end
 	end
 
-	def support_form_with(**kwargs, &block)
-		kwargs.merge!(
+	def support_form_with(**options, &block)
+		options.merge!(
 			builder: SupportFormBuilder,
-			class: ["support-form", kwargs[:class]],
+			class: ["support-form", options[:class]],
 		)
-		form_with(**kwargs, &block)
+		form_with(**options, &block)
 	end
 end

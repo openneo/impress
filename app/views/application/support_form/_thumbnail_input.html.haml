@@ -1,0 +1,5 @@
+- url = form.object.send(method)
+.thumbnail-input
+	- if url.present?
+		= image_tag url, alt: "Thumbnail"
+	= form.url_field method
