@@ -20,6 +20,7 @@ class PetState < ApplicationRecord
   scope :newest, -> { order(created_at: :desc) }
   scope :newest_pet_type, -> { joins(:pet_type).merge(PetType.newest) }
   scope :unlabeled, -> { with_pose("UNKNOWN") }
+  scope :needs_labeling, -> { unlabeled.where(glitched: false) }
 
   # A simple ordering that tries to bring reliable pet states to the front.
   scope :emotion_order, -> {

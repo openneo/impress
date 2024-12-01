@@ -38,7 +38,7 @@ class PetStatesController < ApplicationController
 		# Rather than just getting the newest unlabeled pet state, prioritize the
 		# newest *pet type*. This better matches the user's perception of what the
 		# newest state is, because the Rainbow Pool UI is grouped by pet type!
-		unlabeled_appearance = PetState.unlabeled.newest_pet_type.newest.first
+		unlabeled_appearance = PetState.needs_labeling.newest_pet_type.newest.first
 
 		if unlabeled_appearance
 			edit_pet_type_pet_state_path(
