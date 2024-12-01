@@ -50,10 +50,11 @@ module SupportFormHelper
 	end
 
 	def support_form_with(**options, &block)
-		options.merge!(
+		form_with(
 			builder: SupportFormBuilder,
+			**options,
 			class: ["support-form", options[:class]],
+			&block
 		)
-		form_with(**options, &block)
 	end
 end
