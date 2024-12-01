@@ -32,7 +32,7 @@
 			= f.select :glitched, [["✅ Not marked as Glitched", false],
 				["👾 Yes, it's bad news bonko'd", true]]
 	
-	.actions
+	= f.actions do
 		= f.submit "Save changes"
 
 - content_for :stylesheets do

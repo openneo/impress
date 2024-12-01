@@ -26,7 +26,7 @@
 			= f.label :thumbnail_url, "Thumbnail"
 			= f.thumbnail_input :thumbnail_url
 
-	.actions
+	= f.actions do
 		= f.submit "Save changes"
 		%label{title: "If checked, takes you to the next unlabeled pet style, if any. Useful for labeling in bulk!"}
 			= check_box_tag "next", "unlabeled-style",

@@ -34,6 +34,10 @@ module SupportFormHelper
 			render partial: "application/support_form/thumbnail_input",
 				locals: {form: self, method:}
 		end
+
+		def actions(&block)
+			content_tag(:section, class: "actions", &block)
+		end
 	end
 
 	def support_form_with(**options, &block)
