@@ -26,6 +26,11 @@
 				= f.radio_field do
 					= f.radio_button :pose, pose
 					= pose_name(pose)
+			- if @reference_pet_type
+				= link_to @reference_pet_type, target: "_blank", class: "reference-link" do
+					= pet_type_image @reference_pet_type, :happy, :face
+					%span Reference: #{@reference_pet_type.human_name}
+					= external_link_icon
 
 		= f.field do
 			= f.label :glitched, "Gliched?"

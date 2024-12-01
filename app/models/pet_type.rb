@@ -137,6 +137,10 @@ class PetType < ApplicationRecord
     pet_states.count { |ps| ps.pose == "UNKNOWN" }
   end
 
+  def reference
+    PetType.where(species_id: species).basic.merge(Color.alphabetical).first
+  end
+
   def self.find_by_param!(param)
     raise ActiveRecord::RecordNotFound unless param.include?("-")
     color_param, _, species_param = param.rpartition("-")

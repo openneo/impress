@@ -19,6 +19,7 @@ class PetStatesController < ApplicationController
 	def find_pet_state
 		@pet_type = PetType.find_by_param!(params[:pet_type_name])
 		@pet_state = @pet_type.pet_states.find(params[:id])
+		@reference_pet_type = @pet_type.reference
 	end
 
 	def pet_state_params
