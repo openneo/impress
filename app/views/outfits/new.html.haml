@@ -4,21 +4,19 @@
 
 %p#pet-not-found.alert= t 'pets.load.not_found'
 
-- if show_announcement?
+- hide_after Date.new(2024, 12, 8) do
   %section.announcement
-    = image_tag "/images/error-grundo.png", width: 70, height: 70,
-      srcset: {"/images/error-grundo.png": "2x"}
+    = image_tag "about/announcement.png", width: 70, height: 70,
+      srcset: {"about/announcement@2x.png": "2x"}
     .content
       %p
-        %strong
-          Oops, sorry for the bugs recently!
-        For the first time in One Million Years, we made some changes to our
-        modeling code—and it looks like we goofed it, and started gradually
-        losing some data!
+        %strong Oh wow, it's busy this time of year!
+        We've temporarily moved to a bigger server, to help us handle the extra
+        load. Hopefully this keeps us running smooth!
       %p
-        We've restored a backup from before we made these changes, so most
-        everything is back in order! None of your personal data was affected.
-        Sorry for the disruption, and hope everyone is doing okay! 💜
+        Happy holidays, everyone! Here's hoping you, and your families, and your
+        precious pets—both online and off—stay happy and healthy for the year
+        to come 💜
 
 #outfit-forms
   #pet-preview

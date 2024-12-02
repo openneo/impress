@@ -1,9 +1,4 @@
 module OutfitsHelper
-  LAST_DAY_OF_ANNOUNCEMENT = Date.parse("2024-11-08")
-  def show_announcement?
-    Date.today <= LAST_DAY_OF_ANNOUNCEMENT
-  end
-
   def destination_tag(value)
     hidden_field_tag 'destination', value, :id => nil
   end

@@ -213,6 +213,10 @@ module ApplicationHelper
     @hide_title_header = true
   end
 
+  def hide_after(last_day, &block)
+    yield if Date.today <= last_day
+  end
+
   def use_responsive_design
     @use_responsive_design = true
     add_body_class "use-responsive-design"
