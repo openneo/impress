@@ -9,12 +9,12 @@
 		%tbody
 			- outfit.visible_layers.each do |swf_asset|
 				%tr
-					%th{scope: "row"}
+					%th{scope: "row", "data-field": "id"}
 						= swf_asset.id
 					%td
 						= swf_asset.zone.label
 						(##{swf_asset.zone.id})
-					%td
+					%td{"data-field": "links"}
 						%ul
 							- if swf_asset.image_url?
 								%li= link_to "PNG", swf_asset.image_url, target: "_blank"

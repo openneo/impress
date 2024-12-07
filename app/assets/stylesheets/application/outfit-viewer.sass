@@ -108,3 +108,18 @@ outfit-viewer
 
 	&:has(outfit-layer:state(loading))
 		+outfit-viewer-loading
+
+	// If a layer has the `[highlighted]` attribute, it's brought to the front,
+	// and other layers are grayed out and blurred. We use this in the support
+	// outfit viewer, when you hover over a layer.
+	&:has(outfit-layer[highlighted])
+		outfit-layer[highlighted]
+			z-index: 999
+
+			// Filter everything behind the bottom-most highlighted layer, using a
+			// backdrop filter. This gives us the best visual consistency by applying
+			// effects to the entire backdrop, instead of each layer and then
+			// re-compositing them.
+			backdrop-filter: grayscale(1) brightness(1.5) blur(1px)
+			& ~ outfit-layer[highlighted]
+				backdrop-filter: none

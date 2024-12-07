@@ -18,14 +18,22 @@ support-outfit-viewer
 		border-radius: .5em
 
 		th, td
-			border: 1px solid $soft-border-color
+			border: 1px solid $module-border-color
 			font-size: .85em
 			padding: .25em .5em
 			text-align: left
 
 		> tbody
-			> tr > :nth-child(3) // links column
+			[data-field=links]
 				ul
 					list-style-type: none
 					display: flex
 					gap: .5em
+
+	// Once the component is ready, add some hints about potential interactions.
+	&:state(ready)
+		> table
+			> tbody > tr
+				cursor: zoom-in
+				&:hover
+					background: $module-bg-color
