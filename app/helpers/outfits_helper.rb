@@ -77,13 +77,15 @@ module OutfitsHelper
 
   private
 
-  def parse_outfit_viewer_options(outfit=nil, pet_state: nil, **html_options)
+  def parse_outfit_viewer_options(
+    outfit=nil, pet_state: nil, preferred_image_format: :png, **html_options
+  )
     outfit = Outfit.new(pet_state:) if outfit.nil? && pet_state.present?
 
     if outfit.nil?
       raise ArgumentError, "outfit viewer must have outfit or pet state"
     end
 
-    {outfit:, html_options:}
+    {outfit:, preferred_image_format:, html_options:}
   end
 end
