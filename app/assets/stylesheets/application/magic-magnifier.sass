@@ -1,9 +1,16 @@
 magic-magnifier
 	position: relative
 
-	&:not(:hover)
-		magic-magnifier-lens
-			display: none
+	// Only show the lens when we are hovering, and the magnifier's X and Y
+	// coordinates are set. (This ensures the component is running, and has
+	// received a mousemove event, instead of defaulting to (0, 0).)
+	magic-magnifier-lens
+		display: none
+
+	&:hover
+		@container style(--magic-magnifier-x) and style(--magic-magnifier-y)
+			magic-magnifier-lens
+				display: block
 
 magic-magnifier-lens
 	width: var(--magic-magnifier-lens-width, 100px)

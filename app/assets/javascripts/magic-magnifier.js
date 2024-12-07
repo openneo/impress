@@ -16,8 +16,8 @@ class MagicMagnifier extends HTMLElement {
 		const rect = this.getBoundingClientRect();
 		const x = e.pageX - rect.left;
 		const y = e.pageY - rect.top;
-		lens.style.setProperty("--magic-magnifier-x", x + "px");
-		lens.style.setProperty("--magic-magnifier-y", y + "px");
+		this.style.setProperty("--magic-magnifier-x", x + "px");
+		this.style.setProperty("--magic-magnifier-y", y + "px");
 	}
 }
 
