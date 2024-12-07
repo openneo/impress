@@ -41,7 +41,7 @@ class SwfAsset < ApplicationRecord
     {
       swf: url,
       png: image_url,
-      svg: manifest_asset_urls[:svg],
+      svg: svg_url,
       canvas_library: manifest_asset_urls[:js],
       manifest: manifest_url,
     }
@@ -184,6 +184,18 @@ class SwfAsset < ApplicationRecord
 
     # Otherwise, there's no image URL.
     nil
+  end
+
+  def image_url?
+    image_url.present?
+  end
+
+  def svg_url
+    manifest_asset_urls[:svg]
+  end
+
+  def svg_url?
+    svg_url.present?
   end
 
   def canvas_movie?

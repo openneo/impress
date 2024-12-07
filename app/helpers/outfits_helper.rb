@@ -65,11 +65,25 @@ module OutfitsHelper
     text_field_tag 'name', nil, options
   end
 
-  def outfit_viewer(outfit=nil, pet_state: nil, **html_options)
-    outfit = Outfit.new(pet_state:) if outfit.nil? && pet_state.present?
-    raise "outfit_viewer must have outfit or pet state" if outfit.nil?
+  def outfit_viewer(...)
+    render partial: "outfit_viewer",
+      locals: parse_outfit_viewer_options(...)
+  end
 
-    render partial: "outfit_viewer", locals: {outfit:, html_options:}
+  def support_outfit_viewer(...)
+    render partial: "support_outfit_viewer",
+      locals: parse_outfit_viewer_options(...)
+  end
+
+  private
+
+  def parse_outfit_viewer_options(outfit=nil, pet_state: nil, **html_options)
+    outfit = Outfit.new(pet_state:) if outfit.nil? && pet_state.present?
+
+    if outfit.nil?
+      raise ArgumentError, "outfit viewer must have outfit or pet state"
+    end
+
+    {outfit:, html_options:}
   end
 end
-

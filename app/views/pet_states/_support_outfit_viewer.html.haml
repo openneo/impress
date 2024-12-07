@@ -1,0 +1,25 @@
+= content_tag "support-outfit-viewer", **html_options do
+	= outfit_viewer outfit
+	%table
+		%thead
+			%tr
+				%th{scope: "col"} DTI ID
+				%th{scope: "col"} Zone
+				%th{scope: "col"} Links
+		%tbody
+			- outfit.visible_layers.each do |swf_asset|
+				%tr
+					%th{scope: "row"}
+						= swf_asset.id
+					%td
+						= swf_asset.zone.label
+						(##{swf_asset.zone.id})
+					%td
+						%ul
+							- if swf_asset.image_url?
+								%li= link_to "PNG", swf_asset.image_url, target: "_blank"
+							- if swf_asset.svg_url?
+								%li= link_to "SVG", swf_asset.svg_url, target: "_blank"
+							%li= link_to "SWF", swf_asset.url, target: "_blank"
+							- if swf_asset.manifest_url?
+								%li= link_to "Manifest", swf_asset.manifest_url, target: "_blank"

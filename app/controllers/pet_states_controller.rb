@@ -1,6 +1,7 @@
 class PetStatesController < ApplicationController
-	before_action :find_pet_state
 	before_action :support_staff_only
+	before_action :find_pet_state
+	before_action :preload_assets
 
 	def edit
 	end
@@ -20,6 +21,10 @@ class PetStatesController < ApplicationController
 		@pet_type = PetType.find_by_param!(params[:pet_type_name])
 		@pet_state = @pet_type.pet_states.find(params[:id])
 		@reference_pet_type = @pet_type.reference
+	end
+
+	def preload_assets
+		SwfAsset.preload_manifests @pet_state.swf_assets
 	end
 
 	def pet_state_params

@@ -1,0 +1,31 @@
+@import "../partials/clean/constants"
+
+support-outfit-viewer
+	display: flex
+	gap: 2em
+	flex-wrap: wrap
+	justify-content: center
+
+	outfit-viewer
+		flex: 0 0 auto
+		border: 1px solid $module-border-color
+		border-radius: 1em
+
+	> table
+		flex: 0 0 auto
+		border-collapse: collapse
+		table-layout: fixed
+		border-radius: .5em
+
+		th, td
+			border: 1px solid $soft-border-color
+			font-size: .85em
+			padding: .25em .5em
+			text-align: left
+
+		> tbody
+			> tr > :nth-child(3) // links column
+				ul
+					list-style-type: none
+					display: flex
+					gap: .5em

@@ -6,16 +6,16 @@
 		= link_to "Rainbow Pool", pet_types_path
 	%li
 		= link_to @pet_type.possibly_new_color.human_name,
-		          pet_types_path(color: @pet_type.possibly_new_color.human_name)
+							pet_types_path(color: @pet_type.possibly_new_color.human_name)
 	%li{"data-relation-to-prev": "sibling"}
 		= link_to @pet_type.possibly_new_species.human_name,
-		          pet_types_path(species: @pet_type.possibly_new_species.human_name)
+							pet_types_path(species: @pet_type.possibly_new_species.human_name)
 	%li
 		= link_to "Appearances", @pet_type
 	%li
 		\##{@pet_state.id}
 
-= outfit_viewer pet_state: @pet_state
+= support_outfit_viewer pet_state: @pet_state
 
 = support_form_with model: [@pet_type, @pet_state] do |f|
 	= f.errors
@@ -47,7 +47,9 @@
 	= stylesheet_link_tag "application/breadcrumbs"
 	= stylesheet_link_tag "application/outfit-viewer"
 	= stylesheet_link_tag "application/support-form"
+	= stylesheet_link_tag "pet_states/support-outfit-viewer"
 	= page_stylesheet_link_tag "pet_states/edit"
 
 - content_for :javascripts do
 	= javascript_include_tag "outfit-viewer"
+	= javascript_include_tag "pet_states/support-outfit-viewer"
