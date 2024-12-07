@@ -1,0 +1,40 @@
+magic-magnifier
+	position: relative
+
+	&:not(:hover)
+		magic-magnifier-lens
+			display: none
+
+magic-magnifier-lens
+	width: var(--magic-magnifier-lens-width, 100px)
+	height: var(--magic-magnifier-lens-height, 100px)
+	overflow: hidden
+	border-radius: 100%
+
+	background: white
+	border: 2px solid black
+	box-shadow: 3px 3px 3px rgba(0, 0, 0, .5)
+
+	position: absolute
+	left: var(--magic-magnifier-x, 0px)
+	top: var(--magic-magnifier-y, 0px)
+
+	> *
+		// Translations are applied in the opposite of the order they're specified.
+		// So, here's what we're doing:
+		//
+		// 1. Translate the content left by --magic-magnifier-x and up by
+		//    --magic-magnifier-y, to align the target location with the lens's
+		//    top-right corner.
+		// 2. Zoom in by --magic-magnifier-scale.
+		// 3. Translate the content right by half of --magic-magnifier-lens-width,
+		//    and down by half of --magic-magnifier-lens-height, to align the
+		//    target location with the lens's center.
+		//
+		// Note that it *is* possible to specify transforms relative to the center,
+		// rather than the top-left corner—this is in fact the default!—but that
+		// gets confusing fast with scale in play. I think this is easier to reason
+		// about with the top-left corner in terms of math, and center it after the
+		// fact.
+		transform: translateX(calc(var(--magic-magnifier-lens-width, 100px) / 2)) translateY(calc(var(--magic-magnifier-lens-height, 100px) / 2)) scale(var(--magic-magnifier-scale, 2)) translateX(calc(-1 * var(--magic-magnifier-x, 0px))) translateY(calc(-1 * var(--magic-magnifier-y, 0px)))
+		transform-origin: left top

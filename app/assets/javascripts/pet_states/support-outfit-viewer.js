@@ -13,10 +13,12 @@ class SupportOutfitViewer extends HTMLElement {
 		if (!e.target.matches("tr")) return;
 
 		const id = e.target.querySelector("[data-field=id]").innerText;
-		const layer = this.querySelector(
+		const layers = this.querySelectorAll(
 			`outfit-viewer [data-asset-id="${CSS.escape(id)}"]`,
 		);
-		layer.setAttribute("highlighted", "");
+		for (const layer of layers) {
+			layer.setAttribute("highlighted", "");
+		}
 	}
 
 	// When a row is unhovered, unhighlight its corresponding outfit viewer layer.
@@ -24,10 +26,12 @@ class SupportOutfitViewer extends HTMLElement {
 		if (!e.target.matches("tr")) return;
 
 		const id = e.target.querySelector("[data-field=id]").innerText;
-		const layer = this.querySelector(
+		const layers = this.querySelectorAll(
 			`outfit-viewer [data-asset-id="${CSS.escape(id)}"]`,
 		);
-		layer.removeAttribute("highlighted");
+		for (const layer of layers) {
+			layer.removeAttribute("highlighted");
+		}
 	}
 
 	// When clicking a row, redirect the click to the first link.
