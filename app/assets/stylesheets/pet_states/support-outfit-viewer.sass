@@ -1,4 +1,5 @@
 @import "../partials/clean/constants"
+@import "../partials/context_button"
 
 support-outfit-viewer
 	display: flex
@@ -10,6 +11,36 @@ support-outfit-viewer
 		flex: 0 0 auto
 		border: 1px solid $module-border-color
 		border-radius: 1em
+
+	.outfit-viewer-controls
+		margin-block: .5em
+		isolation: isolate // Avoid z-index weirdness with our buttons vs the lens
+
+		display: flex
+		align-items: center
+		justify-content: center
+		gap: .5em
+
+		font-size: .85em
+
+		fieldset
+			display: contents
+
+		legend
+			font-weight: bold
+			&::after
+				content: ":"
+
+		label
+			display: flex
+			align-items: center
+			gap: .25em
+
+			input[type=radio]
+				margin: 0
+
+		[type=submit]
+			+context-button
 
 	> table
 		flex: 0 0 auto
@@ -42,3 +73,6 @@ support-outfit-viewer
 		--magic-magnifier-lens-width: 100px
 		--magic-magnifier-lens-height: 100px
 		--magic-magnifier-scale: 2.5
+
+	magic-magnifier-lens
+		z-index: 2 // Be above things by default, but not by much!

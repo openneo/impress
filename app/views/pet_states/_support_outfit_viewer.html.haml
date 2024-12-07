@@ -1,7 +1,24 @@
 = content_tag "support-outfit-viewer", **html_options do
-	-# Render an outfit viewer in a magnifier. Use SVG for maximum clarity!
-	%magic-magnifier
-		= outfit_viewer outfit, preferred_image_format: :svg
+	= turbo_frame_tag "support-outfit-viewer-preview" do
+		%div
+			-# Render an outfit viewer in a magnifier. Use SVG by default for clarity,
+			-# but also offer an option to switch to PNG if it looks wrong.
+			%magic-magnifier
+				= outfit_viewer outfit,
+					preferred_image_format: params[:preferred_image_format] == "png" ? :png : :svg
+
+			= form_with method: :get, class: "outfit-viewer-controls" do |f|
+				%fieldset
+					%legend Format
+					%label
+						= f.radio_button "preferred_image_format", "svg",
+							checked: params[:preferred_image_format] != "png"
+						SVG
+					%label
+						= f.radio_button "preferred_image_format", "png",
+							checked: params[:preferred_image_format] == "png"
+						PNG
+				= f.submit "Update"
 
 	%table
 		%thead
