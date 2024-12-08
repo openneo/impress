@@ -40,7 +40,8 @@ class PetStatesController < ApplicationController
 	end
 
 	def next_unlabeled_appearance_path
-		unlabeled_appearance = PetState.next_unlabeled_appearance
+		unlabeled_appearance =
+			PetState.next_unlabeled_appearance(after_id: params[:after])
 
 		if unlabeled_appearance
 			edit_pet_type_pet_state_path(

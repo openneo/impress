@@ -24,6 +24,7 @@ class PetState < ApplicationRecord
 
   scope :newest, -> { order(created_at: :desc) }
   scope :newest_pet_type, -> { joins(:pet_type).merge(PetType.newest) }
+  scope :created_before, ->(time) { where(arel_table[:created_at].lt(time)) }
 
   # A simple ordering that tries to bring reliable pet states to the front.
   scope :emotion_order, -> {
@@ -142,11 +143,39 @@ class PetState < ApplicationRecord
     end
   end
 
-  def self.next_unlabeled_appearance
+  def self.next_unlabeled_appearance(after_id: nil)
     # Rather than just getting the newest unlabeled pet state, prioritize the
     # newest *pet type*. This better matches the user's perception of what the
     # newest state is, because the Rainbow Pool UI is grouped by pet type!
-    needs_labeling.newest_pet_type.newest.first
+    pet_states = needs_labeling.newest_pet_type.newest
+
+    # If `after_id` is given, convert it from a PetState ID to creation
+    # timestamps, and find the next record prior to those timestamps. This
+    # enables skipping past records the user doesn't want to label.
+    if after_id
+      begin
+        after_pet_state = PetState.find(after_id)
+        before_pt_created_at = after_pet_state.pet_type.created_at
+        before_ps_created_at = after_pet_state.created_at
+      rescue ActiveRecord::RecordNotFound
+        Rails.logger.warn "PetState.next_unlabeled_appearance: Could not " +
+          "find pet state ##{after_id}"
+        return nil
+      end
+
+      # Because we sort by `newest_pet_type` first, then breaks ties by
+      # `newest`, our filter needs to operate the same way. Kudos to:
+      # https://brunoscheufler.com/blog/2022-01-01-paginating-large-ordered-datasets-with-cursor-based-pagination
+      pet_states.merge!(
+        PetType.created_before(before_pt_created_at).or(
+          PetType.created_at(before_pt_created_at).and(
+            PetState.created_before(before_ps_created_at)
+          )
+        )
+      )
+    end
+
+    pet_states.first
   end
 end
 

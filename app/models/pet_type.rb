@@ -31,6 +31,12 @@ class PetType < ApplicationRecord
     # We use DTI's creation timestamp as an estimate of when it was released.
     where('created_at <= ?', time)
   }
+  scope :created_before, ->(time) {
+    where(arel_table[:created_at].lt(time))
+  }
+  scope :created_at, ->(time) {
+    where(arel_table[:created_at].eq(time))
+  }
 
   def self.random_basic_per_species(species_ids)
     random_pet_types = []

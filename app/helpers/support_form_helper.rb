@@ -1,7 +1,8 @@
 module SupportFormHelper
 	class SupportFormBuilder < ActionView::Helpers::FormBuilder
 		attr_reader :template
-		delegate :capture, :check_box_tag, :content_tag, :params, :render,
+		delegate :capture, :check_box_tag, :concat, :content_tag,
+			:hidden_field_tag, :params, :render,
 			to: :template, private: true
 
 		def errors
@@ -40,8 +41,11 @@ module SupportFormHelper
 			content_tag(:section, class: "actions", &block)
 		end
 
-		def go_to_next_field(**options, &block)
-			content_tag(:label, class: "go-to-next", **options, &block)
+		def go_to_next_field(after: nil, **options, &block)
+			content_tag(:label, class: "go-to-next", **options) do
+				concat hidden_field_tag(:after, after) if after
+				yield
+			end
 		end
 
 		def go_to_next_check_box(value)
