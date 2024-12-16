@@ -5,21 +5,35 @@ namespace "neopets:import" do
 	task :rainbow_pool => ["neopets:import:neologin", :environment] do
 		puts "Importing from Rainbow Pool…"
 
+		all_species = Species.order(:name).to_a
 		all_pet_types = PetType.all.to_a
 		all_pet_types_by_species_id_and_color_id = all_pet_types.
 			to_h { |pt| [[pt.species_id, pt.color_id], pt] }
 		all_colors_by_name = Color.all.to_h { |c| [c.human_name.downcase, c] }
 
-		# TODO: Do these in parallel? I set up the HTTP requests to be able to
-		#       handle it, and just didn't set up the rest of the code for it, lol
-		Species.order(:name).each do |species|
-			begin
-				hashes_by_color_name = RainbowPool.load_hashes_for_species(
-					species.id, Neologin.cookie)
-			rescue => error
-				puts "Failed to load #{species.name} page, skipping: #{error.message}"
-				next
+		hashes_by_color_name_by_species_id = {}
+		DTIRequests.load_many(max_at_once: 10) do |task|
+			num_loaded = 0
+			num_total = all_species.size
+			print "0/#{num_total} species loaded"
+
+			all_species.each do |species|
+				task.async do
+					begin
+						hashes_by_color_name_by_species_id[species.id] =
+							RainbowPool.load_hashes_for_species(species.id, Neologin.cookie)
+					rescue => error
+						puts "Failed to load #{species.name} page, skipping: #{error.message}"
+					end
+					num_loaded += 1
+					print "\r#{num_loaded}/#{num_total} species loaded"
+				end
 			end
+		end
+
+		all_species.each do |species|
+			hashes_by_color_name = hashes_by_color_name_by_species_id[species.id]
+			next if hashes_by_color_name.nil?
 
 			changed_pet_types = []
 
