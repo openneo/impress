@@ -31,7 +31,7 @@ module Neopets::NCMall
 			]) do |response|
 				if response.status != 200
 					raise ResponseNotOK.new(response.status),
-						"expected status 200 but got #{response.status} (#{url})"
+						"expected status 200 but got #{response.status} (#{ROOT_DOCUMENT_URL})"
 				end
 
 				response.read

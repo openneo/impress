@@ -6,16 +6,14 @@ namespace "neopets:import" do
 		all_species = Species.order(:name).to_a
 
 		# Load 10 species pages from the NC Mall at a time.
-		barrier = Async::Barrier.new
-		semaphore = Async::Semaphore.new(10, parent: barrier)
 		styles_by_species_id = {}
-		Sync do
+		DTIRequests.load_many(max_at_once: 10) do |task|
 			num_loaded = 0
 			num_total = all_species.size
 			print "0/#{num_total} species loaded"
 
 			all_species.each do |species|
-				semaphore.async {
+				task.async {
 					begin
 						styles_by_species_id[species.id] = Neopets::NCMall.load_styles(
 							species_id: species.id,
@@ -28,11 +26,6 @@ namespace "neopets:import" do
 					print "\r#{num_loaded}/#{num_total} species loaded"
 				}
 			end
-
-			# Wait until all tasks are done.
-			barrier.wait
-		ensure
-			barrier.stop # If something goes wrong, clean up all tasks.
 		end
 		print "\n"
 

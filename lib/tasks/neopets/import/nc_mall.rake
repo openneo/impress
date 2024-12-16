@@ -85,15 +85,10 @@ def load_all_nc_mall_pages
 		links = Neopets::NCMall.load_page_links
 
 		# Next, load the linked pages, 10 at a time.
-		barrier = Async::Barrier.new
-		semaphore = Async::Semaphore.new(10, parent: barrier)
-		begin
-			linked_page_tasks = links.map do |link|
-				semaphore.async { Neopets::NCMall.load_page link[:type], link[:cat] }
+		linked_page_tasks = DTIRequests.load_many(max_at_once: 10) do |task|
+			links.map do |link|
+				task.async { Neopets::NCMall.load_page link[:type], link[:cat] }
 			end
-			barrier.wait # Load all the pages.
-		ensure
-			barrier.stop # If any pages failed, cancel the rest.
 		end
 
 		# Finally, return all the pages: the homepage, and the linked pages.
