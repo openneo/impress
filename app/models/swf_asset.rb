@@ -1,7 +1,4 @@
 require 'addressable/template'
-require 'async'
-require 'async/barrier'
-require 'async/semaphore'
 
 class SwfAsset < ApplicationRecord
   # We use the `type` column to mean something other than what Rails means!
@@ -335,19 +332,9 @@ class SwfAsset < ApplicationRecord
   # Given a list of SWF assets, ensure all of their manifests are loaded, with
   # fast concurrent execution!
   def self.preload_manifests(swf_assets)
-    # Blocks all tasks beneath it.
-    barrier = Async::Barrier.new
-
-    Sync do
-      # Only allow 10 manifests to be loaded at a time.
-      semaphore = Async::Semaphore.new(10, parent: barrier)
-
-      # Load all the manifests in async tasks. This will load them 10 at a time
-      # rather than all at once (because of the semaphore), and the
-      # NeopetsMediaArchive will share a pool of persistent connections for
-      # them.
-      swf_assets.map do |swf_asset|
-        semaphore.async do
+    DTIRequests.load_many(max_at_once: 10) do |task|
+      swf_assets.each do |swf_asset|
+        task.async do
           begin
             # Don't save changes in this big async situation; we'll do it all
             # in one batch after, to avoid too much database concurrency!
@@ -358,11 +345,6 @@ class SwfAsset < ApplicationRecord
           end
         end
       end
-
-      # Wait until all tasks are done.
-      barrier.wait
-    ensure
-      barrier.stop # If something goes wrong, clean up all tasks.
     end
 
     SwfAsset.transaction do
