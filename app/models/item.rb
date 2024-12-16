@@ -1,6 +1,3 @@
-require "async"
-require "async/barrier"
-
 class Item < ApplicationRecord
   include PrettyParam
   include Item::Dyeworks
@@ -671,21 +668,10 @@ class Item < ApplicationRecord
   end
 
   def self.preload_nc_trade_values(items)
-    # Only allow 10 trade values to be loaded at a time.
-    barrier = Async::Barrier.new
-    semaphore = Async::Semaphore.new(10, parent: barrier)
-
-    Sync do
+    DTIRequests.load_many(max_at_once: 10) do |task|
       # Load all the trade values in concurrent async tasks. (The
       # `nc_trade_value` caches the value in the Item object.)
-      items.each do |item|
-        semaphore.async { item.nc_trade_value }
-      end
-
-      # Wait until all tasks are done.
-      barrier.wait
-    ensure
-      barrier.stop # If something goes wrong, clean up all tasks.
+      items.each { |item| task.async { item.nc_trade_value } }
     end
 
     items
