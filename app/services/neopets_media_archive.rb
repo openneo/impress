@@ -1,5 +1,4 @@
 require "addressable/uri"
-require "async/http/internet/instance"
 require "json"
 
 # The Neopets Media Archive is a service that mirrors images.neopets.com files
@@ -11,10 +10,6 @@ require "json"
 # long-term archive, not dependent on their services having 100% uptime in
 # order for us to operate. We never discard old files, we just keep going!
 module NeopetsMediaArchive
-  # Share a pool of persistent connections, rather than reconnecting on
-  # each request. (This library does that automatically!)
-  INTERNET = Async::HTTP::Internet.instance
-
   ROOT_PATH = Pathname.new(Rails.configuration.neopets_media_archive_root)
 
   # Load the file from the given `images.neopets.com` URI.
@@ -72,9 +67,7 @@ module NeopetsMediaArchive
     # We use this in the `swf_assets:manifests:load` task to perform many
     # requests in parallel!
     Sync do
-      INTERNET.get(uri, [
-        ["User-Agent", Rails.configuration.user_agent_for_neopets],
-      ]) do |response|
+      DTIRequests.get(uri) do |response|
         if response.status != 200
           raise ResponseNotOK.new(response.status),
             "expected status 200 but got #{response.status} (#{uri})"

@@ -1,11 +1,6 @@
 require "addressable/template"
-require "async/http/internet/instance"
 
 module Neopets::NCMall
-	# Share a pool of persistent connections, rather than reconnecting on
-	# each request. (This library does that automatically!)
-	INTERNET = Async::HTTP::Internet.instance
-
 	# Load the NC Mall home page content area, and return its useful data.
 	HOME_PAGE_URL = "https://ncmall.neopets.com/mall/ajax/home_page.phtml"
 	def self.load_home_page
@@ -26,9 +21,7 @@ module Neopets::NCMall
 	PAGE_LINK_PATTERN = /load_items_pane\(['"](.+?)['"], ([0-9]+)\).+?>(.+?)</
 	def self.load_page_links
 		html = Sync do
-			INTERNET.get(ROOT_DOCUMENT_URL, [
-				["User-Agent", Rails.configuration.user_agent_for_neopets],
-			]) do |response|
+			DTIRequests.get(ROOT_DOCUMENT_URL) do |response|
 				if response.status != 200
 					raise ResponseNotOK.new(response.status),
 						"expected status 200 but got #{response.status} (#{ROOT_DOCUMENT_URL})"
@@ -48,15 +41,14 @@ module Neopets::NCMall
 	STYLING_STUDIO_URL = "https://www.neopets.com/np-templates/ajax/stylingstudio/studio.php"
 	def self.load_styles(species_id:, neologin:)
 		Sync do
-			INTERNET.post(
+			DTIRequests.post(
 				STYLING_STUDIO_URL,
-				headers: [
-					["User-Agent", Rails.configuration.user_agent_for_neopets],
+				[
 					["Content-Type", "application/x-www-form-urlencoded"],
 					["Cookie", "neologin=#{neologin}"],
 					["X-Requested-With", "XMLHttpRequest"],
 				],
-				body: {tab: 1, mode: "getStyles", species: species_id}.to_query,
+				{tab: 1, mode: "getStyles", species: species_id}.to_query,
 			) do |response|
 				if response.status != 200
 					raise ResponseNotOK.new(response.status),
@@ -80,9 +72,7 @@ module Neopets::NCMall
 
 	def self.load_page_by_url(url)
 		Sync do
-			INTERNET.get(url, [
-				["User-Agent", Rails.configuration.user_agent_for_neopets],
-			]) do |response|
+			DTIRequests.get(url) do |response|
 				if response.status != 200
 					raise ResponseNotOK.new(response.status),
 						"expected status 200 but got #{response.status} (#{url})"

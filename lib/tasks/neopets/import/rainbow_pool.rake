@@ -1,5 +1,4 @@
 require "addressable/template"
-require "async/http/internet/instance"
 
 namespace "neopets:import" do
 	desc "Import all basic image hashes from the Rainbow Pool, onto PetTypes"
@@ -60,10 +59,6 @@ namespace "neopets:import" do
 end
 
 module RainbowPool
-	# Share a pool of persistent connections, rather than reconnecting on
-	# each request. (This library does that automatically!)
-	INTERNET = Async::HTTP::Internet.instance
-
 	class << self
 		SPECIES_PAGE_URL_TEMPLATE = Addressable::Template.new(
 			"https://www.neopets.com/pool/all_pb.phtml{?f_species_id}"
@@ -71,10 +66,10 @@ module RainbowPool
 		def load_hashes_for_species(species_id, neologin)
 			Sync do
 				url = SPECIES_PAGE_URL_TEMPLATE.expand(f_species_id: species_id)
-				INTERNET.get(url, [
-					["User-Agent", Rails.configuration.user_agent_for_neopets],
-					["Cookie", "neologin=#{neologin}"],
-				]) do |response|
+				DTIRequests.get(
+					url,
+					[["Cookie", "neologin=#{neologin}"]],
+				) do |response|
 					if response.status != 200
 						raise "expected status 200 but got #{response.status} (#{url})"
 					end

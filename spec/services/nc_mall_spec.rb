@@ -9,7 +9,8 @@ RSpec.describe Neopets::NCMall, type: :model do
 					headers: {
 						"Content-Type": "application/x-www-form-urlencoded",
 						"X-Requested-With": "XMLHttpRequest",
-						"Cookie": "neologin=STUB_NEOLOGIN"
+						"Cookie": "neologin=STUB_NEOLOGIN",
+						"User-Agent": Rails.configuration.user_agent_for_neopets,
 					},
 					body: "mode=getStyles&species=2&tab=1",
 				)

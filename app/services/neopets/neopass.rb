@@ -1,12 +1,6 @@
-require "async/http/internet/instance"
-
 # While most of our NeoPass logic is built into Devise -> OmniAuth -> OIDC
 # OmniAuth plugin, NeoPass also offers some supplemental APIs that we use here.
 module Neopets::NeoPass
-	# Share a pool of persistent connections, rather than reconnecting on
-	# each request. (This library does that automatically!)
-	INTERNET = Async::HTTP::Internet.instance
-
 	def self.load_main_neopets_username(access_token)
 		linkages = load_linkages(access_token)
 
@@ -32,10 +26,10 @@ module Neopets::NeoPass
 	LINKAGE_URL = "https://oidc.neopets.com/linkage/all"
 	def self.load_linkages(access_token)
 		linkages_str = Sync do
-			INTERNET.get(LINKAGE_URL, [
-				["User-Agent", Rails.configuration.user_agent_for_neopets],
-				["Authorization", "Bearer #{access_token}"],
-			]) do |response|
+			DTIRequests.get(
+				LINKAGE_URL,
+				[["Authorization", "Bearer #{access_token}"]],
+			) do |response|
 				if response.status != 200
 					raise ResponseNotOK.new(response.status),
 						"expected status 200 but got #{response.status} (#{LINKAGE_URL})"
