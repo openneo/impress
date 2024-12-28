@@ -38,8 +38,20 @@ module Neopets::NCMall
 			uniq
 	end
 
-	STYLING_STUDIO_URL = "https://www.neopets.com/np-templates/ajax/stylingstudio/studio.php"
 	def self.load_styles(species_id:, neologin:)
+		Sync do
+			tabs = [
+				Async { load_styles_tab(species_id:, neologin:, tab: 1) },
+				Async { load_styles_tab(species_id:, neologin:, tab: 2) },
+			]
+			tabs.map(&:wait).flatten(1)
+		end
+	end
+
+	private
+
+	STYLING_STUDIO_URL = "https://www.neopets.com/np-templates/ajax/stylingstudio/studio.php"
+	def self.load_styles_tab(species_id:, neologin:, tab:)
 		Sync do
 			DTIRequests.post(
 				STYLING_STUDIO_URL,
@@ -48,7 +60,7 @@ module Neopets::NCMall
 					["Cookie", "neologin=#{neologin}"],
 					["X-Requested-With", "XMLHttpRequest"],
 				],
-				{tab: 1, mode: "getStyles", species: species_id}.to_query,
+				{tab:, mode: "getStyles", species: species_id}.to_query,
 			) do |response|
 				if response.status != 200
 					raise ResponseNotOK.new(response.status),
@@ -60,15 +72,14 @@ module Neopets::NCMall
 
 					# HACK: styles is a hash, unless it's empty, in which case it's an
 					#       array? Weird. Normalize this by converting to hash.
-					data.fetch(:styles).to_h.values
+					data.fetch(:styles).to_h.values.
+						map { |s| s.slice(:oii, :name, :image, :limited) }
 				rescue JSON::ParserError, KeyError
 					raise UnexpectedResponseFormat
 				end
 			end
 		end
 	end
-
-	private
 
 	def self.load_page_by_url(url)
 		Sync do
