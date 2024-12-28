@@ -42,7 +42,7 @@ namespace "neopets:import" do
 				record = style_records_by_id[style[:oii]]
 				label = "#{style[:name]} (#{style[:oii]})"
 				if record.nil?
-					puts "⚠️  [#{label}]: Not modeled yet, skipping"
+					puts "❔  [#{label}]: Not modeled yet, skipping"
 					counts[:skipped] += 1
 					next
 				end
