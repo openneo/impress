@@ -101,6 +101,18 @@ class AltStyle < ApplicationRecord
     "<New?>"
   end
 
+  def self.all_series_names
+    distinct.where.not(series_name: nil).pluck(:series_name).sort
+  end
+
+  def self.all_supported_colors
+    Color.find(distinct.pluck(:color_id))
+  end
+
+  def self.all_supported_species
+    Species.find(distinct.pluck(:species_id))
+  end
+
   # For convenience in the console!
   def self.find_by_name(color_name, species_name)
     color = Color.find_by_name(color_name)
