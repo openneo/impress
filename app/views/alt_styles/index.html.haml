@@ -34,11 +34,12 @@
 		           selected: @species&.human_name, include_blank: "Species…"
 		= f.submit "Go", name: nil
 
-= will_paginate @alt_styles, class: "rainbow-pool-pagination"
-
-%ul.rainbow-pool-list= render @alt_styles
-
-= will_paginate @alt_styles, class: "rainbow-pool-pagination"
+- if @alt_styles.present?
+	= will_paginate @alt_styles, class: "rainbow-pool-pagination"
+	%ul.rainbow-pool-list= render @alt_styles
+	= will_paginate @alt_styles, class: "rainbow-pool-pagination"
+- else
+	%p.rainbow-pool-no-results We don't have any styles matching that search.
 
 - content_for :stylesheets do
 	= stylesheet_link_tag "application/breadcrumbs"

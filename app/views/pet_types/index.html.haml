@@ -34,7 +34,7 @@
 	%ui.rainbow-pool-list= render @pet_types
 	= will_paginate @pet_types, class: "rainbow-pool-pagination"
 - else
-	%p.rainbow-pool-no-results No matching pets found!
+	%p.rainbow-pool-no-results We don't have any pets matching that search.
 
 - content_for :stylesheets do
 	= stylesheet_link_tag "application/rainbow-pool"
