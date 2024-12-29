@@ -1,4 +1,6 @@
 class MagicMagnifier extends HTMLElement {
+	#internals = this.attachInternals();
+
 	connectedCallback() {
 		setTimeout(() => this.#attachLens(), 0);
 		this.addEventListener("mousemove", this.#onMouseMove);
@@ -18,6 +20,7 @@ class MagicMagnifier extends HTMLElement {
 		const y = e.clientY - rect.top;
 		this.style.setProperty("--magic-magnifier-x", x + "px");
 		this.style.setProperty("--magic-magnifier-y", y + "px");
+		this.#internals.states.add("ready");
 	}
 }
 

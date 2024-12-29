@@ -7,10 +7,11 @@ magic-magnifier
 	magic-magnifier-lens
 		display: none
 
-	&:hover
-		@container style(--magic-magnifier-x) and style(--magic-magnifier-y)
-			magic-magnifier-lens
-				display: block
+	// TODO: Once container query support is broader, we can remove the CSS state
+	//       and read for the presence of the X and Y custom properties instead.
+	&:hover:state(ready)
+		magic-magnifier-lens
+			display: block
 
 magic-magnifier-lens
 	width: var(--magic-magnifier-lens-width, 100px)
