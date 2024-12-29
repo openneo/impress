@@ -55,13 +55,18 @@ namespace "neopets:import" do
 						"#{record.thumbnail_url.inspect} -> #{style[:image].inspect}"
 				end
 
-				new_series_name = style[:name].match(/\A\S+/)[0] # first word
-				if !record.real_series_name?
-					record.series_name = new_series_name
-					puts "✅ [#{label}]: Series name is now #{new_series_name.inspect}"
-				elsif record.series_name != new_series_name
-					puts "⚠️  [#{label}: Series name may have changed, handle manually? " +
-						"#{record.series_name.inspect} -> #{new_series_name.inspect}"
+				if style[:name].end_with?(record.pet_name)
+					new_series_name = style[:name].split(record.pet_name).first.strip
+					if !record.real_series_name?
+						record.series_name = new_series_name
+						puts "✅ [#{label}]: Series name is now #{new_series_name.inspect}"
+					elsif record.series_name != new_series_name
+						puts "⚠️  [#{label}: Series name may have changed, handle manually? " +
+							"#{record.series_name.inspect} -> #{new_series_name.inspect}"
+					end
+				else
+					puts "⚠️  [#{label}: Unable to detect series name, handle manually? " +
+							"#{record.full_name.inspect} -> #{style[:name].inspect}"
 				end
 
 				if record.changed?
