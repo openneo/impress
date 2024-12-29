@@ -61,11 +61,17 @@ namespace "neopets:import" do
 						record.series_name = new_series_name
 						puts "✅ [#{label}]: Series name is now #{new_series_name.inspect}"
 					elsif record.series_name != new_series_name
-						puts "⚠️  [#{label}: Series name may have changed, handle manually? " +
-							"#{record.series_name.inspect} -> #{new_series_name.inspect}"
+						if ENV['FORCE'] == '1'
+							puts "❗  [#{label}]: Series name forcibly changed: " +
+								"#{record.series_name.inspect} -> #{new_series_name.inspect}"
+							record.series_name = new_series_name
+						else
+							puts "⚠️  [#{label}]: Series name may have changed, handle manually? " +
+								"#{record.series_name.inspect} -> #{new_series_name.inspect}"
+						end
 					end
 				else
-					puts "⚠️  [#{label}: Unable to detect series name, handle manually? " +
+					puts "⚠️  [#{label}]: Unable to detect series name, handle manually? " +
 							"#{record.full_name.inspect} -> #{style[:name].inspect}"
 				end
 
