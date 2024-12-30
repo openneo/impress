@@ -20,7 +20,11 @@ class AltStyle < ApplicationRecord
     where(series_name:, color_id: color.id, species_id: species.id)
   }
   scope :by_creation_date, -> {
-    order("DATE(created_at) DESC")
+    # HACK: Setting up named time zones in MySQL takes effort, so we assume
+    #       it's not Daylight Savings. This will produce slightly incorrect
+    #       sorting when it *is* Daylight Savings, and records happen to be
+    #       created around midnight.
+    order(Arel.sql("DATE(CONVERT_TZ(created_at, '+00:00', '-08:00')) DESC"))
   }
   scope :unlabeled, -> { where(series_name: nil) }
   scope :newest, -> { order(created_at: :desc) }
