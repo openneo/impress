@@ -64,17 +64,17 @@
     .item-zones-info
       %section
         %h3 Occupies
-        - if @appearances_by_occupied_zone.present?
+        - if @appearances_by_occupied_zone_label.present?
           %ul
-            - @appearances_by_occupied_zone.each do |zone, appearances_in_zone|
+            - @appearances_by_occupied_zone_label.each do |label, appearances|
               %li<
-                = zone.label
-                - if item_zone_partial_fit? appearances_in_zone, @all_appearances
+                = label
+                - if item_zone_partial_fit? appearances, @all_appearances
                   = " "
                   %span.zone-species-info{
-                    title: item_zone_species_list(appearances_in_zone)
+                    title: item_zone_species_list(appearances)
                   }<
-                    (#{appearances_in_zone.size} species)
+                    (#{appearances.size} species)
         - else
           %span.no-zones (None)
 

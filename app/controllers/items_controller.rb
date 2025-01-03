@@ -98,8 +98,9 @@ class ItemsController < ApplicationController
         @preview_error = validate_preview
 
         @all_appearances = @item.appearances
-        @appearances_by_occupied_zone = @item.appearances_by_occupied_zone.
-          sort_by { |z, a| z.label }
+        @appearances_by_occupied_zone_label =
+          @item.appearances_by_occupied_zone.
+          transform_keys(&:label).sort_by { |l, a| l }
         @selected_item_appearance = @preview_outfit.item_appearances.first
 
         @preview_pet_type_options = PetType.where(color: @preview_outfit.color).
