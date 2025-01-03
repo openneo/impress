@@ -1,5 +1,4 @@
 @import "../partials/clean/constants"
-@import "../partials/context_button"
 
 support-outfit-viewer
 	display: flex
@@ -39,8 +38,16 @@ support-outfit-viewer
 			input[type=radio]
 				margin: 0
 
-		[type=submit]
-			+context-button
+	.outfit-viewer-area
+		> [data-format=png]
+			display: none
+
+	&:has(input[value=png]:checked)
+		.outfit-viewer-area
+			> [data-format=svg]
+				display: none
+			> [data-format=png]
+				display: block
 
 	> table
 		flex: 0 0 auto
