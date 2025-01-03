@@ -592,20 +592,17 @@ class Item < ApplicationRecord
     Item.appearances_for([self], target, ...)[id]
   end
 
-  def appearances_by_occupied_zone_id
+  def appearances_by_occupied_zone_label
+    zones_by_id = occupied_zones.to_h { |z| [z.id, z] }
     {}.tap do |h|
       appearances.each do |appearance|
         appearance.occupied_zone_ids.each do |zone_id|
-          h[zone_id] ||= []
-          h[zone_id] << appearance
+          zone_label = zones_by_id[zone_id].label
+          h[zone_label] ||= []
+          h[zone_label] << appearance
         end
       end
     end
-  end
-
-  def appearances_by_occupied_zone
-    zones_by_id = occupied_zones.to_h { |z| [z.id, z] }
-    appearances_by_occupied_zone_id.transform_keys { |zid| zones_by_id[zid] }
   end
 
   # Given a list of items, return how they look on the given target (either a

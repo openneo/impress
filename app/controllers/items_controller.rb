@@ -99,8 +99,7 @@ class ItemsController < ApplicationController
 
         @all_appearances = @item.appearances
         @appearances_by_occupied_zone_label =
-          @item.appearances_by_occupied_zone.
-          transform_keys(&:label).sort_by { |l, a| l }
+          @item.appearances_by_occupied_zone_label.sort_by { |l, a| l }
         @selected_item_appearance = @preview_outfit.item_appearances.first
 
         @preview_pet_type_options = PetType.where(color: @preview_outfit.color).
