@@ -25,6 +25,10 @@ let numFramesSinceLastLog = 0;
 // State for error reporting.
 let hasLoggedRenderError = false;
 
+////////////////////////////////////////////////////
+//////// Loading the library and its assets ////////
+////////////////////////////////////////////////////
+
 function loadImage(src) {
 	const image = new Image();
 	image.crossOrigin = "anonymous";
@@ -64,8 +68,8 @@ async function getLibrary() {
 	// One more loading step as part of loading this library is loading the
 	// images it uses for sprites.
 	//
-	// TODO: I guess the manifest has these too, so we could put them in preload
-	// meta tags to get them here faster?
+	// NOTE: We also read these from the manifest, and include them in the
+	//       document as preload meta tags, to get them moving faster.
 	const librarySrcDir = libraryUrl.split("/").slice(0, -1).join("/");
 	const manifestImages = new Map(
 		library.properties.manifest.map(({ id, src }) => [
@@ -95,6 +99,10 @@ async function getLibrary() {
 
 	return library;
 }
+
+/////////////////////////////////////
+//////// Rendering the movie ////////
+/////////////////////////////////////
 
 function buildMovieClip(library) {
 	let constructorName;
@@ -150,6 +158,22 @@ function updateCanvasDimensions() {
 	movieClip.scaleX = internalWidth / library.properties.width;
 	movieClip.scaleY = internalHeight / library.properties.height;
 }
+
+window.addEventListener("resize", () => {
+	updateCanvasDimensions();
+
+	// Redraw the stage with the new dimensions - but with `tickOnUpdate` set
+	// to `false`, so that we don't advance by a frame. This keeps us
+	// really-paused if we're paused, and avoids skipping ahead by a frame if
+	// we're playing.
+	stage.tickOnUpdate = false;
+	updateStage();
+	stage.tickOnUpdate = true;
+});
+
+////////////////////////////////////////////////////
+//// Monitoring and controlling animation state ////
+////////////////////////////////////////////////////
 
 async function startMovie() {
 	// Load the movie's library (from the JS file already run), and use it to
@@ -274,6 +298,10 @@ function getInitialPlayingStatus() {
 	}
 }
 
+//////////////////////////////////////////
+//// Syncing with the parent document ////
+//////////////////////////////////////////
+
 /**
  * Recursively scans the given MovieClip (or child createjs node), to see if
  * there are any animated areas.
@@ -312,18 +340,6 @@ function sendMessage(message) {
 	parent.postMessage(message, document.location.origin);
 }
 
-window.addEventListener("resize", () => {
-	updateCanvasDimensions();
-
-	// Redraw the stage with the new dimensions - but with `tickOnUpdate` set
-	// to `false`, so that we don't advance by a frame. This keeps us
-	// really-paused if we're paused, and avoids skipping ahead by a frame if
-	// we're playing.
-	stage.tickOnUpdate = false;
-	updateStage();
-	stage.tickOnUpdate = true;
-});
-
 window.addEventListener("message", ({ data }) => {
 	// NOTE: For more sensitive messages, it's important for security to also
 	// check the `origin` property of the incoming event. But in this case, I'm
@@ -338,6 +354,10 @@ window.addEventListener("message", ({ data }) => {
 		throw new Error(`unexpected message: ${JSON.stringify(data)}`);
 	}
 });
+
+/////////////////////////////////
+//// The actual entry point! ////
+/////////////////////////////////
 
 startMovie()
 	.then(() => {
