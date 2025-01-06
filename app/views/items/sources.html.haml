@@ -169,7 +169,7 @@
 								alt: "Item thumbnail for #{color.pb_item_name}"
 						- elsif color
 							= image_tag pet_type_image_url(@pb_color_pet_types[color], size: :face),
-								srcset: ["#{pet_type_image_url(@pb_color_pet_types[color], size: :face_2x)} 2x"],
+								srcset: ["#{pet_type_image_url(@pb_color_pet_types[color], size: :face_3x)} 2x"],
 								alt: @pb_color_pet_types[color].human_name
 						- else
 							= image_tag "https://images.neopets.com/items/starter_red_pb.gif",
