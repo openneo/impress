@@ -1,3 +1,13 @@
+@import "../partials/clean/constants"
+
+// Prefer to break the name at certain points.
 .rainbow-pool-list
 	.name span
 		display: inline-block
+
+// De-emphasize Prismatic styles, in browsers that support it.
+.rainbow-pool-filters
+	select[name="series"]
+		option[value*=": "]
+			color: $soft-text-color
+			font-style: italic

@@ -106,7 +106,9 @@ class AltStyle < ApplicationRecord
   end
 
   def self.all_series_names
-    distinct.where.not(series_name: nil).pluck(:series_name).sort
+    # Sort by the part *after* the colon, then before (if any).
+    distinct.where.not(series_name: nil).pluck(:series_name).
+      sort_by { |series_name| series_name.split(': ', 2).reverse }
   end
 
   def self.all_supported_colors
