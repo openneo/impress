@@ -283,7 +283,7 @@ const PosePickerButton = React.forwardRef(
 		const theme = useTheme();
 
 		const icon = altStyle != null ? twemojiSunglasses : getIcon(pose);
-		const label = altStyle != null ? altStyle.seriesName : getLabel(pose);
+		const label = altStyle != null ? altStyle.seriesMainName : getLabel(pose);
 
 		return (
 			<ClassNames>

@@ -76,6 +76,14 @@ class AltStyle < ApplicationRecord
     real_series_name.present?
   end
 
+  def series_main_name
+    series_name.split(': ').last
+  end
+
+  def series_variant_name
+    series_name.split(': ').first
+  end
+
   def adjective_name
     "#{series_name} #{color.human_name}"
   end

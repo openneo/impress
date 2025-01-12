@@ -49,7 +49,7 @@ function normalizeAltStyle(altStyleData) {
 		speciesId: String(altStyleData.species_id),
 		colorId: String(altStyleData.color_id),
 		bodyId: String(altStyleData.body_id),
-		seriesName: altStyleData.series_name,
+		seriesMainName: altStyleData.series_main_name,
 		adjectiveName: altStyleData.adjective_name,
 		thumbnailUrl: altStyleData.thumbnail_url,
 
