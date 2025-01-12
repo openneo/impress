@@ -723,6 +723,13 @@ function StyleOption({ altStyle, checked, onChange, inputRef }) {
 						checked={checked}
 						onChange={(e) => onChange(altStyle.id)}
 						ref={inputRef}
+						// HACK: Without this, the page extends super long. I think this is
+						//       because the VisuallyHidden just uses `position: absolute`,
+						//       which makes it float invisibly *beyond* the scrolling
+						//       container it's in, extending the page? But if we put it at
+						//       the top-left corner instead, it doesn't.
+						left="0"
+						top="0"
 					/>
 					<Flex
 						alignItems="center"
