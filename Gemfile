@@ -6,6 +6,9 @@ gem 'rails', '~> 8.0', '>= 8.0.1'
 # The HTTP server running the Rails instance.
 gem 'falcon', '~> 0.48.0'
 
+# HACK: Workaround for https://github.com/socketry/protocol-rack/issues/20
+gem 'protocol-rack', '~> 0.10.0', '< 0.11.0'
+
 # Our database is MySQL, in both development and production.
 gem 'mysql2', '~> 0.5.5'
 
