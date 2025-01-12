@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '3.3.6'
 
-gem 'rails', '~> 7.2', '>= 7.2.1'
+gem 'rails', '~> 8.0', '>= 8.0.1'
 
 # The HTTP server running the Rails instance.
 gem 'falcon', '~> 0.48.0'
@@ -33,7 +33,7 @@ gem "omniauth_openid_connect", "~> 0.7.1"
 gem 'will_paginate', '~> 4.0'
 
 # For translation, both for the site UI and for Neopets data.
-gem 'rails-i18n', '~> 7.0', '>= 7.0.7'
+gem 'rails-i18n', '~> 8.0', '>= 8.0.1'
 gem 'http_accept_language', '~> 2.1', '>= 2.1.1'
 
 # For reading and parsing HTML from Neopets.com, like importing Closet pages.
