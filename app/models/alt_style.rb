@@ -26,6 +26,24 @@ class AltStyle < ApplicationRecord
     #       created around midnight.
     order(Arel.sql("DATE(CONVERT_TZ(created_at, '+00:00', '-08:00')) DESC"))
   }
+  scope :by_series_main_name, -> {
+    # The main part of the series name, like "Nostalgic".
+    order(Arel.sql("SUBSTRING_INDEX(series_name, ': ', -1)"))
+  }
+  scope :by_series_variant_name, -> {
+    # The variant part of the series name, like "Prismatic Cyan".
+    order(Arel.sql("SUBSTRING_INDEX(series_name, ': ', 1)"))
+  }
+  scope :by_color_name, -> {
+    joins(:color).order(Color.arel_table[:name])
+  }
+  scope :by_name_grouped, -> {
+    # Sort by the color name, then the main part of the series name, then the
+    # variant part of the series name. This way, all the, say, Christmas colors
+    # and their Prismatic variants will be together, including both Festive and
+    # Nostalgic cases.
+    by_color_name.by_series_main_name.by_series_variant_name
+  }
   scope :unlabeled, -> { where(series_name: nil) }
   scope :newest, -> { order(created_at: :desc) }
 
@@ -106,9 +124,9 @@ class AltStyle < ApplicationRecord
   end
 
   def self.all_series_names
-    # Sort by the part *after* the colon, then before (if any).
-    distinct.where.not(series_name: nil).pluck(:series_name).
-      sort_by { |series_name| series_name.split(': ', 2).reverse }
+    distinct.where.not(series_name: nil).
+      by_series_main_name.by_series_variant_name.
+      pluck(:series_name)
   end
 
   def self.all_supported_colors

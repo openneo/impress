@@ -27,8 +27,7 @@ class AltStylesController < ApplicationController
 				render
 			}
 			format.json {
-				@alt_styles = @alt_styles.includes(swf_assets: [:zone]).
-					sort_by(&:full_name)
+				@alt_styles = @alt_styles.includes(swf_assets: [:zone]).by_name_grouped
 				render json: @alt_styles.as_json(
 					only: [:id, :species_id, :color_id, :body_id, :series_name,
 								 :adjective_name, :thumbnail_url],
