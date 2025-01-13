@@ -98,5 +98,7 @@ end
 # For automated tests.
 group :development, :test do
 	gem "rspec-rails", "~> 7.0"
-	gem "webmock", "~> 3.24", group: :test
+end
+group :test do
+	gem "webmock", "~> 3.24"
 end
