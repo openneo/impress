@@ -65,7 +65,7 @@ gem "addressable", "~> 2.8"
 
 # For advanced batching of many HTTP requests.
 gem "async", "~> 2.17", require: false
-gem "async-http", "~> 0.75.0", require: false
+gem "async-http", "~> 0.86.0", require: false
 gem "thread-local", "~> 1.1", require: false
 
 # For debugging.
