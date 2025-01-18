@@ -136,14 +136,15 @@ module Neopets::NCMall
 	end
 
 	# Given item info, return a hash of discount-specific info, if any.
+	NST = Time.find_zone("Pacific Time (US & Canada)")
 	def self.parse_item_discount(item_info)
 		discount_price = item_info["discountPrice"]
 		return nil unless discount_price.present? && discount_price > 0
 
 		{
 			price: discount_price,
-			begins_at: item_info["discountBegin"],
-			ends_at: item_info["discountEnd"],
+			begins_at: NST.at(item_info["discountBegin"]),
+			ends_at: NST.at(item_info["discountEnd"]),
 		}
 	end
 
