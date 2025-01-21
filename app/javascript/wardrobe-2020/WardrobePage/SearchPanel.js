@@ -1,10 +1,18 @@
 import React from "react";
-import { Box, Text, useColorModeValue, VisuallyHidden } from "@chakra-ui/react";
+import {
+	Alert,
+	AlertIcon,
+	Box,
+	Text,
+	useColorModeValue,
+	VisuallyHidden,
+} from "@chakra-ui/react";
 
 import Item, { ItemListContainer, ItemListSkeleton } from "./Item";
 import PaginationToolbar from "../components/PaginationToolbar";
 import { useSearchResults } from "./useSearchResults";
 import { MajorErrorMessage } from "../util";
+import { useAltStylesForSpecies } from "../loaders/alt-styles";
 
 export const SEARCH_PER_PAGE = 30;
 
@@ -161,6 +169,7 @@ function SearchResults({
 					size="sm"
 				/>
 			</Box>
+			<SearchNCStylesHint query={query} outfitState={outfitState} />
 			<ItemListContainer paddingX="4" paddingBottom="2">
 				{items.map((item, index) => (
 					<SearchResultItem
@@ -260,6 +269,54 @@ function SearchResultItem({
 			/>
 		</label>
 	);
+}
+
+function SearchNCStylesHint({ query, outfitState }) {
+	const { data: altStyles } = useAltStylesForSpecies(outfitState.speciesId);
+
+	const message = getSearchNCStylesMessage(query, altStyles);
+	if (!message) {
+		return null;
+	}
+
+	return (
+		<Box paddingX="4" paddingY="2">
+			<Alert status="info" variant="left-accent" fontSize="sm" color="blue.900">
+				<AlertIcon />
+				{message}
+			</Alert>
+		</Box>
+	);
+}
+
+function getSearchNCStylesMessage(query, altStyles) {
+	const seriesMainNames = [
+		...new Set((altStyles ?? []).map((as) => as.seriesMainName)),
+	];
+	const queryWords = query.value.toLowerCase().split(/\s+/);
+
+	if (queryWords.includes("token")) {
+		return (
+			<>
+				If you're looking for NC Styles, check the emotion picker below the pet
+				preview!
+			</>
+		);
+	}
+
+	// NOTE: This won't work on multi-word series names, of which there are
+	//       currently none.
+	const seriesWord = seriesMainNames.find((n) =>
+		queryWords.includes(n.toLowerCase()),
+	);
+	if (seriesWord != null) {
+		return (
+			<>
+				If you're looking for NC Styles, check the emotion picker below the pet
+				preview!
+			</>
+		);
+	}
 }
 
 /**
