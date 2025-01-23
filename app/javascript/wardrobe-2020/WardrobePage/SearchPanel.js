@@ -304,16 +304,17 @@ function getSearchNCStylesMessage(query, altStyles) {
 		);
 	}
 
-	// NOTE: This won't work on multi-word series names, of which there are
-	//       currently none.
+	// NOTE: This won't work on multi-word series main names, of which there
+	//       are currently none. (Some *series names* like Prismatics are
+	//       multi-word, but their *main* name is not.)
 	const seriesWord = seriesMainNames.find((n) =>
 		queryWords.includes(n.toLowerCase()),
 	);
 	if (seriesWord != null) {
 		return (
 			<>
-				If you're looking for NC Styles, check the emotion picker below the pet
-				preview!
+				If you're looking for {seriesWord} NC Styles, check the emotion picker
+				below the pet preview!
 			</>
 		);
 	}
