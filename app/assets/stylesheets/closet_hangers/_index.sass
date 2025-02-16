@@ -31,7 +31,7 @@ body.closet_hangers-index
     color: $soft-text-color
     margin-bottom: 1em
     margin-left: 2em
-    min-height: image-height("neomail.png")
+    min-height: $icon-height
 
     a
       color: inherit
@@ -44,13 +44,14 @@ body.closet_hangers-index
       background:
         position: left center
         repeat: no-repeat
-      padding-left: image-width("neomail.png") + 4px
 
     a.neomail, > form
       background-image: image-url("neomail.png")
+      padding-left: $icon-width + 4px
 
     a.lookup
       background-image: image-url("lookup.png")
+      padding-left: $icon-width + 4px
 
     select
       width: 10em
