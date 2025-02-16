@@ -47,6 +47,14 @@ namespace "neopets:import" do
 					next
 				end
 
+				if !record.real_full_name?
+					record.full_name = style[:name]
+					puts "✅ [#{label}]: Full name is now #{style[:name].inspect}"
+				elsif record.full_name != style[:name]
+					puts "⚠️  [#{label}: Full name may have changed, handle manually? " +
+						"#{record.full_name.inspect} -> #{style[:name].inspect}"
+				end
+
 				if !record.real_thumbnail_url?
 					record.thumbnail_url = style[:image]
 					puts "✅ [#{label}]: Thumbnail URL is now #{style[:image].inspect}"
@@ -72,7 +80,7 @@ namespace "neopets:import" do
 					end
 				else
 					puts "⚠️  [#{label}]: Unable to detect series name, handle manually? " +
-							"#{record.full_name.inspect} -> #{style[:name].inspect}"
+							"#{record.pet_name.inspect} <-> #{style[:name].inspect}"
 				end
 
 				if record.changed?

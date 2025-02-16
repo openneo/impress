@@ -283,7 +283,10 @@ const PosePickerButton = React.forwardRef(
 		const theme = useTheme();
 
 		const icon = altStyle != null ? twemojiSunglasses : getIcon(pose);
-		const label = altStyle != null ? altStyle.seriesMainName : getLabel(pose);
+		const label =
+			altStyle != null
+				? altStyle.seriesMainName.split(/\s+/)[0]
+				: getLabel(pose);
 
 		return (
 			<ClassNames>
@@ -336,9 +339,9 @@ const PosePickerButton = React.forwardRef(
 						ref={ref}
 					>
 						<EmojiImage src={icon} alt="Style" />
-						<Box width=".5em" />
-						{label}
-						<Box width=".5em" />
+						<Box overflow="hidden" textOverflow="ellipsis" marginX=".5em">
+							{label}
+						</Box>
 						<ChevronDownIcon />
 					</Button>
 				)}

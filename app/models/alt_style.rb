@@ -9,10 +9,14 @@ class AltStyle < ApplicationRecord
   has_many :contributions, as: :contributed, inverse_of: :contributed
 
   validates :body_id, presence: true
+  validates :full_name, presence: true, allow_nil: true
   validates :series_name, presence: true, allow_nil: true
   validates :thumbnail_url, presence: true
 
   before_validation :infer_thumbnail_url, unless: :thumbnail_url?
+
+  fallback_for(:full_name) { "#{series_name} #{pet_name}" }
+  fallback_for(:series_name) { AltStyle.placeholder_name }
 
   scope :matching_name, ->(series_name, color_name, species_name) {
     color = Color.find_by_name!(color_name)
@@ -54,28 +58,6 @@ class AltStyle < ApplicationRecord
 
   alias_method :name, :pet_name
 
-  # If the series_name hasn't yet been set manually by support staff, show the
-  # string "<New?>" instead. But it won't be searchable by that string—that is,
-  # `fits:<New?>-faerie-draik` intentionally will not work, and the canonical
-  # filter name will be `fits:alt-style-IDNUMBER`, instead.
-  def series_name
-    real_series_name || AltStyle.placeholder_name
-  end
-
-  def real_series_name=(new_series_name)
-    self[:series_name] = new_series_name
-  end
-
-  def real_series_name
-    self[:series_name]
-  end
-
-  # You can use this to check whether `series_name` is returning the actual
-  # value or its placeholder value.
-  def real_series_name?
-    real_series_name.present?
-  end
-
   def series_main_name
     series_name.split(': ').last
   end
@@ -84,12 +66,9 @@ class AltStyle < ApplicationRecord
     series_name.split(': ').first
   end
 
+  # Returns the full name, with the species removed from the end (if present).
   def adjective_name
-    "#{series_name} #{color.human_name}"
-  end
-
-  def full_name
-    "#{series_name} #{name}"
+    full_name.sub(/\s+#{Regexp.escape(species.name)}\Z/i, "")
   end
 
   EMPTY_IMAGE_URL = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="

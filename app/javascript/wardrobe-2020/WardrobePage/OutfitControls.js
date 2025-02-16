@@ -233,7 +233,7 @@ function OutfitControls({
 										/>
 									</DarkMode>
 								</Box>
-								<Flex flex="0 0 auto" align="center" pl="2">
+								<Flex flex="0 1 auto" align="center" pl="2">
 									<PosePicker
 										speciesId={outfitState.speciesId}
 										colorId={outfitState.colorId}

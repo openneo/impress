@@ -23,6 +23,10 @@
 				placeholder: AltStyle.placeholder_name
 
 		= f.field do
+			= f.label :real_series_name, "Full name"
+			= f.text_field :real_full_name, placeholder: @alt_style.fallback_full_name
+
+		= f.field do
 			= f.label :thumbnail_url, "Thumbnail"
 			= f.thumbnail_input :thumbnail_url
 
