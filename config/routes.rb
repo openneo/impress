@@ -55,7 +55,7 @@ OpenneoImpressItems::Application.routes.draw do
   get 'users/top_contributors' => redirect('/users/top-contributors')
 
   # User resources, like their item lists!
-  resources :users, :path => 'user', :only => [:index, :update] do
+  resources :users, :path => 'user', :only => [:index, :edit, :update] do
     resources :contributions, :only => [:index]
     resources :closet_hangers, :only => [:index, :update, :destroy], :path => 'closet' do
       collection do

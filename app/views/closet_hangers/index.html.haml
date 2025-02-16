@@ -31,6 +31,14 @@
         = f.label :contact_neopets_connection_id
         = f.collection_select :contact_neopets_connection_id, @user.neopets_connections, :id, :neopets_username, {include_blank: true}, 'data-new-text' => t('.neopets_username.new'), 'data-new-prompt' => t('.neopets_username.prompt')
         = f.submit t('.neopets_username.submit')
+    - if support_staff?
+      = link_to "✏️ #{t('.support')}", edit_user_path(@user)
+
+- if support_staff? && @user.shadowbanned?
+  %p.warning
+    %strong 🕶️ Shadowbanned:
+    For most users, this page is hidden, but you can still see them because
+    you're Support staff.
 
 - unless public_perspective?
   %noscript

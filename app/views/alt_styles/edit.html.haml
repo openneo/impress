@@ -13,7 +13,7 @@
 
 = image_tag @alt_style.preview_image_url, class: "alt-style-preview"
 
-= support_form_with model: @alt_style, class: "support-form" do |f|
+= support_form_with model: @alt_style do |f|
 	= f.errors
 
 	= f.fields do

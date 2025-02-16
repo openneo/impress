@@ -95,6 +95,7 @@ en:
       item_search_submit: Search
       send_neomail: Neomail %{neopets_username}
       lookup: "%{neopets_username}'s lookup"
+      support: Support
       neopets_username:
         new: "Add username…"
         prompt: "What Neopets username should we add?"

@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_action :find_and_authorize_user!, :only => [:update]
+  before_action :find_and_authorize_user!, only: [:edit, :update]
+  before_action :support_staff_only, only: [:edit]
 
   def index # search, really
     name = params[:name]
@@ -14,6 +15,9 @@ class UsersController < ApplicationController
 
   def top_contributors
     @users = User.top_contributors.paginate :page => params[:page], :per_page => 20
+  end
+
+  def edit
   end
 
   def update
@@ -42,17 +46,24 @@ class UsersController < ApplicationController
 
   protected
 
+  ALLOWED_ATTRS = [
+    :owned_closet_hangers_visibility,
+    :wanted_closet_hangers_visibility,
+    :contact_neopets_connection_id,
+  ]
   def user_params
-    params.require(:user).permit(:owned_closet_hangers_visibility,
-      :wanted_closet_hangers_visibility, :contact_neopets_connection_id)
+    if support_staff?
+      params.require(:user).permit(
+        *ALLOWED_ATTRS, :name, :shadowbanned, :support_staff
+      )
+    else
+      params.require(:user).permit(*ALLOWED_ATTRS)
+    end
   end
 
   def find_and_authorize_user!
-    if current_user.id == params[:id].to_i
-      @user = current_user
-    else
-      raise AccessDenied
-    end
+    @user = User.find(params[:id])
+    raise AccessDenied unless current_user == @user || support_staff?
   end
 end
 

@@ -1,0 +1,40 @@
+- title @user.name
+- use_responsive_design
+
+%ol.breadcrumbs
+	%li Users
+	%li= link_to @user.name, user_closet_hangers_path(@user)
+
+= support_form_with model: @user do |f|
+	= f.errors
+
+	= f.fields do
+		= f.field do
+			= f.label :name
+			= f.text_field :name
+
+		= f.radio_fieldset "Item list visibility" do
+			= f.radio_field do
+				= f.radio_button :shadowbanned, false
+				%strong 👁️ Visible:
+				Everyone can see page and trades
+			= f.radio_field do
+				= f.radio_button :shadowbanned, true
+				%strong 🕶️ Shadowbanned:
+				Page and trades hidden from other users/IPs
+
+		= f.radio_fieldset "Account role" do
+			= f.radio_field do
+				= f.radio_button :support_staff, false
+				%strong 👤 User:
+				Can manage their own data
+			= f.radio_field do
+				= f.radio_button :support_staff, true
+				%strong 💖 Support:
+				Can manage other users' data and customization data
+
+	= f.actions do
+		= f.submit "Save changes"
+
+- content_for :stylesheets do
+	= stylesheet_link_tag "application/breadcrumbs", "application/support-form"
