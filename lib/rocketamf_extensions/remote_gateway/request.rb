@@ -11,36 +11,12 @@ module RocketAMFExtensions
       end
       
       def post(options={})
-        uri = @action.service.gateway.uri
-        data = envelope.serialize
-
-        req = Net::HTTP::Post.new(uri.request_uri)
-        req.body = data
-        headers = options[:headers] || {}
-        headers.each do |key, value|
-          req[key] = value
-        end
-        
-        res = nil
-        
-        if options[:timeout]
+        response_body = if options[:timeout]
           Timeout.timeout(options[:timeout], ConnectionError) do
-            res = send_request(uri, req)
+            send_request(options)
           end
         else
-          res = send_request(uri, req)
-        end
-        
-        if res.is_a?(Net::HTTPSuccess)
-          response_body = res.body
-        else
-          error = nil
-          begin
-            res.error!
-          rescue Exception => scoped_error
-            error = scoped_error
-          end
-          raise ConnectionError, error.message
+          send_request(options)
         end
         
         begin
@@ -95,11 +71,22 @@ module RocketAMFExtensions
         message
       end
       
-      def send_request(uri, req)
+      def send_request(options={})
+        url = @action.service.gateway.uri
+        headers = options.fetch(:headers, []).to_a
+        body = envelope.serialize
+
         begin
-          http = Net::HTTP.new(uri.host, uri.port)
-          http.use_ssl = true if uri.instance_of? URI::HTTPS
-          return http.request(req)
+          Sync do
+            DTIRequests.post(url, headers, body) do |response|
+              if response.status != 200
+                raise ConnectionError,
+                  "expected status 200 but got #{response.status} (#{url})"
+              end
+
+              response.read
+            end
+          end
         rescue Exception => e
           raise ConnectionError, e.message
         end

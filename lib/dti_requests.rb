@@ -5,11 +5,11 @@ require "async/http/internet/instance"
 module DTIRequests
 	class << self
 		def get(url, headers = [], &block)
-			Async::HTTP::Internet.get(url, add_headers(headers), &block)
+			Async::HTTP::Internet.get(url, ensure_headers(headers), &block)
 		end
 
 		def post(url, headers = [], body = nil, &block)
-			Async::HTTP::Internet.post(url, add_headers(headers), body, &block)
+			Async::HTTP::Internet.post(url, ensure_headers(headers), body, &block)
 		end
 
 		def load_many(max_at_once: 10)
@@ -27,10 +27,28 @@ module DTIRequests
 
 		private
 
-		def add_headers(headers)
-			if headers.none? { |(k, v)| k.downcase == "user-agent" }
-				headers += [["User-Agent", Rails.configuration.user_agent_for_neopets]]
+		def ensure_headers(headers)
+			# To access Neopets.com, requests must have a User-Agent header that
+			# contains a slash.
+			headers = ensure_header(headers, "User-Agent", Rails.configuration.user_agent_for_neopets)
+
+			# To access Neopets.com, requests must have the following headers
+			# present, even with the most basic value possible.
+			headers = ensure_header(headers, "Accept", "*/*")
+			headers = ensure_header(headers, "Accept-Language", "*")
+			headers = ensure_header(headers, "Cookie", " ")
+
+			# NOTE: An Accept-Encoding header is also required, but the underlying
+			#       library already manages this. Don't mess with it!
+
+			headers
+		end
+
+		def ensure_header(headers, name, value)
+			if headers.none? { |(k, v)| k.downcase == name.downcase }
+				headers += [[name, value]]
 			end
+
 			headers
 		end
 	end

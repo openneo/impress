@@ -64,7 +64,10 @@ module OpenneoImpressItems
     # symbols? So I can't provide anything helpful like a URL, email address,
     # version number, etc. So let's only send this to Neopets systems, where it
     # should hopefully be clear who we are from context!
-    config.user_agent_for_neopets = "Dress to Impress"
+    #
+    # NOTE: To be able to access Neopets.com, the User-Agent string must contain
+    #       a slash character.
+    config.user_agent_for_neopets = "Dress to Impress (https://impress.openneo.net)"
 
     # Use the usual Neopets.com, unless we have an override. (At times, we've
     # used this in collaboration with TNT to address the server directly,

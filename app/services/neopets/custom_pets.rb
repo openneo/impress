@@ -49,9 +49,7 @@ module Neopets::CustomPets
 		# Return the response body as a `HashWithIndifferentAccess`.
 		def send_amfphp_request(request, timeout: 10)
 			begin
-				response_data = request.post(timeout: timeout, headers: {
-					"User-Agent" => Rails.configuration.user_agent_for_neopets,
-				})
+				response_data = request.post(timeout: timeout)
 			rescue RocketAMFExtensions::RemoteGateway::AMFError => e
 				raise DownloadError, e.message
 			rescue RocketAMFExtensions::RemoteGateway::ConnectionError => e
