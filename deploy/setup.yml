@@ -6,7 +6,10 @@
   vars:
     email_address: "emi@matchu.dev" # TODO: Extract this to personal config?
     impress_hostname: impress.openneo.net
-    ruby_version: "3.3.6"
+
+    # These two values should usually be the same, unless you're in the middle of an upgrade!
+    ruby_version_latest: "3.3.7" # The latest Ruby to install.
+    ruby_version_live: "3.3.7" # The Ruby to run the latest version of the app with.
   vars_files:
     # mysql_root_password, mysql_user_password, mysql_user_password_2020,
     # dev_ips
@@ -171,21 +174,21 @@
       git:
         repo: https://github.com/rbenv/ruby-build.git
         dest: /opt/ruby-build
-        version: v20241225.2
+        version: v20250326
 
-    - name: Check if Ruby {{ ruby_version }} is already installed
+    - name: Check if Ruby {{ ruby_version_latest }} is already installed
       stat:
-        path: /opt/ruby-{{ ruby_version }}
+        path: /opt/ruby-{{ ruby_version_latest }}
       register: ruby_dir
 
-    - name: Install Ruby {{ ruby_version }}
-      command: "/opt/ruby-build/bin/ruby-build {{ ruby_version }} /opt/ruby-{{ ruby_version }}"
+    - name: Install Ruby {{ ruby_version_latest }}
+      command: "/opt/ruby-build/bin/ruby-build {{ ruby_version_latest }} /opt/ruby-{{ ruby_version_latest }}"
       when: not ruby_dir.stat.exists
 
-    - name: Add Ruby {{ ruby_version }} to the global PATH, for developer convenience
+    - name: Add Ruby {{ ruby_version_latest }} to the global PATH, for developer convenience
       copy:
         dest: /etc/profile.d/ruby_path.sh
-        content: PATH="/opt/ruby-{{ ruby_version }}/bin:$PATH"
+        content: PATH="/opt/ruby-{{ ruby_version_latest }}/bin:$PATH"
 
     - name: Install system dependencies for impress's Ruby gems
       apt:
@@ -249,14 +252,14 @@
       become_user: impress
       command:
         chdir: /srv/impress/versions/initial-placeholder
-        cmd: /opt/ruby-{{ ruby_version }}/bin/bundle config set --local deployment true
+        cmd: /opt/ruby-{{ ruby_version_live }}/bin/bundle config set --local deployment true
       when: not current_app_version.stat.exists
 
     - name: Install the placeholder app's dependencies
       become_user: impress
       command:
         chdir: /srv/impress/versions/initial-placeholder
-        cmd: /opt/ruby-{{ ruby_version }}/bin/bundle install
+        cmd: /opt/ruby-{{ ruby_version_live }}/bin/bundle install
       when: not current_app_version.stat.exists
 
     - name: Set the placeholder app as the current version

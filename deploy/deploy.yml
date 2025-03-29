@@ -6,7 +6,7 @@
   vars:
     local_app_root: "{{ playbook_dir  }}/.."
     remote_project_root: "/srv/impress"
-    ruby_version: "3.3.6"
+    ruby_version: "3.3.7"
 
     # deploy:setup should have added us to the "impress-deployers" group, so we
     # should be able to become the "impress" user without a password.
