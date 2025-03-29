@@ -18,7 +18,7 @@ class SwfAssetsController < ApplicationController
 				# doing this can help make this header a *lot* shorter, which helps
 				# our nginx reverse proxy (and probably some clients) handle it. (For
 				# example, see asset `667993` for "Engulfed in Flames Effect".)
-				hosts: ["https://images.neopets.com"],
+				origins: ["https://images.neopets.com"],
 			)
 		}
 
@@ -45,14 +45,23 @@ class SwfAssetsController < ApplicationController
 
 	private
 
-	def src_list(*urls, hosts: [])
-		urls.
+	def src_list(*urls, origins: [])
+		clean_urls = urls.
 			# Ignore any `nil`s that might arise
 			filter(&:present?).
+			# Parse the URL.
+			map { |url| Addressable::URI.parse(url) }.
 			# Remove query strings from URLs (they're invalid in CSPs)
-			map { |url| url.sub(/\?.*\z/, "") }.
-			# For the given `hosts`, remove all their specific URLs, and just list
-			# the host itself.
-			reject { |url| hosts.any? { |h| url.start_with? h } } + hosts
+			each { |url| url.query = nil }.
+			# For the given `origins`, remove all their specific URLs, because
+			# we'll just include the entire origin anyway.
+			reject { |url| origins.include?(url.origin) }.
+			# Normalize the URLs. (This fixes issues like when the canonical
+			# Neopets version of the URL contains plain unescaped spaces.)
+			each(&:normalize!).
+			# Convert the URLs back into strings.
+			map(&:to_s)
+
+		clean_urls + origins
 	end
 end
