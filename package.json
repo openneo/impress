@@ -9,8 +9,6 @@
 		"@emotion/styled": "^11.0.0",
 		"@hotwired/turbo-rails": "^8.0.4",
 		"@loadable/component": "^5.12.0",
-		"@sentry/react": "^5.30.0",
-		"@sentry/tracing": "^5.30.0",
 		"@tanstack/react-query": "^5.4.3",
 		"apollo-link-persisted-queries": "^0.2.2",
 		"easeljs": "^1.0.2",

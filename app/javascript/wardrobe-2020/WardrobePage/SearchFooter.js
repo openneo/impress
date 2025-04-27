@@ -1,8 +1,7 @@
 import React from "react";
-import * as Sentry from "@sentry/react";
 import { Box, Flex } from "@chakra-ui/react";
 import SearchToolbar from "./SearchToolbar";
-import { MajorErrorMessage, TestErrorSender, useLocalStorage } from "../util";
+import { ErrorBoundary, TestErrorSender, useLocalStorage } from "../util";
 import PaginationToolbar from "../components/PaginationToolbar";
 import { useSearchResults } from "./useSearchResults";
 
@@ -34,7 +33,7 @@ function SearchFooter({ searchQuery, onChangeSearchQuery, outfitState }) {
 	}
 
 	return (
-		<Sentry.ErrorBoundary fallback={MajorErrorMessage}>
+		<ErrorBoundary>
 			<TestErrorSender />
 			<Box>
 				<Box paddingX="4" paddingY="4">
@@ -73,7 +72,7 @@ function SearchFooter({ searchQuery, onChangeSearchQuery, outfitState }) {
 					</Box>
 				</Box>
 			</Box>
-		</Sentry.ErrorBoundary>
+		</ErrorBoundary>
 	);
 }
 

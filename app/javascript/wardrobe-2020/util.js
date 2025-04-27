@@ -8,7 +8,6 @@ import {
 	useColorModeValue,
 } from "@chakra-ui/react";
 import loadableLibrary from "@loadable/component";
-import * as Sentry from "@sentry/react";
 import { WarningIcon } from "@chakra-ui/icons";
 
 import { buildImpress2020Url } from "./impress-2020-config";
@@ -414,14 +413,17 @@ export function loadable(load, options) {
 }
 
 /**
- * logAndCapture will print an error to the console, and send it to Sentry.
+ * logAndCapture will print an error to the console.
+ *
+ * NOTE: Previously, this would log to Sentry, but we actually just don't log
+ *       JS errors anymore, because we haven't done in-depth JS debugging in a
+ *       while.
  *
  * This is useful when there's a graceful recovery path, but it's still a
  * genuinely unexpected error worth logging.
  */
 export function logAndCapture(e) {
 	console.error(e);
-	Sentry.captureException(e);
 }
 
 export function getGraphQLErrorMessage(error) {
@@ -475,8 +477,8 @@ export function MajorErrorMessage({ error = null, variant = "unexpected" }) {
 				<Box gridArea="description" marginBottom="2">
 					{variant === "unexpected" && (
 						<>
-							There was an error displaying this page. I'll get info about it
-							automatically, but you can tell me more at{" "}
+							There was an error displaying this page. If it keeps happening,
+							you can tell me more at{" "}
 							<Link href="mailto:matchu@openneo.net" color="green.400">
 								matchu@openneo.net
 							</Link>
@@ -523,10 +525,29 @@ export function MajorErrorMessage({ error = null, variant = "unexpected" }) {
 
 export function TestErrorSender() {
 	React.useEffect(() => {
-		if (window.location.href.includes("send-test-error-for-sentry")) {
-			throw new Error("Test error for Sentry");
+		if (window.location.href.includes("send-test-error")) {
+			throw new Error("Test error for debugging <ErrorBoundary>s");
 		}
 	});
 
 	return null;
+}
+
+export class ErrorBoundary extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = { error: null };
+	}
+
+	static getDerivedStateFromError(error) {
+		return { error };
+	}
+
+	render() {
+		if (this.state.error != null) {
+			return <MajorErrorMessage error={this.state.error} />;
+		}
+
+		return this.props.children;
+	}
 }

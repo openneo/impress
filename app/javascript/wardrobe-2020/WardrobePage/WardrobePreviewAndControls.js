@@ -2,11 +2,10 @@ import React from "react";
 import { Box, Center, DarkMode } from "@chakra-ui/react";
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/client";
-import * as Sentry from "@sentry/react";
 
 import OutfitThumbnail from "../components/OutfitThumbnail";
 import { useOutfitPreview } from "../components/OutfitPreview";
-import { loadable, MajorErrorMessage, TestErrorSender } from "../util";
+import { loadable, ErrorBoundary, TestErrorSender } from "../util";
 
 const OutfitControls = loadable(() => import("./OutfitControls"));
 
@@ -33,7 +32,7 @@ function WardrobePreviewAndControls({
 	});
 
 	return (
-		<Sentry.ErrorBoundary fallback={MajorErrorMessage}>
+		<ErrorBoundary>
 			<TestErrorSender />
 			<Center position="absolute" top="0" bottom="0" left="0" right="0">
 				<DarkMode>{preview}</DarkMode>
@@ -46,7 +45,7 @@ function WardrobePreviewAndControls({
 					appearance={appearance}
 				/>
 			</Box>
-		</Sentry.ErrorBoundary>
+		</ErrorBoundary>
 	);
 }
 

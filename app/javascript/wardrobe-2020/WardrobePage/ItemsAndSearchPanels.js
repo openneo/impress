@@ -1,11 +1,10 @@
 import React from "react";
 import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
-import * as Sentry from "@sentry/react";
 
 import ItemsPanel from "./ItemsPanel";
 import SearchToolbar, { searchQueryIsEmpty } from "./SearchToolbar";
 import SearchPanel from "./SearchPanel";
-import { MajorErrorMessage, TestErrorSender, useLocalStorage } from "../util";
+import { ErrorBoundary, TestErrorSender, useLocalStorage } from "../util";
 
 /**
  * ItemsAndSearchPanels manages the shared layout and state for:
@@ -40,7 +39,7 @@ function ItemsAndSearchPanels({
 	const isShowingSearchFooter = canUseSearchFooter && hasRoomForSearchFooter;
 
 	return (
-		<Sentry.ErrorBoundary fallback={MajorErrorMessage}>
+		<ErrorBoundary>
 			<TestErrorSender />
 			<Flex direction="column" height="100%">
 				{isShowingSearchFooter && <Box height="2" />}
@@ -85,7 +84,7 @@ function ItemsAndSearchPanels({
 					</Box>
 				)}
 			</Flex>
-		</Sentry.ErrorBoundary>
+		</ErrorBoundary>
 	);
 }
 
