@@ -754,6 +754,11 @@
 						contactField.val(connection.id);
 						submitContactForm();
 					},
+					error: function (xhr) {
+						var data = JSON.parse(xhr.responseText);
+						var fullMessage = data.full_error_messages.join("\n");
+						alert("Oops, we couldn't save this username!\n\n" + fullMessage);
+					},
 				});
 			}
 		} else {

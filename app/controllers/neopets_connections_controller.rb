@@ -5,7 +5,10 @@ class NeopetsConnectionsController < ApplicationController
     if connection.save
       render json: connection
     else
-      render json: {error: 'failure'}, status: :internal_server_error
+      render json: {
+        errors: connection.errors,
+        full_error_messages: connection.errors.map(&:full_message)
+      }, status: :bad_request
     end
   end
 
