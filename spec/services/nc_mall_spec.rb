@@ -58,7 +58,7 @@ RSpec.describe Neopets::NCMall, type: :model do
 						"Cookie": "neologin=STUB_NEOLOGIN",
 						"User-Agent": Rails.configuration.user_agent_for_neopets,
 					},
-					body: "mode=getStyles&species=2&tab=#{tab}",
+					body: "mode=getAvailable&species=2&tab=#{tab}",
 				)
 		end
 

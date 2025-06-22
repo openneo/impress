@@ -60,7 +60,7 @@ module Neopets::NCMall
 					["Cookie", "neologin=#{neologin}"],
 					["X-Requested-With", "XMLHttpRequest"],
 				],
-				{tab:, mode: "getStyles", species: species_id}.to_query,
+				{tab:, mode: "getAvailable", species: species_id}.to_query,
 			) do |response|
 				if response.status != 200
 					raise ResponseNotOK.new(response.status),
