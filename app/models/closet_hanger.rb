@@ -183,6 +183,10 @@ class ClosetHanger < ApplicationRecord
     def lists
       hangers.map(&:list).filter(&:present?)
     end
+
+    def last_activity_at
+      user.last_trade_activity_at
+    end
   end
 
   protected

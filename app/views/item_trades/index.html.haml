@@ -17,10 +17,13 @@
 				%th= t(".table.headings.user.#{@type}")
 				%th= t(".table.headings.lists")
 		%tbody
+			- prev_trade = nil
 			- sorted_vaguely_by_trade_activity(@trades).each do |trade|
 				%tr
-					%td
-						= vague_trade_timestamp trade.user.last_trade_activity_at
+					%td{
+						'data-is-same-as-prev': same_vague_trade_timestamp?(trade, prev_trade)
+					}
+						= vague_trade_timestamp trade
 					%td= trade.user.name
 					%td
 						- if trade.lists.present?
@@ -32,6 +35,7 @@
 							= link_to t(".table.not_in_a_list.#{@type}"), user_closet_hangers_path(trade.user,
 								anchor: "closet-hangers-group-#{@type == :offering}"),
 								class: "not-in-a-list"
+				- prev_trade = trade
 - else
 	%p= t(".no_trades_yet")
 
