@@ -156,7 +156,7 @@ class ClosetHanger < ApplicationRecord
   #
   # We don't preload anything here - if you want user names or list names, you
   # should `includes` them in the hanger scope first, to avoid extra queries!
-  def self.to_trades
+  def self.to_trades(current_user, remote_ip)
     # Let's ensure that the `trading` filter is applied, to avoid data leaks.
     # (I still recommend doing it at the call site too for clarity, though!)
     all_trading_hangers = trading.to_a
@@ -164,17 +164,20 @@ class ClosetHanger < ApplicationRecord
     owned_hangers = all_trading_hangers.filter(&:owned?)
     wanted_hangers = all_trading_hangers.filter(&:wanted?)
 
-    # Group first into offering vs seeking, then by user.
+    # Group first into offering vs seeking, then by user. Only include trades
+    # visible to the current user.
     offering, seeking = [owned_hangers, wanted_hangers].map do |hangers|
-      hangers.group_by(&:user_id).map do |user_id, user_hangers|
-        Trade.new(user_id, user_hangers)
-      end
+      hangers.group_by(&:user_id).
+        map { |user_id, user_hangers| Trade.new(user_id, user_hangers) }.
+        filter { |trade| trade.visible_to?(current_user, remote_ip) }
     end
 
     {offering: offering, seeking: seeking}
   end
 
   Trade = Struct.new('Trade', :user_id, :hangers) do
+    delegate :visible_to?, to: :user
+
     def user
       # Take advantage of `includes(:user)` on the hangers, if applied.
       hangers.first.user

@@ -218,12 +218,8 @@ class ClosetHangersController < ApplicationController
   def enforce_shadowban
     # If this user is shadowbanned, and this *doesn't* seem to be a request
     # from that user, render the 404 page.
-    if @user.shadowbanned?
-      can_see = support_staff? ||
-        @user.likely_is?(current_user, request.remote_ip)
-      if !can_see
-        render file: "public/404.html", layout: false, status: :not_found
-      end
+    if !@user.visible_to?(current_user, request.remote_ip)
+      render file: "public/404.html", layout: false, status: :not_found
     end
   end
 

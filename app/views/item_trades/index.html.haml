@@ -24,7 +24,10 @@
 						'data-is-same-as-prev': same_vague_trade_timestamp?(trade, prev_trade)
 					}
 						= vague_trade_timestamp trade
-					%td= trade.user.name
+					%td
+						= trade.user.name
+						- if support_staff? && trade.user.shadowbanned?
+							%abbr{title: "Shadowbanned (Hidden from most viewers; you can see because you're Support staff"} 🕶️ SBan
 					%td
 						- if trade.lists.present?
 							%ul.trade-list-names

@@ -80,7 +80,8 @@ class ItemsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        @trades = @item.closet_hangers.trading.user_is_active.to_trades
+        @trades = @item.closet_hangers.trading.user_is_active.
+          to_trades(current_user, request.remote_ip)
 
         @contributors_with_counts = @item.contributors_with_counts
 

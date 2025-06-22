@@ -198,6 +198,17 @@ class User < ApplicationRecord
     touch(:last_trade_activity_at)
   end
 
+  def visible_to?(current_user, remote_ip)
+    # Everyone is visible to support staff.
+    return true if current_user&.support_staff?
+
+    # Shadowbanned users are only visible to themselves.
+    return false if shadowbanned? && !likely_is?(current_user, remote_ip)
+
+    # Other than that, users are visible to everyone by default.
+    return true
+  end
+
   def self.points_required_to_pass_top_contributor(offset)
     user = User.top_contributors.select(:points).limit(1).offset(offset).first
     user ? user.points : 0

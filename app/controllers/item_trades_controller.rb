@@ -4,7 +4,8 @@ class ItemTradesController < ApplicationController
 		@type = type_from_params
 
 		@item_trades = @item.closet_hangers.trading.includes(:user, :list).
-			user_is_active.order('users.last_trade_activity_at DESC').to_trades
+			user_is_active.order('users.last_trade_activity_at DESC').
+			to_trades(current_user, request.remote_ip)
 		@trades = @item_trades[@type]
 
 		if user_signed_in?
