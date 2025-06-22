@@ -32,11 +32,13 @@ class AltStyle < ApplicationRecord
   }
   scope :by_series_main_name, -> {
     # The main part of the series name, like "Nostalgic".
+    # If there's no colon, uses the whole string.
     order(Arel.sql("SUBSTRING_INDEX(series_name, ': ', -1)"))
   }
   scope :by_series_variant_name, -> {
     # The variant part of the series name, like "Prismatic Cyan".
-    order(Arel.sql("SUBSTRING_INDEX(series_name, ': ', 1)"))
+    # If there's no colon, uses an empty string.
+    order(Arel.sql("SUBSTRING(series_name, 1, LOCATE(': ', series_name) - 1)"))
   }
   scope :by_color_name, -> {
     joins(:color).order(Color.arel_table[:name])
