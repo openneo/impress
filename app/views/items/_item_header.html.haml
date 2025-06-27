@@ -36,7 +36,8 @@
         %span{
           title: nc_trade_value_updated_at_text(item.nc_trade_value)
         }
-          = t('items.show.resources.lebron', value: item.nc_trade_value.value_text)
+          = t 'items.show.resources.lebron',
+            value: nc_trade_value_estimate_text(item.nc_trade_value)
       - unless item.nc?
         = link_to t('items.show.resources.shop_wizard'), shop_wizard_url_for(item)
         = link_to t('items.show.resources.trading_post'), trading_post_url_for(item)

@@ -184,7 +184,7 @@ module ItemsHelper
   # nicely for our use case.
   def nc_trade_value_estimate_text(nc_trade_value)
     match = nc_trade_value.value_text.match(NC_TRADE_VALUE_ESTIMATE_PATTERN)
-    return nc_trade_value if match.nil?
+    return nc_trade_value.value_text if match.nil?
 
     match => {single:, low:, high:}
     if single.present?
@@ -192,7 +192,7 @@ module ItemsHelper
     elsif low.present? && high.present?
       "#{low}–#{high} capsules"
     else
-      nc_trade_value
+      nc_trade_value.value_text
     end
   end
 
