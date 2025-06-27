@@ -60,7 +60,6 @@ gem 'letter_opener', '~> 1.8', '>= 1.8.1', group: :development
 gem 'parallel', '~> 1.23'
 
 # For miscellaneous HTTP requests.
-gem "httparty", "~> 0.22.0"
 gem "addressable", "~> 2.8"
 
 # For advanced batching of many HTTP requests.
