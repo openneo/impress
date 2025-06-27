@@ -118,12 +118,11 @@ class Item < ApplicationRecord
     return @nc_trade_value if @nc_trade_value_loaded
 
     @nc_trade_value = begin
-      Rails.logger.debug "Item #{id} (#{name}) <lookup>"
-      OwlsValueGuide.find_by_name(name)
-    rescue OwlsValueGuide::NotFound => error
+      LebronNCValues.find_by_name(name)
+    rescue LebronNCValues::NotFound => error
       Rails.logger.debug("No NC trade value listed for #{name} (#{id})")
       nil
-    rescue OwlsValueGuide::NetworkError => error
+    rescue LebronNCValues::NetworkError => error
       Rails.logger.error("Couldn't load nc_trade_value: #{error.full_message}")
       nil
     end

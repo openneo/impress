@@ -151,7 +151,7 @@ module ItemsHelper
   end
 
   def nc_trade_value_updated_at_text(nc_trade_value)
-    return nil if nc_trade_value.updated_at.nil?
+    return "NC trade value" if nc_trade_value.updated_at.nil?
 
     # Render both "[X] [days] ago", and also the exact date, only including the
     # year if it's not this same year.
@@ -160,7 +160,7 @@ module ItemsHelper
       nc_trade_value.updated_at.strftime("%b %-d") :
       nc_trade_value.updated_at.strftime("%b %-d, %Y")
 
-    "Last updated: #{date_str} (#{time_ago_str} ago)"
+    "NC trade value—Last updated: #{date_str} (#{time_ago_str} ago)"
   end
 
   NC_TRADE_VALUE_ESTIMATE_PATTERN = %r{

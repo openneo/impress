@@ -310,7 +310,7 @@ en:
       resources:
         jn_items: JN Items
         impress_2020: DTI 2020
-        owls: "Owls: %{value}"
+        lebron: "Lebron: %{value}"
         shop_wizard: Shop Wizard
         trading_post: Trades
         auction_genie: Auctions

@@ -5,7 +5,7 @@ class Item
 		end
 
 		# Whether this is a Dyeworks item whose base item can currently be purchased
-		# in the NC Mall, then dyed via Dyeworks. (Owls tracks this last part!)
+		# in the NC Mall, then dyed via Dyeworks. (Lebron tracks this last part!)
 		def dyeworks_buyable?
 			dyeworks_base_buyable? && dyeworks_dyeable?
 		end
@@ -18,14 +18,14 @@ class Item
 		end
 
 		# Whether this is a Dyeworks item that can be dyed in the NC Mall ~right now,
-		# either at any time or as a limited-time event. (Owls tracks this, not us!)
+		# either at any time or as a limited-time event. (Lebron tracks this, not us!)
 		def dyeworks_dyeable?
 			dyeworks_permanent? || dyeworks_limited_active?
 		end
 
 		# Whether this is one of the few Dyeworks items that can be dyed in the NC
-		# Mall at any time, rather than as part of a limited-time event. (Owls tracks
-		# this, not us!)
+		# Mall at any time, rather than as part of a limited-time event. (Lebron
+		# tracks this, not us!)
 		DYEWORKS_PERMANENT_PATTERN = /Permanent\s*Dyeworks/i
 		def dyeworks_permanent?
 			return false if nc_trade_value.nil?
@@ -33,11 +33,11 @@ class Item
 		end
 
 		# Whether this is a Dyeworks item that can be dyed in the NC Mall ~right
-		# now, as part of a limited-time event. (Owls tracks this, not us!)
+		# now, as part of a limited-time event. (Lebron tracks this, not us!)
 		#
 		# If we aren't sure of the final date, this will still return `true`, on
 		# the assumption it *is* dyeable right now and we just don't understand the
-		# details of what Owls told us.
+		# details of what Lebron told us.
 		def dyeworks_limited_active?
 			return false unless dyeworks_limited?
 			return true if dyeworks_limited_final_date.nil?
@@ -51,8 +51,8 @@ class Item
 
 		# Whether this is a Dyeworks item that can only be dyed as part of a
 		# limited-time event. (This may return true even if the end date has
-		# passed, see `dyeworks_limited_active?`.) (Owls tracks this, not us!)
-		DYEWORKS_LIMITED_PATTERN = /Limited\s*Dyeworks/i
+		# passed, see `dyeworks_limited_active?`.) (Lebron tracks this, not us!)
+		DYEWORKS_LIMITED_PATTERN = /Dyeworks\s*Thru/i
 		def dyeworks_limited?
 			return false if nc_trade_value.nil?
 			nc_trade_value.value_text.match?(DYEWORKS_LIMITED_PATTERN)
@@ -60,9 +60,9 @@ class Item
 
 		# If this is a limited-time Dyeworks item, this is the date we think the
 		# event will end on. Even if `dyeworks_limited?` returns true, this could
-		# still be `nil`, if we fail to parse this. (Owls tracks this, not us!)
+		# still be `nil`, if we fail to parse this. (Lebron tracks this, not us!)
 		DYEWORKS_LIMITED_FINAL_DATE_PATTERN =
-			/Dyeable\s*Thru\s*(?<month>[a-z]+)\s*(?<day>[0-9]+)/i
+			/Dyeworks\s*Thru\s*(?<month>[a-z]+)\s*(?<day>[0-9]+)/i
 		def dyeworks_limited_final_date
 			return nil unless dyeworks_limited?
 

@@ -145,7 +145,7 @@ class ItemsController < ApplicationController
 
     # For Dyeworks items whose base is currently in the NC Mall, preload their
     # trade values. We'll use this to determine which ones are fully buyable rn
-    # (because Owls tracks this data and we don't).
+    # (because our NC values guide tracks this data and we don't).
     Item.preload_nc_trade_values(@items[:dyeworks])
 
     # Start loading the NC trade values for the non-Mall NC items.
