@@ -225,14 +225,14 @@
 					- content_for :subtitle, flush: true do
 						- if item.nc_trade_value.present?
 							- if nc_trade_value_is_estimate(item.nc_trade_value)
-								= content_tag :span,
+								= link_to 'https://www.neopets.com/~lebron', target: '_blank',
 									class: "nc-trade-guide-info-link",
 									title: 'Lebron keeps track of approximate "capsule" values of NC items for trading. Items with similar values can often be traded for one another. This is an estimate, not a rule!' do
 									%span.nc-trade-guide-info-label [Lebron]
 									Estimated value:
 									= nc_trade_value_estimate_text(item.nc_trade_value)
 							- else
-								= content_tag :span,
+								= link_to 'https://www.neopets.com/~lebron', target: '_blank',
 									class: "nc-trade-guide-info-link",
 									title: "Lebron keeps track of how to get certain special items, even when there isn't a clear NC trade estimate." do
 									%span.nc-trade-guide-info-label [Lebron]

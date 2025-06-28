@@ -33,9 +33,8 @@
       = link_to t('items.show.resources.jn_items'), jn_items_url_for(item)
       = link_to t('items.show.resources.impress_2020'), impress_2020_url_for(item)
       - if item.nc_trade_value
-        %span{
-          title: nc_trade_value_updated_at_text(item.nc_trade_value)
-        }
+        = link_to 'https://www.neopets.com/~lebron',
+          title: nc_trade_value_updated_at_text(item.nc_trade_value) do
           = t 'items.show.resources.lebron',
             value: nc_trade_value_estimate_text(item.nc_trade_value)
       - unless item.nc?
