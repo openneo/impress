@@ -6,10 +6,6 @@
   vars:
     email_address: "emi@matchu.dev" # TODO: Extract this to personal config?
     impress_hostname: impress.openneo.net
-
-    # These two values should usually be the same, unless you're in the middle of an upgrade!
-    ruby_version_latest: "3.3.7" # The latest Ruby to install.
-    ruby_version_live: "3.3.7" # The Ruby to run the latest version of the app with.
   vars_files:
     # mysql_root_password, mysql_user_password, mysql_user_password_2020,
     # dev_ips
@@ -174,7 +170,7 @@
       git:
         repo: https://github.com/rbenv/ruby-build.git
         dest: /opt/ruby-build
-        version: v20250326
+        version: v20250716
 
     - name: Check if Ruby {{ ruby_version_latest }} is already installed
       stat:

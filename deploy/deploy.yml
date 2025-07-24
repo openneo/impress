@@ -6,7 +6,6 @@
   vars:
     local_app_root: "{{ playbook_dir  }}/.."
     remote_project_root: "/srv/impress"
-    ruby_version: "3.3.7"
 
     # deploy:setup should have added us to the "impress-deployers" group, so we
     # should be able to become the "impress" user without a password.
@@ -16,14 +15,15 @@
     # skip our usual cleanup, to avoid disrupting the `current` version!)
     #
     # This can be useful for upgrading our Ruby version without downtime:
-    # 1. Install the new Ruby version, but don't uninstall the old one.
-    # 2. Update the app to reference the new Ruby version in the `Gemfile`.
-    # 3. Deploy the app with `skip_set_as_current`.
-    # 4. Update the service file manually to use the new Ruby to run the new
-    #    version of the app, referenced directly by path.
-    # 5. Link the new version as `current` manually.
-    # 6. Reset the service file to use the new Ruby to run `current`.
-    skip_set_as_current: no
+    # 1. Update `ruby_version_latest` to the newest version, but not `ruby_version_live`.
+    # 2. Run `deploy:setup` to install the latest Ruby version.
+    # 3. Update the app to reference the new Ruby version in the `Gemfile`.
+    # 4. Update `ruby_version_live` to the newest version, too.
+    # 5. Deploy the app with `skip_set_as_current`.
+    # 6. Update the service file manually to reference the newly-uploaded version by path.
+    # 7. Link the new version as `current` manually.
+    # 8. Reset the service file to use the new Ruby to run `current`.
+    skip_set_as_current: yes
   tasks:
     - name: Generate a version name from the current timestamp
       command: date '+%Y-%m-%d-%s'
@@ -62,7 +62,7 @@
     - name: Configure Bundler to run in deployment mode
       command:
         chdir: "{{ remote_app_root }}"
-        cmd: /opt/ruby-{{ ruby_version }}/bin/bundle config set --local deployment true
+        cmd: /opt/ruby-{{ ruby_version_live }}/bin/bundle config set --local deployment true
 
     # This ensures that, while attempting our current deploy, we don't
     # accidentally delete gems out from under the currently-running version.
@@ -72,7 +72,7 @@
     - name: Configure Bundler to *not* clean up old gems when installing
       command:
         chdir: "{{ remote_app_root }}"
-        cmd: /opt/ruby-{{ ruby_version }}/bin/bundle config set --local clean false
+        cmd: /opt/ruby-{{ ruby_version_live }}/bin/bundle config set --local clean false
 
     # NOTE: Bundler recommends this, and they're pretty smart about it: if the
     # Gemfile changes, this shouldn't disrupt the currently-running version,
@@ -81,7 +81,7 @@
     - name: Configure Bundler to use the bundle folder shared by all app versions
       command:
         chdir: "{{ remote_app_root }}"
-        cmd: "/opt/ruby-{{ ruby_version }}/bin/bundle config set --local path {{ remote_project_root}}/shared/bundle"
+        cmd: "/opt/ruby-{{ ruby_version_live }}/bin/bundle config set --local path {{ remote_project_root}}/shared/bundle"
 
     - name: Run `bundle install` to install dependencies in remote folder
       command:
@@ -89,7 +89,7 @@
         # The `--local` flag instructs Bundler to use the cached dependencies
         # in `vendor/cache`, instead of reading from the web, which is much
         # faster and more reliable!
-        cmd: /opt/ruby-{{ ruby_version }}/bin/bundle install --local
+        cmd: /opt/ruby-{{ ruby_version_live }}/bin/bundle install --local
 
     - name: Update the `current` folder to point to the new version
       file:
@@ -113,7 +113,7 @@
     - name: Clean up gems no longer used in the current app version
       command:
         chdir: "{{ remote_app_root }}"
-        cmd: /opt/ruby-{{ ruby_version }}/bin/bundle clean
+        cmd: /opt/ruby-{{ ruby_version_live }}/bin/bundle clean
       when: not skip_set_as_current
 
     - name: Find older app versions to clean up

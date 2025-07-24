@@ -5,7 +5,6 @@
   become_user: impress
   vars:
     remote_project_root: "/srv/impress"
-    ruby_version: "3.3.7"
   tasks:
     - name: Read the second-to-most-recent version
       command:
@@ -24,7 +23,7 @@
     - name: Configure Bundler to run in deployment mode
       command:
         chdir: "{{ remote_app_root }}"
-        cmd: /opt/ruby-{{ ruby_version }}/bin/bundle config set --local deployment true
+        cmd: /opt/ruby-{{ ruby_version_live }}/bin/bundle config set --local deployment true
 
     # This ensures that, while attempting our current deploy, we don't
     # accidentally delete gems out from under the currently-running version.
@@ -34,7 +33,7 @@
     - name: Configure Bundler to *not* clean up old gems when installing
       command:
         chdir: "{{ remote_app_root }}"
-        cmd: /opt/ruby-{{ ruby_version }}/bin/bundle config set --local clean false
+        cmd: /opt/ruby-{{ ruby_version_live }}/bin/bundle config set --local clean false
 
     # NOTE: Bundler recommends this, and they're pretty smart about it: if the
     # Gemfile changes, this shouldn't disrupt the currently-running version,
@@ -43,7 +42,7 @@
     - name: Configure Bundler to use the bundle folder shared by all app versions
       command:
         chdir: "{{ remote_app_root }}"
-        cmd: "/opt/ruby-{{ ruby_version }}/bin/bundle config set --local path {{ remote_project_root}}/shared/bundle"
+        cmd: "/opt/ruby-{{ ruby_version_live }}/bin/bundle config set --local path {{ remote_project_root}}/shared/bundle"
 
     - name: Run `bundle install` to install dependencies in remote folder
       command:
@@ -51,7 +50,7 @@
         # The `--local` flag instructs Bundler to use the cached dependencies
         # in `vendor/cache`, instead of reading from the web, which is much
         # faster and more reliable!
-        cmd: /opt/ruby-{{ ruby_version }}/bin/bundle install --local
+        cmd: /opt/ruby-{{ ruby_version_live }}/bin/bundle install --local
 
     - name: Update the `current` folder to point to the new version
       file:
