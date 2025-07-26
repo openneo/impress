@@ -56,9 +56,6 @@ gem 'rack-attack', '~> 6.7'
 # For testing emails in development.
 gem 'letter_opener', '~> 1.8', '>= 1.8.1', group: :development
 
-# For parallel API calls.
-gem 'parallel', '~> 1.23'
-
 # For miscellaneous HTTP requests.
 gem "addressable", "~> 2.8"
 

@@ -552,7 +552,6 @@ DEPENDENCIES
   omniauth (~> 2.1)
   omniauth-rails_csrf_protection (~> 1.0)
   omniauth_openid_connect (~> 0.7.1)
-  parallel (~> 1.23)
   protocol-rack (~> 0.10.0, < 0.11.0)
   rack-attack (~> 6.7)
   rack-mini-profiler (~> 3.1)
