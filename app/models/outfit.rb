@@ -170,6 +170,11 @@ class Outfit < ApplicationRecord
   end
 
   def visible_layers
+    # TODO: This method doesn't currently handle alt styles! If the outfit has
+    # an alt_style, we should use its layers instead of pet_state layers, and
+    # filter items to only those with body_id=0. This isn't needed yet because
+    # this method is only used on item pages, which don't support alt styles.
+    # See useOutfitAppearance.js for the complete logic including alt styles.
     item_appearances = item_appearances(swf_asset_includes: [:zone])
 
     pet_layers = pet_state.swf_assets.includes(:zone).to_a

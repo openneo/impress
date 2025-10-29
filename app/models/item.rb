@@ -326,6 +326,12 @@ class Item < ApplicationRecord
       PetType.basic.released_before(released_at_estimate).
         distinct.pluck(:body_id).sort
     else
+      # The core challenge: distinguish "item for Maraquan pets" from "item that
+      # happens to fit the Maraquan Mynci" (which shares a body with basic Myncis).
+      # We use a general rule: a color is "modelable" only if it has at least one
+      # *unique* body (not shared with other colors). This filters out false
+      # positives while remaining self-sustaining.
+
       # First, find our compatible pet types, then pair each body ID with its
       # color. (As an optimization, we omit standard colors, other than the
       # basic colors. We also flatten the basic colors into the single color
@@ -336,6 +342,7 @@ class Item < ApplicationRecord
           Arel.sql("IF(colors.basic, 'basic', colors.id)"), :body_id)
 
       # Group colors by body, to help us find bodies unique to certain colors.
+      # Example: {93 => ["basic"], 112 => ["maraquan"], 47 => ["basic", "maraquan"]}
       compatible_color_ids_by_body_id = {}.tap do |h|
         compatible_pairs.each do |(color_id, body_id)|
           h[body_id] ||= []
@@ -343,17 +350,19 @@ class Item < ApplicationRecord
         end
       end
 
-      # Find non-basic colors with at least one unique compatible body. (This
-      # means we'll ignore e.g. the Maraquan Mynci, which has the same body as
-      # the Blue Mynci, as not indicating Maraquan compatibility in general.)
+      # Find non-basic colors with at least one unique compatible body (size == 1).
+      # This means we'll predict "all Maraquan pets" only if the item fits a
+      # Maraquan pet with a unique body (like the Maraquan Acara), not if it only
+      # fits the Maraquan Mynci (which shares its body with basic Myncis).
       modelable_color_ids =
         compatible_color_ids_by_body_id.
           filter { |k, v| v.size == 1 && v.first != "basic" }.
           values.map(&:first).uniq
 
-      # We can model on basic pets (perhaps in addition to the above) if we
-      # find at least one compatible basic body that doesn't *also* fit any of
-      # the modelable colors we identified above.
+      # We can model on basic pets if we find a basic body that doesn't also fit
+      # any modelable colors. This way, if an item fits both basic Mynci and
+      # Maraquan Acara (a modelable color), we treat it as "Maraquan item" not
+      # "basic item", avoiding false predictions for all basic pets.
       basic_is_modelable =
         compatible_color_ids_by_body_id.values.
           any? { |v| v.include?("basic") && (v & modelable_color_ids).empty? }
