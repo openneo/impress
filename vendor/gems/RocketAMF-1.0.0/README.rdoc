@@ -1,0 +1,47 @@
+== DESCRIPTION:
+
+RocketAMF is a full featured AMF0/3 serializer and deserializer with support for
+bi-directional Flash to Ruby class mapping, custom serialization and mapping,
+remoting gateway helpers that follow AMF0/3 messaging specs, and a suite of specs
+to ensure adherence to the specification documents put out by Adobe. If the C
+components compile, then RocketAMF automatically takes advantage of them to
+provide a substantial performance benefit. In addition, RocketAMF is fully
+compatible with Ruby 1.9.
+
+== INSTALL:
+
+  gem install RocketAMF
+
+== SIMPLE EXAMPLE:
+
+  require 'rocketamf'
+
+  hash = {:apple => "Apfel", :red => "Rot", :eyes => "Augen"}
+  File.open("amf.dat", 'w') do |f|
+    f.write RocketAMF.serialize(hash, 3) # Use AMF3 encoding to serialize
+  end
+
+== LICENSE:
+
+(The MIT License)
+
+Copyright (c) 2011 Stephen Augenstein and Jacob Henry
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

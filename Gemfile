@@ -45,7 +45,8 @@ gem 'sanitize', '~> 6.0', '>= 6.0.2'
 
 # For working with Neopets APIs.
 # unstable version of RocketAMF interprets info registry as a hash instead of an array
-gem 'RocketAMF', :git => 'https://github.com/rubyamf/rocketamf.git'
+# Vendored version with Ruby 3.4 ARM compatibility fixes (see vendor/gems/README-RocketAMF.md)
+gem 'RocketAMF', path: 'vendor/gems/RocketAMF-1.0.0'
 
 # For preventing too many modeling attempts.
 gem 'rack-attack', '~> 6.7'
