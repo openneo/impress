@@ -7,11 +7,10 @@ namespace "neopets:import" do
 		puts "Importing from NC Mall…"
 
 		# First, load all records of what's being sold in the live NC Mall. We load
-		# the homepage and all pages linked from the main document, and extract the
-		# items from each. (We also de-duplicate the items, which is important
-		# because the algorithm expects to only process each item once!)
-		pages = load_all_nc_mall_pages
-		live_item_records = pages.map { |p| p[:items] }.flatten.uniq
+		# all categories from the menu and fetch all items from each. (We also
+		# de-duplicate the items, which is important because the same item can
+		# appear in multiple categories!)
+		live_item_records = load_all_nc_mall_items.uniq { |item| item[:id] }
 
 		# Then, get the existing NC Mall records in our database. (We include the
 		# items, to be able to output the item name during logging.)
@@ -76,22 +75,28 @@ namespace "neopets:import" do
 	end
 end
 
-def load_all_nc_mall_pages
+def load_all_nc_mall_items
 	Sync do
-		# First, start loading the homepage.
-		homepage_task = Async { Neopets::NCMall.load_home_page }
+		# Load all categories from the menu JSON
+		categories = Neopets::NCMall.load_categories
 
-		# Next, load the page links for different categories etc.
-		links = Neopets::NCMall.load_page_links
+		# Load all pages for each category, 10 categories at a time
+		category_item_tasks = DTIRequests.load_many(max_at_once: 10) do |task|
+			categories.map do |category|
+				task.async do
+					type = category["type"]
+					cat_id = category["cat_id"]
 
-		# Next, load the linked pages, 10 at a time.
-		linked_page_tasks = DTIRequests.load_many(max_at_once: 10) do |task|
-			links.map do |link|
-				task.async { Neopets::NCMall.load_page link[:type], link[:cat] }
+					Rails.logger.debug "Loading category: #{category["cat_name"]} " +
+						"(type=#{type}, cat=#{cat_id})"
+
+					Neopets::NCMall.load_category_all_pages(type, cat_id)
+				end
 			end
 		end
 
-		# Finally, return all the pages: the homepage, and the linked pages.
-		[homepage_task.wait] + linked_page_tasks.map(&:wait)
+		# Flatten all items from all categories and return as a single array
+		# (We'll de-duplicate in the main task)
+		category_item_tasks.map(&:wait).flatten
 	end
 end

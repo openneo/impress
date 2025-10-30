@@ -1,25 +1,74 @@
 require "addressable/template"
 
+# Neopets::NCMall integrates with the Neopets NC Mall to fetch currently
+# available items and their pricing.
+#
+# The integration works in two steps:
+#
+# 1. Category Discovery: We fetch the NC Mall homepage and extract the
+#    browsable categories from the embedded `window.ncmall_menu` JSON data.
+#    We filter out special feature categories (those with external URLs) and
+#    structural parent nodes (those without a cat_id).
+#
+# 2. Item Fetching: For each category, we call the v2 category API with
+#    pagination support. Large categories may span multiple pages, which we
+#    fetch in parallel and combine. Items can appear in multiple categories,
+#    so the rake task de-duplicates by item ID.
+#
+# The parsed item data includes:
+#   - id: Neopets item ID
+#   - name: Item display name
+#   - description: Item description
+#   - price: Regular price in NC (NeoCash)
+#   - discount: Optional discount info (price, begins_at, ends_at)
+#   - is_available: Whether the item is currently purchasable
+#
+# This module is used by the `neopets:import:nc_mall` rake task to sync our
+# NCMallRecord table with the live NC Mall.
 module Neopets::NCMall
-	# Load the NC Mall home page content area, and return its useful data.
-	HOME_PAGE_URL = "https://ncmall.neopets.com/mall/ajax/home_page.phtml"
-	def self.load_home_page
-		load_page_by_url HOME_PAGE_URL
-	end
-
-	# Load the NC Mall page for a specific type and category ID.
+	# Load the NC Mall page for a specific type and category ID, with pagination.
 	CATEGORY_PAGE_URL_TEMPLATE = Addressable::Template.new(
-		"https://ncmall.neopets.com/mall/ajax/load_page.phtml?lang=en{&type,cat}"
+		"https://ncmall.neopets.com/mall/ajax/v2/category/index.phtml{?type,cat,page,limit}"
 	)
-	def self.load_page(type, cat)
-		load_page_by_url CATEGORY_PAGE_URL_TEMPLATE.expand(type:, cat:)
+	def self.load_page(type, cat, page: 1, limit: 24)
+		url = CATEGORY_PAGE_URL_TEMPLATE.expand(type:, cat:, page:, limit:)
+		Sync do
+			DTIRequests.get(url) do |response|
+				if response.status != 200
+					raise ResponseNotOK.new(response.status),
+						"expected status 200 but got #{response.status} (#{url})"
+				end
+
+				parse_nc_page response.read
+			end
+		end
 	end
 
-	# Load the NC Mall root document HTML, and extract the list of links to
-	# other pages ("New", "Popular", etc.)
+	# Load all pages for a specific category.
+	def self.load_category_all_pages(type, cat, limit: 24)
+		# First, load page 1 to get total page count
+		first_page = load_page(type, cat, page: 1, limit:)
+		total_pages = first_page[:total_pages]
+
+		# If there's only one page, return it
+		return first_page[:items] if total_pages <= 1
+
+		# Otherwise, load remaining pages in parallel
+		Sync do
+			remaining_page_tasks = (2..total_pages).map do |page_num|
+				Async { load_page(type, cat, page: page_num, limit:) }
+			end
+
+			all_pages = [first_page] + remaining_page_tasks.map(&:wait)
+			all_pages.flat_map { |page| page[:items] }
+		end
+	end
+
+	# Load the NC Mall root document HTML, and extract categories from the
+	# embedded menu JSON.
 	ROOT_DOCUMENT_URL = "https://ncmall.neopets.com/mall/shop.phtml"
-	PAGE_LINK_PATTERN = /load_items_pane\(['"](.+?)['"], ([0-9]+)\).+?>(.+?)</
-	def self.load_page_links
+	MENU_JSON_PATTERN = /window\.ncmall_menu = (\[.*?\]);/m
+	def self.load_categories
 		html = Sync do
 			DTIRequests.get(ROOT_DOCUMENT_URL) do |response|
 				if response.status != 200
@@ -31,11 +80,34 @@ module Neopets::NCMall
 			end
 		end
 
-		# Extract `load_items_pane` calls from the root document's HTML. (We use
-		# a very simplified regex, rather than actually parsing the full HTML!)
-		html.scan(PAGE_LINK_PATTERN).
-			map { |type, cat, label| {type:, cat:, label:} }.
-			uniq
+		# Extract the ncmall_menu JSON from the script tag
+		match = html.match(MENU_JSON_PATTERN)
+		unless match
+			raise UnexpectedResponseFormat,
+				"could not find window.ncmall_menu in homepage HTML"
+		end
+
+		begin
+			menu = JSON.parse(match[1])
+		rescue JSON::ParserError => e
+			Rails.logger.debug "Failed to parse ncmall_menu JSON: #{e.message}"
+			raise UnexpectedResponseFormat,
+				"failed to parse ncmall_menu as JSON"
+		end
+
+		# Flatten the menu structure, and filter to browsable categories
+		browsable_categories = flatten_categories(menu).
+			# Skip categories without a cat_id (structural parent nodes)
+			reject { |cat| cat['cat_id'].blank? }.
+			# Skip categories with external URLs (special features)
+			reject { |cat| cat['url'].present? }
+
+		# Map each category to include the API type (and remove load_type)
+		browsable_categories.map do |cat|
+			cat.except("load_type").merge(
+				"type" => map_load_type_to_api_type(cat["load_type"])
+			)
+		end
 	end
 
 	def self.load_styles(species_id:, neologin:)
@@ -49,6 +121,26 @@ module Neopets::NCMall
 	end
 
 	private
+
+	# Map load_type from menu JSON to the v2 API type parameter.
+	def self.map_load_type_to_api_type(load_type)
+		case load_type
+		when "new"
+			"new_items"
+		when "popular"
+			"popular_items"
+		else
+			"browse"
+		end
+	end
+
+	# Flatten nested category structure (handles children arrays)
+	def self.flatten_categories(menu)
+		menu.flat_map do |cat|
+			children = cat["children"] || []
+			[cat] + flatten_categories(children)
+		end
+	end
 
 	STYLING_STUDIO_URL = "https://www.neopets.com/np-templates/ajax/stylingstudio/studio.php"
 	def self.load_styles_tab(species_id:, neologin:, tab:)
@@ -81,20 +173,7 @@ module Neopets::NCMall
 		end
 	end
 
-	def self.load_page_by_url(url)
-		Sync do
-			DTIRequests.get(url) do |response|
-				if response.status != 200
-					raise ResponseNotOK.new(response.status),
-						"expected status 200 but got #{response.status} (#{url})"
-				end
-
-				parse_nc_page response.read
-			end
-		end
-	end
-
-	# Given a string of NC page data, parse the useful data out of it!
+	# Given a string of v2 NC page data, parse the useful data out of it!
 	def self.parse_nc_page(nc_page_str)
 		begin
 			nc_page = JSON.parse(nc_page_str)
@@ -104,24 +183,14 @@ module Neopets::NCMall
 				"failed to parse NC page response as JSON"
 		end
 
-		unless nc_page.has_key? "object_data"
-			raise UnexpectedResponseFormat, "missing field object_data in NC page"
+		# v2 API returns items in a "data" array
+		unless nc_page.has_key? "data"
+			raise UnexpectedResponseFormat, "missing field data in v2 NC page"
 		end
 
-		object_data = nc_page["object_data"]
+		item_data = nc_page["data"] || []
 
-		# NOTE: When there's no object data, it will be an empty array instead of
-		# an empty hash. Weird API thing to work around!
-		object_data = {} if object_data == []
-
-		# Only the items in the `render` list are actually listed as directly for
-		# sale in the shop. `object_data` might contain other items that provide
-		# supporting information about them, but aren't actually for sale.
-		visible_object_data = (nc_page["render"] || []).
-			map { |id| object_data[id.to_s] }.
-			filter(&:present?)
-
-		items = visible_object_data.map do |item_info|
+		items = item_data.map do |item_info|
 			{
 				id: item_info["id"],
 				name: item_info["name"],
@@ -132,7 +201,12 @@ module Neopets::NCMall
 			}
 		end
 
-		{items:}
+		{
+			items:,
+			total_pages: nc_page["totalPages"].to_i,
+			page: nc_page["page"].to_i,
+			limit: nc_page["limit"].to_i,
+		}
 	end
 
 	# Given item info, return a hash of discount-specific info, if any.
