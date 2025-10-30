@@ -1,12 +1,9 @@
 development:
   primary:
-    # You can override these default settings with this environment variable,
-    # fully or partially. We do this in the .devcontainer setup!
-    url: <%= ENV['DATABASE_URL_PRIMARY_DEV'] %>
     adapter: mysql2
+    host: <%= ENV.fetch("DB_HOST", "localhost") %>
     database: openneo_impress
-    username: impress_dev
-    password: impress_dev
+    username: root
     pool: 5
     encoding: utf8mb4
     collation: utf8mb4_unicode_520_ci
@@ -14,13 +11,10 @@ development:
       sql_mode: TRADITIONAL
 
   openneo_id:
-    # You can override these default settings with this environment variable,
-    # fully or partially. We do this in the .devcontainer setup!
-    url: <%= ENV['DATABASE_URL_OPENNEO_ID_DEV'] %>
     adapter: mysql2
+    host: <%= ENV.fetch("DB_HOST", "localhost") %>
     database: openneo_id
-    username: impress_dev
-    password: impress_dev
+    username: root
     pool: 2
     variables:
       sql_mode: TRADITIONAL
@@ -28,13 +22,10 @@ development:
 
 test:
   primary:
-    # You can override these default settings with this environment variable,
-    # fully or partially. We do this in the .devcontainer setup!
-    url: <%= ENV['DATABASE_URL_PRIMARY_TEST'] %>
     adapter: mysql2
+    host: <%= ENV.fetch("DB_HOST", "localhost") %>
     database: openneo_impress_test
-    username: impress_dev
-    password: impress_dev
+    username: root
     pool: 5
     encoding: utf8mb4
     collation: utf8mb4_unicode_520_ci
@@ -42,13 +33,10 @@ test:
       sql_mode: TRADITIONAL
 
   openneo_id:
-    # You can override these default settings with this environment variable,
-    # fully or partially. We do this in the .devcontainer setup!
-    url: <%= ENV['DATABASE_URL_OPENNEO_ID_TEST'] %>
     adapter: mysql2
+    host: <%= ENV.fetch("DB_HOST", "localhost") %>
     database: openneo_id_test
-    username: impress_dev
-    password: impress_dev
+    username: root
     pool: 2
     variables:
       sql_mode: TRADITIONAL

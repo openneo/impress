@@ -1,9 +1,3 @@
-GIT
-  remote: https://github.com/rubyamf/rocketamf.git
-  revision: 796f591d002b5cf47df436dbcbd6f2ab00e869ed
-  specs:
-    RocketAMF (1.0.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -533,7 +527,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  RocketAMF!
   addressable (~> 2.8)
   async (~> 2.17)
   async-http (~> 0.89.0)

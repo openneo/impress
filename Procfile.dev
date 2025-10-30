@@ -1,2 +1,2 @@
-web: unset PORT && env RUBY_DEBUG_OPEN=true bin/rails server
+web: unset PORT && env RUBY_DEBUG_OPEN=true bin/rails server -b 0.0.0.0
 js: yarn dev

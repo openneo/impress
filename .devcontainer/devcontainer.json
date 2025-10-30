@@ -1,46 +1,31 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/ruby-rails-postgres
+// For format details, see https://containers.dev/implementors/json_reference/.
+// For config options, see the README at: https://github.com/devcontainers/templates/tree/main/src/ruby
 {
-  "name": "Dress to Impress",
-  "dockerComposeFile": "docker-compose.yml",
-  "service": "app",
+  "name": "openneo_impress_items",
+  "dockerComposeFile": "compose.yaml",
+  "service": "rails-app",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-  "features": {
-    "ghcr.io/devcontainers/features/node:1": {
-      "nodeGypDependencies": true,
-      "version": "lts"
-    }
-  },
 
   // Features to add to the dev container. More info: https://containers.dev/features.
-  // "features": {},
-
-  // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  // This can be used to network with other containers or the host.
-  "forwardPorts": [3000],
-
-  // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": ".devcontainer/post-create.sh",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/rails/devcontainer/features/mysql-client": {}
+  },
 
   "containerEnv": {
-    // Because the database is hosted on the local network at the hostname `db`,
-    // we partially override `config/database.yml` to connect to `db`!
-    "DATABASE_URL_PRIMARY_DEV": "mysql2://db",
-    "DATABASE_URL_OPENNEO_ID_DEV": "mysql2://db",
-    "DATABASE_URL_PRIMARY_TEST": "mysql2://db",
-    "DATABASE_URL_OPENNEO_ID_TEST": "mysql2://db",
+    "DB_HOST": "mysql"
+  },
 
-    // HACK: Out of the box, this dev container doesn't allow installation to
-    // the default GEM_HOME, because of a weird thing going on with RVM.
-    // Instead, we set a custom GEM_HOME and GEM_PATH in our home directory!
-    // https://github.com/devcontainers/templates/issues/188
-    "GEM_HOME": "~/.rubygems",
-    "GEM_PATH": "~/.rubygems"
-  }
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [3000],
 
   // Configure tool-specific properties.
   // "customizations": {},
 
-  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-  // "remoteUser": "root"
+  // Uncomment to connect as root instead. More info: https://containers.dev/implementors/json_reference/#remoteUser.
+  // "remoteUser": "root",
+
+
+  // Use 'postCreateCommand' to run commands after the container is created.
+  "postCreateCommand": "bin/setup --skip-server"
 }
