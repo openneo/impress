@@ -23,7 +23,7 @@
     # 6. Update the service file manually to reference the newly-uploaded version by path.
     # 7. Link the new version as `current` manually.
     # 8. Reset the service file to use the new Ruby to run `current`.
-    skip_set_as_current: yes
+    skip_set_as_current: no
   tasks:
     - name: Generate a version name from the current timestamp
       command: date '+%Y-%m-%d-%s'
