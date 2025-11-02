@@ -449,12 +449,12 @@
         minute: "*/10"
         job: "bash -c 'source /etc/profile && source ~/.bash_profile && cd /srv/impress/current && bin/rails nc_mall:sync'"
 
-    - name: Create 10min cron job to run `rails neopets:import:nc_mall`
+    - name: Create 10min cron job to run `rails neopets:import`
       become_user: impress
       cron:
-        name: "Impress: import NC Mall data"
+        name: "Impress: import Neopets data"
         minute: "*/10"
-        job: "bash -c 'source /etc/profile && source ~/.bash_profile && cd /srv/impress/current && bin/rails neopets:import:nc_mall'"
+        job: "bash -c 'source /etc/profile && source ~/.bash_profile && cd /srv/impress/current && bin/rails neopets:import'"
 
     - name: Create weekly cron job to run `rails public_data:commit`
       become_user: impress
