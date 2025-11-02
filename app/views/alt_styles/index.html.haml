@@ -22,6 +22,16 @@
 
 	[1]: https://www.neopets.com/mall/stylingstudio/
 
+- if support_staff?
+	%p
+		%strong 💡 Support summary:
+		✅ #{number_with_delimiter @counts[:labeled]} labeled
+		- if @unlabeled_style
+			+ ❓️
+			= link_to "#{number_with_delimiter @counts[:unlabeled]} unlabeled",
+				edit_alt_style_path(@unlabeled_style, next: "unlabeled-style")
+		\= #{number_with_delimiter @counts[:total]} total
+
 = form_with url: alt_styles_path, method: :get,
             class: "rainbow-pool-filters" do |f|
 	%fieldset

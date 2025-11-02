@@ -25,6 +25,15 @@ class AltStylesController < ApplicationController
 				# manifests ready!
 				SwfAsset.preload_manifests @alt_styles.map(&:swf_assets).flatten
 
+				if support_staff?
+					@counts = {
+						total: AltStyle.count,
+						unlabeled: AltStyle.unlabeled.count,
+					}
+					@counts[:labeled] = @counts[:total] - @counts[:unlabeled]
+					@unlabeled_style = AltStyle.unlabeled.newest.first
+				end
+
 				render
 			}
 			format.json {
