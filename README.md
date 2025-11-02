@@ -133,7 +133,12 @@ config/
 
 The `openneo_id` database is a legacy from when authentication was a separate service ("OpenNeo ID") meant to unify auth across multiple OpenNeo projects. DTI was the only project that succeeded, so the apps were merged—but the database split remains for now.
 
-**Implication**: Rails is configured for multi-database mode. User auth models live in `auth_user.rb` and connect to `openneo_id`.
+**Implications**:
+- Rails is configured for multi-database mode
+- User auth models live in `auth_user.rb` and connect to `openneo_id`
+- **⚠️ CRITICAL**: Impress 2020 also directly accesses both `openneo_impress` and `openneo_id` databases via SQL
+- **Database migrations affecting these schemas must consider Impress 2020's direct access**
+- See [docs/impress-2020-dependencies.md](./docs/impress-2020-dependencies.md) for full details on this dependency
 
 ### Rails/React Hybrid
 
@@ -149,7 +154,10 @@ The goal is to simplify this over time—either consolidate into Rails+Turbo, or
 
 - **Main app**: VPS running Rails (Puma, MySQL)
 - **Impress 2020**: Separate VPS in same datacenter (NextJS, GraphQL, headless browser for images)
-- Both services share the same MySQL database (Impress 2020 makes SQL calls over the network)
+- **Shared databases**: Both services directly access the same MySQL databases over the network
+  - `openneo_impress` - Main application data
+  - `openneo_id` - Authentication data
+  - ⚠️ **Any database schema changes must be compatible with both services**
 
 ---
 
