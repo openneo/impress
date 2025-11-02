@@ -9,11 +9,16 @@
   // Features to add to the dev container. More info: https://containers.dev/features.
   "features": {
     "ghcr.io/devcontainers/features/node:1": {},
-    "ghcr.io/rails/devcontainer/features/mysql-client": {}
+    "ghcr.io/rails/devcontainer/features/mysql-client": {},
+    "ghcr.io/devcontainers-extra/features/ansible:2": {}
   },
 
   "containerEnv": {
     "DB_HOST": "mysql"
+  },
+
+  "remoteEnv": {
+    "IMPRESS_DEPLOY_USER": "${localEnv:USER}"
   },
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -27,5 +32,5 @@
 
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "bin/setup --skip-server"
+  "postCreateCommand": "bash .devcontainer/setup-ssh-config.sh && bin/setup --skip-server"
 }
