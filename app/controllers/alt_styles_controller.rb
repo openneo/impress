@@ -15,15 +15,16 @@ class AltStylesController < ApplicationController
 		@alt_styles.merge!(@color.alt_styles) if @color
 		@alt_styles.merge!(@species.alt_styles) if @species
 
-		# We're using the HTML5 image for our preview, so make sure we have all the
-		# manifests ready!
-		SwfAsset.preload_manifests @alt_styles.map(&:swf_assets).flatten
-
 		respond_to do |format|
 			format.html {
 				@alt_styles = @alt_styles.
 					by_creation_date.order(:color_id, :species_id, :series_name).
 					paginate(page: params[:page], per_page: 30)
+
+				# We're using the HTML5 image for our preview, so make sure we have all the
+				# manifests ready!
+				SwfAsset.preload_manifests @alt_styles.map(&:swf_assets).flatten
+
 				render
 			}
 			format.json {
