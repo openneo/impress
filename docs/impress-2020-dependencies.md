@@ -135,14 +135,33 @@ This is the most complex migration:
 
 - **Main Rails app**: Primary VPS server, serves web traffic and API
 - **Impress 2020**: Separate VPS in same datacenter, provides GraphQL API and image services
-- **Database**: MySQL on main Rails server, accessed by both services
-- **OpenNeo ID database**: Separate MySQL database (legacy, could be merged)
+- **Databases**: Two MySQL databases on main Rails server, **both accessed directly by Impress 2020**:
+  - `openneo_impress` - Main application data (items, pets, outfits, etc.)
+  - `openneo_id` - Authentication data (user accounts, passwords, OAuth)
+
+**CRITICAL**: Impress 2020 directly queries both databases via SQL. Any database consolidation must wait until Impress 2020 is retired, or both services must be updated in a coordinated deployment.
 
 ### After Full Migration
 
 - **Single Rails app**: One VPS serving everything
 - **Image service**: Either integrated into Rails or extracted as a simple microservice
-- **Single MySQL database**: Merge OpenNeo ID schema into main database
+- **Single MySQL database**: Can merge `openneo_id` into `openneo_impress` once Impress 2020 is retired
+  - See `feature/consolidate-auth-database` branch for implementation
+  - Migration is ready but BLOCKED on Impress 2020 retirement
+
+## Database Consolidation Blocker
+
+**IMPORTANT**: A database consolidation migration exists on the `feature/consolidate-auth-database` branch that would merge the `openneo_id` database into `openneo_impress`. However, **this migration is blocked** because:
+
+1. **Impress 2020 uses both databases directly** for authentication and user queries
+2. Consolidating now would break Impress 2020's login functionality
+3. The migration can only proceed after Impress 2020 is fully retired
+
+**Options to unblock:**
+- **Preferred**: Complete Impress 2020 retirement first (Priority 1-3 migrations above)
+- **Alternative**: Coordinate simultaneous deployment of both services during maintenance window
+
+See `docs/database-consolidation-deployment.md` (on feature branch) for full deployment plan.
 
 ## Notes
 
@@ -150,6 +169,7 @@ This is the most complex migration:
 - Many API calls have been successfully migrated from GraphQL to REST
 - The GraphQL dependency is primarily in the core outfit rendering logic
 - Support tools are the lowest priority since they're staff-only
+- Database consolidation is ready but awaiting Impress 2020 retirement
 
 ## See Also
 
