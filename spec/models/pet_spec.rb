@@ -551,6 +551,17 @@ RSpec.describe Pet, type: :model do
           it("has no thumbnail yet") { expect(alt_style.thumbnail_url?).to be false }
           it("is saved when saving the pet") { pet.save!; should be_persisted }
 
+          it "logs creation of new alt style" do
+            expect(Rails.logger).to receive(:info).with(
+              a_string_matching(/\[Alt Style Modeling\] Created alt style ID=87458 for pet=Majal_Kita/)
+                .and(matching(/species_id=20/))
+                .and(matching(/color_id=62/))
+                .and(matching(/body_id=378/))
+                .and(matching(/asset_ids=\[56223\]/))
+            )
+            pet.alt_style
+          end
+
           describe "its assets" do
             subject(:assets) { alt_style.swf_assets }
             let(:asset_ids) { assets.map(&:remote_id) }
@@ -588,6 +599,13 @@ RSpec.describe Pet, type: :model do
               new_pet.save!; expect(alt_style.previous_changes).to be_empty
             end
 
+            it "logs re-modeling without changes" do
+              expect(Rails.logger).to receive(:info).with(
+                a_string_matching(/\[Alt Style Modeling\] Loaded alt style ID=87458 for pet=Majal_Kita \(no changes\)/)
+              )
+              new_pet.alt_style
+            end
+
             describe "its assets" do
               subject(:assets) { alt_style.swf_assets }
 
@@ -597,6 +615,37 @@ RSpec.describe Pet, type: :model do
                 new_pet.save!; expect(assets.map(&:previous_changes)).to all be_empty
               end
             end
+          end
+        end
+
+        context "when an alt style with the same ID but different attributes already exists" do
+          before do
+            Pet.load("Blue_Jetsam").save!
+            # Create an alt style with ID 87458 but different attributes
+            # (simulating Neopets reusing an ID)
+            wrong_color = Color.find_by_name!("Blue")
+            wrong_species = Species.find_by_name!("Acara")
+            AltStyle.create!(
+              id: 87458,
+              color_id: wrong_color.id,
+              species_id: wrong_species.id,
+              body_id: 999,
+              thumbnail_url: "http://example.com/wrong.png"
+            )
+          end
+
+          subject(:pet) { Pet.load("Majal_Kita") }
+
+          it "logs a warning about updating existing alt style" do
+            expect(Rails.logger).to receive(:warn).with(
+              a_string_matching(/\[Alt Style Modeling\] Updated alt style ID=87458 for pet=Majal_Kita/)
+                .and(matching(/CHANGED:/))
+                .and(matching(/species_id: 1 -> 20/))
+                .and(matching(/color_id: 8 -> 62/))
+                .and(matching(/body_id: 999 -> 378/))
+                .and(matching(/asset_ids: \[\] -> \[56223\]/))
+            )
+            pet.alt_style
           end
         end
       end

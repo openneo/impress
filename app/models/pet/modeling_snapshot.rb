@@ -52,12 +52,42 @@ class Pet::ModelingSnapshot
 
       id = @custom_pet[:alt_style].to_i
       AltStyle.find_or_initialize_by(id:).tap do |alt_style|
+        pet_name = @custom_pet[:name]
+
+        # Capture old asset IDs before assignment
+        old_asset_ids = alt_style.swf_assets.map(&:remote_id).sort
+
+        # Assign new attributes and assets
+        new_asset_ids = alt_style_assets.map(&:remote_id).sort
         alt_style.assign_attributes(
           color_id: @custom_pet[:alt_color].to_i,
           species_id: @custom_pet[:species_id].to_i,
           body_id: @custom_pet[:body_id].to_i,
           swf_assets: alt_style_assets,
         )
+
+        # Log the modeling event using Rails' change tracking
+        if alt_style.new_record?
+          Rails.logger.info "[Alt Style Modeling] Created alt style " \
+            "ID=#{id} for pet=#{pet_name}: " \
+            "species_id=#{alt_style.species_id}, " \
+            "color_id=#{alt_style.color_id}, " \
+            "body_id=#{alt_style.body_id}, " \
+            "asset_ids=#{new_asset_ids.inspect}"
+        elsif alt_style.changes.any? || old_asset_ids != new_asset_ids
+          changes = []
+          changes << "species_id: #{alt_style.species_id_was} -> #{alt_style.species_id}" if alt_style.species_id_changed?
+          changes << "color_id: #{alt_style.color_id_was} -> #{alt_style.color_id}" if alt_style.color_id_changed?
+          changes << "body_id: #{alt_style.body_id_was} -> #{alt_style.body_id}" if alt_style.body_id_changed?
+          changes << "asset_ids: #{old_asset_ids.inspect} -> #{new_asset_ids.inspect}" if old_asset_ids != new_asset_ids
+
+          Rails.logger.warn "[Alt Style Modeling] Updated alt style " \
+            "ID=#{id} for pet=#{pet_name}. " \
+            "CHANGED: #{changes.join(', ')}"
+        else
+          Rails.logger.info "[Alt Style Modeling] Loaded alt style " \
+            "ID=#{id} for pet=#{pet_name} (no changes)"
+        end
       end
     end
   end
