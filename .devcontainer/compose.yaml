@@ -7,7 +7,7 @@ services:
       dockerfile: .devcontainer/Dockerfile
 
     volumes:
-    - ../..:/workspaces:cached
+      - ../..:/workspaces:cached
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
@@ -18,17 +18,20 @@ services:
     # Use "forwardPorts" in **devcontainer.json** to forward an app port locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
     depends_on:
-    - mysql
+      - mysql
+
+    environment:
+      DB_USER: root
 
   mysql:
     image: mariadb:10.6
     restart: unless-stopped
     environment:
-        MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'true'
     volumes:
-    - mysql-data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
     networks:
-    - default
+      - default
 
 volumes:
   mysql-data:
