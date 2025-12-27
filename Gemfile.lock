@@ -111,10 +111,6 @@ GEM
       async-container (~> 0.16)
       string-format (~> 0.2)
     attr_required (1.0.2)
-    babel-source (5.8.35)
-    babel-transpiler (0.7.0)
-      babel-source (>= 4.0, < 6)
-      execjs (~> 2.0)
     backport (1.2.0)
     base64 (0.3.0)
     bcrypt (3.1.20)
@@ -385,12 +381,6 @@ GEM
       erb
       psych (>= 4.0.0)
       tsort
-    react-rails (2.7.1)
-      babel-transpiler (>= 0.7.0)
-      connection_pool
-      execjs
-      railties (>= 3.2)
-      tilt
     regexp_parser (2.11.3)
     reline (0.6.3)
       io-console (~> 0.5)
@@ -568,7 +558,6 @@ DEPENDENCIES
   rails (~> 8.0, >= 8.0.1)
   rails-i18n (~> 8.0, >= 8.0.1)
   rdiscount (~> 2.2, >= 2.2.7.1)
-  react-rails (~> 2.7, >= 2.7.1)
   rspec-rails (~> 7.0)
   sanitize (~> 6.0, >= 6.0.2)
   sass-rails (~> 6.0)

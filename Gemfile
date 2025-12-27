@@ -18,7 +18,6 @@ gem 'sprockets', '~> 4.2'
 gem 'haml', '~> 6.1', '>= 6.1.1'
 gem 'sass-rails', '~> 6.0'
 gem 'terser', '~> 1.1', '>= 1.1.17'
-gem 'react-rails', '~> 2.7', '>= 2.7.1'
 gem 'jsbundling-rails', '~> 1.3'
 gem 'turbo-rails', '~> 2.0'
 
