@@ -35,8 +35,11 @@
       - if item.nc_trade_value
         = link_to lebron_url_for(item),
           title: nc_trade_value_updated_at_text(item.nc_trade_value) do
-          = t 'items.show.resources.lebron',
+          = t 'items.show.resources.lebron_value',
             value: nc_trade_value_estimate_text(item.nc_trade_value)
+      - elsif item.nc?
+        = link_to lebron_url_for(item) do
+          = t 'items.show.resources.lebron'
       - unless item.nc?
         = link_to t('items.show.resources.shop_wizard'), shop_wizard_url_for(item)
         = link_to t('items.show.resources.trading_post'), trading_post_url_for(item)
