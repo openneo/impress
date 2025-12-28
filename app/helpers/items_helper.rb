@@ -141,6 +141,13 @@ module ItemsHelper
   def auction_genie_url_for(item)
     AUCTION_GENIE_URL_TEMPLATE.expand(auctiongenie: item.name).to_s
   end
+
+  LEBRON_URL_TEMPLATE = Addressable::Template.new(
+    "https://stylisher.club/search/{name}"
+  )
+  def lebron_url_for(item)
+    LEBRON_URL_TEMPLATE.expand(name: item.name).to_s
+  end
   
   def format_contribution_count(count)
     " (&times;#{count})".html_safe if count > 1
