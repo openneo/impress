@@ -170,52 +170,67 @@ class Outfit < ApplicationRecord
   end
 
   def visible_layers
-    # TODO: This method doesn't currently handle alt styles! If the outfit has
-    # an alt_style, we should use its layers instead of pet_state layers, and
-    # filter items to only those with body_id=0. This isn't needed yet because
-    # this method is only used on item pages, which don't support alt styles.
-    # See useOutfitAppearance.js for the complete logic including alt styles.
-    item_appearances = item_appearances(swf_asset_includes: [:zone])
+    # Step 1: Choose biology layers - use alt style if present, otherwise pet state
+    if alt_style
+      biology_layers = alt_style.swf_assets.includes(:zone).to_a
+      body = alt_style
+      using_alt_style = true
+    else
+      biology_layers = pet_state.swf_assets.includes(:zone).to_a
+      body = pet_type
+      using_alt_style = false
+    end
 
-    pet_layers = pet_state.swf_assets.includes(:zone).to_a
+    # Step 2: Load item appearances for the appropriate body
+    item_appearances = Item.appearances_for(
+      worn_items,
+      body,
+      swf_asset_includes: [:zone]
+    ).values
     item_layers = item_appearances.map(&:swf_assets).flatten
 
-    pet_restricted_zone_ids = pet_layers.map(&:restricted_zone_ids).
+    # For alt styles, only body_id=0 items are compatible
+    if using_alt_style
+      item_layers.reject! { |sa| sa.body_id != 0 }
+    end
+
+    # Step 3: Apply restriction rules
+    biology_restricted_zone_ids = biology_layers.map(&:restricted_zone_ids).
       flatten.to_set
     item_restricted_zone_ids = item_appearances.
       map(&:restricted_zone_ids).flatten.to_set
 
-    # When an item restricts a zone, it hides pet layers of the same zone.
+    # Rule 3a: When an item restricts a zone, it hides biology layers of the same zone.
     # We use this to e.g. make a hat hide a hair ruff.
     #
     # NOTE: Items' restricted layers also affect what items you can wear at
     #       the same time. We don't enforce anything about that here, and
     #       instead assume that the input by this point is valid!
-    pet_layers.reject! { |sa| item_restricted_zone_ids.include?(sa.zone_id) }
+    biology_layers.reject! { |sa| item_restricted_zone_ids.include?(sa.zone_id) }
 
-    # When a pet appearance restricts a zone, or when the pet is Unconverted,
-    # it makes body-specific items incompatible. We use this to disallow UCs
-    # from wearing certain body-specific Biology Effects, Statics, etc, while
-    # still allowing non-body-specific items in those zones! (I think this
-    # happens for some Invisible pet stuff, too?)
+    # Rule 3b: When a biology appearance restricts a zone, or when the pet is
+    # Unconverted, it makes body-specific items incompatible. We use this to
+    # disallow UCs from wearing certain body-specific Biology Effects, Statics,
+    # etc, while still allowing non-body-specific items in those zones! (I think
+    # this happens for some Invisible pet stuff, too?)
     #
     # TODO: We shouldn't be *hiding* these zones, like we do with items; we
     #       should be doing this way earlier, to prevent the item from even
     #       showing up even in search results!
     #
-    # NOTE: This can result in both pet layers and items occupying the same
+    # NOTE: This can result in both biology layers and items occupying the same
     #       zone, like Static, so long as the item isn't body-specific! That's
     #       correct, and the item layer should be on top! (Here, we implement
     #       it by placing item layers second in the list, and rely on JS sort
     #       stability, and *then* rely on the UI to respect that ordering when
     #       rendering them by depth. Not great! 😅)
     #
-    # NOTE: We used to also include the pet appearance's *occupied* zones in
+    # NOTE: We used to also include the biology appearance's *occupied* zones in
     #       this condition, not just the restricted zones, as a sensible
     #       defensive default, even though we weren't aware of any relevant
     #       items. But now we know that actually the "Bruce Brucey B Mouth"
     #       occupies the real Mouth zone, and still should be visible and
-    #       above pet layers! So, we now only check *restricted* zones.
+    #       above biology layers! So, we now only check *restricted* zones.
     #
     # NOTE: UCs used to implement their restrictions by listing specific
     #       zones, but it seems that the logic has changed to just be about
@@ -232,14 +247,16 @@ class Outfit < ApplicationRecord
       item_layers.reject! { |sa| sa.body_specific? }
     else
       item_layers.reject! { |sa| sa.body_specific? &&
-        pet_restricted_zone_ids.include?(sa.zone_id) }
+        biology_restricted_zone_ids.include?(sa.zone_id) }
     end
 
-    # A pet appearance can also restrict its own zones. The Wraith Uni is an
-    # interesting example: it has a horn, but its zone restrictions hide it!
-    pet_layers.reject! { |sa| pet_restricted_zone_ids.include?(sa.zone_id) }
+    # Rule 3c: A biology appearance can also restrict its own zones. The Wraith
+    # Uni is an interesting example: it has a horn, but its zone restrictions
+    # hide it!
+    biology_layers.reject! { |sa| biology_restricted_zone_ids.include?(sa.zone_id) }
 
-    (pet_layers + item_layers).sort_by(&:depth)
+    # Step 4: Sort by depth and return
+    (biology_layers + item_layers).sort_by(&:depth)
   end
 
   def wardrobe_params

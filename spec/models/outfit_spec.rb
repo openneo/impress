@@ -8,7 +8,7 @@ RSpec.describe Outfit do
 		pet_state = PetState.create!(
 			pet_type: pet_type,
 			pose: pose,
-			swf_asset_ids: swf_assets.map(&:id)
+			swf_asset_ids: swf_assets.empty? ? [0] : swf_assets.map(&:id)
 		)
 		pet_state.swf_assets = swf_assets
 		pet_state
@@ -374,6 +374,172 @@ RSpec.describe Outfit do
 				# shirt_asset (26), head_layer (34)
 				expect(layers.map(&:depth)).to eq([3, 4, 16, 18, 26, 34])
 				expect(layers).to eq([background, bg_item, hat_asset, body_layer, shirt_asset, head_layer])
+			end
+		end
+
+		context "alt styles (alternative pet appearances)" do
+			before do
+				# Create an alt style with its own body_id distinct from regular pets
+				@alt_style = AltStyle.create!(
+					species: species(:acara),
+					color: colors(:blue),
+					body_id: 999, # Distinct from the regular pet's body_id (1)
+					series_name: "Nostalgic",
+					thumbnail_url: "https://images.neopets.example/alt_style.png"
+				)
+			end
+
+			it "uses alt style layers instead of pet state layers" do
+				# Create regular pet layers
+				regular_head = build_biology_asset(zones(:head), body_id: 1)
+				regular_body = build_biology_asset(zones(:body), body_id: 1)
+				pet_state = build_pet_state(@pet_type, swf_assets: [regular_head, regular_body])
+
+				# Create alt style layers (with the alt style's body_id)
+				alt_head = build_biology_asset(zones(:head), body_id: 999)
+				alt_body = build_biology_asset(zones(:body), body_id: 999)
+				@alt_style.swf_assets = [alt_head, alt_body]
+
+				# Create outfit with alt_style
+				outfit = Outfit.new(pet_state: pet_state, alt_style: @alt_style)
+
+				layers = outfit.visible_layers
+
+				# Should use alt style layers, not pet state layers
+				expect(layers).to contain_exactly(alt_head, alt_body)
+				expect(layers).not_to include(regular_head, regular_body)
+			end
+
+			it "only includes body_id=0 items with alt styles" do
+				# Create alt style layers
+				alt_head = build_biology_asset(zones(:head), body_id: 999)
+				@alt_style.swf_assets = [alt_head]
+				pet_state = build_pet_state(@pet_type)
+
+				# Create a body-specific item for the alt style's body_id
+				body_specific_asset = build_item_asset(zones(:hat), body_id: 999)
+				body_specific_item = build_item("Body-specific Hat", swf_assets: [body_specific_asset])
+
+				# Create a universal item (body_id=0)
+				universal_asset = build_item_asset(zones(:background), body_id: 0)
+				universal_item = build_item("Universal Background", swf_assets: [universal_asset])
+
+				outfit = Outfit.new(pet_state: pet_state, alt_style: @alt_style)
+				outfit.worn_items = [body_specific_item, universal_item]
+
+				layers = outfit.visible_layers
+
+				# Only the universal item should appear
+				expect(layers).to contain_exactly(alt_head, universal_asset)
+				expect(layers).not_to include(body_specific_asset)
+			end
+
+			it "does not include items from the regular pet's body_id" do
+				# Create alt style layers
+				alt_body = build_biology_asset(zones(:body), body_id: 999)
+				@alt_style.swf_assets = [alt_body]
+				pet_state = build_pet_state(@pet_type)
+
+				# Create an item that fits the regular pet's body_id (1)
+				regular_item_asset = build_item_asset(zones(:hat), body_id: 1)
+				regular_item = build_item("Regular Pet Hat", swf_assets: [regular_item_asset])
+
+				outfit = Outfit.new(pet_state: pet_state, alt_style: @alt_style)
+				outfit.worn_items = [regular_item]
+
+				layers = outfit.visible_layers
+
+				# The regular pet item should not appear on the alt style
+				expect(layers).to contain_exactly(alt_body)
+				expect(layers).not_to include(regular_item_asset)
+			end
+
+			it "applies item restriction rules with alt styles" do
+				# Create alt style layers including hair
+				alt_head = build_biology_asset(zones(:head), body_id: 999)
+				alt_hair = build_biology_asset(zones(:hairfront), body_id: 999)
+				@alt_style.swf_assets = [alt_head, alt_hair]
+				pet_state = build_pet_state(@pet_type)
+
+				# Create a universal hat that restricts the hair zone
+				zones_restrict = "0" * 36 + "1" + "0" * 20 # bit 37 (Hair Front) = 1
+				hat_asset = build_item_asset(zones(:hat), body_id: 0, zones_restrict: zones_restrict)
+				hat = build_item("Hair-hiding Hat", swf_assets: [hat_asset])
+
+				outfit = Outfit.new(pet_state: pet_state, alt_style: @alt_style)
+				outfit.worn_items = [hat]
+
+				layers = outfit.visible_layers
+
+				# Hair should be hidden by the hat's zone restrictions
+				expect(layers).to contain_exactly(alt_head, hat_asset)
+				expect(layers).not_to include(alt_hair)
+			end
+
+			it "applies pet restriction rules with alt styles" do
+				# Create alt style with a layer that restricts a zone
+				alt_head = build_biology_asset(zones(:head), body_id: 999)
+				zones_restrict = "0" * 47 + "1" + "0" * 10 # bit 48 (Background Item) = 1
+				restricting_layer = build_biology_asset(zones(:body), body_id: 999, zones_restrict: zones_restrict)
+				@alt_style.swf_assets = [alt_head, restricting_layer]
+				pet_state = build_pet_state(@pet_type)
+
+				# Create a universal Background Item
+				bg_item_asset = build_item_asset(zones(:backgrounditem), body_id: 0)
+				bg_item = build_item("Universal Background Item", swf_assets: [bg_item_asset])
+
+				outfit = Outfit.new(pet_state: pet_state, alt_style: @alt_style)
+				outfit.worn_items = [bg_item]
+
+				layers = outfit.visible_layers
+
+				# body_id=0 items should still appear even in restricted zones
+				# (because they're not body-specific)
+				expect(layers).to contain_exactly(alt_head, restricting_layer, bg_item_asset)
+			end
+
+			it "applies self-restriction rules with alt styles" do
+				# Create alt style that restricts its own horn layer
+				alt_body = build_biology_asset(zones(:body), body_id: 999)
+				alt_horn = build_biology_asset(zones(:headtransientbiology), body_id: 999)
+				zones_restrict = "0" * 37 + "1" + "0" * 20 # bit 38 (Head Transient Biology) = 1
+				restricting_layer = build_biology_asset(zones(:head), body_id: 999, zones_restrict: zones_restrict)
+				@alt_style.swf_assets = [alt_body, alt_horn, restricting_layer]
+				pet_state = build_pet_state(@pet_type)
+
+				outfit = Outfit.new(pet_state: pet_state, alt_style: @alt_style)
+
+				layers = outfit.visible_layers
+
+				# The horn should be hidden by the alt style's own restrictions
+				expect(layers).to contain_exactly(alt_body, restricting_layer)
+				expect(layers).not_to include(alt_horn)
+			end
+
+			it "sorts alt style and item layers by depth correctly" do
+				# Create alt style layers at various depths
+				alt_background = build_biology_asset(zones(:background), body_id: 999) # depth 3
+				alt_body = build_biology_asset(zones(:body), body_id: 999)             # depth 18
+				alt_head = build_biology_asset(zones(:head), body_id: 999)             # depth 34
+				@alt_style.swf_assets = [alt_head, alt_background, alt_body]
+				pet_state = build_pet_state(@pet_type)
+
+				# Add universal items at various depths
+				bg_item = build_item_asset(zones(:backgrounditem), body_id: 0)    # depth 4
+				trinket = build_item_asset(zones(:righthanditem), body_id: 0)     # depth 5
+
+				bg = build_item("Background Item", swf_assets: [bg_item])
+				trinket_item = build_item("Trinket", swf_assets: [trinket])
+
+				outfit = Outfit.new(pet_state: pet_state, alt_style: @alt_style)
+				outfit.worn_items = [trinket_item, bg]
+
+				layers = outfit.visible_layers
+
+				# Expected order by depth:
+				# alt_background (3), bg_item (4), trinket (5), alt_body (18), alt_head (34)
+				expect(layers.map(&:depth)).to eq([3, 4, 5, 18, 34])
+				expect(layers).to eq([alt_background, bg_item, trinket, alt_body, alt_head])
 			end
 		end
 	end
