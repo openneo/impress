@@ -61,6 +61,9 @@ gem "async", "~> 2.17", require: false
 gem "async-http", "~> 0.89.0", require: false
 gem "thread-local", "~> 1.1", require: false
 
+# For image processing (outfit PNG rendering).
+gem "ruby-vips", "~> 2.2"
+
 # For debugging.
 group :development do
 	gem 'debug', '~> 1.9.2'

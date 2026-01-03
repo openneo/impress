@@ -260,7 +260,7 @@ class Outfit < ApplicationRecord
   end
 
   def wardrobe_params
-    {
+    params = {
       name: name,
       color: color_id,
       species: species_id,
@@ -269,6 +269,8 @@ class Outfit < ApplicationRecord
       objects: worn_item_ids,
       closet: closeted_item_ids,
     }
+    params[:style] = alt_style_id if alt_style_id.present?
+    params
   end
 
   def ensure_unique_name

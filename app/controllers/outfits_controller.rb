@@ -13,7 +13,26 @@ class OutfitsController < ApplicationController
   end
 
   def edit
-    render "outfits/edit", layout: false
+    respond_to do |format|
+      format.html { render "outfits/edit", layout: false }
+      format.png do
+        @outfit = build_outfit_from_wardrobe_params
+        if @outfit.valid?
+          renderer = OutfitImageRenderer.new(@outfit)
+          png_data = renderer.render
+
+          if png_data
+            send_data png_data, type: "image/png", disposition: "inline",
+              filename: "outfit.png"
+            expires_in 1.day, public: true
+          else
+            head :not_found
+          end
+        else
+          head :bad_request
+        end
+      end
+    end
   end
 
   def index
@@ -115,6 +134,40 @@ class OutfitsController < ApplicationController
     params.require(:outfit).permit(
       :name, :starred, :alt_style_id, item_ids: {worn: [], closeted: []},
       biology: [:species_id, :color_id, :pose, :pet_state_id])
+  end
+
+  def build_outfit_from_wardrobe_params
+    # Load items first
+    worn_item_ids = params[:objects] ? Array(params[:objects]).map(&:to_i) : []
+    closeted_item_ids = params[:closet] ? Array(params[:closet]).map(&:to_i) : []
+
+    worn_items = Item.where(id: worn_item_ids)
+    closeted_items = Item.where(id: closeted_item_ids)
+
+    # Build outfit with biology and items
+    outfit = Outfit.new(
+      worn_items: worn_items,
+      closeted_items: closeted_items,
+    )
+
+    # Set biology from species, color, and pose params
+    if params[:species] && params[:color] && params[:pose]
+      outfit.biology = {
+        species_id: params[:species],
+        color_id: params[:color],
+        pose: params[:pose]
+      }
+    elsif params[:state]
+      # Alternative: use pet_state_id directly
+      outfit.biology = { pet_state_id: params[:state] }
+    end
+
+    # Set alt style if provided
+    if params[:style]
+      outfit.alt_style_id = params[:style].to_i
+    end
+
+    outfit
   end
 
   def find_authorized_outfit

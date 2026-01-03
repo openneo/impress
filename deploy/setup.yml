@@ -191,6 +191,7 @@
         name:
           - libmysqlclient-dev
           - libyaml-dev
+          - libvips-dev
 
     - name: Create the app folder
       file:
