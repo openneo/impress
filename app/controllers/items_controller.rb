@@ -80,8 +80,10 @@ class ItemsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        @trades = @item.closet_hangers.trading.user_is_active.
-          to_trades(current_user, request.remote_ip)
+        @trades = @item.visible_trades(
+          user: current_user,
+          remote_ip: request.remote_ip
+        )
 
         @contributors_with_counts = @item.contributors_with_counts
 
@@ -105,6 +107,15 @@ class ItemsController < ApplicationController
 
         @preview_pet_type_options = PetType.where(color: @preview_outfit.color).
           includes(:species).merge(Species.alphabetical)
+      end
+
+      format.json do
+        render json: @item.as_json(
+          include_trade_counts: true,
+          include_nc_trade_value: true,
+          current_user: current_user,
+          remote_ip: request.remote_ip
+        )
       end
 
       format.gif do

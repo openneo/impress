@@ -444,11 +444,34 @@ class Item < ApplicationRecord
     created_at || Time.new(2010)
   end
 
+  # Returns the visible trades for this item, filtered by user visibility.
+  # Accepts an optional scope to add additional query constraints (e.g., includes, order).
+  def visible_trades(scope: nil, user: nil, remote_ip: nil)
+    base = closet_hangers.trading.user_is_active
+    base = base.merge(scope) if scope
+    base.to_trades(user, remote_ip)
+  end
+
   def as_json(options={})
-    super({
+    result = super({
       only: [:id, :name, :description, :thumbnail_url, :rarity_index],
       methods: [:zones_restrict],
     }.merge(options))
+
+    if options[:include_trade_counts]
+      trades = visible_trades(
+        user: options[:current_user],
+        remote_ip: options[:remote_ip]
+      )
+      result['num_trades_offering'] = trades[:offering].size
+      result['num_trades_seeking'] = trades[:seeking].size
+    end
+
+    if options[:include_nc_trade_value]
+      result['nc_trade_value'] = nc_trade_value
+    end
+
+    result
   end
 
   def compatible_body_ids(use_cached: true)
