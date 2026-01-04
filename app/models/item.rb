@@ -34,7 +34,7 @@ class Item < ApplicationRecord
   attr_writer :current_body_id, :owned, :wanted
 
   NCRarities = [0, 500]
-  PAINTBRUSH_SET_DESCRIPTION = 'This item is part of a deluxe paint brush set!'
+  PAINTBRUSH_SET_DESCRIPTION = 'This item is part of a deluxe paint brush set'
 
   scope :newest, -> {
     order(arel_table[:created_at].desc) if arel_table[:created_at]
@@ -162,7 +162,7 @@ class Item < ApplicationRecord
   end
   
   def pb?
-    I18n.with_locale(:en) { self.description == PAINTBRUSH_SET_DESCRIPTION }
+    I18n.with_locale(:en) { self.description.include?(PAINTBRUSH_SET_DESCRIPTION) }
   end
 
   def np?
