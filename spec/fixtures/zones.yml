@@ -28,9 +28,9 @@ hindbiology:
   type_id: 1
   label: Hind Biology
   plain_label: hindbiology
-markings:
-  id: 31
-  depth: 35
+markings1:
+  id: 6
+  depth: 8
   type_id: 2
   label: Markings
   plain_label: markings
@@ -88,6 +88,12 @@ body:
   type_id: 1
   label: Body
   plain_label: body
+markings2:
+  id: 16
+  depth: 19
+  type_id: 2
+  label: Markings
+  plain_label: markings
 bodydisease:
   id: 17
   depth: 20
@@ -172,6 +178,12 @@ head:
   type_id: 1
   label: Head
   plain_label: head
+markings3:
+  id: 31
+  depth: 35
+  type_id: 2
+  label: Markings
+  plain_label: markings
 headdisease:
   id: 32
   depth: 36
@@ -196,9 +208,9 @@ glasses:
   type_id: 2
   label: Glasses
   plain_label: glasses
-earrings:
-  id: 41
-  depth: 45
+earrings1:
+  id: 36
+  depth: 39
   type_id: 2
   label: Earrings
   plain_label: earrings
@@ -220,15 +232,21 @@ headdrippings:
   type_id: 1
   label: Head Drippings
   plain_label: headdrippings
-hat:
-  id: 50
-  depth: 16
+hat1:
+  id: 40
+  depth: 44
   type_id: 2
   label: Hat
   plain_label: hat
-righthanditem:
-  id: 49
-  depth: 5
+earrings2:
+  id: 41
+  depth: 45
+  type_id: 2
+  label: Earrings
+  plain_label: earrings
+righthanditem1:
+  id: 42
+  depth: 46
   type_id: 2
   label: Right-hand Item
   plain_label: righthanditem
@@ -268,6 +286,18 @@ backgrounditem:
   type_id: 3
   label: Background Item
   plain_label: backgrounditem
+righthanditem2:
+  id: 49
+  depth: 5
+  type_id: 2
+  label: Right-hand Item
+  plain_label: righthanditem
+hat2:
+  id: 50
+  depth: 16
+  type_id: 2
+  label: Hat
+  plain_label: hat
 belt:
   id: 51
   depth: 27

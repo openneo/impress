@@ -95,7 +95,7 @@ RSpec.describe Outfit do
 				pet_state = build_pet_state(@pet_type, swf_assets: [head, body])
 
 				# Create item layers
-				hat_asset = build_item_asset(zones(:hat), body_id: 1)
+				hat_asset = build_item_asset(zones(:hat1), body_id: 1)
 				hat = build_item("Test Hat", swf_assets: [hat_asset])
 
 				outfit = Outfit.new(pet_state: pet_state)
@@ -134,7 +134,7 @@ RSpec.describe Outfit do
 				# Create a hat that restricts the hair zone
 				# zones_restrict is a bitfield where position 37 (Hair Front zone id) is "1"
 				zones_restrict = "0" * 36 + "1" + "0" * 20 # bit 37 = 1
-				hat_asset = build_item_asset(zones(:hat), body_id: 1, zones_restrict: zones_restrict)
+				hat_asset = build_item_asset(zones(:hat1), body_id: 1, zones_restrict: zones_restrict)
 				hat = build_item("Hair-hiding Hat", swf_assets: [hat_asset])
 
 				outfit = Outfit.new(pet_state: pet_state)
@@ -156,7 +156,7 @@ RSpec.describe Outfit do
 
 				# Create an item that restricts both Hair Front (37) and Head Transient Biology (38)
 				zones_restrict = "0" * 36 + "11" + "0" * 20 # bits 37 and 38 = 1
-				hood_asset = build_item_asset(zones(:hat), body_id: 1, zones_restrict: zones_restrict)
+				hood_asset = build_item_asset(zones(:hat1), body_id: 1, zones_restrict: zones_restrict)
 				hood = build_item("Agent Hood", swf_assets: [hood_asset])
 
 				outfit = Outfit.new(pet_state: pet_state)
@@ -222,7 +222,7 @@ RSpec.describe Outfit do
 				pet_state = build_pet_state(@pet_type, pose: "UNCONVERTED", swf_assets: [head, body])
 
 				# Create both body-specific and body_id=0 items
-				body_specific_asset = build_item_asset(zones(:hat), body_id: 1)
+				body_specific_asset = build_item_asset(zones(:hat1), body_id: 1)
 				body_specific_item = build_item("Body-specific Hat", swf_assets: [body_specific_asset])
 
 				universal_asset = build_item_asset(zones(:background), body_id: 0)
@@ -244,7 +244,7 @@ RSpec.describe Outfit do
 				pet_state = build_pet_state(@pet_type, pose: "UNCONVERTED", swf_assets: [head])
 
 				# Create a body-specific item in a zone the pet doesn't restrict
-				hat_asset = build_item_asset(zones(:hat), body_id: 1)
+				hat_asset = build_item_asset(zones(:hat1), body_id: 1)
 				hat = build_item("Body-specific Hat", swf_assets: [hat_asset])
 
 				outfit = Outfit.new(pet_state: pet_state)
@@ -296,7 +296,7 @@ RSpec.describe Outfit do
 
 				# Add an item that restricts Hair Front (37)
 				item_zones_restrict = "0" * 36 + "1" + "0" * 20 # bit 37 = 1
-				hat_asset = build_item_asset(zones(:hat), body_id: 1, zones_restrict: item_zones_restrict)
+				hat_asset = build_item_asset(zones(:hat1), body_id: 1, zones_restrict: item_zones_restrict)
 				hat = build_item("Hair-hiding Hat", swf_assets: [hat_asset])
 
 				outfit = Outfit.new(pet_state: pet_state)
@@ -357,7 +357,7 @@ RSpec.describe Outfit do
 
 				# Add items at various depths
 				bg_item = build_item_asset(zones(:backgrounditem), body_id: 0)    # depth 4
-				hat_asset = build_item_asset(zones(:hat), body_id: 1)             # depth 16
+				hat_asset = build_item_asset(zones(:hat1), body_id: 1)            # depth 44
 				shirt_asset = build_item_asset(zones(:shirtdress), body_id: 1)    # depth 26
 
 				bg = build_item("Background Item", swf_assets: [bg_item])
@@ -370,10 +370,10 @@ RSpec.describe Outfit do
 				layers = outfit.visible_layers
 
 				# Expected order by depth:
-				# background (3), bg_item (4), hat_asset (16), body_layer (18),
-				# shirt_asset (26), head_layer (34)
-				expect(layers.map(&:depth)).to eq([3, 4, 16, 18, 26, 34])
-				expect(layers).to eq([background, bg_item, hat_asset, body_layer, shirt_asset, head_layer])
+				# background (3), bg_item (4), body_layer (18), shirt_asset (26),
+				# head_layer (34), hat_asset (44)
+				expect(layers.map(&:depth)).to eq([3, 4, 18, 26, 34, 44])
+				expect(layers).to eq([background, bg_item, body_layer, shirt_asset, head_layer, hat_asset])
 			end
 		end
 
@@ -417,7 +417,7 @@ RSpec.describe Outfit do
 				pet_state = build_pet_state(@pet_type)
 
 				# Create a body-specific item for the alt style's body_id
-				body_specific_asset = build_item_asset(zones(:hat), body_id: 999)
+				body_specific_asset = build_item_asset(zones(:hat1), body_id: 999)
 				body_specific_item = build_item("Body-specific Hat", swf_assets: [body_specific_asset])
 
 				# Create a universal item (body_id=0)
@@ -441,7 +441,7 @@ RSpec.describe Outfit do
 				pet_state = build_pet_state(@pet_type)
 
 				# Create an item that fits the regular pet's body_id (1)
-				regular_item_asset = build_item_asset(zones(:hat), body_id: 1)
+				regular_item_asset = build_item_asset(zones(:hat1), body_id: 1)
 				regular_item = build_item("Regular Pet Hat", swf_assets: [regular_item_asset])
 
 				outfit = Outfit.new(pet_state: pet_state, alt_style: @alt_style)
@@ -463,7 +463,7 @@ RSpec.describe Outfit do
 
 				# Create a universal hat that restricts the hair zone
 				zones_restrict = "0" * 36 + "1" + "0" * 20 # bit 37 (Hair Front) = 1
-				hat_asset = build_item_asset(zones(:hat), body_id: 0, zones_restrict: zones_restrict)
+				hat_asset = build_item_asset(zones(:hat1), body_id: 0, zones_restrict: zones_restrict)
 				hat = build_item("Hair-hiding Hat", swf_assets: [hat_asset])
 
 				outfit = Outfit.new(pet_state: pet_state, alt_style: @alt_style)
@@ -526,7 +526,7 @@ RSpec.describe Outfit do
 
 				# Add universal items at various depths
 				bg_item = build_item_asset(zones(:backgrounditem), body_id: 0)    # depth 4
-				trinket = build_item_asset(zones(:righthanditem), body_id: 0)     # depth 5
+				trinket = build_item_asset(zones(:righthanditem1), body_id: 0)    # depth 46
 
 				bg = build_item("Background Item", swf_assets: [bg_item])
 				trinket_item = build_item("Trinket", swf_assets: [trinket])
@@ -537,9 +537,9 @@ RSpec.describe Outfit do
 				layers = outfit.visible_layers
 
 				# Expected order by depth:
-				# alt_background (3), bg_item (4), trinket (5), alt_body (18), alt_head (34)
-				expect(layers.map(&:depth)).to eq([3, 4, 5, 18, 34])
-				expect(layers).to eq([alt_background, bg_item, trinket, alt_body, alt_head])
+				# alt_background (3), bg_item (4), alt_body (18), alt_head (34), trinket (46)
+				expect(layers.map(&:depth)).to eq([3, 4, 18, 34, 46])
+				expect(layers).to eq([alt_background, bg_item, alt_body, alt_head, trinket])
 			end
 		end
 	end
