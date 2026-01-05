@@ -120,6 +120,44 @@ module Neopets::NCMall
 		end
 	end
 
+	# Generate a new image hash for a pet wearing specific items. Takes a base
+	# pet sci (species/color image hash) and optional item IDs, and returns a
+	# response containing the combined image hash in the :newsci field.
+	# Use the returned hash with Neopets::CustomPets.fetch_viewer_data("@#{newsci}")
+	# to get the full appearance data.
+	PET_DATA_URL = "https://ncmall.neopets.com/mall/ajax/petview/getPetData.php"
+	def self.fetch_pet_data(pet_sci, item_ids = [])
+		Sync do
+			params = {"selPetsci" => pet_sci}
+			item_ids.each { |id| params["itemsList[]"] = id.to_s }
+
+			DTIRequests.post(
+				PET_DATA_URL,
+				[["Content-Type", "application/x-www-form-urlencoded"]],
+				params.to_query,
+			) do |response|
+				if response.status != 200
+					raise ResponseNotOK.new(response.status),
+						"expected status 200 but got #{response.status} (#{PET_DATA_URL})"
+				end
+
+				begin
+					data = JSON.parse(response.read)
+				rescue JSON::ParserError
+					raise UnexpectedResponseFormat,
+						"failed to parse pet data response as JSON"
+				end
+
+				unless data["newsci"].is_a?(String) && data["newsci"].present?
+					raise UnexpectedResponseFormat,
+						"missing or invalid field newsci in pet data response"
+				end
+
+				{newsci: data["newsci"]}
+			end
+		end
+	end
+
 	private
 
 	# Map load_type from menu JSON to the v2 API type parameter.

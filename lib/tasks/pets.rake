@@ -1,7 +1,33 @@
 namespace :pets do
-	desc "Load a pet's viewer data"
-	task :load, [:name] => [:environment] do |task, args|
-		viewer_data = Neopets::CustomPets.fetch_viewer_data(args[:name])
+	desc "Load a pet's viewer data (by name or by color/species/items)"
+	task :load, [:first] => [:environment] do |task, args|
+		# Collect all arguments (first + extras)
+		all_args = [args[:first]] + args.extras
+
+		# If only one argument, treat it as a pet name
+		if all_args.length == 1
+			viewer_data = Neopets::CustomPets.fetch_viewer_data(all_args[0])
+		else
+			# Multiple arguments: color, species, and optional item IDs
+			color_name = all_args[0]
+			species_name = all_args[1]
+			item_ids = all_args[2..]
+
+			# Look up the PetType to get its image hash
+			pet_type = PetType.matching_name(color_name, species_name).first!
+			pet_sci = pet_type.image_hash
+
+			# Fetch the new image hash for this pet+items combination
+			response = Neopets::NCMall.fetch_pet_data(pet_sci, item_ids)
+			new_sci = response[:newsci]
+
+			# Output the hash to stderr for debugging
+			$stderr.puts "Generated image hash: #{new_sci}"
+
+			# Load the full viewer data using the new image hash
+			viewer_data = Neopets::CustomPets.fetch_viewer_data("@#{new_sci}")
+		end
+
 		puts JSON.pretty_generate(viewer_data)
 	end
 
