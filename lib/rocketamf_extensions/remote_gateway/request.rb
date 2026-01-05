@@ -30,24 +30,17 @@ module RocketAMFExtensions
           raise RocketAMF::AMFError.new(first_message_data)
         end
         
-        # HACK: It seems to me that these messages come back with Windows-1250
-        # (or similar) encoding on the strings? I'm basing this on the
-        # Patchwork Staff item, whose description arrives as:
+        # HACK: Older items in Neopets' database have Windows-1250 encoding,
+        # while newer items use proper UTF-8. We detect which encoding was used
+        # by checking if the string is valid UTF-8, and only re-encode if needed.
         #
-        # "That staff is cute, but dont use it as a walking stick \x96 I " +
-        # "dont think it will hold you up!"
+        # Example of Windows-1250 item: Patchwork Staff (57311), whose
+        # description contains byte 0x96 (en-dash in Windows-1250).
         #
-        # And the `\x96` is meant to represent an endash, which it doesn't in
-        # UTF-8 or in most extended ASCII encodings, but *does* in Windows's
-        # specific extended ASCII.
-        #
-        # Idk if this is something to do with the AMFPHP spec or how the AMFPHP
-        # server code they use serializes strings (I couldn't find any
-        # reference to it?), or just their internal database encoding being
-        # passed along as-is, or what? But this seems to be the most correct
-        # interpretation I know how to do, so, let's do it!
+        # Example of UTF-8 item: Carnival Party Décor (80042), whose name
+        # contains proper UTF-8 bytes [195, 169] for the é character.
         result.messages[0].data.body.tap do |body|
-          reencode_strings! body, "Windows-1250", "UTF-8"
+          reencode_strings_if_needed! body, "Windows-1250", "UTF-8"
         end
       end
       
@@ -92,13 +85,17 @@ module RocketAMFExtensions
         end
       end
 
-      def reencode_strings!(target, from, to)
+      def reencode_strings_if_needed!(target, from, to)
         if target.is_a? String
-          target.force_encoding(from).encode!(to)
+          # Only re-encode if the string is not valid UTF-8
+          # (indicating it's in the old Windows-1250 encoding)
+          unless target.valid_encoding?
+            target.force_encoding(from).encode!(to)
+          end
         elsif target.is_a? Array
-          target.each { |x| reencode_strings!(x, from, to) }
+          target.each { |x| reencode_strings_if_needed!(x, from, to) }
         elsif target.is_a? Hash
-          target.values.each { |x| reencode_strings!(x, from, to) }
+          target.values.each { |x| reencode_strings_if_needed!(x, from, to) }
         end
       end
     end
