@@ -15,7 +15,7 @@ gem 'dotenv', '~> 3.2'
 
 # For the asset pipeline: templates, CSS, JS, etc.
 gem 'sprockets', '~> 4.2'
-gem 'haml', '~> 6.1', '>= 6.1.1'
+gem 'haml', '~> 7.2'
 gem 'sass-rails', '~> 6.0'
 gem 'terser', '~> 1.1', '>= 1.1.17'
 gem 'jsbundling-rails', '~> 1.3'
