@@ -14,7 +14,6 @@ Gem::Specification.new do |s|
   s.extensions    = Dir[*["ext/**/extconf.rb"]]
   s.require_paths = ["lib"]
 
-  s.has_rdoc         = true
   s.extra_rdoc_files = ['README.rdoc']
   s.rdoc_options     = ['--line-numbers', '--main', 'README.rdoc']
 end
