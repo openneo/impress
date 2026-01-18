@@ -12,11 +12,9 @@ class ApplicationController < ActionController::Base
   before_action :save_return_to_path,
     if: ->(c) { c.controller_name == 'sessions' && c.action_name == 'new' }
 
-  # Enable profiling tools if logged in as admin.
+  # Enable profiling tools in development or when logged in as an admin.
   before_action do
-    if current_user && current_user.admin?
-      Rack::MiniProfiler.authorize_request
-    end
+    Rack::MiniProfiler.authorize_request if Rails.env.development? || current_user&.admin?
   end
 
   class AccessDenied < StandardError; end
