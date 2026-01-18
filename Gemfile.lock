@@ -273,7 +273,7 @@ GEM
       logger
       rack (>= 2.2.3)
       rack-protection
-    omniauth-rails_csrf_protection (1.0.2)
+    omniauth-rails_csrf_protection (2.0.1)
       actionpack (>= 4.2)
       omniauth (~> 2.0)
     omniauth_openid_connect (0.7.1)
@@ -561,7 +561,7 @@ DEPENDENCIES
   mysql2 (~> 0.5.5)
   nokogiri (~> 1.15, >= 1.15.3)
   omniauth (~> 2.1)
-  omniauth-rails_csrf_protection (~> 1.0)
+  omniauth-rails_csrf_protection (~> 2.0, >= 2.0.1)
   omniauth_openid_connect (~> 0.7.1)
   rack-attack (~> 6.7)
   rack-mini-profiler (~> 3.1)
