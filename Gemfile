@@ -40,7 +40,7 @@ gem 'nokogiri', '~> 1.15', '>= 1.15.3'
 
 # For safely rendering users' Markdown + HTML on item list pages.
 gem 'rdiscount', '~> 2.2', '>= 2.2.7.1'
-gem 'sanitize', '~> 6.0', '>= 6.0.2'
+gem 'sanitize', '~> 7.0'
 
 # For working with Neopets APIs.
 # unstable version of RocketAMF interprets info registry as a hash instead of an array
