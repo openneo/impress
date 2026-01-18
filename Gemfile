@@ -85,12 +85,6 @@ gem "sentry-rails", "~> 5.12"
 # For tasks that use shell commands.
 gem "shell", "~> 0.8.1"
 
-# For workspace autocomplete.
-group :development do
-	gem "solargraph", "~> 0.50.0"
-	gem "solargraph-rails", "~> 1.1"
-end
-
 # For automated tests.
 group :development, :test do
 	gem "rspec-rails", "~> 7.0"
