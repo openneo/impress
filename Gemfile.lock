@@ -307,7 +307,7 @@ GEM
     rack (3.2.4)
     rack-attack (6.8.0)
       rack (>= 1.0, < 4)
-    rack-mini-profiler (3.3.1)
+    rack-mini-profiler (4.0.1)
       rack (>= 1.2.0)
     rack-oauth2 (2.3.0)
       activesupport
@@ -503,7 +503,7 @@ DEPENDENCIES
   omniauth-rails_csrf_protection (~> 2.0, >= 2.0.1)
   omniauth_openid_connect (~> 0.7.1)
   rack-attack (~> 6.7)
-  rack-mini-profiler (~> 3.1)
+  rack-mini-profiler (~> 4.0, >= 4.0.1)
   rails (~> 8.0, >= 8.0.1)
   rails-i18n (~> 8.0, >= 8.0.1)
   rdiscount (~> 2.2, >= 2.2.7.1)

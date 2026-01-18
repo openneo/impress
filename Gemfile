@@ -74,7 +74,7 @@ end
 gem 'bootsnap', '~> 1.16', require: false
 
 # For investigating performance issues.
-gem "rack-mini-profiler", "~> 3.1"
+gem 'rack-mini-profiler', '~> 4.0', '>= 4.0.1'
 gem "memory_profiler", "~> 1.0"
 gem "stackprof", "~> 0.2.25"
 
