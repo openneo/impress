@@ -11,7 +11,7 @@ gem 'mysql2', '~> 0.5.5'
 
 # For reading the .env file, which you can use in development to more easily
 # set environment variables for secret data.
-gem 'dotenv-rails', '~> 2.8', '>= 2.8.1'
+gem 'dotenv', '~> 3.2'
 
 # For the asset pipeline: templates, CSS, JS, etc.
 gem 'sprockets', '~> 4.2'
