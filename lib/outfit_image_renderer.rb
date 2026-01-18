@@ -31,12 +31,19 @@ class OutfitImageRenderer
       begin
         layer_image = Vips::Image.new_from_buffer(image_data, "")
 
-        # Center the layer on the canvas
-        x_offset = (CANVAS_SIZE - layer_image.width) / 2
-        y_offset = (CANVAS_SIZE - layer_image.height) / 2
+        # Resize the layer to fit the canvas size
+        # All layer images are square, but may not be CANVAS_SIZE x CANVAS_SIZE
+        # We need to resize them to exactly CANVAS_SIZE x CANVAS_SIZE
+        if layer_image.width != CANVAS_SIZE || layer_image.height != CANVAS_SIZE
+          layer_image = layer_image.resize(
+            CANVAS_SIZE.to_f / layer_image.width,
+            vscale: CANVAS_SIZE.to_f / layer_image.height
+          )
+        end
 
-        # Composite this layer onto the canvas
-        canvas = canvas.composite([layer_image], :over, x: x_offset, y: y_offset)
+        # Composite this layer onto the canvas at (0, 0)
+        # No offset needed since the layer is now exactly canvas-sized
+        canvas = canvas.composite([layer_image], :over)
       rescue Vips::Error => e
         # Log and skip layers that fail to load/composite
         Rails.logger.warn "Failed to composite layer #{layer.id} (#{layer.image_url}): #{e.message}"

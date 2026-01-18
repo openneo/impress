@@ -182,5 +182,59 @@ RSpec.describe OutfitImageRenderer do
         expect(result).to be_nil
       end
     end
+
+    it "resizes all layers to 600x600 before compositing" do
+      # Load a 1200x1200 item layer (real-world case from Neopets)
+      item_1200_png = load_fixture_image('Cape.png')
+      acara_600_png = load_fixture_image('Blue Acara.png')
+      expected_composite_png = load_fixture_image('Blue Acara With Cape.png')
+
+      # Create assets
+      biology_asset = build_biology_asset(zones(:head), body_id: 1)
+      item_asset = build_item_asset(zones(:hat1), body_id: 1)
+
+      # Stub HTTP requests
+      stub_request(:get, biology_asset.image_url).
+        to_return(body: acara_600_png, status: 200)
+      stub_request(:get, item_asset.image_url).
+        to_return(body: item_1200_png, status: 200)
+
+      # Build outfit
+      pet_state = build_pet_state(@pet_type, swf_assets: [biology_asset])
+      item = build_item("Test Item", swf_assets: [item_asset])
+      outfit = Outfit.new(
+        pet_state: pet_state,
+        worn_items: [item]
+      )
+
+      # Render
+      renderer = OutfitImageRenderer.new(outfit)
+      result = renderer.render
+
+      # Verify we got valid PNG data
+      expect(result).not_to be_nil
+      expect(result).to be_a(String)
+      expect(result[0..7]).to eq("\x89PNG\r\n\x1A\n".b)
+
+      # Verify the result is exactly 600x600
+      result_image = Vips::Image.new_from_buffer(result, "")
+      expect(result_image.width).to eq(600)
+      expect(result_image.height).to eq(600)
+
+      # Verify the composite matches the expected image pixel-perfectly
+      expected_image = Vips::Image.new_from_buffer(expected_composite_png, "")
+
+      # Calculate the absolute difference between images
+      diff = (result_image - expected_image).abs
+      max_diff = diff.max
+
+      # Allow a small tolerance for minor encoding/compositing differences
+      tolerance = 2
+      if max_diff > tolerance
+        debug_path = Rails.root.join('tmp', 'test_render_1200_result.png')
+        result_image.write_to_file(debug_path.to_s)
+        fail "Images should match within tolerance of #{tolerance}, but found max difference of #{max_diff}. Actual output saved to #{debug_path}"
+      end
+    end
   end
 end
