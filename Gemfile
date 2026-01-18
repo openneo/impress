@@ -86,9 +86,5 @@ gem "sentry-rails", "~> 5.12"
 gem "shell", "~> 0.8.1"
 
 # For automated tests.
-group :development, :test do
-	gem "rspec-rails", "~> 7.0"
-end
-group :test do
-	gem "webmock", "~> 3.24"
-end
+gem 'rspec-rails', '~> 8.0', '>= 8.0.2', group: [:development, :test]
+gem "webmock", "~> 3.24", group: [:test]
