@@ -150,13 +150,13 @@ function updateStage() {
 
 function updateCanvasDimensions() {
 	// Set the canvas's internal dimensions to be higher, if the device has high
-	// DPI. Scale the movie clip to match, too.
+	// DPI. Scale the stage to match, too.
 	const internalWidth = canvas.offsetWidth * window.devicePixelRatio;
 	const internalHeight = canvas.offsetHeight * window.devicePixelRatio;
 	canvas.width = internalWidth;
 	canvas.height = internalHeight;
-	movieClip.scaleX = internalWidth / library.properties.width;
-	movieClip.scaleY = internalHeight / library.properties.height;
+	stage.scaleX = internalWidth / library.properties.width;
+	stage.scaleY = internalHeight / library.properties.height;
 }
 
 window.addEventListener("resize", () => {
@@ -176,12 +176,13 @@ window.addEventListener("resize", () => {
 ////////////////////////////////////////////////////
 
 async function startMovie() {
+	// Install the MotionGuidePlugin, which is needed for motion path animations.
+	createjs.MotionGuidePlugin.install();
+
 	// Load the movie's library (from the JS file already run), and use it to
 	// build a movie clip.
 	library = await getLibrary();
 	movieClip = buildMovieClip(library);
-
-	updateCanvasDimensions();
 
 	if (canvas.getContext("2d") == null) {
 		console.warn(`Out of memory, can't use canvas for ${libraryUrl}.`);
@@ -189,9 +190,13 @@ async function startMovie() {
 		return;
 	}
 
-	stage = new window.createjs.Stage(canvas);
+	stage = new library.Stage(canvas);
 	stage.addChild(movieClip);
+	updateCanvasDimensions();
 	updateStage();
+
+	// Signal to the library that the composition is ready.
+	AdobeAn.compositionLoaded(library.properties.id);
 
 	loadingStatus = "loaded";
 	canvas.setAttribute("data-status", "loaded");

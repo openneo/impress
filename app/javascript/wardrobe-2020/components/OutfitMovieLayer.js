@@ -390,6 +390,10 @@ export function loadMovieLibrary(librarySrc, { preferArchive = false } = {}) {
 			);
 		}
 		delete window.AdobeAn.compositions[compositionId];
+
+		// Install the MotionGuidePlugin, which is needed for motion path animations.
+		window.createjs.MotionGuidePlugin.install();
+
 		const library = composition.getLibrary();
 
 		// One more loading step as part of loading this library is loading the
