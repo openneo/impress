@@ -25,6 +25,51 @@ class User < ApplicationRecord
 
   scope :top_contributors, -> { order('points DESC').where('points > 0') }
 
+  VALID_TIMEFRAMES = [:all_time, :this_year, :this_month, :this_week]
+
+  scope :top_contributors_for, ->(timeframe = :all_time) {
+    case timeframe.to_sym
+    when :all_time
+      top_contributors # Use existing efficient scope
+    else
+      top_contributors_by_period(timeframe)
+    end
+  }
+
+  def self.top_contributors_by_period(timeframe)
+    start_date = case timeframe.to_sym
+    when :this_week then 1.week.ago
+    when :this_month then 1.month.ago
+    when :this_year then 1.year.ago
+    else raise ArgumentError, "Invalid timeframe: #{timeframe}"
+    end
+
+    # Build the CASE statement dynamically from Contribution::POINT_VALUES
+    point_case = Contribution::POINT_VALUES.map { |type, points|
+      "WHEN #{connection.quote(type)} THEN #{points}"
+    }.join("\n          ")
+
+    select(
+      'users.*',
+      "COALESCE(SUM(
+        CASE contributions.contributed_type
+          #{point_case}
+        END
+      ), 0) AS period_points"
+    )
+    .joins('INNER JOIN contributions ON contributions.user_id = users.id')
+    .where('contributions.created_at >= ?', start_date)
+    .group('users.id')
+    .having('period_points > 0')
+    .order('period_points DESC, users.id ASC')
+  end
+
+  # Virtual attribute reader for dynamically calculated points (from time-period queries).
+  # Falls back to the denormalized `points` column when not calculated.
+  def period_points
+    attributes['period_points'] || points
+  end
+
   after_update :sync_name_with_auth_user!, if: :saved_change_to_name?
   after_update :log_trade_activity, if: -> user {
     (user.saved_change_to_owned_closet_hangers_visibility? &&

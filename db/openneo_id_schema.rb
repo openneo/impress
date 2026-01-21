@@ -10,28 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_04_08_120359) do
+ActiveRecord::Schema[8.1].define(version: 2024_04_08_120359) do
   create_table "users", id: { type: :integer, unsigned: true }, charset: "utf8mb3", collation: "utf8mb3_general_ci", force: :cascade do |t|
-    t.string "name", limit: 30, null: false
-    t.string "encrypted_password", limit: 64
+    t.datetime "created_at", precision: nil
+    t.datetime "current_sign_in_at", precision: nil
+    t.string "current_sign_in_ip"
     t.string "email", limit: 50
+    t.string "encrypted_password", limit: 64
+    t.integer "failed_attempts", default: 0
+    t.datetime "last_sign_in_at", precision: nil
+    t.string "last_sign_in_ip"
+    t.datetime "locked_at", precision: nil
+    t.string "name", limit: 30, null: false
+    t.string "neopass_email"
     t.string "password_salt", limit: 32
+    t.string "provider"
+    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
     t.string "reset_password_token"
     t.integer "sign_in_count", default: 0
-    t.datetime "current_sign_in_at", precision: nil
-    t.datetime "last_sign_in_at", precision: nil
-    t.string "current_sign_in_ip"
-    t.string "last_sign_in_ip"
-    t.integer "failed_attempts", default: 0
-    t.string "unlock_token"
-    t.datetime "locked_at", precision: nil
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.datetime "reset_password_sent_at", precision: nil
-    t.datetime "remember_created_at"
-    t.string "provider"
     t.string "uid"
-    t.string "neopass_email"
+    t.string "unlock_token"
+    t.datetime "updated_at", precision: nil
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

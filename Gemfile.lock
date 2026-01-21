@@ -341,6 +341,10 @@ GEM
       activesupport (= 8.1.2)
       bundler (>= 1.15.0)
       railties (= 8.1.2)
+    rails-controller-testing (1.0.5)
+      actionpack (>= 5.0.1.rc1)
+      actionview (>= 5.0.1.rc1)
+      activesupport (>= 5.0.1.rc1)
     rails-dom-testing (2.3.0)
       activesupport (>= 5.0.0)
       minitest
@@ -505,6 +509,7 @@ DEPENDENCIES
   rack-attack (~> 6.7)
   rack-mini-profiler (~> 4.0, >= 4.0.1)
   rails (~> 8.0, >= 8.0.1)
+  rails-controller-testing
   rails-i18n (~> 8.0, >= 8.0.1)
   rdiscount (~> 2.2, >= 2.2.7.1)
   rspec-rails (~> 8.0, >= 8.0.2)

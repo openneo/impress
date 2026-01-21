@@ -499,6 +499,11 @@ pt:
       rank: Rank
       user: Usuário
       points: Pontos
+      timeframes:
+        all_time: Todo o Tempo
+        this_year: Este Ano
+        this_month: Este Mês
+        this_week: Esta Semana
     update:
       success: Configurações salvas com sucesso
       invalid: "Não foi possível salvar as configurações: %{errors}"

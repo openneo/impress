@@ -1,4 +1,13 @@
 - title t('.title')
+
+%ul.timeframe-nav
+  - ['all_time', 'this_year', 'this_month', 'this_week'].each do |tf|
+    %li
+      - if @timeframe == tf
+        %strong= t(".timeframes.#{tf}")
+      - else
+        = link_to t(".timeframes.#{tf}"), top_contributors_path(timeframe: tf)
+
 = will_paginate @users
 %table#top-contributors
   %thead
@@ -11,5 +20,5 @@
       %tr
         %th{:scope => 'row'}= @users.offset + rank + 1
         %td= link_to user.name, user_contributions_path(user)
-        %td= user.points
+        %td= user.period_points
 = will_paginate @users

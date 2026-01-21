@@ -783,6 +783,11 @@ en:
       rank: Rank
       user: User
       points: Points
+      timeframes:
+        all_time: All Time
+        this_year: This Year
+        this_month: This Month
+        this_week: This Week
 
     update:
       success: Settings successfully saved.

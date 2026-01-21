@@ -505,6 +505,11 @@ es:
       rank: Puesto
       user: Usuario
       points: Puntos
+      timeframes:
+        all_time: Todo el Tiempo
+        this_year: Este Año
+        this_month: Este Mes
+        this_week: Esta Semana
     update:
       success: Ajustes guardados correctamente.
       invalid: "No hemos podido guardar los ajustes: %{errors}"

@@ -640,6 +640,11 @@ en-MEEP:
       rank: Reep
       user: Meepit
       points: Peeps
+      timeframes:
+        all_time: All Meep
+        this_year: Meeps Year
+        this_month: Meeps Month
+        this_week: Meeps Week
 
     update:
       success: Settings successfully meeped.

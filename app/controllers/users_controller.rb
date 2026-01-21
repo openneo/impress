@@ -14,7 +14,10 @@ class UsersController < ApplicationController
   end
 
   def top_contributors
-    @users = User.top_contributors.paginate :page => params[:page], :per_page => 20
+    valid_timeframes = User::VALID_TIMEFRAMES.map(&:to_s)
+    @timeframe = params[:timeframe].presence_in(valid_timeframes) || 'all_time'
+    @users = User.top_contributors_for(@timeframe.to_sym)
+      .paginate(page: params[:page], per_page: 20)
   end
 
   def edit
