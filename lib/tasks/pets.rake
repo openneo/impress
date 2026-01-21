@@ -13,19 +13,16 @@ namespace :pets do
 			species_name = all_args[1]
 			item_ids = all_args[2..]
 
-			# Look up the PetType to get its image hash
+			# Look up the PetType to use for the preview
 			pet_type = PetType.matching_name(color_name, species_name).first!
-			pet_sci = pet_type.image_hash
 
-			# Fetch the new image hash for this pet+items combination
-			response = Neopets::NCMall.fetch_pet_data(pet_sci, item_ids)
-			new_sci = response[:newsci]
+			# Convert it to an image hash for direct lookup
+			new_image_hash = Neopets::NCMall.fetch_pet_data_sci(pet_type.image_hash, item_ids)
+			pet_name = '@' + new_image_hash
+			$stderr.puts "Loading pet #{pet_name}"
 
-			# Output the hash to stderr for debugging
-			$stderr.puts "Generated image hash: #{new_sci}"
-
-			# Load the full viewer data using the new image hash
-			viewer_data = Neopets::CustomPets.fetch_viewer_data("@#{new_sci}")
+			# Load the image hash as if it were a pet
+			viewer_data = Neopets::CustomPets.fetch_viewer_data(pet_name)
 		end
 
 		puts JSON.pretty_generate(viewer_data)

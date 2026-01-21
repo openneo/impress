@@ -1,0 +1,69 @@
+{
+  "custom_pet": {
+    "name": "@mock:m:thyass:39552",
+    "owner": "",
+    "slot": 1.0,
+    "scale": 0.5,
+    "muted": true,
+    "body_id": 212.0,
+    "species_id": 6.0,
+    "color_id": 61.0,
+    "alt_style": false,
+    "alt_color": 61.0,
+    "style_closet_id": null,
+    "biology_by_zone": {
+      "37": {
+        "part_id": 10083.0,
+        "zone_id": 37.0,
+        "asset_url": "https://images.neopets.com/cp/bio/swf/000/000/010/10083_8a1111a13f.swf",
+        "manifest": "https://images.neopets.com/cp/bio/data/000/000/010/10083_8a1111a13f/manifest.json",
+        "zones_restrict": "0000000000000000000000000000000000000000000000000000"
+      },
+      "15": {
+        "part_id": 11613.0,
+        "zone_id": 15.0,
+        "asset_url": "https://images.neopets.com/cp/bio/swf/000/000/011/11613_f7d8d377ab.swf",
+        "manifest": "https://images.neopets.com/cp/bio/data/000/000/011/11613_f7d8d377ab/manifest.json",
+        "zones_restrict": "0000000000000000000000000000000000000000000000000000"
+      },
+      "34": {
+        "part_id": 14187.0,
+        "zone_id": 34.0,
+        "asset_url": "https://images.neopets.com/cp/bio/swf/000/000/014/14187_0e65c2082f.swf",
+        "manifest": "https://images.neopets.com/cp/bio/data/000/000/014/14187_0e65c2082f/manifest.json",
+        "zones_restrict": "0000000000000000000000000000000000000000000000000000"
+      },
+      "33": {
+        "part_id": 14189.0,
+        "zone_id": 33.0,
+        "asset_url": "https://images.neopets.com/cp/bio/swf/000/000/014/14189_102e4991e9.swf",
+        "manifest": "https://images.neopets.com/cp/bio/data/000/000/014/14189_102e4991e9/manifest.json",
+        "zones_restrict": "0000000000000000000000000000000000000000000000000000"
+      }
+    },
+    "equipped_by_zone": {},
+    "original_biology": []
+  },
+  "closet_items": {},
+  "object_info_registry": {
+    "39552": {
+      "obj_info_id": 39552.0,
+      "assets_by_zone": {},
+      "zones_restrict": "0000000000000000000000000000000000000000000000000000",
+      "is_compatible": false,
+      "is_paid": true,
+      "thumbnail_url": "https://images.neopets.com/items/mall_springyeyeglasses.gif",
+      "name": "Springy Eye Glasses",
+      "description": "Hey, keep your eyes in your head!",
+      "category": "Clothes",
+      "type": "Clothes",
+      "rarity": "Artifact",
+      "rarity_index": 500.0,
+      "price": 0.0,
+      "weight_lbs": 1.0,
+      "species_support": [3.0],
+      "converted": true
+    }
+  },
+  "object_asset_registry": {}
+}

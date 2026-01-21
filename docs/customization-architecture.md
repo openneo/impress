@@ -249,6 +249,28 @@ This crowdsourced approach is why DTI is "self-sustaining" - users passively con
 
 See `app/models/pet/modeling_snapshot.rb` for the full implementation.
 
+### Potential Upgrade: Auto-Modeling
+
+We are currently not making full use of a recently-discovered Neopets feature: **we no longer need a real pet to model
+the item**. There's an NC Mall feature that supports previews of *any* item, not just those sold in the Mall.
+
+See the `pets:load` task for implementation details.
+
+We still need users to show us new items in the first place, to learn their item IDs and what body types they might
+fit. But once we have that, we can proactively attempt to model the pet on all relevant body types.
+
+Let's pursue this in two steps:
+
+1. [x] Create a backfill Rake task to attempt to load any models we suspect we need, based on the same logic as the
+   `-is:modeled` item search filter. 
+   - Consider having this task auto-update the `modeling_status_hint` field on the item, if we've demonstrated that
+     the item is almost certainly completely modeled, despite our heuristic indicating it is not. This will keep the
+     `is:modeled` filter clean and approximately empty.
+   - As part of this, let's refactor the logic out of `pets:load`, to more simply construct an "image hash" ("sci")
+     from a pet type + items combination.
+2. [ ] Set this as a cron job to run very frequently, to quickly load in new items.
+   - If we're able to reliably keep `is:modeled` basically empty, this could even be safe to run every, say, 2–5min.
+
 ### Cached Fields
 
 To avoid expensive queries, several models cache computed data:

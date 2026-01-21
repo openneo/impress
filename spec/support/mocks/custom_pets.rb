@@ -3,9 +3,14 @@ module Neopets::CustomPets
   DATA_DIR = Pathname.new(__dir__) / "custom_pets"
 
   def self.fetch_viewer_data(pet_name, ...)
-    File.open(DATA_DIR / "#{pet_name}.json") do |file|
-      HashWithIndifferentAccess.new JSON.load(file)
+    # NOTE: Windows doesn't support `@` in filenames, so we use a `scis` directory instead.
+    path = if pet_name.start_with?('@')
+      DATA_DIR / "scis" / "#{pet_name[1..]}.json"
+    else
+      DATA_DIR / "#{pet_name}.json"
     end
+
+    File.open(path) { |f| HashWithIndifferentAccess.new JSON.load(f) }
   end
 
   def self.fetch_metadata(...)

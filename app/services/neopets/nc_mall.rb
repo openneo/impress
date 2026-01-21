@@ -126,7 +126,7 @@ module Neopets::NCMall
 	# Use the returned hash with Neopets::CustomPets.fetch_viewer_data("@#{newsci}")
 	# to get the full appearance data.
 	PET_DATA_URL = "https://ncmall.neopets.com/mall/ajax/petview/getPetData.php"
-	def self.fetch_pet_data(pet_sci, item_ids = [])
+	def self.fetch_pet_data_sci(pet_sci, item_ids = [])
 		Sync do
 			params = {"selPetsci" => pet_sci}
 			item_ids.each { |id| params["itemsList[]"] = id.to_s }
@@ -153,7 +153,7 @@ module Neopets::NCMall
 						"missing or invalid field newsci in pet data response"
 				end
 
-				{newsci: data["newsci"]}
+				data["newsci"]
 			end
 		end
 	end
