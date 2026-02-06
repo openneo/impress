@@ -442,13 +442,12 @@
         mode: "755"
         state: directory
 
-    - name: Remove 10min cron job to run `rails nc_mall:sync`
+    - name: Create 2min cron job to run `rails items:auto_model`
       become_user: impress
       cron:
-        state: absent
-        name: "Impress: sync NC Mall data"
-        minute: "*/10"
-        job: "bash -c 'source /etc/profile && source ~/.bash_profile && cd /srv/impress/current && bin/rails nc_mall:sync'"
+        name: "Impress: auto-model items"
+        minute: "*/2"
+        job: "bash -c 'source /etc/profile && source ~/.bash_profile && cd /srv/impress/current && bin/rails items:auto_model'"
 
     - name: Create 10min cron job to run `rails neopets:import`
       become_user: impress
