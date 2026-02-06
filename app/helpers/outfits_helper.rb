@@ -1,8 +1,4 @@
 module OutfitsHelper
-  def destination_tag(value)
-    hidden_field_tag 'destination', value, :id => nil
-  end
-  
   def latest_contribution_description(contribution)
     user = contribution.user
     contributed = contribution.contributed

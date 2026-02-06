@@ -167,7 +167,7 @@ module ApplicationHelper
   def origin_tag(value)
     hidden_field_tag 'origin', value, :id => nil
   end
-  
+
   def open_graph(properties)
     if @open_graph
       @open_graph.merge! properties

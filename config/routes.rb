@@ -46,7 +46,7 @@ OpenneoImpressItems::Application.routes.draw do
   get '/alt-styles', to: redirect('/rainbow-pool/styles')
 
   # Loading and modeling pets!
-  post '/pets/load' => 'pets#load', :as => :load_pet
+  match '/pets/load' => 'pets#load', :as => :load_pet, via: [:get, :post]
   get '/modeling' => 'pets#bulk', :as => :bulk_pets
 
   # Contributions to our modeling database!

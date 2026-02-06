@@ -34,9 +34,10 @@ class PetsController < ApplicationController
   end
   
   def destination
-    case (params[:destination] || params[:origin])
-      when 'wardrobe'     then wardrobe_path
-      else                     root_path
+    if request.get?
+      wardrobe_path
+    else
+      root_path
     end
   end
   
@@ -59,7 +60,7 @@ class PetsController < ApplicationController
         path += "?name=#{params[:name]}"
         redirect_to path, :alert => options[:long_message]
       end
-      
+
       format.json do
         render :json => options[:long_message], :status => options[:status]
       end

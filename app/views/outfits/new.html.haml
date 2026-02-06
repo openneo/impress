@@ -25,8 +25,7 @@
   %h1= t 'app_name'
   %h2= t '.tagline'
 
-  = form_tag load_pet_path, method: 'POST', class: 'primary load-pet-to-wardrobe' do
-    = hidden_field_tag 'destination', 'wardrobe'
+  = form_tag load_pet_path, method: 'GET', class: 'primary load-pet-to-wardrobe' do
     %fieldset
       %legend= t '.load_pet'
       = pet_name_tag class: 'main-pet-name'
