@@ -291,6 +291,7 @@ export function OutfitLayers({
 												getBestImageUrlForLayer(layer, { hiResMode }),
 												{ preferArchive },
 											)}
+											crossorigin="anonymous"
 											alt=""
 											objectFit="contain"
 											maxWidth="100%"
