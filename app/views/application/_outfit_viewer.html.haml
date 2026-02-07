@@ -1,4 +1,5 @@
 - html_options = {} unless defined? html_options
+- viewer_id = html_options[:id] ||= "outfit-viewer-#{SecureRandom.hex(8)}"
 = content_tag "outfit-viewer", **html_options do
   .loading-indicator= render partial: "hanger_spinner"
 
@@ -14,6 +15,7 @@
 
   - outfit.visible_layers.each do |swf_asset|
     %outfit-layer{
+      id: "#{viewer_id}-layer-#{swf_asset.id}",
       data: {
         "asset-id": swf_asset.id,
         "zone": swf_asset.zone.label,

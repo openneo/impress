@@ -16,7 +16,7 @@
 
 = turbo_frame_tag "item-preview" do
   .preview-area
-    = outfit_viewer @preview_outfit
+    = outfit_viewer @preview_outfit, id: "item-preview-outfit-viewer"
     .error-indicator
       💥 We couldn't load all of this outfit. Try again?
     = link_to wardrobe_path(params: @preview_outfit.wardrobe_params),
