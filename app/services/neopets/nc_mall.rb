@@ -120,6 +120,39 @@ module Neopets::NCMall
 		end
 	end
 
+	# Load "exclusive" styles from tab 3 of the Styling Studio. Unlike tabs 1
+	# and 2, these are not species-specific—there's just one request that
+	# returns all exclusives.
+	def self.load_exclusives(neologin:)
+		Sync do
+			DTIRequests.post(
+				STYLING_STUDIO_URL,
+				[
+					["Content-Type", "application/x-www-form-urlencoded"],
+					["Cookie", "neologin=#{neologin}"],
+					["X-Requested-With", "XMLHttpRequest"],
+				],
+				{tab: 3, mode: "getTab", key: "StylingStudioTab", value: 3}.to_query,
+			) do |response|
+				if response.status != 200
+					raise ResponseNotOK.new(response.status),
+						"expected status 200 but got #{response.status} (#{STYLING_STUDIO_URL})"
+				end
+
+				begin
+					data = JSON.parse(response.read).deep_symbolize_keys
+
+					# Like styles, exclusives is a hash keyed by ID (or an empty
+					# array when there are none).
+					data.fetch(:exclusives).to_h.values.
+						map { |s| s.slice(:oii, :name, :image) }
+				rescue JSON::ParserError, KeyError
+					raise UnexpectedResponseFormat
+				end
+			end
+		end
+	end
+
 	# Generate a new image hash for a pet wearing specific items. Takes a base
 	# pet sci (species/color image hash) and optional item IDs, and returns a
 	# response containing the combined image hash in the :newsci field.

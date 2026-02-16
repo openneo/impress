@@ -213,4 +213,72 @@ RSpec.describe Neopets::NCMall, type: :model do
 			expect { styles }.to raise_error(Neopets::NCMall::UnexpectedResponseFormat)
 		end
 	end
+
+	describe ".load_exclusives" do
+		def stub_exclusives_request
+			stub_request(:post, "https://www.neopets.com/np-templates/ajax/stylingstudio/studio.php").
+				with(
+					headers: {
+						"Content-Type": "application/x-www-form-urlencoded",
+						"X-Requested-With": "XMLHttpRequest",
+						"Cookie": "neologin=STUB_NEOLOGIN",
+						"User-Agent": Rails.configuration.user_agent_for_neopets,
+					},
+					body: "key=StylingStudioTab&mode=getTab&tab=3&value=3",
+				)
+		end
+
+		subject(:exclusives) do
+			Neopets::NCMall.load_exclusives(neologin: "STUB_NEOLOGIN")
+		end
+
+		it "loads exclusive styles from tab 3" do
+			stub_exclusives_request.to_return(
+				body: '{"success":true,"exclusives":{"95639":{"name":"Treasured Roberta","image":"https:\/\/images.neopets.com\/items\/1c2h6d7fdn.gif","oii":95639},"95640":{"name":"Treasured Lisha","image":"https:\/\/images.neopets.com\/items\/0ocf7m2daj.gif","oii":95640}},"styleMeter":{"num":0,"max":15,"isReady":false},"mode":"getTab"}'
+			)
+
+			expect(exclusives).to contain_exactly(
+				{
+					oii: 95639,
+					name: "Treasured Roberta",
+					image: "https://images.neopets.com/items/1c2h6d7fdn.gif",
+				},
+				{
+					oii: 95640,
+					name: "Treasured Lisha",
+					image: "https://images.neopets.com/items/0ocf7m2daj.gif",
+				},
+			)
+		end
+
+		it "handles empty exclusives" do
+			stub_exclusives_request.to_return(
+				body: '{"success":true,"exclusives":[],"styleMeter":{"num":0,"max":15,"isReady":false},"mode":"getTab"}'
+			)
+
+			expect(exclusives).to be_empty
+		end
+
+		it "raises an error if the request returns a non-200 status" do
+			stub_exclusives_request.to_return(status: 400)
+
+			expect { exclusives }.to raise_error(Neopets::NCMall::ResponseNotOK)
+		end
+
+		it "raises an error if the request returns a non-JSON response" do
+			stub_exclusives_request.to_return(
+				body: "Oops, this request failed for some weird reason!",
+			)
+
+			expect { exclusives }.to raise_error(Neopets::NCMall::UnexpectedResponseFormat)
+		end
+
+		it "raises an error if the request returns unexpected JSON" do
+			stub_exclusives_request.to_return(
+				body: '{"success": false}',
+			)
+
+			expect { exclusives }.to raise_error(Neopets::NCMall::UnexpectedResponseFormat)
+		end
+	end
 end

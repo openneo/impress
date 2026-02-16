@@ -33,12 +33,34 @@ namespace "neopets:import" do
 			end
 			print "\n"
 
-			style_ids = styles_by_species_id.values.flatten(1).map { |s| s[:oii] }
+			# Load exclusive styles from tab 3 (not species-specific).
+			print "Loading exclusives…"
+			begin
+				exclusives = Neopets::NCMall.load_exclusives(
+					neologin: Neologin.cookie,
+				)
+			rescue => error
+				puts "\n⚠️  Error loading exclusives, skipping: #{error.message}"
+				Sentry.capture_exception(error,
+					tags: { task: "neopets:import:styling_studio" })
+				exclusives = nil
+			end
+			puts " #{exclusives&.size || 0} loaded"
+
+			all_styles = styles_by_species_id.values.flatten(1)
+			all_styles += exclusives unless exclusives.nil?
+			style_ids = all_styles.map { |s| s[:oii] }
 			style_records_by_id =
 				AltStyle.where(id: style_ids).to_h { |as| [as.id, as] }
 
-			all_species.each do |species|
-				styles = styles_by_species_id[species.id]
+			# Build a list of groups to process: one per species, plus exclusives.
+			groups = all_species.map { |sp|
+				{label: sp.human_name, styles: styles_by_species_id[sp.id]}
+			}
+			groups << {label: "Exclusives", styles: exclusives}
+
+			groups.each do |group|
+				styles = group[:styles]
 				next if styles.nil?
 
 				counts = {changed: 0, unchanged: 0, skipped: 0}
@@ -96,7 +118,7 @@ namespace "neopets:import" do
 					record.save!
 				end
 
-				puts "#{species.human_name}: #{counts[:changed]} changed, " +
+				puts "#{group[:label]}: #{counts[:changed]} changed, " +
 					"#{counts[:unchanged]} unchanged, #{counts[:skipped]} skipped"
 			end
 		rescue => e
