@@ -26,7 +26,7 @@ class Admin::NeologinCookiesController < ApplicationController
 
   def cookie_params
     params.require(:neologin_cookie).permit(:cookie).tap do |p|
-      p[:cookie] = p[:cookie].to_s.strip
+      p[:cookie] = p[:cookie].to_s.strip.delete_prefix("neologin=")
     end
   end
 end

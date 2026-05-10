@@ -1,116 +1,138 @@
-- title "Neologin Cookie"
+- title "Neologin cookie"
 - use_responsive_design
 
-:markdown
-	The Neologin cookie lets us make authenticated requests to Neopets.com on
-	behalf of our service account—mostly for `rake neopets:import`, which pulls
-	Rainbow Pool data and Styling Studio styles. Neopets logs the cookie out
-	pretty regularly, so we have to refresh it manually here when it stops
-	working.
+- status = (@current_cookie.nil? && :empty) || (@current_cookie.failing? && :failing) || (@current_cookie.last_used_successfully_at && :working) || :untested
 
-%section
-	%h2 Current status
+%section.cookie-form-card{class: "status-#{status}"}
+	%header
+		.status-badge
+			- case status
+			- when :working
+				%span.icon ✅
+				%span.label Working
+			- when :failing
+				%span.icon 🚨
+				%span.label Failing
+			- when :untested
+				%span.icon 🤷
+				%span.label Untested
+			- when :empty
+				%span.icon ⚠️
+				%span.label No cookie saved
 
-	- if @current_cookie.nil?
-		%p ⚠️ No cookie has been saved yet. Paste one below to get started.
-	- else
-		%dl
-			%dt Saved
-			%dd
-				= time_ago_in_words(@current_cookie.created_at)
-				ago
-				- if @current_cookie.created_by
-					\— by #{@current_cookie.created_by.name}
-			%dt Last successful use
-			%dd
-				- if @current_cookie.last_used_successfully_at
-					= time_ago_in_words(@current_cookie.last_used_successfully_at)
-					ago
-				- else
-					%em Never (no import has run yet with this cookie)
-			%dt Status
-			%dd
-				- if @current_cookie.failing?
-					🚨 <strong>Failing</strong> — last failure
-					= time_ago_in_words(@current_cookie.last_failed_at)
-					ago.
-					- if @current_cookie.last_failure_message.present?
-						%pre= @current_cookie.last_failure_message
-				- elsif @current_cookie.last_used_successfully_at
-					✅ Working
-				- else
-					🤷 Untested
+		- if @current_cookie
+			%dl.meta
+				%div
+					%dt Saved
+					%dd
+						= time_ago_in_words(@current_cookie.created_at)
+						ago
+						- if @current_cookie.created_by
+							by #{@current_cookie.created_by.name}
+				%div
+					%dt Last success
+					%dd
+						- if @current_cookie.last_used_successfully_at
+							= time_ago_in_words(@current_cookie.last_used_successfully_at)
+							ago
+						- else
+							%em Never run yet
+				- if status == :failing
+					%div
+						%dt Last failure
+						%dd
+							= time_ago_in_words(@current_cookie.last_failed_at)
+							ago
 
-%section
-	%h2 Refresh the cookie
+	- if status == :failing && @current_cookie.last_failure_message.present?
+		%pre.failure-message= @current_cookie.last_failure_message
 
-	:markdown
-		**Service account credentials** (from environment variables, for staff
-		convenience):
-
-	%dl
-		%dt Email
-		%dd
-			- if Neologin.service_account_email.present?
-				%code= Neologin.service_account_email
-			- else
-				%em not set (NEOPETS_SERVICE_ACCOUNT_EMAIL)
-		%dt Password
-		%dd
-			- if Neologin.service_account_password.present?
-				%code= Neologin.service_account_password
-			- else
-				%em not set (NEOPETS_SERVICE_ACCOUNT_PASSWORD)
-
-	:markdown
-		**How to extract a fresh cookie:**
-
-		1. Log into [Neopets.com](https://www.neopets.com) using the credentials
-		   above. (You'll have to solve their captcha—NeoPass doesn't currently
-		   give us a way to automate this.)
-		2. Open your browser's DevTools → **Application** (or **Storage**) →
-		   **Cookies** → `https://www.neopets.com`.
-		3. Find the cookie named `neologin` and copy its **Value**.
-		4. Paste it into the box below and save. The next scheduled `rake
-		   neopets:import` run will pick it up automatically.
-
-	= form_with model: @new_cookie, url: admin_neologin_cookies_path do |f|
-		= f.errors if f.respond_to?(:errors)
+	= form_with model: @new_cookie, url: admin_neologin_cookies_path, class: "cookie-form" do |f|
 		- if @new_cookie.errors.any?
 			%ul.errors
 				- @new_cookie.errors.full_messages.each do |msg|
 					%li= msg
-		%p
-			= f.label :cookie, "New neologin cookie value"
-			%br
-			= f.text_area :cookie, rows: 4, cols: 80, autofocus: true
-		%p= f.submit "Save cookie"
 
-%section
-	%h2 History
+		.field-row
+			= f.label :cookie, "Paste a fresh neologin cookie", class: "field-label"
+			.field-input
+				.input-with-prefix
+					%span.prefix neologin=
+					= f.text_field :cookie, autofocus: true, autocomplete: "off",
+						spellcheck: "false"
+				= f.submit "Save"
 
-	- if @history.any?
-		%table
-			%thead
-				%tr
-					%th Saved
-					%th By
-					%th Last success
-					%th Last failure
-			%tbody
-				- @history.each do |c|
+	.credentials
+		%h3 Service account
+		%dl
+			%div
+				%dt Email
+				%dd
+					- if Neologin.service_account_email.present?
+						%click-to-copy{value: Neologin.service_account_email}
+							%code= Neologin.service_account_email
+					- else
+						%em.unset not set (NEOPETS_SERVICE_ACCOUNT_EMAIL)
+			%div
+				%dt Password
+				%dd
+					- if Neologin.service_account_password.present?
+						%click-to-copy{value: Neologin.service_account_password}
+							%code.secret ••••••••••••
+					- else
+						%em.unset not set (NEOPETS_SERVICE_ACCOUNT_PASSWORD)
+
+	%details.instructions
+		%summary How to extract a fresh cookie
+		:markdown
+			The Neologin cookie lets us make authenticated requests to Neopets.com on
+			behalf of our service account—mostly for `rake neopets:import`, which pulls
+			Rainbow Pool data and Styling Studio styles. Neopets logs the cookie out
+			pretty regularly, so we have to refresh it manually here when it stops
+			working.
+
+			1. Log into [Neopets.com](https://www.neopets.com) using the service
+			   credentials above. (You'll have to solve their captcha—NeoPass doesn't
+			   currently give us a way to automate this.)
+			2. Open your browser's DevTools → **Application** (or **Storage**) →
+			   **Cookies** → `https://www.neopets.com`.
+			3. Find the cookie named `neologin` and copy its **Value**.
+			4. Paste it into the box above and save. The next scheduled
+			   `rake neopets:import` run will pick it up automatically.
+
+%section.cookie-history
+	%details
+		%summary
+			History
+			%span.count (#{@history.size})
+		- if @history.any?
+			%table
+				%thead
 					%tr
-						%td= c.created_at.to_fs(:long)
-						%td= c.created_by&.name || "(unknown)"
-						%td
-							- if c.last_used_successfully_at
-								= c.last_used_successfully_at.to_fs(:short)
-							- else
-								\—
-						%td
-							- if c.last_failed_at
-								= c.last_failed_at.to_fs(:short)
-							- else
-								\—
-	- else
-		%p No cookies saved yet.
+						%th Saved
+						%th By
+						%th Last success
+						%th Last failure
+				%tbody
+					- @history.each do |c|
+						%tr
+							%td= c.created_at.to_fs(:long)
+							%td= c.created_by&.name || "(unknown)"
+							%td
+								- if c.last_used_successfully_at
+									= c.last_used_successfully_at.to_fs(:short)
+								- else
+									\—
+							%td
+								- if c.last_failed_at
+									= c.last_failed_at.to_fs(:short)
+								- else
+									\—
+		- else
+			%p.empty No cookies saved yet.
+
+- content_for :stylesheets do
+	= stylesheet_link_tag "admin/neologin_cookies"
+
+- content_for :javascripts do
+	= javascript_include_tag "click-to-copy", defer: true

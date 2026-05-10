@@ -1,0 +1,280 @@
+@import "../partials/clean/mixins"
+
+body.admin-neologin_cookies-index, body.admin-neologin_cookies-create
+	max-width: 820px
+	margin-left: auto
+	margin-right: auto
+	padding-left: 1em
+	padding-right: 1em
+
+	.cookie-form-card
+		+module
+		border-radius: 8px
+		padding: 0
+		overflow: hidden
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06)
+
+		header
+			background: rgba(255, 255, 255, 0.5)
+			border-bottom: 1px solid $soft-border-color
+			padding: 1em 1.25em
+			display: flex
+			flex-wrap: wrap
+			align-items: center
+			gap: 1em 1.5em
+
+		.status-badge
+			display: inline-flex
+			align-items: center
+			gap: .4em
+			font-family: $header-font
+			font-size: 1.4em
+			line-height: 1
+
+			.icon
+				font-size: 1.1em
+
+		// Color the badge per status
+		&.status-working .status-badge .label
+			color: $notice-color
+		&.status-failing .status-badge .label
+			color: $error-color
+		&.status-untested .status-badge .label
+			color: $soft-text-color
+		&.status-empty .status-badge .label
+			color: $warning-color
+
+		.meta
+			display: grid
+			grid-template-columns: repeat(auto-fit, minmax(140px, 1fr))
+			gap: .5em 1.5em
+			margin: 0
+			flex: 1
+			min-width: 0
+
+			> div
+				display: flex
+				flex-direction: column
+
+			dt
+				font-size: .8em
+				text-transform: uppercase
+				letter-spacing: .04em
+				color: $soft-text-color
+				margin: 0
+
+			dd
+				margin: 0
+				font-size: .95em
+
+		.failure-message
+			margin: 0
+			padding: .75em 1.25em
+			background: $error-bg-color
+			color: $error-color
+			border-bottom: 1px solid $error-border-color
+			font-size: .85em
+			white-space: pre-wrap
+			word-wrap: break-word
+
+	// The form is the centerpiece — give it room to breathe.
+	.cookie-form
+		padding: 1.25em 1.25em 1em
+
+		.errors
+			background: $error-bg-color
+			border: 1px solid $error-border-color
+			color: $error-color
+			border-radius: 4px
+			margin: 0 0 1em
+			padding: .5em .75em
+			list-style: inside
+
+		.field-label
+			display: block
+			font-weight: bold
+			margin-bottom: .4em
+
+		.field-input
+			display: flex
+			gap: .5em
+
+			.input-with-prefix
+				flex: 1
+				min-width: 0
+				display: flex
+				align-items: stretch
+				border: 1px solid $input-border-color
+				border-radius: 4px
+				background: white
+				overflow: hidden
+				transition: border-color .15s, box-shadow .15s
+
+				&:focus-within
+					border-color: $module-border-color
+					box-shadow: 0 0 0 3px rgba(0, 100, 0, 0.15)
+
+				.prefix
+					display: flex
+					align-items: center
+					padding: 0 .55em
+					background: $module-bg-color
+					color: $soft-text-color
+					border-right: 1px solid $input-border-color
+					font-family: ui-monospace, SFMono-Regular, Menlo, monospace
+					font-size: .9em
+					user-select: none
+
+				input[type="text"]
+					flex: 1
+					min-width: 0
+					font-family: ui-monospace, SFMono-Regular, Menlo, monospace
+					font-size: .9em
+					padding: .55em .65em
+					border: 0
+					background: transparent
+
+					&:focus
+						outline: none
+
+			input[type="submit"]
+				+awesome-button
+				flex-shrink: 0
+
+	.credentials
+		padding: .25em 1.25em 1em
+
+		h3
+			font-size: .8em
+			text-transform: uppercase
+			letter-spacing: .05em
+			color: $soft-text-color
+			margin: 0 0 .5em
+
+		dl
+			display: grid
+			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))
+			gap: .5em 1em
+			margin: 0
+
+			> div
+				display: flex
+				flex-direction: column
+				gap: .15em
+
+			dt
+				font-size: .8em
+				color: $soft-text-color
+				margin: 0
+
+			dd
+				margin: 0
+
+			code
+				font-family: ui-monospace, SFMono-Regular, Menlo, monospace
+				font-size: .9em
+
+			.unset
+				color: $soft-text-color
+				font-size: .85em
+
+	.instructions
+		border-top: 1px solid $soft-border-color
+		background: rgba(255, 255, 255, 0.4)
+
+		summary
+			padding: .75em 1.25em
+			cursor: pointer
+			font-weight: bold
+			color: $link-color
+			user-select: none
+
+			&:hover
+				background: rgba(255, 255, 255, 0.6)
+
+		> :not(summary)
+			padding: 0 1.25em 1em
+			font-size: .9em
+
+		ol
+			padding-left: 1.5em
+			margin: 0
+
+			li
+				margin-bottom: .35em
+
+	.cookie-history
+		margin-top: 2em
+
+		details
+			summary
+				cursor: pointer
+				font-family: $header-font
+				font-size: 1.2em
+				padding: .35em 0
+				user-select: none
+
+				.count
+					color: $soft-text-color
+					font-size: .85em
+					font-weight: normal
+					font-family: $main-font
+
+		table
+			width: 100%
+			border-collapse: collapse
+			margin-top: .75em
+			font-size: .9em
+
+			th, td
+				text-align: left
+				padding: .4em .6em
+				border-bottom: 1px solid $soft-border-color
+
+			th
+				font-size: .8em
+				text-transform: uppercase
+				letter-spacing: .04em
+				color: $soft-text-color
+				background: $module-bg-color
+
+		.empty
+			color: $soft-text-color
+			font-style: italic
+
+	click-to-copy
+		display: inline-flex
+		align-items: center
+		gap: .4em
+		cursor: pointer
+		padding: .15em .4em
+		margin: -.15em -.4em
+		border-radius: 4px
+		transition: background-color .15s
+
+		&:hover
+			background: rgba(0, 100, 0, 0.08)
+
+		// "Copy" by default, "Copied" on success — give the pseudo enough room
+		// for the wider text so the element doesn't reflow when it switches.
+		&:after
+			content: "Copy"
+			font-size: .75em
+			font-weight: bold
+			color: $soft-text-color
+			text-transform: uppercase
+			letter-spacing: .05em
+			min-width: 4.2em
+			text-align: right
+			opacity: .65
+
+		&:hover:after
+			opacity: 1
+
+		&.copied
+			background: $notice-bg-color
+
+			&:after
+				content: "✓ Copied"
+				color: $notice-color
+				opacity: 1
