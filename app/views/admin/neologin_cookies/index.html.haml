@@ -1,0 +1,116 @@
+- title "Neologin Cookie"
+- use_responsive_design
+
+:markdown
+	The Neologin cookie lets us make authenticated requests to Neopets.com on
+	behalf of our service account—mostly for `rake neopets:import`, which pulls
+	Rainbow Pool data and Styling Studio styles. Neopets logs the cookie out
+	pretty regularly, so we have to refresh it manually here when it stops
+	working.
+
+%section
+	%h2 Current status
+
+	- if @current_cookie.nil?
+		%p ⚠️ No cookie has been saved yet. Paste one below to get started.
+	- else
+		%dl
+			%dt Saved
+			%dd
+				= time_ago_in_words(@current_cookie.created_at)
+				ago
+				- if @current_cookie.created_by
+					\— by #{@current_cookie.created_by.name}
+			%dt Last successful use
+			%dd
+				- if @current_cookie.last_used_successfully_at
+					= time_ago_in_words(@current_cookie.last_used_successfully_at)
+					ago
+				- else
+					%em Never (no import has run yet with this cookie)
+			%dt Status
+			%dd
+				- if @current_cookie.failing?
+					🚨 <strong>Failing</strong> — last failure
+					= time_ago_in_words(@current_cookie.last_failed_at)
+					ago.
+					- if @current_cookie.last_failure_message.present?
+						%pre= @current_cookie.last_failure_message
+				- elsif @current_cookie.last_used_successfully_at
+					✅ Working
+				- else
+					🤷 Untested
+
+%section
+	%h2 Refresh the cookie
+
+	:markdown
+		**Service account credentials** (from environment variables, for staff
+		convenience):
+
+	%dl
+		%dt Email
+		%dd
+			- if Neologin.service_account_email.present?
+				%code= Neologin.service_account_email
+			- else
+				%em not set (NEOPETS_SERVICE_ACCOUNT_EMAIL)
+		%dt Password
+		%dd
+			- if Neologin.service_account_password.present?
+				%code= Neologin.service_account_password
+			- else
+				%em not set (NEOPETS_SERVICE_ACCOUNT_PASSWORD)
+
+	:markdown
+		**How to extract a fresh cookie:**
+
+		1. Log into [Neopets.com](https://www.neopets.com) using the credentials
+		   above. (You'll have to solve their captcha—NeoPass doesn't currently
+		   give us a way to automate this.)
+		2. Open your browser's DevTools → **Application** (or **Storage**) →
+		   **Cookies** → `https://www.neopets.com`.
+		3. Find the cookie named `neologin` and copy its **Value**.
+		4. Paste it into the box below and save. The next scheduled `rake
+		   neopets:import` run will pick it up automatically.
+
+	= form_with model: @new_cookie, url: admin_neologin_cookies_path do |f|
+		= f.errors if f.respond_to?(:errors)
+		- if @new_cookie.errors.any?
+			%ul.errors
+				- @new_cookie.errors.full_messages.each do |msg|
+					%li= msg
+		%p
+			= f.label :cookie, "New neologin cookie value"
+			%br
+			= f.text_area :cookie, rows: 4, cols: 80, autofocus: true
+		%p= f.submit "Save cookie"
+
+%section
+	%h2 History
+
+	- if @history.any?
+		%table
+			%thead
+				%tr
+					%th Saved
+					%th By
+					%th Last success
+					%th Last failure
+			%tbody
+				- @history.each do |c|
+					%tr
+						%td= c.created_at.to_fs(:long)
+						%td= c.created_by&.name || "(unknown)"
+						%td
+							- if c.last_used_successfully_at
+								= c.last_used_successfully_at.to_fs(:short)
+							- else
+								\—
+						%td
+							- if c.last_failed_at
+								= c.last_failed_at.to_fs(:short)
+							- else
+								\—
+	- else
+		%p No cookies saved yet.

@@ -22,7 +22,9 @@ namespace "neopets:import" do
 					task.async do
 						begin
 							hashes_by_color_name_by_species_id[species.id] =
-								RainbowPool.load_hashes_for_species(species.id, Neologin.cookie)
+								Neologin.with_tracking do
+									RainbowPool.load_hashes_for_species(species.id, Neologin.cookie)
+								end
 						rescue => error
 							puts "Failed to load #{species.name} page, skipping: #{error.message}"
 							Sentry.capture_exception(error,

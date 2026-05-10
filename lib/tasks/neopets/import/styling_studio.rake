@@ -16,10 +16,12 @@ namespace "neopets:import" do
 				all_species.each do |species|
 					task.async {
 						begin
-							styles_by_species_id[species.id] = Neopets::NCMall.load_styles(
-								species_id: species.id,
-								neologin: Neologin.cookie,
-							)
+							styles_by_species_id[species.id] = Neologin.with_tracking do
+								Neopets::NCMall.load_styles(
+									species_id: species.id,
+									neologin: Neologin.cookie,
+								)
+							end
 						rescue => error
 							puts "\n⚠️  Error loading for #{species.human_name}, skipping: #{error.message}"
 							Sentry.capture_exception(error,
@@ -36,9 +38,11 @@ namespace "neopets:import" do
 			# Load exclusive styles from tab 3 (not species-specific).
 			print "Loading exclusives…"
 			begin
-				exclusives = Neopets::NCMall.load_exclusives(
-					neologin: Neologin.cookie,
-				)
+				exclusives = Neologin.with_tracking do
+					Neopets::NCMall.load_exclusives(
+						neologin: Neologin.cookie,
+					)
+				end
 			rescue => error
 				puts "\n⚠️  Error loading exclusives, skipping: #{error.message}"
 				Sentry.capture_exception(error,

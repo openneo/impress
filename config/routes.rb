@@ -105,6 +105,11 @@ OpenneoImpressItems::Application.routes.draw do
   get '/about/neopass',
       to: redirect('https://blog.openneo.net/2024/03/13/neopass-for-dti.html')
 
+  # Admin tools, gated to support staff!
+  namespace :admin do
+    resources :neologin_cookies, path: "neologin", only: [:index, :create]
+  end
+
   # Other useful lil things!
   get '/sitemap.xml' => 'sitemap#index', :as => :sitemap, :format => :xml
   get '/robots.txt' => 'sitemap#robots', :as => :robots, :format => :text
