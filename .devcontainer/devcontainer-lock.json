@@ -1,0 +1,19 @@
+{
+  "features": {
+    "ghcr.io/devcontainers-extra/features/ansible:2": {
+      "version": "2.1.2",
+      "resolved": "ghcr.io/devcontainers-extra/features/ansible@sha256:0b0c1e75e3c0fc9036d2d73277ded8d7c7589cb5971fc51549c38eaa0d5893ca",
+      "integrity": "sha256:0b0c1e75e3c0fc9036d2d73277ded8d7c7589cb5971fc51549c38eaa0d5893ca"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "1.7.1",
+      "resolved": "ghcr.io/devcontainers/features/node@sha256:8c0de46939b61958041700ee89e3493f3b2e4131a06dc46b4d9423427d06e5f6",
+      "integrity": "sha256:8c0de46939b61958041700ee89e3493f3b2e4131a06dc46b4d9423427d06e5f6"
+    },
+    "ghcr.io/rails/devcontainer/features/mysql-client": {
+      "version": "1.1.1",
+      "resolved": "ghcr.io/rails/devcontainer/features/mysql-client@sha256:fde8e2f5593edb74bba47ade1c7939748be7348c7cd08f91f42d97167fbdc3a9",
+      "integrity": "sha256:fde8e2f5593edb74bba47ade1c7939748be7348c7cd08f91f42d97167fbdc3a9"
+    }
+  }
+}

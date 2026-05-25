@@ -8,6 +8,9 @@ services:
 
     volumes:
       - ../..:/workspaces:cached
+      # Shadow the host's .bundle/config with a container-local volume
+      # (When I run the app directly on my machine, I keep some Mac-specific fixes in there!)
+      - bundle-config:/workspaces/impress/.bundle
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
@@ -35,3 +38,4 @@ services:
 
 volumes:
   mysql-data:
+  bundle-config:
