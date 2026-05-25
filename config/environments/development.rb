@@ -95,6 +95,9 @@ Rails.application.configure do
   # Allow connections on Vagrant's private network.
   config.web_console.permissions = '10.0.2.2'
 
+  # Allow hosting on GitHub Codespaces
+  config.hosts << /.*\.app\.github\.dev/
+
   # Allow pets to model new data. (If modeling is ever broken, disable this in
   # production while we fix it!)
   config.modeling_enabled = true
