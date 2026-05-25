@@ -45,6 +45,8 @@ module DiscordNotifier
     # for the underlying failure that triggered the notification.
     Rails.logger.error("[DiscordNotifier] error posting webhook: #{e.message}")
     Sentry.capture_exception(e) if defined?(Sentry)
+  else
+    Rails.logger.info("[DiscordNotifier] Posted message: #{content}")
   end
 
   def self.admin_url

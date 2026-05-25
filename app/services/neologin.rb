@@ -17,6 +17,12 @@
 module Neologin
   class MissingCookie < StandardError; end
 
+  # Raised when Neopets explicitly rejects our cookie (e.g. responds with
+  # `errType: "login"`). Distinct from a generic UnexpectedResponseFormat so
+  # callers and the admin panel can surface "the cookie is expired" plainly,
+  # instead of lumping it in with parser errors and other surprises.
+  class CookieRejected < StandardError; end
+
   def self.cookie
     db_cookie = NeologinCookie.current&.cookie
     return db_cookie if db_cookie.present?
@@ -40,9 +46,31 @@ module Neologin
       record&.record_success!
       result
     rescue => e
-      record&.record_failure!(message: "#{e.class}: #{e.message}")
+      record&.record_failure!(
+        message: format_exception_chain(e),
+        kind: failure_kind_for(e),
+      )
       raise
     end
+  end
+
+  # Format an exception and its `cause` chain into a single readable string,
+  # so we don't lose context when a low-level error (e.g. JSON::ParserError)
+  # gets re-raised as a higher-level one (e.g. UnexpectedResponseFormat).
+  def self.format_exception_chain(error)
+    parts = []
+    current = error
+    seen = Set.new
+    while current && seen.add?(current.object_id)
+      parts << "#{current.class}: #{current.message}"
+      current = current.cause
+    end
+    parts.join("\nCaused by: ")
+  end
+
+  def self.failure_kind_for(error)
+    return "expired" if error.is_a?(CookieRejected)
+    nil
   end
 
   # Service-account credentials for staff to use when refreshing the cookie.

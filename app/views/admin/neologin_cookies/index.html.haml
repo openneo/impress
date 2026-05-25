@@ -1,7 +1,7 @@
 - title "Neologin cookie"
 - use_responsive_design
 
-- status = (@current_cookie.nil? && :empty) || (@current_cookie.failing? && :failing) || (@current_cookie.last_used_successfully_at && :working) || :untested
+- status = (@current_cookie.nil? && :empty) || (@current_cookie.expired? && :expired) || (@current_cookie.failing? && :failing) || (@current_cookie.last_used_successfully_at && :working) || :untested
 
 %section.cookie-form-card{class: "status-#{status}"}
 	%header
@@ -10,6 +10,9 @@
 			- when :working
 				%span.icon ✅
 				%span.label Working
+			- when :expired
+				%span.icon 🔒
+				%span.label Expired (please refresh)
 			- when :failing
 				%span.icon 🚨
 				%span.label Failing
@@ -37,14 +40,14 @@
 							ago
 						- else
 							%em Never run yet
-				- if status == :failing
+				- if status == :failing || status == :expired
 					%div
 						%dt Last failure
 						%dd
 							= time_ago_in_words(@current_cookie.last_failed_at)
 							ago
 
-	- if status == :failing && @current_cookie.last_failure_message.present?
+	- if (status == :failing || status == :expired) && @current_cookie.last_failure_message.present?
 		%pre.failure-message= @current_cookie.last_failure_message
 
 	= form_with model: @new_cookie, url: admin_neologin_cookies_path, class: "cookie-form" do |f|

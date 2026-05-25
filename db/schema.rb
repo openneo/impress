@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_07_113713) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_10_113722) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "body_id", null: false
     t.integer "color_id", null: false
@@ -180,6 +180,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_07_113713) do
     t.datetime "created_at", null: false
     t.integer "created_by_id"
     t.datetime "last_failed_at"
+    t.string "last_failure_kind"
     t.text "last_failure_message"
     t.datetime "last_used_successfully_at"
     t.datetime "notified_failure_at"

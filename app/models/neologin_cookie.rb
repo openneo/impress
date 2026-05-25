@@ -18,6 +18,7 @@ class NeologinCookie < ApplicationRecord
       last_used_successfully_at: now,
       last_failed_at: nil,
       last_failure_message: nil,
+      last_failure_kind: nil,
       notified_failure_at: nil,
     )
   end
@@ -25,16 +26,31 @@ class NeologinCookie < ApplicationRecord
   # Record that this cookie failed to authenticate. Fires a Discord webhook
   # the *first* time a cookie fails after a successful run, so a flapping
   # task doesn't spam the channel.
-  def record_failure!(message:, now: Time.current)
-    should_notify = notified_failure_at.nil?
-
-    update_columns(
-      last_failed_at: now,
-      last_failure_message: message.to_s.truncate(1000),
-      notified_failure_at: should_notify ? now : notified_failure_at,
-    )
+  #
+  # Uses a DB row lock so concurrent async callers (e.g. parallel species
+  # requests in the styling_studio task) don't each see notified_failure_at
+  # as nil and fire duplicate webhooks.
+  def record_failure!(message:, kind: nil, now: Time.current)
+    should_notify = with_lock do
+      reload
+      notify = notified_failure_at.nil?
+      update_columns(
+        last_failed_at: now,
+        last_failure_message: message.to_s.truncate(1000),
+        last_failure_kind: kind,
+        notified_failure_at: notify ? now : notified_failure_at,
+      )
+      notify
+    end
 
     DiscordNotifier.notify_neologin_failure(self, message:) if should_notify
+  end
+
+  # True when our most recent failure was Neopets explicitly rejecting the
+  # cookie (vs. a parser error, network blip, etc). Lets the admin UI show
+  # a clearer "expired, please refresh" state.
+  def expired?
+    failing? && last_failure_kind == "expired"
   end
 
   # Whether this cookie is currently in a failed state (i.e. has failed since
