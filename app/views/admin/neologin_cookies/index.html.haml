@@ -40,6 +40,12 @@
 							ago
 						- else
 							%em Never run yet
+				- if @current_cookie.last_rotated_at
+					%div
+						%dt Last auto-rotated
+						%dd
+							= time_ago_in_words(@current_cookie.last_rotated_at)
+							ago
 				- if status == :failing || status == :expired
 					%div
 						%dt Last failure
@@ -115,6 +121,7 @@
 						%th Saved
 						%th By
 						%th Last success
+						%th Last rotated
 						%th Last failure
 				%tbody
 					- @history.each do |c|
@@ -124,6 +131,11 @@
 							%td
 								- if c.last_used_successfully_at
 									= c.last_used_successfully_at.to_fs(:short)
+								- else
+									\—
+							%td
+								- if c.last_rotated_at
+									= c.last_rotated_at.to_fs(:short)
 								- else
 									\—
 							%td

@@ -68,6 +68,29 @@ module Neologin
     parts.join("\nCaused by: ")
   end
 
+  # Check a Neopets HTTP response for a Set-Cookie header that rotates the
+  # neologin value. If found and different from what we have stored, updates
+  # the current DB record in-place. Call this inside response blocks that use
+  # the neologin cookie, before reading the body.
+  def self.record_rotation_if_applicable!(response)
+    record = NeologinCookie.current
+    return unless record
+
+    new_cookie = extract_neologin_cookie_value(response)
+    return unless new_cookie.present? && new_cookie != record.cookie
+
+    record.record_rotation!(new_cookie)
+  end
+
+  def self.extract_neologin_cookie_value(response)
+    response.headers.each do |name, value|
+      next unless name == "set-cookie"
+      match = value.match(/\Aneologin=([^;]+)/)
+      return match[1] if match
+    end
+    nil
+  end
+
   def self.failure_kind_for(error)
     return "expired" if error.is_a?(CookieRejected)
     nil

@@ -46,6 +46,13 @@ class NeologinCookie < ApplicationRecord
     DiscordNotifier.notify_neologin_failure(self, message:) if should_notify
   end
 
+  # Record that Neopets auto-rotated the cookie in a Set-Cookie response
+  # header. Updates the stored value in-place (no new audit row) and stamps
+  # last_rotated_at so the admin panel can show rotation is happening.
+  def record_rotation!(new_cookie, now: Time.current)
+    update_columns(cookie: new_cookie, last_rotated_at: now)
+  end
+
   # True when our most recent failure was Neopets explicitly rejecting the
   # cookie (vs. a parser error, network blip, etc). Lets the admin UI show
   # a clearer "expired, please refresh" state.

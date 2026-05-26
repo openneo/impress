@@ -139,6 +139,7 @@ module Neopets::NCMall
 						"expected status 200 but got #{response.status} (#{STYLING_STUDIO_URL})"
 				end
 
+				Neologin.record_rotation_if_applicable!(response)
 				body = response.read
 				begin
 					data = JSON.parse(body).deep_symbolize_keys
@@ -257,6 +258,7 @@ module Neopets::NCMall
 						"expected status 200 but got #{response.status} (#{STYLING_STUDIO_URL})"
 				end
 
+				Neologin.record_rotation_if_applicable!(response)
 				body = response.read
 				begin
 					data = JSON.parse(body).deep_symbolize_keys
