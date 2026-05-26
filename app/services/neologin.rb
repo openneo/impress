@@ -68,10 +68,26 @@ module Neologin
     parts.join("\nCaused by: ")
   end
 
+  # Authenticated wrappers around DTIRequests: inject the neologin cookie
+  # header and intercept any Set-Cookie rotation in the response, so callers
+  # don't have to manage either concern.
+  def self.authed_get(url, headers = [], &block)
+    DTIRequests.get(url, [["Cookie", "neologin=#{cookie}"], *headers]) do |response|
+      record_rotation_if_applicable!(response)
+      block.call(response)
+    end
+  end
+
+  def self.authed_post(url, headers = [], body = nil, &block)
+    DTIRequests.post(url, [["Cookie", "neologin=#{cookie}"], *headers], body) do |response|
+      record_rotation_if_applicable!(response)
+      block.call(response)
+    end
+  end
+
   # Check a Neopets HTTP response for a Set-Cookie header that rotates the
   # neologin value. If found and different from what we have stored, updates
-  # the current DB record in-place. Call this inside response blocks that use
-  # the neologin cookie, before reading the body.
+  # the current DB record in-place.
   def self.record_rotation_if_applicable!(response)
     record = NeologinCookie.current
     return unless record

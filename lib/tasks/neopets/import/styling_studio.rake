@@ -17,10 +17,7 @@ namespace "neopets:import" do
 					task.async {
 						begin
 							styles_by_species_id[species.id] = Neologin.with_tracking do
-								Neopets::NCMall.load_styles(
-									species_id: species.id,
-									neologin: Neologin.cookie,
-								)
+								Neopets::NCMall.load_styles(species_id: species.id)
 							end
 						rescue => error
 							puts "\n⚠️  Error loading for #{species.human_name}, skipping: #{error.message}"
@@ -39,9 +36,7 @@ namespace "neopets:import" do
 			print "Loading exclusives…"
 			begin
 				exclusives = Neologin.with_tracking do
-					Neopets::NCMall.load_exclusives(
-						neologin: Neologin.cookie,
-					)
+					Neopets::NCMall.load_exclusives
 				end
 			rescue => error
 				puts "\n⚠️  Error loading exclusives, skipping: #{error.message}"

@@ -23,7 +23,7 @@ namespace "neopets:import" do
 						begin
 							hashes_by_color_name_by_species_id[species.id] =
 								Neologin.with_tracking do
-									RainbowPool.load_hashes_for_species(species.id, Neologin.cookie)
+									RainbowPool.load_hashes_for_species(species.id)
 								end
 						rescue => error
 							puts "Failed to load #{species.name} page, skipping: #{error.message}"
@@ -89,13 +89,10 @@ module RainbowPool
 		SPECIES_PAGE_URL_TEMPLATE = Addressable::Template.new(
 			"https://www.neopets.com/pool/all_pb.phtml{?f_species_id}"
 		)
-		def load_hashes_for_species(species_id, neologin)
+		def load_hashes_for_species(species_id)
 			Sync do
 				url = SPECIES_PAGE_URL_TEMPLATE.expand(f_species_id: species_id)
-				DTIRequests.get(
-					url,
-					[["Cookie", "neologin=#{neologin}"]],
-				) do |response|
+				Neologin.authed_get(url) do |response|
 					# A 302 to /loginpage.phtml means Neopets bounced us because the
 					# neologin cookie isn't authenticated. Surface this as a typed
 					# error so the admin panel can show "expired" instead of a vague

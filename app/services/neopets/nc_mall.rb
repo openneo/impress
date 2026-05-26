@@ -110,11 +110,11 @@ module Neopets::NCMall
 		end
 	end
 
-	def self.load_styles(species_id:, neologin:)
+	def self.load_styles(species_id:)
 		Sync do
 			tabs = [
-				Async { load_styles_tab(species_id:, neologin:, tab: 1) },
-				Async { load_styles_tab(species_id:, neologin:, tab: 2) },
+				Async { load_styles_tab(species_id:, tab: 1) },
+				Async { load_styles_tab(species_id:, tab: 2) },
 			]
 			tabs.map(&:wait).flatten(1)
 		end
@@ -123,13 +123,12 @@ module Neopets::NCMall
 	# Load "exclusive" styles from tab 3 of the Styling Studio. Unlike tabs 1
 	# and 2, these are not species-specific—there's just one request that
 	# returns all exclusives.
-	def self.load_exclusives(neologin:)
+	def self.load_exclusives
 		Sync do
-			DTIRequests.post(
+			Neologin.authed_post(
 				STYLING_STUDIO_URL,
 				[
 					["Content-Type", "application/x-www-form-urlencoded"],
-					["Cookie", "neologin=#{neologin}"],
 					["X-Requested-With", "XMLHttpRequest"],
 				],
 				{tab: 3, mode: "getTab", key: "StylingStudioTab", value: 3}.to_query,
@@ -139,7 +138,6 @@ module Neopets::NCMall
 						"expected status 200 but got #{response.status} (#{STYLING_STUDIO_URL})"
 				end
 
-				Neologin.record_rotation_if_applicable!(response)
 				body = response.read
 				begin
 					data = JSON.parse(body).deep_symbolize_keys
@@ -242,13 +240,12 @@ module Neopets::NCMall
 	end
 
 	STYLING_STUDIO_URL = "https://www.neopets.com/np-templates/ajax/stylingstudio/studio.php"
-	def self.load_styles_tab(species_id:, neologin:, tab:)
+	def self.load_styles_tab(species_id:, tab:)
 		Sync do
-			DTIRequests.post(
+			Neologin.authed_post(
 				STYLING_STUDIO_URL,
 				[
 					["Content-Type", "application/x-www-form-urlencoded"],
-					["Cookie", "neologin=#{neologin}"],
 					["X-Requested-With", "XMLHttpRequest"],
 				],
 				{tab:, mode: "getAvailable", species: species_id}.to_query,
@@ -258,7 +255,6 @@ module Neopets::NCMall
 						"expected status 200 but got #{response.status} (#{STYLING_STUDIO_URL})"
 				end
 
-				Neologin.record_rotation_if_applicable!(response)
 				body = response.read
 				begin
 					data = JSON.parse(body).deep_symbolize_keys
