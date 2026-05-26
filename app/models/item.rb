@@ -454,7 +454,7 @@ class Item < ApplicationRecord
 
   def as_json(options={})
     result = super({
-      only: [:id, :name, :description, :thumbnail_url, :rarity_index],
+      only: [:id, :name, :created_at, :description, :thumbnail_url, :rarity_index],
       methods: [:zones_restrict],
     }.merge(options))
 
