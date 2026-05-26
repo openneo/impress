@@ -37,7 +37,8 @@ class Pet::ModelingSnapshot
   end
 
   def pet_state
-    @pet_state ||= begin
+    return @pet_state if defined?(@pet_state)
+    @pet_state = if biology_assets
       swf_asset_ids = biology_assets.map(&:remote_id)
       pet_type.pet_states.find_or_initialize_by(swf_asset_ids:).tap do |pet_state|
         pet_state.swf_assets = biology_assets
@@ -101,11 +102,14 @@ class Pet::ModelingSnapshot
   private
 
   def biology_assets
-    @biology_assets ||= begin
-      biology = @custom_pet[:alt_style].present? ?
-        @custom_pet[:original_biology] :
-        @custom_pet[:biology_by_zone]
-      assets_from_biology(biology)
+    return @biology_assets if defined?(@biology_assets)
+    @biology_assets = if @custom_pet[:alt_style].present?
+      # The sci (@) format omits original_biology for alt-style pets; that's
+      # expected, so return nil rather than raising.
+      biology = @custom_pet[:original_biology]
+      assets_from_biology(biology) if biology.present?
+    else
+      assets_from_biology(@custom_pet[:biology_by_zone])
     end
   end
 

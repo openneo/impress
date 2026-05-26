@@ -22,8 +22,8 @@ class Pet < ApplicationRecord
       name: self.name,
       color: self.pet_type.color_id,
       species: self.pet_type.species_id,
-      pose: self.pet_state.pose,
-      state: self.pet_state.id,
+      pose: self.pet_state&.pose,
+      state: self.pet_state&.id,
       objects: self.items.map(&:id),
       style: self.alt_style ? self.alt_style.id : nil,
     }.to_query
