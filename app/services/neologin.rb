@@ -112,6 +112,31 @@ module Neologin
     nil
   end
 
+  # Test whether a cookie value authenticates against Neopets, without saving
+  # it first. Makes a POST to the Styling Studio (the same endpoint we use in
+  # production) and checks for an explicit login rejection. Raises
+  # CookieRejected if Neopets rejects it, or another error on network/parse
+  # failures. Returns normally on success.
+  TEST_ENDPOINT = "https://www.neopets.com/np-templates/ajax/stylingstudio/studio.php"
+  def self.test!(cookie_value)
+    Sync do
+      DTIRequests.post(
+        TEST_ENDPOINT,
+        [
+          ["Cookie", "neologin=#{cookie_value}"],
+          ["Content-Type", "application/x-www-form-urlencoded"],
+          ["X-Requested-With", "XMLHttpRequest"],
+        ],
+        "tab=3&mode=getTab&key=StylingStudioTab&value=3",
+      ) do |response|
+        data = JSON.parse(response.read).deep_symbolize_keys rescue {}
+        if data.is_a?(Hash) && data[:error] && data[:errType] == "login"
+          raise CookieRejected, data[:errMsg].presence || "Neopets rejected the cookie"
+        end
+      end
+    end
+  end
+
   # Service-account credentials for staff to use when refreshing the cookie.
   # Stored in env vars for convenience, not secrecy — the account is just a
   # shared login used to scrape public-ish Neopets data.

@@ -10,6 +10,12 @@ require "net/http"
 module DiscordNotifier
   WEBHOOK_ENV_VAR = "NEOLOGIN_DISCORD_WEBHOOK_URL"
 
+  def self.notify_neologin_refreshed(cookie)
+    who = cookie.created_by&.name || "someone"
+    content = "✅ **Neologin cookie refreshed** by #{who} — import tasks are back online."
+    post(content:)
+  end
+
   def self.notify_neologin_failure(cookie, message:)
     age = ApplicationController.helpers.time_ago_in_words(cookie.created_at)
     content =

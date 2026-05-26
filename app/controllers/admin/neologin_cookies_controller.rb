@@ -12,9 +12,19 @@ class Admin::NeologinCookiesController < ApplicationController
     @new_cookie = NeologinCookie.new(cookie_params)
     @new_cookie.created_by = current_user
 
-    if @new_cookie.save
+    begin
+      Neologin.test!(@new_cookie.cookie)
+    rescue Neologin::CookieRejected
+      @new_cookie.errors.add(:cookie, "was rejected by Neopets — is this the right value?")
+    rescue => e
+      @new_cookie.errors.add(:base, "Test request failed: #{e.message.to_s.truncate(200)}")
+    end
+
+    if @new_cookie.errors.empty? && @new_cookie.save
+      @new_cookie.record_success!
+      DiscordNotifier.notify_neologin_refreshed(@new_cookie)
       redirect_to admin_neologin_cookies_path,
-        notice: "Saved new Neologin cookie. The next import run will use it."
+        notice: "Cookie tested and saved — it's working!"
     else
       @current_cookie = NeologinCookie.current
       @history = NeologinCookie.recent_first.includes(:created_by).limit(20)
