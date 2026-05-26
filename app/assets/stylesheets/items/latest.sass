@@ -1,0 +1,43 @@
+.week-navigation
+  display: flex
+  align-items: center
+  justify-content: space-between
+  margin: 1em 0 2em
+  font-size: 110%
+
+  .week-label
+    font-weight: bold
+
+  .next-week, .prev-week, .next-placeholder
+    min-width: 10em
+
+  .prev-week
+    order: 1
+
+  .week-label
+    order: 2
+
+  .next-week, .next-placeholder
+    text-align: right
+    order: 3
+
+.day-group
+  margin-bottom: 2em
+
+.day-header
+  font-size: 115%
+  margin-bottom: 0.5em
+  border-bottom: 1px solid #ccc
+  padding-bottom: 0.25em
+
+.item-list
+  list-style: none
+  padding: 0
+  margin: 0
+  display: flex
+  flex-wrap: wrap
+  gap: 0.5em
+
+.no-items
+  color: #666
+  font-style: italic

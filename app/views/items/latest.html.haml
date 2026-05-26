@@ -1,0 +1,25 @@
+- title "Item release history"
+
+%h1 Item release history
+
+.week-navigation
+  = link_to "← Previous week", latest_items_path(week: @prev_week_start.strftime("%Y-W%V")), class: "prev-week"
+  .week-label
+    = @week_start.strftime("%B %-d") + " – " + @week_end.strftime("%B %-d, %Y")
+  - if @is_current_week
+    %span.next-placeholder
+  - else
+    = link_to "Next week →", latest_items_path(week: @next_week_start.strftime("%Y-W%V")), class: "next-week"
+
+- if @items_by_day.empty?
+  %p.no-items No items were added this week.
+- else
+  - @items_by_day.each do |date, items|
+    %section.day-group
+      %h2.day-header= date.strftime("%A, %B %-d")
+      %ul.item-list
+        - items.sort_by(&:name).each do |item|
+          %li.object= render_item_link(item)
+
+- content_for :stylesheets do
+  = page_stylesheet_link_tag "items/latest"

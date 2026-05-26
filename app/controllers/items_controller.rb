@@ -1,6 +1,6 @@
 class ItemsController < ApplicationController
   before_action :set_query
-  before_action :support_staff_only, except: [:index, :show, :sources]
+  before_action :support_staff_only, except: [:index, :show, :sources, :latest]
   rescue_from Item::Search::Error, :with => :search_error
 
   def index
@@ -137,6 +137,38 @@ class ItemsController < ApplicationController
       redirect_to @item
     else
       render action: "edit", layout: "application", status: :bad_request
+    end
+  end
+
+  def latest
+    # Parse the requested week (default: current week), then compute
+    # adjacent weeks for prev/next navigation.
+    if params[:week].present?
+      year, week = params[:week].split("-W").map(&:to_i)
+      @week_start = Date.commercial(year, week, 1)
+    else
+      @week_start = Date.today.beginning_of_week
+    end
+    @week_end = @week_start.end_of_week
+
+    @prev_week_start = @week_start - 1.week
+    @next_week_start = @week_start + 1.week
+    @is_current_week = @week_start == Date.today.beginning_of_week
+
+    items = Item.newest.where(created_at: @week_start.beginning_of_day..@week_end.end_of_day)
+    @items_by_day = items.group_by { |i| i.created_at.to_date }.sort.reverse
+
+    respond_to do |format|
+      format.html { render layout: "application" }
+      format.json {
+        render json: {
+          week_start: @week_start,
+          week_end: @week_end,
+          items_by_day: @items_by_day.map { |date, items|
+            {date: date, items: items.as_json}
+          },
+        }
+      }
     end
   end
 

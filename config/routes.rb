@@ -27,6 +27,7 @@ OpenneoImpressItems::Application.routes.draw do
 
     collection do
       get "sources/:ids", action: :sources
+      get :latest
     end
   end
   resources :species, only: [] do

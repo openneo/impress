@@ -97,7 +97,9 @@
             = render_predicted_missing_species_by_color(@newest_unmodeled_items_predicted_missing_species_by_color[item])
           .models
   - if @newest_modeled_items.present?
-    %h3= t '.newest_items.modeled.header'
+    .newest-modeled-header
+      %h3= t '.newest_items.modeled.header'
+      = link_to t('.newest_items.see_all'), latest_items_path, class: "see-all-latest"
     %ul#newest-modeled-items
       - @newest_modeled_items.each do |item|
         %li.object

@@ -709,6 +709,7 @@ en:
               last_word_connector: ", or "
         modeled:
           header: Here's all the latest items popping up across Neopia!
+        see_all: "More new items →"
       pet_query:
         notice_html: Thanks for showing us <strong>%{pet_name}</strong>.
           Keep up the good work!
