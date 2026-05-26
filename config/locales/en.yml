@@ -708,7 +708,7 @@ en:
               two_words_connector: " or "
               last_word_connector: ", or "
         modeled:
-          header: These items have already been modeled—thanks for your help!
+          header: Here's all the latest items popping up across Neopia!
       pet_query:
         notice_html: Thanks for showing us <strong>%{pet_name}</strong>.
           Keep up the good work!

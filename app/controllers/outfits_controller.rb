@@ -69,7 +69,7 @@ class OutfitsController < ApplicationController
     @colors = Color.alphabetical
     @species = Species.alphabetical
 
-    newest_items = Item.newest.limit(18)
+    newest_items = Item.newest.limit(27)
     @newest_modeled_items, @newest_unmodeled_items =
       newest_items.partition(&:predicted_fully_modeled?)
 

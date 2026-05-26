@@ -573,7 +573,7 @@ en-MEEP:
               two_words_connector: " meep "
               last_word_connector: "! meep "
         modeled:
-          header: These items have already been meeped—meep for your help!
+          header: Here's all the latest meepits popping up across Meepitia!
           body_title: You just finished meeping this—meep so much!
           neopets_usernames_form:
             label: meepits username
