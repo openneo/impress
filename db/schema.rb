@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_21_031001) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_10_113722) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "body_id", null: false
     t.integer "color_id", null: false
@@ -175,6 +175,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_21_031001) do
     t.index ["item_id"], name: "index_nc_mall_records_on_item_id", unique: true
   end
 
+  create_table "neologin_cookies", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
+    t.text "cookie", null: false
+    t.datetime "created_at", null: false
+    t.integer "created_by_id"
+    t.datetime "last_failed_at"
+    t.string "last_failure_kind"
+    t.text "last_failure_message"
+    t.datetime "last_used_successfully_at"
+    t.datetime "notified_failure_at"
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_neologin_cookies_on_created_by_id"
+  end
+
   create_table "neopets_connections", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.string "neopets_username"
@@ -303,5 +316,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_21_031001) do
   add_foreign_key "alt_styles", "species"
   add_foreign_key "items", "items", column: "dyeworks_base_item_id"
   add_foreign_key "nc_mall_records", "items"
+  add_foreign_key "neologin_cookies", "users", column: "created_by_id"
   add_foreign_key "outfits", "alt_styles"
 end

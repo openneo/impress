@@ -22,7 +22,9 @@ namespace "neopets:import" do
 					task.async do
 						begin
 							hashes_by_color_name_by_species_id[species.id] =
-								RainbowPool.load_hashes_for_species(species.id, Neologin.cookie)
+								Neologin.with_tracking do
+									RainbowPool.load_hashes_for_species(species.id, Neologin.cookie)
+								end
 						rescue => error
 							puts "Failed to load #{species.name} page, skipping: #{error.message}"
 							Sentry.capture_exception(error,
@@ -94,6 +96,17 @@ module RainbowPool
 					url,
 					[["Cookie", "neologin=#{neologin}"]],
 				) do |response|
+					# A 302 to /loginpage.phtml means Neopets bounced us because the
+					# neologin cookie isn't authenticated. Surface this as a typed
+					# error so the admin panel can show "expired" instead of a vague
+					# "expected status 200 but got 302".
+					if response.status == 302 &&
+							response.headers["location"].to_s.start_with?("/loginpage.phtml")
+						raise Neologin::CookieRejected,
+							"Neopets redirected the Rainbow Pool request to the " \
+							"login page — our neologin cookie isn't authenticated"
+					end
+
 					if response.status != 200
 						raise "expected status 200 but got #{response.status} (#{url})"
 					end

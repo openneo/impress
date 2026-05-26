@@ -139,15 +139,24 @@ module Neopets::NCMall
 						"expected status 200 but got #{response.status} (#{STYLING_STUDIO_URL})"
 				end
 
+				body = response.read
 				begin
-					data = JSON.parse(response.read).deep_symbolize_keys
+					data = JSON.parse(body).deep_symbolize_keys
+				rescue JSON::ParserError
+					raise UnexpectedResponseFormat,
+						"failed to parse Styling Studio exclusives response as JSON"
+				end
 
+				check_styling_studio_error!(data)
+
+				begin
 					# Like styles, exclusives is a hash keyed by ID (or an empty
 					# array when there are none).
 					data.fetch(:exclusives).to_h.values.
 						map { |s| s.slice(:oii, :name, :image) }
-				rescue JSON::ParserError, KeyError
-					raise UnexpectedResponseFormat
+				rescue KeyError => e
+					raise UnexpectedResponseFormat,
+						"missing field in Styling Studio exclusives response: #{e.key}"
 				end
 			end
 		end
@@ -191,6 +200,24 @@ module Neopets::NCMall
 		end
 	end
 
+	# Detect Neopets' explicit error envelope on Styling Studio AJAX endpoints,
+	# e.g. `{"error":true,"errType":"login","errMsg":"You must be logged in…"}`
+	# when the neologin cookie has expired. Raises a typed error so the admin
+	# panel can show "expired" instead of a generic parse failure.
+	def self.check_styling_studio_error!(data)
+		return unless data.is_a?(Hash) && data[:error]
+
+		err_msg = data[:errMsg].presence || "Neopets returned an unspecified error"
+
+		if data[:errType] == "login"
+			raise Neologin::CookieRejected,
+				"Neopets rejected our neologin cookie: #{err_msg}"
+		end
+
+		raise UnexpectedResponseFormat,
+			"Neopets returned errType=#{data[:errType].inspect}: #{err_msg}"
+	end
+
 	private
 
 	# Map load_type from menu JSON to the v2 API type parameter.
@@ -230,15 +257,24 @@ module Neopets::NCMall
 						"expected status 200 but got #{response.status} (#{STYLING_STUDIO_URL})"
 				end
 
+				body = response.read
 				begin
-					data = JSON.parse(response.read).deep_symbolize_keys
+					data = JSON.parse(body).deep_symbolize_keys
+				rescue JSON::ParserError
+					raise UnexpectedResponseFormat,
+						"failed to parse Styling Studio tab #{tab} response as JSON"
+				end
 
+				check_styling_studio_error!(data)
+
+				begin
 					# HACK: styles is a hash, unless it's empty, in which case it's an
 					#       array? Weird. Normalize this by converting to hash.
 					data.fetch(:styles).to_h.values.
 						map { |s| s.slice(:oii, :name, :image, :limited) }
-				rescue JSON::ParserError, KeyError
-					raise UnexpectedResponseFormat
+				rescue KeyError => e
+					raise UnexpectedResponseFormat,
+						"missing field in Styling Studio tab #{tab} response: #{e.key}"
 				end
 			end
 		end
