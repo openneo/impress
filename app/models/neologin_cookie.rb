@@ -12,14 +12,15 @@ class NeologinCookie < ApplicationRecord
   end
 
   # Record that this cookie successfully authenticated against Neopets.
-  # Clears any pending failure state so a future failure will re-notify.
+  # Clears failure details but intentionally keeps notified_failure_at: once
+  # we've alerted for a cookie, we don't re-alert until a new cookie row is
+  # saved (which starts with notified_failure_at: nil naturally).
   def record_success!(now: Time.current)
     update_columns(
       last_used_successfully_at: now,
       last_failed_at: nil,
       last_failure_message: nil,
       last_failure_kind: nil,
-      notified_failure_at: nil,
     )
   end
 
