@@ -16,12 +16,20 @@ module NeopetsMediaArchive
   def self.load_file(uri, return_content: true)
     local_path = local_file_path(uri)
 
-    # Read the file locally if we have it.
+    # Read the file locally if we have it. We treat an empty file as if it
+    # weren't there: a 0-byte file is the fingerprint of a past failed download
+    # (e.g. a transient empty response from the origin), and because we only
+    # used to check existence, such failures got cached forever. Ignoring empty
+    # files lets them self-heal on the next request.
     if return_content
       begin
-        content = File.read(local_path)
-        debug "Loaded source file from filesystem: #{local_path}"
-        return {content: content, source: "filesystem"}
+        content = File.binread(local_path)
+        if content.empty?
+          debug "Ignoring empty cached file, will re-download: #{local_path}"
+        else
+          debug "Loaded source file from filesystem: #{local_path}"
+          return {content: content, source: "filesystem"}
+        end
       rescue Errno::ENOENT
         # If it doesn't exist, that's fine: just move on and download it.
       end
@@ -30,7 +38,7 @@ module NeopetsMediaArchive
       # it exists. If it doesn't, we'll move on and load it from source.
       # (We use this when preloading files, to save the cost of reading files
       # we're not ready to use yet.)
-      if File.exist?(local_path)
+      if File.exist?(local_path) && File.size(local_path) > 0
         debug "Source file is already loaded, skipping: #{local_path}"
         return {content: nil, source: "filesystem"}
       end
@@ -39,10 +47,21 @@ module NeopetsMediaArchive
     # Download the file from the origin, then save a copy for next time.
     content = load_file_from_origin(uri)
     info "Loaded source file from origin: #{uri}"
+
+    # Don't cache empty responses: that's how we got stuck with 0-byte files in
+    # the first place. Leave it unsaved so a future request can retry.
+    if content.nil? || content.empty?
+      warn "Got empty response for #{uri}; not caching it"
+      return {content: return_content ? content : nil, source: "network"}
+    end
+
     local_path.dirname.mkpath
-    File.write(local_path, content)
+    # Write in binary mode: content is often a binary file (e.g. a PNG), and
+    # `File.write`'s default text mode would try to transcode it to UTF-8, fail
+    # on the first non-UTF-8 byte, and leave a truncated 0-byte file behind.
+    File.binwrite(local_path, content)
     info "Wrote source file to filesystem: #{local_path}"
-    
+
     {content: return_content ? content : nil, source: "network"}
   end
 
@@ -112,5 +131,9 @@ module NeopetsMediaArchive
 
   def self.debug(message)
     Rails.logger.debug "[NeopetsMediaArchive] #{message}"
+  end
+
+  def self.warn(message)
+    Rails.logger.warn "[NeopetsMediaArchive] #{message}"
   end
 end
