@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_25_195429) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_07_120000) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "body_id", null: false
     t.integer "color_id", null: false
@@ -227,6 +227,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_25_195429) do
     t.string "pet_name", limit: 20, null: false
   end
 
+  create_table "pet_state_label_audits", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
+    t.float "confidence"
+    t.datetime "created_at", null: false
+    t.text "evidence"
+    t.boolean "female"
+    t.integer "mood_id"
+    t.integer "pet_state_id", null: false
+    t.string "pose", null: false
+    t.string "tier", null: false
+    t.index ["pet_state_id"], name: "index_pet_state_label_audits_on_pet_state_id"
+  end
+
   create_table "pet_states", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.string "artist_neopets_username"
     t.datetime "created_at"
@@ -319,4 +331,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_25_195429) do
   add_foreign_key "nc_mall_records", "items"
   add_foreign_key "neologin_cookies", "users", column: "created_by_id"
   add_foreign_key "outfits", "alt_styles"
+  add_foreign_key "pet_state_label_audits", "pet_states"
 end
