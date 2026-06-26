@@ -31,7 +31,9 @@ class NeopetsPage
 
 
   def index
-    parse_results[:index]
+    # JSON endpoints (like the closet's) don't report which page they represent,
+    # so we fall back to the page we asked the user to fetch.
+    parse_results[:index] || @expected_index
   end
 
 
@@ -178,6 +180,31 @@ class NeopetsPage
 
 
 
+  # Parses one page of items out of a JSON API response (the format Neopets
+  # switched the closet over to in 2026). Conforms to the same #parse interface
+  # as the HTML Parser above, returning {items:, index:, page_count:}.
+  class JsonParser
+    def initialize(params)
+      @parse_items = params.fetch(:parse_items)
+      @parse_page_count = params.fetch(:parse_page_count)
+    end
+
+    def parse(source)
+      data = JSON.parse(source)
+      {
+        items: @parse_items.call(data),
+        # The JSON response doesn't say which page it represents, so we leave
+        # this nil and let NeopetsPage fall back to the expected index.
+        index: nil,
+        page_count: @parse_page_count.call(data)
+      }
+    rescue JSON::ParserError => e
+      raise ParseError, "couldn't parse JSON: #{e.message}"
+    end
+  end
+
+
+
   class Type
     attr_reader :parser
     delegate :parse, to: :parser
@@ -203,41 +230,29 @@ class NeopetsPage
 
 
   TYPES = {
+    # As of 2026, the closet is a Vue app that loads items from a JSON API,
+    # rather than the old server-rendered HTML table. The user pastes that JSON
+    # response (per_page is server-clamped to 30, so it stays page-by-page).
     'closet' => Type.new(
       get_name: lambda { I18n.translate('neopets_page_import_tasks.names.closet') },
-      get_url: lambda { |index| "https://www.neopets.com/closet.phtml?per_page=50&page=#{index}" },
-      parser: Parser.new(
-        selectors: {
-          items:          "form[action=\"process_closet.phtml\"] tr[bgcolor!=silver][bgcolor!=\"#E4E4E4\"]",
-          item_thumbnail: "img",
-          item_name:      "td:nth-child(2)",
-          item_quantity:  "td:nth-child(5)",
-          item_remove:    "input",
-          page_select:    "select[name=page]",
-          selected:       "option[selected]"
-        }
-      )
-    ),
-    'safety_deposit' => Type.new(
-      get_name: lambda { I18n.translate('neopets_page_import_tasks.names.safety_deposit') },
-      get_url: lambda { |index| "https://www.neopets.com/safetydeposit.phtml?offset=#{(index - 1) * 30}" },
-      parser: Parser.new(
-        selectors: {
-          items:          "#content tr[bgcolor=\"#DFEAF7\"]",
-          item_thumbnail: "img",
-          item_name:      "td:nth-child(2)",
-          item_quantity:  "td:nth-child(5)",
-          item_remove:    "input",
-          page_select:    "select[name=offset]",
-          selected:       "option[selected]"
-        },
-        parse_id: lambda { |id|
-          unless match = id.match(/\[([0-9]+)\]/)
-            raise ParseError, "Remove Item input name format was unexpected: #{id}.inspect"
+      get_url: lambda { |index|
+        "https://www.neopets.com/np-templates/ajax/closet/get-items.php" \
+          "?page=#{index}&per_page=30&search=&category="
+      },
+      parser: JsonParser.new(
+        parse_items: lambda { |data|
+          data.fetch('items', []).map do |item|
+            NeopetsPage::ItemRef.new(
+              # Neopets likes to flip JSON numbers between ints and strings over
+              # the years, so coerce the numeric fields ourselves.
+              item['obj_info_id']&.to_i,
+              item['image_url'],
+              item['obj_name'],
+              (item['qty'] || 1).to_i
+            )
           end
-          match[1]
         },
-        parse_index: lambda { |offset| offset / 30 + 1 }
+        parse_page_count: lambda { |data| (data['total_pages'] || 1).to_i }
       )
     ),
     'gallery' => Type.new(
@@ -281,16 +296,26 @@ class NeopetsPage
         if item_ref.id?
           item_refs_by_best_key[:id][item_ref.id] = item_ref
         else
-          item_refs_by_best_key[:thumbnail_url][item_ref.thumbnail_url] = item_ref
+          # Key by a scheme-less thumbnail URL: Neopets serves protocol-relative
+          # URLs (//images...), but we store an explicit scheme, and our own
+          # data even mixes http and https. (Used by the gallery, which has no
+          # item IDs to match on.)
+          key = normalize_thumbnail_url(item_ref.thumbnail_url)
+          item_refs_by_best_key[:thumbnail_url][key] = item_ref
         end
       end
 
       # Find items with either a matching ID or matching thumbnail URL
       # Check out that single-query beauty :)
+      # For thumbnails we match scheme-insensitively, so expand each scheme-less
+      # key back out to every scheme we might have stored it under.
+      thumbnail_url_candidates = item_refs_by_best_key[:thumbnail_url].keys.flat_map do |key|
+        ["https:#{key}", "http:#{key}", key]
+      end
       i = Item.arel_table
       items = Item.where(
         i[:id].in(item_refs_by_best_key[:id].keys).
-        or i[:thumbnail_url].in(item_refs_by_best_key[:thumbnail_url].keys)
+        or i[:thumbnail_url].in(thumbnail_url_candidates)
       )
 
       # And now for some more single-query beauty: check for existing hangers.
@@ -317,7 +342,7 @@ class NeopetsPage
       # lists.
       hangers = items.map do |item|
         data = item_refs_by_best_key[:id].delete(item.id) ||
-          item_refs_by_best_key[:thumbnail_url].delete(item.thumbnail_url)
+          item_refs_by_best_key[:thumbnail_url].delete(normalize_thumbnail_url(item.thumbnail_url))
 
         # If there's a hanger in the current list, we want it so we can update
         # its quantity. If there's a hanger in another list, we want it so we
@@ -383,6 +408,17 @@ class NeopetsPage
 
     def persisted?
       false
+    end
+
+
+    private
+
+    # Drop the URL scheme so thumbnails compare equal regardless of
+    # http/https/protocol-relative. "https://x" and "//x" both become "//x".
+    # Tolerates a nil thumbnail (e.g. a gallery item with no <img> src), leaving
+    # it unmatched rather than crashing the whole import.
+    def normalize_thumbnail_url(url)
+      url&.sub(/\Ahttps?:/, "")
     end
   end
 

@@ -65,7 +65,6 @@ es:
       public_url_label: "URL pública:"
       import_from:
         closet: Importar desde el ropero
-        safety_deposit: Importar desde la Caja de Seguridad
       export_to:
         petpage: Exportar para petpage
       toggle_group:
@@ -273,52 +272,23 @@ es:
       unknown_items:
         one: "Hemos encontrado este objeto que no hemos reconocido: %{item_names}. Por favor pon el nombre de este pet en la Pasarela de Moda y nuestra base de datos se actualizará al instante. ¡Gracias!"
         other: "Hemos encontrado %{count} objetos que no hemos reconocido: %{item_names}. Por favor pon el nombre de este pet en la Pasarela de Moda y nuestra base de datos se actualizará al instante. ¡Gracias!"
-      next_page: Ahora la página debería contener %{next_index}. Pega este código también.
+      next_page: Ahora consigue la página %{next_index} de la misma forma, y pégala abajo.
       done: Esta fue la última página de tu Neopet %{name}.
-      parse_error: Hemos tenido un error leyendo el código. ¿Es un documento HTML válido? Intenta pegar un código clicando en Ver código de fuente de la página.
+      parse_error: Hemos tenido un error leyendo el código. Asegúrate de haber abierto la página en Neopets con tu sesión iniciada, y luego haber copiado todo el código.
     names:
       closet: ropero
-      safety_deposit: caja de seguridad
     new:
       title: Importar de %{name}, Página %{index}
       your_items_link: Volver a Tus Objetos
-      frame_header: Página %{index} de tu %{name}
-      source_header: Pega el código de fuente abajo
+      source_header: Pega aquí el código de fuente
       submit: Importar objetos
-      help:
-        welcome: ¡Bienvenido al importador de tu %{name} !
-        intro: "Vamos a hacer de la forma más fácil posible el poder importar los datos de tu %{name} en Neopets.com hacia tu lista de objetos en Dress to Impress. Así es cómo funciona:"
-        check_frame:
-          header:
-            main_html: Mira arriba a la izquierda la ventanita que muestra la página de Neopets.com, verás que está en la %{page_link}.
-            page_link_content: página %{index} de tu %{name}
-          check_login:
-            summary: Confirma que te has conectado.
-            details: Si estás conectado a Neopets, pero en el pequeño recuadro de arriba no te ves conectado, intenta activar "recibir cookies de terceros" en tu navegador. (La mayoría de navegadores tienen esta opción activada por defecto)
-          login:
-            summary:
-              main_html: Si no te has conectado, %{login_link}.
-              login_link_content: hazlo en otra ventana
-            details:
-              main_html: Es muy mala idea el intentar conectarse en ventanas de este tipo a no ser que seas programador web profesional y sepas perfectamente lo que hace la ventana, si no lo eres, hazlo desde Neopets.com. Para estar seguro, %{login_link}.
-              login_link_content: hazlo en otra ventana, comprueba que la URL es correcta y conéctate sin miedo.
-          check_content:
-            summary: Confirma que la página es tu %{name}.
-            details: No te fies de páginas web que piden que copies el código de fuente de otra página. Comprueba lo que tiene tú página y verifica que no contenga información privada.
-        view_source:
-          header: Ver el código de fuente
-          chrome_html: <strong>En Google Chrome</strong>, botón derecho a la ventanita y clica en <strong>Ver código de fuente</strong>.
-          firefox_html: <strong>En Mozilla Firefox</strong>, botón derecho a la ventanita y clica en <strong>Ver código de fuente</strong>.
-          other: En otros navegadores pulsa botón derecho en la página y busca por algo similar a los anteriores.
-          troubleshooting:
-            main_html: Si sigues teniendo problemas intenta %{page_link}, luego pulsas botón derecho y clica en Ver código de fuente.
-            page_link_content: abriendo la página en una nueva ventana
-        copy_source:
-          header: Selecciona todo el código de fuente y cópialo y pégalo en el interior de la caja a la derecha.
-          shortcuts: "Algunos atajos para hacerlo: Ctrl+A para seleccionar todo el texto, Ctrl+C para copiarlo, Ctrl+V para pegarlo."
-        submit:
-          header: ¡Envíalo!
-          description: El código será analizado y obtendrá sólo la información de la cantidad de objetos y qué objetos hay en tu %{name}. Estos objetos los podrás añadir a tus listas de Dress to Impress. Este proceso es totalmente seguro pero si no te fías contacta con algún programador para que revise el código y estar seguro.
+      intro: "¡Vamos a importar una página de tu %{name} de Neopets.com a tu lista de objetos de Dress to Impress! Así es cómo."
+      steps:
+        open_html: Asegúrate de haber iniciado sesión en Neopets, y luego %{page_link} — se abrirá en una pestaña nueva.
+        open_link: abre la página %{index} de tu %{name}
+        view_source_html: Mira el código de fuente de esa página. En la mayoría de navegadores, pulsa el botón derecho y elige <strong>Ver código fuente de la página</strong>, o pulsa <strong>Ctrl-U</strong> (<strong>Cmd-U</strong> en Mac).
+        copy_html: Selecciona todo (<strong>Ctrl-A</strong>), cópialo (<strong>Ctrl-C</strong>) y pégalo en la caja de abajo. ¡Luego elige una lista e impórtalo!
+      safety_note: Es seguro — sólo leemos los nombres y las cantidades de los objetos. Pero haces bien en tener cuidado al copiar y pegar código entre páginas, así que échale un vistazo antes si quieres, y nunca pegues nada en una página en la que no confíes.
   outfits:
     destroy:
       success: El atuendo %{outfit_name}" se ha eliminado correctamente.

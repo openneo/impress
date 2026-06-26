@@ -103,7 +103,6 @@ en:
       public_url_label: "Public URL:"
       import_from:
         closet: Import from closet
-        safety_deposit: Import from SDB
         gallery: Import from gallery
       export_to:
         petpage: Export to petpage
@@ -423,87 +422,41 @@ en:
         other: "We also found %{count} items we didn't recognize: %{item_names}.
           Please model them for us and we'll update our database instantly.
           Thanks!"
-      next_page: Now the frame should contain page %{next_index}.
-        Paste that source code over, too.
+      next_page: Now grab page %{next_index} the same way, and paste it below.
       done: That was the last page of your Neopets %{name}.
       parse_error:
-        We had trouble reading your source code. Is it a valid HTML document?
-        Make sure you pasted the computery-looking result of clicking View
-        Frame Source, and not the pretty-looking page itself.
+        We had trouble reading your source code. Make sure you opened the page
+        on Neopets while logged in, then copied the whole source over.
 
     names:
       closet: closet
-      safety_deposit: safety deposit
       gallery: gallery
 
     new:
       title: Import from %{name}, Page %{index}
       your_items_link: Back to Your Items
-      frame_header: Page %{index} of your %{name}
-      source_header: Paste source code below
+      source_header: Paste the source code here
       submit: Import items
-      help:
-        welcome: Welcome to the bulk %{name} importer!
-        intro:
-          We're going to make it as easy as possible to import your Neopets.com
-          %{name} data into your Dress to Impress items list. Here's how it
-          works.
-        check_frame:
-          header:
-            main_html: Check the framed Neopets.com window on the left,
-              pointing to %{page_link}.
-            page_link_content: page %{index} of your %{name}
-          check_login:
-            summary: Confirm that you're logged in.
-            details:
-              If you're logged into Neopets, but the above frame says that
-              you're not, try enabling "third-party cookies" in your browser.
-              (Most have that on by default.)
-          login:
-            summary:
-              main_html: If you haven't logged in, %{login_link}.
-              login_link_content: do so in another window
-            details:
-              main_html:
-                It's never a good idea to log in inside of a frame, unless
-                you're a web programmer pro who can check that the frame does,
-                in fact, point to Neopets.com. To be safe, %{login_link}.
-              login_link_content: pull up another window, check the URL, and log in safely
-          check_content:
-            summary: Confirm that the page is, in fact, your %{name}.
-            details:
-              Don't just trust a website when they tell you to copy-paste the
-              source code of another site. Instead, check that the page is what
-              it is supposed to be and doesn't contain any private information.
-        view_source:
-          header: View the frame's source code.
-          chrome_html:
-            <strong>In Google Chrome</strong>, right-click the frame and choose
-            <strong>View Frame Source</strong>.
-          firefox_html:
-            <strong>In Firefox</strong>, right-click the frame, choose
-            <strong>This Frame</strong>, then <strong>View Frame
-            Source</strong>.
-          other: In other browsers, right-click and look for something similar.
-          troubleshooting:
-            main_html:
-              If you're still having trouble, try %{page_link}, right-clicking,
-              and choosing View Source.
-            page_link_content: opening the page in a new window
-        copy_source:
-          header: Highlight the entire source code,
-            and copy-paste it into the box on the right.
-          shortcuts:
-            "Some nifty shortcuts: Ctrl-A to select all the text, Ctrl-C to
-            copy it, Ctrl-V to paste it in."
-        submit:
-          header: Submit!
-          description:
-            We'll analyze the code you sent us, grab exclusively the identity
-            and quantity of items in your %{name}, and add that to your Dress
-            to Impress items list. I promise it's all safe, but, if you're
-            concerned, find a programmer buddy and check out the source code to
-            be sure.
+      intro:
+        Let's import a page of your Neopets.com %{name} into your Dress to
+        Impress items list! Here's how.
+      steps:
+        open_html:
+          Make sure you're logged into Neopets, then %{page_link} — it opens in
+          a new tab.
+        open_link: open page %{index} of your %{name}
+        view_source_html:
+          View that page's source code. In most browsers, right-click and choose
+          <strong>View Page Source</strong>, or press <strong>Ctrl-U</strong>
+          (<strong>Cmd-U</strong> on a Mac).
+        copy_html:
+          Select everything (<strong>Ctrl-A</strong>), copy it
+          (<strong>Ctrl-C</strong>), and paste it into the box below. Then pick a
+          list and import!
+      safety_note:
+        It's safe — we only read the item names and quantities. But you're right
+        to be cautious about copy-pasting code between sites, so feel free to
+        look it over first, and never paste anything into a site you don't trust.
 
   outfits:
     destroy:

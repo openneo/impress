@@ -63,7 +63,6 @@ pt:
       public_url_label: "URL Pública"
       import_from:
         closet: Importar do Armário
-        safety_deposit: Importar do Cofre
       export_to:
         petpage: Exportar para Petpage
       toggle_group:
@@ -271,52 +270,23 @@ pt:
       unknown_items:
         one: "Encontramos também um item que não reconhecemos: %{item_names}. Por favor, modele para nós e vamos atualizar nosso banco de dados instantaneamente. Obrigado!"
         other: "Nós também encontramos %{count} itens que não reconhecemos: %{item_names}. Por favor, modele para nós e vamos atualizar nosso banco de dados instantaneamente. Obrigado!"
-      next_page: Agora no frame deve conter %{next_index}. Cole o código fonte também.
+      next_page: Agora pegue a página %{next_index} da mesma forma, e cole abaixo.
       done: Essa foi a última página de seus Neopets %{name}.
-      parse_error: Nós estamos tendo problemas ao ler seu código fonte. Isso é um documento HTML válido? Tenha certeza que copiou o código fonte do Frame e não da página.
+      parse_error: Nós estamos tendo problemas ao ler seu código fonte. Tenha certeza de que abriu a página no Neopets enquanto estava logado, e então copiou todo o código fonte.
     names:
       closet: armário
-      safety_deposit: cofre
     new:
       title: Importar de %{name}, Página %{index}
       your_items_link: Voltar para "Seus Itens"
-      frame_header: Página %{index} do seu %{name}
-      source_header: Cole o código fonte abaixo
+      source_header: Cole o código fonte aqui
       submit: Importar itens
-      help:
-        welcome: Bem-Vindo ao importador em massa %{name}!
-        intro: Nós estamos tornando o mais fácil possivel importar seus dados de itens do Neopets.com %{name} para sua lista de itens do Dress to Impress. Veja como funciona.
-        check_frame:
-          header:
-            main_html: Verifique a janela Neopets.com em um frame no lado esquerdo, indicando %{page_link}.
-            page_link_content: Página %{index} do seu %{name}
-          check_login:
-            summary: Confirme que você está logado.
-            details: Se você estiver logado no Neopets, mas o frame acima diz que você não está, tente ativar "cookies de terceiros" no seu navegado. (A maioria tem ativado por padrão.)
-          login:
-            summary:
-              main_html: Se você ainda não tiver efetuado o login, %{login_link}.
-              login_link_content: faça isso em outra janela
-            details:
-              main_html: Nunca é uma boa ideia para fazer login no interior de um frame, a menos que você é um profissional programador web, que pode verificar que o frame, de fato, é do Neopets.com. Para ser seguro, %{login_link}.
-              login_link_content: abra outra janela, cheque a URL, e faça o login com segurança
-          check_content:
-            summary: Confirme se a página é, de fato, sua %{name}.
-            details: Não basta confiar em um site quando eles dizem para você copiar e colar o código fonte de um outro site. Em vez disso, verifique se a página é o que é suposto ser e não contém qualquer informação privada.
-        view_source:
-          header: Ver código fonte do frame
-          chrome_html: <strong>No Google Chrome</strong>, clique com o botão direito em cima do frame e escolha <strong>Exibir código fonte do frame</strong>.
-          firefox_html: <strong>No Firefox</strong>, clique com o botão direito em cima do frame e escolha <strong>Esta frame</strong>, então <strong>Exibir código fonte do frame</strong>.
-          other: Em outros navegadores procure algo similar.
-          troubleshooting:
-            main_html: Se você ainda estiver tendo problemas, tente %{page_link}, clique no botão direito e escolha "Ver Código Fonte".
-            page_link_content: abrir a página em uma nova janela
-        copy_source:
-          header: Selecione todo o código fonte, copie e cole na caixa à direita.
-          shortcuts: "Alguns atalhos do teclado: Ctrl-A para selecionar todo o texto, Ctrl-C para copiar, Ctrl-V para colar."
-        submit:
-          header: Enviar
-          description: Vamos analisar o código que você nos enviou, agarre exclusivamente a identidade e quantidade de itens em seu %{name}, e acrescentar a sua lista de itens do Dress to Impress. Eu prometo que é tudo seguro, mas, se você estiver preocupado, encontre um amigo programador e verifique o código fonte para ter certeza.
+      intro: Vamos importar uma página do seu %{name} do Neopets.com para sua lista de itens do Dress to Impress! Veja como.
+      steps:
+        open_html: Tenha certeza de que está logado no Neopets, e então %{page_link} — abrirá em uma nova aba.
+        open_link: abra a página %{index} do seu %{name}
+        view_source_html: Veja o código fonte dessa página. Na maioria dos navegadores, clique com o botão direito e escolha <strong>Exibir código fonte da página</strong>, ou pressione <strong>Ctrl-U</strong> (<strong>Cmd-U</strong> no Mac).
+        copy_html: Selecione tudo (<strong>Ctrl-A</strong>), copie (<strong>Ctrl-C</strong>) e cole na caixa abaixo. Então escolha uma lista e importe!
+      safety_note: É seguro — nós só lemos os nomes e as quantidades dos itens. Mas você tem razão em ter cuidado ao copiar e colar código entre sites, então fique à vontade para conferir antes, e nunca cole nada em um site que você não confia.
   outfits:
     destroy:
       success: Roupa "%{outfit_name}" excluída com sucesso.

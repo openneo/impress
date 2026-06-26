@@ -2,13 +2,17 @@
 - content_for :before_flashes do
   = link_to t('.your_items_link'), user_closet_hangers_path(current_user), :id => 'back-to-items'
 
+%p#closet-page-intro= t '.intro', :name => @import_task.page.name
+
+- page_link_text = t('.steps.open_link', :name => @import_task.page.name, :index => @import_task.page.expected_index)
+- page_link = link_to(page_link_text, @import_task.page.url, :target => '_blank', :rel => 'noopener')
+
+%ol#closet-page-steps
+  %li= t '.steps.open_html', :page_link => page_link
+  %li= t '.steps.view_source_html'
+  %li= t '.steps.copy_html'
+
 = form_for @import_task, :html => {:id => 'closet-page-form'} do |f|
-  #closet-page-frame-wrapper
-    %span
-      %strong
-        = t '.frame_header', :name => @import_task.page.name,
-            :index => @import_task.page.expected_index
-    %iframe#closet-page-frame{:src => @import_task.page.url}
   #closet-page-source
     = fields_for @import_task.page do |p|
       = p.label :source, t('.source_header')
@@ -16,51 +20,4 @@
   = f.select :list_id, neopets_page_list_options(current_user)
   = f.submit t('.submit')
 
-%p
-  = t '.help.welcome', :name => @import_task.page.name
-  = t '.help.intro', :name => @import_task.page.name
-
-%ol
-  %li
-    = twl '.help.check_frame.header', :page_link_url => @import_task.page.url,
-          :name => @import_task.page.name, :index => @import_task.page.expected_index
-    %ul
-      %li
-        %strong= t '.help.check_frame.check_login.summary'
-        = t '.help.check_frame.check_login.details'
-      %li
-        %strong
-          = twl '.help.check_frame.login.summary',
-                :login_link_url => neopets_login_url
-        = twl '.help.check_frame.login.details',
-              :login_link_url => neopets_login_url
-      %li
-        %strong
-          = t '.help.check_frame.check_content.summary',
-              :name => @import_task.page.name
-        = t '.help.check_frame.check_content.details'
-
-  %li
-    = t '.help.view_source.header'
-    %ul
-      %li
-        = t '.help.view_source.chrome_html'
-      %li
-        = t '.help.view_source.firefox_html'
-      %li
-        = t '.help.view_source.other'
-      %li
-        = twl '.help.view_source.troubleshooting',
-            :page_link_url => @import_task.page.url
-
-  %li
-    = t '.help.copy_source.header'
-    %ul
-      %li
-        = t '.help.copy_source.shortcuts'
-
-  %li
-    = t '.help.submit.header'
-    %ul
-      %li
-        = t '.help.submit.description', :name => @import_task.page.name
+%p#closet-page-safety-note= t '.safety_note'
