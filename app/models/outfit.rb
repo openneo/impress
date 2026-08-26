@@ -16,6 +16,10 @@ class Outfit < ApplicationRecord
 
   validates :name, :presence => {:if => :user_id}, :uniqueness => {:scope => :user_id, :if => :user_id}
   validates :pet_state, presence: {
+    # When an alt style is present, its layers replace the pet state's, so we
+    # don't need a valid pet state. (This also lets alt-style outfits use
+    # pose=UNKNOWN, even for pets that have no unlabeled pet state.)
+    unless: :alt_style,
     message: ->(object, _) do
       if object.biology
         "does not exist for " +
@@ -243,7 +247,7 @@ class Outfit < ApplicationRecord
     #
     # TODO: Do Invisibles follow this new rule like UCs, too? Or do they still
     #       use zone restrictions?
-    if pet_state.pose === "UNCONVERTED"
+    if pet_state&.pose === "UNCONVERTED"
       item_layers.reject! { |sa| sa.body_specific? }
     else
       item_layers.reject! { |sa| sa.body_specific? &&

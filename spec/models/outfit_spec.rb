@@ -516,6 +516,31 @@ RSpec.describe Outfit do
 				expect(layers).not_to include(alt_horn)
 			end
 
+			it "renders even when there's no pet state" do
+				# When an outfit uses pose=UNKNOWN but the pet has no unlabeled pet
+				# state, `pet_state` ends up nil. With an alt style, we should still
+				# render fine, using the alt style's layers. (See the bug report about
+				# pose=UNKNOWN returning a 400 for alt styles.)
+				alt_head = build_biology_asset(zones(:head), body_id: 999)
+				alt_body = build_biology_asset(zones(:body), body_id: 999)
+				@alt_style.swf_assets = [alt_head, alt_body]
+
+				outfit = Outfit.new(pet_state: nil, alt_style: @alt_style)
+
+				layers = outfit.visible_layers
+
+				expect(layers).to contain_exactly(alt_head, alt_body)
+			end
+
+			it "is valid without a pet state" do
+				# The pet_state presence validation should be skipped when an alt style
+				# is present, so that alt-style outfits can use poses like UNKNOWN even
+				# for pets that have no matching (unlabeled) pet state.
+				outfit = Outfit.new(pet_state: nil, alt_style: @alt_style)
+
+				expect(outfit).to be_valid
+			end
+
 			it "sorts alt style and item layers by depth correctly" do
 				# Create alt style layers at various depths
 				alt_background = build_biology_asset(zones(:background), body_id: 999) # depth 3
