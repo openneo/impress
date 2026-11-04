@@ -126,12 +126,9 @@ RSpec.describe Neopets::NCMall, type: :model do
 			{ body: '{"success":true,"styles":[]}' }
 		end
 
-		subject(:styles) do
-			Neopets::NCMall.load_styles(
-				species_id: 2,
-				neologin: "STUB_NEOLOGIN",
-			)
-		end
+		before { NeologinCookie.create!(cookie: "STUB_NEOLOGIN") }
+
+		subject(:styles) { Neopets::NCMall.load_styles(species_id: 2) }
 
 		it "loads current NC styles from the NC Mall" do
 			stub_styles_request(tab: 1).to_return(
@@ -228,9 +225,9 @@ RSpec.describe Neopets::NCMall, type: :model do
 				)
 		end
 
-		subject(:exclusives) do
-			Neopets::NCMall.load_exclusives(neologin: "STUB_NEOLOGIN")
-		end
+		before { NeologinCookie.create!(cookie: "STUB_NEOLOGIN") }
+
+		subject(:exclusives) { Neopets::NCMall.load_exclusives }
 
 		it "loads exclusive styles from tab 3" do
 			stub_exclusives_request.to_return(

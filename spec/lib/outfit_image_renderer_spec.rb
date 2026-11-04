@@ -167,6 +167,37 @@ RSpec.describe OutfitImageRenderer do
       end
     end
 
+    context "when a layer image isn't a PNG" do
+      it "skips the layer, rather than decoding another format" do
+        # A perfectly valid image, just not a PNG! An opaque black JPEG would
+        # cover the whole canvas, if we decoded it.
+        jpeg = Vips::Image.black(600, 600).jpegsave_buffer
+        hat_png = load_fixture_image('Hat.png')
+
+        biology_asset = build_biology_asset(zones(:head), body_id: 1)
+        item_asset = build_item_asset(zones(:hat1), body_id: 1)
+
+        stub_request(:get, biology_asset.image_url).
+          to_return(body: jpeg, status: 200)
+        stub_request(:get, item_asset.image_url).
+          to_return(body: hat_png, status: 200)
+
+        pet_state = build_pet_state(@pet_type, swf_assets: [biology_asset])
+        item = build_item("Test Hat", swf_assets: [item_asset])
+        outfit = Outfit.new(pet_state: pet_state, worn_items: [item])
+
+        allow(Rails.logger).to receive(:warn)
+        result = OutfitImageRenderer.new(outfit).render
+
+        expect(Rails.logger).to have_received(:warn).
+          with(/Failed to composite layer #{biology_asset.id}/)
+
+        # The corner should still be transparent, not JPEG black.
+        result_image = Vips::Image.new_from_buffer(result, "")
+        expect(result_image.getpoint(0, 0).last).to eq 0
+      end
+    end
+
     context "when no layers have images" do
       it "returns nil" do
         # Create an asset but stub image_url to return nil

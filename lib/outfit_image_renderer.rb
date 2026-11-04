@@ -29,7 +29,10 @@ class OutfitImageRenderer
       next unless image_data
 
       begin
-        layer_image = Vips::Image.new_from_buffer(image_data, "")
+        # Layer images are always PNGs. Use the PNG loader explicitly, rather
+        # than letting libvips sniff the format, so unexpected bytes can't
+        # reach libvips' more exotic (and less hardened) loaders.
+        layer_image = Vips::Image.pngload_buffer(image_data)
 
         # Resize the layer to fit the canvas size
         # All layer images are square, but may not be CANVAS_SIZE x CANVAS_SIZE

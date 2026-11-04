@@ -23,13 +23,17 @@ RSpec.describe NeologinCookie do
 			)
 		end
 
-		it "stamps last_used_successfully_at and clears failure state" do
+		it "stamps last_used_successfully_at and clears failure details" do
 			cookie.record_success!
 			cookie.reload
 			expect(cookie.last_used_successfully_at).to be_within(2.seconds).of(Time.current)
 			expect(cookie.last_failed_at).to be_nil
 			expect(cookie.last_failure_message).to be_nil
-			expect(cookie.notified_failure_at).to be_nil
+		end
+
+		it "keeps notified_failure_at, so we don't re-alert for this cookie" do
+			expect { cookie.record_success! }.
+				not_to change { cookie.reload.notified_failure_at }
 		end
 	end
 
@@ -58,11 +62,17 @@ RSpec.describe NeologinCookie do
 			cookie.record_failure!(message: "third")
 		end
 
-		it "re-notifies after a success has cleared the prior failure" do
-			expect(DiscordNotifier).to receive(:notify_neologin_failure).twice
+		it "doesn't re-notify for the same cookie, even after a success" do
+			expect(DiscordNotifier).to receive(:notify_neologin_failure).once
 			cookie.record_failure!(message: "first")
 			cookie.record_success!
 			cookie.record_failure!(message: "second")
+		end
+
+		it "notifies again once a new cookie is saved" do
+			expect(DiscordNotifier).to receive(:notify_neologin_failure).twice
+			cookie.record_failure!(message: "first")
+			NeologinCookie.create!(cookie: "fresh").record_failure!(message: "second")
 		end
 
 		it "truncates very long failure messages" do
