@@ -320,6 +320,13 @@ class Item < ApplicationRecord
       # This might just be a species-specific item. Let's be conservative in
       # our prediction, though we'll revise it if we see another body ID.
       compatible_body_ids
+    elsif compatible_pet_types.distinct.count(:species_id) == 1
+      # Same idea, but for a species-specific item that fits several bodies of
+      # the same species, like a Pteri item that fits both the standard and
+      # Baby Pteri. Without this, the logic below would see a basic body and a
+      # uniquely-colored body, and predict every basic and Baby species. We'll
+      # revise this as soon as we see a second species.
+      compatible_body_ids
     elsif compatible_body_ids.size == 0
       # If somehow we have this item, but not any modeling data for it (weird!),
       # consider it to fit all standard pet types until shown otherwise.

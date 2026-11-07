@@ -169,6 +169,22 @@ RSpec.describe Item do
 			end
 		end
 
+		describe "an item with one species modeled in basic and Maraquan" do
+			subject(:item) { items(:birthday_bg) }
+
+			before do
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 1)
+				item.swf_assets << build_item_asset(zones(:wings), body_id: 11)
+			end
+
+			# Like a Pteri item that fits standard and Baby Pteri: it's probably
+			# just species-specific, not a basic+Maraquan item for everyone.
+			it_behaves_like "a fully-modeled item"
+			it("has two compatible body IDs") do
+				expect(item.compatible_body_ids).to contain_exactly(1, 11)
+			end
+		end
+
 		describe "an item with all Maraquan species modeled" do
 			subject(:item) { items(:birthday_bg) }
 
