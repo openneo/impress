@@ -29,6 +29,7 @@ module PetStateLabeling
 
       appearances = PetStateLabeling.appearances_for(states)
       present = present_poses_for(states)
+      mouth_genders = mouth_genders_for(states)
       pet_types = PetType.where(id: states.map(&:pet_type_id).uniq).
         includes(:color).index_by(&:id)
 
@@ -45,6 +46,11 @@ module PetStateLabeling
           @tally[:below_threshold] += 1
           next
         end
+
+        mouth_key = [pet_state.pet_type_id, appearance&.mouth_id]
+        prediction = pair_duplicate_guess(prediction, mouth_genders[mouth_key])
+        @tally[:flipped_guess] += 1 if prediction.evidence[:flipped_from]
+        mouth_genders[mouth_key] << FEMALE_BY_POSE[prediction.pose] if appearance&.mouth_id
 
         applied = apply!(pet_state, prediction)
         @tally[:"applied_#{prediction.tier}"] += 1 if applied
@@ -72,6 +78,40 @@ module PetStateLabeling
       end
 
       nil
+    end
+
+    # A "visual_guess" is an arbitrary gender for art that's identical across
+    # genders (e.g. Varwolf). But Neopets still ships those as a fem/masc *pair*
+    # of states: same mouth asset, distinct eyes assets. A per-pet-type guess
+    # would give both halves the same gender, collapsing them onto one pose and
+    # leaving the other empty. So if this state's mouth-sharing sibling already
+    # has exactly one known gender, take the other one. (The art is identical,
+    # so which half gets which renders the same either way.)
+    def pair_duplicate_guess(prediction, sibling_genders)
+      return prediction unless prediction.tier == "visual_guess"
+      return prediction unless sibling_genders.size == 1
+
+      female = !sibling_genders.first
+      return prediction if FEMALE_BY_POSE[prediction.pose] == female
+
+      mood_id = MOOD_BY_POSE[prediction.pose]
+      pose = POSES_BY_MOOD[mood_id].find { |p| FEMALE_BY_POSE[p] == female }
+      prediction.with(pose:,
+        evidence: prediction.evidence.merge(flipped_from: prediction.pose))
+    end
+
+    # The genders already labeled on each (pet type, mouth asset) among the
+    # targets' pet types, so a duplicate-art guess can pair up with its sibling.
+    def mouth_genders_for(states)
+      pt_ids = states.map(&:pet_type_id).uniq
+      labeled = PetState.usable.where(pet_type_id: pt_ids).to_a
+      appearances = PetStateLabeling.appearances_for(labeled)
+      genders = Hash.new { |h, k| h[k] = Set.new }
+      labeled.each do |ps|
+        mouth_id = appearances[ps.id].mouth_id
+        genders[[ps.pet_type_id, mouth_id]] << ps.female if mouth_id
+      end
+      genders
     end
 
     def apply!(pet_state, prediction)
