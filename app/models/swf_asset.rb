@@ -52,7 +52,7 @@ class SwfAsset < ApplicationRecord
     load_manifest(return_content: false, save_changes:)
   end
 
-  def load_manifest(return_content: true, save_changes: true)
+  def load_manifest(return_content: true, save_changes: true, refresh: false)
     return nil if manifest_url.blank?
 
     # If we recently tried loading the manifest and got a 4xx HTTP status code
@@ -76,13 +76,18 @@ class SwfAsset < ApplicationRecord
     begin
       Sync do |task|
         task.with_timeout(5) do
-          NeopetsMediaArchive.load_file(manifest_url, return_content:)
+          NeopetsMediaArchive.load_file(manifest_url, return_content:, refresh:)
         end
       end => {content:, source:}
     rescue Async::TimeoutError
       # If the request times out, record nothing and return nothing! We'll try
       # again sometime, on the assumption that this is intermittent.
       Rails.logger.warn("Timed out loading manifest for asset #{id}")
+      return nil
+    rescue NeopetsMediaArchive::IncompleteResponse => error
+      # Same for a response cut short: we didn't cache it, so a later try can
+      # get the whole thing.
+      Rails.logger.warn "Incomplete manifest for asset #{id}: #{error.message}"
       return nil
     rescue NeopetsMediaArchive::ResponseNotOK => error
       Rails.logger.warn "Failed to load manifest for asset #{id}: " +
@@ -107,6 +112,15 @@ class SwfAsset < ApplicationRecord
     begin
       JSON.parse(content)
     rescue JSON::ParserError => error
+      # If the copy in our archive is corrupt (e.g. truncated by a dropped
+      # connection, before we checked for that), re-download it once, which
+      # also overwrites the bad copy. If the origin's copy is bad too, give up.
+      if source == "filesystem"
+        Rails.logger.warn "Failed to parse cached manifest for asset #{id}, " +
+          "re-downloading: #{error.message}"
+        return load_manifest(return_content:, save_changes:, refresh: true)
+      end
+
       Rails.logger.warn "Failed to parse manifest for asset #{id}: " +
         error.message
       return nil

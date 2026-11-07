@@ -13,7 +13,9 @@ module NeopetsMediaArchive
   ROOT_PATH = Pathname.new(Rails.configuration.neopets_media_archive_root)
 
   # Load the file from the given `images.neopets.com` URI.
-  def self.load_file(uri, return_content: true)
+  # Set `refresh: true` to skip the local copy and re-download from the origin,
+  # overwriting it. (We use this when a cached file turns out to be corrupt.)
+  def self.load_file(uri, return_content: true, refresh: false)
     local_path = local_file_path(uri)
 
     # Read the file locally if we have it. We treat an empty file as if it
@@ -21,7 +23,9 @@ module NeopetsMediaArchive
     # (e.g. a transient empty response from the origin), and because we only
     # used to check existence, such failures got cached forever. Ignoring empty
     # files lets them self-heal on the next request.
-    if return_content
+    if refresh
+      debug "Refreshing file from origin: #{local_path}"
+    elsif return_content
       begin
         content = File.binread(local_path)
         if content.empty?
@@ -55,11 +59,7 @@ module NeopetsMediaArchive
       return {content: return_content ? content : nil, source: "network"}
     end
 
-    local_path.dirname.mkpath
-    # Write in binary mode: content is often a binary file (e.g. a PNG), and
-    # `File.write`'s default text mode would try to transcode it to UTF-8, fail
-    # on the first non-UTF-8 byte, and leave a truncated 0-byte file behind.
-    File.binwrite(local_path, content)
+    write_file_atomically(local_path, content)
     info "Wrote source file to filesystem: #{local_path}"
 
     {content: return_content ? content : nil, source: "network"}
@@ -91,8 +91,41 @@ module NeopetsMediaArchive
           raise ResponseNotOK.new(response.status),
             "expected status 200 but got #{response.status} (#{uri})"
         end
-        response.read
+
+        # If the connection drops mid-body, we can get a clean-looking prefix of
+        # the file, which we'd then cache forever. So when the origin declares a
+        # length (async-http exposes Content-Length as `body.length`, not as a
+        # header), make sure we got all of it.
+        expected_length = response.body&.length
+        content = response.read
+        actual_length = content&.bytesize || 0
+        if expected_length && actual_length != expected_length
+          raise IncompleteResponse,
+            "expected #{expected_length} bytes but got #{actual_length} (#{uri})"
+        end
+
+        content
       end
+    end
+  end
+
+  # Write to a temporary file in the same directory, then rename it into place.
+  # The rename is atomic, so readers see either the old file or the complete
+  # new one, never a partial write, and a crash mid-write can't leave a
+  # truncated file behind.
+  #
+  # We write in binary mode: content is often a binary file (e.g. a PNG), and
+  # `File.write`'s default text mode would try to transcode it to UTF-8, fail on
+  # the first non-UTF-8 byte, and leave a truncated 0-byte file behind.
+  def self.write_file_atomically(local_path, content)
+    local_path.dirname.mkpath
+    temp_path = local_path.dirname +
+      ".#{local_path.basename}.#{Process.pid}.#{SecureRandom.hex(4)}.tmp"
+    begin
+      File.binwrite(temp_path, content)
+      File.rename(temp_path, local_path)
+    ensure
+      File.delete(temp_path) if File.exist?(temp_path)
     end
   end
 
@@ -122,6 +155,10 @@ module NeopetsMediaArchive
       @status = status
     end
   end
+
+  # The origin's response body was shorter (or longer) than its declared
+  # Content-Length, e.g. because the connection dropped. Likely intermittent.
+  class IncompleteResponse < StandardError; end
 
   private
 
