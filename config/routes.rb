@@ -3,8 +3,9 @@ OpenneoImpressItems::Application.routes.draw do
 
   # Login and account management!
   devise_for :auth_users, path: "users", skip: [:registrations]
-  resources :auth_users, only: [:new, :create, :update]
+  resources :auth_users, only: [:new, :create, :update, :destroy]
   get '/users/edit', to: 'auth_users#edit', as: 'edit_auth_user'
+  get '/users/export', to: 'auth_users#export', as: 'export_auth_user'
 
   # The outfit editor!
   # TODO: It's a bit silly that outfits/new points to outfits#edit.

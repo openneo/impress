@@ -1,0 +1,59 @@
+require_relative '../rails_helper'
+require_relative '../support/account_data_helpers'
+
+RSpec.describe AccountExport, :account_data do
+  fixtures :colors, :species, :pet_types
+
+  let(:auth_user) { create_account("Exporter") }
+  let(:user) { auth_user.user }
+  let!(:records) { populate_account(user) }
+  let!(:bystander_records) { populate_account(create_account("Other").user) }
+
+  subject(:export) { JSON.parse(described_class.new(auth_user).to_json) }
+
+  it "includes account info, but no credentials" do
+    expect(export["account"]).to include("name" => "exporter",
+      "email" => "exporter@example.com", "uses_password" => true)
+
+    json = described_class.new(auth_user).to_json
+    expect(json).not_to include(auth_user.encrypted_password)
+    expect(export["account"].keys).not_to include("encrypted_password",
+      "password_salt", "reset_password_token", "remember_created_at")
+  end
+
+  it "includes item lists and items, with names" do
+    expect(export["item_lists"]).to contain_exactly(
+      a_hash_including("name" => "Trading", "kind" => "owned",
+        "visibility" => "public"))
+    expect(export["items"]).to contain_exactly(
+      a_hash_including("item_name" => "exporter's Hat", "kind" => "owned",
+        "list_name" => "Trading", "quantity" => 2),
+      a_hash_including("item_name" => "exporter's Background",
+        "kind" => "wanted", "list_name" => nil))
+  end
+
+  it "includes outfits, with their pet and items" do
+    expect(export["outfits"]).to contain_exactly(a_hash_including(
+      "name" => "Spooky",
+      "url" => "https://impress.openneo.net/outfits/#{records[:outfit].id}",
+      "species" => "acara", "color" => "blue", "pose" => "HAPPY_FEM",
+      "worn_items" => [{"id" => records[:hat].id, "name" => "exporter's Hat"}],
+      "closeted_items" => [
+        {"id" => records[:bg].id, "name" => "exporter's Background"}]))
+  end
+
+  it "includes contributions, connections, and donations" do
+    expect(export["contributions"]).to contain_exactly(a_hash_including(
+      "contributed_type" => "Item", "contributed_id" => records[:hat].id))
+    expect(export["neopets_connections"]).to contain_exactly(
+      a_hash_including("neopets_username" => "exporter_np"))
+    expect(export["donations"]).to contain_exactly(
+      a_hash_including("amount_in_cents" => 500))
+  end
+
+  it "doesn't include other users' data" do
+    json = described_class.new(auth_user).to_json
+    expect(json).not_to include("Other's Hat")
+    expect(json).not_to include("Other_np")
+  end
+end

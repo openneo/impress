@@ -19,6 +19,32 @@ class AuthUsersController < ApplicationController
 		@auth_user = @persisted_auth_user
 	end
 
+	def export
+		export = AccountExport.new(current_auth_user)
+		send_data export.to_json, filename: export.filename,
+			type: "application/json", disposition: "attachment"
+	end
+
+	def destroy
+		@auth_user = load_auth_user
+		@persisted_auth_user = @auth_user
+
+		@deletion_error = deletion_error_for(@auth_user)
+		if @deletion_error
+			render action: :edit, status: :unprocessable_entity
+			return
+		end
+
+		result = AccountDeletion.new(@auth_user).call
+		sign_out :auth_user
+		flash[:notice] = "Your account \"#{result.name}\" has been deleted. " +
+			"Thank you for spending time with us, and take care! 💜"
+		redirect_to root_path
+	rescue AccountDeletion::NotAllowed => error
+		@deletion_error = error.message
+		render action: :edit, status: :unprocessable_entity
+	end
+
 	def new
 		@auth_user = AuthUser.new
 	end
@@ -48,6 +74,38 @@ class AuthUsersController < ApplicationController
 	end
 
 	private
+
+	# How long ago you must have logged in, to delete an account without a
+	# password (e.g. NeoPass-only accounts).
+	RECENT_SIGN_IN_WINDOW = 30.minutes
+
+	# Returns an error message if this deletion request isn't confirmed well
+	# enough, or nil if it's okay to proceed.
+	def deletion_error_for(auth_user)
+		confirm_name = params.dig(:account_deletion, :confirm_name).to_s.strip
+		if confirm_name.casecmp(auth_user.name) != 0
+			return "To delete your account, type your username " +
+				"\"#{auth_user.name}\" exactly as shown."
+		end
+
+		if auth_user.uses_password?
+			password = params.dig(:account_deletion, :current_password).to_s
+			unless auth_user.valid_password?(password)
+				return "That password doesn't match. Please enter your current " +
+					"password to confirm."
+			end
+		elsif !signed_in_recently?(auth_user)
+			return "For safety, please log out and log back in with NeoPass, " +
+				"then try again within #{RECENT_SIGN_IN_WINDOW.inspect}."
+		end
+
+		nil
+	end
+
+	def signed_in_recently?(auth_user)
+		auth_user.current_sign_in_at.present? &&
+			auth_user.current_sign_in_at > RECENT_SIGN_IN_WINDOW.ago
+	end
 
 	def auth_user_params
 		params.require(:auth_user).permit(:name, :email, :password,
