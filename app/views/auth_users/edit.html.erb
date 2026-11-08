@@ -207,6 +207,15 @@
   <% end %>
 <% end %>
 
+<%# After a failed submission, Turbo normally scrolls to the top of the page,
+    which hides errors for the forms further down (like account deletion).
+    Instead, keep the scroll position where the user submitted from. %>
+<% if @deletion_error.present? || @auth_user.errors.any? %>
+  <% content_for :meta do %>
+    <meta name="turbo-refresh-scroll" content="preserve">
+  <% end %>
+<% end %>
+
 <% content_for :stylesheets do %>
   <%= page_stylesheet_link_tag "auth_users/edit" %>
 <% end %>

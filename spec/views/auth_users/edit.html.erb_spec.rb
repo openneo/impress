@@ -62,5 +62,12 @@ RSpec.describe "auth_users/edit", :account_data, type: :view do
     render_for(create_account("Oops"))
 
     expect(rendered).to include("Wrong password, try again.")
+    expect(view.content_for(:meta)).to include('name="turbo-refresh-scroll"')
+  end
+
+  it "lets Turbo scroll to the top as usual when there's no error" do
+    render_for(create_account("Fine"))
+
+    expect(view.content_for(:meta).to_s).not_to include("turbo-refresh-scroll")
   end
 end
