@@ -89,3 +89,6 @@ gem "shell", "~> 0.8.1"
 gem 'rspec-rails', '~> 8.0', '>= 8.0.2', group: [:development, :test]
 gem 'rails-controller-testing', group: [:test]
 gem "webmock", "~> 3.24", group: [:test]
+
+# For checking our gems against known security advisories. (See bin/security-scan.)
+gem "bundler-audit", "~> 0.9.2", require: false, group: [:development, :test]

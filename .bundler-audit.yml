@@ -1,0 +1,33 @@
+---
+# Advisories we've reviewed and decided don't affect DTI. `bundle-audit check`
+# and bin/security-scan both read this file.
+#
+# Every entry needs a comment saying *why* it can't affect us. When the reason
+# stops being true (e.g. we enable a Devise module, or change our Sanitize
+# config), remove the entry so the advisory surfaces again. bin/security-scan
+# also reports entries that no longer match anything, so they can be pruned.
+ignore:
+  # bcrypt 3.1.21: integer overflow at cost=31, in the JRuby (Java) implementation
+  # only. We run MRI, and Devise's default cost is far below 31.
+  - GHSA-f27w-vcwj-c954
+
+  # devise 4.9.4: confirmable "change email" race. We don't enable the
+  # :confirmable module (see AuthUser's `devise` call), so there's no
+  # confirmation flow to race. The fix is in Devise 5, a major upgrade.
+  - GHSA-57hq-95w6-v4fc
+
+  # devise 4.9.4: open redirect via request.referrer in the session-timeout
+  # handler. That code path only runs for the :timeout warden message, which
+  # only the :timeoutable module sets, and we don't enable it.
+  - GHSA-jp94-3292-c3xv
+
+  # msgpack 1.8.0: use-after-free in MessagePack::Buffer#clear. Our only user is
+  # bootsnap, which uses it to cache our own compiled code on local disk. No
+  # untrusted input ever reaches msgpack.
+  - GHSA-4mrv-5p47-p938
+
+  # sanitize 7.0.0: CSS allowlist bypass via CSS nesting in stylesheets. We only
+  # use Sanitize::Config::BASIC (ClosetListsHelper), which allows neither
+  # <style> elements nor style attributes, so CSS is stripped, never parsed.
+  # If we ever allow CSS in user content, remove this and upgrade.
+  - GHSA-wgw9-qhqg-8hv5
