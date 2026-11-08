@@ -1,0 +1,370 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Checks DTI's dependencies and upstream security news for vulnerabilities we
+# haven't reviewed yet, and prints a JSON summary of only the *new* ones.
+#
+#   bin/security-scan [--since HOURS] [--osv] [--no-update]
+#
+# Sources:
+#   - Ruby gems: bundler-audit against Gemfile.lock, minus .bundler-audit.yml.
+#   - JS packages: `yarn npm audit` against yarn.lock, minus
+#     .security-scan-ignore.yml.
+#   - News: the Rails security announcements feed and the Ruby news feed, for
+#     posts in the last --since hours (default 48). Rails and Ruby themselves
+#     aren't in Gemfile.lock the same way gems are, so this is how we hear
+#     about them.
+#
+# Options:
+#   --since HOURS  How far back to look in the news feeds (default 48, so a
+#                  daily scan has overlap if a run is late or missed).
+#   --osv          Look up each finding on api.osv.dev, to add CVE aliases and
+#                  the versions that fix it.
+#   --no-update    Don't refresh the Ruby advisory database first.
+#
+# Exit status:
+#   0  All clear: nothing new.
+#   1  New findings (see "findings"; check "errors" too).
+#   2  No new findings, but some check failed, so the scan is incomplete.
+#
+# Each JS finding has a "scope": "production" if it's reachable through our
+# dependencies, or "development" if only through devDependencies (build and
+# lint tooling that never runs in production or ships to browsers). Ruby
+# findings have the same, based on Gemfile groups.
+
+require "bundler/setup"
+require "json"
+require "net/http"
+require "nokogiri"
+require "open3"
+require "optparse"
+require "set"
+require "tempfile"
+require "time"
+require "yaml"
+
+Encoding.default_external = Encoding::UTF_8
+
+module SecurityScan
+	ROOT = File.expand_path("..", __dir__)
+	RAILS_FEED_URL = "https://discuss.rubyonrails.org/c/security-announcements/9.rss"
+	RUBY_FEED_URL = "https://www.ruby-lang.org/en/feeds/news.rss"
+	OSV_URL = "https://api.osv.dev/v1/vulns/"
+	SECURITY_WORDS = /security|CVE-\d|vulnerab/i
+
+	class Scan
+		attr_reader :findings, :notes, :errors, :stale_ignores, :ignored_count
+
+		def initialize(since_hours:, osv:, update:)
+			@since = Time.now - since_hours * 3600
+			@osv = osv
+			@update = update
+			@findings = []
+			@notes = []
+			@errors = []
+			@stale_ignores = []
+			@ignored_count = 0
+		end
+
+		def run
+			check("bundler-audit") { scan_gems }
+			check("yarn-audit") { scan_js }
+			check("rails-feed") { scan_rails_feed }
+			check("ruby-feed") { scan_ruby_feed }
+			check("osv") { enrich_with_osv } if @osv && @findings.any?
+			self
+		end
+
+		def status
+			if @findings.any? then "findings"
+			elsif @errors.any? then "incomplete"
+			else "clear"
+			end
+		end
+
+		def exit_code
+			{ "clear" => 0, "findings" => 1, "incomplete" => 2 }.fetch(status)
+		end
+
+		def to_h
+			{
+				status: status,
+				scanned_at: Time.now.utc.iso8601,
+				versions: { ruby: ruby_version, rails: locked_version("rails") },
+				findings: @findings,
+				ignored: @ignored_count,
+				stale_ignores: @stale_ignores,
+				notes: @notes,
+				errors: @errors,
+			}
+		end
+
+		private
+
+		# Run one check, recording a failure as an error instead of crashing, so
+		# one flaky source doesn't hide the others' results.
+		def check(name)
+			yield
+		rescue StandardError => e
+			@errors << { check: name, error: "#{e.class}: #{e.message}" }
+		end
+
+		## Ruby gems
+
+		def scan_gems
+			if @update
+				_out, err, st = Open3.capture3("bundle", "exec", "bundle-audit", "update", chdir: ROOT)
+				raise "bundle-audit update failed: #{err.strip}" unless st.success?
+			end
+
+			# Run with an empty config so we see everything, then apply the ignore
+			# list ourselves. That way we can also spot stale ignore entries.
+			results = Tempfile.create(["empty-bundler-audit", ".yml"]) do |empty|
+				empty.write("--- {}\n")
+				empty.flush
+				out, err, _st = Open3.capture3(
+					"bundle", "exec", "bundle-audit", "check",
+					"--format", "json", "--config", empty.path,
+					chdir: ROOT,
+				)
+				begin
+					JSON.parse(out).fetch("results")
+				rescue JSON::ParserError
+					raise "bundle-audit check failed: #{err.strip[0, 500]}"
+				end
+			end
+
+			config = YAML.safe_load_file(File.join(ROOT, ".bundler-audit.yml")) || {}
+			ignores = Array(config["ignore"]).to_set
+			production_gems = Bundler.definition.specs_for([:default]).map(&:name).to_set
+			seen = Set.new
+
+			results.each do |result|
+				if result["type"] == "insecure_source"
+					@findings << {
+						source: "bundler-audit", id: "insecure-source:#{result["source"]}",
+						title: "Gem source uses an insecure protocol", url: result["source"],
+					}
+					next
+				end
+				next unless result["type"] == "unpatched_gem"
+
+				gem = result.fetch("gem")
+				adv = result.fetch("advisory")
+				ids = [
+					adv["ghsa"] && "GHSA-#{adv["ghsa"]}",
+					adv["cve"] && "CVE-#{adv["cve"]}",
+					adv["osvdb"] && "OSVDB-#{adv["osvdb"]}",
+					adv["id"],
+				].compact.uniq
+				seen.merge(ids)
+
+				if ids.any? { |id| ignores.include?(id) }
+					@ignored_count += 1
+					next
+				end
+
+				@findings << {
+					source: "bundler-audit",
+					id: ids.first,
+					aliases: ids.drop(1),
+					package: gem["name"],
+					version: gem["version"],
+					scope: production_gems.include?(gem["name"]) ? "production" : "development",
+					severity: adv["criticality"] || "unknown",
+					title: adv["title"],
+					url: adv["url"],
+					fix: Array(adv["patched_versions"]).join(", ").then { |v| v.empty? ? "none published" : v },
+				}
+			end
+
+			(ignores - seen).each do |id|
+				@stale_ignores << { file: ".bundler-audit.yml", id: id }
+			end
+		end
+
+		## JS packages
+
+		def scan_js
+			all = yarn_audit("--all")
+			production_keys = yarn_audit("--environment", "production").keys.to_set
+
+			config = YAML.safe_load_file(File.join(ROOT, ".security-scan-ignore.yml")) || {}
+			ignores = config["yarn"] || {}
+			dev_ignores = config["yarn_development"] || {}
+
+			all.each do |(id, package), entry|
+				scope = production_keys.include?([id, package]) ? "production" : "development"
+				if ignores.key?(id) || (scope == "development" && dev_ignores.key?(id))
+					@ignored_count += 1
+					next
+				end
+				@findings << entry.merge(scope: scope)
+			end
+
+			seen_ids = all.keys.map(&:first).to_set
+			seen_dev_ids = all.keys.reject { |key| production_keys.include?(key) }.map(&:first).to_set
+			ignores.each_key do |id|
+				@stale_ignores << { file: ".security-scan-ignore.yml", id: id } unless seen_ids.include?(id)
+			end
+			dev_ignores.each_key do |id|
+				next if seen_dev_ids.include?(id)
+				@stale_ignores << { file: ".security-scan-ignore.yml", id: id }
+			end
+		end
+
+		# Returns a hash of [advisory id, package name] => finding.
+		def yarn_audit(*args)
+			env = {
+				# Node's built-in fetch ignores HTTPS_PROXY unless asked to use it.
+				"NODE_USE_ENV_PROXY" => "1",
+				"COREPACK_ENABLE_DOWNLOAD_PROMPT" => "0",
+			}
+			yarn = system("which corepack > /dev/null 2>&1") ? %w[corepack yarn] : %w[yarn]
+			out, err, st = Open3.capture3(env, *yarn, "npm", "audit", "--recursive", "--json", *args, chdir: ROOT)
+
+			lines = out.lines.select { |line| line.start_with?("{") }
+			# Yarn exits 1 when it finds advisories, so only treat it as a failure
+			# if it also didn't give us any results.
+			if !st.success? && lines.empty? && !out.include?("No audit suggestions")
+				raise "yarn npm audit #{args.join(" ")} failed: #{(err + out).strip[0, 500]}"
+			end
+
+			lines.each_with_object({}) do |line, findings|
+				record = JSON.parse(line)
+				package = record.fetch("value")
+				info = record.fetch("children")
+				# Deprecation notices show up here too, but they're not advisories.
+				next if info["ID"].to_s.include?("(deprecation)")
+
+				url = info["URL"].to_s
+				id = url[%r{/(GHSA-[\w-]+)\z}, 1] || "npm-#{info["ID"]}"
+				key = [id, package]
+				finding = findings[key] ||= {
+					source: "yarn-audit",
+					id: id,
+					package: package,
+					versions: [],
+					severity: info["Severity"],
+					title: info["Issue"],
+					url: url,
+					vulnerable_versions: info["Vulnerable Versions"],
+					via: [],
+				}
+				finding[:versions] |= Array(info["Tree Versions"])
+				finding[:via] |= Array(info["Dependents"]).map { |d| d.sub(/@virtual:[^#]+#/, "@") }
+			end
+		end
+
+		## News feeds
+
+		def scan_rails_feed
+			# Everything in this category is a security announcement.
+			feed_items(RAILS_FEED_URL).each do |item|
+				next if item[:published] < @since
+				add_feed_finding("rails-security-feed", item)
+			end
+		end
+
+		def scan_ruby_feed
+			ours = Gem::Version.new(ruby_version)
+			minor = ours.segments.first(2).join(".")
+			newest_patch = nil
+
+			feed_items(RUBY_FEED_URL).each do |item|
+				release = item[:title][/\ARuby (\d+\.\d+\.\d+) Released/, 1]
+				if release&.start_with?("#{minor}.")
+					version = Gem::Version.new(release)
+					newest_patch = version if newest_patch.nil? || version > newest_patch
+				end
+				next if item[:published] < @since
+
+				# Report security posts, and new releases in our minor version
+				# series, whose notes are where security fixes get mentioned.
+				ours_newer = release&.start_with?("#{minor}.") && Gem::Version.new(release) > ours
+				next unless item[:title].match?(SECURITY_WORDS) || ours_newer
+				add_feed_finding("ruby-news-feed", item)
+			end
+
+			if newest_patch && newest_patch > ours
+				@notes << "Ruby #{newest_patch} is out; we run #{ours} (.ruby-version). " \
+					"Not a finding by itself: upgrading Ruby means a deploy/setup.yml change."
+			end
+		end
+
+		def add_feed_finding(source, item)
+			config = YAML.safe_load_file(File.join(ROOT, ".security-scan-ignore.yml")) || {}
+			if (config["feeds"] || {}).key?(item[:link])
+				@ignored_count += 1
+				return
+			end
+			@findings << {
+				source: source, id: item[:link], title: item[:title],
+				url: item[:link], published: item[:published].utc.iso8601,
+			}
+		end
+
+		def feed_items(url)
+			doc = Nokogiri::XML(http_get(url))
+			doc.css("item").map do |item|
+				{
+					title: item.at_css("title")&.text.to_s.strip,
+					link: item.at_css("link")&.text.to_s.strip,
+					published: Time.rfc2822(item.at_css("pubDate").text.strip),
+				}
+			end
+		end
+
+		## OSV
+
+		def enrich_with_osv
+			@findings.each do |finding|
+				next unless finding[:id].to_s.start_with?("GHSA-", "CVE-")
+				data = JSON.parse(http_get(OSV_URL + finding[:id]))
+				finding[:aliases] = (Array(finding[:aliases]) | Array(data["aliases"])) - [finding[:id]]
+				fixed = Array(data["affected"]).
+					select { |a| a.dig("package", "name") == finding[:package] }.
+					flat_map { |a| Array(a["ranges"]).flat_map { |r| Array(r["events"]) } }.
+					filter_map { |event| event["fixed"] }
+				finding[:fixed_in] = fixed.uniq if fixed.any?
+			rescue StandardError => e
+				@errors << { check: "osv", id: finding[:id], error: "#{e.class}: #{e.message}" }
+			end
+		end
+
+		## Helpers
+
+		def http_get(url, redirects: 3)
+			uri = URI(url)
+			response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == "https",
+				open_timeout: 15, read_timeout: 30) do |http|
+				http.get(uri.request_uri, "User-Agent" => "DTI security scan (bin/security-scan)")
+			end
+			if response.is_a?(Net::HTTPRedirection) && redirects > 0
+				return http_get(URI.join(url, response["location"]).to_s, redirects: redirects - 1)
+			end
+			raise "GET #{url} returned HTTP #{response.code}" unless response.is_a?(Net::HTTPSuccess)
+			response.body.force_encoding(Encoding::UTF_8)
+		end
+
+		def ruby_version
+			File.read(File.join(ROOT, ".ruby-version")).strip
+		end
+
+		def locked_version(name)
+			Bundler.locked_gems.specs.find { |spec| spec.name == name }&.version&.to_s
+		end
+	end
+end
+
+options = { since_hours: 48, osv: false, update: true }
+OptionParser.new do |opts|
+	opts.banner = "Usage: bin/security-scan [--since HOURS] [--osv] [--no-update]"
+	opts.on("--since HOURS", Float, "News lookback window in hours (default 48)") { |h| options[:since_hours] = h }
+	opts.on("--osv", "Add CVE aliases and fixed versions from api.osv.dev") { options[:osv] = true }
+	opts.on("--[no-]update", "Refresh the Ruby advisory database (default: yes)") { |u| options[:update] = u }
+end.parse!
+
+scan = SecurityScan::Scan.new(**options).run
+puts JSON.pretty_generate(scan.to_h)
+exit scan.exit_code
