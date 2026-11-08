@@ -1,178 +1,281 @@
 # Impress 2020 Dependencies
 
-This document tracks how the main DTI Rails app still depends on the separate Impress 2020 service, and what would need to be migrated to fully consolidate into a single Rails app.
+This document maps everything the main DTI Rails app (and the outside world)
+still needs from the separate Impress 2020 service, and what it would take to
+turn Impress 2020 off and replace it with redirects.
+
+_Last audited: November 2026._
 
 ## Background
 
-In 2020, we started a NextJS rewrite called "Impress 2020" to modernize the frontend. We've since decided to consolidate back into the Rails app, but migration is ongoing. The Rails app now embeds the Impress 2020 React frontend (in `app/javascript/wardrobe-2020/`) for the outfit editor, but some functionality still calls back to the Impress 2020 GraphQL API.
+In 2020, we started a NextJS rewrite called "Impress 2020" to modernize the
+frontend. We've since consolidated back into the Rails app: the Impress 2020
+React wardrobe now lives in Rails (`app/javascript/wardrobe-2020/`), and is
+staying React for the foreseeable future. (A Rails/Turbo "Wardrobe V2" was
+explored on the `feature/wardrobe-v2` branch; it's not merged, nothing on
+`main` depends on it, and we're not pursuing it further.)
 
-## Current State
+But the embedded wardrobe still calls back to Impress 2020 for some data, and
+Impress 2020 still serves a few things nobody else does, mostly images.
 
-### What's Migrated to Rails
+**Why turn it off:** one site instead of two, a smaller maintenance surface, a
+lower bill, and closing real security gaps. The Impress 2020 box runs Node 16,
+connects to MySQL as a user with `ALL` on both `openneo_impress` and
+`openneo_id`, and authorizes support tools with a shared secret embedded in
+page HTML. (Also, it has a cron job that restarts it every 8 minutes, because
+of memory leaks.)
 
-The following have been migrated to Rails REST API endpoints (in `app/javascript/wardrobe-2020/loaders/`):
+## Inventory
 
-- **Item search** (`/items.json`) - Searching for items with filters
-- **Item appearances** (`/items/:id/appearances.json`) - Getting item layers for different bodies
-- **Outfit save/load** (`/outfits.json`, `/outfits/:id.json`) - CRUD operations on outfits
-- **Alt styles** (`/species/:id/alt-styles.json`) - Loading alternative pet appearances
+### 1. GraphQL calls from the Rails wardrobe
 
-### What Still Uses Impress 2020 GraphQL
+All go through `apolloClient.js` → `impress-2020.openneo.net/api/graphql`.
 
-The following GraphQL queries and mutations are still hitting the Impress 2020 service:
+**Core wardrobe** (blocks retirement):
 
-#### Core Wardrobe Functionality
+| Operation | File | Notes |
+|---|---|---|
+| `OutfitPetAppearance`, `OutfitPetAppearanceById` | `components/useOutfitAppearance.js` | Biology layers. `/species/:id/colors/:id/pet_type.json` is a starting point. |
+| `OutfitItemsAppearance` | `components/useOutfitAppearance.js` | Object layers for worn items. May mostly be covered by `/items/:id/appearances.json`. |
+| `OutfitStateItems`, `OutfitStateItemConflicts` | `WardrobePage/useOutfitState.js` | Item metadata and zone conflicts. |
+| `PosePicker` | `WardrobePage/PosePicker.js` | Available poses for a species/color. |
+| `SpeciesColorPicker` | `components/SpeciesColorPicker.js` | All species and colors. Static enough to embed in the page. |
+| `SearchToolbarZones` | `WardrobePage/SearchToolbar.js` | All zones. Static enough to embed in the page. |
+| `OutfitThumbnailIfCached` | `WardrobePage/WardrobePreviewAndControls.js` | Placeholder while loading. Could just be dropped. |
+| `WriteItemFromLoader` | `loaders/items.js` | Writes REST results into the Apollo cache. Goes away with Apollo. |
 
-- **`OutfitPetAppearance`** - Load pet appearance (biology layers) by species/color/pose
-- **`OutfitPetAppearanceById`** - Load pet appearance by ID
-- **`OutfitItemsAppearance`** - Load item appearances (object layers) for worn items
-- **`OutfitStateItems`** - Load item metadata for the outfit state
-- **`OutfitStateItemConflicts`** - Check for conflicting items in zones
-- **`PosePicker`** - Load available poses for a species/color combination
-- **`SpeciesColorPicker`** - Load all species and colors for the picker UI
-- **`SearchToolbarZones`** - Load all zones for search filtering
-- **`OutfitThumbnailIfCached`** - Check if an outfit thumbnail exists in the cache
+**Support tools**: see [Support tools](#support-tools) below.
 
-#### Support/Admin Tools
+Already migrated to Rails REST (`app/javascript/wardrobe-2020/loaders/`): item
+search, item appearances, outfit save/load, alt styles.
 
-These are staff-only features for managing modeling data:
+### 2. Non-GraphQL calls from the Rails wardrobe
 
-- **`ItemSupportFields`** - Load item data for support drawer
-- **`ItemSupportRestrictedZones`** - Load restricted zones for an item
-- **`ItemSupportDrawerAllColors`** - Load all colors for support tools
-- **`PosePickerSupport`** - Load pet appearance data for labeling
-- **`PosePickerSupportRefetchCanonicalAppearances`** - Refresh canonical appearance data
-- **`AllItemLayersSupportModal`** - Load all layers for an item (support view)
-- **`AllItemLayersSupportModal_BulkAddProposal`** - Preview bulk layer additions
-- **`WriteItemFromLoader`** - Write item data to Apollo cache (used after REST calls)
+| Call | Where | Status |
+|---|---|---|
+| `GET /api/validPetPoses` (Impress 2020 origin) | `components/SpeciesColorPicker.js` | Live dependency, fetched on every wardrobe load. A binary bitfield of species × color × pose. Easy to port, but keep the exact format: dti.py parses it too. |
+| `GET /api/readFromArchive` (**Rails** origin) | `util.js`, via the "prefer archive" toggle in `OutfitControls.js` | **Probably already broken.** It's a relative URL from when Impress 2020 served the wardrobe, and Rails has no such route. The archive it reads is an S3 bucket, separate from Rails' local `NeopetsMediaArchive`. Port it or remove the toggle. |
+| `POST /api/uploadLayerImage` (**Rails** origin) | `support/AppearanceLayerSupportUploadModal.js` | **Probably already broken**, for the same reason. Remove it along with the other support tools unless someone asks for it. |
+| `outfits.openneo-assets.net/outfits/...png` | `components/OutfitThumbnail.js` | Saved outfit thumbnails. See images below. |
+| `buildImpress2020Url("/__error__...")` | `util.js` | Placeholder URLs for unparseable images. Cosmetic; any placeholder works. |
 
-#### Support/Admin Mutations
+### 3. Images
 
-- **`ItemSupportDrawerSetItemExplicitlyBodySpecific`** - Mark item as body-specific
-- **`ItemSupportDrawerSetManualSpecialColor`** - Set manual special color for item
-- **`PosePickerSupportSetPetAppearancePose`** - Update pet appearance pose label
-- **`PosePickerSupportSetPetAppearanceIsGlitched`** - Mark pet appearance as glitched
-- **`ApperanceLayerSupportSetLayerBodyId`** - Update layer's body ID
-- **`AppearanceLayerSupportRemoveButton`** - Remove a layer
-- **`AllItemLayersSupportModal_BulkAddMutation`** - Bulk add layers to bodies
+This is the biggest piece, but Rails already has part of it:
+`lib/outfit_image_renderer.rb` composites layer PNGs with libvips and serves
+`/outfits/new.png?species=…&color=…&pose=…&objects[]=…` (dti.py already uses
+it).
 
-### Image Services
+What's still on Impress 2020:
 
-Impress 2020 also provides image generation services:
+- **Saved outfit images.** `Outfit#image_versions` produces
+  `outfits.openneo-assets.net/outfits/:id/v/:updated_at/:size.png`. That
+  hostname is a CDN in front of Impress 2020's `/api/outfitImage`. These URLs
+  are **embedded across the internet** (Neopets petpages, Discord, Open Graph
+  previews), and also in our own Your Outfits cards, fundraising features, and
+  `OutfitThumbnail.js`. They need to keep working forever. Plan: serve the same
+  URL shape from Rails using `OutfitImageRenderer`, then repoint the CDN's
+  origin. Nothing outside needs to change.
+- **Canvas-movie PNGs.** When an asset's manifest has no PNG,
+  `SwfAsset#image_url` (`app/models/swf_asset.rb`) falls back to Impress 2020's
+  `/api/assetImage`, which renders the movie in headless Chromium on request.
+  This affects `OutfitImageRenderer` itself, the `<img>` fallback inside
+  `swf_assets/show` (the item-page iframes), and the PNG links in the support
+  outfit viewer. Assets don't change once published, so the replacement can be
+  a render-once job (headless Chromium against Rails' own `swf_assets#show`
+  page, with the PNG cached on disk next to the media archive) instead of
+  rendering on every request. **First, count how many assets have a JS manifest
+  but no PNG.** If the number is small, a one-time backfill might be most of the
+  work.
+- **`impress-asset-images.openneo.net`, maybe.** Impress 2020 rewrites
+  `/asset-images/:type/…/:size.png` to `/api/assetImageRedirect`, which was
+  built as a new backend for that old Classic DTI hostname. (Rails' own legacy
+  URLs use `aws.impress-asset-images.openneo.net`, which is unaffected.) **Check
+  DNS:** if the non-`aws` hostname still points at Impress 2020, old embeds need
+  a Rails route or a redirect rule.
 
-- **Outfit thumbnails** - Generates PNG images of outfits at various sizes (150px, 300px, 600px)
-- **Asset image rendering** - Runs a headless browser to convert HTML5 canvas movies to static images
+### 4. Other Rails references
 
-These are served via:
-- Production: `https://outfits.openneo-assets.net/outfits/:id/v/:timestamp/:size.png`
-- Development: `Rails.configuration.impress_2020_origin + /api/outfitImage?id=...`
+- `/privacy` redirects to Impress 2020 (`config/routes.rb`). See
+  [Privacy policy](#privacy-policy).
+- The "DTI 2020" resource link on item pages (`items/_item_header.html.haml`,
+  `ItemsHelper#impress_2020_url_for`, locale key
+  `items.show.resources.impress_2020`).
+- `impress_2020_meta_tags` (origin plus support secret) in
+  `layouts/application.html.haml` and `outfits/edit.html.haml`.
+- `config.impress_2020_origin` in all three environments.
+- `Rails.application.credentials.impress_2020.support_secret`.
 
-## Migration Strategy
+### 5. Infrastructure
 
-There are two potential paths forward:
+- **MySQL user `impress2020`** with `ALL` on both databases, and a ufw rule
+  letting the Impress 2020 box reach MySQL (`deploy/setup.yml`). Removing these
+  is the biggest single security win.
+- **Cron `model-needed-items`** on the Impress 2020 box (every 10 minutes).
+  This looks redundant with Rails' `items:auto_model` (every 2 minutes, based on
+  body IDs, so it should cover the Baby and Maraquan bodies the old script
+  special-cases). Confirm it's still running, and that turning it off doesn't
+  stall anything.
+- **DNS and CDN:** `impress-2020.openneo.net`, `impress-2020-box.openneo.net`,
+  `outfits.openneo-assets.net` (CDN origin), and possibly
+  `impress-asset-images.openneo.net`.
+- **Unrelated:** `pets.neopets-asset-proxy.openneo.net` (used by `util.js`)
+  isn't part of the Impress 2020 deploy. Leave it alone.
 
-### Option A: Incremental GraphQL → REST Migration
+## External consumers
 
-Continue migrating GraphQL queries to Rails REST endpoints, keeping the React wardrobe.
+We're not committing to legacy support for unknown public callers. The one we
+care about is the /r/Neopets Discord server, via
+[rneopets/dti.py](https://github.com/rneopets/dti.py) (actively maintained as of
+October 2026). Plan: add the Rails endpoints it needs, then send them a PR,
+instead of keeping GraphQL alive.
 
-**Pros**: Lower risk, incremental progress, preserves mobile-friendly UI
+What dti.py uses today:
 
-**Cons**: Maintains complexity of React app + dual API surface
+- **GraphQL** (`dti/constants.py`, `API_BASE` in `dti/http.py`), about 16
+  queries:
+  - all species and colors, and zones
+  - item search, including "fits pet"
+  - items by IDs or names
+  - pet appearance by species/color/pose, by ID, or by multiple IDs
+  - pet appearance with items, and alt-style items
+  - all appearances for a color
+  - an outfit by ID
+  - `petOnNeopetsDotCom`: load a pet by name. Rails' `/pets/load.json` covers
+    this.
+- **`/api/validPetPoses`**, the binary bitfield. If Rails serves the same bytes,
+  their change is just a URL.
+- **`/api/outfitImage?layerUrls=…`** via `utils.build_layers_url`. This makes
+  the client assemble layer URLs itself. It's exported, but dti.py's own models
+  no longer call it.
+- **Already on Rails:** `outfit_image_url` uses `impress.openneo.net/outfits/new.png`,
+  and alt styles use Rails REST.
+- **Saved outfit images** via `outfits.openneo-assets.net`. This keeps working
+  if we keep the URL shape.
 
-### Option B: Wardrobe Rewrite (Rails + Turbo)
+Much of their GraphQL usage boils down to "give me the layers for this pet plus
+these items" and "render this outfit". That's better served by a couple of
+outfit-state JSON and PNG endpoints in Rails than by recreating the GraphQL
+schema. Design the Rails endpoints for the wardrobe's needs first, then check
+them against this list.
 
-Rewrite the outfit editor as a Rails view with Turbo/Stimulus, similar to the item show page.
+Impress 2020 also serves `/api/allNCTradeValues` and `/api/allWakaValues`
+(already marked deprecated). Nothing of ours uses them, and they can simply go
+away.
 
-**Pros**: Massive simplification—remove React, GraphQL, and complex data fetching entirely
+## Support tools
 
-**Cons**: High risk (rewrites are dangerous), significant effort, potential UI regressions
+Every Impress 2020 support mutation logs to the support Discord channel
+(`src/server/types/MutationsForSupport.js`), so that channel is a complete
+record of usage. **As of November 2026 it's been quiet since March, except for
+two "Removed layer" entries on August 23, 2026** (`removeLayerFromItem`). Many
+tools have been made unnecessary by better scraping and modeling rules.
 
-**Note**: Simplicity has been DTI's most valuable architectural principle long-term. The complexity of maintaining the React wardrobe + its APIs is significant. But rewrites carry inherent risk.
+Plan: remove the Impress 2020 support tools from the wardrobe, and rebuild only
+what volunteers actually ask for, as plain Rails pages with session auth. That
+also gets rid of the shared `support_secret`.
 
----
+| Wardrobe tool (GraphQL) | Rails equivalent today | Suggested |
+|---|---|---|
+| Pet appearance pose/glitch labeling (`PosePickerSupport*`, `setPetAppearancePose`, `setPetAppearanceIsGlitched`) | `pet_states#edit` / `#update` (pose, glitched), with an "unlabeled appearance" queue | Remove; link to Rails. |
+| Item "explicitly body-specific" (`ItemSupportDrawerSetItemExplicitlyBodySpecific`) | `items#edit` (`explicitly_body_specific`, `is_manually_nc`) | Remove; link to Rails. |
+| Manual special color (`ItemSupportDrawerSetManualSpecialColor`) | none | Remove; rebuild if asked. |
+| Layer body ID (`ApperanceLayerSupportSetLayerBodyId`) | none | Remove; rebuild if asked. |
+| **Remove layer from item** (`AppearanceLayerSupportRemoveButton`) | none | **The only tool used recently.** Rebuild first, as a button on a Rails item/layer page. |
+| Bulk add layers (`AllItemLayersSupportModal*`) | none | Remove; rebuild if asked. |
+| Upload layer image (`/api/uploadLayerImage`) | none (already broken) | Remove. |
 
-### Option A: Priority 1 - Core Data Loading
+When rebuilding any of these, also log to Discord (Rails has `DiscordNotifier`,
+currently only for Neologin alerts) so the channel stays a usage record.
 
-The most important migrations to enable turning off Impress 2020 would be:
+## Privacy policy
 
-1. **Pet appearances** (`OutfitPetAppearance`, `OutfitPetAppearanceById`)
-   - Backend: Create `/pet-types/:species/:color/appearances.json` or similar
-   - Frontend: Update `useOutfitAppearance.js` to use REST loader
+`/privacy` currently redirects to Impress 2020's page
+(`src/app/PrivacyPolicyPage.js` there). Much of it describes the Impress 2020
+era and is out of date, so don't port it verbatim:
 
-2. **Item appearance layers** (`OutfitItemsAppearance`)
-   - May already be covered by `/items/:id/appearances.json`?
-   - Need to verify if this is redundant with existing loader
+| Section | Today |
+|---|---|
+| Auth0 account management | **Obsolete.** Rails uses its own accounts (Devise) plus NeoPass sign-in (OpenID Connect via Neopets). This section was already conditional on Auth0 mode. |
+| Plausible analytics | **Still true, but self-hosted** (`analytics.openneo.net`, `application/_analytics`). |
+| Sentry error tracking | **Partly true.** The server reports to a self-hosted Sentry-compatible endpoint (`health.openneo.net`). The wardrobe JS no longer reports errors anywhere (`logAndCapture` just logs to the console). |
+| Linode and Fastly hosting | **Needs confirming.** Which host is current? Is Fastly still the CDN for `outfits.openneo-assets.net`? |
+| Outfits (public by URL; sequential IDs) | Still true. |
+| Item lists (private / public / trading) | Still true. |
+| Modeling contributions (public credit) | Still true. |
+| _Missing:_ email | Password resets and account emails go through Fastmail SMTP. |
+| _Missing:_ donations | Stripe (`config/initializers/stripe.rb`). |
+| _Missing:_ account deletion and data export | Now self-serve in Rails. This replaces "use the contact link" for removing your data. |
+| _Missing:_ Neopets page imports | Users paste their own Neopets pages for import; worth a sentence on what we keep. |
 
-3. **Species/Color/Zone metadata** (`SpeciesColorPicker`, `SearchToolbarZones`)
-   - Backend: Create endpoints for species, colors, zones listings
-   - Or embed this static data in the JS bundle
+So: write a shorter, current policy as a Rails page (next to `about#terms`),
+not a port.
 
-4. **Pose availability** (`PosePicker`)
-   - Backend: Add pose data to pet type endpoints
-   - Frontend: Update pose picker to use REST data
+## Plan
 
-### Priority 2: Support Tools
+**Phase 1: wardrobe data.** No user-visible change.
+- Rails endpoints for:
+  - species, colors and zones (or embed them in the page)
+  - valid poses (same binary format as `/api/validPetPoses`)
+  - pet appearance by species/color/pose and by ID
+  - outfit item metadata and zone conflicts
+- Switch the core wardrobe queries to those endpoints. After this, Apollo is
+  only used by support tools.
+- Remove the "DTI 2020" item-page link. Write the new privacy page.
+- Fix or remove the "prefer archive" toggle.
 
-Support tools could be migrated as Rails admin pages using Turbo/Stimulus:
+**Phase 2: support tools.** Remove the Impress 2020 support UI and
+`useSupport`/`support_secret`. Rebuild "remove layer from item" in Rails. Then
+Apollo and `graphql` can leave the bundle entirely.
 
-- Pet state labeling (pose picker support)
-- Item layer management
-- Manual data corrections
+**Phase 3: images.**
+- Serve `/outfits/:id/v/:updated_at/:size.png` (and the unversioned form) from
+  Rails via `OutfitImageRenderer`.
+- Replace the canvas-movie PNG fallback with render-once-and-cache.
+- Point `Outfit#image_versions` and `OutfitThumbnail.js` at the new path, then
+  repoint the `outfits.openneo-assets.net` CDN origin at Rails. Keep the
+  hostname, because of embeds.
+- Handle `impress-asset-images.openneo.net` if DNS says it's still on Impress
+  2020.
 
-These don't need to be React-based; simpler Rails views would work fine.
+**Phase 4: dti.py.** Send rneopets/dti.py a PR moving them to the Rails
+endpoints, ideally in time to land before shutdown.
 
-### Priority 3: Image Services
+**Phase 5: shutdown.**
+- Redirect `impress-2020.openneo.net` to Rails:
 
-This is the most complex migration:
+  | Impress 2020 path | Rails path |
+  |---|---|
+  | `/`, `/outfits/new`, `/outfits/:id`, `/items/:id` | same |
+  | `/items/search/:query` | `/items?q=:query` |
+  | `/user/:id/lists`, `/user/:id/lists/{owns,wants}/:listId` | `/user/:id/closet` |
+  | `/your-outfits`, `/modeling`, `/donate`, `/terms`, `/privacy` | same |
+  | `/support/petAppearances` | the unlabeled-appearances flow |
+  | `/conversion` | home, or drop it |
+  | `/api/outfitImage?id=…` | Rails outfit image |
+  | `/api/*` (everything else) | 410 Gone |
 
-- Move headless browser rendering into a Rails service or separate microservice
-- Set up image storage (S3 or similar)
-- Update outfit image URLs to point to new service
+- Turn off the box and its cron jobs.
+- Drop the `impress2020` MySQL user and ufw rule. Delete
+  `impress_2020_origin`, `impress_2020_meta_tags`, `impress-2020-config.js`,
+  `apolloClient.js`, the `impress_2020` credentials, and the matching
+  `deploy/setup.yml` steps.
 
-## Deployment Architecture
+**Then:** the `openneo_id` → `openneo_impress` database consolidation is
+unblocked. Its branch, `feature/consolidate-auth-database`, has no common
+history with current `main`, so it will need re-landing (a rebase or
+cherry-picks), not a merge.
 
-### Current Setup
+## Open questions
 
-- **Main Rails app**: Primary VPS server, serves web traffic and API
-- **Impress 2020**: Separate VPS in same datacenter, provides GraphQL API and image services
-- **Databases**: Two MySQL databases on main Rails server, **both accessed directly by Impress 2020**:
-  - `openneo_impress` - Main application data (items, pets, outfits, etc.)
-  - `openneo_id` - Authentication data (user accounts, passwords, OAuth)
-
-**CRITICAL**: Impress 2020 directly queries both databases via SQL. Any database consolidation must wait until Impress 2020 is retired, or both services must be updated in a coordinated deployment.
-
-### After Full Migration
-
-- **Single Rails app**: One VPS serving everything
-- **Image service**: Either integrated into Rails or extracted as a simple microservice
-- **Single MySQL database**: Can merge `openneo_id` into `openneo_impress` once Impress 2020 is retired
-  - See `feature/consolidate-auth-database` branch for implementation
-  - Migration is ready but BLOCKED on Impress 2020 retirement
-
-## Database Consolidation Blocker
-
-**IMPORTANT**: A database consolidation migration exists on the `feature/consolidate-auth-database` branch that would merge the `openneo_id` database into `openneo_impress`. However, **this migration is blocked** because:
-
-1. **Impress 2020 uses both databases directly** for authentication and user queries
-2. Consolidating now would break Impress 2020's login functionality
-3. The migration can only proceed after Impress 2020 is fully retired
-
-**Options to unblock:**
-- **Preferred**: Complete Impress 2020 retirement first (Priority 1-3 migrations above)
-- **Alternative**: Coordinate simultaneous deployment of both services during maintenance window
-
-See `docs/database-consolidation-deployment.md` (on feature branch) for full deployment plan.
-
-## Notes
-
-- The wardrobe-2020 frontend is already embedded in Rails (`app/javascript/wardrobe-2020/`)
-- Many API calls have been successfully migrated from GraphQL to REST
-- The GraphQL dependency is primarily in the core outfit rendering logic
-- Support tools are the lowest priority since they're staff-only
-- Database consolidation is ready but awaiting Impress 2020 retirement
+- How many canvas-movie assets have no manifest PNG? (This sizes Phase 3.)
+- Does `impress-asset-images.openneo.net` still resolve to Impress 2020?
+- Is `model-needed-items` still running on the Impress 2020 box, and does it
+  model anything `items:auto_model` doesn't?
+- Which hosting/CDN vendors are current, for the privacy page?
 
 ## See Also
 
-- [Customization Architecture](./customization-architecture.md) - Explains the data model
-- `app/javascript/wardrobe-2020/loaders/` - Migrated REST API calls
-- `config/routes.rb` - Rails API endpoints
+- [Customization Architecture](./customization-architecture.md): explains the data model
+- `app/javascript/wardrobe-2020/loaders/`: already-migrated REST calls
+- `lib/outfit_image_renderer.rb`: Rails outfit image rendering
