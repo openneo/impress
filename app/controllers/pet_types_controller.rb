@@ -66,7 +66,12 @@ class PetTypesController < ApplicationController
 			format.html do
 				@pet_states = group_pet_states @pet_type.pet_states
 			end
-			format.json { render json: @pet_type }
+			# The homepage preview (outfits/new.js) needs `image_hash`.
+			format.json do
+				render json: @pet_type.as_json(
+					methods: [:color, :species, :image_hash],
+				)
+			end
 		end
 	end
 

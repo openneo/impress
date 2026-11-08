@@ -63,7 +63,8 @@
 			}
 		},
 		displayLoading: function () {
-			preview_el.addClass("loading");
+			// Whatever's on screen is on its way out, so it's not clickable.
+			preview_el.removeClass("loaded").addClass("loading");
 			response_el.text("Loading...");
 		},
 		failed: function () {
