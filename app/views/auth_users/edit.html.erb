@@ -1,3 +1,4 @@
+<% use_responsive_design %>
 <h2>Settings</h2>
 
 <%= form_with(model: @auth_user, method: :put, class: "settings-form") do |f| %>
@@ -132,8 +133,8 @@
     <p>
       You can download a copy of everything Dress to Impress stores about your
       account: your login info, item lists, outfits, and contributions. It's a
-      JSON file, which is handy for keeping a backup, or bringing your lists to
-      another tool.
+      JSON file: not the prettiest to read, but a complete backup of your
+      account.
     </p>
   </section>
   <%= f.submit "Download your data", name: nil %>
@@ -162,8 +163,8 @@
     <p>
       If you helped model items or pets, that customization data stays on DTI
       for everyone to use, but it won't be connected to you anymore. If you
-      donated, we keep a record of the donation for our finances, but we
-      remove your name and email from it.
+      donated, we keep the donation in our records, but remove your name and
+      email from it.
     </p>
   </section>
 
@@ -202,7 +203,7 @@
     </fieldset>
 
     <div class="actions">
-      <%= f.submit "Permanently delete your account" %>
+      <%= f.submit "Permanently delete your account", class: "danger" %>
     </div>
   <% end %>
 <% end %>

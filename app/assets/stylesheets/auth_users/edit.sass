@@ -1,4 +1,5 @@
 @import "../partials/clean/constants"
+@import "../partials/clean/mixins"
 
 .settings-form
 	border: 1px solid $module-border-color
@@ -57,3 +58,9 @@
 .data-export-explanation, .delete-account-explanation
 	font-size: .85em
 	margin-bottom: .5em
+
+// A permanent, destructive action gets a deep red, rather than our usual
+// friendly green. (It's a bit darker than `$error-color`, to match the green
+// button's visual weight once the button's glossy overlay lightens it.)
+input[type=submit].danger
+	+awesome-button-color(#7a1c14)

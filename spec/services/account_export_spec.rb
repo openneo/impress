@@ -32,6 +32,17 @@ RSpec.describe AccountExport, :account_data do
         "kind" => "wanted", "list_name" => nil))
   end
 
+  it "lists an item once per list it's in, each with its own quantity" do
+    keep = user.closet_lists.create!(name: "Keep", hangers_owned: true)
+    user.closet_hangers.create!(item: records[:hat], owned: true, list: keep,
+      quantity: 1)
+
+    hat_entries = export["items"].select { |i| i["item_id"] == records[:hat].id }
+    expect(hat_entries).to contain_exactly(
+      a_hash_including("list_name" => "Trading", "quantity" => 2),
+      a_hash_including("list_name" => "Keep", "quantity" => 1))
+  end
+
   it "includes outfits, with their pet and items" do
     expect(export["outfits"]).to contain_exactly(a_hash_including(
       "name" => "Spooky",
