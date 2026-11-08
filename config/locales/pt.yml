@@ -401,6 +401,7 @@ pt:
       preview:
         pet_type_not_found: Nós nunca vimos um %{species_name} %{color_name} . Você viu?
         pet_not_found: Pet não encontrado.
+        load_error: Ops, não conseguimos carregar esta prévia. Quer tentar de novo?
       submit:
         primary: Planeje minha roupa!
         secondary: Vai

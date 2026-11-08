@@ -405,6 +405,7 @@ es:
       preview:
         pet_type_not_found: No hemos encontrado aun a un %{species_name} %{color_name}. ¿Lo has hecho tú?
         pet_not_found: Pet no encontrado.
+        load_error: ¡Uy! No pudimos cargar esta vista previa. ¿Lo intentas de nuevo?
       submit:
         primary: ¡Diseñar mi atuendo!
         secondary: Ir
