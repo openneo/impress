@@ -60,25 +60,36 @@ class AuthUser::Deletion
 
   def delete_user_data!
     user_id = @user.id
-    # A subquery rather than a list of IDs, so we can't miss an outfit that
-    # gets saved partway through.
-    outfit_ids = Outfit.where(user_id:).select(:id)
+
+    # Lock the user's outfits (`SELECT ... FOR UPDATE`), so an outfit they save
+    # partway through can't slip past us: InnoDB also locks the gap in the
+    # `user_id` index, which blocks new outfits for this user until we commit.
+    #
+    # NOTE: We use a list of IDs, rather than an `IN (SELECT ...)` subquery!
+    #       MariaDB (before 11.1) can't optimize a subquery in a single-table
+    #       UPDATE or DELETE, so it scans the *entire* table instead, locking
+    #       every row as it goes. For `item_outfit_relationships`, that took
+    #       minutes in production, and blocked other people's outfit saves.
+    outfit_ids = Outfit.where(user_id:).lock.pluck(:id)
 
     counts = {}
 
     # Detach records we keep from the data we're about to delete.
     counts[:donations_detached] = Fundraising::Donation.where(user_id:).
       update_all(user_id: nil, donor_name: nil, donor_email: nil)
-    counts[:donation_features_detached] = Fundraising::DonationFeature.
-      where(outfit_id: outfit_ids).update_all(outfit_id: nil)
+    counts[:donation_features_detached] = in_batches_of_ids(outfit_ids) do |ids|
+      Fundraising::DonationFeature.where(outfit_id: ids).
+        update_all(outfit_id: nil)
+    end
     counts[:neologin_cookies_detached] = NeologinCookie.
       where(created_by_id: user_id).update_all(created_by_id: nil)
 
     # Delete the user's own data. We use `delete_all` rather than `destroy` to
     # keep this fast for users with many thousands of items, so we handle the
     # dependent records ourselves.
-    counts[:item_outfit_relationships] = ItemOutfitRelationship.
-      where(outfit_id: outfit_ids).delete_all
+    counts[:item_outfit_relationships] = in_batches_of_ids(outfit_ids) do |ids|
+      ItemOutfitRelationship.where(outfit_id: ids).delete_all
+    end
     counts[:outfits] = Outfit.where(user_id:).delete_all
     counts[:closet_hangers] = ClosetHanger.where(user_id:).delete_all
     counts[:closet_lists] = ClosetList.where(user_id:).delete_all
@@ -90,5 +101,12 @@ class AuthUser::Deletion
     counts[:users] = User.where(id: user_id).delete_all
 
     counts
+  end
+
+  # Runs the block on slices of the given IDs, so a user with many thousands
+  # of outfits doesn't produce one enormous `IN (...)` list. Returns the sum of
+  # the block's results (affected row counts).
+  def in_batches_of_ids(ids, batch_size: 1000)
+    ids.each_slice(batch_size).sum { |batch| yield batch }
   end
 end

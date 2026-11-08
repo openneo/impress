@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_07_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_08_120000) do
   create_table "alt_styles", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
     t.integer "body_id", null: false
     t.integer "color_id", null: false
@@ -194,6 +194,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_07_120000) do
     t.string "neopets_username"
     t.datetime "updated_at", precision: nil, null: false
     t.integer "user_id"
+    t.index ["user_id"], name: "index_neopets_connections_on_user_id"
   end
 
   create_table "outfits", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
@@ -316,6 +317,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_07_120000) do
     t.boolean "shadowbanned", default: false, null: false
     t.boolean "support_staff", default: false, null: false
     t.integer "wanted_closet_hangers_visibility", default: 1, null: false
+    t.index ["remote_id"], name: "index_users_on_remote_id"
   end
 
   create_table "zones", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
