@@ -119,6 +119,9 @@
 %script#preview-pet-not-found-template{:type => 'text/x-jquery-tmpl'}
   = t '.preview.pet_not_found'
 
+%script#preview-load-error-template{:type => 'text/x-jquery-tmpl'}
+  = t '.preview.load_error'
+
 - content_for :javascripts do
   = javascript_include_tag 'jquery', 'jquery.tmpl', 'jquery.timeago',
                            defer: true

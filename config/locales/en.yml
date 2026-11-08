@@ -615,6 +615,7 @@ en:
       preview:
         pet_type_not_found: We haven't seen a %{color_name} %{species_name}. Have you?
         pet_not_found: Pet not found.
+        load_error: Oops, we couldn't load this preview. Try again?
       submit:
         primary: Plan my outfit!
         secondary: Go

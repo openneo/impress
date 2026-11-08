@@ -4,7 +4,10 @@
 	}
 
 	var PetQuery = {},
-		query_string = document.location.hash || document.location.search;
+		query_string = (document.location.hash || document.location.search).replace(
+			/^#/,
+			"",
+		);
 
 	for (const [key, value] of new URLSearchParams(query_string).entries()) {
 		PetQuery[key] = value;
@@ -32,20 +35,43 @@
 	var defaultPreviewUrl = img_el.attr("src");
 
 	preview_el.click(function () {
-		if (Preview.Job.current) Preview.Job.current.visit();
+		var job = Preview.visitableJob();
+		if (job) job.visit();
 	});
 
+	// Bumped whenever the preview moves on to something new, so that a slow
+	// pet type lookup doesn't clobber whatever the user has done since.
+	var petTypeRequestId = 0;
+
 	var Preview = {
+		// Stop listening for the current job's image, if it's still in flight.
+		cancelCurrent: function () {
+			if (Preview.Job.current) Preview.Job.current.loading = false;
+		},
 		clear: function () {
-			if (typeof Preview.Job.fallback != "undefined")
+			petTypeRequestId++;
+			if (typeof Preview.Job.fallback != "undefined") {
 				Preview.Job.fallback.setAsCurrent();
+			} else {
+				// Nothing to fall back to (yet), so go back to the blank preview.
+				// If a feature arrives later, `loadFeature` will show it.
+				Preview.cancelCurrent();
+				Preview.Job.current = undefined;
+				img_el.attr("src", defaultPreviewUrl);
+				preview_el.removeClass("loading loaded hidden");
+				response_el.empty();
+			}
 		},
 		displayLoading: function () {
 			preview_el.addClass("loading");
 			response_el.text("Loading...");
 		},
 		failed: function () {
-			preview_el.addClass("hidden");
+			// The failed job isn't on screen anymore, so forget it. That way, the
+			// user can retry it, rather than `updateWithName` thinking it's shown.
+			Preview.cancelCurrent();
+			Preview.Job.current = undefined;
+			preview_el.removeClass("loading loaded").addClass("hidden");
 		},
 		notFound: function (key, options) {
 			Preview.failed();
@@ -58,8 +84,8 @@
 			var name = name_el.val(),
 				job;
 			if (name) {
-				currentName = name;
 				if (!Preview.Job.current || name != Preview.Job.current.name) {
+					petTypeRequestId++;
 					job = new Preview.Job.Name(name);
 					job.setAsCurrent();
 					Preview.displayLoading();
@@ -68,6 +94,10 @@
 				Preview.clear();
 			}
 		},
+		// The job whose preview is on screen, if any, for clicks and submits.
+		visitableJob: function () {
+			return preview_el.hasClass("loaded") ? Preview.Job.current : undefined;
+		},
 	};
 
 	function loadFeature() {
@@ -75,7 +105,9 @@
 			if (features.length > 0) {
 				var feature = features[Math.floor(Math.random() * features.length)];
 				Preview.Job.fallback = new Preview.Job.Feature(feature);
-				if (!Preview.Job.current) {
+				// Show it if nothing else is showing, but don't replace an error
+				// message (which is shown with the `hidden` class).
+				if (!Preview.Job.current && !preview_el.hasClass("hidden")) {
 					Preview.Job.fallback.setAsCurrent();
 				}
 			}
@@ -112,6 +144,9 @@
 		};
 
 		this.setAsCurrent = function () {
+			// If another job's image is still in flight, it's been replaced, so
+			// its load/error events should no longer count.
+			if (Preview.Job.current !== job) Preview.cancelCurrent();
 			Preview.Job.current = job;
 			load();
 		};
@@ -157,6 +192,13 @@
 		};
 
 		this.notFound = function () {
+			if (feature.outfit_image_url === defaultPreviewUrl) {
+				// Even the boring image failed! Don't keep retrying it forever.
+				Preview.failed();
+				response_el.text(this.name);
+				return;
+			}
+
 			// The outfit thumbnail hasn't generated or is missing or something.
 			// Let's fall back to a boring image for now.
 			var boring = new Preview.Job.Feature({
@@ -171,14 +213,14 @@
 		var previewWithNameTimeout;
 
 		var name_el = $(".main-pet-name");
-		name_el.val(PetQuery.name);
+		// Setting `undefined` would clear a name the browser restored for us.
+		if (PetQuery.name) name_el.val(PetQuery.name);
 		Preview.updateWithName(name_el);
 
-		name_el.keyup(function () {
-			if (previewWithNameTimeout && Preview.Job.current) {
-				clearTimeout(previewWithNameTimeout);
-				Preview.Job.current.loading = false;
-			}
+		// `input` (rather than `keyup`) also catches pasting, autofill, etc, and
+		// skips keys that don't change the value, like Shift and arrow keys.
+		name_el.bind("input", function () {
+			clearTimeout(previewWithNameTimeout);
 			var name_el = $(this);
 			previewWithNameTimeout = setTimeout(function () {
 				Preview.updateWithName(name_el);
@@ -217,7 +259,10 @@
 				type[key] = selectedEl.val();
 				nameComponents[key] = selectedEl.text();
 			});
-			name = nameComponents.color + " " + nameComponents.species;
+			var name = nameComponents.color + " " + nameComponents.species;
+			var requestId = ++petTypeRequestId;
+			// Don't let the previous job's image finish and replace "Loading...".
+			Preview.cancelCurrent();
 			Preview.displayLoading();
 			$.ajax({
 				url:
@@ -228,25 +273,30 @@
 					"/pet_type.json",
 				dataType: "json",
 				success: function (data) {
-					var job;
-					if (data) {
-						job = new Preview.Job.Hash(data.image_hash, form);
-						job.name = name;
-						job.setAsCurrent();
-					} else {
+					if (requestId !== petTypeRequestId) return;
+					var job = new Preview.Job.Hash(data.image_hash, form);
+					job.name = name;
+					job.setAsCurrent();
+				},
+				error: function (xhr) {
+					if (requestId !== petTypeRequestId) return;
+					if (xhr.status === 404) {
 						Preview.notFound("pet-type-not-found", {
 							color_name: nameComponents.color,
 							species_name: nameComponents.species,
 						});
+					} else {
+						Preview.notFound("load-error");
 					}
 				},
 			});
 		});
 
 		$(".load-pet-to-wardrobe").submit(function (e) {
-			if ($(this).find(".main-pet-name").val() === "" && Preview.Job.current) {
+			var job = Preview.visitableJob();
+			if ($(this).find(".main-pet-name").val() === "" && job) {
 				e.preventDefault();
-				Preview.Job.current.visit();
+				job.visit();
 			}
 		});
 	});
