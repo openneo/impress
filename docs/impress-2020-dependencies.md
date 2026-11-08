@@ -87,12 +87,12 @@ What's still on Impress 2020:
   rendering on every request. **First, count how many assets have a JS manifest
   but no PNG.** If the number is small, a one-time backfill might be most of the
   work.
-- **`impress-asset-images.openneo.net`, maybe.** Impress 2020 rewrites
-  `/asset-images/:type/…/:size.png` to `/api/assetImageRedirect`, which was
-  built as a new backend for that old Classic DTI hostname. (Rails' own legacy
-  URLs use `aws.impress-asset-images.openneo.net`, which is unaffected.) **Check
-  DNS:** if the non-`aws` hostname still points at Impress 2020, old embeds need
-  a Rails route or a redirect rule.
+- **`impress-asset-images.openneo.net`.** This old Classic DTI hostname
+  points at Impress 2020 (confirmed November 2026). Impress 2020 rewrites
+  `/asset-images/:type/…/:size.png` to `/api/assetImageRedirect`, which
+  redirects to the best image we have. Old embeds use these URLs, so Rails needs
+  an equivalent route before the DNS moves. (Rails' own legacy URLs use
+  `aws.impress-asset-images.openneo.net`, which is unaffected.)
 
 ### 4. Other Rails references
 
@@ -111,13 +111,25 @@ What's still on Impress 2020:
 - **MySQL user `impress2020`** with `ALL` on both databases, and a ufw rule
   letting the Impress 2020 box reach MySQL (`deploy/setup.yml`). Removing these
   is the biggest single security win.
-- **Cron `model-needed-items`** on the Impress 2020 box (every 10 minutes).
-  This looks redundant with Rails' `items:auto_model` (every 2 minutes, based on
-  body IDs, so it should cover the Baby and Maraquan bodies the old script
-  special-cases). Confirm it's still running, and that turning it off doesn't
-  stall anything.
+- **Cron `model-needed-items`** on the Impress 2020 box (every 10 minutes,
+  still in the crontab). It models Blue, Baby, Maraquan, and Mutant bodies via
+  the NC Mall try-on. Rails' `items:auto_model` (every 2 minutes, based on body
+  IDs) does the same job, so the cron is probably redundant. There's no flag
+  gating it in the script.
+
+  Two notes for checking whether it actually does anything:
+  - Its crontab entry is `… 2>&1 > model-needed-items.log`. That order sends
+    stderr to cron's own output, not the log file, so the log only ever shows
+    successes. A quiet log can mean "failing every run".
+  - It writes a `modeling_logs` row (with `pet_name` like `@<hash>`) for each
+    success, and Rails never writes to that table. So
+    `SELECT COUNT(*), MAX(created_at) FROM modeling_logs WHERE pet_name LIKE '@%'`
+    shows whether it has done anything lately.
+
+  Either way, turning it off is low-risk: if auto-modeling stalls, it shows
+  quickly, and nothing hard-breaks.
 - **DNS and CDN:** `impress-2020.openneo.net`, `impress-2020-box.openneo.net`,
-  `outfits.openneo-assets.net` (CDN origin), and possibly
+  `outfits.openneo-assets.net` (Fastly, with Impress 2020 as origin), and
   `impress-asset-images.openneo.net`.
 - **Unrelated:** `pets.neopets-asset-proxy.openneo.net` (used by `util.js`)
   isn't part of the Impress 2020 deploy. Leave it alone.
@@ -199,7 +211,7 @@ era and is out of date, so don't port it verbatim:
 | Auth0 account management | **Obsolete.** Rails uses its own accounts (Devise) plus NeoPass sign-in (OpenID Connect via Neopets). This section was already conditional on Auth0 mode. |
 | Plausible analytics | **Still true, but self-hosted** (`analytics.openneo.net`, `application/_analytics`). |
 | Sentry error tracking | **Partly true.** The server reports to a self-hosted Sentry-compatible endpoint (`health.openneo.net`). The wardrobe JS no longer reports errors anywhere (`logAndCapture` just logs to the console). |
-| Linode and Fastly hosting | **Needs confirming.** Which host is current? Is Fastly still the CDN for `outfits.openneo-assets.net`? |
+| Linode and Fastly hosting | Still true. Fastly is the CDN for `outfits.openneo-assets.net`. |
 | Outfits (public by URL; sequential IDs) | Still true. |
 | Item lists (private / public / trading) | Still true. |
 | Modeling contributions (public credit) | Still true. |
@@ -235,8 +247,8 @@ Apollo and `graphql` can leave the bundle entirely.
 - Point `Outfit#image_versions` and `OutfitThumbnail.js` at the new path, then
   repoint the `outfits.openneo-assets.net` CDN origin at Rails. Keep the
   hostname, because of embeds.
-- Handle `impress-asset-images.openneo.net` if DNS says it's still on Impress
-  2020.
+- Port `/asset-images/…` (the `assetImageRedirect` logic) to Rails, then move
+  `impress-asset-images.openneo.net` DNS to Rails.
 
 **Phase 4: dti.py.** Send rneopets/dti.py a PR moving them to the Rails
 endpoints, ideally in time to land before shutdown.
@@ -255,7 +267,8 @@ endpoints, ideally in time to land before shutdown.
   | `/api/outfitImage?id=…` | Rails outfit image |
   | `/api/*` (everything else) | 410 Gone |
 
-- Turn off the box and its cron jobs.
+- Turn off the box and its cron jobs. (`model-needed-items` can be turned off
+  earlier, any time.)
 - Drop the `impress2020` MySQL user and ufw rule. Delete
   `impress_2020_origin`, `impress_2020_meta_tags`, `impress-2020-config.js`,
   `apolloClient.js`, the `impress_2020` credentials, and the matching
@@ -269,10 +282,6 @@ cherry-picks), not a merge.
 ## Open questions
 
 - How many canvas-movie assets have no manifest PNG? (This sizes Phase 3.)
-- Does `impress-asset-images.openneo.net` still resolve to Impress 2020?
-- Is `model-needed-items` still running on the Impress 2020 box, and does it
-  model anything `items:auto_model` doesn't?
-- Which hosting/CDN vendors are current, for the privacy page?
 
 ## See Also
 
