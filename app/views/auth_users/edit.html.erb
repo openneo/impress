@@ -1,3 +1,4 @@
+<% use_responsive_design %>
 <h2>Settings</h2>
 
 <%= form_with(model: @auth_user, method: :put, class: "settings-form") do |f| %>
@@ -122,6 +123,97 @@
       </p>
     </section>
     <%= form.submit "Connect your NeoPass" %>
+  <% end %>
+<% end %>
+
+<%= form_with url: export_auth_user_path, method: :get,
+    class: "settings-form", data: {turbo: false} do |f| %>
+  <h2>Your data</h2>
+  <section class="data-export-explanation">
+    <p>
+      You can download a copy of everything Dress to Impress stores about your
+      account: your login info, item lists, outfits, and contributions. It's a
+      JSON file: not the prettiest to read, but a complete backup of your
+      account.
+    </p>
+  </section>
+  <%= f.submit "Download your data", name: nil %>
+<% end %>
+
+<%= form_with url: auth_user_path(@persisted_auth_user), method: :delete,
+    scope: :account_deletion, class: "settings-form delete-account-form",
+    data: {
+      turbo_confirm: "This will permanently delete your account " +
+        "\"#{@persisted_auth_user.name}\", including all your item lists " +
+        "and outfits. This can't be undone!\n\nAre you sure?"
+    } do |f| %>
+  <h2 id="delete-account">Delete your account</h2>
+  <% if @deletion_error %>
+    <div class="error-explanation" role="alert" data-turbo-cache="false">
+      <%= @deletion_error %>
+    </div>
+  <% end %>
+  <section class="delete-account-explanation">
+    <p>
+      This permanently deletes your Dress to Impress account, along with your
+      item lists, outfits, and Neopets connections. We can't undo this, so we
+      recommend <%= link_to "downloading your data", export_auth_user_path,
+      data: {turbo: false} %> first!
+    </p>
+    <p>
+      If you helped model items or pets, that customization data stays on DTI
+      for everyone to use, but it won't be connected to you anymore. If you
+      donated, we keep the donation in our records, but remove your name and
+      email from it.
+    </p>
+  </section>
+
+  <% if @persisted_auth_user.user&.support_staff? %>
+    <p>
+      Support staff accounts can't be deleted from here. Ask Matchu to remove
+      your support access first.
+    </p>
+  <% else %>
+    <fieldset>
+      <div class="field">
+        <%= f.label :confirm_name, "Type your username to confirm" %>
+        <span class="hint">
+          Your username is <strong><%= @persisted_auth_user.name %></strong>.
+        </span>
+        <br />
+        <%# If the last attempt failed, focus here, to scroll the error into
+            view. %>
+        <%= f.text_field :confirm_name, autocomplete: "off",
+          value: nil, spellcheck: false, autofocus: @deletion_error.present? %>
+      </div>
+
+      <% if @persisted_auth_user.uses_password? %>
+        <div class="field">
+          <%= f.label :current_password %>
+          <br />
+          <%= f.password_field :current_password,
+            autocomplete: "current-password" %>
+        </div>
+      <% else %>
+        <p class="hint">
+          Your account doesn't have a password, so for safety, you'll need to
+          have logged in with NeoPass within the last 30 minutes.
+        </p>
+      <% end %>
+    </fieldset>
+
+    <div class="actions">
+      <%= f.submit "Permanently delete your account", class: "danger" %>
+    </div>
+  <% end %>
+<% end %>
+
+<%# After a failed submission, Turbo normally scrolls to the top of the page,
+    which hides errors for the forms further down (like account deletion).
+    Instead, keep the scroll position where the user submitted from. %>
+<% if @deletion_error.present? || @auth_user.errors.any? %>
+  <% content_for :meta do %>
+    <meta name="turbo-refresh-scroll" content="preserve">
   <% end %>
 <% end %>
 
