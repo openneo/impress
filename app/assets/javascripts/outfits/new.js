@@ -32,7 +32,7 @@
 	var defaultPreviewUrl = img_el.attr("src");
 
 	preview_el.click(function () {
-		Preview.Job.current.visit();
+		if (Preview.Job.current) Preview.Job.current.visit();
 	});
 
 	var Preview = {
@@ -187,8 +187,10 @@
 
 		img_el
 			.load(function () {
-				if (Preview.Job.current.loading) {
-					Preview.Job.loading = false;
+				// The default preview image can finish loading before any job has
+				// started, so there may not be a current job yet.
+				if (Preview.Job.current && Preview.Job.current.loading) {
+					Preview.Job.current.loading = false;
 					Preview.Job.current.increaseQualityIfPossible();
 					preview_el
 						.removeClass("loading")
@@ -198,8 +200,8 @@
 				}
 			})
 			.error(function () {
-				if (Preview.Job.current.loading) {
-					Preview.Job.loading = false;
+				if (Preview.Job.current && Preview.Job.current.loading) {
+					Preview.Job.current.loading = false;
 					Preview.Job.current.notFound();
 				}
 			});
