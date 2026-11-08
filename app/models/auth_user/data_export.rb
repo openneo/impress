@@ -5,12 +5,12 @@
 # This is offered from the Settings page (and before account deletion), and is
 # also what support uses via `rake users:export`, so it's important that it be
 # *complete*. If you add a new table that stores user data, add it here, and
-# also to `AccountDeletion`!
+# also to `AuthUser::Deletion`!
 #
 # Things we intentionally leave out: password hashes and salts, and the tokens
 # Devise uses for "remember me" and password resets. Those are credentials, not
 # data about you, and they're no use outside DTI anyway.
-class AccountExport
+class AuthUser::DataExport
   FORMAT_VERSION = 1
 
   def initialize(auth_user)

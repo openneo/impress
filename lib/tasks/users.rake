@@ -40,7 +40,7 @@ namespace :users do
   end
 
   def write_export(auth_user)
-    export = AccountExport.new(auth_user)
+    export = AuthUser::DataExport.new(auth_user)
     dir = Rails.root.join("tmp", "account-exports")
     FileUtils.mkdir_p(dir)
     path = dir.join(export.filename)
@@ -60,7 +60,7 @@ namespace :users do
   task :delete, [:name_or_email] => :environment do |_, args|
     auth_user = find_auth_user!(args[:name_or_email])
     describe_auth_user(auth_user)
-    AccountDeletion.new(auth_user).check_allowed!
+    AuthUser::Deletion.new(auth_user).check_allowed!
 
     puts "Wrote export to #{write_export(auth_user)}"
 
@@ -71,7 +71,7 @@ namespace :users do
       next
     end
 
-    result = AccountDeletion.new(auth_user).call
+    result = AuthUser::Deletion.new(auth_user).call
     puts "Deleted #{result.name.inspect}:"
     result.counts.each { |kind, count| puts "  - #{kind}: #{count}" }
     puts "\nOnce you've sent the export to them, delete it from tmp/account-exports!"

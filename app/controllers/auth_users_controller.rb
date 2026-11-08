@@ -20,7 +20,7 @@ class AuthUsersController < ApplicationController
 	end
 
 	def export
-		export = AccountExport.new(current_auth_user)
+		export = AuthUser::DataExport.new(current_auth_user)
 		send_data export.to_json, filename: export.filename,
 			type: "application/json", disposition: "attachment"
 	end
@@ -35,12 +35,12 @@ class AuthUsersController < ApplicationController
 			return
 		end
 
-		result = AccountDeletion.new(@auth_user).call
+		result = AuthUser::Deletion.new(@auth_user).call
 		sign_out :auth_user
 		flash[:notice] = "Your account \"#{result.name}\" has been deleted. " +
 			"Thank you for spending time with us, and take care! 💜"
 		redirect_to root_path
-	rescue AccountDeletion::NotAllowed => error
+	rescue AuthUser::Deletion::NotAllowed => error
 		@deletion_error = error.message
 		render action: :edit, status: :unprocessable_entity
 	end

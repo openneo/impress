@@ -1,7 +1,7 @@
-require_relative '../rails_helper'
-require_relative '../support/account_data_helpers'
+require_relative '../../rails_helper'
+require_relative '../../support/account_data_helpers'
 
-RSpec.describe AccountDeletion, :account_data do
+RSpec.describe AuthUser::Deletion, :account_data do
   fixtures :colors, :species, :pet_types
 
   let(:auth_user) { create_account("doomed") }
@@ -108,7 +108,7 @@ RSpec.describe AccountDeletion, :account_data do
     user.update!(support_staff: true)
 
     expect { described_class.new(auth_user).call }.
-      to raise_error(AccountDeletion::NotAllowed)
+      to raise_error(AuthUser::Deletion::NotAllowed)
     expect(AuthUser.where(id: auth_user.id)).to exist
   end
 

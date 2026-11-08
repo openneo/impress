@@ -66,10 +66,12 @@ app/
 │   ├── swf_asset.rb                # Visual layers (biology/object)
 │   ├── outfit.rb                   # Saved outfits + rendering logic (visible_layers)
 │   ├── alt_style.rb                # Alternative pet appearances (Nostalgic, etc.)
-│   └── pet/
-│       └── modeling_snapshot.rb    # Processes Neopets API data into models
+│   ├── pet/
+│   │   └── modeling_snapshot.rb    # Processes Neopets API data into models
+│   └── auth_user/
+│       └── deletion.rb             # Account deletion (domain logic lives here, by model)
 │
-├── services/
+├── services/                       # Clients for EXTERNAL services only (see its README)
 │   ├── neopets/
 │   │   ├── custom_pets.rb          # Neopets AMF/Flash API client (pet data)
 │   │   ├── nc_mall.rb              # NC Mall item scraping

@@ -1,7 +1,7 @@
-require_relative '../rails_helper'
-require_relative '../support/account_data_helpers'
+require_relative '../../rails_helper'
+require_relative '../../support/account_data_helpers'
 
-RSpec.describe AccountExport, :account_data do
+RSpec.describe AuthUser::DataExport, :account_data do
   fixtures :colors, :species, :pet_types
 
   let(:auth_user) { create_account("Exporter") }
