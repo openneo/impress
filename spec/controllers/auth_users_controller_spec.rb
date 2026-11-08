@@ -13,6 +13,23 @@ RSpec.describe AuthUsersController, :account_data, type: :controller do
     @request.env["devise.mapping"] = Devise.mappings[:auth_user]
   end
 
+  describe "PUT #update, when it fails" do
+    before { sign_in auth_user, scope: :auth_user }
+
+    it "gives the view the saved account, not the unsaved changes" do
+      put :update, params: {id: auth_user.id, auth_user: {name: "typedname",
+        password: "newpassword", password_confirmation: "mismatch",
+        current_password: "password123"}}
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(assigns(:auth_user).name).to eq "typedname"
+      persisted = assigns(:persisted_auth_user)
+      expect(persisted).to be_persisted
+      expect(persisted.name).to eq "leaving"
+      expect(persisted.user).to eq auth_user.user
+    end
+  end
+
   describe "GET #export" do
     it "downloads the signed-in user's data as JSON" do
       sign_in auth_user, scope: :auth_user
@@ -106,6 +123,7 @@ RSpec.describe AuthUsersController, :account_data, type: :controller do
         delete_account(confirm_name: "neopassuser", current_password: "")
 
         expect(AuthUser.where(id: auth_user.id)).to exist
+        expect(assigns(:deletion_error)).to include("log back in")
       end
 
       it "refuses if this session has no login time recorded" do
@@ -113,6 +131,7 @@ RSpec.describe AuthUsersController, :account_data, type: :controller do
         delete_account(confirm_name: "neopassuser", current_password: "")
 
         expect(AuthUser.where(id: auth_user.id)).to exist
+        expect(assigns(:deletion_error)).to include("log back in")
       end
     end
 

@@ -139,14 +139,11 @@
   <%= f.submit "Download your data", name: nil %>
 <% end %>
 
-<%# NOTE: These sections use `current_auth_user` rather than
-    `@persisted_auth_user`, because after a failed update, the latter is an
-    unsaved copy with no ID. %>
-<%= form_with url: auth_user_path(current_auth_user), method: :delete,
+<%= form_with url: auth_user_path(@persisted_auth_user), method: :delete,
     scope: :account_deletion, class: "settings-form delete-account-form",
     data: {
       turbo_confirm: "This will permanently delete your account " +
-        "\"#{current_auth_user.name}\", including all your item lists " +
+        "\"#{@persisted_auth_user.name}\", including all your item lists " +
         "and outfits. This can't be undone!\n\nAre you sure?"
     } do |f| %>
   <h2 id="delete-account">Delete your account</h2>
@@ -170,7 +167,7 @@
     </p>
   </section>
 
-  <% if current_auth_user.user&.support_staff? %>
+  <% if @persisted_auth_user.user&.support_staff? %>
     <p>
       Support staff accounts can't be deleted from here. Ask Matchu to remove
       your support access first.
@@ -180,7 +177,7 @@
       <div class="field">
         <%= f.label :confirm_name, "Type your username to confirm" %>
         <span class="hint">
-          Your username is <strong><%= current_auth_user.name %></strong>.
+          Your username is <strong><%= @persisted_auth_user.name %></strong>.
         </span>
         <br />
         <%# If the last attempt failed, focus here, to scroll the error into
@@ -189,7 +186,7 @@
           value: nil, spellcheck: false, autofocus: @deletion_error.present? %>
       </div>
 
-      <% if current_auth_user.uses_password? %>
+      <% if @persisted_auth_user.uses_password? %>
         <div class="field">
           <%= f.label :current_password %>
           <br />

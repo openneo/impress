@@ -56,10 +56,11 @@ class AuthUsersController < ApplicationController
 		# password" field, instead of getting thrown off if the password changed
 		# but the record didn't get saved.
 		#
-		# HACK: Is there a way to get the kind of copy we want for real? `dup`
-		#       actually returns a *new* unsaved record with the same attributes.
+		# NOTE: We load a separate copy from the database, rather than `dup`,
+		#       because `dup` returns a *new* unsaved record with no ID, which
+		#       breaks links and associations (like `.user`) in the view.
 		@auth_user = load_auth_user
-		@persisted_auth_user = @auth_user.dup
+		@persisted_auth_user = AuthUser.find(@auth_user.id)
 
 		if @auth_user.update_with_password(auth_user_params)
 			# NOTE: Changing the password will sign you out, so make sure we stay

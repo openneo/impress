@@ -5,6 +5,11 @@
 #
 # This runs for real logins (password, NeoPass, and remember-me cookies), but
 # not for loading an existing session on each request.
+#
+# NOTE: Because remember-me cookie logins count too, this means "this browser
+#       proved it's you recently", with up to a remember-me period of slack.
+#       That's fine for NeoPass-only accounts today, since NeoPass login
+#       doesn't set remember-me, but keep it in mind if you reuse this!
 Warden::Manager.after_authentication do |record, warden, options|
   warden.session(options[:scope])["authenticated_at"] = Time.now.to_i
 end
