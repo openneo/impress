@@ -130,12 +130,45 @@ RSpec.describe AuthUser::Deletion, :account_data do
     allow(deletion).to receive(:in_batches_of_ids).and_wrap_original do |m, ids, &block|
       m.call(ids, batch_size: 2, &block)
     end
-    result = deletion.call
+    statements = []
+    callback = ->(*, payload) { statements << payload[:sql] }
+    result = ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+      deletion.call
+    end
 
+    # 4 outfits in batches of 2 means 2 statements each.
+    expect(statements.grep(/\ADELETE FROM `item_outfit_relationships`/).size).to eq 2
+    expect(statements.grep(/\AUPDATE `donation_features`/).size).to eq 2
     expect(result.counts[:outfits]).to eq 4
     expect(result.counts[:item_outfit_relationships]).to eq 5
     expect(Outfit.where(id: extra.map(&:id))).not_to exist
     expect(bystander.outfits.count).to eq 1
+  end
+
+  it "retries once if it's picked as a deadlock victim" do
+    deletion = described_class.new(auth_user)
+    attempts = 0
+    allow(deletion).to receive(:delete_user_data!).and_wrap_original do |m|
+      attempts += 1
+      raise ActiveRecord::Deadlocked, "Deadlock found" if attempts == 1
+      m.call
+    end
+
+    result = deletion.call
+
+    expect(attempts).to eq 2
+    expect(result.counts[:outfits]).to eq 1
+    expect(AuthUser.where(id: auth_user.id)).not_to exist
+  end
+
+  it "gives up after a second deadlock, leaving everything in place" do
+    deletion = described_class.new(auth_user)
+    allow(deletion).to receive(:delete_user_data!).
+      and_raise(ActiveRecord::Deadlocked, "Deadlock found")
+
+    expect { deletion.call }.to raise_error(ActiveRecord::Deadlocked)
+    expect(deletion).to have_received(:delete_user_data!).twice
+    expect(AuthUser.where(id: auth_user.id)).to exist
   end
 
   it "refuses to delete support staff" do

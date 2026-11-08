@@ -96,6 +96,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_08_120000) do
     t.integer "donation_id", null: false
     t.integer "outfit_id"
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["donation_id"], name: "index_donation_features_on_donation_id"
+    t.index ["outfit_id"], name: "index_donation_features_on_outfit_id"
   end
 
   create_table "donations", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|
@@ -108,6 +110,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_08_120000) do
     t.string "secret"
     t.datetime "updated_at", precision: nil, null: false
     t.integer "user_id"
+    t.index ["user_id"], name: "index_donations_on_user_id"
   end
 
   create_table "item_outfit_relationships", charset: "utf8mb4", collation: "utf8mb4_unicode_520_ci", force: :cascade do |t|

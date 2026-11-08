@@ -43,10 +43,12 @@ class AuthUser::Deletion
     check_allowed!
 
     counts = {}
-    AuthRecord.transaction do
-      ApplicationRecord.transaction do
-        counts = delete_user_data! if @user.present?
-        @auth_user.destroy!
+    with_one_retry_on_deadlock do
+      AuthRecord.transaction do
+        ApplicationRecord.transaction do
+          counts = @user.present? ? delete_user_data! : {}
+          @auth_user.destroy!
+        end
       end
     end
 
@@ -64,12 +66,14 @@ class AuthUser::Deletion
     # Lock the user's outfits (`SELECT ... FOR UPDATE`), so an outfit they save
     # partway through can't slip past us: InnoDB also locks the gap in the
     # `user_id` index, which blocks new outfits for this user until we commit.
+    # (The gap lock can briefly block new outfits for neighboring user IDs too,
+    # but only for the moment this transaction takes.)
     #
     # NOTE: We use a list of IDs, rather than an `IN (SELECT ...)` subquery!
     #       MariaDB (before 11.1) can't optimize a subquery in a single-table
     #       UPDATE or DELETE, so it scans the *entire* table instead, locking
     #       every row as it goes. For `item_outfit_relationships`, that took
-    #       minutes in production, and blocked other people's outfit saves.
+    #       minutes in production, and could block other people's outfit saves.
     outfit_ids = Outfit.where(user_id:).lock.pluck(:id)
 
     counts = {}
@@ -101,6 +105,22 @@ class AuthUser::Deletion
     counts[:users] = User.where(id: user_id).delete_all
 
     counts
+  end
+
+  # Deletion locks the user's outfits, then their items. Saving changes to an
+  # existing outfit can take those locks in the opposite order, so if the user
+  # saves an outfit at just the wrong moment, the database may pick us as a
+  # deadlock victim. Everything rolls back cleanly when that happens, so we
+  # just try once more.
+  def with_one_retry_on_deadlock
+    attempts = 0
+    begin
+      attempts += 1
+      yield
+    rescue ActiveRecord::Deadlocked
+      raise if attempts >= 2
+      retry
+    end
   end
 
   # Runs the block on slices of the given IDs, so a user with many thousands
