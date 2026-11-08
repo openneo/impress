@@ -104,6 +104,73 @@ RSpec.describe AuthUser::Deletion, :account_data do
       neopets_connections: 1, users: 1, donations_detached: 1)
   end
 
+  it "doesn't use IN (SELECT ...) subqueries in UPDATE or DELETE statements" do
+    # MariaDB (before 11.1) can't optimize these, and scans (and locks!) the
+    # whole table instead. On tiny test tables that's invisible, so we check
+    # the SQL itself. See the NOTE in `AuthUser::Deletion#delete_user_data!`.
+    statements = []
+    callback = ->(*, payload) { statements << payload[:sql] }
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+      described_class.new(auth_user).call
+    end
+
+    writes = statements.grep(/\A\s*(UPDATE|DELETE)/i)
+    expect(writes).not_to be_empty
+    expect(writes.grep(/IN\s*\(\s*SELECT/i)).to be_empty
+  end
+
+  it "handles users with more outfits than one batch" do
+    pet_state = records[:outfit].pet_state
+    extra = 3.times.map do |i|
+      Outfit.create!(user: user, name: "Extra #{i}", pet_state: pet_state,
+        worn_items: [records[:hat]])
+    end
+
+    deletion = described_class.new(auth_user)
+    allow(deletion).to receive(:in_batches_of_ids).and_wrap_original do |m, ids, &block|
+      m.call(ids, batch_size: 2, &block)
+    end
+    statements = []
+    callback = ->(*, payload) { statements << payload[:sql] }
+    result = ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+      deletion.call
+    end
+
+    # 4 outfits in batches of 2 means 2 statements each.
+    expect(statements.grep(/\ADELETE FROM `item_outfit_relationships`/).size).to eq 2
+    expect(statements.grep(/\AUPDATE `donation_features`/).size).to eq 2
+    expect(result.counts[:outfits]).to eq 4
+    expect(result.counts[:item_outfit_relationships]).to eq 5
+    expect(Outfit.where(id: extra.map(&:id))).not_to exist
+    expect(bystander.outfits.count).to eq 1
+  end
+
+  it "retries once if it's picked as a deadlock victim" do
+    deletion = described_class.new(auth_user)
+    attempts = 0
+    allow(deletion).to receive(:delete_user_data!).and_wrap_original do |m|
+      attempts += 1
+      raise ActiveRecord::Deadlocked, "Deadlock found" if attempts == 1
+      m.call
+    end
+
+    result = deletion.call
+
+    expect(attempts).to eq 2
+    expect(result.counts[:outfits]).to eq 1
+    expect(AuthUser.where(id: auth_user.id)).not_to exist
+  end
+
+  it "gives up after a second deadlock, leaving everything in place" do
+    deletion = described_class.new(auth_user)
+    allow(deletion).to receive(:delete_user_data!).
+      and_raise(ActiveRecord::Deadlocked, "Deadlock found")
+
+    expect { deletion.call }.to raise_error(ActiveRecord::Deadlocked)
+    expect(deletion).to have_received(:delete_user_data!).twice
+    expect(AuthUser.where(id: auth_user.id)).to exist
+  end
+
   it "refuses to delete support staff" do
     user.update!(support_staff: true)
 
