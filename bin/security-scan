@@ -11,13 +11,13 @@
 #   - JS packages: `yarn npm audit` against yarn.lock, minus
 #     .security-scan-ignore.yml.
 #   - News: the Rails security announcements feed and the Ruby news feed, for
-#     posts in the last --since hours (default 48). Rails and Ruby themselves
+#     posts in the last --since hours (default 168, one week). Rails and Ruby themselves
 #     aren't in Gemfile.lock the same way gems are, so this is how we hear
 #     about them.
 #
 # Options:
-#   --since HOURS  How far back to look in the news feeds (default 48, so a
-#                  daily scan has overlap if a run is late or missed).
+#   --since HOURS  How far back to look in the news feeds (default 168). Posts
+#                  we've reviewed go in .security-scan-ignore.yml's `feeds:`.
 #   --osv          Look up each finding on api.osv.dev, to add CVE aliases and
 #                  the versions that fix it.
 #   --no-update    Don't refresh the Ruby advisory database first.
@@ -26,14 +26,34 @@
 #   0  All clear: nothing new.
 #   1  New findings (see "findings"; check "errors" too).
 #   2  No new findings, but some check failed, so the scan is incomplete.
+#   Anything else means the script itself broke; treat it like 2.
 #
 # Each JS finding has a "scope": "production" if it's reachable through our
 # dependencies, or "development" if only through devDependencies (build and
 # lint tooling that never runs in production or ships to browsers). Ruby
 # findings have the same, based on Gemfile groups.
 
-require "bundler/setup"
 require "json"
+
+# If we can't even load our dependencies, still say so in the same JSON shape,
+# so an unattended caller never mistakes a crash for a result.
+def security_scan_crashed!(error)
+	puts JSON.pretty_generate(
+		status: "incomplete",
+		findings: [],
+		errors: [{ check: "startup", error: "#{error.class}: #{error.message}" }],
+	)
+	exit 2
+end
+
+begin
+	ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../Gemfile", __dir__)
+	require "bundler/setup"
+	require "bundler/audit/database"
+rescue StandardError, LoadError, SystemExit => e
+	security_scan_crashed!(e)
+end
+
 require "net/http"
 require "nokogiri"
 require "open3"
@@ -51,6 +71,7 @@ module SecurityScan
 	RUBY_FEED_URL = "https://www.ruby-lang.org/en/feeds/news.rss"
 	OSV_URL = "https://api.osv.dev/v1/vulns/"
 	SECURITY_WORDS = /security|CVE-\d|vulnerab/i
+	MAX_ADVISORY_DB_AGE_DAYS = 7
 
 	class Scan
 		attr_reader :findings, :notes, :errors, :stale_ignores, :ignored_count
@@ -90,7 +111,11 @@ module SecurityScan
 			{
 				status: status,
 				scanned_at: Time.now.utc.iso8601,
-				versions: { ruby: ruby_version, rails: locked_version("rails") },
+				versions: {
+					ruby: ruby_version,
+					rails: locked_version("rails"),
+					ruby_advisory_db: @advisory_db_updated_at&.utc&.iso8601,
+				},
 				findings: @findings,
 				ignored: @ignored_count,
 				stale_ignores: @stale_ignores,
@@ -115,6 +140,16 @@ module SecurityScan
 			if @update
 				_out, err, st = Open3.capture3("bundle", "exec", "bundle-audit", "update", chdir: ROOT)
 				raise "bundle-audit update failed: #{err.strip}" unless st.success?
+			end
+
+			@advisory_db_updated_at = Bundler::Audit::Database.new.last_updated_at
+			if @advisory_db_updated_at.nil? ||
+					@advisory_db_updated_at < Time.now - MAX_ADVISORY_DB_AGE_DAYS * 86400
+				@errors << {
+					check: "bundler-audit",
+					error: "Ruby advisory database is stale (last updated " \
+						"#{@advisory_db_updated_at || "never"}); gem results may be missing advisories.",
+				}
 			end
 
 			# Run with an empty config so we see everything, then apply the ignore
@@ -147,7 +182,8 @@ module SecurityScan
 					}
 					next
 				end
-				next unless result["type"] == "unpatched_gem"
+				# Don't silently skip result types we don't understand.
+				raise "unknown bundle-audit result type: #{result["type"].inspect}" unless result["type"] == "unpatched_gem"
 
 				gem = result.fetch("gem")
 				adv = result.fetch("advisory")
@@ -178,15 +214,21 @@ module SecurityScan
 				}
 			end
 
-			(ignores - seen).each do |id|
-				@stale_ignores << { file: ".bundler-audit.yml", id: id }
+			stale = ignores - seen
+			stale.each { |id| @stale_ignores << { file: ".bundler-audit.yml", id: id } }
+			# One stale entry just needs pruning. All of them at once more likely
+			# means the audit came back empty when it shouldn't have.
+			if ignores.size > 1 && stale.size == ignores.size
+				raise "every .bundler-audit.yml ignore is stale; did bundle-audit return results?"
 			end
 		end
 
 		## JS packages
 
 		def scan_js
-			all = yarn_audit("--all")
+			# (Yarn's --all means all workspaces, not all environments: the
+			# default environment is already "all".)
+			all = yarn_audit
 			production_keys = yarn_audit("--environment", "production").keys.to_set
 
 			config = YAML.safe_load_file(File.join(ROOT, ".security-scan-ignore.yml")) || {}
@@ -211,6 +253,12 @@ module SecurityScan
 				next if seen_dev_ids.include?(id)
 				@stale_ignores << { file: ".security-scan-ignore.yml", id: id }
 			end
+
+			total = ignores.size + dev_ignores.size
+			stale = @stale_ignores.count { |s| s[:file] == ".security-scan-ignore.yml" }
+			if total > 1 && stale == total
+				raise "every JS ignore entry is stale; did yarn npm audit return results?"
+			end
 		end
 
 		# Returns a hash of [advisory id, package name] => finding.
@@ -221,12 +269,12 @@ module SecurityScan
 				"COREPACK_ENABLE_DOWNLOAD_PROMPT" => "0",
 			}
 			yarn = system("which corepack > /dev/null 2>&1") ? %w[corepack yarn] : %w[yarn]
-			out, err, st = Open3.capture3(env, *yarn, "npm", "audit", "--recursive", "--json", *args, chdir: ROOT)
+			out, err, st = Open3.capture3(env, *yarn, "npm", "audit", "--all", "--recursive", "--json", *args, chdir: ROOT)
 
 			lines = out.lines.select { |line| line.start_with?("{") }
 			# Yarn exits 1 when it finds advisories, so only treat it as a failure
 			# if it also didn't give us any results.
-			if !st.success? && lines.empty? && !out.include?("No audit suggestions")
+			if !st.success? && lines.empty?
 				raise "yarn npm audit #{args.join(" ")} failed: #{(err + out).strip[0, 500]}"
 			end
 
@@ -306,7 +354,11 @@ module SecurityScan
 
 		def feed_items(url)
 			doc = Nokogiri::XML(http_get(url))
-			doc.css("item").map do |item|
+			# A challenge or maintenance page would otherwise parse as "no items".
+			raise "#{url} didn't return an RSS feed" unless doc.at_xpath("/rss/channel")
+			items = doc.xpath("/rss/channel/item")
+			raise "#{url} returned an empty feed" if items.empty?
+			items.map do |item|
 				{
 					title: item.at_css("title")&.text.to_s.strip,
 					link: item.at_css("link")&.text.to_s.strip,
@@ -357,14 +409,20 @@ module SecurityScan
 	end
 end
 
-options = { since_hours: 48, osv: false, update: true }
-OptionParser.new do |opts|
+options = { since_hours: 168, osv: false, update: true }
+parser = OptionParser.new do |opts|
 	opts.banner = "Usage: bin/security-scan [--since HOURS] [--osv] [--no-update]"
-	opts.on("--since HOURS", Float, "News lookback window in hours (default 48)") { |h| options[:since_hours] = h }
+	opts.on("--since HOURS", Float, "News lookback window in hours (default 168)") { |h| options[:since_hours] = h }
 	opts.on("--osv", "Add CVE aliases and fixed versions from api.osv.dev") { options[:osv] = true }
 	opts.on("--[no-]update", "Refresh the Ruby advisory database (default: yes)") { |u| options[:update] = u }
-end.parse!
+end
 
-scan = SecurityScan::Scan.new(**options).run
-puts JSON.pretty_generate(scan.to_h)
+begin
+	parser.parse!
+	scan = SecurityScan::Scan.new(**options).run
+	output = JSON.pretty_generate(scan.to_h)
+rescue StandardError => e
+	security_scan_crashed!(e)
+end
+puts output
 exit scan.exit_code
