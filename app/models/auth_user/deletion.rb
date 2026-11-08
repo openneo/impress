@@ -3,7 +3,8 @@
 # This is the one code path for account deletion: the self-serve button on the
 # Settings page uses it, and so does `rake users:delete` for support requests.
 # If you add a new table that stores user data, add it here, and also to
-# `AuthUser::DataExport`!
+# `AuthUser::DataExport`! (spec/models/auth_user/user_data_coverage_spec.rb
+# lists every user-data column we know about, and fails on new ones.)
 #
 # What we delete: the login account (in the `openneo_id` database), the user
 # record, item lists and the items in them, outfits, Neopets connections, and

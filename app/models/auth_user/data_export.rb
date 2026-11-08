@@ -5,7 +5,8 @@
 # This is offered from the Settings page (and before account deletion), and is
 # also what support uses via `rake users:export`, so it's important that it be
 # *complete*. If you add a new table that stores user data, add it here, and
-# also to `AuthUser::Deletion`!
+# also to `AuthUser::Deletion`! (spec/models/auth_user/user_data_coverage_spec.rb
+# lists every user-data column we know about, and fails on new ones.)
 #
 # Things we intentionally leave out: password hashes and salts, and the tokens
 # Devise uses for "remember me" and password resets. Those are credentials, not

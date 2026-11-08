@@ -6,6 +6,11 @@ class User < ApplicationRecord
   belongs_to :auth_user, foreign_key: :remote_id, inverse_of: :user
   delegate :disconnect_neopass, :uses_neopass?, to: :auth_user
 
+  # NOTE: When a user deletes their account, `AuthUser::Deletion` removes their
+  #       data, and `AuthUser::DataExport` lets them download it first. If you
+  #       add a new kind of user data, update both! (The spec
+  #       spec/models/auth_user/user_data_coverage_spec.rb will remind you, if
+  #       your new table has a `user_id` column or similar.)
   has_many :closet_hangers
   has_many :closet_lists
   has_many :closeted_items, through: :closet_hangers, source: :item
