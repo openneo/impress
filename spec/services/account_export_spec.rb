@@ -48,12 +48,27 @@ RSpec.describe AccountExport, :account_data do
     expect(export["neopets_connections"]).to contain_exactly(
       a_hash_including("neopets_username" => "exporter_np"))
     expect(export["donations"]).to contain_exactly(
-      a_hash_including("amount_in_cents" => 500))
+      a_hash_including("amount_in_cents" => 500,
+        "featured_outfit_ids" => [records[:outfit].id]))
+  end
+
+  it "still exports the login info if the user record is missing" do
+    User.where(id: user.id).delete_all
+    auth_user.reload
+
+    expect(export["account"]["name"]).to eq "exporter"
+    expect(export["profile"]).to be_nil
+    expect(export["items"]).to eq []
+    expect(export["outfits"]).to eq []
   end
 
   it "doesn't include other users' data" do
     json = described_class.new(auth_user).to_json
-    expect(json).not_to include("Other's Hat")
-    expect(json).not_to include("Other_np")
+    # (Usernames are stored lowercase, so that's what the helpers use.)
+    expect(json).to include("exporter's Hat")
+    expect(json).not_to include("other's Hat")
+    expect(json).not_to include("other_np")
+    expect(JSON.parse(json)["outfits"].map { |o| o["id"] }).
+      not_to include(bystander_records[:outfit].id)
   end
 end

@@ -42,6 +42,7 @@ RSpec.describe AuthUsersController, :account_data, type: :controller do
       expect(AuthUser.where(id: auth_user.id)).not_to exist
       expect(response).to redirect_to(root_path)
       expect(controller.current_auth_user).to be_nil
+      expect(flash[:notice]).to include("has been deleted")
     end
 
     it "accepts the username in a different case" do
@@ -78,19 +79,40 @@ RSpec.describe AuthUsersController, :account_data, type: :controller do
           provider: "neopass", uid: "np-123", neopass_email: "np@example.com")
       end
 
-      it "deletes the account if they signed in recently" do
-        auth_user.update!(current_sign_in_at: 5.minutes.ago)
+      def set_session_authenticated_at(time)
+        warden.session(:auth_user)["authenticated_at"] = time&.to_i
+      end
+
+      it "deletes the account if this session logged in recently" do
+        set_session_authenticated_at 5.minutes.ago
         delete_account(confirm_name: "neopassuser", current_password: "")
 
         expect(AuthUser.where(id: auth_user.id)).not_to exist
       end
 
-      it "refuses if they haven't signed in recently" do
-        auth_user.update!(current_sign_in_at: 2.hours.ago)
+      it "refuses if this session logged in a while ago" do
+        set_session_authenticated_at 2.hours.ago
         delete_account(confirm_name: "neopassuser", current_password: "")
 
         expect(AuthUser.where(id: auth_user.id)).to exist
         expect(assigns(:deletion_error)).to include("log back in")
+      end
+
+      it "refuses if a *different* session logged in recently, but not this one" do
+        # e.g. the owner just logged in on their phone, but this is an old
+        # session on a shared computer.
+        auth_user.update!(current_sign_in_at: 1.minute.ago)
+        set_session_authenticated_at 3.days.ago
+        delete_account(confirm_name: "neopassuser", current_password: "")
+
+        expect(AuthUser.where(id: auth_user.id)).to exist
+      end
+
+      it "refuses if this session has no login time recorded" do
+        set_session_authenticated_at nil
+        delete_account(confirm_name: "neopassuser", current_password: "")
+
+        expect(AuthUser.where(id: auth_user.id)).to exist
       end
     end
 

@@ -15,6 +15,8 @@ class AccountExport
 
   def initialize(auth_user)
     @auth_user = auth_user
+    # This *should* always be present, but if a previous deletion only got
+    # partway, it might not be! In that case, export what we have.
     @user = auth_user.user
   end
 
@@ -49,6 +51,7 @@ class AccountExport
       name: @auth_user.name,
       email: @auth_user.email,
       neopass_email: @auth_user.neopass_email,
+      neopass_id: @auth_user.uses_neopass? ? @auth_user.uid : nil,
       uses_password: @auth_user.uses_password?,
       uses_neopass: @auth_user.uses_neopass?,
       created_at: @auth_user.created_at,
@@ -61,6 +64,8 @@ class AccountExport
   end
 
   def profile_data
+    return nil if @user.nil?
+
     {
       id: @user.id,
       points: @user.points,
@@ -74,6 +79,8 @@ class AccountExport
   end
 
   def neopets_connections_data
+    return [] if @user.nil?
+
     @user.neopets_connections.order(:id).map do |connection|
       {
         neopets_username: connection.neopets_username,
@@ -83,6 +90,8 @@ class AccountExport
   end
 
   def item_lists_data
+    return [] if @user.nil?
+
     @user.closet_lists.order(:id).map do |list|
       {
         id: list.id,
@@ -97,6 +106,8 @@ class AccountExport
   end
 
   def items_data
+    return [] if @user.nil?
+
     @user.closet_hangers.includes(:item, :list).order(:id).map do |hanger|
       {
         item_id: hanger.item_id,
@@ -112,6 +123,8 @@ class AccountExport
   end
 
   def outfits_data
+    return [] if @user.nil?
+
     @user.outfits.
       includes(:alt_style, :worn_items, :closeted_items,
         pet_state: {pet_type: [:species, :color]}).
@@ -137,6 +150,8 @@ class AccountExport
   end
 
   def contributions_data
+    return [] if @user.nil?
+
     @user.contributions.order(:id).map do |contribution|
       {
         contributed_type: contribution.contributed_type,
@@ -147,11 +162,16 @@ class AccountExport
   end
 
   def donations_data
-    Fundraising::Donation.where(user_id: @user.id).order(:id).map do |donation|
+    return [] if @user.nil?
+
+    donations = Fundraising::Donation.where(user_id: @user.id).
+      includes(:features).order(:id)
+    donations.map do |donation|
       {
         amount_in_cents: donation.amount,
         donor_name: donation.donor_name,
         donor_email: donation.donor_email,
+        featured_outfit_ids: donation.features.map(&:outfit_id).compact,
         created_at: donation.created_at,
       }
     end

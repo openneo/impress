@@ -2,10 +2,29 @@ require_relative '../../rails_helper'
 require_relative '../../support/account_data_helpers'
 
 RSpec.describe "auth_users/edit", :account_data, type: :view do
-  def render_for(auth_user)
+  def render_for(auth_user, persisted_auth_user: auth_user)
+    allow(view).to receive(:current_auth_user).and_return(auth_user)
     assign(:auth_user, auth_user)
-    assign(:persisted_auth_user, auth_user)
+    assign(:persisted_auth_user, persisted_auth_user)
     render
+  end
+
+  it "renders after a failed update, when the persisted user is an unsaved copy" do
+    # This mirrors `AuthUsersController#update`, which `dup`s the record.
+    auth_user = create_account("Typo")
+    auth_user.email = "not an email"
+    render_for(auth_user, persisted_auth_user: auth_user.dup)
+
+    expect(rendered).to include("Permanently delete your account")
+    expect(rendered).to include(%(action="/auth_users/#{auth_user.id}"))
+  end
+
+  it "hides deletion from support staff, even after a failed update" do
+    auth_user = create_account("Staffer")
+    auth_user.user.update!(support_staff: true)
+    render_for(auth_user, persisted_auth_user: auth_user.dup)
+
+    expect(rendered).not_to include("Permanently delete your account")
   end
 
   it "offers data export and account deletion" do

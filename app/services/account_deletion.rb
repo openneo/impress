@@ -12,7 +12,8 @@
 # who contributed it.
 #
 # What we keep, but detach from the user: donation records (we need those for
-# our financial records), and NeoLogin cookies that support staff added.
+# our financial records, but we clear the donor's name and email), and
+# NeoLogin cookies that support staff added.
 #
 # The two databases can't share a transaction, so we nest them, and do all the
 # work in the innermost block: if anything raises, both roll back. The
@@ -58,13 +59,15 @@ class AccountDeletion
 
   def delete_user_data!
     user_id = @user.id
-    outfit_ids = Outfit.where(user_id:).pluck(:id)
+    # A subquery rather than a list of IDs, so we can't miss an outfit that
+    # gets saved partway through.
+    outfit_ids = Outfit.where(user_id:).select(:id)
 
     counts = {}
 
     # Detach records we keep from the data we're about to delete.
     counts[:donations_detached] = Fundraising::Donation.where(user_id:).
-      update_all(user_id: nil)
+      update_all(user_id: nil, donor_name: nil, donor_email: nil)
     counts[:donation_features_detached] = Fundraising::DonationFeature.
       where(outfit_id: outfit_ids).update_all(outfit_id: nil)
     counts[:neologin_cookies_detached] = NeologinCookie.

@@ -41,8 +41,34 @@ RSpec.describe AccountDeletion, :account_data do
   it "keeps donation records, but detaches them from the user and outfit" do
     described_class.new(auth_user).call
 
-    expect(records[:donation].reload.user_id).to be_nil
+    donation = records[:donation].reload
+    expect(donation.user_id).to be_nil
+    expect(donation.donor_name).to be_nil
+    expect(donation.donor_email).to be_nil
+    expect(donation.amount).to eq 500
     expect(records[:feature].reload.outfit_id).to be_nil
+  end
+
+  it "deletes legacy login cookies" do
+    connection = ApplicationRecord.connection
+    insert = "INSERT INTO login_cookies (user_id, series, token) VALUES (%d, 1, 2)"
+    connection.execute(insert % user.id)
+    connection.execute(insert % bystander.id)
+
+    described_class.new(auth_user).call
+
+    remaining = connection.select_values("SELECT user_id FROM login_cookies")
+    expect(remaining).to eq [bystander.id]
+  end
+
+  it "finishes the job if a previous deletion only removed the user record" do
+    User.where(id: user.id).delete_all
+    auth_user.reload
+
+    result = described_class.new(auth_user).call
+
+    expect(result.counts).to eq({})
+    expect(AuthUser.where(id: auth_user.id)).not_to exist
   end
 
   it "detaches NeoLogin cookies the user created" do
@@ -64,6 +90,9 @@ RSpec.describe AccountDeletion, :account_data do
     expect(bystander.contributions.count).to eq 1
     expect(bystander.neopets_connections.count).to eq 1
     expect(bystander_records[:donation].reload.user_id).to eq bystander.id
+    expect(bystander_records[:donation].donor_name).to eq "bystander"
+    expect(bystander_records[:feature].reload.outfit_id).
+      to eq bystander_records[:outfit].id
   end
 
   it "reports what it deleted" do

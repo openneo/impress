@@ -102,9 +102,12 @@ class AuthUsersController < ApplicationController
 		nil
 	end
 
+	# Whether *this session* logged in recently. (See the initializer
+	# `warden_authenticated_at.rb`, which records this.)
 	def signed_in_recently?(auth_user)
-		auth_user.current_sign_in_at.present? &&
-			auth_user.current_sign_in_at > RECENT_SIGN_IN_WINDOW.ago
+		authenticated_at = warden.session(:auth_user)["authenticated_at"]
+		authenticated_at.present? &&
+			Time.at(authenticated_at) > RECENT_SIGN_IN_WINDOW.ago
 	end
 
 	def auth_user_params
