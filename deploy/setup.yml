@@ -193,6 +193,10 @@
           - libyaml-dev
           - libvips-dev
 
+    - name: Install jemalloc, which the impress service uses as its memory allocator
+      apt:
+        name: libjemalloc2
+
     - name: Create the app folder
       file:
         path: /srv/impress

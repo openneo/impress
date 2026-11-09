@@ -11,14 +11,31 @@ Environment="RAILS_ENV=production"
 Environment="EXECJS_RUNTIME=Disabled"
 EnvironmentFile=/srv/impress/shared/production.env
 
-; Kill the app at 1.2GB of RAM.
-; NOTE: It's generally recommended to pair this with a `MemoryHigh` setting, to
-; try throttling memory usage before killing altogether. But at time of writing,
-; our app has a memory leak that causes it to always keep growing - and then the
-; throttling *successfully* keeps it within the RAM limits, just running very
-; slowly. Instead, let's always reboot it when it gets too high, and hopefully
-; find and fix that leak sometime!
-MemoryMax=1.2G
+; Run 6 Falcon workers (one per core on our 6-core box), and kill the app if
+; they use more than 4GB of RAM in total. These two numbers are coupled, so
+; change them together!
+;
+; Each worker settles around 225MB once warm (more like 300MB with YJIT), so 6
+; workers need ~1.4–1.8GB. On top of that, a single worker can spike by
+; ~500MB when serving several big unpaginated pages at once (e.g. large
+; closets, or the sitemap), and only gives part of that back afterward. 4GB
+; leaves room for that, on a 16GB box that also runs MariaDB.
+;
+; History: In 2023 we set a 1.2GB cap here, to work around what looked like a
+; memory leak, back when the app was a single Puma process. Later, Falcon
+; started forking one worker per core, which put the app's *healthy* memory
+; usage above that cap, so it got killed a few times a week. A long load test
+; in late 2026 showed no leak: each worker's memory stayed flat. So this cap
+; is now a safety net for runaway spikes, not a leak workaround. If it starts
+; getting hit, that's worth investigating!
+Environment="FALCON_COUNT=6"
+MemoryMax=4G
+
+; Use jemalloc as the memory allocator, instead of glibc's malloc. glibc tends
+; to hold onto a process's peak memory usage after a spike; jemalloc gives
+; more of it back to the system. (If the library is missing, the dynamic
+; linker prints a warning and falls back to glibc, so this fails safe.)
+Environment="LD_PRELOAD=libjemalloc.so.2"
 
 ; Some security directives, adapted from Akkoma's service file, they seem like sensible defaults!
 ; Use private /tmp and /var/tmp folders inside a new file system namespace, which are discarded after the process stops.
