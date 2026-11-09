@@ -1,7 +1,7 @@
 Dress to Impress is deployed to a VPS server. We use this Ansible Playbook to
 automate the environment setup!
 
-We expect to be deploying to Ubuntu 20.04 LTS, initially with nothing
+We expect to be deploying to Ubuntu 22.04 LTS, initially with nothing
 installed. The user you deploy with should have sudoers access. That should be
 all it takes!
 

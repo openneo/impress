@@ -156,7 +156,7 @@ Rolls back to a previous deployment. This doesn't undo database migrations.
 ## Server Details
 
 - **Host:** `impress.openneo.net`
-- **OS:** Ubuntu 20.04 LTS
+- **OS:** Ubuntu 22.04 LTS
 - **Ruby:** 3.4.5
 - **App location:** `/srv/impress/`
 - **Deploy user:** `impress`
