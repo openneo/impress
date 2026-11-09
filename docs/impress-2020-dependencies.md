@@ -96,13 +96,38 @@ What's still on Impress 2020:
 
   Assets don't change once published, so the replacement doesn't need to render
   on request. Instead: render each library once with headless Chromium against
-  Rails' own `swf_assets#show` page, store the PNG on disk next to the media
+  Rails' own `swf_assets#show` page, store the result on disk next to the media
   archive, and have `image_url` prefer that file. Backfill in the background,
-  with the 24,723 no-fallback assets first and the rest after. At the 1–3 seconds
-  per render Impress 2020 sees, one worker gets through everything in a few days.
-  New assets get rendered when they're modeled. After that, there's no
-  Chromium anywhere in the request path. Before starting, check the disk budget:
-  the renders will plausibly add up to about 10 GB at 600×600.
+  with the 24,723 no-fallback assets first and the rest after. New assets get
+  rendered when they're modeled. After that, there's no Chromium anywhere in
+  the request path.
+
+  **Storage format: WebP near-lossless, quality 60** (decided November 2026).
+  A spot check rendered 5 real canvas movies (first frame, 600×600,
+  transparent, via the real `swf_assets/show.js`). Painted backgrounds are
+  heavy, so the average was 207 KB as plain PNG, about 22.8 GB for the whole
+  catalog.
+
+  | Format | Size vs PNG | Projected total | Worst pixel shift |
+  |---|---|---|---|
+  | PNG, as rendered | 100% | 22.8 GB | exact |
+  | WebP lossless | 72% | 16.3 GB | exact |
+  | **WebP near-lossless 60** | **49%** | **11.2 GB** | **4 / 255** |
+  | PNG 256-color | 28% | 6.4 GB | 125 / 255 |
+  | WebP lossy q95 | 29% | 6.7 GB | 99 / 255 |
+  | JPEG XL d1.0 | 19% | 4.4 GB | 150 / 255 |
+
+  Near-lossless bounds how far any pixel can move, so it can't smear ink lines
+  or band gradients, and it looks identical while halving storage. The 256-color
+  palette looked fine on this small sample, but its worst-case pixel shifts on
+  painted backgrounds made the extra ~5 GB of savings not worth the risk. In
+  libvips: `webpsave(lossless: true, near_lossless: true, Q: 60, effort: 6)`,
+  about 200 ms per image. `OutfitImageRenderer` currently loads only PNGs (as
+  hardening), so it needs to accept these locally generated WebP files too.
+
+  Rendering took about 1.2 seconds per asset (about 4,100 per hour with two
+  browser tabs, measured off-box), so a full backfill takes about a day. The
+  box has about 80 GB free; the whole media archive is 6.2 GB.
 
   The same pipeline can also cover the **2,410 SVG-only assets** (2,373 of them
   pet layers). `OutfitImageRenderer` only draws PNGs, so any of these without a
@@ -243,37 +268,34 @@ era and is out of date, so don't port it verbatim:
 So: write a shorter, current policy as a Rails page (next to `about#terms`),
 not a port.
 
-## Plan
+## Work breakdown
 
-**Phase 1: wardrobe data.** No user-visible change.
-- Rails endpoints for:
-  - species, colors and zones (or embed them in the page)
-  - valid poses (same binary format as `/api/validPetPoses`)
-  - pet appearance by species/color/pose and by ID
-  - outfit item metadata and zone conflicts
-- Switch the core wardrobe queries to those endpoints. After this, Apollo is
-  only used by support tools.
-- Remove the "DTI 2020" item-page link. Write the new privacy page.
-- Fix or remove the "prefer archive" toggle.
+Each row is meant to be one PR, small enough for one agent session. Rows in the
+same wave can run in parallel. Each PR should keep the wardrobe working while
+Impress 2020 is still up, so they can land and deploy in any order within a
+wave.
 
-**Phase 2: support tools.** Remove the Impress 2020 support UI and
-`useSupport`/`support_secret`. Rebuild "remove layer from item" in Rails. Then
-Apollo and `graphql` can leave the bundle entirely.
+### Wave 1: independent
 
-**Phase 3: images.**
-- Serve `/outfits/:id/v/:updated_at/:size.png` (and the unversioned form) from
-  Rails via `OutfitImageRenderer`.
-- Replace the canvas-movie PNG fallback with render-once-and-cache.
-- Point `Outfit#image_versions` and `OutfitThumbnail.js` at the new path, then
-  repoint the `outfits.openneo-assets.net` CDN origin at Rails. Keep the
-  hostname, because of embeds.
-- Port `/asset-images/…` (the `assetImageRedirect` logic) to Rails, then move
-  `impress-asset-images.openneo.net` DNS to Rails.
+| # | PR | Size | Scope |
+|---|---|---|---|
+| 1 | Species, color, zone and pose data | S | Rails serves the valid-poses bitfield (byte-for-byte the same format as Impress 2020's `/api/validPetPoses`, since dti.py parses it) plus species, colors and zones (as JSON, or embedded in the wardrobe page). Switch `SpeciesColorPicker` (`SpeciesColorPicker` query and `validPetPoses` fetch) and `SearchToolbar` (`SearchToolbarZones`) to them. |
+| 2 | Pet appearance endpoints | M | Rails endpoints for pet appearance by species/color/pose and by ID, with layers and available poses. Switch `OutfitPetAppearance`, `OutfitPetAppearanceById` (`useOutfitAppearance.js`) and `PosePicker` (`PosePicker.js`, not including its support mode). |
+| 3 | Saved outfit images in Rails | M | Serve `/outfits/:id/v/:updated_at/:size.png` (150/300/600, plus the unversioned form) from `OutfitImageRenderer`, with long-lived cache headers on the versioned form. Point `Outfit#image_versions` and `OutfitThumbnail.js` at it. Canvas-movie layers still come from Impress 2020 until #5 lands, which is fine. Afterward: repoint the `outfits.openneo-assets.net` CDN origin (manual). |
+| 4 | `/asset-images/…` redirect | S | Port Impress 2020's `/asset-images/:type/:x1/:x2/:x3/:remoteId/:idealSize.png` → `assetImageRedirect` logic to a Rails route. Afterward: move `impress-asset-images.openneo.net` DNS (manual). |
+| 5 | Render pipeline for canvas movies | L | Render each canvas movie once with headless Chromium against `swf_assets#show`, store it as WebP near-lossless 60 next to the media archive, and have `SwfAsset#image_url` prefer it over Impress 2020. Let `OutfitImageRenderer` load these WebP files. Add a backfill rake task (no-fallback assets first), render newly modeled assets, and install Chromium via `deploy/setup.yml`. Optionally also rasterize SVG-only assets. |
+| 6 | Small cleanups | S | Remove the "DTI 2020" item-page link (and its helper and locale key), remove the broken "prefer archive" toggle, and draft a new Rails privacy page from the [Privacy policy](#privacy-policy) table, replacing the `/privacy` redirect. The policy text needs human review. |
 
-**Phase 4: dti.py.** Send rneopets/dti.py a PR moving them to the Rails
-endpoints, ideally in time to land before shutdown.
+### Wave 2: after a wave 1 PR
 
-**Phase 5: shutdown.**
+| # | PR | After | Scope |
+|---|---|---|---|
+| 7 | Item appearance and outfit state | #2 (both edit `useOutfitAppearance.js`) | Switch `OutfitItemsAppearance`, `OutfitStateItems` and `OutfitStateItemConflicts` to Rails, building on `/items/:id/appearances.json`. Drop `OutfitThumbnailIfCached` and `WriteItemFromLoader`. After this, only support tools use Apollo. |
+| 8 | Support tools | #2 (`PosePickerSupport` lives inside `PosePicker`) | Remove the Impress 2020 support UI from the wardrobe, plus `useSupport` and the `support_secret` meta tag. Link to the Rails equivalents in the [Support tools](#support-tools) table. Rebuild "remove layer from item" in Rails, logging to Discord. Then remove Apollo and `graphql` from the bundle. |
+| 9 | dti.py | #1, #2 and #7 deployed | PR to [rneopets/dti.py](https://github.com/rneopets/dti.py) moving it to the Rails endpoints. See [External consumers](#external-consumers). |
+
+### Wave 3: teardown
+
 - Redirect `impress-2020.openneo.net` to Rails:
 
   | Impress 2020 path | Rails path |
@@ -287,22 +309,23 @@ endpoints, ideally in time to land before shutdown.
   | `/api/outfitImage?id=…` | Rails outfit image |
   | `/api/*` (everything else) | 410 Gone |
 
-- Turn off the box and its cron jobs. (`model-needed-items` can be turned off
-  earlier, any time.)
+- Turn off the box and its cron jobs.
 - Drop the `impress2020` MySQL user and ufw rule. Delete
   `impress_2020_origin`, `impress_2020_meta_tags`, `impress-2020-config.js`,
   `apolloClient.js`, the `impress_2020` credentials, and the matching
   `deploy/setup.yml` steps.
+- Update the README and this doc, which still describe Impress 2020 as
+  load-bearing.
+- Then re-land the `openneo_id` → `openneo_impress` database consolidation.
+  Its branch, `feature/consolidate-auth-database`, has no common history with
+  current `main`, so it needs a rebase or cherry-picks, not a merge.
 
-**Then:** the `openneo_id` → `openneo_impress` database consolidation is
-unblocked. Its branch, `feature/consolidate-auth-database`, has no common
-history with current `main`, so it will need re-landing (a rebase or
-cherry-picks), not a merge.
+### Manual steps
 
-## Open questions
-
-- How long does a render take on the Rails box, and how big are the PNGs?
-  (Settles the backfill schedule and disk budget.)
+- Turn off the `model-needed-items` cron on the Impress 2020 box (any time).
+- Repoint the `outfits.openneo-assets.net` Fastly origin at Rails (after #3).
+- Move `impress-asset-images.openneo.net` DNS to Rails (after #4).
+- Run the canvas-movie backfill (after #5 deploys).
 
 ## See Also
 
