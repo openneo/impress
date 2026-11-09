@@ -259,12 +259,19 @@ RSpec.describe OutfitImageRenderer do
       diff = (result_image - expected_image).abs
       max_diff = diff.max
 
-      # Allow a small tolerance for minor encoding/compositing differences
-      tolerance = 2
-      if max_diff > tolerance
+      # Resampling (Lanczos) output varies slightly across libvips versions:
+      # CI's build differs from the fixture by up to 4/255 in a few pixels.
+      # So we allow a loose per-pixel max, but pair it with a tight average:
+      # the max alone gets weaker the higher it goes, while the average catches
+      # systematic errors. Measured against this fixture, a correct render has
+      # avg ~0.00002, while shifting the layer by 1px gives avg ~0.2 (max 222).
+      max_tolerance = 8
+      avg_tolerance = 0.05
+      avg_diff = diff.avg
+      if max_diff > max_tolerance || avg_diff > avg_tolerance
         debug_path = Rails.root.join('tmp', 'test_render_1200_result.png')
         result_image.write_to_file(debug_path.to_s)
-        fail "Images should match within tolerance of #{tolerance}, but found max difference of #{max_diff}. Actual output saved to #{debug_path}"
+        fail "Images should match within max tolerance of #{max_tolerance} and avg tolerance of #{avg_tolerance}, but found max difference of #{max_diff} and avg difference of #{avg_diff}. Actual output saved to #{debug_path}"
       end
     end
   end
