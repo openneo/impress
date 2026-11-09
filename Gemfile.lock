@@ -103,7 +103,7 @@ GEM
       traces (~> 0.10)
     async-http-cache (0.4.6)
       async-http (~> 0.56)
-    async-pool (0.11.1)
+    async-pool (0.12.0)
       async (>= 2.0)
     async-service (0.17.0)
       async
