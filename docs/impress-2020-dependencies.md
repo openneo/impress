@@ -80,8 +80,9 @@ What's still on Impress 2020:
   `SwfAsset#image_url` (`app/models/swf_asset.rb`) falls back to Impress 2020's
   `/api/assetImage`, which renders the movie in headless Chromium on request.
   This affects `OutfitImageRenderer` itself, the `<img>` fallback inside
-  `swf_assets/show` (the item-page iframes), and the PNG links in the support
-  outfit viewer. (Whenever a manifest has a JS file, any PNGs in it are sprite
+  `swf_assets/show` (the item-page iframes), the `urls.png` value in asset JSON
+  (the wardrobe's `imageUrl`, also read by dti.py), and the wardrobe's Download
+  feature. (Whenever a manifest has a JS file, any PNGs in it are sprite
   atlases, so *every* canvas movie depends on Impress 2020 for its image today.)
 
   Production census (November 2026, 777,862 assets, manifests read from the
@@ -279,42 +280,57 @@ wave.
 
 | # | PR | Size | Scope |
 |---|---|---|---|
-| 1 | Species, color, zone and pose data | S | Rails serves the valid-poses bitfield (byte-for-byte the same format as Impress 2020's `/api/validPetPoses`, since dti.py parses it) plus species, colors and zones (as JSON, or embedded in the wardrobe page). Switch `SpeciesColorPicker` (`SpeciesColorPicker` query and `validPetPoses` fetch) and `SearchToolbar` (`SearchToolbarZones`) to them. |
-| 2 | Pet appearance endpoints | M | Rails endpoints for pet appearance by species/color/pose and by ID, with layers and available poses. Switch `OutfitPetAppearance`, `OutfitPetAppearanceById` (`useOutfitAppearance.js`) and `PosePicker` (`PosePicker.js`, not including its support mode). |
-| 3 | Saved outfit images in Rails | M | Serve `/outfits/:id/v/:updated_at/:size.png` (150/300/600, plus the unversioned form) from `OutfitImageRenderer`, with long-lived cache headers on the versioned form. Point `Outfit#image_versions` and `OutfitThumbnail.js` at it. Canvas-movie layers still come from Impress 2020 until #5 lands, which is fine. Afterward: repoint the `outfits.openneo-assets.net` CDN origin (manual). |
-| 4 | `/asset-images/…` redirect | S | Port Impress 2020's `/asset-images/:type/:x1/:x2/:x3/:remoteId/:idealSize.png` → `assetImageRedirect` logic to a Rails route. Afterward: move `impress-asset-images.openneo.net` DNS (manual). |
-| 5 | Render pipeline for canvas movies | L | Render each canvas movie once with headless Chromium against `swf_assets#show`, store it as WebP near-lossless 60 next to the media archive, and have `SwfAsset#image_url` prefer it over Impress 2020. Let `OutfitImageRenderer` load these WebP files. Add a backfill rake task (no-fallback assets first), render newly modeled assets, and install Chromium via `deploy/setup.yml`. Optionally also rasterize SVG-only assets. |
-| 6 | Small cleanups | S | Remove the "DTI 2020" item-page link (and its helper and locale key), remove the broken "prefer archive" toggle, and draft a new Rails privacy page from the [Privacy policy](#privacy-policy) table, replacing the `/privacy` redirect. The policy text needs human review. |
+| 1 | Species, color, zone and pose data | S | Rails serves the valid-poses bitfield (byte-for-byte the same format as Impress 2020's `/api/validPetPoses`, since dti.py parses it) plus species, colors and zones **as JSON endpoints** (dti.py needs them too; the wardrobe may also embed them in the page). Switch `SpeciesColorPicker` (its `SpeciesColorPicker` query and `validPetPoses` fetch) and `SearchToolbar` (`SearchToolbarZones`) to them. |
+| 2 | Pet appearance endpoints | M | Rails endpoints for pet appearance by species/color/pose and by ID, with layers and available poses. Switch `OutfitPetAppearance`, `OutfitPetAppearanceById` (`useOutfitAppearance.js`) and `PosePicker` (`PosePicker.js`, not including its support mode). Leave the shared GraphQL fragments in `getVisibleLayers.js` for whichever PR removes the last use. |
+| 3 | Saved outfit images in Rails | M | Serve `/outfits/:id/v/:updated_at/:size.png` (150/300/600) from `OutfitImageRenderer`, matching Impress 2020's `pages/api/outfitImage.js`: **if any layer fails to load, return status 500 with `Cache-Control: private, max-age=604800`, never the immutable header**, so Fastly doesn't cache a broken image for a year. (Today the renderer quietly skips failed layers, and `DTIRequests.get` has no timeout; add one.) Successful renders get `public, max-age=31536000, immutable`. The unversioned `/outfits/:id/:size.png` **redirects** to the versioned URL with `max-age=600`, as Impress 2020 does. **Production URLs stay on `outfits.openneo-assets.net`** (it works around a Neopets petpage bug with openneo.net URLs; see `Outfit#image_versions`), so only the development branch of `Outfit#image_versions` and the hardcoded host in `OutfitThumbnail.js` change. Afterward, the cutover is a manual Fastly origin change. |
+| 4 | `/asset-images/…` redirect | S | Port Impress 2020's `/asset-images/:type/:x1/:x2/:x3/:remoteId/:idealSize.png` → `assetImageRedirect` logic to a Rails route. Old URLs are plain `http://` with `?timestamp` query strings, so the route must ignore the query. Also add an nginx server block and certificate for `impress-asset-images.openneo.net` in `deploy/setup.yml` (Rails' nginx only serves `impress_hostname` today). Afterward: move the DNS (manual). |
+| 5 | Render pipeline for canvas movies | L | Render each canvas movie once with headless Chromium against `swf_assets#show`, and store it as WebP near-lossless 60 on disk. **Serve the files over HTTPS at an absolute URL** (a Rails route or an nginx location; the media archive isn't served today), because `image_url` is used by browsers, the CSP in `SwfAssetsController`, the wardrobe and dti.py. It must be absolute: the wardrobe's `safeImageUrl` resolves relative URLs against images.neopets.com. Make `SwfAsset#image_url` prefer the stored file over Impress 2020. Let `OutfitImageRenderer` load these WebP files (#3 also edits this file; whichever lands second rebases). Add a backfill rake task (no-fallback assets first), render newly modeled assets, and install Chromium via `deploy/setup.yml`. Note that `urls.png` will then hold WebP URLs for canvas movies. Optionally also rasterize SVG-only assets. |
+| 6 | Small cleanups | S | Remove the "DTI 2020" item-page link (and its helper and locale key). Remove the broken "prefer archive" toggle everywhere it's used: `usePreferArchive.js`, `OutfitControls.js`, `OutfitPreview.js`, `ItemCard.js`, `SquareItemCard.js`, `OutfitMovieLayer.js`, and the `preferArchive` branch in `util.js`. Replace the `buildImpress2020Url` placeholder URLs in `util.js` with a local placeholder. Draft a new Rails privacy page from the [Privacy policy](#privacy-policy) table, replacing the `/privacy` redirect; the policy text needs human review. |
 
-### Wave 2: after a wave 1 PR
+### Wave 2: after wave 1 PRs
 
 | # | PR | After | Scope |
 |---|---|---|---|
-| 7 | Item appearance and outfit state | #2 (both edit `useOutfitAppearance.js`) | Switch `OutfitItemsAppearance`, `OutfitStateItems` and `OutfitStateItemConflicts` to Rails, building on `/items/:id/appearances.json`. Drop `OutfitThumbnailIfCached` and `WriteItemFromLoader`. After this, only support tools use Apollo. |
-| 8 | Support tools | #2 (`PosePickerSupport` lives inside `PosePicker`) | Remove the Impress 2020 support UI from the wardrobe, plus `useSupport` and the `support_secret` meta tag. Link to the Rails equivalents in the [Support tools](#support-tools) table. Rebuild "remove layer from item" in Rails, logging to Discord. Then remove Apollo and `graphql` from the bundle. |
-| 9 | dti.py | #1, #2 and #7 deployed | PR to [rneopets/dti.py](https://github.com/rneopets/dti.py) moving it to the Rails endpoints. See [External consumers](#external-consumers). |
+| 7 | Item appearance and outfit state | #2 (both edit `useOutfitAppearance.js`) | Switch `OutfitItemsAppearance` and `OutfitStateItems` to Rails, building on `/items/:id/appearances.json`. `OutfitStateItemConflicts` is a cache-only `apolloClient.readQuery` in `useOutfitState.js`, so it needs a new local data source (e.g. the React Query cache), not an endpoint. Drop `OutfitThumbnailIfCached` and `WriteItemFromLoader`. |
+| 8 | Support tools, then Apollo | #1, #2 and #7 (`PosePickerSupport` lives inside `PosePicker`; Apollo is still used by #1's and #7's queries) | Remove the Impress 2020 support UI from the wardrobe, plus `useSupport` and the `support_secret` meta tag. Link to the Rails equivalents in the [Support tools](#support-tools) table. Rebuild "remove layer from item" in Rails, logging to Discord. Then delete `apolloClient.js`, `AppProvider.js`'s Apollo setup, the GraphQL fragments in `getVisibleLayers.js`, and the `@apollo/client` and `graphql` dependencies. |
+| 9 | dti.py | #1, #2 and #7 deployed | Add the remaining Rails endpoints dti.py needs that the wardrobe doesn't: items by name, all pet appearances for a color, and pet appearances by multiple IDs. Then send a PR to [rneopets/dti.py](https://github.com/rneopets/dti.py) moving it off Impress 2020. See [External consumers](#external-consumers). |
 
 ### Wave 3: teardown
 
-- Redirect `impress-2020.openneo.net` to Rails:
+**Gates:** #1–#9 merged and deployed; the canvas-movie backfill **finished**
+(not just deployed); the Fastly and DNS moves done; and a dti.py release
+using the Rails endpoints is out.
+
+- Remove Impress 2020 fallbacks from Rails: `CANVAS_MOVIE_IMAGE_URL_TEMPLATE`
+  in `swf_asset.rb` (it reads `impress_2020_origin` at class load, so leaving
+  it would break boot), and the development branch of `Outfit#image_versions`.
+  A canvas movie without a render falls back to its legacy image, or nil.
+- Redirect `impress-2020.openneo.net` to Rails. Decide where the redirects live
+  (Rails' nginx with its own server block and certificate, or Fastly):
+  Impress 2020's own nginx only knows `impress-2020-box.openneo.net`, so the
+  public hostname is fronted by something else today.
 
   | Impress 2020 path | Rails path |
   |---|---|
   | `/`, `/outfits/new`, `/outfits/:id`, `/items/:id` | same |
-  | `/items/search/:query` | `/items?q=:query` |
-  | `/user/:id/lists`, `/user/:id/lists/{owns,wants}/:listId` | `/user/:id/closet` |
+  | `/items/search`, `/items/search/:query` | `/items`, `/items?q=:query` |
+  | `/items/:id/trades/{offering,seeking}` | same (already redirected to Rails) |
+  | `/user/:id/lists`, `/user/:id/lists/{owns,wants}/:listId`, `/user/:id/closet`, `/user/:id/items` | `/user/:id/closet` |
   | `/your-outfits`, `/modeling`, `/donate`, `/terms`, `/privacy` | same |
-  | `/support/petAppearances` | the unlabeled-appearances flow |
+  | `/support/petAppearances` | `/rainbow-pool` (the unlabeled-appearances flow starts there) |
   | `/conversion` | home, or drop it |
-  | `/api/outfitImage?id=…` | Rails outfit image |
-  | `/api/*` (everything else) | 410 Gone |
+  | `/outfits/:id/:size.png`, `/outfits/:id/v/:ts/:size.png`, `/api/outfitImage?id=…` | the Rails outfit image |
+  | `/asset-images/…` | the Rails route from #4 |
+  | `/api/validPetPoses` | the Rails endpoint from #1 (same bytes, so old dti.py versions keep working) |
+  | `/internal/assetImage`, `/api/*` (everything else) | 410 Gone |
 
 - Turn off the box and its cron jobs.
 - Drop the `impress2020` MySQL user and ufw rule. Delete
   `impress_2020_origin`, `impress_2020_meta_tags`, `impress-2020-config.js`,
-  `apolloClient.js`, the `impress_2020` credentials, and the matching
-  `deploy/setup.yml` steps.
-- Update the README and this doc, which still describe Impress 2020 as
+  the `impress_2020` credentials, and the matching `deploy/setup.yml` steps.
+- Update the README, this doc, `docs/deployment-setup.md`
+  (`IMPRESS_2020_ORIGIN`, `mysql_user_password_2020`) and
+  `docs/customization-architecture.md`, which still describe Impress 2020 as
   load-bearing.
 - Then re-land the `openneo_id` → `openneo_impress` database consolidation.
   Its branch, `feature/consolidate-auth-database`, has no common history with
@@ -323,9 +339,11 @@ wave.
 ### Manual steps
 
 - Turn off the `model-needed-items` cron on the Impress 2020 box (any time).
-- Repoint the `outfits.openneo-assets.net` Fastly origin at Rails (after #3).
-- Move `impress-asset-images.openneo.net` DNS to Rails (after #4).
-- Run the canvas-movie backfill (after #5 deploys).
+- Repoint the `outfits.openneo-assets.net` Fastly origin at Rails (after #3),
+  overriding the Host header and SNI to the Rails hostname.
+- Move `impress-asset-images.openneo.net` DNS to Rails (after #4 deploys).
+- Run the canvas-movie backfill (after #5 deploys), and let it finish before
+  teardown.
 
 ## See Also
 
