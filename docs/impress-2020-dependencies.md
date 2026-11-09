@@ -81,12 +81,32 @@ What's still on Impress 2020:
   `/api/assetImage`, which renders the movie in headless Chromium on request.
   This affects `OutfitImageRenderer` itself, the `<img>` fallback inside
   `swf_assets/show` (the item-page iframes), and the PNG links in the support
-  outfit viewer. Assets don't change once published, so the replacement can be
-  a render-once job (headless Chromium against Rails' own `swf_assets#show`
-  page, with the PNG cached on disk next to the media archive) instead of
-  rendering on every request. **First, count how many assets have a JS manifest
-  but no PNG.** If the number is small, a one-time backfill might be most of the
-  work.
+  outfit viewer. (Whenever a manifest has a JS file, any PNGs in it are sprite
+  atlases, so *every* canvas movie depends on Impress 2020 for its image today.)
+
+  Production census (November 2026, 777,862 assets, manifests read from the
+  local archive):
+
+  | | Count |
+  |---|---|
+  | Canvas movies (all are object assets; pets have none) | 107,620, each with its own JS library |
+  | ...with a legacy pre-HTML5 PNG that could be a stopgap | 82,897 |
+  | ...with no image at all without a render | 24,723 |
+  | ...created in the last year | 4,391 (about 12 a day) |
+
+  Assets don't change once published, so the replacement doesn't need to render
+  on request. Instead: render each library once with headless Chromium against
+  Rails' own `swf_assets#show` page, store the PNG on disk next to the media
+  archive, and have `image_url` prefer that file. Backfill in the background,
+  with the 24,723 no-fallback assets first and the rest after. At the 1–3 seconds
+  per render Impress 2020 sees, one worker gets through everything in a few days.
+  New assets get rendered when they're modeled. After that, there's no
+  Chromium anywhere in the request path. Before starting, check the disk budget:
+  the renders will plausibly add up to about 10 GB at 600×600.
+
+  The same pipeline can also cover the **2,410 SVG-only assets** (2,373 of them
+  pet layers). `OutfitImageRenderer` only draws PNGs, so any of these without a
+  legacy image are missing from rendered outfits today.
 - **`impress-asset-images.openneo.net`.** This old Classic DTI hostname
   points at Impress 2020 (confirmed November 2026). Impress 2020 rewrites
   `/asset-images/:type/…/:size.png` to `/api/assetImageRedirect`, which
@@ -281,7 +301,8 @@ cherry-picks), not a merge.
 
 ## Open questions
 
-- How many canvas-movie assets have no manifest PNG? (This sizes Phase 3.)
+- How long does a render take on the Rails box, and how big are the PNGs?
+  (Settles the backfill schedule and disk budget.)
 
 ## See Also
 
