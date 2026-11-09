@@ -4,10 +4,36 @@ This guide covers how to set up deployment access to Dress to Impress from a new
 
 ## Overview
 
-The deployment system uses Ansible playbooks to automate deployment to `impress.openneo.net`. You'll need:
+**Changes deploy automatically.** When a change lands in `main`, Forgejo Actions runs the specs, and if they pass, deploys it to production (see [Automatic Deploys](#automatic-deploys) below). Deploys run database migrations too; see [database-migrations.md](./database-migrations.md) for the rules migrations need to follow.
+
+You only need the rest of this guide to deploy by hand, run server setup, or debug production. The deployment system uses Ansible playbooks to automate deployment to `impress.openneo.net`. You'll need:
 - SSH key authorized on the production server
 - Secret files for configuration and credentials
 - Ansible and build dependencies installed locally
+
+## Automatic Deploys
+
+The `deploy` job in `.forgejo/workflows/ci.yml` runs on every push to `main`, after the `rspec` job passes. It precompiles assets, then runs the same `deploy/deploy.yml` playbook as `bin/deploy`, as a dedicated `deploy-bot` user.
+
+- **Watching a deploy:** see the repository's Actions tab, or the status checks on the latest commit in `main`.
+- **Several merges at once:** runs on `main` wait for each other rather than cancelling (a cancelled deploy could stop mid-migration). Each deploy first checks that its commit is still the newest on `main`, and skips itself if not, so only the newest commit deploys. That also means re-running an old run won't roll production back.
+- **Migrations:** the deploy runs pending migrations before switching to the new code, unless one is marked `# deploy: run manually`. See [database-migrations.md](./database-migrations.md).
+- **Pausing deploys:** turn off Actions for the repository (Settings → Units → Overview → Actions), or deploy by hand with `bin/deploy` while it's off.
+
+### How `deploy-bot` is set up
+
+- `deploy/setup.yml` creates the `deploy-bot` user on the server, in the `impress-deployers` group, so it has the same permissions as a person deploying.
+- Its public key is `deploy/files/deploy-bot-ssh-key.pub`. The server only accepts it from `code.openneo.net`, where the Forgejo runner lives (`deploy_bot_allowed_ip` in `setup.yml`).
+- Its private key is the `DEPLOY_SSH_KEY` secret in OpenNeo/impress → Settings → Actions → Secrets. **Anyone with write access to OpenNeo/impress can reach this secret** (by pushing a branch with a workflow that reads it), so keep write access to people we'd trust with production.
+- CI trusts the server's SSH host key from `deploy/files/known_hosts`.
+
+To replace the key (e.g. if it might have leaked):
+
+1. `ssh-keygen -t ed25519 -N '' -C deploy-bot@code.openneo.net -f deploy-bot`
+2. Copy `deploy-bot.pub` to `deploy/files/deploy-bot-ssh-key.pub`, and run `bin/deploy:setup`.
+3. Paste the contents of `deploy-bot` (the private key) into the `DEPLOY_SSH_KEY` secret, then delete both files from your machine.
+
+If the server's host key changes (e.g. after rebuilding it), update `deploy/files/known_hosts` with `ssh-keyscan -t ed25519 impress.openneo.net`. Check the fingerprint first: compare `ssh-keygen -lf deploy/files/known_hosts` with what the server reports for itself (`ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub`, run on the server).
 
 ## Deploying from Devcontainer
 
@@ -119,13 +145,13 @@ Runs the Ansible setup playbook to configure the server (Ruby, MySQL, nginx, SSL
 ```bash
 bin/deploy
 ```
-Compiles assets locally, then deploys to production. No sudo required.
+Compiles assets locally, then deploys to production. No sudo required. Like automatic deploys, it runs pending database migrations; add `-e skip_migrations=yes` to skip them.
 
 ### Rollback
 ```bash
 bin/deploy:rollback [version-name]
 ```
-Rolls back to a previous deployment.
+Rolls back to a previous deployment. This doesn't undo database migrations.
 
 ## Server Details
 

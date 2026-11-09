@@ -1,0 +1,4 @@
+# SSH host key for impress.openneo.net, which CI trusts when deploying.
+# Generate with `ssh-keyscan -t ed25519 impress.openneo.net`, and check its
+# fingerprint before committing. See docs/deployment-setup.md.
+impress.openneo.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAZY3dChc8gu5XQ+wS/UltXK3ZA/TZ06klBMIbVyzsG4

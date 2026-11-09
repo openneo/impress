@@ -24,6 +24,12 @@
     # 7. Link the new version as `current` manually.
     # 8. Reset the service file to use the new Ruby to run `current`.
     skip_set_as_current: no
+
+    # Set this to `yes` to skip running database migrations, e.g. with
+    # `bin/deploy -e skip_migrations=yes`. (Deploys also skip them on their own
+    # when a pending migration is marked to be run by hand.) See
+    # docs/database-migrations.md.
+    skip_migrations: no
   tasks:
     - name: Generate a version name from the current timestamp
       command: date '+%Y-%m-%d-%s'
@@ -43,14 +49,19 @@
         state: directory
 
     # NOTE: We skip most gitignored files, except for public/assets/*, which
-    # contains the assets we precompiled for production.
+    # contains the assets we precompiled for production. We also skip
+    # vendor/bundle, where CI keeps its installed gems: the server installs its
+    # own, into the shared bundle folder.
     - name: Copy local app's source files to new remote folder
       ansible.posix.synchronize:
         src: "{{ local_app_root }}/"
         dest: "{{ remote_app_root }}"
+        # By default, synchronize skips checking the server's SSH host key!
+        verify_host: true
         rsync_opts:
           - "--include=/public/assets/*"
           - "--exclude=.git"
+          - "--exclude=/vendor/bundle"
           - "--filter=':- .gitignore'"
 
     - name: Link the public-data folder to the shared public-data folder
@@ -91,6 +102,53 @@
         # faster and more reliable!
         cmd: /opt/ruby-{{ ruby_version_live }}/bin/bundle install --local
 
+    # We run migrations before switching to the new version, so the new code
+    # never runs against an old schema. That means the *old* code runs against
+    # the new schema for a bit, so migrations must be compatible with it (and
+    # with Impress 2020, which shares the database). If a migration fails, the
+    # deploy stops here, and the old version keeps running.
+    # See docs/database-migrations.md.
+    #
+    # These commands load the app's environment the same way our cron jobs do:
+    # from the .bash_profile that `deploy:setup` creates, which sets RAILS_ENV
+    # and loads production.env.
+    - name: Check pending migrations for ones that need running by hand
+      shell:
+        chdir: "{{ remote_app_root }}"
+        executable: /bin/bash
+        cmd: "source /srv/impress/.bash_profile && /opt/ruby-{{ ruby_version_live }}/bin/bundle exec rails deploy:check_migrations"
+      register: migrations_check
+      changed_when: false
+      when: not (skip_migrations | bool)
+
+    # (Rails also logs to stdout in production, so we pick out our lines.)
+    - name: Read the results of the migrations check
+      set_fact:
+        manual_migrations: "{{ migrations_check.stdout_lines | select('match', '^MANUAL MIGRATION: ') | list }}"
+        blocked_migrations: "{{ migrations_check.stdout_lines | select('match', '^BLOCKED MIGRATION: ') | list }}"
+      when: not (skip_migrations | bool)
+
+    # While a migration marked to run by hand is pending, deploys skip *all*
+    # migrations, because they need to run in order. So an unmarked migration
+    # would never run, and its code might depend on it: stop before switching.
+    - name: Stop if unmarked migrations are waiting behind ones marked to run by hand
+      fail:
+        msg:
+          - "These pending migrations can't run until the ones marked to run by hand do:"
+          - "{{ blocked_migrations }}"
+          - "Marked to run by hand:"
+          - "{{ manual_migrations }}"
+          - "Run the marked migrations on the server first (see docs/database-migrations.md),"
+          - "then re-run this deploy. The current version is still running, unchanged."
+      when: not (skip_migrations | bool) and blocked_migrations | length > 0
+
+    - name: Run database migrations
+      shell:
+        chdir: "{{ remote_app_root }}"
+        executable: /bin/bash
+        cmd: "source /srv/impress/.bash_profile && /opt/ruby-{{ ruby_version_live }}/bin/bundle exec rails db:migrate"
+      when: not (skip_migrations | bool) and manual_migrations | length == 0
+
     - name: Update the `current` folder to point to the new version
       file:
         src: "{{ remote_app_root }}"
@@ -130,3 +188,15 @@
         state: absent
       with_items: "{{ versions_to_clean_up.stdout_lines }}"
       when: not skip_set_as_current
+
+    # The deploy itself succeeded, but we fail at the very end, so the run shows
+    # up red and someone notices that migrations still need running by hand.
+    - name: Fail, to flag migrations that still need running by hand
+      fail:
+        msg:
+          - "Deployed, but SKIPPED MIGRATIONS: these pending migrations are marked to be run by hand:"
+          - "{{ manual_migrations }}"
+          - "When you're ready, run them on the server:"
+          - "ssh impress.openneo.net, then: sudo -iu impress, then: cd /srv/impress/current && bin/rails db:migrate"
+          - "Until then, deploys of changes with new migrations will stop before switching versions."
+      when: not (skip_migrations | bool) and manual_migrations | length > 0

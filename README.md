@@ -160,6 +160,7 @@ The goal is to simplify this over time—either consolidate into Rails+Turbo, or
   - `openneo_impress` - Main application data
   - `openneo_id` - Authentication data
   - ⚠️ **Any database schema changes must be compatible with both services**
+- **Automatic deploys**: Changes deploy when they land in `main` and the specs pass, including database migrations. See [docs/deployment-setup.md](./docs/deployment-setup.md) and [docs/database-migrations.md](./docs/database-migrations.md).
 
 ---
 

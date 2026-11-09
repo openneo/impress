@@ -1,0 +1,261 @@
+# Run the test suite on every pull request, and on every push to main. When a
+# push to main passes, deploy it to production.
+#
+# Security notes:
+# - Forgejo doesn't run workflows from a fork's pull request until someone with
+#   write access approves it ("Approve once" or "Approve always" for that
+#   author), and those runs never receive repository secrets.
+# - Only the `deploy` job uses secrets, and it only runs on pushes to main.
+#   Keep it that way: never give secrets to a job that runs on pull requests.
+# - Anyone who can push a branch to OpenNeo/impress itself could write a
+#   workflow that reads our secrets, so keep write access to people we'd trust
+#   with production. Contributors can send pull requests from their forks.
+# - Don't add `ports:` to the services or container here. The runner shares a
+#   machine with Forgejo, and Docker-published ports bypass its firewall, which
+#   would expose this passwordless MariaDB to the internet during each run.
+#   Containers in a job can already reach each other by name, without it.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# One run at a time for each branch or PR. A new push to a PR cancels its
+# older runs, since only the newest result matters. But on main, new runs wait
+# for older ones instead: cancelling a deploy partway through could stop it
+# mid-migration, or between switching versions and restarting the app.
+# (Without this block, Forgejo cancels older runs on every push.)
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+env:
+  # Keep this in sync with whatever Node version we develop with. The checksum
+  # comes from https://nodejs.org/dist/v<version>/SHASUMS256.txt.
+  NODE_VERSION: "22.23.4"
+  NODE_SHA256: "1805bcd35e6815559bd2eb97db438d3fdb0eb3a5e6a977b7c1badca76337e9ce"
+  COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
+
+jobs:
+  rspec:
+    # This label is configured on the runner in the openneo-code repository.
+    runs-on: docker
+    timeout-minutes: 20
+    container:
+      # Keep this in sync with `.ruby-version`. The full (non-slim) image has
+      # the compilers and headers our native gems need, including MySQL's.
+      image: ruby:3.4.5-bookworm
+    services:
+      mariadb:
+        image: mariadb:10.11
+        env:
+          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "1"
+    env:
+      RAILS_ENV: test
+      # Read by `config/database.yml`.
+      DB_HOST: mariadb
+      DB_USER: root
+    steps:
+      # We check out with plain Git rather than `actions/checkout`, because
+      # that action runs on Node, which this Ruby image doesn't come with.
+      # (Fetching by SHA also works for pull requests from forks: Forgejo keeps
+      # their commits in this repository under `refs/pull/*`.)
+      - name: Check out the code
+        run: |
+          git init -q .
+          git fetch -q --depth=1 "${{ github.server_url }}/${{ github.repository }}" "${{ github.sha }}"
+          git checkout -q FETCH_HEAD
+
+      # Some specs process images with ruby-vips, which loads libvips at runtime.
+      - name: Install libvips
+        run: |
+          apt-get update -qq
+          apt-get install -y -qq --no-install-recommends libvips42 > /dev/null
+
+      # Request specs render the full layout, which needs the built JS.
+      - name: Install Node
+        run: |
+          curl -fsSL -o /tmp/node.tar.xz \
+            "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz"
+          echo "${NODE_SHA256}  /tmp/node.tar.xz" | sha256sum -c -
+          tar -xJf /tmp/node.tar.xz -C /usr/local --strip-components=1
+          corepack enable
+
+      # Reuse installed JS packages from earlier runs with the same `yarn.lock`.
+      # (`actions/cache` runs on Node, so this has to come after installing it.
+      # It's pinned to the commit for v4, the last version that targets Node 20;
+      # later versions want Node 24.)
+      #
+      # Caches from pull requests are only visible to that same PR's later
+      # runs. Only pushes to main write the cache that everyone shares.
+      - name: Restore cached JS packages
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            node_modules
+            .yarn/install-state.gz
+          key: js-${{ env.NODE_VERSION }}-${{ hashFiles('yarn.lock') }}
+
+      - name: Build JS
+        run: |
+          yarn install --immutable
+          yarn build
+
+      # Reuse installed gems from earlier runs. Many of our gems compile native
+      # extensions on install (sassc builds all of libsass!), which takes
+      # minutes on the runner's single CPU. When `Gemfile.lock` changes, we
+      # start from the most recent cache, so only new or changed gems compile.
+      - name: Restore cached gems
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: vendor/bundle
+          key: gems-${{ hashFiles('.ruby-version') }}-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: gems-${{ hashFiles('.ruby-version') }}-
+
+      # `--local` installs from the gems checked into `vendor/cache`, so this
+      # doesn't depend on rubygems.org. `frozen` fails the build if
+      # `Gemfile.lock` is out of date, rather than quietly updating it.
+      # `bundle clean` removes gems we no longer use, so the cache doesn't grow
+      # forever.
+      - name: Install gems
+        run: |
+          bundle config set --local frozen true
+          bundle config set --local path vendor/bundle
+          bundle install --local --jobs "$(nproc)"
+          bundle clean
+
+      # MariaDB's container starts with networking off while it initializes,
+      # so once the port accepts connections, it's ready for us.
+      - name: Wait for MariaDB
+        run: |
+          for i in $(seq 1 60); do
+            ruby -rsocket -e 'TCPSocket.new(ENV["DB_HOST"], 3306)' 2> /dev/null && exit 0
+            sleep 1
+          done
+          echo "MariaDB didn't start within 60 seconds" >&2
+          exit 1
+
+      - name: Set up the test databases
+        run: bin/rails db:create db:schema:load
+
+      - name: Run specs
+        run: bundle exec rspec
+
+  deploy:
+    # Deploy each change that lands in main, once its specs pass.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: rspec
+    runs-on: docker
+    timeout-minutes: 30
+    container:
+      # Keep this in sync with `.ruby-version`.
+      image: ruby:3.4.5-bookworm
+    steps:
+      # Only deploy the newest commit on main. A run for an older commit can
+      # reach this point after a newer one landed (since runs on main wait for
+      # each other), or if someone re-runs it from the Actions page. Deploying
+      # it would roll production back. The newer commit's run deploys instead.
+      - name: Check that this is still the newest commit on main
+        id: newest
+        run: |
+          newest=$(git ls-remote "${{ github.server_url }}/${{ github.repository }}" refs/heads/main | cut -f1)
+          if [ "$newest" = "${{ github.sha }}" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Skipping this deploy: main has moved on to $newest, whose own run will deploy it."
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # The steps up to "Install gems" match the `rspec` job, so the two jobs
+      # share caches. (See the notes there.)
+      - name: Check out the code
+        if: steps.newest.outputs.deploy == 'true'
+        run: |
+          git init -q .
+          git fetch -q --depth=1 "${{ github.server_url }}/${{ github.repository }}" "${{ github.sha }}"
+          git checkout -q FETCH_HEAD
+
+      # The deploy playbook (`deploy/deploy.yml`) copies the app to the server
+      # with rsync over SSH. And booting the app (to precompile assets) loads
+      # ruby-vips, which needs libvips.
+      - name: Install Ansible, rsync, and libvips
+        if: steps.newest.outputs.deploy == 'true'
+        run: |
+          apt-get update -qq
+          apt-get install -y -qq --no-install-recommends ansible rsync openssh-client libvips42 > /dev/null
+
+      - name: Install Node
+        if: steps.newest.outputs.deploy == 'true'
+        run: |
+          curl -fsSL -o /tmp/node.tar.xz \
+            "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz"
+          echo "${NODE_SHA256}  /tmp/node.tar.xz" | sha256sum -c -
+          tar -xJf /tmp/node.tar.xz -C /usr/local --strip-components=1
+          corepack enable
+
+      - name: Restore cached JS packages
+        if: steps.newest.outputs.deploy == 'true'
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            node_modules
+            .yarn/install-state.gz
+          key: js-${{ env.NODE_VERSION }}-${{ hashFiles('yarn.lock') }}
+
+      - name: Restore cached gems
+        if: steps.newest.outputs.deploy == 'true'
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: vendor/bundle
+          key: gems-${{ hashFiles('.ruby-version') }}-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: gems-${{ hashFiles('.ruby-version') }}-
+
+      - name: Install gems
+        if: steps.newest.outputs.deploy == 'true'
+        run: |
+          bundle config set --local frozen true
+          bundle config set --local path vendor/bundle
+          bundle install --local --jobs "$(nproc)"
+          bundle clean
+
+      # This boots the app in production mode, which expects database URLs and
+      # a secret key, but precompiling assets never uses them. So placeholders
+      # are enough, and CI never needs production's real secrets. (This also
+      # runs `yarn install` and `yarn build`, via jsbundling-rails.)
+      - name: Precompile assets
+        if: steps.newest.outputs.deploy == 'true'
+        env:
+          RAILS_ENV: production
+          SECRET_KEY_BASE_DUMMY: "1"
+          EXECJS_RUNTIME: Disabled
+          DATABASE_URL_PRIMARY: mysql2://placeholder/placeholder
+          DATABASE_URL_OPENNEO_ID: mysql2://placeholder/placeholder
+        run: bin/rails assets:precompile
+
+      # The key is for the `deploy-bot` user, which `deploy/setup.yml` sets up
+      # on the server, and which only accepts it from the runner's machine.
+      # We trust the server's host key from `deploy/files/known_hosts`, which is
+      # committed, so a reviewer can see when it changes.
+      - name: Set up SSH
+        if: steps.newest.outputs.deploy == 'true'
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          cp deploy/files/known_hosts ~/.ssh/known_hosts
+
+      # This runs any pending database migrations, unless one is marked to be
+      # run by hand. See docs/database-migrations.md.
+      #
+      # We name the config and inventory explicitly. Ansible ignores an
+      # `ansible.cfg` in a world-writable working directory, and without the
+      # inventory, it would match no hosts and "succeed" without deploying.
+      - name: Deploy
+        if: steps.newest.outputs.deploy == 'true'
+        working-directory: deploy
+        env:
+          ANSIBLE_CONFIG: ansible.cfg
+        run: ansible-playbook --inventory inventory.cfg --user deploy-bot deploy.yml

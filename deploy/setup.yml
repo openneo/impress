@@ -6,6 +6,10 @@
   vars:
     email_address: "emi@matchu.dev" # TODO: Extract this to personal config?
     impress_hostname: impress.openneo.net
+    # Forgejo Actions deploys from code.openneo.net, where the runner lives, so
+    # deploy-bot's SSH key only works from there. (Job containers have no IPv6,
+    # so they always connect over IPv4.) If the runner moves, update this!
+    deploy_bot_allowed_ip: 45.79.220.14
   vars_files:
     # mysql_root_password, mysql_user_password, mysql_user_password_2020,
     # dev_ips
@@ -161,6 +165,36 @@
           - /bin/systemctl stop impress
           - /bin/systemctl restart impress
         nopassword: yes
+
+    # Forgejo Actions deploys the app as this user, each time a change lands in
+    # main. Its private key is the DEPLOY_SSH_KEY secret in OpenNeo/impress's
+    # Actions settings. See docs/deployment-setup.md.
+    - name: Create "deploy-bot" user, for automatic deploys from Forgejo Actions
+      user:
+        name: deploy-bot
+        comment: Automatic deploys from Forgejo Actions
+        password: "!" # disables password login
+        shell: /bin/bash
+        groups:
+          - impress-deployers
+        append: yes
+
+    - name: Create SSH folder for deploy-bot
+      file:
+        path: /home/deploy-bot/.ssh
+        owner: deploy-bot
+        group: deploy-bot
+        mode: "700"
+        state: directory
+
+    - name: Authorize deploy-bot's SSH key, only from the Forgejo runner
+      copy:
+        dest: /home/deploy-bot/.ssh/authorized_keys
+        content: |
+          from="{{ deploy_bot_allowed_ip }}",no-agent-forwarding,no-port-forwarding,no-X11-forwarding {{ lookup('file', 'files/deploy-bot-ssh-key.pub') }}
+        owner: deploy-bot
+        group: deploy-bot
+        mode: "600"
 
     - name: Install ACL, to enable us to run commands as the "impress" user
       apt:
