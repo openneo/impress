@@ -38,17 +38,20 @@ class AltStylesController < ApplicationController
 			}
 			format.json {
 				@alt_styles = @alt_styles.includes(swf_assets: [:zone]).by_name_grouped
-				render json: @alt_styles.as_json(
-					only: [:id, :species_id, :color_id, :body_id, :thumbnail_url],
-					include: {
-						swf_assets: {
-							only: [:id, :body_id],
-							include: [:zone],
-							methods: [:urls, :known_glitches],
-						}
-					},
-					methods: [:series_main_name, :adjective_name],
-				)
+				render json: @alt_styles.map { |alt_style|
+					alt_style.as_json(
+						only: [:id, :species_id, :color_id, :body_id, :thumbnail_url],
+						include: {
+							color: { only: [:id, :name], methods: [:human_name] },
+							swf_assets: {
+								only: [:id, :body_id],
+								include: [:zone],
+								methods: [:urls, :known_glitches],
+							}
+						},
+						methods: [:series_main_name, :adjective_name],
+					).merge(is_labeled: alt_style.labeled?)
+				}
 			}
 		end
 	end

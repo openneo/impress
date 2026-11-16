@@ -49,6 +49,10 @@ function normalizeAltStyle(altStyleData) {
 		speciesId: String(altStyleData.species_id),
 		colorId: String(altStyleData.color_id),
 		bodyId: String(altStyleData.body_id),
+		colorName: altStyleData.color?.human_name ?? null,
+		// Whether we've given this style a real name yet. (If not, the server
+		// sends a stand-in `adjectiveName`, like "Unnamed Faerie style".)
+		isLabeled: altStyleData.is_labeled ?? true,
 		seriesMainName: altStyleData.series_main_name,
 		adjectiveName: altStyleData.adjective_name,
 		thumbnailUrl: altStyleData.thumbnail_url,

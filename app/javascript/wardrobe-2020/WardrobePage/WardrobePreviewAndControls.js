@@ -18,12 +18,20 @@ function WardrobePreviewAndControls({
 	// show the play/pause button.
 	const [hasAnimations, setHasAnimations] = React.useState(false);
 
+	// While the user hovers over a style in the PosePicker, we preview it
+	// without changing the outfit. `undefined` means "no preview"; `null` means
+	// "preview the pet with no style".
+	const [previewAltStyleId, setPreviewAltStyleId] = React.useState(undefined);
+
 	const { appearance, preview } = useOutfitPreview({
 		isLoading: isLoading,
 		speciesId: outfitState.speciesId,
 		colorId: outfitState.colorId,
 		pose: outfitState.pose,
-		altStyleId: outfitState.altStyleId,
+		altStyleId:
+			previewAltStyleId !== undefined
+				? previewAltStyleId
+				: outfitState.altStyleId,
 		appearanceId: outfitState.appearanceId,
 		wornItemIds: outfitState.wornItemIds,
 		onChangeHasAnimations: setHasAnimations,
@@ -43,6 +51,7 @@ function WardrobePreviewAndControls({
 					dispatchToOutfit={dispatchToOutfit}
 					showAnimationControls={hasAnimations}
 					appearance={appearance}
+					onPreviewAltStyle={setPreviewAltStyleId}
 				/>
 			</Box>
 		</ErrorBoundary>

@@ -31,6 +31,26 @@ RSpec.describe AltStyle do
 		end
 	end
 
+	describe "labeled?" do
+		subject(:alt_style) do
+			AltStyle.new(color: colors(:blue), species: species(:acara))
+		end
+
+		it("is false for a new alt style") do
+			expect(alt_style.labeled?).to be false
+		end
+
+		it("is true once it has a series name") do
+			alt_style.real_series_name = "Nostalgic"
+			expect(alt_style.labeled?).to be true
+		end
+
+		it("is true once it has a full name, even without a series name") do
+			alt_style.real_full_name = "Nostalgic Blue Acara"
+			expect(alt_style.labeled?).to be true
+		end
+	end
+
 	describe "full name" do
 		subject(:alt_style) do
 			AltStyle.new(color: colors(:blue), species: species(:acara))
@@ -38,7 +58,7 @@ RSpec.describe AltStyle do
 
 		describe "for a new alt style" do
 			it("returns a placeholder value by default") do
-				expect(alt_style.full_name).to eq "<New?> Blue Acara"
+				expect(alt_style.full_name).to eq "Unnamed Blue Acara style"
 			end
 
 			it("has no real_full_name by default") do
@@ -80,8 +100,8 @@ RSpec.describe AltStyle do
 		end
 
 		describe "for a new alt style" do
-			it("returns the placeholder series name and color name") do
-				expect(alt_style.adjective_name).to eq "<New?> Blue"
+			it("returns a stand-in name with the color name") do
+				expect(alt_style.adjective_name).to eq "Unnamed Blue style"
 			end
 		end
 

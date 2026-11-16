@@ -6,6 +6,7 @@ import {
 	Box,
 	Button,
 	Flex,
+	Input,
 	Popover,
 	PopoverArrow,
 	PopoverContent,
@@ -24,7 +25,7 @@ import {
 	useToken,
 } from "@chakra-ui/react";
 import { ChevronDownIcon, WarningTwoIcon } from "@chakra-ui/icons";
-import { loadable } from "../util";
+import { loadable, safeImageUrl } from "../util";
 
 import { petAppearanceFragment } from "../components/useOutfitAppearance";
 import getVisibleLayers from "../components/getVisibleLayers";
@@ -69,6 +70,7 @@ function PosePicker({
 	altStyleId,
 	appearanceId,
 	dispatchToOutfit,
+	onPreviewAltStyle,
 	onLockFocus,
 	onUnlockFocus,
 	...props
@@ -161,6 +163,13 @@ function PosePicker({
 		dispatchToOutfit,
 	]);
 
+	// NOTE: This needs to be stable, so the memoized tiles in `StyleSelect`
+	//       don't all re-render whenever we do.
+	const onChangeStyle = React.useCallback(
+		(altStyleId) => dispatchToOutfit({ type: "setStyle", altStyleId }),
+		[dispatchToOutfit],
+	);
+
 	// This is a low-stakes enough control, where enough pairs don't have data
 	// anyway, that I think I want to just not draw attention to failures.
 	if (error) {
@@ -173,10 +182,6 @@ function PosePicker({
 
 	const onChangePose = (e) => {
 		dispatchToOutfit({ type: "setPose", pose: e.target.value });
-	};
-
-	const onChangeStyle = (altStyleId) => {
-		dispatchToOutfit({ type: "setStyle", altStyleId });
 	};
 
 	return (
@@ -262,10 +267,12 @@ function PosePicker({
 										<StyleSelect
 											selectedStyleId={altStyleId}
 											altStyles={altStyles}
+											petColorId={colorId}
+											isShowing={isOpen && tabIndex === 1}
 											onChange={onChangeStyle}
+											onPreview={onPreviewAltStyle}
 											initialFocusRef={tabIndex === 1 ? initialFocusRef : null}
 										/>
-										<StyleExplanation />
 									</TabPanel>
 								</TabPanels>
 							</Tabs>
@@ -283,10 +290,7 @@ const PosePickerButton = React.forwardRef(
 		const theme = useTheme();
 
 		const icon = altStyle != null ? twemojiSunglasses : getIcon(pose);
-		const label =
-			altStyle != null
-				? altStyle.seriesMainName.split(/\s+/)[0]
-				: getLabel(pose);
+		const label = altStyle != null ? getStyleLabel(altStyle) : getLabel(pose);
 
 		return (
 			<ClassNames>
@@ -666,52 +670,258 @@ function RetiredUCWarning({ isSelected }) {
 	);
 }
 
+// How long the mouse rests on a style before we preview it on the pet. Short
+// enough to feel live, long enough that sweeping across the grid doesn't load
+// every style along the way.
+const STYLE_PREVIEW_DELAY_MS = 200;
+
+/**
+ * StyleSelect is a grid of the styles available for this species, as pictures
+ * of the pet itself, grouped by color.
+ *
+ * We lead with pictures rather than names, because there can be 100+ styles
+ * for a species, and how a style looks is the whole point of it. (It also
+ * means styles we haven't named yet are just as easy to pick as the others!)
+ *
+ * Resting the mouse on a style previews it on the pet, via `onPreview`. The
+ * rule for that is simple: the preview follows the mouse, and *anything else*
+ * the user does here (picking a style, typing in the filter, leaving the grid,
+ * leaving this tab) ends it.
+ */
 function StyleSelect({
 	selectedStyleId,
 	altStyles,
+	petColorId,
+	isShowing,
 	onChange,
+	onPreview,
 	initialFocusRef,
 }) {
-	const defaultStyle = { id: null, adjectiveName: "Default" };
+	const [query, setQuery] = React.useState("");
 
-	const styles = [defaultStyle, ...altStyles];
+	// The style the mouse is currently over, to name it in the caption.
+	// `undefined` means none; `null` means the "Default" option.
+	const [hoveredStyleId, setHoveredStyleId] = React.useState(undefined);
+
+	const groups = React.useMemo(
+		() => groupAltStylesByColor(altStyles, { query, petColorId }),
+		[altStyles, query, petColorId],
+	);
+
+	const previewTimeoutRef = React.useRef(null);
+	const isShowingRef = React.useRef(isShowing);
+	isShowingRef.current = isShowing;
+
+	const endHover = React.useCallback(() => {
+		setHoveredStyleId(undefined);
+		clearTimeout(previewTimeoutRef.current);
+		onPreview?.(undefined);
+	}, [onPreview]);
+
+	const startHover = React.useCallback(
+		(e, altStyleId) => {
+			// Touch devices fire these too, but there the "hover" would stick after
+			// the tap. Tapping selects the style anyway, so skip it. (We also skip
+			// it if we're on our way out, e.g. during the popover's fade.)
+			if (e.pointerType !== "mouse" || !isShowingRef.current) {
+				return;
+			}
+
+			// Previewing a style can mean loading new item layers, so we wait for
+			// the mouse to settle before asking for it.
+			setHoveredStyleId(altStyleId);
+			clearTimeout(previewTimeoutRef.current);
+			previewTimeoutRef.current = setTimeout(() => {
+				if (isShowingRef.current) {
+					onPreview?.(altStyleId);
+				}
+			}, STYLE_PREVIEW_DELAY_MS);
+		},
+		[onPreview],
+	);
+
+	// Picking a style ends the preview, so that the pet shows what's actually
+	// selected. (This matters for the keyboard: arrow keys change the selection
+	// while the mouse might still be resting on some other style.)
+	const changeStyle = React.useCallback(
+		(altStyleId) => {
+			endHover();
+			onChange(altStyleId);
+		},
+		[endHover, onChange],
+	);
+
+	// We won't get a pointer event if the grid goes away under the mouse (the
+	// popover closes, the user switches tabs by keyboard, or we unmount), so
+	// end the preview ourselves.
+	React.useEffect(() => {
+		if (!isShowing) {
+			endHover();
+		}
+	}, [isShowing, endHover]);
+	React.useEffect(() => endHover, [endHover]);
+
+	const captionStyleId =
+		hoveredStyleId !== undefined ? hoveredStyleId : selectedStyleId;
+	const captionStyle = altStyles.find((s) => s.id === captionStyleId) ?? null;
+
+	const groupHeaderBackground = useColorModeValue("white", "gray.700");
 
 	return (
 		<Flex
 			as="form"
 			direction="column"
 			gap="2"
-			maxHeight={{ base: "30vh", md: "10rem" }}
-			padding="4px"
-			overflow="auto"
+			onSubmit={(e) => e.preventDefault()}
 		>
-			{styles.map((altStyle) => (
-				<StyleOption
-					key={altStyle.id}
-					altStyle={altStyle}
-					checked={selectedStyleId === altStyle.id}
-					onChange={onChange}
-					inputRef={selectedStyleId === altStyle.id ? initialFocusRef : null}
-				/>
-			))}
+			<Input
+				type="search"
+				size="sm"
+				borderRadius="md"
+				placeholder={`Filter ${altStyles.length} styles…`}
+				aria-label="Filter styles"
+				value={query}
+				onChange={(e) => {
+					// The style under the mouse might be about to leave the grid.
+					endHover();
+					setQuery(e.target.value);
+				}}
+			/>
+			<Box
+				maxHeight={{ base: "40vh", md: "18rem" }}
+				// Room for the focus ring, which would otherwise be clipped.
+				padding="4px"
+				overflow="auto"
+				onPointerLeave={endHover}
+				data-style-scroll-container="true"
+			>
+				{matchesDefaultStyle(query) && (
+					<Box marginBottom="2">
+						<StyleOption
+							altStyle={null}
+							checked={selectedStyleId == null}
+							onChange={changeStyle}
+							onHover={startHover}
+							inputRef={selectedStyleId == null ? initialFocusRef : null}
+							description="No style: your pet's regular look"
+						/>
+					</Box>
+				)}
+				{groups.map((group) => (
+					<Box key={group.colorId} role="group" aria-label={group.colorName}>
+						<Flex
+							position="sticky"
+							// Cover the scroll box's padding too, or tiles peek out above.
+							top="-4px"
+							zIndex="1"
+							background={groupHeaderBackground}
+							align="baseline"
+							justify="space-between"
+							gap="2"
+							fontSize="xs"
+							paddingY="1"
+						>
+							<Box fontWeight="bold">
+								{group.colorName}
+								{group.isPetColor && (
+									<Box as="span" fontWeight="normal" opacity="0.7">
+										{" "}
+										· your pet's color
+									</Box>
+								)}
+							</Box>
+							<Box flex="0 0 auto" opacity="0.7">
+								{group.altStyles.length}{" "}
+								{group.altStyles.length === 1 ? "style" : "styles"}
+							</Box>
+						</Flex>
+						<Box
+							display="grid"
+							gridTemplateColumns="repeat(auto-fill, minmax(48px, 1fr))"
+							gap="1"
+							marginBottom="2"
+						>
+							{group.altStyles.map((altStyle) => (
+								<StyleOption
+									key={altStyle.id}
+									altStyle={altStyle}
+									checked={selectedStyleId === altStyle.id}
+									onChange={changeStyle}
+									onHover={startHover}
+									inputRef={
+										selectedStyleId === altStyle.id ? initialFocusRef : null
+									}
+								/>
+							))}
+						</Box>
+					</Box>
+				))}
+				{groups.length === 0 && !matchesDefaultStyle(query) && (
+					<Box fontSize="sm" textAlign="center" opacity="0.7" paddingY="4">
+						No styles match “{query.trim()}”.
+					</Box>
+				)}
+			</Box>
+			<StyleCaption altStyle={captionStyle} />
 		</Flex>
 	);
 }
 
-function StyleOption({ altStyle, checked, onChange, inputRef }) {
+/**
+ * StyleOption is one tile in the StyleSelect grid: a picture of the pet in
+ * this style, backed by a radio input. Pass `altStyle={null}` for the
+ * "Default" (no style) option.
+ *
+ * If `description` is given, the option is laid out as a row instead, with
+ * the tile on the left and its name and description beside it.
+ *
+ * NOTE: This is memoized, because there can be 100+ of these, and the grid
+ *       re-renders whenever the mouse moves from one to the next. Keep its
+ *       props stable!
+ */
+const StyleOption = React.memo(function StyleOption({
+	altStyle,
+	checked,
+	onChange,
+	onHover,
+	inputRef,
+	description = null,
+}) {
 	const theme = useTheme();
 	const selectedBorderColor = useColorModeValue(
 		theme.colors.green["600"],
 		theme.colors.green["300"],
 	);
+	const hoverBorderColor = theme.colors.gray["400"];
+	const unlabeledBorderColor = useColorModeValue(
+		theme.colors.gray["300"],
+		theme.colors.gray["500"],
+	);
+	const tileBackground = useColorModeValue(
+		theme.colors.gray["100"],
+		theme.colors.whiteAlpha["200"],
+	);
 	const outlineShadow = useToken("shadows", "outline");
+
+	const tileRef = React.useRef(null);
+	const shouldLoadImage = useHasBeenNearView(tileRef);
+
+	const id = altStyle?.id ?? null;
+	const name = getStyleName(altStyle);
+	const imageUrl = getStyleImageUrl(altStyle);
+	const isLabeled = altStyle == null || altStyle.isLabeled;
 
 	return (
 		<ClassNames>
-			{({ css, cx }) => (
+			{({ css }) => (
 				<Box
 					as="label"
+					display={description != null ? "flex" : "block"}
+					alignItems="center"
+					gap="3"
+					position="relative"
 					cursor="pointer"
+					onPointerEnter={(e) => onHover(e, id)}
 					onClick={(e) => {
 						// HACK: We need the timeout to beat the popover's focus stealing!
 						const input = e.currentTarget.querySelector("input");
@@ -722,9 +932,10 @@ function StyleOption({ altStyle, checked, onChange, inputRef }) {
 						as="input"
 						type="radio"
 						name="style"
-						value={altStyle.id}
+						aria-label={name}
+						value={id ?? ""}
 						checked={checked}
-						onChange={(e) => onChange(altStyle.id)}
+						onChange={() => onChange(id)}
 						ref={inputRef}
 						// HACK: Without this, the page extends super long. I think this is
 						//       because the VisuallyHidden just uses `position: absolute`,
@@ -733,80 +944,252 @@ function StyleOption({ altStyle, checked, onChange, inputRef }) {
 						//       the top-left corner instead, it doesn't.
 						left="0"
 						top="0"
+						// When the keyboard scrolls this into view, don't leave it
+						// hidden under the sticky group heading.
+						style={{ scrollMarginTop: "2rem" }}
 					/>
-					<Flex
-						alignItems="center"
-						gap="2"
+					<Box
+						ref={tileRef}
+						flex="0 0 auto"
+						width={description != null ? "52px" : "auto"}
 						borderRadius="md"
-						// HACK: Don't let the thumbnail image overlap the border
-						paddingLeft="2px"
-						paddingY="2px"
-						className={cx(css`
-							border: 2px solid transparent;
-							opacity: 0.8;
-							transition: all 0.2s;
+						overflow="hidden"
+						className={css`
+							aspect-ratio: 1;
+							background: ${tileBackground};
+							border: 2px ${isLabeled ? "solid" : "dashed"}
+								${isLabeled ? "transparent" : unlabeledBorderColor};
+							transition:
+								border-color 0.2s,
+								box-shadow 0.2s;
+
+							label:hover > & {
+								border-color: ${hoverBorderColor};
+							}
 
 							input:focus + & {
 								box-shadow: ${outlineShadow};
 							}
 
 							input:checked + & {
-								border-color: ${selectedBorderColor};
-								opacity: 1;
-								font-weight: bold;
+								border: 2px solid ${selectedBorderColor};
 							}
-						`)}
+						`}
 					>
-						{altStyle.thumbnailUrl ? (
-							<Box
-								as="img"
-								src={altStyle.thumbnailUrl}
-								alt="Item thumbnail"
-								width="40px"
-								height="40px"
+						{imageUrl != null ? (
+							<img
+								// The grid can hold 100+ of these, and they're the full-size
+								// pet layers (~50kb each), so we only load the ones scrolled
+								// near view. (It's the same file the outfit preview uses, so
+								// it's often already in the browser's cache by then.)
+								src={shouldLoadImage ? imageUrl : undefined}
+								alt=""
 								loading="lazy"
+								decoding="async"
+								// The image's own size, so the browser can lay it out before
+								// it loads.
+								width="600"
+								height="600"
+								// The pet only fills the middle of its 600x600 canvas, so
+								// zoom in. (This crops the very largest pets a little.)
+								className={css`
+									display: block;
+									width: 100%;
+									height: 100%;
+									object-fit: contain;
+									transform: scale(1.7);
+								`}
 							/>
 						) : (
-							<Box width="40px" height="40px" />
+							<Flex align="center" justify="center" height="100%">
+								<EmojiImage src={twemojiSmile} alt="" boxSize={20} />
+							</Flex>
 						)}
-						<Box width="2" />
-						{altStyle.adjectiveName}
-					</Flex>
+					</Box>
+					{description != null && (
+						<Box fontSize="sm" lineHeight="short">
+							<Box fontWeight={checked ? "bold" : "normal"}>{name}</Box>
+							<Box fontSize="xs" opacity="0.7">
+								{description}
+							</Box>
+						</Box>
+					)}
 				</Box>
 			)}
 		</ClassNames>
 	);
+});
+
+/**
+ * useHasBeenNearView returns whether the element has ever been scrolled into
+ * (or nearly into) view within the StyleSelect grid. Once true, it stays true.
+ *
+ * We use this instead of relying on `loading="lazy"` alone: browsers start
+ * lazy images long before they're visible (Chrome: up to ~1250px away, even
+ * inside a small scrolling box), which here meant fetching most of the grid
+ * as soon as it opened.
+ */
+function useHasBeenNearView(ref) {
+	const [hasBeenNearView, setHasBeenNearView] = React.useState(false);
+
+	React.useEffect(() => {
+		const element = ref.current;
+		if (hasBeenNearView || element == null) {
+			return;
+		}
+
+		// If we can't observe, just load. (`loading="lazy"` is still on the image.)
+		if (typeof IntersectionObserver === "undefined") {
+			setHasBeenNearView(true);
+			return;
+		}
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				if (entries.some((entry) => entry.isIntersecting)) {
+					setHasBeenNearView(true);
+				}
+			},
+			{
+				root: element.closest("[data-style-scroll-container]"),
+				// About two rows of tiles ahead, so normal scrolling stays filled in.
+				rootMargin: "120px 0px",
+			},
+		);
+		observer.observe(element);
+		return () => observer.disconnect();
+	}, [ref, hasBeenNearView]);
+
+	return hasBeenNearView;
 }
 
-function StyleExplanation() {
+/**
+ * StyleCaption names the style that's hovered or selected, since the grid
+ * itself is pictures only. It always takes up two lines, so the popover
+ * doesn't jump around as the mouse moves.
+ */
+function StyleCaption({ altStyle }) {
+	const { name, variantName } = getStyleNameParts(altStyle);
+
 	return (
-		<Box
-			fontSize="xs"
-			fontStyle="italic"
-			textAlign="center"
-			opacity="0.7"
-			marginTop="2"
-		>
-			<Box
-				as="a"
-				href="/rainbow-pool/styles"
-				target="_blank"
-				textDecoration="underline"
-			>
-				Pet Styles
-			</Box>{" "}
-			are NC items that override the pet's appearance via the{" "}
-			<Box
-				as="a"
-				href="https://www.neopets.com/stylingchamber/"
-				target="_blank"
-				textDecoration="underline"
-			>
-				Styling Chamber
+		<Box fontSize="sm" lineHeight="short" minHeight="2.75em">
+			<Box fontWeight="bold">{name}</Box>
+			<Box fontSize="xs" opacity="0.7">
+				{variantName}
 			</Box>
-			. Not all items fit all Pet Styles. The pet's color doesn't have to match.
 		</Box>
 	);
+}
+
+/**
+ * Split a style's name into its main name and its Prismatic variant, if any:
+ * "Prismatic Cyan: Nostalgic Faerie" is "Nostalgic Faerie", in "Prismatic
+ * Cyan".
+ */
+function getStyleNameParts(altStyle) {
+	if (altStyle == null) {
+		return { name: "Default", variantName: "No style" };
+	}
+
+	if (!altStyle.isLabeled) {
+		// The server names these for us, like "Unnamed Faerie style".
+		return {
+			name: altStyle.adjectiveName,
+			variantName: "We haven't named this one yet",
+		};
+	}
+
+	const [variantName, ...rest] = altStyle.adjectiveName.split(": ");
+	if (rest.length === 0) {
+		return { name: altStyle.adjectiveName, variantName: "" };
+	}
+	return { name: rest.join(": "), variantName };
+}
+
+function getStyleName(altStyle) {
+	const { name, variantName } = getStyleNameParts(altStyle);
+	return altStyle?.isLabeled && variantName ? `${variantName}: ${name}` : name;
+}
+
+/**
+ * The short label for the PosePicker button: the first word of the style's
+ * main name, like "Nostalgic".
+ */
+function getStyleLabel(altStyle) {
+	if (!altStyle.isLabeled) {
+		return "Unnamed";
+	}
+	return getStyleNameParts(altStyle).name.split(/\s+/)[0];
+}
+
+/**
+ * The picture for a style's tile: the pet layer itself. (Styles are almost
+ * always a single layer. The NC item thumbnail is only a fallback, because
+ * it's small, and new styles don't have one until we've labeled them.)
+ */
+function getStyleImageUrl(altStyle) {
+	if (altStyle == null) {
+		return null;
+	}
+
+	const layerImageUrl = altStyle.appearance.layers[0]?.imageUrl;
+	return safeImageUrl(layerImageUrl ?? altStyle.thumbnailUrl);
+}
+
+// Whether every word of the filter query appears somewhere in the text.
+function matchesQuery(text, query) {
+	const lowerText = text.toLowerCase();
+	const queryWords = query.toLowerCase().split(/\s+/).filter(Boolean);
+	return queryWords.every((word) => lowerText.includes(word));
+}
+
+// Whether the "Default" option should show for this filter query. (It always
+// shows when there's no query.)
+function matchesDefaultStyle(query) {
+	return matchesQuery("default no style", query);
+}
+
+/**
+ * Group styles by color for the StyleSelect grid, keeping only the ones that
+ * match the filter query. The pet's own color goes first, since those are the
+ * styles people most often come looking for; then colors A-Z.
+ */
+function groupAltStylesByColor(altStyles, { query = "", petColorId }) {
+	const groupsByColorId = new Map();
+	for (const altStyle of altStyles) {
+		// Match on the style's real name and color. Styles we haven't named yet
+		// only have a color, plus "unnamed" and "new" as ways to find them.
+		const searchText = altStyle.isLabeled
+			? `${altStyle.adjectiveName} ${altStyle.colorName}`
+			: `${altStyle.colorName} unnamed new`;
+		if (!matchesQuery(searchText, query)) {
+			continue;
+		}
+
+		if (!groupsByColorId.has(altStyle.colorId)) {
+			groupsByColorId.set(altStyle.colorId, {
+				colorId: altStyle.colorId,
+				colorName: altStyle.colorName ?? "Other",
+				isPetColor: altStyle.colorId === String(petColorId),
+				altStyles: [],
+			});
+		}
+		groupsByColorId.get(altStyle.colorId).altStyles.push(altStyle);
+	}
+
+	const groups = [...groupsByColorId.values()];
+	groups.sort(
+		(a, b) =>
+			b.isPetColor - a.isPetColor || a.colorName.localeCompare(b.colorName),
+	);
+
+	// Within a color, keep the order the server gave us (by series, then by
+	// Prismatic variant), but with the styles we haven't named yet at the end.
+	for (const group of groups) {
+		group.altStyles.sort((a, b) => b.isLabeled - a.isLabeled);
+	}
+
+	return groups;
 }
 
 function EmojiImage({ src, alt, boxSize = 16 }) {

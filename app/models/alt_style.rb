@@ -15,7 +15,16 @@ class AltStyle < ApplicationRecord
 
   before_validation :infer_thumbnail_url, unless: :thumbnail_url?
 
-  fallback_for(:full_name) { "#{series_name} #{pet_name}" }
+  # Until we've given a style its real name, build one from what we do know:
+  # "Nostalgic Blue Acara" if we know the series, or "Unnamed Blue Acara style"
+  # if all we have is the pet it was modeled on.
+  fallback_for(:full_name) do
+    if real_series_name?
+      "#{series_name} #{pet_name}"
+    else
+      "Unnamed #{pet_name} style"
+    end
+  end
   fallback_for(:series_name) { AltStyle.placeholder_name }
 
   scope :matching_name, ->(series_name, color_name, species_name) {
@@ -69,7 +78,10 @@ class AltStyle < ApplicationRecord
   end
 
   # Returns the full name, with the species removed from the end (if present).
+  # For a style we haven't named yet, that's like "Unnamed Blue style".
   def adjective_name
+    return "Unnamed #{color.human_name} style" unless labeled?
+
     full_name.sub(/\s+#{Regexp.escape(species.name)}\Z/i, "")
   end
 
@@ -102,6 +114,12 @@ class AltStyle < ApplicationRecord
     else
       self.thumbnail_url = DEFAULT_THUMBNAIL_URL
     end
+  end
+
+  # Whether we've given this style a real name yet. (Until then, its names
+  # are stand-ins like "Unnamed Faerie Acara style".)
+  def labeled?
+    real_full_name? || real_series_name?
   end
 
   def real_thumbnail_url?
