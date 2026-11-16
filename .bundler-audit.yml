@@ -7,10 +7,6 @@
 # config), remove the entry so the advisory surfaces again. bin/security-scan
 # also reports entries that no longer match anything, so they can be pruned.
 ignore:
-  # bcrypt 3.1.21: integer overflow at cost=31, in the JRuby (Java) implementation
-  # only. We run MRI, and Devise's default cost is far below 31.
-  - GHSA-f27w-vcwj-c954
-
   # devise 4.9.4: confirmable "change email" race. We don't enable the
   # :confirmable module (see AuthUser's `devise` call), so there's no
   # confirmation flow to race. The fix is in Devise 5, a major upgrade.
