@@ -20,14 +20,3 @@ ignore:
   # handler. That code path only runs for the :timeout warden message, which
   # only the :timeoutable module sets, and we don't enable it.
   - GHSA-jp94-3292-c3xv
-
-  # msgpack 1.8.0: use-after-free in MessagePack::Buffer#clear. Our only user is
-  # bootsnap, which uses it to cache our own compiled code on local disk. No
-  # untrusted input ever reaches msgpack.
-  - GHSA-4mrv-5p47-p938
-
-  # sanitize 7.0.0: CSS allowlist bypass via CSS nesting in stylesheets. We only
-  # use Sanitize::Config::BASIC (ClosetListsHelper), which allows neither
-  # <style> elements nor style attributes, so CSS is stripped, never parsed.
-  # If we ever allow CSS in user content, remove this and upgrade.
-  - GHSA-wgw9-qhqg-8hv5

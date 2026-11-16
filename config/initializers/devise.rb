@@ -317,6 +317,14 @@ Devise.setup do |config|
   #       actively using it anymore.
   OmniAuth.config.logger = Rails.logger
 
+  # Build OmniAuth's callback URLs from our NeoPass redirect URI's origin,
+  # rather than from the request's (forgeable) Host header. Our NeoPass
+  # strategy sends the hardcoded `redirect_uri` above instead of OmniAuth's
+  # `callback_url`, so this doesn't change its behavior. But without it,
+  # OmniAuth 2.3+ logs a warning about the Host header on every login.
+  OmniAuth.config.full_host =
+    URI.join(Rails.configuration.neopass_redirect_uri, "/").to_s.chomp("/")
+
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.
