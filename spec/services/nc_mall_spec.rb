@@ -178,6 +178,36 @@ RSpec.describe Neopets::NCMall, type: :model do
 			)
 		end
 
+		it "loads styles in the newer plain-array format" do
+			stub_styles_request(tab: 1).to_return(
+				body: '{"success":true,"styles":[{"oii":96861,"name":"Super Nostalgic Blue Acara","image":"https:\/\/images.neopets.com\/items\/6mlcm3p50.gif","preview":"\/\/pets.neopets.com\/cp\/kqbmlqdo\/1\/5.png","limited":true,"new":false},{"oii":90030,"name":"Celebratory Anniversary Acara","image":"https:\/\/images.neopets.com\/items\/7b9c1c76d5.gif","preview":"\/\/pets.neopets.com\/cp\/tsh7lqg4\/1\/5.png","limited":false,"new":false}],"mode":"getAvailable"}',
+			)
+			stub_styles_request(tab: 2).to_return(
+				body: '{"success":true,"styles":[{"oii":94698,"name":"Prismatic Red: Celebratory Anniversary Acara","image":"https:\/\/images.neopets.com\/items\/4t8safdp.gif","preview":"\/\/pets.neopets.com\/cp\/k7946zgx\/1\/5.png","limited":true,"new":false,"style":90030,"styleName":"Celebratory Anniversary Acara"}],"mode":"getAvailable"}',
+			)
+
+			expect(styles).to contain_exactly(
+				{
+					oii: 96861,
+					name: "Super Nostalgic Blue Acara",
+					image: "https://images.neopets.com/items/6mlcm3p50.gif",
+					limited: true,
+				},
+				{
+					oii: 90030,
+					name: "Celebratory Anniversary Acara",
+					image: "https://images.neopets.com/items/7b9c1c76d5.gif",
+					limited: false,
+				},
+				{
+					oii: 94698,
+					name: "Prismatic Red: Celebratory Anniversary Acara",
+					image: "https://images.neopets.com/items/4t8safdp.gif",
+					limited: true,
+				},
+			)
+		end
+
 		it "handles the NC Mall's odd API behavior for zero styles" do
 			stub_styles_request(tab: 1).to_return(empty_styles_response)
 			stub_styles_request(tab: 2).to_return(empty_styles_response)

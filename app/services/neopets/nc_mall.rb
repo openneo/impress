@@ -149,9 +149,7 @@ module Neopets::NCMall
 				check_styling_studio_error!(data)
 
 				begin
-					# Like styles, exclusives is a hash keyed by ID (or an empty
-					# array when there are none).
-					data.fetch(:exclusives).to_h.values.
+					style_list(data.fetch(:exclusives)).
 						map { |s| s.slice(:oii, :name, :image) }
 				rescue KeyError => e
 					raise UnexpectedResponseFormat,
@@ -266,15 +264,27 @@ module Neopets::NCMall
 				check_styling_studio_error!(data)
 
 				begin
-					# HACK: styles is a hash, unless it's empty, in which case it's an
-					#       array? Weird. Normalize this by converting to hash.
-					data.fetch(:styles).to_h.values.
+					style_list(data.fetch(:styles)).
 						map { |s| s.slice(:oii, :name, :image, :limited) }
 				rescue KeyError => e
 					raise UnexpectedResponseFormat,
 						"missing field in Styling Studio tab #{tab} response: #{e.key}"
 				end
 			end
+		end
+	end
+
+	# Normalize a list of styles from a Styling Studio response. Neopets has
+	# sent these in a few shapes over time: a hash keyed by ID (but `[]` when
+	# empty, because PHP), and, as of Nov 2026 for tabs 1 & 2, a plain array.
+	# Accept either, so the next flip doesn't break us.
+	def self.style_list(styles)
+		case styles
+		when Hash then styles.values
+		when Array then styles
+		else
+			raise UnexpectedResponseFormat,
+				"expected Styling Studio styles to be a list, got #{styles.class}"
 		end
 	end
 
