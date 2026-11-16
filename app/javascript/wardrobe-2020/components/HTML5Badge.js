@@ -137,10 +137,10 @@ export function GlitchBadgeLayout({
 export function layerUsesHTML5(layer) {
 	return Boolean(
 		layer.svgUrl ||
-			layer.canvasMovieLibraryUrl ||
-			// If this glitch is applied, then `svgUrl` will be null, but there's still
-			// an HTML5 manifest that the official player can render.
-			(layer.knownGlitches || []).includes("OFFICIAL_SVG_IS_INCORRECT"),
+		layer.canvasMovieLibraryUrl ||
+		// If this glitch is applied, then `svgUrl` will be null, but there's still
+		// an HTML5 manifest that the official player can render.
+		(layer.knownGlitches || []).includes("OFFICIAL_SVG_IS_INCORRECT"),
 	);
 }
 
