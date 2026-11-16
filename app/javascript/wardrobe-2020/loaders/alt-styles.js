@@ -63,9 +63,13 @@ function normalizeAltStyle(altStyleData) {
 			pose: "UNKNOWN",
 			isGlitched: false,
 			species: { id: String(altStyleData.species_id) },
-			color: { id: String(altStyleData.species_id) },
+			color: { id: String(altStyleData.color_id) },
 			layers: altStyleData.swf_assets.map(normalizeSwfAssetToLayer),
 			restrictedZones: [],
+			// Alt styles have no poses, so UI that talks about poses should check
+			// this flag. (Regular pets can also have the UNKNOWN pose, so we can't
+			// rely on that.)
+			isAltStyle: true,
 		},
 	};
 }

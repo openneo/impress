@@ -187,7 +187,9 @@ function OutfitKnownGlitchesBadge({ appearance }) {
 	}
 
 	// Check whether the pet is Invisible. If so, we'll show a blanket warning.
-	if (petAppearance?.color?.id === "38") {
+	// (Skipped for alt styles: the advice is about switching poses, and styles
+	// don't have poses.)
+	if (!petAppearance?.isAltStyle && petAppearance?.color?.id === "38") {
 		glitchMessages.push(
 			<Box key={`invisible-pet-warning`}>
 				Invisible pets are affected by a number of glitches, including faces
@@ -200,7 +202,10 @@ function OutfitKnownGlitchesBadge({ appearance }) {
 	}
 
 	// Check if this is a Faerie Uni. If so, we'll explain the dithering horns.
+	// (Skipped for alt styles: the explanation is about feminine/masculine
+	// poses, and styles don't have poses.)
 	if (
+		!petAppearance?.isAltStyle &&
 		petAppearance?.color?.id === "26" &&
 		petAppearance?.species?.id === "49"
 	) {
