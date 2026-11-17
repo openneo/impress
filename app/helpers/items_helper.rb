@@ -105,6 +105,24 @@ module ItemsHelper
     first_seen_at.strftime("%b %Y")
   end
 
+  # We don't know style tokens' real descriptions, so we write our own.
+  def style_token_description(alt_style)
+    if alt_style.labeled?
+      "This token unlocks the #{alt_style.adjective_name} style for your " +
+        "#{alt_style.species.human_name}."
+    else
+      "This token unlocks a style for your #{alt_style.species.human_name}."
+    end
+  end
+
+  def style_token_wardrobe_path(alt_style)
+    wardrobe_path(
+      species: alt_style.species_id,
+      color: alt_style.color_id,
+      style: alt_style.id,
+    )
+  end
+
   JN_ITEMS_URL_TEMPLATE = Addressable::Template.new(
     "https://items.jellyneo.net/search/?name_type=3{&name}"
   )

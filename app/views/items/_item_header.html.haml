@@ -31,7 +31,8 @@
         }= time_with_only_month_if_old item.created_at
 
       = link_to t('items.show.resources.jn_items'), jn_items_url_for(item)
-      = link_to t('items.show.resources.impress_2020'), impress_2020_url_for(item)
+      - unless item.style_token?
+        = link_to t('items.show.resources.impress_2020'), impress_2020_url_for(item)
       - if item.nc_trade_value
         = link_to lebron_url_for(item),
           title: nc_trade_value_updated_at_text(item.nc_trade_value) do
@@ -86,7 +87,10 @@
                               t('items.show.closet_hangers.quantity_label')
       = submit_tag t('items.show.closet_hangers.submit')
 
-  %p.item-description= item.description
+  - if item.style_token? && item.description.blank?
+    %p.item-description= style_token_description(item.alt_style)
+  - else
+    %p.item-description= item.description
 
   %nav.item-subpages-nav
     = link_to t('items.show.subpages_nav.preview'), item,

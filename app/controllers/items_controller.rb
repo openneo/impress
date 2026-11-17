@@ -93,6 +93,15 @@ class ItemsController < ApplicationController
           @current_user_quantities = current_user.item_quantities_for(@item)
         end
 
+        # Style tokens aren't wearable, so instead of previewing the item on
+        # a pet, we show the style it unlocks.
+        if @item.style_token?
+          @alt_style = @item.alt_style
+          @preview_outfit = Outfit.new(alt_style: @alt_style)
+          render :show_style_token
+          return
+        end
+
         @selected_preview_pet_type = load_selected_preview_pet_type
         @preview_outfit = Outfit.new(
           pet_state: load_preview_pet_type.canonical_pet_state,

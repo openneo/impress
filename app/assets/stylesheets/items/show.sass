@@ -302,6 +302,30 @@ species-face-picker
     .item-preview-meta-info
       grid-area: meta
 
+// Style tokens aren't wearable, so instead of the species picker and zone
+// info, we show the style itself with some explanation next to it.
+#item-preview[data-kind=style-token]
+  @media (min-width: 700px)
+    grid-template-areas: "viewer info"
+    grid-template-columns: auto 1fr
+    gap: 1.5em
+
+    .style-token-info
+      text-align: left
+
+  .style-token-info
+    grid-area: info
+    align-self: center
+
+    p
+      margin-top: 0
+
+    ul
+      list-style: none
+      display: flex
+      flex-direction: column
+      gap: .5em
+
 @keyframes fade-in
   from
     opacity: 0
