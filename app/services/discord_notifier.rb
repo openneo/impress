@@ -1,8 +1,9 @@
 require "net/http"
 
-# Sends notifications to Discord via incoming webhooks. Currently only used to
-# alert when our Neologin cookie stops working, so the right people can rotate
-# it.
+# Sends notifications to Discord via incoming webhooks. Used to alert when our
+# Neologin cookie stops working, so the right people can rotate it, and when
+# the Rainbow Pool import finds a brand-new color, so someone can check its
+# settings.
 #
 # The webhook URL is read from NEOLOGIN_DISCORD_WEBHOOK_URL. If unset, we log
 # the would-be notification and move on — useful in dev/test, and avoids
@@ -23,6 +24,17 @@ module DiscordNotifier
       "isn't working. Please rotate it at <#{admin_url}>.\n" \
       "```\n#{message.to_s.truncate(500)}\n```"
 
+    post(content:)
+  end
+
+  def self.notify_new_colors(colors)
+    names = colors.map { |c| "**#{c.human_name}** (##{c.id})" }.to_sentence
+    content =
+      "🎨 **New #{"color".pluralize(colors.size)}** found in the Rainbow " \
+      "Pool: #{names}! Please double-check #{colors.size == 1 ? "its name" :
+      "their names"} (the Rainbow Pool calls Elderlygirl \"ElderlyGir\", " \
+      "so it's not always right), and our guess of " \
+      "`basic: false, standard: false`."
     post(content:)
   end
 

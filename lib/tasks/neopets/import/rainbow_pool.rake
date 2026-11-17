@@ -1,131 +1,94 @@
-require "addressable/template"
-
 namespace "neopets:import" do
-	desc "Import all basic image hashes from the Rainbow Pool, onto PetTypes"
+	desc "Import colors and pet type image hashes from the Rainbow Pool, " +
+		"modeling new pet types"
 	task :rainbow_pool => ["neopets:import:neologin", :environment] do
+		# NOTE: We don't raise out of this task, even if something goes wrong,
+		# because that would stop `neopets:import` from running the tasks after
+		# this one. Instead, we report problems to Sentry, and carry on.
+		sentry_tags = PetType::RainbowPoolImport::SENTRY_TAGS
+		safe_message = PetType::RainbowPoolImport.method(:safe_message)
+		puts "Importing from Rainbow Pool…"
+
+		# Load the list of all species and colors.
 		begin
-			puts "Importing from Rainbow Pool…"
+			all_pets = Neopets::RainbowPool.load_all_pets
+			puts "#{all_pets[:species].size} species and " +
+				"#{all_pets[:colors].size} colors listed"
+		rescue => error
+			puts "⚠️  Failed to load species and colors list, skipping: " +
+				safe_message.(error)
+			Sentry.capture_exception(error, tags: sentry_tags)
+			all_pets = {species: [], colors: []}
+		end
 
-			all_species = Species.order(:name).to_a
-			all_pet_types = PetType.all.to_a
-			all_pet_types_by_species_id_and_color_id = all_pet_types.
-				to_h { |pt| [[pt.species_id, pt.color_id], pt] }
-			all_colors_by_name = Color.all.to_h { |c| [c.human_name.downcase, c] }
+		# Load paint brushes, which we use for colors' paint brush info. If this
+		# fails, we can carry on without them.
+		begin
+			brushes = Neopets::RainbowPool.load_brushes
+			puts "#{brushes.size} paint brushes loaded"
+		rescue => error
+			puts "⚠️  Failed to load paint brushes, skipping: " +
+				safe_message.(error)
+			Sentry.capture_exception(error, tags: sentry_tags)
+			brushes = []
+		end
 
-			hashes_by_color_name_by_species_id = {}
-			DTIRequests.load_many(max_at_once: 10) do |task|
-				num_loaded = 0
-				num_total = all_species.size
-				print "0/#{num_total} species loaded"
-
-				all_species.each do |species|
-					task.async do
-						begin
-							hashes_by_color_name_by_species_id[species.id] =
-								Neologin.with_tracking do
-									RainbowPool.load_hashes_for_species(species.id)
-								end
-						rescue => error
-							puts "Failed to load #{species.name} page, skipping: #{error.message}"
-							Sentry.capture_exception(error,
-								tags: { task: "neopets:import:rainbow_pool" },
-								contexts: { species: { name: species.name, id: species.id } })
-						end
-						num_loaded += 1
-						print "\r#{num_loaded}/#{num_total} species loaded"
-					end
-				end
-			end
+		# Load the colors for each species, 10 at a time.
+		all_species = Species.order(:name).to_a
+		colors_by_species_id = {}
+		errors_by_species = {}
+		DTIRequests.load_many(max_at_once: 10) do |task|
+			num_loaded = 0
+			num_total = all_species.size
+			print "0/#{num_total} species loaded"
 
 			all_species.each do |species|
-				hashes_by_color_name = hashes_by_color_name_by_species_id[species.id]
-				next if hashes_by_color_name.nil?
-
-				changed_pet_types = []
-
-				hashes_by_color_name.each do |color_name, image_hash|
-					color = all_colors_by_name[color_name.downcase]
-					if color.nil?
-						puts "Skipping unrecognized color name: #{color_name}"
-						next
+				task.async do
+					begin
+						colors_by_species_id[species.id] =
+							Neopets::RainbowPool.load_colors_for_species(species.id)
+					rescue => error
+						errors_by_species[species] = error
+						puts "\n⚠️  Failed to load #{species.human_name}, skipping: " +
+							safe_message.(error)
 					end
-
-					pet_type = all_pet_types_by_species_id_and_color_id[
-						[species.id, color.id]]
-					if pet_type.nil?
-						puts "Skipping unrecognized pet type: " +
-								"#{color_name} #{species.human_name}"
-						next
-					end
-
-					if pet_type.basic_image_hash.nil?
-						puts "Found new image hash: #{image_hash} (#{pet_type.human_name})"
-						pet_type.basic_image_hash = image_hash
-						changed_pet_types << pet_type
-					elsif pet_type.basic_image_hash != image_hash
-						puts "Updating image hash: #{image_hash} ({#{pet_type.human_name})"
-						pet_type.basic_image_hash = image_hash
-						changed_pet_types << pet_type
-					else
-						# No need to do anything with image hashes that match!
-					end
-				end
-
-				PetType.transaction { changed_pet_types.each(&:save!) }
-				puts "Saved #{changed_pet_types.size} image hashes for " +
-						"#{species.human_name}"
-			end
-		rescue => e
-			puts "Failed to import Rainbow Pool data: #{e.message}"
-			puts e.backtrace.join("\n")
-			Sentry.capture_exception(e, tags: { task: "neopets:import:rainbow_pool" })
-			raise
-		end
-	end
-end
-
-module RainbowPool
-	class << self
-		SPECIES_PAGE_URL_TEMPLATE = Addressable::Template.new(
-			"https://www.neopets.com/pool/all_pb.phtml{?f_species_id}"
-		)
-		def load_hashes_for_species(species_id)
-			Sync do
-				url = SPECIES_PAGE_URL_TEMPLATE.expand(f_species_id: species_id)
-				Neologin.authed_get(url) do |response|
-					# A 302 to /loginpage.phtml means Neopets bounced us because the
-					# neologin cookie isn't authenticated. Surface this as a typed
-					# error so the admin panel can show "expired" instead of a vague
-					# "expected status 200 but got 302".
-					if response.status == 302 &&
-							response.headers["location"].to_s.start_with?("/loginpage.phtml")
-						raise Neologin::CookieRejected,
-							"Neopets redirected the Rainbow Pool request to the " \
-							"login page — our neologin cookie isn't authenticated"
-					end
-
-					if response.status != 200
-						raise "expected status 200 but got #{response.status} (#{url})"
-					end
-
-					parse_hashes_from_page response.read
+					num_loaded += 1
+					print "\r#{num_loaded}/#{num_total} species loaded"
 				end
 			end
 		end
+		puts ""
 
-		private
+		# Report species failures to Sentry as one event, rather than one per
+		# species, so an outage doesn't flood it.
+		if errors_by_species.any?
+			species_names = errors_by_species.keys.map(&:human_name).sort
+			puts "⚠️  Failed to load #{errors_by_species.size} of " +
+				"#{all_species.size} species: #{species_names.join(", ")}"
+			Sentry.capture_exception(errors_by_species.values.first,
+				tags: sentry_tags,
+				contexts: {
+					rainbow_pool: {
+						failed_species_count: errors_by_species.size,
+						total_species_count: all_species.size,
+						errors: errors_by_species.to_h { |species, error|
+							[species.human_name, safe_message.(error)]
+						},
+					},
+				})
+		end
 
-		IMAGE_HASH_PATTERN = %r{
-			set_pet_img\(
-				'https?://pets\.neopets\.com/cp/(?<hash>[0-9a-z]+)/[0-9]+/[0-9]+\.png',
-				\s*
-				'(?<color_name>.+?)'
-			\)
-		}x
-		def parse_hashes_from_page(html)
-			html.scan(IMAGE_HASH_PATTERN).to_h do |(image_hash, color_name)|
-				[color_name, image_hash]
-			end
+		begin
+			result = PetType::RainbowPoolImport.new(colors_by_species_id,
+				species: all_pets[:species], colors: all_pets[:colors], brushes:).run!
+			puts "Done! #{result.new_colors.size} new colors, " +
+				"#{result.updated_colors.size} colors updated, " +
+				"#{result.modeled_pet_types.size} new pet types, " +
+				"#{result.updated_pet_types.size} image hashes saved"
+		rescue => error
+			puts "⚠️  Failed to import Rainbow Pool data: #{safe_message.(error)}"
+			puts error.backtrace.join("\n")
+			Sentry.capture_exception(error, tags: sentry_tags)
 		end
 	end
 end
