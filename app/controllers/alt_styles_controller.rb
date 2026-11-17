@@ -43,6 +43,7 @@ class AltStylesController < ApplicationController
 						only: [:id, :species_id, :color_id, :body_id, :thumbnail_url],
 						include: {
 							color: { only: [:id, :name], methods: [:human_name] },
+							species: { only: [:id, :name], methods: [:human_name] },
 							swf_assets: {
 								only: [:id, :body_id],
 								include: [:zone],
