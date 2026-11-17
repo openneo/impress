@@ -3,12 +3,18 @@ require_relative '../support/account_data_helpers'
 
 # Checks our Rack::Attack config, in config/initializers/attack.rb.
 RSpec.describe "Rate limits", :account_data, type: :request do
+  include ActiveSupport::Testing::TimeHelpers
+
   # Rack::Attack uses `Rails.cache`, which is a null store in tests, so swap in
   # a real store for these tests.
+  #
+  # We also freeze time, because Rack::Attack counts requests in fixed time
+  # windows (e.g. 20:40–20:45), so a test that runs across a boundary would
+  # see its counts reset partway through.
   around do |example|
     original_store = Rack::Attack.cache.store
     Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
-    example.run
+    freeze_time { example.run }
   ensure
     Rack::Attack.cache.store = original_store
   end
