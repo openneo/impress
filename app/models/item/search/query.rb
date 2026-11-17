@@ -134,6 +134,8 @@ class Item
             is_positive ? Filter.is_pb : Filter.is_not_pb
           when 'modeled'
             is_positive ? Filter.is_modeled : Filter.is_not_modeled
+          when 'style'
+            is_positive ? Filter.is_style_token : Filter.is_not_style_token
           else
             raise_search_error "not_found.label", label: "is:#{value}"
           end
@@ -154,6 +156,8 @@ class Item
           is_positive ? Filter.is_pb : Filter.is_not_pb
         when 'is_np'
           is_positive ? Filter.is_np : Filter.is_not_np
+        when 'is_style'
+          is_positive ? Filter.is_style_token : Filter.is_not_style_token
         when 'occupied_zone_set_name'
           is_positive ? Filter.occupies(value) : Filter.not_occupies(value)
         when 'restricted_zone_set_name'
@@ -346,6 +350,14 @@ class Item
 
       def self.is_not_pb
         self.new Item.is_not_pb, '-is:pb'
+      end
+
+      def self.is_style_token
+        self.new Item.is_style_token, 'is:style'
+      end
+
+      def self.is_not_style_token
+        self.new Item.is_not_style_token, '-is:style'
       end
 
       def self.is_modeled

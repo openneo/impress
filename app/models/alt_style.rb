@@ -8,12 +8,22 @@ class AltStyle < ApplicationRecord
   has_many :swf_assets, through: :parent_swf_asset_relationships
   has_many :contributions, as: :contributed, inverse_of: :contributed
 
+  # Each NC Pet Style has a "token" item on Neopets.com: the thing that sits in
+  # your inventory until you use it to unlock the style. Conveniently, the
+  # style's ID *is* the token's item ID, so we link them by primary key.
+  has_one :token_item, class_name: "Item", foreign_key: :id, primary_key: :id,
+    inverse_of: :alt_style
+
   validates :body_id, presence: true
   validates :full_name, presence: true, allow_nil: true
   validates :series_name, presence: true, allow_nil: true
   validates :thumbnail_url, presence: true
 
   before_validation :infer_thumbnail_url, unless: :thumbnail_url?
+
+  # Once we know a style's name, keep its token item in sync, so that people
+  # can search for it and add it to their lists.
+  after_save :sync_token_item!, if: :labeled?
 
   # Until we've given a style its real name, build one from what we do know:
   # "Nostalgic Blue Acara" if we know the series, or "Unnamed Blue Acara style"
@@ -124,6 +134,50 @@ class AltStyle < ApplicationRecord
 
   def real_thumbnail_url?
     thumbnail_url != DEFAULT_THUMBNAIL_URL
+  end
+
+  # Create or update the token item for this style, from what we know about
+  # the style itself. (Token items aren't wearable, so we never see them in
+  # modeling data; but the Styling Studio tells us the token's name and
+  # thumbnail, which is all we really need.)
+  #
+  # The style is the source of truth for the token's name and thumbnail: if
+  # they need correcting, edit the style, not the item.
+  TOKEN_ITEM_DEFAULTS = {
+    description: "",
+    category: "Special",
+    type: "none",
+    rarity: "Artifact",
+    rarity_index: 500, # All style tokens are NC items.
+    price: 0,
+    weight_lbs: 1,
+    zones_restrict: "0" * 52,
+    species_support_ids: "",
+  }
+  def sync_token_item!
+    item = Item.find_or_initialize_by(id: id)
+
+    # Styles and items share an ID space, so we don't expect a wearable item
+    # to ever have the same ID as a style. But if we're wrong, overwriting a
+    # real item would be much worse than skipping a token!
+    if item.persisted? && item.swf_assets.exists?
+      Rails.logger.warn "Not syncing token item for alt style #{id}: " \
+        "item #{id} (#{item.name.inspect}) already exists, and is wearable"
+      return
+    end
+
+    if item.new_record?
+      # We "first saw" this item when we first saw the style.
+      item.assign_attributes(TOKEN_ITEM_DEFAULTS.merge(created_at: created_at))
+    end
+    item.name = full_name
+    item.thumbnail_url = thumbnail_url
+    item.save! if item.changed?
+
+    # Mark the item as not needing modeling (see `Item#predicted_body_ids`).
+    item.update_cached_fields unless item.cached_predicted_fully_modeled?
+
+    item
   end
 
   def self.placeholder_name

@@ -20,6 +20,13 @@ class Item < ApplicationRecord
   has_many :dyeworks_variants, class_name: "Item",
     inverse_of: :dyeworks_base_item
 
+  # NC Pet Style "tokens" are the items you use to unlock a style. They're not
+  # wearable, so they have no assets, zones, or modeling data: we create them
+  # from the style's own info instead. A style's ID is its token's item ID.
+  # (See `AltStyle#sync_token_item!`.)
+  has_one :alt_style, foreign_key: :id, primary_key: :id,
+    inverse_of: :token_item
+
   # We require a name field. A number of other fields must be *specified*: they
   # can't be nil, to help ensure we aren't forgetting any fields when importing
   # items. But sometimes they happen to be blank (e.g. when TNT leaves an item
@@ -70,6 +77,8 @@ class Item < ApplicationRecord
     where('description NOT LIKE ?',
       '%' + sanitize_sql_like(PAINTBRUSH_SET_DESCRIPTION) + '%')
   }
+  scope :is_style_token, -> { where(id: AltStyle.select(:id)) }
+  scope :is_not_style_token, -> { where.not(id: AltStyle.select(:id)) }
   scope :is_modeled, -> {
     where(cached_predicted_fully_modeled: true)
   }
@@ -167,6 +176,10 @@ class Item < ApplicationRecord
 
   def np?
     !nc? && !pb?
+  end
+
+  def style_token?
+    alt_style.present?
   end
 
   def currently_in_mall?
@@ -327,6 +340,9 @@ class Item < ApplicationRecord
       # uniquely-colored body, and predict every basic and Baby species. We'll
       # revise this as soon as we see a second species.
       compatible_body_ids
+    elsif compatible_body_ids.size == 0 && style_token?
+      # Style tokens aren't wearable, so there's nothing to model.
+      []
     elsif compatible_body_ids.size == 0
       # If somehow we have this item, but not any modeling data for it (weird!),
       # consider it to fit all standard pet types until shown otherwise.
