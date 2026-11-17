@@ -119,6 +119,7 @@ Required variables:
 - `DATABASE_URL_OPENNEO_ID` - MySQL connection URL for auth database
 - `IMPRESS_2020_ORIGIN` - URL of Impress 2020 service (optional, defaults to `https://impress-2020.openneo.net`)
 - `RAILS_LOG_LEVEL` - Log level (optional, defaults to "info")
+- `ITEMDB_API_KEY` - API key for itemdb, used by the daily `itemdb:import:styles` cron job (without it, the job fails with `Itemdb::NotConfigured`)
 
 ### 2. `deploy/files/setup_secrets.yml`
 Ansible variables for the setup playbook. Only needed if running initial server setup (`bin/deploy:setup`).

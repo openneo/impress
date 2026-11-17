@@ -498,6 +498,17 @@
         minute: "*/10"
         job: "bash -c 'source /etc/profile && source ~/.bash_profile && cd /srv/impress/current && bin/rails neopets:import'"
 
+    # Our own importers should catch most style token data, but itemdb knows
+    # about some things we can't see ourselves, and can repair what we missed.
+    # Needs ITEMDB_API_KEY in production.env.
+    - name: Create daily cron job to run `rails itemdb:import:styles`
+      become_user: impress
+      cron:
+        name: "Impress: import style tokens from itemdb"
+        hour: "3"
+        minute: "40" # 3:40am
+        job: "bash -c 'source /etc/profile && source ~/.bash_profile && cd /srv/impress/current && bin/rails itemdb:import:styles'"
+
     - name: Create weekly cron job to run `rails public_data:commit`
       become_user: impress
       cron:
