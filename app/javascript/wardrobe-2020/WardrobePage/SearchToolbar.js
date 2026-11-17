@@ -35,17 +35,6 @@ export function searchQueryIsEmpty(query) {
 	return Object.values(query).every((value) => !value);
 }
 
-const SUGGESTIONS_PLACEMENT_PROPS = {
-	inline: {
-		borderBottomRadius: "md",
-	},
-	top: {
-		position: "absolute",
-		bottom: "100%",
-		borderTopRadius: "md",
-	},
-};
-
 /**
  * SearchToolbar is rendered above both the ItemsPanel and the SearchPanel,
  * and contains the search field where the user types their query.
@@ -64,7 +53,6 @@ function SearchToolbar({
 	showItemsLabel = false,
 	background = null,
 	boxShadow = null,
-	suggestionsPlacement = "inline",
 	...props
 }) {
 	const [suggestions, setSuggestions] = React.useState([]);
@@ -125,6 +113,7 @@ function SearchToolbar({
 							boxShadow="md"
 							overflow="auto"
 							transition="all 0.4s"
+							borderBottomRadius="md"
 							maxHeight="48"
 							width="100%"
 							className={cx(
@@ -135,7 +124,6 @@ function SearchToolbar({
 									}
 								`,
 							)}
-							{...SUGGESTIONS_PLACEMENT_PROPS[suggestionsPlacement]}
 						>
 							{children}
 							{!children && advancedSearchIsOpen && (
@@ -153,7 +141,7 @@ function SearchToolbar({
 				</ClassNames>
 			);
 		},
-		[advancedSearchIsOpen, suggestionsPlacement],
+		[advancedSearchIsOpen],
 	);
 
 	// When we change the query filters, clear out the suggestions.

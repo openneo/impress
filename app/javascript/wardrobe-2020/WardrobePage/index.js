@@ -3,7 +3,6 @@ import { useToast } from "@chakra-ui/react";
 
 import { emptySearchQuery } from "./SearchToolbar";
 import ItemsAndSearchPanels from "./ItemsAndSearchPanels";
-import SearchFooter from "./SearchFooter";
 import useOutfitSaving from "./useOutfitSaving";
 import useOutfitState, { OutfitStateContext } from "./useOutfitState";
 import WardrobePageLayout from "./WardrobePageLayout";
@@ -96,13 +95,6 @@ function WardrobePage() {
 						outfitState={outfitState}
 						outfitSaving={outfitSaving}
 						dispatchToOutfit={dispatchToOutfit}
-					/>
-				}
-				searchFooter={
-					<SearchFooter
-						searchQuery={searchQuery}
-						onChangeSearchQuery={setSearchQuery}
-						outfitState={outfitState}
 					/>
 				}
 			/>
