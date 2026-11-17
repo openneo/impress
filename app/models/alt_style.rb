@@ -101,6 +101,15 @@ class AltStyle < ApplicationRecord
     swf_assets.first&.image_url || EMPTY_IMAGE_URL
   end
 
+  # The best pet type to represent this alt style in the wardrobe: the one
+  # matching its color and species if it exists, or else a basic pet type of
+  # the same species. (An alt style's color/species combination isn't always
+  # backed by a real pet type, and the wardrobe errors on those.)
+  def canonical_pet_type
+    PetType.find_by(color_id:, species_id:) ||
+      PetType.where(species_id:).basic.merge(Color.alphabetical).first
+  end
+
   # Given a list of items, return how they look on this alt style.
   def appearances_for(items, ...)
     Item.appearances_for(items, self, ...)

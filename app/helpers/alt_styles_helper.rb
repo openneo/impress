@@ -3,11 +3,7 @@ module AltStylesHelper
 		if support_staff?
 			edit_alt_style_path alt_style
 		else
-			wardrobe_path(
-				species: alt_style.species_id,
-				color: alt_style.color_id,
-				style: alt_style.id,
-			)
+			style_token_wardrobe_path alt_style
 		end
 	end
 end

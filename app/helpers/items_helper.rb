@@ -116,9 +116,12 @@ module ItemsHelper
   end
 
   def style_token_wardrobe_path(alt_style)
+    # The style's own color/species might not be backed by a real pet type, so
+    # we start the wardrobe from the best pet type that does exist.
+    pet_type = alt_style.canonical_pet_type
     wardrobe_path(
-      species: alt_style.species_id,
-      color: alt_style.color_id,
+      species: pet_type&.species_id || alt_style.species_id,
+      color: pet_type&.color_id || alt_style.color_id,
       style: alt_style.id,
     )
   end

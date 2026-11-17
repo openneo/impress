@@ -231,4 +231,46 @@ RSpec.describe AltStyle do
 			expect(Item.fits(1234)).to be_empty
 		end
 	end
+
+	describe "canonical_pet_type" do
+		let(:acara) { species(:acara) }
+
+		def create_pet_type(color, body_id)
+			PetType.create!(color:, species: acara, body_id:)
+		end
+
+		def build_alt_style_for(color)
+			AltStyle.new(color:, species: acara, body_id: 1234)
+		end
+
+		it "is the matching pet type when there is one" do
+			create_pet_type(colors(:blue), 101)
+			maraquan = create_pet_type(colors(:maraquan), 102)
+
+			expect(build_alt_style_for(colors(:maraquan)).canonical_pet_type).
+				to eq maraquan
+		end
+
+		it "falls back to a basic pet type of the same species" do
+			blue = create_pet_type(colors(:blue), 101)
+
+			# There's no maraquan acara pet type, so we get the basic one.
+			expect(build_alt_style_for(colors(:maraquan)).canonical_pet_type).
+				to eq blue
+		end
+
+		it "ignores pet types of other species and non-basic colors" do
+			create_pet_type(colors(:purple), 103)
+			PetType.create!(color: colors(:blue), species: species(:chia),
+											body_id: 104)
+
+			expect(build_alt_style_for(colors(:maraquan)).canonical_pet_type).
+				to be_nil
+		end
+
+		it "is nil when the species has no pet types at all" do
+			expect(build_alt_style_for(colors(:maraquan)).canonical_pet_type).
+				to be_nil
+		end
+	end
 end
