@@ -167,7 +167,7 @@ class Item
             alt_style = load_alt_style_by_id(value[:alt_style_id])
             is_positive ?
               Filter.fits_alt_style(alt_style) :
-              Filter.fits_alt_style(alt_style)
+              Filter.not_fits_alt_style(alt_style)
           else
             pet_type = load_pet_type_by_color_and_species(
               value[:color_id], value[:species_id])

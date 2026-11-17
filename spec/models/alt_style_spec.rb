@@ -235,6 +235,11 @@ RSpec.describe AltStyle do
 	describe "canonical_pet_type" do
 		let(:acara) { species(:acara) }
 
+		# Other specs load pet type fixtures, which stick around in the database
+		# between spec files. Clear them out so they can't collide with the pet
+		# types we create here. (This runs in a transaction, so it's rolled back.)
+		before { PetType.destroy_all }
+
 		def create_pet_type(color, body_id)
 			PetType.create!(color:, species: acara, body_id:)
 		end
