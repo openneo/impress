@@ -102,12 +102,18 @@ export function useStyleHoverPreview({ isShowing = true, onPreview }) {
  * images, and what the headers stick to.
  *
  * - `tileSize` is the smallest a tile can be; the grid stretches tiles to
- *   fill each row.
+ *   fill each row. It can be responsive, like `{ base: "64px", md: "72px" }`.
  * - `showLabels` puts two short lines under each tile, naming it.
  * - `stickyTop` is where the headers stick, relative to the scroll box. (Use
  *   a negative value to cover the box's own padding.)
  * - `onDeselect`, if given, is called when the user clicks the style that's
  *   already selected, to take it off. Without it, that click does nothing.
+ * - `initialFocusRef` goes on the tile for `focusStyleId`, which is the
+ *   selected style unless you say otherwise.
+ * - `scrollMarginBottom` is how much room to leave below a tile when the
+ *   keyboard scrolls it into view, e.g. to clear a sticky bar at the bottom.
+ *   (The radio is pinned to the tile's top-left corner, so include the
+ *   tile's own height too.)
  */
 export function StyleTileGroups({
 	groups,
@@ -116,6 +122,8 @@ export function StyleTileGroups({
 	onDeselect = null,
 	onHover,
 	initialFocusRef = null,
+	focusStyleId = selectedStyleId,
+	scrollMarginBottom = null,
 	tileSize = "48px",
 	showLabels = false,
 	stickyTop = "0",
@@ -124,6 +132,10 @@ export function StyleTileGroups({
 	groupHeaderPaddingX = "0",
 }) {
 	const defaultGroupHeaderBackground = useColorModeValue("white", "gray.700");
+	const gridTemplateColumns = mapResponsive(
+		tileSize,
+		(size) => `repeat(auto-fill, minmax(${size}, 1fr))`,
+	);
 
 	return groups.map((group) => (
 		<Box key={group.colorId} role="group" aria-label={group.colorName}>
@@ -155,7 +167,7 @@ export function StyleTileGroups({
 			</Flex>
 			<Box
 				display="grid"
-				gridTemplateColumns={`repeat(auto-fill, minmax(${tileSize}, 1fr))`}
+				gridTemplateColumns={gridTemplateColumns}
 				gap={tileGap}
 				marginBottom="2"
 			>
@@ -167,13 +179,25 @@ export function StyleTileGroups({
 						onChange={onChange}
 						onDeselect={onDeselect}
 						onHover={onHover}
-						inputRef={selectedStyleId === altStyle.id ? initialFocusRef : null}
+						inputRef={focusStyleId === altStyle.id ? initialFocusRef : null}
 						showLabels={showLabels}
+						scrollMarginBottom={scrollMarginBottom}
 					/>
 				))}
 			</Box>
 		</Box>
 	));
+}
+
+// Apply `fn` to a Chakra style value, which might be responsive (an object
+// of breakpoint values) or just one value.
+function mapResponsive(value, fn) {
+	if (value != null && typeof value === "object") {
+		return Object.fromEntries(
+			Object.entries(value).map(([key, v]) => [key, fn(v)]),
+		);
+	}
+	return fn(value);
 }
 
 /**
@@ -197,6 +221,7 @@ export const StyleTile = React.memo(function StyleTile({
 	inputRef,
 	description = null,
 	showLabels = false,
+	scrollMarginBottom = null,
 }) {
 	const theme = useTheme();
 	const selectedBorderColor = useColorModeValue(
@@ -215,6 +240,7 @@ export const StyleTile = React.memo(function StyleTile({
 	const outlineShadow = useToken("shadows", "outline");
 
 	const tileRef = React.useRef(null);
+	const didDeselectBySpaceRef = React.useRef(false);
 	const shouldLoadImage = useHasBeenNearView(tileRef);
 
 	const id = altStyle?.id ?? null;
@@ -257,6 +283,23 @@ export const StyleTile = React.memo(function StyleTile({
 								setTimeout(() => onDeselect(id), 0);
 							}
 						}}
+						onKeyDown={(e) => {
+							// Space on the selected radio doesn't click it, either, so we
+							// handle that ourselves too.
+							if (e.key === " " && checked && onDeselect != null) {
+								e.preventDefault();
+								didDeselectBySpaceRef.current = true;
+								onDeselect(id);
+							}
+						}}
+						onKeyUp={(e) => {
+							// Some browsers click on Space's keyup even if we prevented its
+							// keydown, which would put the style right back on. Block that.
+							if (e.key === " " && didDeselectBySpaceRef.current) {
+								e.preventDefault();
+								didDeselectBySpaceRef.current = false;
+							}
+						}}
 						ref={inputRef}
 						// HACK: Without this, the page extends super long. I think this is
 						//       because the VisuallyHidden just uses `position: absolute`,
@@ -267,7 +310,10 @@ export const StyleTile = React.memo(function StyleTile({
 						top="0"
 						// When the keyboard scrolls this into view, don't leave it
 						// hidden under the sticky group heading.
-						style={{ scrollMarginTop: "2rem" }}
+						style={{
+							scrollMarginTop: "2rem",
+							scrollMarginBottom: scrollMarginBottom ?? undefined,
+						}}
 					/>
 					<Box
 						ref={tileRef}
@@ -498,9 +544,13 @@ export function getStyleTileLabels(altStyle) {
 		return { seriesLabel: "Unnamed", variantLabel: "" };
 	}
 
-	const { variantName } = getStyleNameParts(altStyle);
+	// Some styles have a full name, but we don't know their series yet, so the
+	// server sends a placeholder like "<New?>" as the series. Use the name.
+	const { name, variantName } = getStyleNameParts(altStyle);
+	const hasSeriesName =
+		altStyle.seriesMainName != null && !altStyle.seriesMainName.startsWith("<");
 	return {
-		seriesLabel: altStyle.seriesMainName ?? getStyleLabel(altStyle),
+		seriesLabel: hasSeriesName ? altStyle.seriesMainName : name,
 		variantLabel: variantName.replace(/^Prismatic\s+/i, ""),
 	};
 }

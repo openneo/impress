@@ -26,6 +26,7 @@ function ItemsAndSearchPanels({
 	outfitState,
 	outfitSaving,
 	dispatchToOutfit,
+	onPreviewAltStyle,
 }) {
 	const scrollContainerRef = React.useRef();
 	const searchQueryRef = React.useRef();
@@ -51,6 +52,8 @@ function ItemsAndSearchPanels({
 						overflowY="scroll"
 						ref={scrollContainerRef}
 						data-test-id="search-panel-scroll-container"
+						// Style tiles lazy-load their images as they scroll near view.
+						data-style-scroll-container="true"
 					>
 						<SearchPanel
 							query={searchQuery}
@@ -59,6 +62,7 @@ function ItemsAndSearchPanels({
 							scrollContainerRef={scrollContainerRef}
 							searchQueryRef={searchQueryRef}
 							firstSearchResultRef={firstSearchResultRef}
+							onPreviewAltStyle={onPreviewAltStyle}
 						/>
 					</Box>
 				) : (

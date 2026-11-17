@@ -25,6 +25,11 @@ function WardrobePage() {
 
 	const [searchQuery, setSearchQuery] = React.useState(emptySearchQuery);
 
+	// While the user hovers over a style, in the PosePicker or in search, we
+	// preview it without changing the outfit. `undefined` means "no preview";
+	// `null` means "preview the pet with no style".
+	const [previewAltStyleId, setPreviewAltStyleId] = React.useState(undefined);
+
 	// We manage outfit saving up here, rather than at the point of the UI where
 	// "Saving" indicators appear. That way, auto-saving still happens even when
 	// the indicator isn't on the page, e.g. when searching.
@@ -85,6 +90,8 @@ function WardrobePage() {
 						isLoading={loading}
 						outfitState={outfitState}
 						dispatchToOutfit={dispatchToOutfit}
+						previewAltStyleId={previewAltStyleId}
+						onPreviewAltStyle={setPreviewAltStyleId}
 					/>
 				}
 				itemsAndMaybeSearchPanel={
@@ -95,6 +102,7 @@ function WardrobePage() {
 						outfitState={outfitState}
 						outfitSaving={outfitSaving}
 						dispatchToOutfit={dispatchToOutfit}
+						onPreviewAltStyle={setPreviewAltStyleId}
 					/>
 				}
 			/>

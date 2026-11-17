@@ -277,7 +277,10 @@ function SearchToolbar({
 					</InputGroup>
 				)}
 				inputProps={{
-					placeholder: "Search all items…",
+					placeholder:
+						query.filterToItemKind === "STYLE"
+							? "Search styles…"
+							: "Search all items…",
 					focusBorderColor: focusBorderColor,
 					value: query.value || "",
 					ref: searchQueryRef,
@@ -346,6 +349,14 @@ function getSuggestions(
 
 	const suggestions = [];
 
+	// NC Pet Styles aren't items, so the item filters don't apply to them. We
+	// only offer styles when no item filters are set, and vice-versa.
+	// TODO: Offer "Styles you own/want" too, once we track that per style.
+	const isFilteringToStyles = query.filterToItemKind === "STYLE";
+	const hasItemOnlyFilters =
+		query.filterToZoneLabel != null ||
+		query.filterToCurrentUserOwnsOrWants != null;
+
 	if (query.filterToItemKind == null) {
 		if (
 			wordMatches("NC", lastWord) ||
@@ -372,7 +383,25 @@ function getSuggestions(
 		}
 	}
 
-	if (isLoggedIn && query.filterToCurrentUserOwnsOrWants == null) {
+	// This goes after the item kinds, so that "nc" still suggests NC items
+	// first. And we only match the starts of these words, so it doesn't pop up
+	// for every "st" or "to" while typing ordinary item searches.
+	if (query.filterToItemKind == null && !hasItemOnlyFilters) {
+		if (
+			["pet", "styles", "tokens"].some((w) =>
+				w.startsWith(lastWord.toLowerCase()),
+			) ||
+			showAll
+		) {
+			suggestions.push({ itemKind: "STYLE", text: "NC Pet Styles" });
+		}
+	}
+
+	if (
+		isLoggedIn &&
+		!isFilteringToStyles &&
+		query.filterToCurrentUserOwnsOrWants == null
+	) {
 		if (wordMatches("Items you own", lastWord) || showAll) {
 			suggestions.push({ userOwnsOrWants: "OWNS", text: "Items you own" });
 		}
@@ -382,7 +411,7 @@ function getSuggestions(
 		}
 	}
 
-	if (query.filterToZoneLabel == null) {
+	if (!isFilteringToStyles && query.filterToZoneLabel == null) {
 		for (const zoneLabel of zoneLabels) {
 			if (wordMatches(zoneLabel, lastWord) || showAll) {
 				suggestions.push({ zoneLabel, text: `Zone: ${zoneLabel}` });
@@ -399,6 +428,10 @@ function wordMatches(target, word) {
 
 function getQueryFilterText(query) {
 	const textWords = [];
+
+	if (query.filterToItemKind === "STYLE") {
+		return "NC Pet Styles";
+	}
 
 	if (query.filterToItemKind) {
 		textWords.push(query.filterToItemKind);

@@ -13,6 +13,7 @@ import PaginationToolbar from "../components/PaginationToolbar";
 import { useSearchResults } from "./useSearchResults";
 import { MajorErrorMessage } from "../util";
 import { useAltStylesForSpecies } from "../loaders/alt-styles";
+import StyleSearchResults from "./StyleSearchResults";
 
 export const SEARCH_PER_PAGE = 30;
 
@@ -30,6 +31,7 @@ function SearchPanel({
 	scrollContainerRef,
 	searchQueryRef,
 	firstSearchResultRef,
+	onPreviewAltStyle,
 }) {
 	const scrollToTop = React.useCallback(() => {
 		if (scrollContainerRef.current) {
@@ -47,6 +49,11 @@ function SearchPanel({
 
 	return (
 		<Box
+			// Let NC Pet Styles mode fill the panel, so its caption bar can sit at
+			// the bottom.
+			minHeight="100%"
+			display="flex"
+			flexDirection="column"
 			onKeyDown={(e) => {
 				// This will catch any Escape presses when the user's focus is inside
 				// the SearchPanel.
@@ -55,21 +62,33 @@ function SearchPanel({
 				}
 			}}
 		>
-			<SearchResults
-				// When the query changes, replace the SearchResults component with a
-				// new instance. This resets both `currentPageNumber`, to take us back
-				// to page 1; and also `itemIdsToReconsider`. That way, if you find an
-				// item you like in one search, then immediately do a second search and
-				// try a conflicting item, we'll restore the item you liked from your
-				// first search!
-				key={serializeQuery(query)}
-				query={query}
-				outfitState={outfitState}
-				dispatchToOutfit={dispatchToOutfit}
-				firstSearchResultRef={firstSearchResultRef}
-				scrollToTop={scrollToTop}
-				onMoveFocusUpToQuery={onMoveFocusUpToQuery}
-			/>
+			{query.filterToItemKind === "STYLE" ? (
+				<StyleSearchResults
+					query={query}
+					outfitState={outfitState}
+					dispatchToOutfit={dispatchToOutfit}
+					firstSearchResultRef={firstSearchResultRef}
+					onPreviewAltStyle={onPreviewAltStyle}
+					scrollToTop={scrollToTop}
+					onMoveFocusUpToQuery={onMoveFocusUpToQuery}
+				/>
+			) : (
+				<SearchResults
+					// When the query changes, replace the SearchResults component with a
+					// new instance. This resets both `currentPageNumber`, to take us back
+					// to page 1; and also `itemIdsToReconsider`. That way, if you find an
+					// item you like in one search, then immediately do a second search and
+					// try a conflicting item, we'll restore the item you liked from your
+					// first search!
+					key={serializeQuery(query)}
+					query={query}
+					outfitState={outfitState}
+					dispatchToOutfit={dispatchToOutfit}
+					firstSearchResultRef={firstSearchResultRef}
+					scrollToTop={scrollToTop}
+					onMoveFocusUpToQuery={onMoveFocusUpToQuery}
+				/>
+			)}
 		</Box>
 	);
 }
