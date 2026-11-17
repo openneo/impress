@@ -130,6 +130,15 @@ module ItemsHelper
     JN_ITEMS_URL_TEMPLATE.expand(name: item.name).to_s
   end
 
+  # itemdb asks that we link back wherever we use their data. Their item URLs
+  # use slugs we can't reliably predict, so we link to a search by name.
+  ITEMDB_SEARCH_URL_TEMPLATE = Addressable::Template.new(
+    "https://itemdb.com.br/search{?s}"
+  )
+  def itemdb_url_for(item)
+    ITEMDB_SEARCH_URL_TEMPLATE.expand(s: item.name).to_s
+  end
+
   IMPRESS_2020_ITEM_URL_TEMPLATE = Addressable::Template.new(
     "#{Rails.configuration.impress_2020_origin}/items/{id}"
   )

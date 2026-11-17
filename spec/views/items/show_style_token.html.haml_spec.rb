@@ -80,4 +80,12 @@ RSpec.describe "items/show_style_token", type: :view do
 		expect(rendered).to include("All Acara styles")
 		expect(rendered).to include("All Nostalgic styles")
 	end
+
+	it "credits itemdb, with a link to the item there" do
+		render_for create_alt_style
+
+		expect(rendered).to include(
+			"https://itemdb.com.br/search?s=Nostalgic%20Blue%20Acara")
+		expect(rendered).to include("itemdb")
+	end
 end

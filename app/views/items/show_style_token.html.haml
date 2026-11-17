@@ -42,6 +42,14 @@
         %li
           = link_to "All #{@alt_style.series_name} styles",
             alt_styles_path(series: @alt_style.series_name)
+    %p.itemdb-credit
+      = link_to itemdb_url_for(@item), target: "_blank" do
+        = image_tag "itemdb-logo.svg", alt: "", width: 20, height: 20
+        %span
+          Style token info with help from
+          = succeed "." do
+            %strong itemdb
+          Thank you!
 
 - content_for :stylesheets do
   = stylesheet_link_tag "application/hanger-spinner"
