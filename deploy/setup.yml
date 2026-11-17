@@ -13,7 +13,6 @@
     # While the runner moves, list both machines' IPs, so deploys keep working
     # whichever machine runs them. Then remove the old one.
     deploy_bot_allowed_ips:
-      - 45.79.220.14 # code.openneo.net, the old runner. TODO: Remove after the move.
       - 74.207.234.34 # runner.openneo.net
   vars_files:
     # mysql_root_password, mysql_user_password, mysql_user_password_2020,
