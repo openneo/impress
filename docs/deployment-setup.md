@@ -23,13 +23,13 @@ The `deploy` job in `.forgejo/workflows/ci.yml` runs on every push to `main`, af
 ### How `deploy-bot` is set up
 
 - `deploy/setup.yml` creates the `deploy-bot` user on the server, in the `impress-deployers` group, so it has the same permissions as a person deploying.
-- Its public key is `deploy/files/deploy-bot-ssh-key.pub`. The server only accepts it from `code.openneo.net`, where the Forgejo runner lives (`deploy_bot_allowed_ip` in `setup.yml`).
+- Its public key is `deploy/files/deploy-bot-ssh-key.pub`. The server only accepts it from the IPs in `deploy_bot_allowed_ips` in `setup.yml`: `runner.openneo.net`, where the Forgejo runner lives (and, while the runner moves there, its old home, `code.openneo.net`).
 - Its private key is the `DEPLOY_SSH_KEY` secret in OpenNeo/impress → Settings → Actions → Secrets. **Anyone with write access to OpenNeo/impress can reach this secret** (by pushing a branch with a workflow that reads it), so keep write access to people we'd trust with production.
 - CI trusts the server's SSH host key from `deploy/files/known_hosts`.
 
 To replace the key (e.g. if it might have leaked):
 
-1. `ssh-keygen -t ed25519 -N '' -C deploy-bot@code.openneo.net -f deploy-bot`
+1. `ssh-keygen -t ed25519 -N '' -C deploy-bot@runner.openneo.net -f deploy-bot`
 2. Copy `deploy-bot.pub` to `deploy/files/deploy-bot-ssh-key.pub`, and run `bin/deploy:setup`.
 3. Paste the contents of `deploy-bot` (the private key) into the `DEPLOY_SSH_KEY` secret, then delete both files from your machine.
 

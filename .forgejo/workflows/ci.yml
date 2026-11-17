@@ -10,10 +10,10 @@
 # - Anyone who can push a branch to OpenNeo/impress itself could write a
 #   workflow that reads our secrets, so keep write access to people we'd trust
 #   with production. Contributors can send pull requests from their forks.
-# - Don't add `ports:` to the services or container here. The runner shares a
-#   machine with Forgejo, and Docker-published ports bypass its firewall, which
-#   would expose this passwordless MariaDB to the internet during each run.
-#   Containers in a job can already reach each other by name, without it.
+# - Don't add `ports:` to the services or container here. Docker-published
+#   ports bypass the runner machine's firewall, which would expose this
+#   passwordless MariaDB to the internet during each run. Containers in a job
+#   can already reach each other by name, without it.
 name: CI
 
 on:
