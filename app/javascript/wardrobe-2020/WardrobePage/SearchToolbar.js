@@ -200,11 +200,11 @@ function SearchToolbar({
 				onSuggestionSelected={(e, { suggestion }) => {
 					onChange({
 						...query,
-						// If the suggestion was from typing, remove the last word of the
-						// query value. Or, if it was from Advanced Search, leave it alone!
+						// If the suggestion was from typing, remove the word(s) that it
+						// came from. Or, if it was from Advanced Search, leave it alone!
 						value: advancedSearchIsOpen
 							? query.value
-							: removeLastWord(query.value),
+							: removeLastWords(query.value, suggestion.numWordsToRemove ?? 1),
 						filterToZoneLabel: suggestion.zoneLabel || query.filterToZoneLabel,
 						filterToItemKind: suggestion.itemKind || query.filterToItemKind,
 						filterToCurrentUserOwnsOrWants:
@@ -383,17 +383,20 @@ function getSuggestions(
 		}
 	}
 
-	// This goes after the item kinds, so that "nc" still suggests NC items
-	// first. And we only match the starts of these words, so it doesn't pop up
-	// for every "st" or "to" while typing ordinary item searches.
+	// This goes after the item kinds, so that "nc" suggests NC items first.
+	// And we only match the starts of these words, so it doesn't pop up for
+	// every "st" or "ok" while typing ordinary item searches.
 	if (query.filterToItemKind == null && !hasItemOnlyFilters) {
-		if (
-			["pet", "styles", "tokens"].some((w) =>
-				w.startsWith(lastWord.toLowerCase()),
-			) ||
-			showAll
-		) {
-			suggestions.push({ itemKind: "STYLE", text: "NC Pet Styles" });
+		if (startsAStyleWord(lastWord) || showAll) {
+			suggestions.push({
+				itemKind: "STYLE",
+				text: "NC Pet Styles",
+				// If the user typed a phrase like "nc pet style", that whole phrase
+				// was asking for this filter, so remove all of it. (Only the last
+				// word can be partly typed, so "back to pet" keeps "back to".)
+				numWordsToRemove:
+					1 + countTrailingWords(words.slice(0, -1), isAStyleWord),
+			});
 		}
 	}
 
@@ -420,6 +423,28 @@ function getSuggestions(
 	}
 
 	return suggestions;
+}
+
+const STYLE_WORDS = ["nc", "pet", "pets", "style", "styles", "token", "tokens"];
+
+function isAStyleWord(word) {
+	return STYLE_WORDS.includes(word.toLowerCase());
+}
+
+function startsAStyleWord(word) {
+	const lowerWord = word.toLowerCase();
+	return (
+		lowerWord.length > 0 && STYLE_WORDS.some((w) => w.startsWith(lowerWord))
+	);
+}
+
+// How many words at the end of the list match the predicate, in a row.
+function countTrailingWords(words, predicate) {
+	let count = 0;
+	for (let i = words.length - 1; i >= 0 && predicate(words[i]); i--) {
+		count++;
+	}
+	return count;
 }
 
 function wordMatches(target, word) {
@@ -474,6 +499,17 @@ function pluralizeZoneLabel(zoneLabel) {
 	} else {
 		return zoneLabel + "s";
 	}
+}
+
+/**
+ * removeLastWords returns a copy of the text, with the last `count` words and
+ * any preceding space removed.
+ */
+function removeLastWords(text, count) {
+	for (let i = 0; i < count; i++) {
+		text = removeLastWord(text);
+	}
+	return text;
 }
 
 /**

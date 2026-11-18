@@ -44,12 +44,14 @@ function WardrobePreviewAndControls({
 			<Center position="absolute" top="0" bottom="0" left="0" right="0">
 				<DarkMode>{preview}</DarkMode>
 			</Center>
-			{previewAltStyleId !== undefined && (
-				<StylePreviewPill
-					altStyleId={previewAltStyleId}
-					speciesId={outfitState.speciesId}
-				/>
-			)}
+			{/* No pill if we're "previewing" what's already worn: nothing changes! */}
+			{previewAltStyleId !== undefined &&
+				previewAltStyleId !== outfitState.altStyleId && (
+					<StylePreviewPill
+						altStyleId={previewAltStyleId}
+						speciesId={outfitState.speciesId}
+					/>
+				)}
 			<Box position="absolute" top="0" bottom="0" left="0" right="0">
 				<OutfitControls
 					outfitState={outfitState}

@@ -23,10 +23,14 @@ import twemojiSmile from "../images/twemoji/smile.svg";
  * panel can use them too. Nothing in here assumes it's inside a popover.
  */
 
-// How long the mouse rests on a style before we preview it on the pet. Short
-// enough to feel live, long enough that sweeping across the grid doesn't load
-// every style along the way.
-export const STYLE_PREVIEW_DELAY_MS = 200;
+// How long the mouse must rest on a style before we preview it on the pet.
+// Short enough to feel live, long enough that sliding across the grid on the
+// way somewhere else doesn't preview (and load) every style along the way.
+export const STYLE_PREVIEW_DELAY_MS = 250;
+
+// How far the mouse can drift while still "resting", in CSS pixels. Hands
+// jiggle a little, but sliding across a tile moves well past this.
+const STYLE_PREVIEW_REST_SLOP_PX = 4;
 
 /**
  * useStyleHoverPreview manages previewing a style on the pet while the mouse
@@ -34,6 +38,10 @@ export const STYLE_PREVIEW_DELAY_MS = 200;
  * *anything else* the user does (picking a style, typing a filter, leaving
  * the grid, hiding it) ends it. Callers handle the "anything else" by calling
  * `endHover`; we handle hiding and unmounting ourselves.
+ *
+ * Tiles should call `startHover` on `pointerenter`, `pointermove` and
+ * `pointerleave`. We only preview once the mouse has stayed still over a tile
+ * for a moment, so sliding across tiles doesn't trigger it, however slowly.
  *
  * `onPreview` is called with the style ID to preview, `null` to preview no
  * style, or `undefined` to end the preview. `isShowing` should be false while
@@ -51,9 +59,22 @@ export function useStyleHoverPreview({ isShowing = true, onPreview }) {
 	const isShowingRef = React.useRef(isShowing);
 	isShowingRef.current = isShowing;
 
+	// Where the mouse last came to rest, and on which tile. `isSettled` means
+	// we're done with this tile until the mouse leaves it: either we've
+	// previewed it, or the hover was ended while the mouse was on it (e.g. by
+	// clicking it), in which case jiggling the mouse shouldn't start it again.
+	const restRef = React.useRef(null);
+
+	// The style we're previewing right now, if any.
+	const previewedStyleIdRef = React.useRef(undefined);
+
 	const endHover = React.useCallback(() => {
 		setHoveredStyleId(undefined);
 		clearTimeout(previewTimeoutRef.current);
+		if (restRef.current != null) {
+			restRef.current.isSettled = true;
+		}
+		previewedStyleIdRef.current = undefined;
 		onPreview?.(undefined);
 	}, [onPreview]);
 
@@ -66,12 +87,45 @@ export function useStyleHoverPreview({ isShowing = true, onPreview }) {
 				return;
 			}
 
+			const rest = restRef.current;
+
+			// If the mouse leaves a tile before resting on it (e.g. onto a group
+			// heading, or the gap between tiles), don't preview it after all. Go
+			// back to naming whatever we're previewing, if anything. (But if we
+			// already previewed it, leave that be, so moving from tile to tile
+			// doesn't flicker back to the outfit in between.)
+			if (e.type === "pointerleave") {
+				if (rest?.altStyleId === altStyleId && !rest.isSettled) {
+					clearTimeout(previewTimeoutRef.current);
+					restRef.current = null;
+					setHoveredStyleId(previewedStyleIdRef.current);
+				}
+				return;
+			}
+
+			// Moving within the same tile only matters if we're still waiting for
+			// the mouse to rest there, and it's moved more than a jiggle.
+			if (e.type !== "pointerenter" && rest?.altStyleId === altStyleId) {
+				const distance = Math.hypot(e.clientX - rest.x, e.clientY - rest.y);
+				if (rest.isSettled || distance <= STYLE_PREVIEW_REST_SLOP_PX) {
+					return;
+				}
+			}
+
 			// Previewing a style can mean loading new item layers, so we wait for
-			// the mouse to settle before asking for it.
+			// the mouse to rest before asking for it.
+			restRef.current = {
+				altStyleId,
+				x: e.clientX,
+				y: e.clientY,
+				isSettled: false,
+			};
 			setHoveredStyleId(altStyleId);
 			clearTimeout(previewTimeoutRef.current);
 			previewTimeoutRef.current = setTimeout(() => {
 				if (isShowingRef.current) {
+					restRef.current.isSettled = true;
+					previewedStyleIdRef.current = altStyleId;
 					onPreview?.(altStyleId);
 				}
 			}, STYLE_PREVIEW_DELAY_MS);
@@ -259,6 +313,8 @@ export const StyleTile = React.memo(function StyleTile({
 					position="relative"
 					cursor="pointer"
 					onPointerEnter={(e) => onHover(e, id)}
+					onPointerMove={(e) => onHover(e, id)}
+					onPointerLeave={(e) => onHover(e, id)}
 					onClick={(e) => {
 						// HACK: We need the timeout to beat the popover's focus stealing!
 						const input = e.currentTarget.querySelector("input");
