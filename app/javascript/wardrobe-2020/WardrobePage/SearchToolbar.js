@@ -351,7 +351,9 @@ function getSuggestions(
 
 	// NC Pet Styles aren't items, so the item filters don't apply to them. We
 	// only offer styles when no item filters are set, and vice-versa.
-	// TODO: Offer "Styles you own/want" too, once we track that per style.
+	// TODO: Offer "Styles you own/want" too. The server knows (they're lists of
+	//       the styles' token items, which share their IDs; only named styles
+	//       have one), but the wardrobe's styles data doesn't include it yet.
 	const isFilteringToStyles = query.filterToItemKind === "STYLE";
 	const hasItemOnlyFilters =
 		query.filterToZoneLabel != null ||

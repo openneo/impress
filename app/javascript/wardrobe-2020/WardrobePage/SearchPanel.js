@@ -365,8 +365,10 @@ function focusShelf(shelf) {
 
 /**
  * Whether NC Pet Styles could match this item search, to show them in a shelf
- * above the results. Styles are NC and have no zone, and we don't track
- * whether you own or want them (yet), so other filters rule them out.
+ * above the results. Styles are NC and have no zone, so other kinds and zone
+ * filters rule them out. So do the own/want filters, for now: you can own or
+ * want a style's token item like any other item, but the wardrobe doesn't
+ * load that for styles yet.
  */
 function canMatchStyles(query) {
 	return (
