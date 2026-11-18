@@ -625,11 +625,14 @@ export function getStyleImageUrl(altStyle) {
 	return safeImageUrl(layerImageUrl ?? altStyle.thumbnailUrl);
 }
 
-// Whether every word of the filter query appears somewhere in the text.
+// Whether every word of the filter query starts some word of the text. (So
+// "red" matches "Red", but not "Shredded"; and "nost" matches "Nostalgic".)
 export function matchesQuery(text, query) {
-	const lowerText = text.toLowerCase();
+	const textWords = text.toLowerCase().split(/[\s:]+/);
 	const queryWords = query.toLowerCase().split(/\s+/).filter(Boolean);
-	return queryWords.every((word) => lowerText.includes(word));
+	return queryWords.every((word) =>
+		textWords.some((textWord) => textWord.startsWith(word)),
+	);
 }
 
 /**

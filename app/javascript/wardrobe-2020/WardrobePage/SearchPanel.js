@@ -1,19 +1,14 @@
 import React from "react";
-import {
-	Alert,
-	AlertIcon,
-	Box,
-	Text,
-	useColorModeValue,
-	VisuallyHidden,
-} from "@chakra-ui/react";
+import { Box, Text, useColorModeValue, VisuallyHidden } from "@chakra-ui/react";
 
 import Item, { ItemListContainer, ItemListSkeleton } from "./Item";
 import PaginationToolbar from "../components/PaginationToolbar";
 import { useSearchResults } from "./useSearchResults";
-import { MajorErrorMessage } from "../util";
-import { useAltStylesForSpecies } from "../loaders/alt-styles";
+import { MajorErrorMessage, useDebounce } from "../util";
 import StyleSearchResults from "./StyleSearchResults";
+import StyleShelf from "./StyleShelf";
+import { useAltStylesForSpecies } from "../loaders/alt-styles";
+import { groupAltStylesByColor } from "./StyleTiles";
 
 export const SEARCH_PER_PAGE = 30;
 
@@ -32,6 +27,7 @@ function SearchPanel({
 	searchQueryRef,
 	firstSearchResultRef,
 	onPreviewAltStyle,
+	onChangeQuery,
 }) {
 	const scrollToTop = React.useCallback(() => {
 		if (scrollContainerRef.current) {
@@ -87,6 +83,13 @@ function SearchPanel({
 					firstSearchResultRef={firstSearchResultRef}
 					scrollToTop={scrollToTop}
 					onMoveFocusUpToQuery={onMoveFocusUpToQuery}
+					onPreviewAltStyle={onPreviewAltStyle}
+					onSeeAllStyles={() => {
+						onChangeQuery({ ...query, filterToItemKind: "STYLE" });
+						// The "See all" button is about to go away, so put focus in the
+						// search field, ready to narrow down the styles.
+						searchQueryRef.current?.focus();
+					}}
 				/>
 			)}
 		</Box>
@@ -108,6 +111,8 @@ function SearchResults({
 	firstSearchResultRef,
 	scrollToTop,
 	onMoveFocusUpToQuery,
+	onPreviewAltStyle,
+	onSeeAllStyles,
 }) {
 	const [currentPageNumber, setCurrentPageNumber] = React.useState(1);
 	const { loading, error, items, numTotalPages } = useSearchResults(
@@ -135,14 +140,50 @@ function SearchResults({
 	// Whenever the page number changes, scroll back to the top!
 	React.useEffect(() => scrollToTop(), [currentPageNumber, scrollToTop]);
 
+	// Wait for a pause in typing before showing the styles shelf, like the item
+	// results do, so it doesn't flicker in and out with each keystroke.
+	const debouncedQueryText = useDebounce(query.value, 300, {
+		waitForFirstPause: true,
+		initialValue: "",
+	});
+
+	// The NC Pet Styles that match this search, for the shelf above the items.
+	const { data: speciesAltStyles } = useAltStylesForSpecies(
+		outfitState.speciesId,
+	);
+	const shelfAltStyles = React.useMemo(() => {
+		if (
+			speciesAltStyles == null ||
+			!debouncedQueryText.trim() ||
+			!canMatchStyles(query)
+		) {
+			return [];
+		}
+		const groups = groupAltStylesByColor(speciesAltStyles, {
+			query: debouncedQueryText,
+			petColorId: outfitState.colorId,
+		});
+		return groups.flatMap((g) => g.altStyles);
+	}, [speciesAltStyles, debouncedQueryText, query, outfitState.colorId]);
+	const hasShelf = currentPageNumber === 1 && shelfAltStyles.length > 0;
+
+	// The arrow keys go from the search field, to the shelf (if any), to the
+	// items. So Down from the field goes to the shelf if it's there, and the
+	// shelf and the first item point at each other.
+	const shelfRef = React.useRef(null);
+	const firstItemRef = React.useRef(null);
+
 	// You can use UpArrow/DownArrow to navigate between items, and even back up
-	// to the search field!
+	// to the shelf or the search field!
 	const goToPrevItem = React.useCallback(
 		(e) => {
 			const prevLabel = e.target.closest("label").previousSibling;
 			if (prevLabel) {
 				prevLabel.querySelector("input[type=checkbox]").focus();
 				prevLabel.scrollIntoView({ block: "center" });
+				e.preventDefault();
+			} else if (shelfRef.current != null) {
+				focusShelf(shelfRef.current);
 				e.preventDefault();
 			} else {
 				// If we're at the top of the list, move back up to the search box!
@@ -188,7 +229,24 @@ function SearchResults({
 					size="sm"
 				/>
 			</Box>
-			<SearchNCStylesHint query={query} outfitState={outfitState} />
+			{hasShelf && (
+				<StyleShelf
+					ref={shelfRef}
+					altStyles={shelfAltStyles}
+					outfitState={outfitState}
+					dispatchToOutfit={dispatchToOutfit}
+					onPreviewAltStyle={onPreviewAltStyle}
+					onSeeAll={onSeeAllStyles}
+					firstTileRef={firstSearchResultRef}
+					onMoveFocusUp={onMoveFocusUpToQuery}
+					onMoveFocusDown={(e) => {
+						if (firstItemRef.current != null) {
+							firstItemRef.current.focus();
+							e.preventDefault();
+						}
+					}}
+				/>
+			)}
 			<ItemListContainer paddingX="4" paddingBottom="2">
 				{items.map((item, index) => (
 					<SearchResultItem
@@ -198,7 +256,13 @@ function SearchResults({
 						isWorn={outfitState.wornItemIds.includes(item.id)}
 						isInOutfit={outfitState.allItemIds.includes(item.id)}
 						dispatchToOutfit={dispatchToOutfit}
-						checkboxRef={index === 0 ? firstSearchResultRef : null}
+						checkboxRef={
+							index === 0
+								? hasShelf
+									? firstItemRef
+									: firstSearchResultRef
+								: null
+						}
 						goToPrevItem={goToPrevItem}
 						goToNextItem={goToNextItem}
 					/>
@@ -290,53 +354,26 @@ function SearchResultItem({
 	);
 }
 
-function SearchNCStylesHint({ query, outfitState }) {
-	const { data: altStyles } = useAltStylesForSpecies(outfitState.speciesId);
-
-	const message = getSearchNCStylesMessage(query, altStyles);
-	if (!message) {
-		return null;
-	}
-
-	return (
-		<Box paddingX="4" paddingY="2">
-			<Alert status="info" variant="left-accent" fontSize="sm" color="blue.900">
-				<AlertIcon />
-				{message}
-			</Alert>
-		</Box>
-	);
+// Focus the shelf's worn style, if it's there, or else its first style.
+function focusShelf(shelf) {
+	const input =
+		shelf.querySelector("input[name=style]:checked") ??
+		shelf.querySelector("input[name=style]");
+	input?.focus();
+	input?.closest("form")?.scrollIntoView({ block: "nearest" });
 }
 
-function getSearchNCStylesMessage(query, altStyles) {
-	const seriesMainNames = [
-		...new Set((altStyles ?? []).map((as) => as.seriesMainName)),
-	];
-	const queryWords = query.value.toLowerCase().split(/\s+/);
-
-	if (queryWords.includes("token")) {
-		return (
-			<>
-				If you're looking for NC Styles, check the emotion picker below the pet
-				preview!
-			</>
-		);
-	}
-
-	// NOTE: This won't work on multi-word series main names, of which there
-	//       are currently none. (Some *series names* like Prismatics are
-	//       multi-word, but their *main* name is not.)
-	const seriesWord = seriesMainNames.find((n) =>
-		queryWords.includes(n.toLowerCase()),
+/**
+ * Whether NC Pet Styles could match this item search, to show them in a shelf
+ * above the results. Styles are NC and have no zone, and we don't track
+ * whether you own or want them (yet), so other filters rule them out.
+ */
+function canMatchStyles(query) {
+	return (
+		(query.filterToItemKind == null || query.filterToItemKind === "NC") &&
+		query.filterToZoneLabel == null &&
+		query.filterToCurrentUserOwnsOrWants == null
 	);
-	if (seriesWord != null) {
-		return (
-			<>
-				If you're looking for {seriesWord} NC Styles, check the emotion picker
-				below the pet preview!
-			</>
-		);
-	}
 }
 
 /**

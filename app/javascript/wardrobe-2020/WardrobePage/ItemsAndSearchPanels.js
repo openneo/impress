@@ -78,6 +78,7 @@ function ItemsAndSearchPanels({
 							searchQueryRef={searchQueryRef}
 							firstSearchResultRef={firstSearchResultRef}
 							onPreviewAltStyle={onPreviewAltStyle}
+							onChangeQuery={onChangeSearchQuery}
 						/>
 					</Box>
 				) : (
