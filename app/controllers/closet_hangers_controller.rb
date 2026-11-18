@@ -118,12 +118,20 @@ class ClosetHangersController < ApplicationController
   
   def update
     if params[:ids]
-      ClosetHanger.transaction do
-        @closet_hangers = current_user.closet_hangers.includes(:list).find params[:ids]
-        @closet_hangers.each do |h|
-          h.possibly_null_list_id = params[:list_id]
-          h.save!
+      begin
+        ClosetHanger.transaction do
+          @closet_hangers = current_user.closet_hangers.includes(:list).find params[:ids]
+          @closet_hangers.each do |h|
+            h.possibly_null_list_id = params[:list_id]
+            h.save!
+          end
         end
+      rescue ActiveRecord::RecordInvalid => e
+        # The transaction rolled back, so none of the hangers moved. The
+        # closet page's JS follows this redirect and shows its flashes.
+        flash[:alert] = t('closet_hangers.update.invalid',
+                          :item_name => e.record.item&.name,
+                          :errors => e.record.errors.full_messages.to_sentence)
       end
       redirect_back!(user_closet_hangers_path(current_user))
     else

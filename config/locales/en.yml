@@ -86,6 +86,9 @@ en:
     destroy_all:
       success: Success! Removed all items from the list.
 
+    update:
+      invalid: "We couldn't move the %{item_name}, so none of the selected items were moved: %{errors}"
+
     index:
       title_for:
         you: Your Items
