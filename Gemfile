@@ -79,8 +79,8 @@ gem "memory_profiler", "~> 1.0"
 gem "stackprof", "~> 0.2.25"
 
 # For monitoring errors in production.
-gem "sentry-ruby", "~> 5.12"
-gem "sentry-rails", "~> 5.12"
+gem "sentry-ruby", "~> 6.7"
+gem "sentry-rails", "~> 6.7"
 
 # For tasks that use shell commands.
 gem "shell", "~> 0.8.1"
