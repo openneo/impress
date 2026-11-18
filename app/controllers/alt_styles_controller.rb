@@ -50,7 +50,7 @@ class AltStylesController < ApplicationController
 								methods: [:urls, :known_glitches],
 							}
 						},
-						methods: [:series_main_name, :adjective_name],
+						methods: [:series_main_name, :adjective_name, :full_name],
 					).merge(is_labeled: alt_style.labeled?)
 				}
 			}

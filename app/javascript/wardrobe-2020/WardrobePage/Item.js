@@ -130,7 +130,7 @@ function ItemSkeleton() {
  * styles - including for its children, who sometimes reference it as an
  * .item-container parent!
  */
-function ItemContainer({ children, isDisabled = false }) {
+export function ItemContainer({ children, isDisabled = false }) {
 	const theme = useTheme();
 
 	const focusBackgroundColor = useColorModeValue(
@@ -216,7 +216,7 @@ function ItemBadges({ item }) {
 /**
  * ItemActionButton is one of a list of actions a user can take for this item.
  */
-function ItemActionButton({ icon, label, to, onClick, ...props }) {
+export function ItemActionButton({ icon, label, to, onClick, ...props }) {
 	const theme = useTheme();
 
 	const focusBackgroundColor = useColorModeValue(
@@ -310,7 +310,7 @@ export function ItemListSkeleton({ count, ...props }) {
  * .item-container is hovered or the adjacent hidden radio/checkbox is
  * focused.
  */
-const containerHasFocus =
+export const containerHasFocus =
 	".item-container:hover &, input:focus + .item-container &";
 
 export default React.memo(Item);

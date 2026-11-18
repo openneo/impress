@@ -632,12 +632,6 @@ export function matchesQuery(text, query) {
 	return queryWords.every((word) => lowerText.includes(word));
 }
 
-// Whether the "Default" option should show for this filter query. (It always
-// shows when there's no query.)
-export function matchesDefaultStyle(query) {
-	return matchesQuery("default no style", query);
-}
-
 /**
  * The text a filter query matches a style against: its name, color, and
  * species, plus words people use for styles in general (like "token", as in

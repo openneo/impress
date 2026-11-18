@@ -30,6 +30,20 @@ function WardrobePage() {
 	// `null` means "preview the pet with no style".
 	const [previewAltStyleId, setPreviewAltStyleId] = React.useState(undefined);
 
+	// Open the NC Pet Styles search, to browse the styles for this pet, and ask
+	// for the cursor to go in the search field. (If we're already there, keep
+	// whatever the user has typed.) This is stable, because the PosePicker is
+	// memoized and receives it.
+	const [searchFocusRequest, setSearchFocusRequest] = React.useState(0);
+	const browseStyles = React.useCallback(() => {
+		setSearchQuery((query) =>
+			query.filterToItemKind === "STYLE"
+				? query
+				: { ...emptySearchQuery, filterToItemKind: "STYLE" },
+		);
+		setSearchFocusRequest((n) => n + 1);
+	}, []);
+
 	// We manage outfit saving up here, rather than at the point of the UI where
 	// "Saving" indicators appear. That way, auto-saving still happens even when
 	// the indicator isn't on the page, e.g. when searching.
@@ -91,7 +105,7 @@ function WardrobePage() {
 						outfitState={outfitState}
 						dispatchToOutfit={dispatchToOutfit}
 						previewAltStyleId={previewAltStyleId}
-						onPreviewAltStyle={setPreviewAltStyleId}
+						onBrowseStyles={browseStyles}
 					/>
 				}
 				itemsAndMaybeSearchPanel={
@@ -103,6 +117,8 @@ function WardrobePage() {
 						outfitSaving={outfitSaving}
 						dispatchToOutfit={dispatchToOutfit}
 						onPreviewAltStyle={setPreviewAltStyleId}
+						onBrowseStyles={browseStyles}
+						searchFocusRequest={searchFocusRequest}
 					/>
 				}
 			/>

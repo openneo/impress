@@ -27,10 +27,25 @@ function ItemsAndSearchPanels({
 	outfitSaving,
 	dispatchToOutfit,
 	onPreviewAltStyle,
+	onBrowseStyles,
+	searchFocusRequest,
 }) {
 	const scrollContainerRef = React.useRef();
 	const searchQueryRef = React.useRef();
 	const firstSearchResultRef = React.useRef();
+
+	// When another part of the page sends us to search (e.g. the PosePicker
+	// opening NC Pet Styles), put the cursor in the search field, ready to
+	// type. (But not on touch devices, where the on-screen keyboard would
+	// cover the results!)
+	React.useEffect(() => {
+		if (
+			searchFocusRequest > 0 &&
+			window.matchMedia?.("(hover: hover)").matches
+		) {
+			searchQueryRef.current?.focus();
+		}
+	}, [searchFocusRequest]);
 
 	return (
 		<ErrorBoundary>
@@ -73,6 +88,7 @@ function ItemsAndSearchPanels({
 								outfitState={outfitState}
 								outfitSaving={outfitSaving}
 								dispatchToOutfit={dispatchToOutfit}
+								onBrowseStyles={onBrowseStyles}
 							/>
 						</Box>
 					</Box>

@@ -16,7 +16,7 @@ function WardrobePreviewAndControls({
 	outfitState,
 	dispatchToOutfit,
 	previewAltStyleId,
-	onPreviewAltStyle,
+	onBrowseStyles,
 }) {
 	// Whether the current outfit preview has animations. Determines whether we
 	// show the play/pause button.
@@ -58,7 +58,7 @@ function WardrobePreviewAndControls({
 					dispatchToOutfit={dispatchToOutfit}
 					showAnimationControls={hasAnimations}
 					appearance={appearance}
-					onPreviewAltStyle={onPreviewAltStyle}
+					onBrowseStyles={onBrowseStyles}
 				/>
 			</Box>
 		</ErrorBoundary>

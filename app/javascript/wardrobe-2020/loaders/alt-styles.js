@@ -56,6 +56,8 @@ function normalizeAltStyle(altStyleData) {
 		isLabeled: altStyleData.is_labeled ?? true,
 		seriesMainName: altStyleData.series_main_name,
 		adjectiveName: altStyleData.adjective_name,
+		// The style's name with the species, like "Nostalgic Faerie Aisha".
+		fullName: altStyleData.full_name,
 		thumbnailUrl: altStyleData.thumbnail_url,
 
 		// This matches the PetAppearanceForOutfitPreview GQL fragment!

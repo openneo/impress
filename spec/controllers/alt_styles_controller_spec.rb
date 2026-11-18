@@ -21,6 +21,7 @@ RSpec.describe AltStylesController, type: :controller do
 				a_hash_including(
 					"id" => 87966,
 					"adjective_name" => "Nostalgic Blue",
+					"full_name" => "Nostalgic Blue Acara",
 					"color" => a_hash_including("human_name" => "Blue"),
 					"species" => a_hash_including(
 						"id" => species(:acara).id,

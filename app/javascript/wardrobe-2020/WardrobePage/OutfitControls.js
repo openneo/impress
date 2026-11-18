@@ -59,7 +59,7 @@ function OutfitControls({
 	dispatchToOutfit,
 	showAnimationControls,
 	appearance,
-	onPreviewAltStyle,
+	onBrowseStyles,
 }) {
 	const [focusIsLocked, setFocusIsLocked] = React.useState(false);
 	const onLockFocus = React.useCallback(
@@ -242,7 +242,7 @@ function OutfitControls({
 										altStyleId={outfitState.altStyleId}
 										appearanceId={outfitState.appearanceId}
 										dispatchToOutfit={dispatchToOutfit}
-										onPreviewAltStyle={onPreviewAltStyle}
+										onBrowseStyles={onBrowseStyles}
 										onLockFocus={onLockFocus}
 										onUnlockFocus={onUnlockFocus}
 										data-test-id="wardrobe-pose-picker"

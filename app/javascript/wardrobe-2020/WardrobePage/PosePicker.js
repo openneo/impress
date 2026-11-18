@@ -6,24 +6,22 @@ import {
 	Box,
 	Button,
 	Flex,
-	Input,
 	Popover,
 	PopoverArrow,
 	PopoverContent,
 	PopoverTrigger,
 	Portal,
-	Tab,
-	Tabs,
-	TabList,
-	TabPanel,
-	TabPanels,
 	VisuallyHidden,
 	useBreakpointValue,
 	useColorModeValue,
 	useTheme,
 	useToast,
 } from "@chakra-ui/react";
-import { ChevronDownIcon, WarningTwoIcon } from "@chakra-ui/icons";
+import {
+	ChevronDownIcon,
+	ChevronRightIcon,
+	WarningTwoIcon,
+} from "@chakra-ui/icons";
 import { loadable } from "../util";
 
 import { petAppearanceFragment } from "../components/useOutfitAppearance";
@@ -32,15 +30,7 @@ import { OutfitLayers } from "../components/OutfitPreview";
 import SupportOnly from "./support/SupportOnly";
 import { useAltStylesForSpecies } from "../loaders/alt-styles";
 import { useLocalStorage } from "../util";
-import {
-	StyleCaption,
-	StyleTile,
-	StyleTileGroups,
-	getStyleLabel,
-	groupAltStylesByColor,
-	matchesDefaultStyle,
-	useStyleHoverPreview,
-} from "./StyleTiles";
+import { StyleCaption, getStyleImageUrl, getStyleLabel } from "./StyleTiles";
 
 // From https://twemoji.twitter.com/, thank you!
 import twemojiSmile from "../images/twemoji/smile.svg";
@@ -78,7 +68,7 @@ function PosePicker({
 	altStyleId,
 	appearanceId,
 	dispatchToOutfit,
-	onPreviewAltStyle,
+	onBrowseStyles,
 	onLockFocus,
 	onUnlockFocus,
 	...props
@@ -98,32 +88,26 @@ function PosePicker({
 	const altStyles = altStylesQuery.data ?? [];
 
 	const [isOpen, setIsOpen] = React.useState(false);
-	const [tabIndex, setTabIndex] = React.useState(0);
+
+	// Usually, closing the popover puts focus back on its button. But when we
+	// close it to open the NC Pet Styles search, focus belongs over there, in
+	// the search field.
+	const [shouldReturnFocus, setShouldReturnFocus] = React.useState(true);
 
 	const altStyle = altStyles.find((s) => s.id === altStyleId);
 
 	const placement = useBreakpointValue({ base: "bottom-end", md: "top-end" });
 
-	React.useEffect(() => {
-		// While the popover is open, don't change which tab is open.
-		if (isOpen) {
-			return;
-		}
-
-		// Otherwise, set the tab to Styles if we're wearing an Alt Style, or
-		// Expressions if we're not.
-		setTabIndex(altStyle != null ? 1 : 0);
-	}, [altStyle, isOpen]);
-
-	// Resize the Popover when we toggle support mode, because it probably will
-	// affect the content size.
+	// Resize the Popover when we toggle support mode, or put on or take off a
+	// style, because it probably will affect the content size.
+	const isWearingStyle = altStyle != null;
 	React.useLayoutEffect(() => {
 		// HACK: To trigger a Popover resize, we simulate a window resize event,
 		//       because Popover listens for window resizes to reposition itself.
 		//       I've also filed an issue requesting an official API!
 		//       https://github.com/chakra-ui/chakra-ui/issues/1853
 		window.dispatchEvent(new Event("resize"));
-	}, [isInSupportMode]);
+	}, [isInSupportMode, isWearingStyle]);
 
 	// Generally, the app tries to never put us in an invalid pose state. But it
 	// can happen with direct URL navigation, or pet loading when modeling isn't
@@ -171,13 +155,6 @@ function PosePicker({
 		dispatchToOutfit,
 	]);
 
-	// NOTE: This needs to be stable, so the memoized tiles in `StyleSelect`
-	//       don't all re-render whenever we do.
-	const onChangeStyle = React.useCallback(
-		(altStyleId) => dispatchToOutfit({ type: "setStyle", altStyleId }),
-		[dispatchToOutfit],
-	);
-
 	// This is a low-stakes enough control, where enough pairs don't have data
 	// anyway, that I think I want to just not draw attention to failures.
 	if (error) {
@@ -195,9 +172,10 @@ function PosePicker({
 	return (
 		<Popover
 			placement={placement}
-			returnFocusOnClose
+			returnFocusOnClose={shouldReturnFocus}
 			onOpen={() => {
 				setIsOpen(true);
+				setShouldReturnFocus(true);
 				onLockFocus();
 			}}
 			onClose={() => {
@@ -208,88 +186,186 @@ function PosePicker({
 			isLazy
 			lazyBehavior="keepMounted"
 		>
-			{() => (
-				<>
-					<PopoverTrigger>
-						<PosePickerButton
-							pose={pose}
-							altStyle={altStyle}
-							isOpen={isOpen}
-							loading={loading}
-							{...props}
-						/>
-					</PopoverTrigger>
-					<Portal>
-						<PopoverContent>
-							<Tabs
-								size="sm"
-								variant="soft-rounded"
-								display="flex"
-								flexDirection={{ base: "column", md: "column-reverse" }}
-								paddingY="2"
-								gap="2"
-								index={tabIndex}
-								onChange={setTabIndex}
-							>
-								<TabList paddingX="2" paddingY="0">
-									<Tab width="50%">Expressions</Tab>
-									<Tab width="50%">Styles</Tab>
-								</TabList>
-								<TabPanels position="relative">
-									<TabPanel paddingX="4" paddingY="0">
-										{isInSupportMode ? (
-											<PosePickerSupport
-												speciesId={speciesId}
-												colorId={colorId}
-												pose={pose}
-												appearanceId={appearanceId}
-												initialFocusRef={
-													tabIndex === 0 ? initialFocusRef : null
-												}
-												dispatchToOutfit={dispatchToOutfit}
-											/>
-										) : (
-											<>
-												<PosePickerTable
-													poseInfos={poseInfos}
-													onChange={onChangePose}
-													initialFocusRef={
-														tabIndex === 0 ? initialFocusRef : null
-													}
-												/>
-												{numStandardPoses == 0 && (
-													<PosePickerEmptyExplanation />
-												)}
-											</>
-										)}
-										<SupportOnly>
-											<Box position="absolute" top="1" left="3">
-												<PosePickerSupportSwitch
-													isChecked={isInSupportMode}
-													onChange={(e) => setIsInSupportMode(e.target.checked)}
-												/>
-											</Box>
-										</SupportOnly>
-									</TabPanel>
-									<TabPanel paddingX="4" paddingY="0">
-										<StyleSelect
-											selectedStyleId={altStyleId}
-											altStyles={altStyles}
-											petColorId={colorId}
-											isShowing={isOpen && tabIndex === 1}
-											onChange={onChangeStyle}
-											onPreview={onPreviewAltStyle}
-											initialFocusRef={tabIndex === 1 ? initialFocusRef : null}
+			{({ onClose }) => {
+				const browseStyles = () => {
+					setShouldReturnFocus(false);
+					onClose();
+					onBrowseStyles();
+				};
+				return (
+					<>
+						<PopoverTrigger>
+							<PosePickerButton
+								pose={pose}
+								altStyle={altStyle}
+								isOpen={isOpen}
+								loading={loading}
+								{...props}
+							/>
+						</PopoverTrigger>
+						<Portal>
+							<PopoverContent>
+								<Box position="relative" padding="4">
+									{altStyle != null ? (
+										<WornStyleCard
+											altStyle={altStyle}
+											onChange={browseStyles}
+											onRemove={() =>
+												dispatchToOutfit({ type: "setStyle", altStyleId: null })
+											}
+											initialFocusRef={initialFocusRef}
 										/>
-									</TabPanel>
-								</TabPanels>
-							</Tabs>
-							<PopoverArrow />
-						</PopoverContent>
-					</Portal>
-				</>
-			)}
+									) : (
+										<>
+											{isInSupportMode ? (
+												<PosePickerSupport
+													speciesId={speciesId}
+													colorId={colorId}
+													pose={pose}
+													appearanceId={appearanceId}
+													initialFocusRef={initialFocusRef}
+													dispatchToOutfit={dispatchToOutfit}
+												/>
+											) : (
+												<>
+													<PosePickerTable
+														poseInfos={poseInfos}
+														onChange={onChangePose}
+														initialFocusRef={initialFocusRef}
+													/>
+													{numStandardPoses == 0 && (
+														<PosePickerEmptyExplanation />
+													)}
+												</>
+											)}
+											<SupportOnly>
+												<Box position="absolute" top="1" left="3">
+													<PosePickerSupportSwitch
+														isChecked={isInSupportMode}
+														onChange={(e) =>
+															setIsInSupportMode(e.target.checked)
+														}
+													/>
+												</Box>
+											</SupportOnly>
+											<BrowseStylesRow
+												numStyles={altStyles.length}
+												onClick={browseStyles}
+											/>
+										</>
+									)}
+								</Box>
+								<PopoverArrow />
+							</PopoverContent>
+						</Portal>
+					</>
+				);
+			}}
 		</Popover>
+	);
+}
+
+/**
+ * BrowseStylesRow sits under the expressions, and opens the NC Pet Styles
+ * search, where you can look through the styles for this species.
+ */
+function BrowseStylesRow({ numStyles, onClick }) {
+	const borderColor = useColorModeValue("gray.200", "whiteAlpha.300");
+
+	if (numStyles === 0) {
+		return null;
+	}
+
+	return (
+		<Button
+			variant="ghost"
+			width="100%"
+			height="auto"
+			marginTop="3"
+			paddingX="2"
+			paddingY="2"
+			borderTop="1px solid"
+			borderColor={borderColor}
+			borderTopRadius="0"
+			fontWeight="normal"
+			justifyContent="flex-start"
+			gap="2"
+			onClick={onClick}
+		>
+			<EmojiImage src={twemojiSunglasses} alt="" boxSize={20} />
+			<Box flex="1 1 auto" textAlign="left" fontSize="sm" fontWeight="bold">
+				NC Pet Styles
+			</Box>
+			<Box fontSize="xs" opacity="0.7">
+				{numStyles} {numStyles === 1 ? "style" : "styles"}
+			</Box>
+			<ChevronRightIcon />
+		</Button>
+	);
+}
+
+/**
+ * WornStyleCard replaces the expressions while a style is worn, because styles
+ * come with their own expression. It shows the style, and lets you change it
+ * (in the NC Pet Styles search) or take it off.
+ */
+function WornStyleCard({ altStyle, onChange, onRemove, initialFocusRef }) {
+	const tileBackground = useColorModeValue("gray.100", "whiteAlpha.200");
+	const imageUrl = getStyleImageUrl(altStyle);
+
+	return (
+		<Flex direction="column" gap="3">
+			<Flex align="center" gap="3">
+				<Box
+					flex="0 0 auto"
+					width="64px"
+					height="64px"
+					borderRadius="md"
+					overflow="hidden"
+					background={tileBackground}
+				>
+					{imageUrl && (
+						<img
+							src={imageUrl}
+							alt=""
+							width="600"
+							height="600"
+							style={{
+								width: "100%",
+								height: "100%",
+								objectFit: "contain",
+								// The pet only fills the middle of its canvas, so zoom in.
+								transform: "scale(1.7)",
+							}}
+						/>
+					)}
+				</Box>
+				<Box minWidth="0">
+					<Box fontSize="xs" opacity="0.7">
+						Wearing
+					</Box>
+					<StyleCaption altStyle={altStyle} />
+				</Box>
+			</Flex>
+			<Flex gap="2">
+				<Button
+					size="sm"
+					colorScheme="green"
+					flex="1 1 auto"
+					onClick={onChange}
+					ref={initialFocusRef}
+				>
+					Change style
+				</Button>
+				<Button size="sm" flex="1 1 auto" onClick={onRemove}>
+					Remove
+				</Button>
+			</Flex>
+			<Box fontSize="xs" opacity="0.7" textAlign="center">
+				Styles come with their own expression. Remove the style to choose a
+				different one.
+			</Box>
+		</Flex>
 	);
 }
 
@@ -675,113 +751,6 @@ function RetiredUCWarning({ isSelected }) {
 				as an archive!
 			</PopoverContent>
 		</Popover>
-	);
-}
-
-/**
- * StyleSelect is a grid of the styles available for this species, as pictures
- * of the pet itself, grouped by color.
- *
- * We lead with pictures rather than names, because there can be 100+ styles
- * for a species, and how a style looks is the whole point of it. (It also
- * means styles we haven't named yet are just as easy to pick as the others!)
- *
- * Resting the mouse on a style previews it on the pet, via `onPreview`. See
- * `useStyleHoverPreview` for the rules.
- */
-function StyleSelect({
-	selectedStyleId,
-	altStyles,
-	petColorId,
-	isShowing,
-	onChange,
-	onPreview,
-	initialFocusRef,
-}) {
-	const [query, setQuery] = React.useState("");
-
-	const groups = React.useMemo(
-		() => groupAltStylesByColor(altStyles, { query, petColorId }),
-		[altStyles, query, petColorId],
-	);
-
-	const { hoveredStyleId, startHover, endHover } = useStyleHoverPreview({
-		isShowing,
-		onPreview,
-	});
-
-	// Picking a style ends the preview, so that the pet shows what's actually
-	// selected. (This matters for the keyboard: arrow keys change the selection
-	// while the mouse might still be resting on some other style.)
-	const changeStyle = React.useCallback(
-		(altStyleId) => {
-			endHover();
-			onChange(altStyleId);
-		},
-		[endHover, onChange],
-	);
-
-	const captionStyleId =
-		hoveredStyleId !== undefined ? hoveredStyleId : selectedStyleId;
-	const captionStyle = altStyles.find((s) => s.id === captionStyleId) ?? null;
-
-	return (
-		<Flex
-			as="form"
-			direction="column"
-			gap="2"
-			onSubmit={(e) => e.preventDefault()}
-		>
-			<Input
-				type="search"
-				size="sm"
-				borderRadius="md"
-				placeholder={`Filter ${altStyles.length} styles…`}
-				aria-label="Filter styles"
-				value={query}
-				onChange={(e) => {
-					// The style under the mouse might be about to leave the grid.
-					endHover();
-					setQuery(e.target.value);
-				}}
-			/>
-			<Box
-				maxHeight={{ base: "40vh", md: "18rem" }}
-				// Room for the focus ring, which would otherwise be clipped.
-				padding="4px"
-				overflow="auto"
-				onPointerLeave={endHover}
-				data-style-scroll-container="true"
-			>
-				{matchesDefaultStyle(query) && (
-					<Box marginBottom="2">
-						<StyleTile
-							altStyle={null}
-							checked={selectedStyleId == null}
-							onChange={changeStyle}
-							onHover={startHover}
-							inputRef={selectedStyleId == null ? initialFocusRef : null}
-							description="No style: your pet's regular look"
-						/>
-					</Box>
-				)}
-				<StyleTileGroups
-					groups={groups}
-					selectedStyleId={selectedStyleId}
-					onChange={changeStyle}
-					onHover={startHover}
-					initialFocusRef={initialFocusRef}
-					// Cover the scroll box's padding too, or tiles peek out above.
-					stickyTop="-4px"
-				/>
-				{groups.length === 0 && !matchesDefaultStyle(query) && (
-					<Box fontSize="sm" textAlign="center" opacity="0.7" paddingY="4">
-						No styles match “{query.trim()}”.
-					</Box>
-				)}
-			</Box>
-			<StyleCaption altStyle={captionStyle} />
-		</Flex>
 	);
 }
 

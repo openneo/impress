@@ -1,6 +1,7 @@
 import React from "react";
 import { ClassNames } from "@emotion/react";
 import {
+	Badge,
 	Box,
 	Editable,
 	EditablePreview,
@@ -31,14 +32,28 @@ import {
 	CheckIcon,
 	DeleteIcon,
 	EditIcon,
+	InfoIcon,
 	QuestionIcon,
+	RepeatIcon,
 	WarningTwoIcon,
 } from "@chakra-ui/icons";
 import { IoBagCheck } from "react-icons/io5";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 import { Delay, ErrorMessage, Heading1, Heading2 } from "../util";
-import Item, { ItemListContainer, ItemListSkeleton } from "./Item";
+import Item, {
+	ItemActionButton,
+	ItemContainer,
+	ItemListContainer,
+	ItemListSkeleton,
+	containerHasFocus,
+} from "./Item";
+import {
+	ItemBadgeList,
+	ItemCardContent,
+	ItemKindBadge,
+} from "../components/ItemCard";
+import { useAltStyle } from "../loaders/alt-styles";
 import { BiRename } from "react-icons/bi";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { MdMoreVert } from "react-icons/md";
@@ -58,8 +73,15 @@ import { useDeleteOutfitMutation } from "../loaders/outfits";
  * to have extra padding. Essentially: while the Items _do_ stretch out the
  * full width of the container, it doesn't look like it!
  */
-function ItemsPanel({ outfitState, outfitSaving, loading, dispatchToOutfit }) {
-	const { altStyleId, zonesAndItems, incompatibleItems } = outfitState;
+function ItemsPanel({
+	outfitState,
+	outfitSaving,
+	loading,
+	dispatchToOutfit,
+	onBrowseStyles,
+}) {
+	const { altStyleId, speciesId, zonesAndItems, incompatibleItems } =
+		outfitState;
 
 	return (
 		<ClassNames>
@@ -79,6 +101,14 @@ function ItemsPanel({ outfitState, outfitSaving, loading, dispatchToOutfit }) {
 							/>
 						) : (
 							<>
+								{altStyleId != null && (
+									<PetStyleGroup
+										altStyleId={altStyleId}
+										speciesId={speciesId}
+										dispatchToOutfit={dispatchToOutfit}
+										onBrowseStyles={onBrowseStyles}
+									/>
+								)}
 								<TransitionGroup component={null}>
 									{zonesAndItems.map(({ zoneId, zoneLabel, items }) => (
 										<CSSTransition
@@ -122,6 +152,84 @@ function ItemsPanel({ outfitState, outfitSaving, loading, dispatchToOutfit }) {
 				</Box>
 			)}
 		</ClassNames>
+	);
+}
+
+/**
+ * PetStyleGroup shows the NC Pet Style the pet is wearing, if any, as the
+ * first group of the outfit. It looks like an item row, but it isn't a toggle
+ * like they are: its actions are to change the style (in the NC Pet Styles
+ * search), take it off, or learn more about it.
+ */
+function PetStyleGroup({
+	altStyleId,
+	speciesId,
+	dispatchToOutfit,
+	onBrowseStyles,
+}) {
+	const { data: altStyle } = useAltStyle(altStyleId, speciesId);
+
+	// Wait for the style to load. (It's usually already loaded, for the
+	// PosePicker.) If it's not one we know about, show nothing, like the rest
+	// of the wardrobe does.
+	if (altStyle == null) {
+		return null;
+	}
+
+	// The token item has the style's NC item thumbnail, and its name. Styles we
+	// haven't named yet don't have a token item to link to.
+	const pseudoItem = {
+		name: altStyle.fullName ?? altStyle.adjectiveName,
+		thumbnailUrl: altStyle.thumbnailUrl,
+	};
+	const nameId = `pet-style-${altStyle.id}-name`;
+
+	return (
+		<Box mb="10">
+			<Heading2 mx="1">NC Pet Style</Heading2>
+			<ItemListContainer>
+				{/* Unlike item rows, this row isn't a toggle, so don't make it look
+				    clickable: just its action buttons are. */}
+				<ItemContainer isDisabled>
+					<Box flex="1 1 0" minWidth="0">
+						<ItemCardContent
+							item={pseudoItem}
+							itemNameId={nameId}
+							isWorn
+							focusSelector={containerHasFocus}
+							badges={
+								<ItemBadgeList>
+									<ItemKindBadge isNc />
+									<Badge>Pet Style</Badge>
+								</ItemBadgeList>
+							}
+						/>
+					</Box>
+					<Box flex="0 0 auto" marginTop="5px">
+						<ItemActionButton
+							icon={<RepeatIcon />}
+							label="Change style"
+							onClick={onBrowseStyles}
+						/>
+						<ItemActionButton
+							icon={<DeleteIcon />}
+							label="Remove"
+							onClick={() =>
+								dispatchToOutfit({ type: "setStyle", altStyleId: null })
+							}
+						/>
+						{altStyle.isLabeled && (
+							<ItemActionButton
+								icon={<InfoIcon />}
+								label="More info"
+								to={`/items/${altStyle.id}`}
+								target="_blank"
+							/>
+						)}
+					</Box>
+				</ItemContainer>
+			</ItemListContainer>
+		</Box>
 	);
 }
 
