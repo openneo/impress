@@ -47,9 +47,9 @@
     - name: Run `bundle install` to install dependencies in remote folder
       command:
         chdir: "{{ remote_app_root }}"
-        # The `--local` flag instructs Bundler to use the cached dependencies
-        # in `vendor/cache`, instead of reading from the web, which is much
-        # faster and more reliable!
+        # The `--local` flag instructs Bundler to use the gems that
+        # `deploy.yml` packaged into this version's `vendor/cache`, instead of
+        # reading from the web, which is much faster and more reliable!
         cmd: /opt/ruby-{{ ruby_version_live }}/bin/bundle install --local
 
     - name: Update the `current` folder to point to the new version

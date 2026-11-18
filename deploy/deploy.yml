@@ -31,6 +31,31 @@
     # docs/database-migrations.md.
     skip_migrations: no
   tasks:
+    # The server installs gems only from `vendor/cache`, never from the web
+    # (see "Run `bundle install`" below). We don't commit them to Git, so we
+    # package them here, on the machine we're deploying from. We include every
+    # platform in Gemfile.lock, so this works from a Mac too. (This step needs
+    # to reach rubygems.org, even when `vendor/cache` is already complete.)
+    #
+    # The server's `bundle install` checks each gem it installs against its
+    # checksum in Gemfile.lock, so a gem that doesn't match what we locked
+    # (e.g. one tampered with on its way to us) fails the deploy, before we
+    # switch to the new version. `BUNDLE_FROZEN` makes sure this step never
+    # quietly updates Gemfile.lock on the way out.
+    #
+    # We do this before anything touches the server, so a failure here doesn't
+    # leave behind an empty version folder.
+    - name: Package gems into the local app's vendor/cache
+      delegate_to: localhost
+      run_once: true
+      become: no
+      environment:
+        BUNDLE_FROZEN: "true"
+      changed_when: false
+      command:
+        chdir: "{{ local_app_root }}"
+        cmd: bundle cache --all-platforms --no-install
+
     - name: Generate a version name from the current timestamp
       command: date '+%Y-%m-%d-%s'
       register: new_app_version
@@ -49,9 +74,10 @@
         state: directory
 
     # NOTE: We skip most gitignored files, except for public/assets/*, which
-    # contains the assets we precompiled for production. We also skip
-    # vendor/bundle, where CI keeps its installed gems: the server installs its
-    # own, into the shared bundle folder.
+    # contains the assets we precompiled for production, and vendor/cache,
+    # which contains the gems we just packaged. We also skip vendor/bundle,
+    # where CI keeps its installed gems: the server installs its own, into the
+    # shared bundle folder.
     - name: Copy local app's source files to new remote folder
       ansible.posix.synchronize:
         src: "{{ local_app_root }}/"
@@ -60,6 +86,8 @@
         verify_host: true
         rsync_opts:
           - "--include=/public/assets/*"
+          - "--include=/vendor/cache/"
+          - "--include=/vendor/cache/*"
           - "--exclude=.git"
           - "--exclude=/vendor/bundle"
           - "--filter=':- .gitignore'"
@@ -97,8 +125,8 @@
     - name: Run `bundle install` to install dependencies in remote folder
       command:
         chdir: "{{ remote_app_root }}"
-        # The `--local` flag instructs Bundler to use the cached dependencies
-        # in `vendor/cache`, instead of reading from the web, which is much
+        # The `--local` flag instructs Bundler to use the gems we packaged into
+        # `vendor/cache`, instead of reading from the web, which is much
         # faster and more reliable!
         cmd: /opt/ruby-{{ ruby_version_live }}/bin/bundle install --local
 

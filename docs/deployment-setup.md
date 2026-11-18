@@ -61,7 +61,7 @@ If you have an existing machine with deploy access, this workflow lets you boots
 
 **Prerequisites to Install:** (or use devcontainer)
 - [ ] Install Ansible
-- [ ] Install Ruby 3.4+
+- [ ] Install Ruby 3.4+ (deploying packages gems from rubygems.org on your machine, so it needs network access to it)
 - [ ] Install Node.js/Yarn
 
 **Generate SSH Key:**

@@ -24,3 +24,6 @@ tmp/**/*
 !.yarn/versions
 
 .DS_Store
+
+# Gems are packaged here at deploy time (see deploy/deploy.yml), not committed.
+/vendor/cache

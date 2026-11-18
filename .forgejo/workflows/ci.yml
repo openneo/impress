@@ -113,16 +113,16 @@ jobs:
           key: gems-${{ hashFiles('.ruby-version') }}-${{ hashFiles('Gemfile.lock') }}
           restore-keys: gems-${{ hashFiles('.ruby-version') }}-
 
-      # `--local` installs from the gems checked into `vendor/cache`, so this
-      # doesn't depend on rubygems.org. `frozen` fails the build if
-      # `Gemfile.lock` is out of date, rather than quietly updating it.
-      # `bundle clean` removes gems we no longer use, so the cache doesn't grow
-      # forever.
+      # This downloads any gems the cache is missing from rubygems.org, and
+      # Bundler checks each one against its checksum in `Gemfile.lock`.
+      # `frozen` fails the build if `Gemfile.lock` is out of date, rather than
+      # quietly updating it. `bundle clean` removes gems we no longer use, so
+      # the cache doesn't grow forever.
       - name: Install gems
         run: |
           bundle config set --local frozen true
           bundle config set --local path vendor/bundle
-          bundle install --local --jobs "$(nproc)"
+          bundle install --jobs "$(nproc)"
           bundle clean
 
       # MariaDB's container starts with networking off while it initializes,
@@ -216,7 +216,7 @@ jobs:
         run: |
           bundle config set --local frozen true
           bundle config set --local path vendor/bundle
-          bundle install --local --jobs "$(nproc)"
+          bundle install --jobs "$(nproc)"
           bundle clean
 
       # This boots the app in production mode, which expects database URLs and
