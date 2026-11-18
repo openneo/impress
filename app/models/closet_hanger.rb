@@ -48,7 +48,10 @@ class ClosetHanger < ApplicationRecord
     joins(:user).where(u[:last_trade_activity_at].gteq(6.months.ago))
   }
 
-  before_validation :merge_quantities, :set_owned_by_list
+  # Set `owned` from the list *before* merging, so that when a hanger moves
+  # into a list with the other ownership status (e.g. from a wanted list into
+  # an owned list), we look for conflicts under its new `owned` value.
+  before_validation :set_owned_by_list, :merge_quantities
 
   after_save :log_trade_activity, if: :trading?
   after_destroy :log_trade_activity, if: :trading?
