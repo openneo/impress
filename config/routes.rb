@@ -51,6 +51,9 @@ OpenneoImpressItems::Application.routes.draw do
   match '/pets/load' => 'pets#load', :as => :load_pet, via: [:get, :post]
   get '/modeling' => 'pets#bulk', :as => :bulk_pets
 
+  # A random pet, dressed in a random outfit!
+  get '/roulette' => 'roulettes#new', :as => :roulette
+
   # Contributions to our modeling database!
   resources :contributions, :only => [:index]
   get 'users/top-contributors' => 'users#top_contributors', :as => :top_contributors

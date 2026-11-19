@@ -57,7 +57,8 @@ app/
 │   ├── outfits_controller.rb       # Outfit editor + CRUD
 │   ├── items_controller.rb         # Item search, pages, and JSON APIs
 │   ├── pets_controller.rb          # Pet loading (triggers modeling)
-│   └── closet_hangers_controller.rb # User item lists ("closets")
+│   ├── closet_hangers_controller.rb # User item lists ("closets")
+│   └── roulettes_controller.rb     # The roulette (random dressed pet)
 │
 ├── models/
 │   ├── item.rb                     # Items + compatibility prediction logic
@@ -65,6 +66,7 @@ app/
 │   ├── pet_state.rb                # Visual variants (pose/gender/mood)
 │   ├── swf_asset.rb                # Visual layers (biology/object)
 │   ├── outfit.rb                   # Saved outfits + rendering logic (visible_layers)
+│   ├── roulette.rb                 # The roulette: random pet in a compatible outfit
 │   ├── alt_style.rb                # Alternative pet appearances (Nostalgic, etc.)
 │   ├── pet/
 │   │   └── modeling_snapshot.rb    # Processes Neopets API data into models
