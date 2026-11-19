@@ -37,12 +37,5 @@ feeds:
     We're on Rails 8.1.4.1 already.
   "https://discuss.rubyonrails.org/t/ghsa-744p-w4gc-m3gh-sql-injection-through-trilogy-escape-with-multibyte-encodings/91797": >-
     Trilogy-only. We use the mysql2 adapter.
-  "https://www.ruby-lang.org/en/news/2026/10/23/regexp-fixes-for-gitlab-cves/": >-
-    Memory corruption when compiling attacker-supplied regexes (Regexp.new on
-    user input). DTI never compiles regexes from user input. Fixed in Ruby
-    3.4.12; worth taking on the next Ruby upgrade.
-  "https://www.ruby-lang.org/en/news/2026/08/27/multiple-vulnerabilities-in-resolv/": >-
-    resolv: memory exhaustion and validation bypass when resolving
-    attacker-influenced hostnames. Async's scheduler does use Resolv, but we
-    only ever fetch fixed hosts (Neopets, NeoPass, Lebron, Impress 2020), never
-    user-supplied URLs. Fixed in Ruby 3.4.12.
+  "https://www.ruby-lang.org/en/news/2026/11/18/multiple-vulnerabilities-in-regexp-and-string/": >-
+    Fixed: we upgraded to Ruby 3.4.13 in #53/#54.
