@@ -208,7 +208,7 @@
       git:
         repo: https://github.com/rbenv/ruby-build.git
         dest: /opt/ruby-build
-        version: v20250716
+        version: v20261119
 
     - name: Check if Ruby {{ ruby_version_latest }} is already installed
       stat:
