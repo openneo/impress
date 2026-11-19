@@ -45,7 +45,7 @@ jobs:
     container:
       # Keep this in sync with `.ruby-version`. The full (non-slim) image has
       # the compilers and headers our native gems need, including MySQL's.
-      image: ruby:3.4.5-bookworm
+      image: ruby:3.4.13-bookworm
     services:
       mariadb:
         image: mariadb:10.11
@@ -150,7 +150,7 @@ jobs:
     timeout-minutes: 30
     container:
       # Keep this in sync with `.ruby-version`.
-      image: ruby:3.4.5-bookworm
+      image: ruby:3.4.13-bookworm
     steps:
       # Only deploy the newest commit on main. A run for an older commit can
       # reach this point after a newer one landed (since runs on main wait for
