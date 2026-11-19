@@ -289,6 +289,48 @@ RSpec.describe Roulette do
 	end
 
 	describe ".pick_pet_state" do
+		it "picks a happy state when there is one" do
+			pet_type = build_pet_type(color: colors(:blue), species: species(:acara),
+			                          body_id: 1)
+			happy = build_pet_state(pet_type, mood_id: 1)
+			build_pet_state(pet_type, mood_id: 2) # Sad
+			build_pet_state(pet_type, mood_id: 4) # Sick
+
+			10.times do
+				expect(Roulette.pick_pet_state(pet_type.id)).to eq(happy)
+			end
+		end
+
+		it "falls back to another mood when no state is happy" do
+			pet_type = build_pet_type(color: colors(:blue), species: species(:acara),
+			                          body_id: 1)
+			sad = build_pet_state(pet_type, mood_id: 2)
+
+			expect(Roulette.pick_pet_state(pet_type.id)).to eq(sad)
+		end
+
+		it "prefers a usable sad state over a glitched happy one" do
+			pet_type = build_pet_type(color: colors(:blue), species: species(:acara),
+			                          body_id: 1)
+			sad = build_pet_state(pet_type, mood_id: 2)
+			build_pet_state(pet_type, mood_id: 1, labeled: false, glitched: true)
+
+			10.times do
+				expect(Roulette.pick_pet_state(pet_type.id)).to eq(sad)
+			end
+		end
+
+		it "prefers a happy state among unvalidated ones, too" do
+			pet_type = build_pet_type(color: colors(:blue), species: species(:acara),
+			                          body_id: 1)
+			happy = build_pet_state(pet_type, mood_id: 1, labeled: false)
+			build_pet_state(pet_type, mood_id: 4, labeled: false)
+
+			10.times do
+				expect(Roulette.pick_pet_state(pet_type.id)).to eq(happy)
+			end
+		end
+
 		it "prefers usable states, but falls back to the rest" do
 			pet_type = build_pet_type(color: colors(:blue), species: species(:acara),
 			                          body_id: 1)
@@ -460,7 +502,13 @@ RSpec.describe Roulette do
 				.to eq([hat_item.id])
 
 			expect { Roulette.pick_item_ids(1, zones: "#{hat.id},") }
-				.to raise_error(Roulette::InvalidRequest, /Unknown zone/)
+				.to raise_error(Roulette::InvalidRequest, /empty entry/)
+			expect { Roulette.pick_item_ids(1, zones: "#{hat.id},,#{shirt.id}") }
+				.to raise_error(Roulette::InvalidRequest, /empty entry/)
+
+			# Spaces after the commas are fine, though.
+			expect(Roulette.pick_item_ids(1, rng: Random.new(42), zones: "#{hat.id}, #{hat.id}"))
+				.to eq([hat_item.id])
 
 			expect { Roulette.pick_item_ids(1, zones: "1_0") }
 				.to raise_error(Roulette::InvalidRequest, /Unknown zone: 1_0/)
@@ -529,6 +577,33 @@ RSpec.describe Roulette do
 			# Even count=0 (a bare pet) contradicts filling specific zones.
 			expect { Roulette.pick_item_ids(1, zone_count: 0, zones: [hat.id]) }
 				.to raise_error(Roulette::InvalidRequest)
+		end
+
+		it "favors zones with more items, but still visits the thin ones" do
+			# One lone hat (like a "Be-Gone!" item alone in its zone), and a big
+			# pool of shirts. With a single zone to fill, the hat zone's chance is
+			# its weight's share of the total: 1 / (1 + 24^exponent).
+			thin = build_item(name: "Lone Hat", body_ids: [1], zones: [hat])
+			24.times { |i| build_item(name: "Shirt #{i}", body_ids: [1], zones: [shirt]) }
+
+			spins = 600
+			thin_picks = spins.times.count do |seed|
+				Roulette.pick_item_ids(1, rng: Random.new(seed), zone_count: 1) == [thin.id]
+			end
+
+			expected = 1 / (1 + 24**Roulette::ZONE_WEIGHT_EXPONENT)
+			expect(thin_picks.fdiv(spins)).to be_within(0.05).of(expected)
+			expect(expected).to be < 0.5 # Sanity: it's less than an even split.
+		end
+
+		it "fills requested zones no matter how few items they have" do
+			thin = build_item(name: "Lone Hat", body_ids: [1], zones: [hat])
+			24.times { |i| build_item(name: "Shirt #{i}", body_ids: [1], zones: [shirt]) }
+
+			10.times do |seed|
+				expect(Roulette.pick_item_ids(1, rng: Random.new(seed), zones: [hat.id]))
+					.to eq([thin.id])
+			end
 		end
 
 		it "picks at most one item per zone" do

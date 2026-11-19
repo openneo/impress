@@ -30,6 +30,31 @@ class Roulette
     [count, (1000 * height).round]
   end.freeze
 
+  # How strongly to favor zones with lots of items when picking which zones to
+  # fill. Each zone's weight is its number of fitting items, raised to this
+  # power. Within a zone, every item is still equally likely, so this shapes
+  # what the outfit looks like (hat, shirt, background...) without hiding
+  # obscure items.
+  #
+  # At 0, every zone is equally likely, so zones with only a few items crowd in:
+  # about ten biology zones hold just one or two items, usually a "Be-Gone!"
+  # item that hides that part of the pet, and most spins wore one. At 1, zones
+  # are picked in proportion to their item counts, so pets wear lots of
+  # scenery, because backgrounds and foregrounds are by far the biggest zones.
+  # Simulated with a Blue Acara's item counts (about 6 items per spin):
+  #
+  #   exponent  spins with a Be-Gone  scenery items per spin
+  #   0         72%                   0.9
+  #   0.25      29%                   1.4
+  #   0.5        8%                   1.9
+  #   0.75       2%                   2.2
+  #   1          0.4%                 2.6
+  ZONE_WEIGHT_EXPONENT = 0.5
+
+  # The poses we prefer for a random pet, because sad and sick pets feel
+  # unpleasant in practice. See `pick_pet_state`.
+  HAPPY_POSES = %w[HAPPY_MASC HAPPY_FEM].freeze
+
   # Return a hash of wardrobe query params for a random pet, e.g.:
   #   {color: 8, species: 1, pose: "HAPPY_FEM", state: 123, objects: [456, ...]}
   # By default the pet gets a realistic number of items. `full_outfit:` dresses
@@ -135,12 +160,23 @@ class Roulette
   # states exist at all. States with moods we no longer use are skipped in both
   # paths, since the editor would reject them. We only load the columns that
   # determine the pose, because the full row includes a big list of asset IDs.
+  #
+  # Within each of those, we pick a happy pose if there is one. A random mood is
+  # in the spirit of the roulette, but sad and sick pets feel unpleasant in
+  # practice. (Validated still wins over happy: a glitched happy state looks
+  # broken, which is worse than a sad one.)
   def self.pick_pet_state(pet_type_id)
     columns = [:id, :pet_type_id, :mood_id, :female, :unconverted]
     scope = PetState.where(pet_type_id:).select(*columns)
 
-    scope.merge(PetState.usable).to_a.shuffle.find { |state| showable_pose?(state) } ||
-      scope.to_a.shuffle.find { |state| showable_pose?(state) }
+    pick_happiest_state(scope.merge(PetState.usable)) || pick_happiest_state(scope)
+  end
+
+  # A random showable state from the scope, happy if possible, or nil if there
+  # are no showable states at all.
+  def self.pick_happiest_state(scope)
+    states = scope.to_a.shuffle.select { |state| showable_pose?(state) }
+    states.find { |state| HAPPY_POSES.include?(state.pose) } || states.first
   end
 
   # Whether the editor can display this state. `PetState#pose` raises for
@@ -151,7 +187,7 @@ class Roulette
     state.unconverted? || state.mood_id.nil? || [1, 2, 4].include?(state.mood_id)
   end
 
-  private_class_method :showable_pose?
+  private_class_method :pick_happiest_state, :showable_pose?
 
   # Pick how many items to dress the pet in, following the bell curve in
   # ITEM_COUNT_WEIGHTS.
@@ -176,11 +212,11 @@ class Roulette
   # `swf_assets`.)
   #
   # By default we stop at a realistic item count; `full_outfit:` fills every
-  # zone that can be filled, `zone_count:` fills that many random zones, and
-  # `zones:` (a list of IDs, or a comma-separated string) fills only those
-  # zones, leaving any that nothing fits empty. The three are mutually
-  # exclusive. Unknown zone IDs, and the music and sound effects zones, raise
-  # InvalidRequest.
+  # zone that can be filled, `zone_count:` fills that many random zones
+  # (favoring zones with more items, like a default spin), and `zones:` (a list
+  # of IDs, or a comma-separated string) fills only those zones, leaving any
+  # that nothing fits empty. The three are mutually exclusive. Unknown zone IDs,
+  # and the music and sound effects zones, raise InvalidRequest.
   def self.pick_item_ids(body_id, rng: Random.new, full_outfit: false,
                          zone_count: nil, zones: nil)
     # Each dress-level knob picks a different outfit, so they can't be mixed.
@@ -218,9 +254,10 @@ class Roulette
 
     # Which zones to fill, and how many items to stop at. If the caller chose
     # the zones, those are the only ones we look at (in the order given), and
-    # any that nothing fits stay empty. Otherwise it's every zone in random
-    # order, and we stop at every zone for a full outfit, or at the requested
-    # count, or our default realistic count.
+    # any that nothing fits stay empty. Otherwise it's every zone in a weighted
+    # random order (see ZONE_WEIGHT_EXPONENT), and we stop at every zone for a
+    # full outfit, or at the requested count, or our default realistic count.
+    # (For a full outfit, the order only decides which item wins a conflict.)
     #
     # An item is compatible if it occupies no zone that's already occupied or
     # restricted, and doesn't restrict a zone that's already occupied.
@@ -230,7 +267,7 @@ class Roulette
       zone_order = requested & pools.keys
       target = nil
     else
-      zone_order = pools.keys.shuffle(random: rng)
+      zone_order = weighted_zone_order(pools, rng)
       target = if full_outfit
         nil # Dress every zone that can be filled.
       elsif zone_count
@@ -264,6 +301,20 @@ class Roulette
     chosen.sort.presence
   end
 
+  # Shuffle the zones so that zones with more items tend to come first, with
+  # each zone's weight being its pool size to the ZONE_WEIGHT_EXPONENT. This is
+  # a weighted shuffle (Efraimidis-Spirakis): each zone gets a random key of
+  # -ln(u) / weight, which is an exponential random value with rate = weight,
+  # and we sort smallest first. The smallest key belongs to each zone with
+  # probability proportional to its weight, then the next from the rest, and
+  # so on.
+  def self.weighted_zone_order(pools, rng)
+    pools.keys.sort_by do |zone_id|
+      weight = pools[zone_id].size**ZONE_WEIGHT_EXPONENT
+      -Math.log(rng.rand) / weight
+    end
+  end
+
   # The zones a caller asked to fill, as IDs without duplicates, in the order
   # given. `zones` is a list or a comma-separated string. Unknown IDs, junk that
   # isn't an ID at all, a list longer than the number of zones that exist, and
@@ -280,11 +331,16 @@ class Roulette
     end
 
     ids = raw.map do |zone|
-      unless zone.to_s.match?(/\A\d+\z/)
+      zone = zone.to_s.strip # Allow spaces, like "40, 23".
+      if zone.empty?
+        raise InvalidRequest, "zones has an empty entry (maybe a stray comma?)"
+      end
+
+      unless zone.match?(/\A\d+\z/)
         raise InvalidRequest, "Unknown zone: #{zone}"
       end
 
-      zone.to_s.to_i
+      zone.to_i
     end.uniq
 
     if (excluded = ids & EXCLUDED_ZONE_IDS).any?
@@ -331,5 +387,6 @@ class Roulette
     end
   end
 
-  private_class_method :requested_zones, :zone_mask, :restrict_mask, :each_set_zone
+  private_class_method :weighted_zone_order, :requested_zones, :zone_mask,
+                       :restrict_mask, :each_set_zone
 end

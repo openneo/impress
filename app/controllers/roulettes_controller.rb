@@ -13,8 +13,8 @@
 #   color=N     Spin only that color (ID or name). Unknown ones are a 400.
 #   full=1      Dress every zone that can be filled. Falsy values like 0, false,
 #               or no turn it off. Can't be combined with count or zones.
-#   count=N     Fill exactly N random zones (0 = a bare pet). Can't be combined
-#               with full or zones.
+#   count=N     Fill exactly N random zones (0 = a bare pet), favoring zones
+#               with more items. Can't be combined with full or zones.
 #   zones=40,23 Fill only these specific zones (IDs only). Zones that nothing
 #               fits are left empty, so the result can be a bare pet. Unknown
 #               IDs are a 400, as are the music and sound effects zones, and a
@@ -60,8 +60,10 @@ class RoulettesController < ApplicationController
 
   private
 
+  # (`private` doesn't apply to constants, so we hide these explicitly.)
   TRUTHY_VALUES = %w[1 true yes on].freeze
   FALSY_VALUES = %w[0 false no off].freeze
+  private_constant :TRUTHY_VALUES, :FALSY_VALUES
 
   # ?full=1: whether to fill every zone. A bare ?full is on; falsy values like
   # 0, false, and no are off. Anything else is a 400, rather than guessing.
