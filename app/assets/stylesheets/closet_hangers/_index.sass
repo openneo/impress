@@ -4,6 +4,57 @@
 @import "../partials/icon"
 @import "../partials/secondary_nav"
 
+// Colors for trade matches, from the outfit editor's (Chakra UI's) green and
+// blue, to match its "You own this" and "You want this" badges.
+$trade-match-own:           #38a169
+$trade-match-own-light:     #c6f6d5
+$trade-match-own-dark:      #22543d
+$trade-match-own-bg:        #f0fff4
+$trade-match-own-outline:   #38a169
+$trade-match-want:          #3182ce
+$trade-match-want-light:    #bee3f8
+$trade-match-want-dark:     #2a4365
+$trade-match-want-bg:       #ebf8ff
+$trade-match-want-outline:  #3182ce
+$trade-match-want-text:     #2c5282
+$trade-match-tooltip-bg:    #2d3748
+$trade-match-tile-padding:  4px
+// The tooltip's arrow: its size, and how far its right edge is from the
+// tooltip's right edge.
+$trade-match-arrow-size:    6px
+$trade-match-arrow-right:   12px
+// The badge sits in the top-right corner of the item's image, opposite the
+// quantity in the top-left.
+$trade-match-badge-size:    22px
+$trade-match-badge-top:     $trade-match-tile-padding
+$trade-match-badge-right:   ($object-width - $object-img-size) / 2 + $object-padding
+
+=trade-match-highlight($bg, $outline, $trading-class)
+  border-radius: 6px
+  // Give the image some breathing room from the tile's edge, borrowing from
+  // the margins so that the layout doesn't shift.
+  padding-top: $trade-match-tile-padding
+  padding-bottom: $trade-match-tile-padding
+  margin-top: $object-padding - $trade-match-tile-padding
+  margin-bottom: $object-padding - $trade-match-tile-padding
+  &.#{$trading-class}
+    background: $bg
+    font-weight: bold
+  &:not(.#{$trading-class})
+    outline: 1px dashed $outline
+    outline-offset: -2px
+
+// A soft badge for matches you aren't trading, and a solid one for those you
+// are.
+=trade-match-badge-colors($light, $base, $dark)
+  background: $light
+  border-color: $base
+  color: $dark
+  &.trade-match-badge-trading
+    background: $base
+    border-color: $dark
+    color: white
+
 body.closet_hangers-index
   +campaign-progress
   +secondary-nav
@@ -323,10 +374,127 @@ body.closet_hangers-index
       font-size: 85%
       padding-left: 2em
 
+  // Trade matches, on another user's closet page: on their wishlists, the
+  // items you own (green check); on their trade lists, the items you want
+  // (blue star), matching the outfit editor's badges. Matches in your trading
+  // lists get a filled highlight and a solid badge; the ones you have (or want)
+  // but aren't trading get just a dashed outline and a soft badge.
   .closet-hangers-group
-    &[data-owned=true] .user-wants, &[data-owned=false] .user-owns
-      background: $module-bg-color
-      font-weight: bold
+    &[data-owned=false] .user-owns
+      +trade-match-highlight($trade-match-own-bg, $trade-match-own-outline, "user-owns-for-trade")
+    &[data-owned=true] .user-wants
+      +trade-match-highlight($trade-match-want-bg, $trade-match-want-outline, "user-wants-for-trade")
+      a
+        color: $trade-match-want-text
+
+  // Keep the quantity and NC icon on the image, now that it's padded down.
+  #closet-hangers .closet-hangers-group
+    &[data-owned=false] .user-owns, &[data-owned=true] .user-wants
+      .quantity
+        top: $trade-match-tile-padding
+      .nc-icon
+        top: $object-img-size - $nc-icon-size + $trade-match-tile-padding
+
+  .trade-match-badge
+    position: absolute
+    top: $trade-match-badge-top
+    right: $trade-match-badge-right
+    width: $trade-match-badge-size
+    height: $trade-match-badge-size
+    padding: 0
+    border: 1px solid
+    border-radius: 50%
+    cursor: help
+    display: flex
+    align-items: center
+    justify-content: center
+    font: inherit
+
+    svg
+      width: 14px
+      height: 14px
+      fill: currentColor
+
+  // Show the tooltip on hover (only for real pointers: on touch screens,
+  // :hover sticks after a tap, so we toggle it on click instead), on keyboard
+  // focus, or when opened by a click. Escape dismisses it.
+  @media (hover: hover)
+    .trade-match-badge:hover + .trade-match-tooltip
+      display: block
+  .trade-match-badge:focus-visible + .trade-match-tooltip,
+  .trade-match-tooltip.open
+    display: block
+  .trade-match-tooltip.dismissed
+    display: none !important
+
+  .trade-match-badge-owns
+    +trade-match-badge-colors($trade-match-own-light, $trade-match-own, $trade-match-own-dark)
+  .trade-match-badge-wants
+    +trade-match-badge-colors($trade-match-want-light, $trade-match-want, $trade-match-want-dark)
+
+  .trade-match-tooltip
+    display: none
+    // Positioned relative to the item, so that the box sits 8px above the
+    // badge, with its arrow centered over the badge.
+    position: absolute
+    bottom: calc(100% - #{$trade-match-badge-top} + 8px)
+    right: $trade-match-badge-right + $trade-match-badge-size / 2 - $trade-match-arrow-right - $trade-match-arrow-size
+    z-index: 10
+    width: max-content
+    max-width: 16em
+    padding: 6px 10px
+    border-radius: 6px
+    background: $trade-match-tooltip-bg
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .2)
+    color: white
+    cursor: auto
+    font-size: 13px
+    font-weight: normal
+    line-height: 1.4
+    text-align: left
+    // Nudged back on-screen by JS, if it would overflow the window.
+    transform: translateX(var(--trade-match-tooltip-shift, 0px))
+
+    // The little arrow, pointing down at the badge.
+    &::after
+      content: ""
+      position: absolute
+      top: 100%
+      right: $trade-match-arrow-right
+      border: $trade-match-arrow-size solid transparent
+      border-top-color: $trade-match-tooltip-bg
+      transform: translateX(calc(-1 * var(--trade-match-tooltip-shift, 0px)))
+
+    // If there's no room above the badge, it goes below instead.
+    &.below
+      bottom: auto
+      top: $trade-match-badge-top + $trade-match-badge-size + 8px
+      &::after
+        top: auto
+        bottom: 100%
+        border-top-color: transparent
+        border-bottom-color: $trade-match-tooltip-bg
+
+    // Keep the heading on one line, and let the tooltip widen to fit it.
+    .trade-match-tooltip-heading
+      display: block
+      margin-bottom: 2px
+      white-space: nowrap
+
+      em
+        opacity: .8
+
+    ul
+      list-style: none
+      margin: 0
+      padding: 0
+
+    li
+      margin: 2px 0 0
+
+  .trade-match-list-unlisted
+    font-style: italic
+    opacity: .8
 
   &.current-user
     #closet-hangers

@@ -165,12 +165,4 @@
   = javascript_include_tag 'closet_hangers/index', defer: true
 
 - if public_perspective? && user_signed_in?
-  - content_for :meta do
-    %meta{
-      name: "trade-matches-owns",
-      value: @items.select(&:owned?).map(&:id).join(",")
-    }
-    %meta{
-      name: "trade-matches-wants",
-      value: @items.select(&:wanted?).map(&:id).join(",")
-    }
+  = render "trade_matches", trade_matches: @trade_matches

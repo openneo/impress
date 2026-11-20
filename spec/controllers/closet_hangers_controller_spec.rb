@@ -75,4 +75,118 @@ RSpec.describe ClosetHangersController, :account_data, type: :controller do
       end
     end
   end
+
+  describe "GET #index for another user's lists" do
+    let(:trading) { ClosetVisibility[:trading].id }
+    let(:public_vis) { ClosetVisibility[:public].id }
+
+    let(:their_wishlist) do
+      other_user.closet_lists.create!(name: "Wants", hangers_owned: false,
+        visibility: trading)
+    end
+    let(:their_trades) do
+      other_user.closet_lists.create!(name: "Trades", hangers_owned: true,
+        visibility: trading)
+    end
+
+    let(:my_trades) do
+      user.closet_lists.create!(name: "UFT", hangers_owned: true,
+        visibility: trading)
+    end
+    let(:my_keepers) do
+      user.closet_lists.create!(name: "Keepers", hangers_owned: true,
+        visibility: public_vis)
+    end
+    let(:my_seeking) do
+      user.closet_lists.create!(name: "Seeking", hangers_owned: false,
+        visibility: trading)
+    end
+    let(:my_dreams) do
+      user.closet_lists.create!(name: "Dreams", hangers_owned: false,
+        visibility: public_vis)
+    end
+
+    let(:traded_item) { create_item("Traded") }
+    let(:kept_item) { create_item("Kept") }
+    let(:kept_and_traded_item) { create_item("Kept and Traded") }
+    let(:sought_item) { create_item("Sought") }
+    let(:dreamt_item) { create_item("Dreamt") }
+
+    before do
+      Fundraising::Campaign.create!(active: true, goal: 100,
+        description: "Test")
+
+      [traded_item, kept_item, kept_and_traded_item].each do |item|
+        other_user.closet_hangers.create!(item:, owned: false, quantity: 1,
+          list: their_wishlist)
+      end
+      [sought_item, dreamt_item].each do |item|
+        other_user.closet_hangers.create!(item:, owned: true, quantity: 1,
+          list: their_trades)
+      end
+
+      user.closet_hangers.create!(item: traded_item, owned: true, quantity: 1,
+        list: my_trades)
+      user.closet_hangers.create!(item: kept_item, owned: true, quantity: 1,
+        list: my_keepers)
+      user.closet_hangers.create!(item: kept_and_traded_item, owned: true,
+        quantity: 1, list: my_keepers)
+      user.closet_hangers.create!(item: kept_and_traded_item, owned: true,
+        quantity: 1, list: my_trades)
+      user.closet_hangers.create!(item: sought_item, owned: false, quantity: 1,
+        list: my_seeking)
+      user.closet_hangers.create!(item: dreamt_item, owned: false, quantity: 1,
+        list: my_dreams)
+    end
+
+    it "lists which of your lists each match is in, and if they're trading" do
+      get :index, params: {user_id: other_user.id}
+
+      matches = assigns(:trade_matches)
+      expect(matches[:owns]).to eq(
+        traded_item.id => [{name: "UFT", trading: true}],
+        kept_item.id => [{name: "Keepers", trading: false}],
+        # Trading lists come first.
+        kept_and_traded_item.id => [
+          {name: "UFT", trading: true},
+          {name: "Keepers", trading: false},
+        ],
+      )
+      expect(matches[:wants]).to eq(
+        sought_item.id => [{name: "Seeking", trading: true}],
+        dreamt_item.id => [{name: "Dreams", trading: false}],
+      )
+    end
+
+    it "doesn't include anything for signed-out viewers" do
+      sign_out :auth_user
+      get :index, params: {user_id: other_user.id}
+      expect(assigns(:trade_matches)).to be_nil
+    end
+
+    context "with your unlisted items" do
+      let(:unlisted_item) { create_item("Unlisted") }
+
+      before do
+        other_user.closet_hangers.create!(item: unlisted_item, owned: false,
+          quantity: 1, list: their_wishlist)
+        user.closet_hangers.create!(item: unlisted_item, owned: true,
+          quantity: 1)
+      end
+
+      it "counts them as trading if your owned items are trading" do
+        user.update!(owned_closet_hangers_visibility: trading)
+        get :index, params: {user_id: other_user.id}
+        expect(assigns(:trade_matches)[:owns][unlisted_item.id]).
+          to eq [{name: nil, trading: true}]
+      end
+
+      it "doesn't count them as trading if your owned items are just public" do
+        user.update!(owned_closet_hangers_visibility: public_vis)
+        get :index, params: {user_id: other_user.id}
+        expect(assigns(:trade_matches)[:owns][unlisted_item.id]).
+          to eq [{name: nil, trading: false}]
+      end
+    end
+  end
 end

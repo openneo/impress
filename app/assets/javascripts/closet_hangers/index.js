@@ -70,34 +70,183 @@
 		this.setAttribute("aria-pressed", isComparing);
 	});
 
-	// Read the item IDs of trade matches from the meta tags.
-	const ownedIds =
-		document
-			.querySelector("meta[name=trade-matches-owns]")
-			?.getAttribute("value")
-			?.split(",") ?? [];
-	const wantedIds =
-		document
-			.querySelector("meta[name=trade-matches-wants]")
-			?.getAttribute("value")
-			?.split(",") ?? [];
+	// Read the current user's trade matches: for each item they own or want,
+	// which of their lists it's in, and whether that list is up for trade.
+	const tradeMatches = (() => {
+		const el = document.getElementById("trade-matches");
+		try {
+			return el ? JSON.parse(el.textContent) : null;
+		} catch (error) {
+			console.error("Could not read trade matches", error);
+			return null;
+		}
+	})() ?? { owns: {}, wants: {} };
 
-	// Apply the `user-owns` and `user-wants` classes to the relevant entries.
-	// This both provides immediate visual feedback, and sets up "Compare with
-	// Your Items" to toggle to just them!
+	// Apply the `user-owns` and `user-wants` classes (and their `-for-trade`
+	// variants, when the item is in one of the user's trading lists) to the
+	// relevant entries, and add a badge explaining the match. This both
+	// provides immediate visual feedback, and sets up "Compare with Your Items"
+	// to toggle to just them!
 	//
 	// NOTE: The motivation here is caching: this allows us to share a cache of
 	// the closet list contents across all users, without `user-owns` or
 	// `user-wants` classes for one specific user getting cached and reused.
+	let tradeMatchTooltipCount = 0;
 	const hangerEls = document.querySelectorAll("#closet-hangers .object");
 	for (const hangerEl of hangerEls) {
 		const itemId = hangerEl.getAttribute("data-item-id");
-		if (ownedIds.includes(itemId)) {
+		const ownedLists = tradeMatches.owns[itemId];
+		const wantedLists = tradeMatches.wants[itemId];
+		if (ownedLists) {
 			hangerEl.classList.add("user-owns");
+			if (ownedLists.some((l) => l.trading)) {
+				hangerEl.classList.add("user-owns-for-trade");
+			}
 		}
-		if (wantedIds.includes(itemId)) {
+		if (wantedLists) {
 			hangerEl.classList.add("user-wants");
+			if (wantedLists.some((l) => l.trading)) {
+				hangerEl.classList.add("user-wants-for-trade");
+			}
 		}
+
+		// Badge the matches that are relevant to this group: on the other
+		// user's wishlists, the items you own; on their trade lists, the items
+		// you want.
+		const theyOwn =
+			hangerEl.closest(".closet-hangers-group")?.getAttribute("data-owned") ===
+			"true";
+		const lists = theyOwn ? wantedLists : ownedLists;
+		if (lists) {
+			hangerEl.append(...buildTradeMatchBadge(theyOwn ? "wants" : "owns", lists));
+		}
+	}
+
+	// Builds the badge button, and its tooltip (a sibling, so that clicking
+	// the tooltip doesn't count as clicking the badge).
+	function buildTradeMatchBadge(kind, lists) {
+		const isTrading = lists.some((l) => l.trading);
+		const summary = kind === "owns" ? "You own this!" : "You want this!";
+		// Explain the badge's strength in words: are you trading this?
+		const status = isTrading ? "Trading" : "Not trading";
+
+		const badge = document.createElement("button");
+		badge.type = "button";
+		badge.className = `trade-match-badge trade-match-badge-${kind}`;
+		if (isTrading) badge.classList.add("trade-match-badge-trading");
+		badge.setAttribute("aria-label", `${summary} (${status})`);
+		badge.append(buildTradeMatchIcon(kind));
+
+		const tooltip = document.createElement("span");
+		tooltip.className = "trade-match-tooltip";
+		tooltip.setAttribute("role", "tooltip");
+		tooltip.id = `trade-match-tooltip-${tradeMatchTooltipCount++}`;
+		badge.setAttribute("aria-describedby", tooltip.id);
+
+		// The badge's label already says this, so hide it from screen readers.
+		const heading = document.createElement("span");
+		heading.className = "trade-match-tooltip-heading";
+		heading.setAttribute("aria-hidden", "true");
+		const summaryEl = document.createElement("strong");
+		summaryEl.textContent = summary;
+		const statusEl = document.createElement("em");
+		statusEl.textContent = `(${status})`;
+		heading.append(summaryEl, " ", statusEl);
+		tooltip.append(heading);
+
+		const listEls = document.createElement("ul");
+		for (const list of lists) {
+			const listEl = document.createElement("li");
+			const nameEl = document.createElement("span");
+			if (list.name == null) {
+				nameEl.className = "trade-match-list-unlisted";
+				nameEl.textContent = "Not in a list";
+			} else {
+				nameEl.textContent = list.name;
+			}
+			listEl.append(nameEl);
+			listEls.append(listEl);
+		}
+		tooltip.append(listEls);
+
+		// The tooltip shows on hover (for real pointers) and keyboard focus via
+		// CSS. Clicking (or tapping) the badge toggles it open, too.
+		badge.addEventListener("mouseenter", () => showingTooltip(tooltip));
+		badge.addEventListener("mouseleave", () => tooltip.classList.remove("open"));
+		badge.addEventListener("focus", () => showingTooltip(tooltip));
+		badge.addEventListener("click", () => {
+			const wasOpen = tooltip.classList.contains("open");
+			closeTooltips();
+			if (!wasOpen) {
+				tooltip.classList.add("open");
+				showingTooltip(tooltip);
+			}
+		});
+
+		return [badge, tooltip];
+	}
+	function closeTooltips({ dismiss = false } = {}) {
+		for (const tooltip of document.querySelectorAll(".trade-match-tooltip")) {
+			tooltip.classList.remove("open");
+			// Hide it even while hovered or focused, until it's shown again.
+			if (dismiss) tooltip.classList.add("dismissed");
+		}
+	}
+	document.addEventListener("click", (event) => {
+		if (!event.target.closest(".trade-match-badge")) {
+			closeTooltips();
+		}
+	});
+	document.addEventListener("keydown", (event) => {
+		if (event.key === "Escape") closeTooltips({ dismiss: true });
+	});
+
+	// When a tooltip is about to show, un-dismiss it, close any others, and
+	// make sure it fits on-screen: flip it below the badge if it would go off
+	// the top, and shift it sideways if it would go off either side.
+	function showingTooltip(tooltip) {
+		tooltip.classList.remove("dismissed");
+		for (const other of document.querySelectorAll(
+			".trade-match-tooltip.open",
+		)) {
+			if (other !== tooltip) other.classList.remove("open");
+		}
+
+		tooltip.classList.remove("below");
+		tooltip.style.removeProperty("--trade-match-tooltip-shift");
+		const margin = 8;
+		if (tooltip.getBoundingClientRect().top < margin) {
+			tooltip.classList.add("below");
+		}
+		const rect = tooltip.getBoundingClientRect();
+		const viewportWidth = document.documentElement.clientWidth;
+		let shift = 0;
+		if (rect.left < margin) {
+			shift = margin - rect.left;
+		} else if (rect.right > viewportWidth - margin) {
+			shift = viewportWidth - margin - rect.right;
+		}
+		if (shift !== 0) {
+			tooltip.style.setProperty("--trade-match-tooltip-shift", `${shift}px`);
+		}
+	}
+
+	// A check for items you own, and a star for items you want, to match the
+	// badges in the outfit editor.
+	function buildTradeMatchIcon(kind) {
+		const svgNS = "http://www.w3.org/2000/svg";
+		const svg = document.createElementNS(svgNS, "svg");
+		svg.setAttribute("viewBox", "0 0 24 24");
+		svg.setAttribute("aria-hidden", "true");
+		const path = document.createElementNS(svgNS, "path");
+		path.setAttribute(
+			"d",
+			kind === "owns"
+				? "M20.3 5.3 9 16.6l-5.3-5.3-1.4 1.4L9 19.4 21.7 6.7z"
+				: "M12 2.5l2.9 6.2 6.6.8-4.9 4.6 1.3 6.6L12 17.4l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z",
+		);
+		svg.append(path);
+		return svg;
 	}
 
 	/*

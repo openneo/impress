@@ -63,7 +63,7 @@ class ClosetHangersController < ApplicationController
     end
 
     if @public_perspective && user_signed_in?
-      current_user.assign_closeted_to_items!(@items)
+      @trade_matches = find_trade_matches(@items)
     end
 
     @campaign = Fundraising::Campaign.current
@@ -170,6 +170,37 @@ class ClosetHangersController < ApplicationController
   end
 
   private
+
+  # For each of these items that the current user owns or wants, which of
+  # their lists is it in, and are those lists up for trade? We use this to
+  # highlight trade matches on another user's closet page, more strongly for
+  # the ones you're actually trading, and to explain them in a tooltip.
+  #
+  # Returns a hash like:
+  #   {owns: {item_id => [{name: "My Trades", trading: true}, ...]},
+  #    wants: {item_id => [{name: nil, trading: false}, ...]}}
+  # where a `nil` name means the item isn't in a list.
+  def find_trade_matches(items)
+    hangers = current_user.closet_hangers.
+      where(item_id: items.map(&:id).uniq).includes(:list)
+
+    matches = {owns: {}, wants: {}}
+    hangers.each do |hanger|
+      lists = (matches[hanger.owned? ? :owns : :wants][hanger.item_id] ||= [])
+      lists << {name: hanger.list&.name, trading: hanger.trading?}
+    end
+
+    # Trading lists first, then alphabetical, then "not in a list" last.
+    matches.each_value do |lists_by_item_id|
+      lists_by_item_id.each_value do |lists|
+        lists.sort_by! do |l|
+          [l[:trading] ? 0 : 1, l[:name].nil? ? 1 : 0, l[:name].to_s.downcase]
+        end
+      end
+    end
+
+    matches
+  end
 
   def closet_hanger_params
     params.require(:closet_hanger).permit(:list_id, :owned, :quantity)

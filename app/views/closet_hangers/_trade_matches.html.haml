@@ -1,0 +1,4 @@
+-# Your own trade matches, for the highlights and badges. We add those in JS
+-# rather than in the HTML, so the closet lists can be cached for everyone.
+%script#trade-matches{type: "application/json"}
+  = json_escape(trade_matches.to_json).html_safe
