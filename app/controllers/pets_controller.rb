@@ -56,8 +56,10 @@ class PetsController < ApplicationController
   def pet_load_error(options)
     respond_to do |format|
       format.html do
-        path = params[:origin] || root_path
-        path += "?name=#{params[:name]}"
+        # Only send folks back to a URL on this site. (The origin is untrusted
+        # input, and scanners like to probe it.)
+        path = url_from(params[:origin]) || root_path
+        path += "?" + {name: params[:name]}.to_query
         redirect_to path, :alert => options[:long_message]
       end
 

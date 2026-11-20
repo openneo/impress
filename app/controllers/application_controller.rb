@@ -25,6 +25,13 @@ class ApplicationController < ActionController::Base
 
   rescue_from ActiveRecord::ConnectionTimeoutError, with: :on_db_timeout
 
+  # Malformed input, like a page number or redirect target that's actually a
+  # SQL injection probe, is the client's mistake, not ours: answer 400 rather
+  # than 500, which also keeps it out of GlitchTip.
+  rescue_from WillPaginate::InvalidPage,
+    ActionController::Redirecting::UnsafeRedirectError,
+    with: :on_bad_request
+
   def authenticate_user!
     redirect_to(new_auth_user_session_path) unless user_signed_in?
   end
@@ -64,6 +71,10 @@ class ApplicationController < ActionController::Base
   def on_request_stopped
     render file: 'public/stopped.html', layout: false,
       status: :internal_server_error
+  end
+
+  def on_bad_request
+    render file: 'public/400.html', layout: false, status: :bad_request
   end
 
   def on_db_timeout
