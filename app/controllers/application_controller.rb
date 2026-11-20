@@ -30,6 +30,7 @@ class ApplicationController < ActionController::Base
   # than 500, which also keeps it out of GlitchTip.
   rescue_from WillPaginate::InvalidPage,
     ActionController::Redirecting::UnsafeRedirectError,
+    ActionController::BadRequest,
     with: :on_bad_request
 
   def authenticate_user!

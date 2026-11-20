@@ -319,6 +319,12 @@ class ItemsController < ApplicationController
     if q.is_a?(String)
       @query = Item::Search::Query.from_text(q, current_user)
     elsif q.is_a?(ActionController::Parameters)
+      # Each filter should be a nested hash, like `q[0][key]=name`. Something
+      # like `q[name]=frost` is the client's mistake: answer 400, not 500.
+      unless q.values.all?(ActionController::Parameters)
+        raise ActionController::BadRequest, "q filters must be hashes"
+      end
+
       @query = Item::Search::Query.from_params(q, current_user)
     end
   end

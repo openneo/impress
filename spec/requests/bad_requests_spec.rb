@@ -67,4 +67,14 @@ RSpec.describe "Malformed requests", type: :request do
     get "/pets/load", params: {name: "thyassa", origin: "/modeling"}
     expect(response).to redirect_to("/modeling?name=thyassa")
   end
+
+  it "answers 400 for item search filters that aren't hashes" do
+    get "/items.json", params: {q: {name: "frost"}}
+    expect(response).to have_http_status(:bad_request)
+  end
+
+  it "still searches items with hash filters" do
+    get "/items.json", params: {q: {"0" => {key: "name", value: "frost"}}}
+    expect(response).to have_http_status(:ok)
+  end
 end
