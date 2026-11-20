@@ -340,9 +340,17 @@ class NeopetsPage
 
       # Create closet hanger from each item, and remove them from the reference
       # lists.
-      hangers = items.map do |item|
+      # When several items match one ref, the first claims it, so put items the
+      # user already has first, to update those rather than add a lookalike.
+      items = items.sort_by { |item| existing_hangers_by_item_id.key?(item.id) ? 0 : 1 }
+      hangers = items.filter_map do |item|
         data = item_refs_by_best_key[:id].delete(item.id) ||
           item_refs_by_best_key[:thumbnail_url].delete(normalize_thumbnail_url(item.thumbnail_url))
+
+        # Several of our items can share one thumbnail URL, and so match the same
+        # gallery ref. The first one claims the ref; skip the rest, rather than
+        # import one ref as several items.
+        next if data.nil?
 
         # If there's a hanger in the current list, we want it so we can update
         # its quantity. If there's a hanger in another list, we want it so we
