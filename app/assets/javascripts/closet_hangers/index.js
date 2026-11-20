@@ -66,7 +66,8 @@
   */
 
 	$("#toggle-compare").click(function () {
-		hangersEl.toggleClass("comparing");
+		const isComparing = hangersEl.toggleClass("comparing").hasClass("comparing");
+		this.setAttribute("aria-pressed", isComparing);
 	});
 
 	// Read the item IDs of trade matches from the meta tags.
@@ -833,8 +834,15 @@
 
   */
 
-	$("#toggle-help").click(function () {
-		$("#closet-hangers-help").toggleClass("hidden");
+	const helpEl = $("#closet-hangers-help");
+	const toggleHelpEl = $("#toggle-help");
+
+	// The help starts hidden for users with items, but visible for new users.
+	toggleHelpEl.attr("aria-expanded", !helpEl.hasClass("hidden"));
+
+	toggleHelpEl.click(function () {
+		const isExpanded = !helpEl.toggleClass("hidden").hasClass("hidden");
+		this.setAttribute("aria-expanded", isExpanded);
 	});
 
 	/*

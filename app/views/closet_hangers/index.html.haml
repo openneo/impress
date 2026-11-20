@@ -4,14 +4,14 @@
   - title t('.title_for.you')
   - add_body_class 'current-user'
   - secondary_nav do
-    %span#toggle-help= t('.toggle_help')
+    %button#toggle-help{type: 'button', 'aria-expanded': 'false', 'aria-controls': 'closet-hangers-help'}= t('.toggle_help')
     = form_tag items_path, :method => :get, :id => 'closet-hangers-items-search', 'data-current-user-id' => current_user.id do
       = text_field_tag :q, nil, :placeholder => t('.item_search_placeholder')
       = submit_tag t('.item_search_submit'), :name => nil
 - else
   - title t('.title_for.another_user', :user_name => @user.name)
   - secondary_nav do
-    %span#toggle-compare Compare with Your Items
+    %button#toggle-compare{type: 'button', 'aria-pressed': 'false'} Compare with Your Items
 
 - canonical_path user_closet_hangers_path(@user)
 
