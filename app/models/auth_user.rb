@@ -210,25 +210,27 @@ class AuthUser < AuthRecord
       base_name = "neopass-#{random_species_name}"
     end
 
-    # Fetch the list of names that already start with that.
+    # Fetch the list of names that already start with that. Names are unique
+    # case-insensitively, so compare them downcased.
     name_query = sanitize_sql_like(base_name) + "%"
-    similar_names = where("name LIKE ?", name_query).pluck(:name).to_set
+    similar_names = where("name LIKE ?", name_query).pluck(:name).
+      map(&:downcase).to_set
 
     # If this was the user's preferred name (rather than a random one), try
     # using the preferred name itself, if not already taken.
-    if preferred_name.present? && !similar_names.include?(preferred_name)
+    if preferred_name.present? && !similar_names.include?(preferred_name.downcase)
       return preferred_name
     end
 
     # Otherwise, shuffle the list of four-digit numbers to create 10000
     # possible names, then use the first one that's not already claimed.
     potential_names = (0..9999).map { |n| "#{base_name}-#{n}" }.shuffle
-    name = potential_names.find { |name| !similar_names.include?(name) }
+    name = potential_names.find { |name| !similar_names.include?(name.downcase) }
     return name unless name.nil?
 
     # If that failed, try again but with six digits.
     potential_names = (0..999999).map { |n| "#{base_name}-#{n}" }.shuffle
-    name = potential_names.find { |name| !similar_names.include?(name) }
+    name = potential_names.find { |name| !similar_names.include?(name.downcase) }
     return name unless name.nil?
 
     # If *that* failed, then golly gee, we have millions of NeoPass users
