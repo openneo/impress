@@ -92,6 +92,15 @@ RSpec.describe Itemdb, type: :model do
 			expect(Itemdb.load_style_tokens.keys).to eq [100684]
 		end
 
+		it "skips items that have no name" do
+			stub_list_request.to_return(body: [
+				item_data(100684, "Blended Burlap Acara"),
+				item_data(100685, "Mystery Token").merge("name" => nil),
+			].to_json)
+
+			expect(Itemdb.load_style_tokens.keys).to eq [100684]
+		end
+
 		it "raises NetworkError when the API key is rejected" do
 			stub_token_request.to_return(
 				status: 401, body: '{"error":"Invalid API key"}')

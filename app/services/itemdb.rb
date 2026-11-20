@@ -145,8 +145,12 @@ module Itemdb
 			end
 
 			# Skip items with no Neopets item ID: itemdb has some, but they can't
-			# be style tokens we know about.
-			items_data.filter { |d| d["item_id"].present? }.to_h do |item_data|
+			# be style tokens we know about. (And skip items with no name, which
+			# we'd have no use for, just in case.)
+			usable_items_data = items_data.filter { |item_data|
+				item_data["item_id"].present? && item_data["name"].present?
+			}
+			usable_items_data.to_h do |item_data|
 				item = Item.new(
 					id: item_data.fetch("item_id"),
 					name: item_data.fetch("name"),

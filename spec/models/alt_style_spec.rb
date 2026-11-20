@@ -130,6 +130,46 @@ RSpec.describe AltStyle do
 		end
 	end
 
+	describe "#infer_series_name" do
+		subject(:alt_style) do
+			AltStyle.new(color: colors(:blue), species: species(:acara))
+		end
+
+		it "returns what comes before the color and species" do
+			expect(alt_style.infer_series_name("Nostalgic Blue Acara")).
+				to eq "Nostalgic"
+		end
+
+		it "keeps variant names, like Prismatic ones" do
+			expect(alt_style.infer_series_name("Prismatic Ice: Nostalgic Blue Acara")).
+				to eq "Prismatic Ice: Nostalgic"
+		end
+
+		it "ignores case" do
+			expect(alt_style.infer_series_name("Nostalgic BLUE ACARA")).
+				to eq "Nostalgic"
+		end
+
+		it "recognizes series named after characters" do
+			expect(alt_style.infer_series_name("Treasured Roberta")).
+				to eq "Treasured"
+		end
+
+		it "returns nil when the name has a different color or species" do
+			expect(alt_style.infer_series_name("Nostalgic Red Acara")).to be_nil
+			expect(alt_style.infer_series_name("Nostalgic Blue Blumaroo")).to be_nil
+		end
+
+		it "returns nil when there's nothing before the color and species" do
+			expect(alt_style.infer_series_name("Blue Acara")).to be_nil
+		end
+
+		it "returns nil when only a Prismatic variant name is left" do
+			expect(alt_style.infer_series_name("Prismatic Cocoa: Blue Acara")).
+				to be_nil
+		end
+	end
+
 	describe "token item" do
 		fixtures :items, :zones
 

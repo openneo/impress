@@ -189,6 +189,31 @@ class AltStyle < ApplicationRecord
     item
   end
 
+  # Series whose styles are named after a character, rather than the pet's
+  # color and species: "Essence of Esophagor", "Treasured Roberta".
+  CHARACTER_SERIES_NAMES = ["Essence of", "Treasured"]
+
+  # Guess the series name from a full name for this style, like one from
+  # itemdb: "Nostalgic Faerie Gnorbu" is in the "Nostalgic" series. Returns nil
+  # if we can't tell.
+  #
+  # That's often the case! Usually it's because the name doesn't end in this
+  # style's color and species: Neopets reports "Mini Yellow Aisha" as a Blue
+  # Aisha, "Celebratory Anniversary" styles as 25th Anniversary, and so on.
+  # But it can also be because what's left isn't a series name we know how to
+  # handle, like "Prismatic Cocoa: Christmas Acara", which would leave us with
+  # "Prismatic Cocoa:".
+  def infer_series_name(token_name)
+    series_name = CHARACTER_SERIES_NAMES.find { |name|
+      token_name.downcase.start_with?("#{name.downcase} ")
+    }
+    if series_name.nil? && token_name.downcase.end_with?(" #{pet_name.downcase}")
+      series_name = token_name[0...-pet_name.length].strip
+    end
+
+    series_name unless series_name.blank? || series_name.end_with?(":")
+  end
+
   def self.placeholder_name
     "<New?>"
   end
