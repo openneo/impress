@@ -19,7 +19,9 @@ class ItemsController < ApplicationController
       respond_to do |format|
         format.html {
           @campaign = Fundraising::Campaign.current rescue nil
-          if @items.count == 1
+          # If the search has exactly one result, go straight to it. (But
+          # check this page actually has it: a page past the end is empty.)
+          if @items.total_entries == 1 && @items.length == 1
             redirect_to @items.first
           else
             render
