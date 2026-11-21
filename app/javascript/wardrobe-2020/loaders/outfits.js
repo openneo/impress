@@ -123,7 +123,10 @@ function normalizeOutfit(outfit) {
 		speciesId: String(outfit.species_id),
 		colorId: String(outfit.color_id),
 		pose: outfit.pose,
-		appearanceId: String(outfit.pet_state_id),
+		// Alt-style outfits can have no pet state, so keep that as null rather
+		// than the string "null".
+		appearanceId:
+			outfit.pet_state_id != null ? String(outfit.pet_state_id) : null,
 		altStyleId: outfit.alt_style_id ? String(outfit.alt_style_id) : null,
 		wornItemIds: (outfit.item_ids?.worn || []).map((id) => String(id)),
 		closetedItemIds: (outfit.item_ids?.closeted || []).map((id) => String(id)),

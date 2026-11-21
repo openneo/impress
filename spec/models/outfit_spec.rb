@@ -541,6 +541,32 @@ RSpec.describe Outfit do
 				expect(outfit).to be_valid
 			end
 
+			it "serializes to JSON without a pet state" do
+				# Alt-style outfits can be saved without a pet state (e.g. when the alt
+				# style's color/species has no regular pet type), so rendering them as
+				# JSON, like the wardrobe does after saving or loading, must not crash.
+				outfit = Outfit.new(pet_state: nil, alt_style: @alt_style)
+				outfit.biology = {species_id: species(:acara).id,
+				                  color_id: colors(:maraquan).id, pose: "HAPPY_FEM"}
+
+				json = outfit.as_json
+
+				expect(json["species_id"]).to eq(@alt_style.species_id)
+				expect(json["color_id"]).to eq(@alt_style.color_id)
+				expect(json["pose"]).to eq("HAPPY_FEM")
+				expect(json["pet_state_id"]).to be_nil
+			end
+
+			it "builds wardrobe params without a pet state" do
+				outfit = Outfit.new(pet_state: nil, alt_style: @alt_style)
+
+				params = outfit.wardrobe_params
+
+				expect(params[:species]).to eq(@alt_style.species_id)
+				expect(params[:color]).to eq(@alt_style.color_id)
+				expect(params[:style]).to eq(@alt_style.id)
+			end
+
 			it "sorts alt style and item layers by depth correctly" do
 				# Create alt style layers at various depths
 				alt_background = build_biology_asset(zones(:background), body_id: 999) # depth 3

@@ -35,12 +35,30 @@ class Outfit < ApplicationRecord
   before_validation :ensure_unique_name, if: :user_id?
 
   attr_reader :biology
-  delegate :pose, to: :pet_state
-  delegate :pet_type, to: :pet_state
-  delegate :color, to: :pet_type
-  delegate :color_id, to: :pet_type
-  delegate :species, to: :pet_type
-  delegate :species_id, to: :pet_type
+  delegate :pet_type, to: :pet_state, allow_nil: true
+
+  # An alt-style outfit can have no pet state (see the validation above), so
+  # these fall back to the alt style's color and species, and to the requested
+  # pose (if any).
+  def pose
+    pet_state ? pet_state.pose : @biology&.[](:pose)
+  end
+
+  def color
+    pet_type ? pet_type.color : alt_style&.color
+  end
+
+  def color_id
+    pet_type ? pet_type.color_id : alt_style&.color_id
+  end
+
+  def species
+    pet_type ? pet_type.species : alt_style&.species
+  end
+
+  def species_id
+    pet_type ? pet_type.species_id : alt_style&.species_id
+  end
 
   scope :wardrobe_order, -> { order('starred DESC', :name) }
   
