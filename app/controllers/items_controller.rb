@@ -205,8 +205,10 @@ class ItemsController < ApplicationController
 
     # Also, PB items have some special handling: we group them by color, then
     # load example pet types for the colors that don't have paint brushes.
+    # (Items we can't match to a color are grouped under `nil`, shown as
+    # "Basic colors": sort that group first, then the rest by name.)
     @pb_items_by_color = @items[:pb].group_by(&:pb_color).
-      sort_by { |color, items| color&.name }.to_h
+      sort_by { |color, items| color.nil? ? [0, ""] : [1, color.name] }.to_h
 
     colors_without_thumbnails = @pb_items_by_color.keys.
       select(&:present?).reject(&:pb_item_thumbnail_url?)
