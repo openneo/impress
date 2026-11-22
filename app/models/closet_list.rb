@@ -2,7 +2,8 @@ class ClosetList < ApplicationRecord
   belongs_to :user
   has_many :hangers, class_name: 'ClosetHanger', foreign_key: 'list_id', dependent: :delete_all
 
-  validates :name, :presence => true, :uniqueness => {:scope => :user_id}
+  validates :name, :presence => true, :uniqueness => {:scope => :user_id},
+    length: {maximum: 255} # the column's size
   validates :user, :presence => true
   validates :hangers_owned, :inclusion => {:in => [true, false], :message => "can't be blank"}
   validates :description, format: {
