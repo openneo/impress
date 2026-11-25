@@ -224,7 +224,7 @@ RSpec.describe "The roulette endpoint", type: :request do
 
 		get "/roulette.json?species=1&color=61" # There's no red acara.
 		expect(response).to have_http_status(:bad_request)
-		expect(JSON.parse(response.body)["error"]).to eq("No showable pet found for species 1 and color 61")
+		expect(JSON.parse(response.body)["error"]).to eq("No showable pet found for Red Acara (color 61, species 1)")
 	end
 
 	it "accepts names as well as IDs, like the rest of the site" do

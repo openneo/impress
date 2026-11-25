@@ -144,11 +144,21 @@ class Roulette
   end
 
   # The error message for a species and/or color that has no showable pet type.
+  # It names them, color first, and includes their IDs, e.g.
+  # "Red Acara (color 61, species 1)". (Ones with no name yet show only IDs.)
   def self.no_such_pet_message(species_id, color_id)
-    kind = [
-      ("species #{species_id}" if species_id),
+    species = Species.find_by(id: species_id) if species_id
+    color = Color.find_by(id: color_id) if color_id
+
+    names = [color, species].compact.select(&:name?).map(&:human_name)
+    ids = [
       ("color #{color_id}" if color_id),
-    ].compact.join(" and ")
+      ("species #{species_id}" if species_id),
+    ].compact
+
+    kind = [names.join(" ").presence, ("(#{ids.join(", ")})" if names.any?)]
+      .compact.join(" ")
+    kind = ids.join(" and ") if names.empty?
 
     "No showable pet found for #{kind}"
   end
